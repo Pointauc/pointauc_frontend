@@ -1,0 +1,48 @@
+{
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "prettier",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "tsconfigRootDir": "."
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "prettier/prettier": [2, {
+      "trailingComma": "all",
+      "singleQuote": true,
+      "printWidth": 100,
+      "endOfLine":"auto"
+    }],
+    "import/no-extraneous-dependencies": [2, { "devDependencies": true }],
+    "import/extensions": [
+      "error", "ignorePackages", {
+      "ts": "never",
+      "tsx": "never",
+      "js": "never",
+      "jsx": "never"
+    }],
+    "react/jsx-filename-extension": [2, { "extensions": [
+      ".js", ".jsx", ".ts", ".tsx"
+    ] }],
+    "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/camelcase": [0],
+    "react/jsx-props-no-spreading": [0],
+    "no-unused-expressions": [0],
+    "no-case-declarations": [0]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}

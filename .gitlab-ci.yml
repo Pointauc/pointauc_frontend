@@ -1,0 +1,40 @@
+image: node:latest
+
+stages:
+    - lint
+    - build
+    - deploy
+
+lint:
+    stage: lint
+    script:
+        - echo "Installing packages"
+        - npm install
+        - echo "Starting lint"
+        - npm run lint
+        - echo "Lint sucessful"
+
+build:
+    stage: build
+    script:
+        - echo "Installing packages"
+        - npm install
+        - echo "Building package"
+        - npm run build
+        - echo "Build sucessful"
+    artifacts:
+        expire_in: 1 hour
+        paths:
+            - build
+
+pages:
+    stage: deploy
+    script:
+        - mkdir public
+        - mv build/* public
+        - echo "Deployed"
+    artifacts:
+        paths:
+            - public
+    only:
+        - master
