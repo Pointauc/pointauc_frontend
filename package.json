@@ -2,7 +2,7 @@
   "name": "link-media-storage",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://https://ankirig.gitlab.io/link-media-storage",
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -50,9 +50,10 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
     "prettier-eslint": "^11.0.0",
-    "tslint-plugin-prettier": "^2.3.0",
-    "react-app-rewired": "^2.1.6"
+    "react-app-rewired": "^2.1.6",
+    "tslint-plugin-prettier": "^2.3.0"
   }
 }
