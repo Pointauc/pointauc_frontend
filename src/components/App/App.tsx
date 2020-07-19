@@ -1,23 +1,24 @@
 import React from 'react';
-import logo from '../../logo.svg';
 import './App.scss';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
+import ControlColumn from '../ControlColumn/ControlColumn';
+import SlotsColumn from '../SlotsColumn/SlotsColumn';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Edit App.js and save to reload.</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <MuiThemeProvider theme={theme}>
+      <Paper className="App" square>
+        <SlotsColumn />
+        <ControlColumn />
+      </Paper>
+    </MuiThemeProvider>
   );
 };
 

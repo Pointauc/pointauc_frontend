@@ -1,0 +1,15 @@
+.slot {
+  display: flex;
+  width: 100%;
+  margin-bottom: 30px;
+
+  &-name {
+    flex-grow: 1;
+    margin-right: 25px;
+  }
+
+  &-money {
+    width: 80px;
+    padding-left: 5px;
+  }
+}

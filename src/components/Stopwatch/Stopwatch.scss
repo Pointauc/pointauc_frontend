@@ -1,0 +1,13 @@
+.stopwatch-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  .stopwatch {
+    font-size: 80px;
+  }
+
+  .stopwatch-controls {
+    display: flex;
+    justify-content: space-between;
+  }
+}

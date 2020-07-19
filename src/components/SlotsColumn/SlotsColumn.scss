@@ -1,0 +1,10 @@
+.slots-column {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  height: 90%;
+  margin-right: 500px;
+  margin-top: 30px;
+  overflow-y: scroll;
+}
