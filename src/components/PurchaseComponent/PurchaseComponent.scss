@@ -1,0 +1,14 @@
+.purchase {
+  width: 100%;
+  margin-bottom: 10px;
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-remove-button {
+      padding: 10px !important;
+    }
+  }
+}

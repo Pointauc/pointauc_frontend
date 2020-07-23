@@ -1,23 +1,36 @@
 import React from 'react';
 import './App.scss';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { Paper } from '@material-ui/core';
-import ControlColumn from '../ControlColumn/ControlColumn';
-import SlotsColumn from '../SlotsColumn/SlotsColumn';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import ROUTES from '../../constants/routes.constants';
+import AucPage from '../AucPage/AucPage';
+import TwitchRedirect from '../TwitchRedirect/TwitchRedirect';
 
 const theme = createMuiTheme({
   palette: {
     type: 'dark',
+    primary: {
+      main: '#a6d4fa',
+    },
+    secondary: {
+      main: '#f48fb1',
+    },
   },
 });
 
 const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={theme}>
-      <Paper className="App" square>
-        <SlotsColumn />
-        <ControlColumn />
-      </Paper>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path={ROUTES.AUC_PAGE}>
+            <AucPage />
+          </Route>
+          <Route path={ROUTES.TWITCH_REDIRECT}>
+            <TwitchRedirect />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </MuiThemeProvider>
   );
 };

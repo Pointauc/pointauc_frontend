@@ -52,13 +52,14 @@ const Stopwatch: React.FC = () => {
 
   const handleStop = (): void => {
     if (frameId.current) {
-      setIsStopped(true);
       cancelAnimationFrame(frameId.current);
+      frameId.current = undefined;
     }
+    setIsStopped(true);
   };
 
   const handleStart = (): void => {
-    if (!frameId.current) {
+    if (time.current) {
       setIsStopped(false);
       prevTimestamp.current = undefined;
       frameId.current = requestAnimationFrame(updateTimeOnFrame);

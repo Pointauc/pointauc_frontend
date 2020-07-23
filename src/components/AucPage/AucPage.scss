@@ -1,9 +1,11 @@
-.App {
+.auc-page {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   padding: 0 50px;
 
   &-content {
     display: flex;
-    height: 94%;
+    height: 92%;
   }
 }

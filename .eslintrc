@@ -21,6 +21,7 @@
       "printWidth": 100,
       "endOfLine":"auto"
     }],
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
     "no-param-reassign": ["error", { "props": false }],
     "import/no-extraneous-dependencies": [2, { "devDependencies": true }],
     "import/extensions": [

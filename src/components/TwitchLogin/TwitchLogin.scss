@@ -1,0 +1,31 @@
+.twitch-login {
+  display: flex;
+  width: 250px;
+  flex-direction: column;
+
+  .twitch-login-submit-button {
+    border: 0;
+    border-radius: 0;
+    width: 100%;
+  }
+
+  &-logged-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-username {
+    margin-left: 5px;
+    font-weight: 500;
+    color: #90caf9;
+  }
+
+  &-logout-button {
+    margin-left: 5px !important;
+  }
+
+  &-mock-data-button {
+    margin-top: 10px !important;
+  }
+}
