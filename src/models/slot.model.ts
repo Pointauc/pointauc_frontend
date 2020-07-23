@@ -1,6 +1,8 @@
+import { ReactText } from 'react';
+
 export interface Slot {
-  id: number;
-  name: string;
-  amount: string;
-  extra: string;
+  id: ReactText;
+  name: string | null;
+  amount: number | null;
+  extra: number | null;
 }

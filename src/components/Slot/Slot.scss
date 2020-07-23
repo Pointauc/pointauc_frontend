@@ -1,7 +1,22 @@
+@import "../../styles/colors";
+
 .slot {
   display: flex;
-  width: 100%;
-  margin-bottom: 30px;
+  align-self: stretch;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+
+  &.drop-help {
+    background-color: $grey-8;
+    border-color: $grey-7;
+  }
+
+  &.drag-over {
+    background-color: $blue-gray-3;
+    border-color: $blue-gray-2;
+  }
 
   &-name {
     flex-grow: 1;

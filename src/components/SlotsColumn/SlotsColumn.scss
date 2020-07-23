@@ -1,3 +1,5 @@
+@import "../../styles/colors";
+
 .slots-column {
   display: flex;
   flex-grow: 1;
@@ -7,4 +9,20 @@
   margin-right: 500px;
   margin-top: 30px;
   overflow-y: auto;
+
+  .add-button {
+    width: 15%;
+    border-radius: 10px;
+    border: 2px solid transparent;
+
+    &.drop-help {
+      background-color: $grey-8;
+      border-color: $grey-7;
+    }
+
+    &.drag-over {
+      background-color: $blue-gray-3;
+      border-color: $blue-gray-2;
+    }
+  }
 }
