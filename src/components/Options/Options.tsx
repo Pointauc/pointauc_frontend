@@ -4,9 +4,11 @@ import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Fade, IconButton, Paper, Popper } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
+import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import TwitchLogin from '../TwitchLogin/TwitchLogin';
 import { setUsername } from '../../reducers/User/User';
 import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
+import { resetSlots } from '../../reducers/Slots/Slots';
 
 const Options: React.FC = () => {
   const dispatch = useDispatch();
@@ -14,6 +16,10 @@ const Options: React.FC = () => {
 
   const toggleOptions = (e: MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(anchorEl ? null : e.currentTarget);
+  };
+
+  const handleResetSlots = (): void => {
+    dispatch(resetSlots());
   };
 
   const open = Boolean(anchorEl);
@@ -36,7 +42,10 @@ const Options: React.FC = () => {
           </Fade>
         )}
       </Popper>
-      <IconButton onClick={toggleOptions}>
+      <IconButton onClick={handleResetSlots} className="options-button">
+        <DeleteSweepIcon />
+      </IconButton>
+      <IconButton onClick={toggleOptions} className="options-button">
         <SettingsIcon />
       </IconButton>
     </div>

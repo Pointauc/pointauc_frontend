@@ -55,6 +55,9 @@ const slotsSlice = createSlice({
       const newSlot: Slot = { id, name, amount, extra: null };
       state.slots = [...state.slots, newSlot];
     },
+    resetSlots(state): void {
+      state.slots = initialState.slots;
+    },
   },
 });
 
@@ -66,6 +69,7 @@ export const {
   addSlot,
   createSlotFromPurchase,
   deleteSlot,
+  resetSlots,
 } = slotsSlice.actions;
 
 export default slotsSlice.reducer;
