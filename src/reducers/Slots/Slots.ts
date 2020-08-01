@@ -43,6 +43,10 @@ const slotsSlice = createSlice({
         slot.id === id ? { ...slot, extra: null, amount: getAmountSum(slot) } : slot,
       );
     },
+    deleteSlot(state, action: PayloadAction<ReactText>): void {
+      const deletedId = action.payload;
+      state.slots = state.slots.filter(({ id }) => deletedId !== id);
+    },
     addSlot(state): void {
       state.slots = [...state.slots, createSlot()];
     },
@@ -61,6 +65,7 @@ export const {
   addExtra,
   addSlot,
   createSlotFromPurchase,
+  deleteSlot,
 } = slotsSlice.actions;
 
 export default slotsSlice.reducer;

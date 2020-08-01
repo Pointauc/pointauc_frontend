@@ -1,30 +1,53 @@
 @import "../../styles/colors";
 
-.slot {
+.slot-wrapper {
   display: flex;
   align-self: stretch;
+  align-items: center;
   margin-bottom: 10px;
-  padding: 10px;
-  border: 2px solid transparent;
-  border-radius: 10px;
 
-  &.drop-help {
-    background-color: $grey-9;
-    border-color: $grey-7;
-  }
-
-  &.drag-over {
-    background-color: $blue-gray-3;
-    border-color: $blue-gray-2;
-  }
-
-  &-name {
+  .slot {
+    display: flex;
     flex-grow: 1;
-    margin-right: 25px;
+    padding: 10px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+
+    &.drop-help {
+      background-color: $grey-9;
+      border-color: $grey-7;
+    }
+
+    &.drag-over {
+      background-color: $blue-gray-3;
+      border-color: $blue-gray-2;
+    }
+
+    &-name {
+      flex-grow: 1;
+      margin-right: 25px;
+    }
+
+    &-money {
+      width: 80px;
+      padding-left: 5px;
+    }
   }
 
-  &-money {
-    width: 80px;
-    padding-left: 5px;
+  .delete-button {
+    opacity: 0;
+    width: 50px;
+    height: 50px;
+    transition: opacity .3s;
+  }
+
+  &:hover {
+    .delete-button {
+      opacity: .7;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }
