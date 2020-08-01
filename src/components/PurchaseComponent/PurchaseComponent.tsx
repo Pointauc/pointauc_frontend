@@ -31,7 +31,7 @@ const PurchaseComponent: React.FC<Purchase> = (purchase) => {
   });
 
   const cardStyles = { backgroundColor: isDragging ? undefined : color };
-  const purchaseClasses = classNames(['purchase', { dragging: isDragging }]);
+  const purchaseClasses = classNames(['purchase', { 'drag-placeholder': isDragging }]);
 
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });

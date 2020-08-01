@@ -63,7 +63,7 @@ const CustomDragLayer: React.FC = () => {
   }
 
   return (
-    <div style={layerStyles}>
+    <div style={layerStyles} className="drag-layer">
       <div style={getItemStyles(initialOffset, currentOffset)}>{renderItem()}</div>
     </div>
   );

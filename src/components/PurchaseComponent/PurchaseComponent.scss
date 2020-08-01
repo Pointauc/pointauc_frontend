@@ -1,12 +1,15 @@
 @import "../../styles/colors";
 
+.drag-layer .purchase {
+  width: 304px;
+}
+
 .purchase {
   margin-bottom: 10px;
   cursor: pointer;
-  width: 304px;
   border: 3px solid transparent;
 
-  &.dragging {
+  &.drag-placeholder {
     border: 3px dashed $grey-4;
     background-color: transparent;
 
@@ -24,12 +27,4 @@
       padding: 10px !important;
     }
   }
-}
-
-.drag-placeholder {
-  position: relative;
-  z-index: 10;
-  height: 50px;
-  border: 2px dashed $grey-4;
-  margin-bottom: 6px;
 }
