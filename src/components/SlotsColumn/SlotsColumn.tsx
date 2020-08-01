@@ -9,8 +9,8 @@ import { RootState } from '../../reducers';
 import SlotComponent from '../Slot/SlotComponent';
 import { addSlot, createSlotFromPurchase } from '../../reducers/Slots/Slots';
 import { Slot } from '../../models/slot.model';
-import { DRAG_TYPE } from '../../constants/drag.constants';
 import { PurchaseDragType } from '../../models/purchase';
+import { DragTypeEnum } from '../../enums/dragType.enum';
 
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const SlotsColumn: React.FC = () => {
   };
 
   const [{ isOver, canDrop }, drops] = useDrop({
-    accept: DRAG_TYPE.PURCHASE,
+    accept: DragTypeEnum.Purchase,
     drop: (purchase: PurchaseDragType) => dispatch(createSlotFromPurchase(purchase)),
     collect: (monitor) => ({
       isOver: monitor.isOver(),

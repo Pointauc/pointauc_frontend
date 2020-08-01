@@ -7,8 +7,8 @@ import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import { Slot } from '../../models/slot.model';
 import { addExtra, setSlotAmount, setSlotExtra, setSlotName } from '../../reducers/Slots/Slots';
-import { DRAG_TYPE } from '../../constants/drag.constants';
 import { PurchaseDragType } from '../../models/purchase';
+import { DragTypeEnum } from '../../enums/dragType.enum';
 
 const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }: Slot) => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }: Slot) => {
   const amountInput = useRef<HTMLInputElement>(null);
 
   const [{ isOver, canDrop }, drops] = useDrop({
-    accept: DRAG_TYPE.PURCHASE,
+    accept: DragTypeEnum.Purchase,
     drop: ({ cost }: PurchaseDragType) =>
       dispatch(setSlotAmount({ id, amount: Number(amount) + cost })),
     collect: (monitor) => ({

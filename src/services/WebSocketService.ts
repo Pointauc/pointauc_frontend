@@ -1,9 +1,4 @@
-const TWITCH_WEBSOCKET_URL = 'wss://pubsub-edge.twitch.tv';
-const USERNAME_COOKIE_KEY = 'username';
-const CHANNEL_MODERATE_TOPIC = 'chat_moderator_actions';
-
 const PING_INTERVAL = 1000 * 60; // ms between PING's
-const RECONNECT_INTERVAL = 1000 * 3; // ms to wait before reconnect
 
 class WebSocketService<T> {
   private ws?: WebSocket;
@@ -11,10 +6,6 @@ class WebSocketService<T> {
   private readonly closeHandler?: () => void;
   private readonly openHandler?: (ws: WebSocket) => void;
   private pingHandle?: number;
-
-  get socket(): WebSocket | undefined {
-    return this.ws;
-  }
 
   constructor(
     messageHandler?: (message: T) => void,
@@ -26,7 +17,7 @@ class WebSocketService<T> {
     this.openHandler = openHandler;
   }
 
-  connect = (url: string) => {
+  connect = (url: string): void => {
     this.ws = new WebSocket(url);
     console.log('connecting');
     this.ws.onopen = this.onOpen;
