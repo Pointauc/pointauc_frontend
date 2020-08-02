@@ -13,6 +13,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
   }
 
   &-username {
@@ -23,6 +24,7 @@
 
   &-logout-button {
     margin-left: 5px !important;
+    padding: 8px !important;
   }
 
   &-mock-data-button {

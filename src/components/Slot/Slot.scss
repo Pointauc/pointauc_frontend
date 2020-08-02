@@ -6,6 +6,10 @@
   align-items: center;
   margin-bottom: 10px;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   .slot {
     display: flex;
     flex-grow: 1;

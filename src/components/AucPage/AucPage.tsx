@@ -6,6 +6,7 @@ import SlotsColumn from '../SlotsColumn/SlotsColumn';
 import ControlColumn from '../ControlColumn/ControlColumn';
 import Options from '../Options/Options';
 import './AucPage.scss';
+import Notification from '../Notification/Notification';
 
 const AucPage: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const AucPage: React.FC = () => {
           <ControlColumn />
         </div>
         <Options />
+        <Notification />
       </Paper>
     </DndProvider>
   );

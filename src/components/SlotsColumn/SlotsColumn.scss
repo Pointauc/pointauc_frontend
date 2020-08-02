@@ -5,15 +5,40 @@
   flex-grow: 1;
   flex-direction: column;
   align-items: center;
-  height: 90%;
+  max-height: 100%;
   margin-right: 500px;
   margin-top: 30px;
-  overflow-y: auto;
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  &-buyout {
+    display: flex;
+    align-self: flex-start;
+    margin-bottom: 20px;
+
+    &-title {
+      margin-right: 35px !important;
+      margin-left: 10px !important;
+    }
+
+    &-input {
+      width: 100px;
+      font-size: 1.5em !important;
+    }
+  }
 
   .add-button {
     width: 20%;
     border-radius: 10px;
     border: 2px solid transparent;
+    align-self: center;
+    margin-top: 10px;
 
     &.drop-help {
       background-color: $grey-9;

@@ -22,8 +22,6 @@ const Options: React.FC = () => {
     dispatch(resetSlots());
   };
 
-  const open = Boolean(anchorEl);
-
   useEffect(() => {
     const username = Cookies.get(USERNAME_COOKIE_KEY);
     if (username) {
@@ -31,9 +29,18 @@ const Options: React.FC = () => {
     }
   }, [dispatch]);
 
+  const open = Boolean(anchorEl);
+
   return (
     <div className="options">
-      <Popper keepMounted open={open} anchorEl={anchorEl} placement="top" transition>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement="top"
+        keepMounted
+        transition
+        style={{ position: 'relative' }}
+      >
         {({ TransitionProps }): ReactNode => (
           <Fade {...TransitionProps} timeout={350}>
             <Paper variant="outlined" className="options-menu">

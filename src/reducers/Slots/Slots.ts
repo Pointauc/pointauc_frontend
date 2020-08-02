@@ -44,6 +44,10 @@ const slotsSlice = createSlice({
       );
     },
     deleteSlot(state, action: PayloadAction<ReactText>): void {
+      if (state.slots.length === 1) {
+        state.slots = initialState.slots;
+        return;
+      }
       const deletedId = action.payload;
       state.slots = state.slots.filter(({ id }) => deletedId !== id);
     },
