@@ -43,7 +43,12 @@ const SlotsColumn: React.FC = () => {
       {sortedSlots.map((slot) => (
         <SlotComponent key={slot.id} {...slot} />
       ))}
-      <IconButton onClick={handleAddSlot} className={addButtonClasses} ref={drops}>
+      <IconButton
+        onClick={handleAddSlot}
+        className={addButtonClasses}
+        title="Добавить слот"
+        ref={drops}
+      >
         <AddBoxIcon fontSize="large" />
       </IconButton>
     </div>

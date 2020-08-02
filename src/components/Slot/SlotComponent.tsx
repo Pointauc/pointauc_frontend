@@ -82,7 +82,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }: Slot) => {
           onChange={handleAmountChange}
           ref={amountInput}
         />
-        <IconButton onClick={handleAddExtra}>
+        <IconButton onClick={handleAddExtra} title="Прибавить стоимость">
           <AddIcon />
         </IconButton>
         <Input
@@ -92,7 +92,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }: Slot) => {
           value={extra || ''}
         />
       </div>
-      <IconButton onClick={handleDelete} className="delete-button">
+      <IconButton onClick={handleDelete} className="delete-button" title="Удалить слот">
         <DeleteIcon />
       </IconButton>
     </div>

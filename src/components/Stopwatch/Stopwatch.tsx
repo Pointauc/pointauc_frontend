@@ -24,7 +24,6 @@ const Stopwatch: React.FC = () => {
   const stopwatchElement = useRef<HTMLDivElement>(null);
 
   const handleReset = (): void => {
-    console.log('READY!!!');
     setIsStopped(true);
     time.current = 0;
   };
@@ -81,24 +80,24 @@ const Stopwatch: React.FC = () => {
       <div className="stopwatch" ref={stopwatchElement} />
       <div className="stopwatch-controls">
         {isStopped ? (
-          <IconButton onClick={handleStart}>
+          <IconButton onClick={handleStart} title="Продолжить">
             <PlayArrowIcon fontSize="large" />
           </IconButton>
         ) : (
-          <IconButton onClick={handleStop}>
+          <IconButton onClick={handleStop} title="Пауза">
             <PauseIcon fontSize="large" />
           </IconButton>
         )}
-        <IconButton onClick={handleReset}>
+        <IconButton onClick={handleReset} title="Обнулить">
           <StopIcon fontSize="large" />
         </IconButton>
-        <IconButton onClick={handleAdd}>
+        <IconButton onClick={handleAdd} title="Добавить время">
           <ExpandLessIcon fontSize="large" />
         </IconButton>
-        <IconButton onClick={handleSubtract}>
+        <IconButton onClick={handleSubtract} title="Уменьшить время">
           <ExpandMoreIcon fontSize="large" />
         </IconButton>
-        <IconButton onClick={handleAddDouble}>
+        <IconButton onClick={handleAddDouble} title="Добавить время Х2">
           <KeyboardCapslockIcon fontSize="large" />
         </IconButton>
       </div>

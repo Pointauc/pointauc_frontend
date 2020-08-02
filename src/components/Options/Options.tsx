@@ -42,10 +42,10 @@ const Options: React.FC = () => {
           </Fade>
         )}
       </Popper>
-      <IconButton onClick={handleResetSlots} className="options-button">
+      <IconButton onClick={handleResetSlots} className="options-button" title="Очистить все">
         <DeleteSweepIcon />
       </IconButton>
-      <IconButton onClick={toggleOptions} className="options-button">
+      <IconButton onClick={toggleOptions} className="options-button" title="Настройки">
         <SettingsIcon />
       </IconButton>
     </div>

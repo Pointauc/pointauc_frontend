@@ -43,7 +43,11 @@ const PurchaseComponent: React.FC<Purchase> = (purchase) => {
         <CardContent className="purchase-content">
           <div className="purchase-header">
             <Typography variant="h6">{`${cost} ${username}`}</Typography>
-            <IconButton onClick={handleRemove} className="purchase-header-remove-button">
+            <IconButton
+              onClick={handleRemove}
+              className="purchase-header-remove-button"
+              title="Удалить слот"
+            >
               <CloseIcon />
             </IconButton>
           </div>
