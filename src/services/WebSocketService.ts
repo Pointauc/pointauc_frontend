@@ -1,4 +1,4 @@
-const PING_INTERVAL = 1000 * 60; // ms between PING's
+const PING_INTERVAL = 1000 * 10; // ms between PING's
 
 class WebSocketService<T> {
   private ws?: WebSocket;

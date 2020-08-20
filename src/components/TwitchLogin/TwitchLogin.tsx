@@ -9,19 +9,30 @@ import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { setUsername } from '../../reducers/User/User';
 import WebSocketService from '../../services/WebSocketService';
 import { addPurchase, Purchase } from '../../reducers/Purchases/Purchases';
+import { connectWithChannelPoints } from '../../api/twitchApi';
+
+const isProduction = (): boolean => process.env.NODE_ENV === 'production';
+
+const HOME_PAGE = isProduction()
+  ? 'https://woodsauc-reneawal.netlify.app'
+  : 'http://localhost:3000';
+
+const TWITCH_WEBSOCKET_URL = isProduction()
+  ? 'wss://woods-service.herokuapp.com'
+  : 'ws://localhost:8000';
 
 const AUTH_PARAMS = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
-  redirect_uri: 'http://localhost:3000/twitch/redirect',
+  redirect_uri: `${HOME_PAGE}/twitch/redirect`,
   response_type: 'code',
-  scope: 'channel_read channel:moderate',
+  scope: 'channel:read:redemptions',
+  force_verify: 'true',
 };
 
 const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
 const authParams = new URLSearchParams(AUTH_PARAMS);
 authUrl.search = authParams.toString();
 
-const TWITCH_WEBSOCKET_URL = 'ws://localhost:8080';
 const MOCK_DATA_REQUEST = 'GET_MOCK_DATA';
 
 const TwitchLogin: React.FC = () => {
@@ -41,21 +52,16 @@ const TwitchLogin: React.FC = () => {
   const onMessage = (purchase: Purchase): void => {
     console.log(purchase);
     dispatch(addPurchase(purchase));
-    // const message = JSON.parse(event.data);
-    // console.log(message);
-    // if (message.data) {
-    //   console.log(message.data.message);
-    //   console.log(JSON.parse(message.data.message));
-    // }
   };
 
   const onOpen = (ws: WebSocket): void => setPubSubSocket(ws);
 
   const onClose = (): void => setPubSubSocket(undefined);
 
-  const handleConnectTwitchPoints = (): void => {
+  const handleConnectTwitchPoints = async (): Promise<void> => {
     const webSocketService = new WebSocketService<Purchase>(onMessage, onClose, onOpen);
     webSocketService.connect(TWITCH_WEBSOCKET_URL);
+    await connectWithChannelPoints();
   };
 
   const handleDisconnect = (): void => {
