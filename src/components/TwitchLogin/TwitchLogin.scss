@@ -1,12 +1,11 @@
 .twitch-login {
   display: flex;
-  width: 250px;
   flex-direction: column;
 
   .twitch-login-submit-button {
+    width: 250px;
     border: 0;
     border-radius: 0;
-    width: 100%;
   }
 
   &-logged-wrapper {
@@ -22,12 +21,17 @@
     color: #90caf9;
   }
 
+  &-subscribe-button {
+    width: 250px;
+  }
+
   &-logout-button {
     margin-left: 5px !important;
     padding: 8px !important;
   }
 
   &-mock-data-button {
+    width: 250px;
     margin-top: 10px !important;
   }
 }

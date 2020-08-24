@@ -11,8 +11,8 @@ import Notification from '../Notification/Notification';
 const AucPage: React.FC = () => {
   return (
     <DndProvider backend={HTML5Backend}>
-      <Paper className="auc-page" square>
-        <div className="auc-page-content">
+      <Paper className="page-container" square>
+        <div className="page-container-content">
           <SlotsColumn />
           <ControlColumn />
         </div>

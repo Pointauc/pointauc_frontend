@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../AucPage/AucPage';
 import TwitchRedirect from '../TwitchRedirect/TwitchRedirect';
+import VideoPointsPage from '../VideoPointsPage/VideoPointsPage';
 
 const theme = createMuiTheme({
   palette: {
@@ -28,6 +29,9 @@ const App: React.FC = () => {
           </Route>
           <Route path={ROUTES.TWITCH_REDIRECT}>
             <TwitchRedirect />
+          </Route>
+          <Route path={ROUTES.VIDEO_POINTS_PAGE}>
+            <VideoPointsPage />
           </Route>
         </Switch>
       </BrowserRouter>

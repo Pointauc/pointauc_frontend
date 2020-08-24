@@ -1,8 +1,8 @@
-import React, { MouseEvent, ReactNode, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Options.scss';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
-import { Fade, IconButton, Paper, Popper } from '@material-ui/core';
+import { Fade, IconButton, Paper } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import TwitchLogin from '../TwitchLogin/TwitchLogin';
@@ -12,10 +12,10 @@ import { resetSlots } from '../../reducers/Slots/Slots';
 
 const Options: React.FC = () => {
   const dispatch = useDispatch();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isOptionsOpened, setIsOptionsOpened] = useState(false);
 
-  const toggleOptions = (e: MouseEvent<HTMLButtonElement>): void => {
-    setAnchorEl(anchorEl ? null : e.currentTarget);
+  const toggleOptions = (): void => {
+    setIsOptionsOpened((prevOpenedState) => !prevOpenedState);
   };
 
   const handleResetSlots = (): void => {
@@ -29,26 +29,13 @@ const Options: React.FC = () => {
     }
   }, [dispatch]);
 
-  const open = Boolean(anchorEl);
-
   return (
     <div className="options">
-      <Popper
-        open={open}
-        anchorEl={anchorEl}
-        placement="top"
-        keepMounted
-        transition
-        style={{ position: 'relative' }}
-      >
-        {({ TransitionProps }): ReactNode => (
-          <Fade {...TransitionProps} timeout={350}>
-            <Paper variant="outlined" className="options-menu">
-              <TwitchLogin />
-            </Paper>
-          </Fade>
-        )}
-      </Popper>
+      <Fade in={isOptionsOpened} timeout={300}>
+        <Paper variant="outlined" className="options-menu">
+          <TwitchLogin />
+        </Paper>
+      </Fade>
       <IconButton onClick={handleResetSlots} className="options-button" title="Очистить все">
         <DeleteSweepIcon />
       </IconButton>

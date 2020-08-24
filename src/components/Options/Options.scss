@@ -4,11 +4,13 @@
   justify-content: flex-end;
   align-items: flex-end;
   padding-bottom: 25px;
-  margin-right: 90px;
+  margin-right: 50px;
 
   &-menu {
+    position: absolute;
+    right: 35px;
+    bottom: 90px;
     padding: 20px;
-    margin-bottom: 15px;
   }
 
   &-button {

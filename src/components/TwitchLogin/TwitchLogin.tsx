@@ -4,6 +4,7 @@ import './TwitchLogin.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import Cookies from 'js-cookie';
+import { useLocation } from 'react-router';
 import { RootState } from '../../reducers';
 import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { setUsername } from '../../reducers/User/User';
@@ -21,17 +22,15 @@ const TWITCH_WEBSOCKET_URL = isProduction()
   ? 'wss://woods-service.herokuapp.com'
   : 'ws://localhost:8000';
 
-const AUTH_PARAMS = {
+const getAuthParams = (currentPath: string): Record<string, string> => ({
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
-  redirect_uri: `${HOME_PAGE}/twitch/redirect`,
+  redirect_uri: `${HOME_PAGE}/twitch/redirect?originalPath=${currentPath}`,
   response_type: 'code',
   scope: 'channel:read:redemptions',
   force_verify: 'true',
-};
+});
 
 const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
-const authParams = new URLSearchParams(AUTH_PARAMS);
-authUrl.search = authParams.toString();
 
 const MOCK_DATA_REQUEST = 'GET_MOCK_DATA';
 
@@ -39,8 +38,12 @@ const TwitchLogin: React.FC = () => {
   const dispatch = useDispatch();
   const { username } = useSelector((root: RootState) => root.user);
   const [pubSubSocket, setPubSubSocket] = useState<WebSocket>();
+  const location = useLocation();
 
   const handleAuth = (): void => {
+    const authParams = new URLSearchParams(getAuthParams(location.pathname));
+    authUrl.search = authParams.toString();
+
     window.open(authUrl.toString(), '_self');
   };
 
@@ -50,7 +53,6 @@ const TwitchLogin: React.FC = () => {
   };
 
   const onMessage = (purchase: Purchase): void => {
-    console.log(purchase);
     dispatch(addPurchase(purchase));
   };
 
@@ -88,11 +90,22 @@ const TwitchLogin: React.FC = () => {
             </IconButton>
           </div>
           {pubSubSocket ? (
-            <Button variant="outlined" color="secondary" onClick={handleDisconnect}>
+            <Button
+              className="twitch-login-subscribe-button"
+              variant="outlined"
+              color="secondary"
+              onClick={handleDisconnect}
+            >
               Отписаться от покупки поинтов
             </Button>
           ) : (
-            <Button variant="outlined" color="primary" onClick={handleConnectTwitchPoints}>
+            <Button
+              className="twitch-login-subscribe-button"
+              variant="outlined"
+              color="primary"
+              onClick={handleConnectTwitchPoints}
+              disabled
+            >
               Подписаться на покупку поинтов
             </Button>
           )}
