@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, IconButton } from '@material-ui/core';
 import './TwitchLogin.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,19 +8,13 @@ import { useLocation } from 'react-router';
 import { RootState } from '../../reducers';
 import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { setUsername } from '../../reducers/User/User';
-import WebSocketService from '../../services/WebSocketService';
-import { addPurchase, Purchase } from '../../reducers/Purchases/Purchases';
-import { connectWithChannelPoints } from '../../api/twitchApi';
-
-const isProduction = (): boolean => process.env.NODE_ENV === 'production';
+import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
+import { isProduction } from '../../utils/common.utils';
+import LoadingButton from '../LoadingButton/LoadingButton';
 
 const HOME_PAGE = isProduction()
   ? 'https://woodsauc-reneawal.netlify.app'
   : 'http://localhost:3000';
-
-const TWITCH_WEBSOCKET_URL = isProduction()
-  ? 'wss://woods-service.herokuapp.com'
-  : 'ws://localhost:8000';
 
 const getAuthParams = (currentPath: string): Record<string, string> => ({
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -32,13 +26,37 @@ const getAuthParams = (currentPath: string): Record<string, string> => ({
 
 const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
 
-const MOCK_DATA_REQUEST = 'GET_MOCK_DATA';
-
 const TwitchLogin: React.FC = () => {
   const dispatch = useDispatch();
-  const { username } = useSelector((root: RootState) => root.user);
-  const [pubSubSocket, setPubSubSocket] = useState<WebSocket>();
   const location = useLocation();
+  const { username } = useSelector((root: RootState) => root.user);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
+
+  const handleSubscribeMessage = ({ data }: MessageEvent): void => {
+    const { type } = JSON.parse(data);
+    switch (type) {
+      case MESSAGE_TYPES.CP_SUBSCRIBED:
+        setIsSubscribed(true);
+        setIsSubscribeLoading(false);
+        break;
+
+      case MESSAGE_TYPES.CP_UNSUBSCRIBED:
+        setIsSubscribed(false);
+        setIsSubscribeLoading(false);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    if (webSocket) {
+      webSocket.addEventListener('message', handleSubscribeMessage);
+    }
+  }, [webSocket]);
 
   const handleAuth = (): void => {
     const authParams = new URLSearchParams(getAuthParams(location.pathname));
@@ -52,31 +70,27 @@ const TwitchLogin: React.FC = () => {
     dispatch(setUsername(null));
   };
 
-  const onMessage = (purchase: Purchase): void => {
-    dispatch(addPurchase(purchase));
+  const subscribeTwitchPoints = (): void => {
+    if (webSocket) {
+      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.CHANNEL_POINTS_SUBSCRIBE, username }));
+      setIsSubscribeLoading(true);
+    }
   };
 
-  const onOpen = (ws: WebSocket): void => setPubSubSocket(ws);
-
-  const onClose = (): void => setPubSubSocket(undefined);
-
-  const handleConnectTwitchPoints = async (): Promise<void> => {
-    const webSocketService = new WebSocketService<Purchase>(onMessage, onClose, onOpen);
-    webSocketService.connect(TWITCH_WEBSOCKET_URL);
-    await connectWithChannelPoints();
-  };
-
-  const handleDisconnect = (): void => {
-    if (pubSubSocket) {
-      pubSubSocket.close();
+  const unsubscribeTwitchPoints = (): void => {
+    if (webSocket) {
+      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.CHANNEL_POINTS_UNSUBSCRIBE, username }));
+      setIsSubscribeLoading(true);
     }
   };
 
   const requestMockData = (): void => {
-    if (pubSubSocket) {
-      pubSubSocket.send(JSON.stringify({ type: MOCK_DATA_REQUEST }));
+    if (webSocket) {
+      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE }));
     }
   };
+
+  const isSubscribeDisabled = !webSocket || isSubscribeLoading;
 
   return (
     <div className="twitch-login">
@@ -89,31 +103,34 @@ const TwitchLogin: React.FC = () => {
               <MeetingRoomIcon />
             </IconButton>
           </div>
-          {pubSubSocket ? (
-            <Button
+          {isSubscribed ? (
+            <LoadingButton
               className="twitch-login-subscribe-button"
               variant="outlined"
               color="secondary"
-              onClick={handleDisconnect}
+              onClick={unsubscribeTwitchPoints}
+              disabled={isSubscribeDisabled}
+              isLoading={isSubscribeLoading}
             >
               Отписаться от покупки поинтов
-            </Button>
+            </LoadingButton>
           ) : (
-            <Button
+            <LoadingButton
               className="twitch-login-subscribe-button"
               variant="outlined"
               color="primary"
-              onClick={handleConnectTwitchPoints}
-              disabled
+              onClick={subscribeTwitchPoints}
+              disabled={isSubscribeDisabled}
+              isLoading={isSubscribeLoading}
             >
               Подписаться на покупку поинтов
-            </Button>
+            </LoadingButton>
           )}
           <Button
             variant="contained"
             color="primary"
             onClick={requestMockData}
-            disabled={!pubSubSocket}
+            disabled={!webSocket}
             className="twitch-login-mock-data-button"
           >
             Get mock data

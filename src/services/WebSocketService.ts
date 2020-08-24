@@ -2,17 +2,11 @@ const PING_INTERVAL = 1000 * 10; // ms between PING's
 
 class WebSocketService<T> {
   private ws?: WebSocket;
-  private readonly messageHandler?: (message: T) => void;
   private readonly closeHandler?: () => void;
   private readonly openHandler?: (ws: WebSocket) => void;
   private pingHandle?: number;
 
-  constructor(
-    messageHandler?: (message: T) => void,
-    closeHandler?: () => void,
-    openHandler?: (ws: WebSocket) => void,
-  ) {
-    this.messageHandler = messageHandler;
+  constructor(closeHandler?: () => void, openHandler?: (ws: WebSocket) => void) {
     this.closeHandler = closeHandler;
     this.openHandler = openHandler;
   }
@@ -22,8 +16,8 @@ class WebSocketService<T> {
     console.log('connecting');
     this.ws.onopen = this.onOpen;
     this.ws.onerror = this.onError;
-    this.ws.onmessage = this.onMessage;
     this.ws.onclose = this.onClose;
+    this.ws.addEventListener('message', this.logMessage);
   };
 
   pingConnection = (): void => {
@@ -34,6 +28,10 @@ class WebSocketService<T> {
       this.ws.send(JSON.stringify(message));
     }
     console.log('ping');
+  };
+
+  private logMessage = (message: MessageEvent): void => {
+    console.log(JSON.parse(message.data));
   };
 
   private onOpen = (): void => {
@@ -47,13 +45,6 @@ class WebSocketService<T> {
 
   private onError = (error: Event): void => {
     console.log(error);
-  };
-
-  private onMessage = (event: MessageEvent): void => {
-    const message = JSON.parse(event.data);
-    if (this.messageHandler) {
-      this.messageHandler(message);
-    }
   };
 
   private onClose = (): void => {

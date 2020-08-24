@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../AucPage/AucPage';
 import TwitchRedirect from '../TwitchRedirect/TwitchRedirect';
 import VideoPointsPage from '../VideoPointsPage/VideoPointsPage';
+import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
 
 const theme = createMuiTheme({
   palette: {
@@ -20,6 +22,12 @@ const theme = createMuiTheme({
 });
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(connectToServer());
+  }, [dispatch]);
+
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>

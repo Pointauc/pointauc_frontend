@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import './styles/index.scss';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './reducers';
 
 const store = configureStore({
   reducer: rootReducer,
+  middleware: [thunk],
 });
 
 ReactDOM.render(
