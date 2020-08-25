@@ -7,5 +7,10 @@
   &-content {
     display: flex;
     height: 92%;
+
+    &.centralize {
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
