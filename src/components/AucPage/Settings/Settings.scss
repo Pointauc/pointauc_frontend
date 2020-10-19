@@ -1,0 +1,25 @@
+.auc-settings {
+  &-list {
+    margin-bottom: 15px;
+  }
+
+  &-row {
+    align-items: center;
+  }
+
+  &-start-time {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+    width: 50px;
+
+    .MuiInputBase-input {
+      padding: 8px 10px;
+    }
+  }
+}
+
+.mock-data-button {
+  width: 150px;
+  height: 35px;
+  margin-left: 15px !important;
+}

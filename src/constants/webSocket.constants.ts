@@ -12,6 +12,7 @@ export const MESSAGE_TYPES = {
   SKIP_REQUEST: 'SKIP_REQUEST',
   VOTE_SKIP: 'VOTE_SKIP',
   VOTE_ANTI_SKIP: 'VOTE_ANTI_SKIP',
+  PURCHASE: 'PURCHASE',
 };
 
 export const WEBSOCKET_URL = isProduction()

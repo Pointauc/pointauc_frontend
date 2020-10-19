@@ -5,14 +5,14 @@ import { IconButton, Input, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
-import { RootState } from '../../reducers';
+import { RootState } from '../../../reducers';
 import SlotComponent from '../Slot/SlotComponent';
-import { addSlot, createSlotFromPurchase } from '../../reducers/Slots/Slots';
-import { Slot } from '../../models/slot.model';
-import { PurchaseDragType } from '../../models/purchase';
-import { DragTypeEnum } from '../../enums/dragType.enum';
-import { setNotification } from '../../reducers/notifications/notifications';
-import { DEFAULT_SLOT_NAME } from '../../constants/slots.constants';
+import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
+import { Slot } from '../../../models/slot.model';
+import { PurchaseDragType } from '../../../models/purchase';
+import { DragTypeEnum } from '../../../enums/dragType.enum';
+import { setNotification } from '../../../reducers/notifications/notifications';
+import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();

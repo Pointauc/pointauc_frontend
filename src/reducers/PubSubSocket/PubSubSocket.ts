@@ -19,17 +19,6 @@ const puSubSocketSlice = createSlice({
     setWebSocket(state, action: PayloadAction<WebSocket | undefined>): void {
       state.webSocket = action.payload;
     },
-    connectToServer(state): void {
-      const onOpen = (ws: WebSocket): void => {
-        state.webSocket = ws;
-      };
-      const onClose = (): void => {
-        state.webSocket = undefined;
-      };
-
-      const webSocketService = new WebSocketService<Purchase>(onClose, onOpen);
-      webSocketService.connect(WEBSOCKET_URL);
-    },
   },
 });
 

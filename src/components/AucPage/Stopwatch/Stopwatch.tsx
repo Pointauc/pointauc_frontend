@@ -2,20 +2,19 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './Stopwatch.scss';
 import { IconButton } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import ReplayIcon from '@material-ui/icons/Replay';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import KeyboardCapslockIcon from '@material-ui/icons/KeyboardCapslock';
 import PauseIcon from '@material-ui/icons/Pause';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNotification } from '../../reducers/notifications/notifications';
-import { getWinnerSlot } from '../../utils/slots.utils';
-import { RootState } from '../../reducers';
-import { DEFAULT_SLOT_NAME } from '../../constants/slots.constants';
+import { RootState } from '../../../reducers';
+import { getWinnerSlot } from '../../../utils/slots.utils';
+import { setNotification } from '../../../reducers/notifications/notifications';
+import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 
 export const STOPWATCH = {
-  DEFAULT_TIME: 3 * 1000,
   FORMAT: 'mm:ss:SS',
   MINUTE: 60 * 1000,
   TWO_MINUTES: 120 * 1000,
@@ -24,30 +23,29 @@ export const STOPWATCH = {
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
+  const {
+    settings: { startTime },
+  } = useSelector((root: RootState) => root.aucSettings);
+  const defaultTime = Number(startTime) * 60 * 1000;
   const [isStopped, setIsStopped] = useState<boolean>(true);
-  const time = useRef<number>(STOPWATCH.DEFAULT_TIME);
+  const time = useRef<number>(defaultTime);
   const frameId = useRef<number>();
   const prevTimestamp = useRef<number>();
   const stopwatchElement = useRef<HTMLDivElement>(null);
-
-  const handleReset = useCallback((): void => {
-    setIsStopped(true);
-    time.current = 0;
-    const { name } = getWinnerSlot(slots);
-    dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
-  }, [dispatch, slots]);
 
   const updateStopwatch = useCallback(
     (timeDifference = 0): void => {
       if (stopwatchElement.current) {
         time.current += timeDifference;
         if (time.current < 0) {
-          handleReset();
+          time.current = 0;
+          const { name } = getWinnerSlot(slots);
+          dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }
         stopwatchElement.current.innerHTML = moment(time.current).format(STOPWATCH.FORMAT);
       }
     },
-    [handleReset],
+    [dispatch, slots],
   );
 
   useEffect(() => updateStopwatch(), [updateStopwatch]);
@@ -60,7 +58,6 @@ const Stopwatch: React.FC = () => {
     prevTimestamp.current = timestamp;
     frameId.current = time.current ? requestAnimationFrame(updateTimeOnFrame) : undefined;
   };
-
   const handleStop = (): void => {
     if (frameId.current) {
       cancelAnimationFrame(frameId.current);
@@ -68,6 +65,12 @@ const Stopwatch: React.FC = () => {
     }
     setIsStopped(true);
   };
+
+  const handleReset = useCallback((): void => {
+    handleStop();
+    time.current = defaultTime;
+    updateStopwatch();
+  }, [defaultTime, updateStopwatch]);
 
   const handleStart = (): void => {
     if (time.current) {
@@ -101,7 +104,7 @@ const Stopwatch: React.FC = () => {
           </IconButton>
         )}
         <IconButton onClick={handleReset} title="Обнулить">
-          <StopIcon fontSize="large" />
+          <ReplayIcon fontSize="large" />
         </IconButton>
         <IconButton onClick={handleAdd} title="Добавить время">
           <ExpandLessIcon fontSize="large" />

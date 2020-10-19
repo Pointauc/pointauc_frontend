@@ -1,5 +1,5 @@
 import React from 'react';
-import Stopwatch from '../Stopwatch/Stopwatch';
+import Stopwatch from '../AucPage/Stopwatch/Stopwatch';
 import './ControlColumn.scss';
 import PurchaseList from '../PurchaseList/PurchaseList';
 

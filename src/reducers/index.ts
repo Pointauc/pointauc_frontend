@@ -4,6 +4,7 @@ import user from './User/User';
 import purchases from './Purchases/Purchases';
 import notifications from './notifications/notifications';
 import pubSubSocket from './PubSubSocket/PubSubSocket';
+import aucSettings from './AucSettings/AucSettings';
 
 const rootReducer = combineReducers({
   slots,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   purchases,
   notifications,
   pubSubSocket,
+  aucSettings,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
