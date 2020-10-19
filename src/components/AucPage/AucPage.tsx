@@ -5,8 +5,8 @@ import { DndProvider } from 'react-dnd';
 import SlotsColumn from '../SlotsColumn/SlotsColumn';
 import ControlColumn from '../ControlColumn/ControlColumn';
 import Options from '../Options/Options';
-import './AucPage.scss';
 import Notification from '../Notification/Notification';
+import './AucPage.scss';
 
 const AucPage: React.FC = () => {
   return (

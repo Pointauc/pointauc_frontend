@@ -21,6 +21,7 @@
       "printWidth": 100,
       "endOfLine":"auto"
     }],
+    "import/prefer-default-export": "off",
     "react/prop-types": "off",
     "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
     "no-param-reassign": ["error", { "props": false }],

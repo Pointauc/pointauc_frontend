@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Redirect, useLocation } from 'react-router';
-import { CircularProgress } from '@material-ui/core';
 import { getQueryValue } from '../../utils/url.utils';
 import ROUTES from '../../constants/routes.constants';
 import { authenticateTwitch } from '../../api/twitchApi';
-import './TwitchRedirect.scss';
 import { QUERIES } from '../../constants/common.constants';
+import LoadingPage from '../LoadingPage/LoadingPage';
 
 const TwitchRedirect: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -18,15 +17,7 @@ const TwitchRedirect: React.FC = () => {
     }
   }, [location]);
 
-  const originalPath = getQueryValue(location.search, QUERIES.ORIGINAL_PATH);
-
-  return isLoading ? (
-    <div className="twitch-redirect">
-      <CircularProgress className="twitch-redirect-spinner" />
-    </div>
-  ) : (
-    <Redirect to={originalPath || ROUTES.AUC_PAGE} />
-  );
+  return isLoading ? <LoadingPage /> : <Redirect to={ROUTES.HOME} />;
 };
 
 export default TwitchRedirect;

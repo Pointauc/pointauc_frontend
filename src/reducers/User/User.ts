@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { Action } from 'redux';
+import { getUsername } from '../../api/user';
 
 interface UserState {
   username: string | null;
@@ -19,5 +21,11 @@ const userSlice = createSlice({
 });
 
 export const { setUsername } = userSlice.actions;
+
+export const updateUsername = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
+  const newUsername = await getUsername();
+
+  dispatch(setUsername(newUsername));
+};
 
 export default userSlice.reducer;

@@ -10,6 +10,10 @@ import VideoPointsPage from '../VideoPointsPage/VideoPointsPage';
 import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
 import { RootState } from '../../reducers';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
+import SkipWidget from '../SkipWidjet/SkipWidget';
+import PrivateRoute from '../PrivateRoute/PrivateRoute';
+import HomePage from '../HomePage/HomePage';
+import Login from '../Login/Login';
 
 const theme = createMuiTheme({
   palette: {
@@ -44,14 +48,23 @@ const App: React.FC = () => {
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <Switch>
-          <Route exact path={ROUTES.AUC_PAGE}>
+          <PrivateRoute exact path={ROUTES.HOME}>
+            <HomePage />
+          </PrivateRoute>
+          <PrivateRoute path={ROUTES.AUC_PAGE}>
             <AucPage />
-          </Route>
+          </PrivateRoute>
+          <PrivateRoute path={ROUTES.VIDEO_REQUESTS}>
+            <VideoPointsPage />
+          </PrivateRoute>
+          <PrivateRoute path={ROUTES.SKIP_WIDGET}>
+            <SkipWidget />
+          </PrivateRoute>
           <Route path={ROUTES.TWITCH_REDIRECT}>
             <TwitchRedirect />
           </Route>
-          <Route path={ROUTES.VIDEO_POINTS_PAGE}>
-            <VideoPointsPage />
+          <Route path={ROUTES.LOGIN}>
+            <Login />
           </Route>
         </Switch>
       </BrowserRouter>

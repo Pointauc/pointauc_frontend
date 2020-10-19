@@ -1,7 +1,11 @@
 const ROUTES = {
-  AUC_PAGE: '/',
+  HOME: '/',
+  AUC_PAGE: '/auc',
+  VIDEO_REQUESTS: '/videoPoints',
+  CHAT_BOT: '/chatBot',
   TWITCH_REDIRECT: '/twitch/redirect',
-  VIDEO_POINTS_PAGE: '/videoPoints',
+  SKIP_WIDGET: '/skipWidget',
+  LOGIN: '/login',
 };
 
 export default ROUTES;
