@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Typography } from '@material-ui/core';
 import { RootState } from '../../reducers';
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import './PurchaseList.scss';
@@ -30,11 +31,19 @@ const PurchaseList: React.FC = () => {
   }, [handleNewPurchase, webSocket]);
 
   return (
-    <div className="purchase-list">
-      <CustomDragLayer />
-      {purchases.map((purchase) => (
-        <PurchaseComponent {...purchase} key={purchase.id} />
-      ))}
+    <div className="purchase-container">
+      <div className="purchase-list">
+        <CustomDragLayer />
+        {purchases.map((purchase) => (
+          <PurchaseComponent {...purchase} key={purchase.id} />
+        ))}
+      </div>
+      {!!purchases.length && (
+        <Typography className="total-purchases">
+          Всего заказов:
+          <span>{purchases.length}</span>
+        </Typography>
+      )}
     </div>
   );
 };

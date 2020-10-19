@@ -1,6 +1,7 @@
 .auc-settings {
   &-list {
     margin-bottom: 15px;
+    margin-left: 20px;
   }
 
   &-row {
@@ -15,6 +16,10 @@
     .MuiInputBase-input {
       padding: 8px 10px;
     }
+  }
+
+  .MuiFormControlLabel-labelPlacementStart {
+    margin-left: 0 !important;
   }
 }
 
