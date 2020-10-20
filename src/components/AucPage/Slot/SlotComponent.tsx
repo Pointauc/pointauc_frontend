@@ -54,6 +54,13 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
     dispatch(setSlotAmount({ id, amount: Number(currentAmount) }));
   }, [currentAmount, dispatch, id]);
 
+  const handleKeyPress = (e: any): void => {
+    if (e.key === 'Enter') {
+      handleAddExtra();
+      e.preventDefault();
+    }
+  };
+
   useEffect(() => {
     if (amountInput.current) {
       amountInput.current.onchange = confirmAmount;
@@ -81,6 +88,7 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
           onChange={handleAmountChange}
           ref={amountInput}
           variant="outlined"
+          type="number"
         />
         <IconButton onClick={handleAddExtra} title="Прибавить стоимость">
           <AddIcon />
@@ -91,6 +99,8 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
           onChange={handleExtraChange}
           value={extra || ''}
           variant="outlined"
+          type="number"
+          onKeyPress={handleKeyPress}
         />
       </div>
       <IconButton onClick={handleDelete} className="delete-button" title="Удалить слот">

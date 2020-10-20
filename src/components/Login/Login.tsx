@@ -5,9 +5,7 @@ import { ReactComponent as TwitchSvg } from '../../assets/icons/twitch.svg';
 import '../AucPage/AucPage.scss';
 import './Login.scss';
 
-const HOME_PAGE = isProduction()
-  ? 'https://woodsauc-reneawal.netlify.app'
-  : 'http://localhost:3000';
+const HOME_PAGE = isProduction() ? 'https://woodsauc-reneawal.netlify.app' : 'http://localhost:3000';
 
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -28,7 +26,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Paper className="page-container" square>
+    <Paper className="page-container" style={{ alignItems: 'center', justifyContent: 'center' }} square>
       <div>
         <Button
           color="primary"
