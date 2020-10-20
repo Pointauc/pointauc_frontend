@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { Button, FormControlLabel, FormGroup, Input, Switch, Typography } from '@material-ui/core';
+import { Button, FormControlLabel, FormGroup, Switch, TextField, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import './Settings.scss';
@@ -83,11 +83,28 @@ const Settings: React.FC = () => {
       <FormGroup className="auc-settings-list">
         <FormGroup row className="auc-settings-row">
           <Typography variant="body1">Начальное время</Typography>
-          <Input name="startTime" className="auc-settings-start-time" inputRef={register} type="number" />
+          <TextField
+            name="startTime"
+            className="auc-settings-start-time"
+            inputRef={register}
+            type="number"
+            variant="outlined"
+          />
           <Typography variant="body1">минут</Typography>
         </FormGroup>
-        <FormGroup row>
+        <FormGroup row className="auc-settings-row">
           <FormControlLabel control={isBuyoutVisibleSwitch} label="Показать выкуп" labelPlacement="start" />
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <Typography variant="body1">Время прибавления таймера</Typography>
+          <TextField
+            name="timeStep"
+            className="auc-settings-start-time"
+            inputRef={register}
+            type="number"
+            variant="outlined"
+          />
+          <Typography variant="body1">секунд</Typography>
         </FormGroup>
       </FormGroup>
     </form>

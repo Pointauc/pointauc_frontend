@@ -5,6 +5,7 @@ export interface SettingFields {
   isSubscribed?: boolean;
   startTime?: ReactText;
   isBuyoutVisible?: boolean;
+  timeStep?: ReactText;
 }
 
 interface AucSettingsState {
@@ -16,6 +17,7 @@ export const initialState: AucSettingsState = {
     isSubscribed: false,
     startTime: 10,
     isBuyoutVisible: true,
+    timeStep: 60,
   },
 };
 

@@ -16,17 +16,17 @@ import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SS',
-  MINUTE: 60 * 1000,
-  TWO_MINUTES: 120 * 1000,
 };
 
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
   const {
-    settings: { startTime },
+    settings: { startTime, timeStep },
   } = useSelector((root: RootState) => root.aucSettings);
   const defaultTime = Number(startTime) * 60 * 1000;
+  const stopwatchStep = Number(timeStep) * 1000;
+
   const [isStopped, setIsStopped] = useState<boolean>(true);
   const time = useRef<number>(defaultTime);
   const frameId = useRef<number>();
@@ -81,13 +81,13 @@ const Stopwatch: React.FC = () => {
   };
 
   const handleAdd = (): void => {
-    updateStopwatch(STOPWATCH.MINUTE);
+    updateStopwatch(stopwatchStep);
   };
   const handleAddDouble = (): void => {
-    updateStopwatch(STOPWATCH.TWO_MINUTES);
+    updateStopwatch(stopwatchStep * 2);
   };
   const handleSubtract = (): void => {
-    updateStopwatch(-STOPWATCH.MINUTE);
+    updateStopwatch(-stopwatchStep);
   };
 
   return (
