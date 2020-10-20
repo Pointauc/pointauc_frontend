@@ -8,6 +8,7 @@ import Options from '../Options/Options';
 import Notification from '../Notification/Notification';
 import './AucPage.scss';
 import Settings from './Settings/Settings';
+import PurchaseHistory from './PurchaseHistory/PurchaseHistory';
 
 const AucPage: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const AucPage: React.FC = () => {
           <SlotsColumn />
           <ControlColumn />
         </div>
-        <Options settingsComponent={<Settings />} />
+        <Options settingsComponent={<Settings />} historyComponent={<PurchaseHistory />} />
         <Notification />
       </Paper>
     </DndProvider>

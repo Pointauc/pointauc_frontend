@@ -5,7 +5,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useDrag } from 'react-dnd';
 import classNames from 'classnames';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { Purchase, removePurchase } from '../../reducers/Purchases/Purchases';
+import {
+  Purchase,
+  removePurchase,
+  logPurchase,
+  PurchaseStatusEnum,
+} from '../../reducers/Purchases/Purchases';
 import './PurchaseComponent.scss';
 import { PurchaseDragType } from '../../models/purchase';
 import { DragTypeEnum } from '../../enums/dragType.enum';
@@ -16,6 +21,7 @@ const PurchaseComponent: React.FC<Purchase> = (purchase) => {
   const { id, message, username, cost, color } = purchase;
 
   const handleRemove = (): void => {
+    dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Deleted }));
     dispatch(removePurchase(id));
   };
 
@@ -24,7 +30,8 @@ const PurchaseComponent: React.FC<Purchase> = (purchase) => {
     end: (draggedItem?: PurchaseDragType, monitor?) => {
       setIsDragging(false);
       if (monitor && monitor.didDrop()) {
-        handleRemove();
+        dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Processed }));
+        dispatch(removePurchase(id));
       }
     },
     begin: () => setIsDragging(true),

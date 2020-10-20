@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { Button, FormControlLabel, FormGroup, Input, Switch, Typography } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import './Settings.scss';
 import { setAucSettings, SettingFields } from '../../../reducers/AucSettings/AucSettings';
-import { useDispatch, useSelector } from 'react-redux';
 import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { RootState } from '../../../reducers';
 
@@ -14,6 +14,8 @@ const Settings: React.FC = () => {
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const { username } = useSelector((root: RootState) => root.user);
   const [defaultSettings] = useState<SettingFields>(settings);
+  const isFormValuesChanged = useRef<boolean>(false);
+
   const { register, control } = useForm<SettingFields>({ defaultValues: defaultSettings });
   const formValues = useWatch<SettingFields>({ control });
   const { isSubscribed } = formValues;
@@ -37,12 +39,19 @@ const Settings: React.FC = () => {
   };
 
   useEffect(() => {
-    isSubscribed ? subscribeTwitchPoints() : unsubscribeTwitchPoints();
+    if (isFormValuesChanged.current) {
+      isSubscribed ? subscribeTwitchPoints() : unsubscribeTwitchPoints();
+    }
   }, [isSubscribed, subscribeTwitchPoints, unsubscribeTwitchPoints]);
 
   useEffect(() => {
+    isFormValuesChanged.current = true;
     dispatch(setAucSettings(formValues));
   }, [dispatch, formValues]);
+
+  const isSubscribedSwitch = (
+    <Switch name="isSubscribed" inputRef={register} defaultChecked={defaultSettings.isSubscribed} />
+  );
 
   return (
     <form className="auc-settings">
@@ -50,7 +59,7 @@ const Settings: React.FC = () => {
       <FormGroup className="auc-settings-list">
         <FormGroup row>
           <FormControlLabel
-            control={<Switch name="isSubscribed" inputRef={register} />}
+            control={isSubscribedSwitch}
             label="Подписаться на покупку поинтов"
             labelPlacement="start"
           />

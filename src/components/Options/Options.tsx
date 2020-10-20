@@ -12,20 +12,27 @@ import {
 } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import { setUsername } from '../../reducers/User/User';
 import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { resetSlots } from '../../reducers/Slots/Slots';
 
 interface OptionsProps {
   settingsComponent?: ReactNode;
+  historyComponent?: ReactNode;
 }
 
-const Options: React.FC<OptionsProps> = ({ settingsComponent }) => {
+const Options: React.FC<OptionsProps> = ({ settingsComponent, historyComponent }) => {
   const dispatch = useDispatch();
   const [isSettingsOpened, setIsSettingsOpened] = useState(false);
+  const [isHistoryOpened, setIsHistoryOpened] = useState(false);
 
   const toggleSettings = (): void => {
     setIsSettingsOpened((prevOpenedState) => !prevOpenedState);
+  };
+
+  const toggleHistory = (): void => {
+    setIsHistoryOpened((prevOpenedState) => !prevOpenedState);
   };
 
   const handleResetSlots = (): void => {
@@ -50,8 +57,20 @@ const Options: React.FC<OptionsProps> = ({ settingsComponent }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog open={isHistoryOpened} onClose={toggleHistory} fullWidth maxWidth="md">
+        <DialogTitle>История</DialogTitle>
+        <DialogContent>{historyComponent}</DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={toggleHistory} color="primary">
+            Закрыть
+          </Button>
+        </DialogActions>
+      </Dialog>
       <IconButton onClick={handleResetSlots} className="options-button" title="Очистить все">
         <DeleteSweepIcon />
+      </IconButton>
+      <IconButton onClick={toggleHistory} className="options-button" title="История">
+        <AssignmentIcon />
       </IconButton>
       <IconButton onClick={toggleSettings} className="options-button" title="Настройки">
         <SettingsIcon />

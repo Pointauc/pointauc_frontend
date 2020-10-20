@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export enum PurchaseStatusEnum {
+  Processed = 'Processed',
+  Deleted = 'Deleted',
+}
+
 export interface Purchase {
   timestamp: string;
   cost: number;
@@ -9,18 +14,28 @@ export interface Purchase {
   id: number;
 }
 
+export interface PurchaseLog {
+  purchase: Purchase;
+  status: PurchaseStatusEnum;
+}
+
 interface PurchasesState {
   purchases: Purchase[];
+  history: PurchaseLog[];
 }
 
 const initialState: PurchasesState = {
   purchases: [],
+  history: [],
 };
 
 const purchasesSlice = createSlice({
   name: 'purchases',
   initialState,
   reducers: {
+    logPurchase(state, action: PayloadAction<PurchaseLog>): void {
+      state.history = [...state.history, action.payload];
+    },
     addPurchase(state, action: PayloadAction<Purchase>): void {
       state.purchases = [...state.purchases, action.payload];
     },
@@ -30,6 +45,6 @@ const purchasesSlice = createSlice({
   },
 });
 
-export const { addPurchase, removePurchase } = purchasesSlice.actions;
+export const { addPurchase, removePurchase, logPurchase } = purchasesSlice.actions;
 
 export default purchasesSlice.reducer;
