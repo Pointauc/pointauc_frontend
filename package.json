@@ -12,7 +12,6 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "ag-grid-community": "^24.0.0",
-    "ag-grid-enterprise": "^24.0.0",
     "ag-grid-react": "^24.0.0",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",

@@ -4,6 +4,7 @@ import { ReactText } from 'react';
 export interface SettingFields {
   isSubscribed?: boolean;
   startTime?: ReactText;
+  isBuyoutVisible?: boolean;
 }
 
 interface AucSettingsState {
@@ -14,6 +15,7 @@ export const initialState: AucSettingsState = {
   settings: {
     isSubscribed: false,
     startTime: 10,
+    isBuyoutVisible: true,
   },
 };
 

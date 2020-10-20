@@ -2,10 +2,19 @@
   &-list {
     margin-bottom: 15px;
     margin-left: 20px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
   }
 
   &-row {
     align-items: center;
+    margin-bottom: 10px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
   }
 
   &-start-time {

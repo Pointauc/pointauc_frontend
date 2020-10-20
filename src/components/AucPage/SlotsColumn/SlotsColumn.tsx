@@ -19,6 +19,10 @@ const SlotsColumn: React.FC = () => {
   const buyoutInput = useRef<HTMLInputElement>(null);
   const [buyout, setBuyout] = useState<number | null>(null);
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
+  const {
+    settings: { isBuyoutVisible },
+  } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
+
   const handleAddSlot = (): void => {
     dispatch(addSlot());
   };
@@ -32,19 +36,19 @@ const SlotsColumn: React.FC = () => {
     }),
   });
 
-  const sortedSlots = useMemo(
-    () => [...slots].sort((a: Slot, b: Slot) => Number(b.amount) - Number(a.amount)),
-    [slots],
-  );
+  const sortedSlots = useMemo(() => [...slots].sort((a: Slot, b: Slot) => Number(b.amount) - Number(a.amount)), [
+    slots,
+  ]);
 
   const winnerSlot = useMemo(() => sortedSlots[0], [sortedSlots]);
 
   useEffect(() => {
     const { name, amount } = winnerSlot;
-    if (buyout && amount && amount >= buyout) {
+
+    if (isBuyoutVisible && buyout && amount && amount >= buyout) {
       dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} выкупили за ${amount}!`));
     }
-  }, [buyout, dispatch, winnerSlot]);
+  }, [buyout, dispatch, isBuyoutVisible, winnerSlot]);
 
   const addButtonClasses = useMemo(
     () => classNames('add-button', { 'drop-help': canDrop && !isOver }, { 'drag-over': isOver }),
@@ -57,6 +61,15 @@ const SlotsColumn: React.FC = () => {
     }
   };
 
+  const buyoutStyles = classNames('slots-column-buyout', { hidden: !isBuyoutVisible });
+
+  useEffect(() => {
+    if (!isBuyoutVisible && buyoutInput.current) {
+      setBuyout(null);
+      buyoutInput.current.value = '';
+    }
+  }, [isBuyoutVisible]);
+
   useEffect(() => {
     if (buyoutInput.current) {
       buyoutInput.current.addEventListener('change', handleBuyoutChange);
@@ -65,28 +78,18 @@ const SlotsColumn: React.FC = () => {
 
   return (
     <div className="slots-column">
-      <div className="slots-column-buyout">
+      <div className={buyoutStyles}>
         <Typography className="slots-column-buyout-title" variant="h4">
           Выкуп...
         </Typography>
-        <Input
-          className="slots-column-buyout-input"
-          placeholder="₽"
-          inputRef={buyoutInput}
-          type="number"
-        />
+        <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
       </div>
       <div className="slots-column-list">
         {sortedSlots.map((slot) => (
           <SlotComponent key={slot.id} {...slot} />
         ))}
       </div>
-      <IconButton
-        onClick={handleAddSlot}
-        className={addButtonClasses}
-        title="Добавить слот"
-        ref={drops}
-      >
+      <IconButton onClick={handleAddSlot} className={addButtonClasses} title="Добавить слот" ref={drops}>
         <AddBoxIcon fontSize="large" />
       </IconButton>
     </div>

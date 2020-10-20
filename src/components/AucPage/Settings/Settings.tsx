@@ -53,6 +53,10 @@ const Settings: React.FC = () => {
     <Switch name="isSubscribed" inputRef={register} defaultChecked={defaultSettings.isSubscribed} />
   );
 
+  const isBuyoutVisibleSwitch = (
+    <Switch name="isBuyoutVisible" inputRef={register} defaultChecked={defaultSettings.isBuyoutVisible} />
+  );
+
   return (
     <form className="auc-settings">
       <SettingsGroupTitle title="Twitch" />
@@ -79,13 +83,11 @@ const Settings: React.FC = () => {
       <FormGroup className="auc-settings-list">
         <FormGroup row className="auc-settings-row">
           <Typography variant="body1">Начальное время</Typography>
-          <Input
-            name="startTime"
-            className="auc-settings-start-time"
-            inputRef={register}
-            type="number"
-          />
+          <Input name="startTime" className="auc-settings-start-time" inputRef={register} type="number" />
           <Typography variant="body1">минут</Typography>
+        </FormGroup>
+        <FormGroup row>
+          <FormControlLabel control={isBuyoutVisibleSwitch} label="Показать выкуп" labelPlacement="start" />
         </FormGroup>
       </FormGroup>
     </form>

@@ -22,6 +22,10 @@
     align-self: flex-start;
     margin-bottom: 20px;
 
+    &.hidden {
+      display: none;
+    }
+
     &-title {
       margin-right: 35px !important;
       margin-left: 10px !important;
