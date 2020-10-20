@@ -13,9 +13,26 @@
   .slot {
     display: flex;
     flex-grow: 1;
+    height: 43px;
     padding: 10px;
     border: 2px solid transparent;
     border-radius: 10px;
+    align-items: center;
+
+    &-crown {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      //top: 0;
+      //left: 0;
+      margin-left: -5px;
+      margin-top: -20px;
+    }
+
+    &-index {
+      font-size: 1.1em;
+      width: 35px;
+    }
 
     &.drop-help {
       background-color: $grey-9;
@@ -30,11 +47,19 @@
     &-name {
       flex-grow: 1;
       margin-right: 25px;
+
+      input {
+        padding: 12px 15px;
+      }
     }
 
     &-money {
       width: 80px;
       padding-left: 5px;
+
+      input {
+        padding: 12px 15px;
+      }
     }
   }
 

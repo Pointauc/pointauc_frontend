@@ -85,8 +85,8 @@ const SlotsColumn: React.FC = () => {
         <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
       </div>
       <div className="slots-column-list">
-        {sortedSlots.map((slot) => (
-          <SlotComponent key={slot.id} {...slot} />
+        {sortedSlots.map((slot, index) => (
+          <SlotComponent key={slot.id} {...slot} index={index + 1} />
         ))}
       </div>
       <IconButton onClick={handleAddSlot} className={addButtonClasses} title="Добавить слот" ref={drops}>

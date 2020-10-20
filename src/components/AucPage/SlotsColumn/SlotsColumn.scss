@@ -6,8 +6,9 @@
   flex-direction: column;
   align-items: center;
   max-height: 100%;
-  margin-right: 500px;
+  margin-right: 300px;
   margin-top: 30px;
+  margin-bottom: 30px;
 
   &-list {
     display: flex;
@@ -43,6 +44,7 @@
     border: 2px solid transparent;
     align-self: center;
     margin-top: 10px;
+    transition: 0s;
 
     &.drop-help {
       background-color: $grey-9;
