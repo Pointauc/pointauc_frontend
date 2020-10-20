@@ -8,6 +8,7 @@ export interface SettingFields {
   timeStep?: ReactText;
   isAutoincrementActive?: boolean;
   autoincrementTime?: ReactText;
+  purchaseSort?: number;
 }
 
 interface AucSettingsState {
@@ -22,6 +23,7 @@ export const initialState: AucSettingsState = {
     timeStep: 60,
     isAutoincrementActive: false,
     autoincrementTime: 30,
+    purchaseSort: 0,
   },
 };
 

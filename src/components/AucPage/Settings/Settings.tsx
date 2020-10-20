@@ -1,6 +1,17 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { Button, FormControlLabel, FormGroup, Switch, TextField, Typography } from '@material-ui/core';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+import {
+  Button,
+  FormControlLabel,
+  FormGroup,
+  MenuItem,
+  Select,
+  Switch,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
+import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import './Settings.scss';
@@ -129,6 +140,35 @@ const Settings: React.FC = () => {
             disabled={!isAutoincrementActive}
           />
           <Typography variant="body1">с.</Typography>
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <Typography variant="body1" className="auc-settings-label">
+            Сортировать покупки за поинты
+          </Typography>
+          <Controller
+            control={control}
+            as={Select}
+            name="purchaseSort"
+            defaultValue={defaultSettings.purchaseSort}
+            className="auc-settings-option"
+          >
+            <MenuItem value={0}>
+              <Typography>Дата</Typography>
+              <ArrowUpwardOutlinedIcon fontSize="small" />
+            </MenuItem>
+            <MenuItem value={1}>
+              <Typography>Дата</Typography>
+              <ArrowDownwardOutlinedIcon fontSize="small" />
+            </MenuItem>
+            <MenuItem value={2}>
+              <Typography>Стоимость</Typography>
+              <ArrowUpwardOutlinedIcon fontSize="small" />
+            </MenuItem>
+            <MenuItem value={3}>
+              <Typography>Стоимость</Typography>
+              <ArrowDownwardOutlinedIcon fontSize="small" />
+            </MenuItem>
+          </Controller>
         </FormGroup>
       </FormGroup>
     </form>

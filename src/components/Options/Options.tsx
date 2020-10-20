@@ -2,20 +2,14 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import './Options.scss';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-} from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { setUsername } from '../../reducers/User/User';
 import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { resetSlots } from '../../reducers/Slots/Slots';
+import { resetPurchases } from '../../reducers/Purchases/Purchases';
 
 interface OptionsProps {
   settingsComponent?: ReactNode;
@@ -37,6 +31,7 @@ const Options: React.FC<OptionsProps> = ({ settingsComponent, historyComponent }
 
   const handleResetSlots = (): void => {
     dispatch(resetSlots());
+    dispatch(resetPurchases());
   };
 
   useEffect(() => {

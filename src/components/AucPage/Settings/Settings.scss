@@ -20,6 +20,18 @@
     }
   }
 
+  &-option {
+    margin-left: 15px;
+
+    .MuiSelect-selectMenu {
+      display: flex;
+    }
+
+    p {
+      margin-right: 5px;
+    }
+  }
+
   &-row {
     align-items: center;
     margin-bottom: 10px;
