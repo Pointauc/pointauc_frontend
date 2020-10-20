@@ -1,4 +1,16 @@
 .auc-settings {
+  &-label {
+    width: 280px;
+  }
+
+  .MuiFormControlLabel-label {
+    width: 290px;
+  }
+
+  .MuiTypography-body1 {
+    font-size: 14px;
+  }
+
   &-list {
     margin-bottom: 15px;
     margin-left: 20px;
@@ -19,11 +31,11 @@
 
   &-start-time {
     margin-left: 15px !important;
-    margin-right: 15px !important;
+    margin-right: 5px !important;
     width: 50px;
 
     .MuiInputBase-input {
-      padding: 8px 10px;
+      padding: 7px 10px;
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { ReactText, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './Stopwatch.scss';
 import { IconButton } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -22,10 +22,11 @@ const Stopwatch: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
   const {
-    settings: { startTime, timeStep },
+    settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime },
   } = useSelector((root: RootState) => root.aucSettings);
   const defaultTime = Number(startTime) * 60 * 1000;
   const stopwatchStep = Number(timeStep) * 1000;
+  const stopwatchAutoincrement = Number(autoincrementTime) * 1000;
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
   const time = useRef<number>(defaultTime);
@@ -89,6 +90,16 @@ const Stopwatch: React.FC = () => {
   const handleSubtract = (): void => {
     updateStopwatch(-stopwatchStep);
   };
+
+  const winnerSlot = useMemo(() => getWinnerSlot(slots), [slots]);
+  const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
+
+  useEffect(() => {
+    if (isAutoincrementActive && winnerSlot.amount && previousWinnerSlotId.current !== winnerSlot.id) {
+      updateStopwatch(Number(stopwatchAutoincrement));
+    }
+    previousWinnerSlotId.current = winnerSlot.id;
+  }, [isAutoincrementActive, stopwatchAutoincrement, updateStopwatch, winnerSlot]);
 
   return (
     <div className="stopwatch-wrapper">

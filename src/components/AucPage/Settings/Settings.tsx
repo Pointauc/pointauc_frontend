@@ -18,7 +18,7 @@ const Settings: React.FC = () => {
 
   const { register, control } = useForm<SettingFields>({ defaultValues: defaultSettings });
   const formValues = useWatch<SettingFields>({ control });
-  const { isSubscribed } = formValues;
+  const { isSubscribed, isAutoincrementActive } = formValues;
 
   const subscribeTwitchPoints = useCallback((): void => {
     if (webSocket) {
@@ -57,6 +57,10 @@ const Settings: React.FC = () => {
     <Switch name="isBuyoutVisible" inputRef={register} defaultChecked={defaultSettings.isBuyoutVisible} />
   );
 
+  const isAutoincrementActiveSwitch = (
+    <Switch name="isAutoincrementActive" inputRef={register} defaultChecked={defaultSettings.isAutoincrementActive} />
+  );
+
   return (
     <form className="auc-settings">
       <SettingsGroupTitle title="Twitch" />
@@ -82,7 +86,12 @@ const Settings: React.FC = () => {
       <SettingsGroupTitle title="Аукцион" />
       <FormGroup className="auc-settings-list">
         <FormGroup row className="auc-settings-row">
-          <Typography variant="body1">Начальное время</Typography>
+          <FormControlLabel control={isBuyoutVisibleSwitch} label="Показать выкуп" labelPlacement="start" />
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <Typography variant="body1" className="auc-settings-label">
+            Начальное время
+          </Typography>
           <TextField
             name="startTime"
             className="auc-settings-start-time"
@@ -90,13 +99,12 @@ const Settings: React.FC = () => {
             type="number"
             variant="outlined"
           />
-          <Typography variant="body1">минут</Typography>
+          <Typography variant="body1">мин.</Typography>
         </FormGroup>
         <FormGroup row className="auc-settings-row">
-          <FormControlLabel control={isBuyoutVisibleSwitch} label="Показать выкуп" labelPlacement="start" />
-        </FormGroup>
-        <FormGroup row className="auc-settings-row">
-          <Typography variant="body1">Время прибавления таймера</Typography>
+          <Typography variant="body1" className="auc-settings-label">
+            Время прибавления таймера
+          </Typography>
           <TextField
             name="timeStep"
             className="auc-settings-start-time"
@@ -104,7 +112,23 @@ const Settings: React.FC = () => {
             type="number"
             variant="outlined"
           />
-          <Typography variant="body1">секунд</Typography>
+          <Typography variant="body1">с.</Typography>
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <FormControlLabel
+            control={isAutoincrementActiveSwitch}
+            label="Добавлять время при смене лидера"
+            labelPlacement="start"
+          />
+          <TextField
+            name="autoincrementTime"
+            className="auc-settings-start-time"
+            inputRef={register}
+            type="number"
+            variant="outlined"
+            disabled={!isAutoincrementActive}
+          />
+          <Typography variant="body1">с.</Typography>
         </FormGroup>
       </FormGroup>
     </form>

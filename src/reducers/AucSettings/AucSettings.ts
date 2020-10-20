@@ -6,6 +6,8 @@ export interface SettingFields {
   startTime?: ReactText;
   isBuyoutVisible?: boolean;
   timeStep?: ReactText;
+  isAutoincrementActive?: boolean;
+  autoincrementTime?: ReactText;
 }
 
 interface AucSettingsState {
@@ -18,6 +20,8 @@ export const initialState: AucSettingsState = {
     startTime: 10,
     isBuyoutVisible: true,
     timeStep: 60,
+    isAutoincrementActive: false,
+    autoincrementTime: 30,
   },
 };
 
