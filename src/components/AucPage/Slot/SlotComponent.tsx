@@ -10,7 +10,6 @@ import { Slot } from '../../../models/slot.model';
 import { addExtra, deleteSlot, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
 import { PurchaseDragType } from '../../../models/purchase';
 import { DragTypeEnum } from '../../../enums/dragType.enum';
-import { ReactComponent as CrownSvg } from '../../../assets/icons/crown.svg';
 
 interface SlotProps extends Slot {
   index: number;
@@ -66,7 +65,7 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
   return (
     <div className="slot-wrapper">
       <div className={slotClasses} ref={drops}>
-        {index === 1 && <CrownSvg className="slot-crown" />}
+        {/* {index === 1 && <CrownSvg className="slot-crown" />} */}
         <Typography className="slot-index">{`${index}.`}</Typography>
         <TextField
           className="slot-name slot-input"
