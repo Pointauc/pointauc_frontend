@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, Input, Typography } from '@material-ui/core';
+import { FormControlLabel, Grid, IconButton, Input, Radio, RadioGroup, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
+import VerticalSplitRoundedIcon from '@material-ui/icons/VerticalSplitRounded';
+import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
 import { RootState } from '../../../reducers';
 import SlotComponent from '../Slot/SlotComponent';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
@@ -16,11 +18,12 @@ import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();
   const buyoutInput = useRef<HTMLInputElement>(null);
-  const [buyout, setBuyout] = useState<number | null>(null);
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
     settings: { isBuyoutVisible },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
+  const [buyout, setBuyout] = useState<number | null>(null);
+  const [slotWidth, setSlotWidth] = useState<6 | 12>(12);
 
   const handleAddSlot = (): void => {
     dispatch(addSlot());
@@ -71,23 +74,42 @@ const SlotsColumn: React.FC = () => {
     }
   }, [buyoutInput]);
 
+  const handleSlotWidthChange = (e: ChangeEvent<HTMLInputElement>, value: string): void => {
+    const newWidth = Number(value);
+    if (newWidth === 6 || newWidth === 12) {
+      setSlotWidth(newWidth);
+    }
+  };
+
   return (
-    <div className="slots-column">
+    <Grid container direction="column" wrap="nowrap" className="slots">
       <div className={buyoutStyles}>
         <Typography className="slots-column-buyout-title" variant="h4">
           Выкуп...
         </Typography>
         <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
       </div>
-      <div className="slots-column-list">
-        {slots.map((slot, index) => (
-          <SlotComponent key={slot.id} {...slot} index={index + 1} />
-        ))}
-      </div>
-      <IconButton onClick={handleAddSlot} className={addButtonClasses} title="Добавить слот" ref={drops}>
-        <AddBoxIcon fontSize="large" />
-      </IconButton>
-    </div>
+
+      <Grid container wrap="nowrap" className="slots-wrapper">
+        <Grid container className="slots-column" direction="column" wrap="nowrap">
+          <Grid container className="slots-column-list" spacing={1}>
+            {slots.map((slot, index) => (
+              <Grid key={slot.id} item xs={slotWidth}>
+                <SlotComponent {...slot} index={index + 1} />
+              </Grid>
+            ))}
+          </Grid>
+          <IconButton onClick={handleAddSlot} className={addButtonClasses} title="Добавить слот" ref={drops}>
+            <AddBoxIcon fontSize="large" />
+          </IconButton>
+        </Grid>
+
+        <RadioGroup value={slotWidth} onChange={handleSlotWidthChange} row>
+          <FormControlLabel control={<Radio icon={<ReorderRoundedIcon />} />} label="" value={12} />
+          <FormControlLabel control={<Radio icon={<VerticalSplitRoundedIcon />} />} label="" value={6} />
+        </RadioGroup>
+      </Grid>
+    </Grid>
   );
 };
 

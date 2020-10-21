@@ -1,59 +1,59 @@
 @import "../../../styles/colors";
 
-.slots-column {
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  align-items: center;
-  max-height: 100%;
-  margin-right: 280px;
+.slots {
+  margin-right: 10%;
   margin-top: 30px;
   margin-bottom: 30px;
 
-  &-list {
-    display: flex;
-    flex-direction: column;
-    align-self: stretch;
-    align-items: center;
-    overflow-y: auto;
+  &-wrapper {
+    flex: 1 1 0;
+    min-height: 0;
   }
 
-  &-buyout {
-    display: flex;
-    align-self: flex-start;
-    margin-bottom: 20px;
+  &-column {
+    flex-grow: 1;
 
-    &.hidden {
-      display: none;
+    &-list {
+      overflow-y: auto;
     }
 
-    &-title {
-      margin-right: 35px !important;
-      margin-left: 10px !important;
+    &-buyout {
+      display: flex;
+      align-self: flex-start;
+      margin-bottom: 20px;
+
+      &.hidden {
+        display: none;
+      }
+
+      &-title {
+        margin-right: 35px !important;
+        margin-left: 10px !important;
+      }
+
+      &-input {
+        width: 100px;
+        font-size: 1.5em !important;
+      }
     }
 
-    &-input {
-      width: 100px;
-      font-size: 1.5em !important;
-    }
-  }
+    .add-button {
+      width: 20%;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      align-self: center;
+      margin-top: 10px;
+      transition: 0s;
 
-  .add-button {
-    width: 20%;
-    border-radius: 10px;
-    border: 2px solid transparent;
-    align-self: center;
-    margin-top: 10px;
-    transition: 0s;
+      &.drop-help {
+        background-color: $grey-9;
+        border-color: $grey-7;
+      }
 
-    &.drop-help {
-      background-color: $grey-9;
-      border-color: $grey-7;
-    }
-
-    &.drag-over {
-      background-color: $blue-gray-3;
-      border-color: $blue-gray-2;
+      &.drag-over {
+        background-color: $blue-gray-3;
+        border-color: $blue-gray-2;
+      }
     }
   }
 }
