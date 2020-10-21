@@ -15,6 +15,9 @@ import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import DroppableSlot from '../Slot/DroppableSlot';
 
+const TwoColumnIcon = VerticalSplitRoundedIcon;
+const SingleColumnIcon = ReorderRoundedIcon;
+
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();
   const buyoutInput = useRef<HTMLInputElement>(null);
@@ -104,9 +107,17 @@ const SlotsColumn: React.FC = () => {
           </IconButton>
         </Grid>
 
-        <RadioGroup value={slotWidth} onChange={handleSlotWidthChange} row>
-          <FormControlLabel control={<Radio icon={<ReorderRoundedIcon />} />} label="" value={12} />
-          <FormControlLabel control={<Radio icon={<VerticalSplitRoundedIcon />} />} label="" value={6} />
+        <RadioGroup value={slotWidth} onChange={handleSlotWidthChange} row className="slots-width-wrapper">
+          <FormControlLabel
+            control={<Radio icon={<SingleColumnIcon />} checkedIcon={<SingleColumnIcon />} />}
+            label=""
+            value={12}
+          />
+          <FormControlLabel
+            control={<Radio icon={<TwoColumnIcon />} checkedIcon={<TwoColumnIcon />} />}
+            label=""
+            value={6}
+          />
         </RadioGroup>
       </Grid>
     </Grid>
