@@ -15,7 +15,9 @@ const createSlot = (): Slot => ({
 });
 
 const initialState: SlotsState = {
-  slots: [createSlot()],
+  slots: Array(20)
+    .fill(0)
+    .map(() => createSlot()),
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);

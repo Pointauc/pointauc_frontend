@@ -20,7 +20,6 @@ const SORTABLE_SLOT_EVENTS = [
 const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => (action): AnyAction => {
   const result = next(action);
   if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
-    console.log('sort slots');
     const slots = [...store.getState().slots.slots];
     const sortedSlots = slots.sort((a: Slot, b: Slot) => Number(b.amount) - Number(a.amount));
     return next(setSlots(sortedSlots));

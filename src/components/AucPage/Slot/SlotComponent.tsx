@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { FilledInputProps } from '@material-ui/core/FilledInput';
 import { Slot } from '../../../models/slot.model';
 import { addExtra, deleteSlot, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
 import { PurchaseDragType } from '../../../models/purchase';
@@ -18,6 +19,8 @@ interface SlotProps extends Slot {
 const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: SlotProps) => {
   const dispatch = useDispatch();
   const [currentAmount, setCurrentAmount] = useState(amount);
+  const [currentName, setCurrentName] = useState(name);
+  const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
 
   const [{ isOver, canDrop }, drops] = useDrop({
@@ -29,12 +32,20 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
     }),
   });
 
-  const handleNameChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleNameBlur: FilledInputProps['onBlur'] = (e): void => {
     dispatch(setSlotName({ id, name: e.target.value }));
   };
+  const handleNameChange: FilledInputProps['onChange'] = (e): void => {
+    setCurrentName(e.target.value);
+  };
+
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>): void => setCurrentAmount(Number(e.target.value));
-  const handleExtraChange = (e: ChangeEvent<HTMLInputElement>): void => {
+
+  const handleExtraBlur: FilledInputProps['onBlur'] = (e): void => {
     dispatch(setSlotExtra({ id, extra: Number(e.target.value) }));
+  };
+  const handleExtraChange: FilledInputProps['onChange'] = (e): void => {
+    setCurrentExtra(Number(e.target.value));
   };
 
   const handleAddExtra = (): void => {
@@ -56,6 +67,8 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
 
   const handleKeyPress = (e: any): void => {
     if (e.key === 'Enter') {
+      dispatch(setSlotExtra({ id, extra: Number(currentExtra) }));
+      setCurrentExtra(null);
       handleAddExtra();
       e.preventDefault();
     }
@@ -68,6 +81,8 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
   }, [confirmAmount]);
 
   useEffect(() => setCurrentAmount(amount), [amount]);
+  useEffect(() => setCurrentName(name), [name]);
+  useEffect(() => setCurrentExtra(extra), [extra]);
 
   return (
     <div className="slot-wrapper">
@@ -77,8 +92,9 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
         <TextField
           className="slot-name slot-input"
           placeholder="Название"
+          onBlur={handleNameBlur}
           onChange={handleNameChange}
-          value={name}
+          value={currentName}
           variant="outlined"
         />
         <TextField
@@ -96,8 +112,9 @@ const SlotComponent: React.FC<SlotProps> = ({ id, extra, amount, name, index }: 
         <TextField
           className="slot-money slot-input"
           placeholder="₽"
+          onBlur={handleExtraBlur}
           onChange={handleExtraChange}
-          value={extra || ''}
+          value={currentExtra || ''}
           variant="outlined"
           type="number"
           onKeyPress={handleKeyPress}
