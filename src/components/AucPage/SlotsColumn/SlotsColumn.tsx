@@ -8,12 +8,12 @@ import classNames from 'classnames';
 import VerticalSplitRoundedIcon from '@material-ui/icons/VerticalSplitRounded';
 import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
 import { RootState } from '../../../reducers';
-import SlotComponent from '../Slot/SlotComponent';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { PurchaseDragType } from '../../../models/purchase';
 import { DragTypeEnum } from '../../../enums/dragType.enum';
 import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
+import DroppableSlot from '../Slot/DroppableSlot';
 
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();
@@ -95,7 +95,7 @@ const SlotsColumn: React.FC = () => {
           <Grid container className="slots-column-list" spacing={1}>
             {slots.map((slot, index) => (
               <Grid key={slot.id} item xs={slotWidth}>
-                <SlotComponent {...slot} index={index + 1} />
+                <DroppableSlot index={index + 1} {...slot} />
               </Grid>
             ))}
           </Grid>
