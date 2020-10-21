@@ -9,6 +9,7 @@ export interface SettingFields {
   isAutoincrementActive?: boolean;
   autoincrementTime?: ReactText;
   purchaseSort?: number;
+  aucRewardPrefix?: string;
 }
 
 interface AucSettingsState {
@@ -24,6 +25,7 @@ export const initialState: AucSettingsState = {
     isAutoincrementActive: false,
     autoincrementTime: 30,
     purchaseSort: 0,
+    aucRewardPrefix: 'аук',
   },
 };
 

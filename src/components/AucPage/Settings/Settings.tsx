@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import {
   Button,
@@ -25,11 +25,37 @@ const Settings: React.FC = () => {
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const { username } = useSelector((root: RootState) => root.user);
   const [defaultSettings] = useState<SettingFields>(settings);
+  const [isSubscribeLoading, setIsSubscribeLoading] = useState(false);
+  const [currentRewardPrefix, setCurrentRewardPrefix] = useState(defaultSettings.aucRewardPrefix);
   const isFormValuesChanged = useRef<boolean>(false);
 
-  const { register, control } = useForm<SettingFields>({ defaultValues: defaultSettings });
+  const { register, control, setValue } = useForm<SettingFields>({ defaultValues: defaultSettings });
   const formValues = useWatch<SettingFields>({ control });
   const { isSubscribed, isAutoincrementActive } = formValues;
+  const { aucRewardPrefix } = settings;
+
+  useEffect(() => {
+    register()({ name: 'aucRewardPrefix', type: 'custom' });
+  }, [aucRewardPrefix, register]);
+
+  const handleSubscribeMessage = ({ data }: MessageEvent): void => {
+    const { type } = JSON.parse(data);
+    if (type === MESSAGE_TYPES.CP_SUBSCRIBED || type === MESSAGE_TYPES.CP_UNSUBSCRIBED) {
+      setIsSubscribeLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (webSocket) {
+      webSocket.addEventListener('message', handleSubscribeMessage);
+    }
+
+    return (): void => {
+      if (webSocket) {
+        webSocket.removeEventListener('message', handleSubscribeMessage);
+      }
+    };
+  }, [webSocket]);
 
   const subscribeTwitchPoints = useCallback((): void => {
     if (webSocket) {
@@ -49,8 +75,17 @@ const Settings: React.FC = () => {
     }
   };
 
+  const submitAucRewardPrefix = (): void => {
+    setValue('aucRewardPrefix', currentRewardPrefix);
+
+    if (webSocket) {
+      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.SET_AUC_REWARD_PREFIX, rewardPrefix: currentRewardPrefix }));
+    }
+  };
+
   useEffect(() => {
     if (isFormValuesChanged.current) {
+      setIsSubscribeLoading(true);
       isSubscribed ? subscribeTwitchPoints() : unsubscribeTwitchPoints();
     }
   }, [isSubscribed, subscribeTwitchPoints, unsubscribeTwitchPoints]);
@@ -59,6 +94,10 @@ const Settings: React.FC = () => {
     isFormValuesChanged.current = true;
     dispatch(setAucSettings(formValues));
   }, [dispatch, formValues]);
+
+  const handleCurrentRewardChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setCurrentRewardPrefix(e.target.value);
+  };
 
   const isSubscribedSwitch = (
     <Switch name="isSubscribed" inputRef={register} defaultChecked={defaultSettings.isSubscribed} />
@@ -76,11 +115,12 @@ const Settings: React.FC = () => {
     <form className="auc-settings">
       <SettingsGroupTitle title="Twitch" />
       <FormGroup className="auc-settings-list">
-        <FormGroup row>
+        <FormGroup row className="auc-settings-row">
           <FormControlLabel
             control={isSubscribedSwitch}
             label="Подписаться на покупку поинтов"
             labelPlacement="start"
+            disabled={isSubscribeLoading}
           />
           <Button
             variant="contained"
@@ -91,6 +131,26 @@ const Settings: React.FC = () => {
             size="small"
           >
             Get mock data
+          </Button>
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <Typography variant="body1" className="auc-settings-label">
+            Префикс наград аукциона
+          </Typography>
+          <TextField
+            className="auc-settings-reward-prefix"
+            variant="outlined"
+            onChange={handleCurrentRewardChange}
+            value={currentRewardPrefix}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={submitAucRewardPrefix}
+            disabled={currentRewardPrefix === aucRewardPrefix}
+            size="small"
+          >
+            Сохранить
           </Button>
         </FormGroup>
       </FormGroup>

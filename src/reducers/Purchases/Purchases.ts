@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ReactText } from 'react';
 
 export enum PurchaseStatusEnum {
   Processed = 'Processed',
@@ -11,7 +12,7 @@ export interface Purchase {
   username: string;
   message: string;
   color: string;
-  id: number;
+  id: ReactText;
 }
 
 export interface PurchaseLog {
@@ -39,7 +40,7 @@ const purchasesSlice = createSlice({
     addPurchase(state, action: PayloadAction<Purchase>): void {
       state.purchases = [...state.purchases, action.payload];
     },
-    removePurchase(state, action: PayloadAction<number>): void {
+    removePurchase(state, action: PayloadAction<ReactText>): void {
       state.purchases = state.purchases.filter(({ id }) => id !== action.payload);
     },
     resetPurchases(state): void {

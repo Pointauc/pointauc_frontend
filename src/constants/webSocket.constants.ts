@@ -12,9 +12,9 @@ export const MESSAGE_TYPES = {
   SKIP_REQUEST: 'SKIP_REQUEST',
   VOTE_SKIP: 'VOTE_SKIP',
   VOTE_ANTI_SKIP: 'VOTE_ANTI_SKIP',
+
   PURCHASE: 'PURCHASE',
+  SET_AUC_REWARD_PREFIX: 'SET_AUC_REWARD_PREFIX',
 };
 
-export const WEBSOCKET_URL = isProduction()
-  ? 'wss://woods-service.herokuapp.com'
-  : 'ws://localhost:8000';
+export const WEBSOCKET_URL = isProduction() ? 'wss://woods-service.herokuapp.com' : 'ws://localhost:8000';

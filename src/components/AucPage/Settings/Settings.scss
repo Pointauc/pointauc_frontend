@@ -3,12 +3,23 @@
     width: 280px;
   }
 
+  &-reward-prefix {
+    width: 95px;
+    margin-left: 15px !important;
+    margin-right: 10px !important;
+  }
+
   .MuiFormControlLabel-label {
     width: 290px;
   }
 
   .MuiTypography-body1 {
     font-size: 14px;
+  }
+
+  .MuiButton-sizeSmall {
+    font-size: 0.75em;
+    height: 30px;
   }
 
   &-list {
@@ -45,10 +56,10 @@
     margin-left: 15px !important;
     margin-right: 5px !important;
     width: 50px;
+  }
 
-    .MuiInputBase-input {
-      padding: 7px 10px;
-    }
+  .MuiInputBase-input {
+    padding: 7px 10px;
   }
 
   .MuiFormControlLabel-labelPlacementStart {
@@ -57,7 +68,6 @@
 }
 
 .mock-data-button {
-  width: 150px;
-  height: 35px;
+  width: 140px;
   margin-left: 15px !important;
 }
