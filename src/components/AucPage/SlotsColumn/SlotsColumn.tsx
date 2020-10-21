@@ -8,7 +8,6 @@ import classNames from 'classnames';
 import { RootState } from '../../../reducers';
 import SlotComponent from '../Slot/SlotComponent';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
-import { Slot } from '../../../models/slot.model';
 import { PurchaseDragType } from '../../../models/purchase';
 import { DragTypeEnum } from '../../../enums/dragType.enum';
 import { setNotification } from '../../../reducers/notifications/notifications';
@@ -36,11 +35,7 @@ const SlotsColumn: React.FC = () => {
     }),
   });
 
-  const sortedSlots = useMemo(() => [...slots].sort((a: Slot, b: Slot) => Number(b.amount) - Number(a.amount)), [
-    slots,
-  ]);
-
-  const winnerSlot = useMemo(() => sortedSlots[0], [sortedSlots]);
+  const winnerSlot = useMemo(() => slots[0], [slots]);
 
   useEffect(() => {
     const { name, amount } = winnerSlot;
@@ -85,7 +80,7 @@ const SlotsColumn: React.FC = () => {
         <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
       </div>
       <div className="slots-column-list">
-        {sortedSlots.map((slot, index) => (
+        {slots.map((slot, index) => (
           <SlotComponent key={slot.id} {...slot} index={index + 1} />
         ))}
       </div>

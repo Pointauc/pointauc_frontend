@@ -1,16 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.scss';
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction, configureStore, Middleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
-import rootReducer from './reducers';
+import rootReducer, { RootState } from './reducers';
+import { Slot } from './models/slot.model';
+import { setSlots } from './reducers/Slots/Slots';
+
+const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => (action): AnyAction => {
+  const result = next(action);
+  if (action.type.startsWith('slots')) {
+    const slots = [...store.getState().slots.slots];
+    const sortedSlots = slots.sort((a: Slot, b: Slot) => Number(b.amount) - Number(a.amount));
+    return next(setSlots(sortedSlots));
+  }
+  return result;
+};
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk],
+  middleware: [thunk, sortSlotsMiddleware],
 });
 
 ReactDOM.render(

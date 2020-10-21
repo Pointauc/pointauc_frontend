@@ -61,6 +61,9 @@ const slotsSlice = createSlice({
     resetSlots(state): void {
       state.slots = initialState.slots;
     },
+    setSlots(state, action: PayloadAction<Slot[]>): void {
+      state.slots = action.payload;
+    },
   },
 });
 
@@ -73,6 +76,7 @@ export const {
   createSlotFromPurchase,
   deleteSlot,
   resetSlots,
+  setSlots,
 } = slotsSlice.actions;
 
 export default slotsSlice.reducer;

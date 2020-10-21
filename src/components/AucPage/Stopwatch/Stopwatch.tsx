@@ -10,7 +10,6 @@ import PauseIcon from '@material-ui/icons/Pause';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../reducers';
-import { getWinnerSlot } from '../../../utils/slots.utils';
 import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 
@@ -40,7 +39,7 @@ const Stopwatch: React.FC = () => {
         time.current += timeDifference;
         if (time.current < 0) {
           time.current = 0;
-          const { name } = getWinnerSlot(slots);
+          const { name } = slots[0];
           dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }
         stopwatchElement.current.innerHTML = moment(time.current).format(STOPWATCH.FORMAT);
@@ -91,7 +90,7 @@ const Stopwatch: React.FC = () => {
     updateStopwatch(-stopwatchStep);
   };
 
-  const winnerSlot = useMemo(() => getWinnerSlot(slots), [slots]);
+  const winnerSlot = useMemo(() => slots[0], [slots]);
   const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 
   useEffect(() => {
