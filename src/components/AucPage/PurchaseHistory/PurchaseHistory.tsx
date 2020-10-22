@@ -21,14 +21,37 @@ const PurchaseHistory: React.FC = () => {
   });
 
   const columnDefs: ColDef[] = [
-    { headerName: 'Время', field: 'purchase.timestamp', sortable: true, valueGetter: getTime },
-    { headerName: 'Пользователь', field: 'purchase.username', sortable: true },
-    { headerName: 'Сообщение', field: 'purchase.message', suppressSizeToFit: true },
-    { headerName: 'Стоимость', field: 'purchase.cost', sortable: true },
+    {
+      headerName: 'Время',
+      field: 'purchase.timestamp',
+      sortable: true,
+      valueGetter: getTime,
+    },
+    {
+      headerName: 'Пользователь',
+      field: 'purchase.username',
+      sortable: true,
+      filter: 'agTextColumnFilter',
+      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+    },
+    {
+      headerName: 'Сообщение',
+      field: 'purchase.message',
+      suppressSizeToFit: true,
+      filter: 'agTextColumnFilter',
+      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+    },
+    {
+      headerName: 'Стоимость',
+      field: 'purchase.cost',
+      sortable: true,
+      filter: 'agNumberColumnFilter',
+      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+    },
     { headerName: 'Статус', field: 'status', cellStyle: getStatusCellStyles },
   ];
 
-  const handleGridReady = ({ api, columnApi }: AgGridEvent): void => {
+  const resizeTable = ({ api, columnApi }: AgGridEvent): void => {
     columnApi.autoSizeAllColumns();
     api.sizeColumnsToFit();
   };
@@ -36,9 +59,13 @@ const PurchaseHistory: React.FC = () => {
   return (
     <div className="ag-theme-alpine-dark" id="history-table">
       <AgGridReact
-        onGridReady={handleGridReady}
+        onGridReady={resizeTable}
+        onPaginationChanged={resizeTable}
         columnDefs={columnDefs}
         rowData={history}
+        suppressCellSelection
+        enableCellTextSelection
+        suppressMenuHide
         paginationPageSize={10}
         pagination
         domLayout="autoHeight"

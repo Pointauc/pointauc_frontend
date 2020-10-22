@@ -4,11 +4,15 @@ import './styles/index.scss';
 import { AnyAction, configureStore, Middleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
+import moment from 'moment';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer, { RootState } from './reducers';
 import { Slot } from './models/slot.model';
 import { setSlots } from './reducers/Slots/Slots';
+import 'moment/locale/ru'; // without this line it didn't work
+
+moment.locale('ru');
 
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotAmount',
