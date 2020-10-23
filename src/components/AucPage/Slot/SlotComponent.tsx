@@ -57,6 +57,9 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
   useEffect(() => setCurrentName(name), [name]);
   useEffect(() => setCurrentExtra(extra), [extra]);
 
+  const extraLength = Number(currentExtra?.toString().length);
+  const extraFieldWidth = `${extraLength > 3 ? 5 + extraLength : 8}ch`;
+
   return (
     <>
       <OutlinedInput
@@ -74,11 +77,12 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
         ref={amountInput}
         type="number"
       />
-      <IconButton onClick={handleAddExtra} title="Прибавить стоимость">
+      <IconButton className="slot-add-extra" onClick={handleAddExtra} title="Прибавить стоимость">
         <AddIcon />
       </IconButton>
       <OutlinedInput
         className="slot-money slot-input"
+        style={{ width: extraFieldWidth }}
         placeholder="₽"
         onBlur={handleExtraBlur}
         onChange={handleExtraChange}
