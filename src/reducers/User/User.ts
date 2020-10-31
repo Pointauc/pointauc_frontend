@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
-import { getUsername } from '../../api/user';
+import { getUsername } from '../../api/userApi';
 
 interface UserState {
   username: string | null;

@@ -21,6 +21,7 @@ import { setAucSettings, SettingFields } from '../../../reducers/AucSettings/Auc
 import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { RootState } from '../../../reducers';
 import ImageLinkInput from '../../ImageLinkInput/ImageLinkInput';
+import { updateAucSettings } from '../../../api/userApi';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const Settings: React.FC = () => {
   const { register, control, setValue } = useForm<SettingFields>({ defaultValues: defaultSettings });
   const formValues = useWatch<SettingFields>({ control });
   const { isSubscribed, isAutoincrementActive } = formValues;
-  const { aucRewardPrefix } = settings;
+  const { aucRewardPrefix, background } = settings;
 
   useEffect(() => {
     register()({ name: 'aucRewardPrefix', type: 'custom' });
@@ -89,10 +90,6 @@ const Settings: React.FC = () => {
 
   const submitAucRewardPrefix = (): void => {
     setValue('aucRewardPrefix', currentRewardPrefix);
-
-    if (webSocket) {
-      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.SET_AUC_REWARD_PREFIX, rewardPrefix: currentRewardPrefix }));
-    }
   };
 
   useEffect(() => {
@@ -106,6 +103,12 @@ const Settings: React.FC = () => {
     isFormValuesChanged.current = true;
     dispatch(setAucSettings(formValues));
   }, [dispatch, formValues]);
+
+  useEffect(() => {
+    if (isFormValuesChanged.current) {
+      updateAucSettings({ background, aucRewardPrefix });
+    }
+  }, [aucRewardPrefix, background]);
 
   const handleCurrentRewardChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setCurrentRewardPrefix(e.target.value);

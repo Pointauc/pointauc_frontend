@@ -35,7 +35,7 @@ const aucSettingsSlice = createSlice({
   initialState,
   reducers: {
     setAucSettings(state, action: PayloadAction<SettingFields>): void {
-      state.settings = action.payload;
+      state.settings = { ...state.settings, ...action.payload };
     },
   },
 });
