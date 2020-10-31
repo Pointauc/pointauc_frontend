@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import './Slot.scss';
 import { IconButton, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import SlotComponent from './SlotComponent';
@@ -10,6 +10,7 @@ import { deleteSlot, setSlotAmount, setSlotName } from '../../../reducers/Slots/
 import { Slot } from '../../../models/slot.model';
 import { DragTypeEnum } from '../../../enums/dragType.enum';
 import { PurchaseDragType } from '../../../models/purchase';
+import { RootState } from '../../../reducers';
 
 interface DroppableSlotProps extends Slot {
   index: number;
@@ -17,6 +18,7 @@ interface DroppableSlotProps extends Slot {
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) => {
   const dispatch = useDispatch();
+  const { background } = useSelector((root: RootState) => root.aucSettings.settings);
   const { id, amount, name } = slotProps;
 
   const [{ isOver, canDrop }, drops] = useDrop({
@@ -43,8 +45,10 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
     dispatch(deleteSlot(id));
   };
 
+  const slotWrapperClasses = classNames('slot-wrapper', { 'custom-background': background });
+
   return (
-    <div className="slot-wrapper">
+    <div className={slotWrapperClasses}>
       <div className={slotClasses} ref={drops}>
         <Typography className="slot-index">{`${index}.`}</Typography>
         <SlotComponent {...slotProps} />

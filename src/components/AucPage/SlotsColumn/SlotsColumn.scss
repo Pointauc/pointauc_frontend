@@ -55,11 +55,21 @@
       &.drop-help {
         background-color: $grey-9;
         border-color: $grey-7;
+
+        &.custom-background {
+          background-color: rgba(100, 100, 100, 0.5);
+          border-color: $grey-5;
+        }
       }
 
       &.drag-over {
         background-color: $blue-gray-3;
         border-color: $blue-gray-2;
+
+        &.custom-background {
+          background-color: rgba($blue-gray-3, 0.7);
+          border-color: $blue-gray-2;
+        }
       }
     }
   }

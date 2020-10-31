@@ -23,7 +23,7 @@ const SlotsColumn: React.FC = () => {
   const buyoutInput = useRef<HTMLInputElement>(null);
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
-    settings: { isBuyoutVisible },
+    settings: { isBuyoutVisible, background },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const [buyout, setBuyout] = useState<number | null>(null);
   const [slotWidth, setSlotWidth] = useState<6 | 12>(12);
@@ -52,8 +52,14 @@ const SlotsColumn: React.FC = () => {
   }, [buyout, dispatch, isBuyoutVisible, winnerSlot]);
 
   const addButtonClasses = useMemo(
-    () => classNames('add-button', { 'drop-help': canDrop && !isOver }, { 'drag-over': isOver }),
-    [canDrop, isOver],
+    () =>
+      classNames(
+        'add-button',
+        { 'drop-help': canDrop && !isOver },
+        { 'drag-over': isOver },
+        { 'custom-background': background },
+      ),
+    [background, canDrop, isOver],
   );
 
   const handleBuyoutChange = (): void => {
