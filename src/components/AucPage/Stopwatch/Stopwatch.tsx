@@ -33,19 +33,22 @@ const Stopwatch: React.FC = () => {
   const prevTimestamp = useRef<number>();
   const stopwatchElement = useRef<HTMLDivElement>(null);
 
+  const winnerSlot = useMemo(() => slots[0], [slots]);
+  const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
+
   const updateStopwatch = useCallback(
     (timeDifference = 0): void => {
       if (stopwatchElement.current) {
         time.current += timeDifference;
         if (time.current < 0) {
           time.current = 0;
-          const { name } = slots[0];
+          const { name } = winnerSlot;
           dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }
         stopwatchElement.current.innerHTML = moment(time.current).format(STOPWATCH.FORMAT);
       }
     },
-    [dispatch, slots],
+    [dispatch, winnerSlot],
   );
 
   useEffect(() => updateStopwatch(), [updateStopwatch]);
@@ -89,9 +92,6 @@ const Stopwatch: React.FC = () => {
   const handleSubtract = (): void => {
     updateStopwatch(-stopwatchStep);
   };
-
-  const winnerSlot = useMemo(() => slots[0], [slots]);
-  const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 
   useEffect(() => {
     if (isAutoincrementActive && winnerSlot.amount && previousWinnerSlotId.current !== winnerSlot.id) {
