@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import SlotComponent from './SlotComponent';
-import { deleteSlot, setSlotAmount } from '../../../reducers/Slots/Slots';
+import { deleteSlot, setSlotAmount, setSlotName } from '../../../reducers/Slots/Slots';
 import { Slot } from '../../../models/slot.model';
 import { DragTypeEnum } from '../../../enums/dragType.enum';
 import { PurchaseDragType } from '../../../models/purchase';
@@ -17,11 +17,17 @@ interface DroppableSlotProps extends Slot {
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) => {
   const dispatch = useDispatch();
-  const { id, amount } = slotProps;
+  const { id, amount, name } = slotProps;
 
   const [{ isOver, canDrop }, drops] = useDrop({
     accept: DragTypeEnum.Purchase,
-    drop: ({ cost }: PurchaseDragType) => dispatch(setSlotAmount({ id, amount: Number(amount) + cost })),
+    drop: ({ cost, message }: PurchaseDragType) => {
+      dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
+
+      if (!name) {
+        dispatch(setSlotName({ id, name: message }));
+      }
+    },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
