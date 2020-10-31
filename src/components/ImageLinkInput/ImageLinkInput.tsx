@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogContent, DialogTitle, OutlinedInput } from '@material-ui/core';
+import { Button, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import './ImageLinkInput.scss';
 
@@ -12,14 +12,30 @@ interface ImageLinkInputProps {
 
 const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitle, buttonClass, onChange }) => {
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
-  const toggleDialog = (): void => setIsInputOpened((prevOpened) => !prevOpened);
+  const [isCorrectUrl, setIsCorrectUrl] = useState(true);
+  const toggleDialog = (): void => {
+    setIsCorrectUrl(true);
+    setIsInputOpened((prevOpened) => !prevOpened);
+  };
+
+  const isImage = (url: string): Promise<Event> =>
+    new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = url;
+      image.onload = resolve;
+      image.onerror = reject;
+    });
 
   const handleLinkPaste = (e: any): void => {
-    const imageLink = e.clipboardData.getData('text');
+    const imageUrl = e.clipboardData.getData('text');
     setTimeout(() => {
-      onChange(imageLink);
-      setIsInputOpened(false);
-    }, 250);
+      isImage(imageUrl)
+        .then(() => {
+          onChange(imageUrl);
+          setIsInputOpened(false);
+        })
+        .catch(() => setIsCorrectUrl(false));
+    }, 170);
   };
 
   return (
@@ -33,10 +49,13 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
             dropzoneProps={{ disabled: true }}
           />
           <div className="divider">ИЛИ</div>
-          <OutlinedInput
+          <TextField
             onPaste={handleLinkPaste}
             placeholder="Вставьте ссылку на изображение..."
             className="link-input"
+            error={!isCorrectUrl}
+            helperText={!isCorrectUrl ? 'Неверная ссылка' : undefined}
+            variant="outlined"
           />
         </DialogContent>
       </Dialog>
