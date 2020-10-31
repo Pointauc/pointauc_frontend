@@ -38,6 +38,18 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
     }, 170);
   };
 
+  const handleFileUpload = ([file]: File[]): void => {
+    const reader = new FileReader();
+
+    reader.onloadend = (): void => {
+      if (typeof reader.result === 'string') {
+        onChange(reader.result);
+        setIsInputOpened(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div>
       <Dialog open={isInputOpened} onClose={toggleDialog} maxWidth={false}>
@@ -46,7 +58,8 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
           <DropzoneArea
             dropzoneClass="drop-zone"
             dropzoneText="Перетащите сюда файл или нажмите"
-            dropzoneProps={{ disabled: true }}
+            onDrop={handleFileUpload}
+            filesLimit={1}
           />
           <div className="divider">ИЛИ</div>
           <TextField

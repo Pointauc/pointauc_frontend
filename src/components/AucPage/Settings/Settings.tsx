@@ -100,11 +100,6 @@ const Settings: React.FC = () => {
   }, [isSubscribed, subscribeTwitchPoints, unsubscribeTwitchPoints]);
 
   useEffect(() => {
-    isFormValuesChanged.current = true;
-    dispatch(setAucSettings(formValues));
-  }, [dispatch, formValues]);
-
-  useEffect(() => {
     if (isFormValuesChanged.current) {
       updateAucSettings({ background, aucRewardPrefix });
     }
@@ -125,6 +120,11 @@ const Settings: React.FC = () => {
   const isAutoincrementActiveSwitch = (
     <Switch name="isAutoincrementActive" inputRef={register} defaultChecked={defaultSettings.isAutoincrementActive} />
   );
+
+  useEffect(() => {
+    isFormValuesChanged.current = true;
+    dispatch(setAucSettings(formValues));
+  }, [dispatch, formValues]);
 
   return (
     <form className="auc-settings">

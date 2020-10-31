@@ -23,7 +23,7 @@ const PrivateRoute: React.FC<RouteProps> = (props) => {
   }
 
   if (isLoading) {
-    return <LoadingPage />;
+    return <LoadingPage helpText="Авторизация..." />;
   }
 
   return <Redirect to={ROUTES.LOGIN} />;

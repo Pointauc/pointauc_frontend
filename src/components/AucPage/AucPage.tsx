@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Paper } from '@material-ui/core';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
@@ -11,11 +11,14 @@ import { RootState } from '../../reducers';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { getAucSettings } from '../../api/userApi';
 import { setAucSettings } from '../../reducers/AucSettings/AucSettings';
+import LoadingPage from '../LoadingPage/LoadingPage';
+import withLoading from '../../decorators/withLoading';
 
 const AucPage: React.FC = () => {
   const dispatch = useDispatch();
   const { background, aucRewardPrefix } = useSelector((root: RootState) => root.aucSettings.settings);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const [isSettingsLoading, setIsSettingsLoading] = useState<boolean>(true);
 
   const backgroundStyles = {
     backgroundImage: `url(${background})`,
@@ -37,8 +40,12 @@ const AucPage: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    loadUserSettings();
+    withLoading(setIsSettingsLoading, loadUserSettings)();
   }, [loadUserSettings]);
+
+  if (isSettingsLoading) {
+    return <LoadingPage helpText="Загрузка настроек..." />;
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
