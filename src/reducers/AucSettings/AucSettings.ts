@@ -10,6 +10,7 @@ export interface SettingFields {
   autoincrementTime?: ReactText;
   purchaseSort?: number;
   aucRewardPrefix?: string;
+  background?: string;
 }
 
 interface AucSettingsState {

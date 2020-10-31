@@ -4,6 +4,7 @@ import {
   Button,
   FormControlLabel,
   FormGroup,
+  IconButton,
   MenuItem,
   Select,
   Switch,
@@ -13,11 +14,13 @@ import {
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import { useDispatch, useSelector } from 'react-redux';
+import ReplayIcon from '@material-ui/icons/Replay';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import './Settings.scss';
 import { setAucSettings, SettingFields } from '../../../reducers/AucSettings/AucSettings';
 import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { RootState } from '../../../reducers';
+import ImageLinkInput from '../../ImageLinkInput/ImageLinkInput';
 
 const Settings: React.FC = () => {
   const dispatch = useDispatch();
@@ -36,6 +39,7 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     register()({ name: 'aucRewardPrefix', type: 'custom' });
+    register()({ name: 'background', type: 'custom' });
   }, [aucRewardPrefix, register]);
 
   const handleSubscribeMessage = ({ data }: MessageEvent): void => {
@@ -43,6 +47,14 @@ const Settings: React.FC = () => {
     if (type === MESSAGE_TYPES.CP_SUBSCRIBED || type === MESSAGE_TYPES.CP_UNSUBSCRIBED) {
       setIsSubscribeLoading(false);
     }
+  };
+
+  const handleImageChange = (image: string): void => {
+    setValue('background', image);
+  };
+
+  const resetBackground = (): void => {
+    setValue('background', undefined);
   };
 
   useEffect(() => {
@@ -154,11 +166,8 @@ const Settings: React.FC = () => {
           </Button>
         </FormGroup>
       </FormGroup>
-      <SettingsGroupTitle title="Аукцион" />
+      <SettingsGroupTitle title="Таймер" />
       <FormGroup className="auc-settings-list">
-        <FormGroup row className="auc-settings-row">
-          <FormControlLabel control={isBuyoutVisibleSwitch} label="Показать выкуп" labelPlacement="start" />
-        </FormGroup>
         <FormGroup row className="auc-settings-row">
           <Typography variant="body1" className="auc-settings-label">
             Начальное время
@@ -200,6 +209,21 @@ const Settings: React.FC = () => {
             disabled={!isAutoincrementActive}
           />
           <Typography variant="body1">с.</Typography>
+        </FormGroup>
+      </FormGroup>
+      <SettingsGroupTitle title="Аукцион" />
+      <FormGroup className="auc-settings-list">
+        <FormGroup row className="auc-settings-row">
+          <FormControlLabel control={isBuyoutVisibleSwitch} label="Показать выкуп" labelPlacement="start" />
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <Typography variant="body1" className="auc-settings-label">
+            Фон аукциона
+          </Typography>
+          <ImageLinkInput buttonTitle="Изменить" buttonClass="mock-data-button" onChange={handleImageChange} />
+          <IconButton className="auc-settings-reset-background" onClick={resetBackground}>
+            <ReplayIcon />
+          </IconButton>
         </FormGroup>
         <FormGroup row className="auc-settings-row">
           <Typography variant="body1" className="auc-settings-label">
