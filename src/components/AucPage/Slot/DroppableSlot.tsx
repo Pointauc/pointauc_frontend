@@ -21,7 +21,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
   const { background } = useSelector((root: RootState) => root.aucSettings.settings);
   const { id, amount, name } = slotProps;
 
-  const [{ isOver, canDrop }, drops] = useDrop({
+  const [{ isOver, canDrop, showRemoveHelper }, drops] = useDrop({
     accept: DragTypeEnum.Purchase,
     drop: ({ cost, message }: PurchaseDragType) => {
       dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
@@ -33,13 +33,14 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
+      showRemoveHelper: monitor.getItem()?.cost < 0,
     }),
   });
 
-  const slotClasses = useMemo(() => classNames('slot', { 'drop-help': canDrop && !isOver }, { 'drag-over': isOver }), [
-    canDrop,
-    isOver,
-  ]);
+  const slotClasses = useMemo(
+    () => classNames('slot', { 'drop-help': canDrop && !isOver, 'drag-over': isOver, 'remove-cost': showRemoveHelper }),
+    [canDrop, isOver, showRemoveHelper],
+  );
 
   const handleDelete = (): void => {
     dispatch(deleteSlot(id));

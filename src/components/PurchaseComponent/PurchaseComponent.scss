@@ -9,6 +9,10 @@
   cursor: pointer;
   border: 3px solid transparent;
 
+  &.remove-cost {
+    border: solid 5px $red-3;
+  }
+
   &.drag-placeholder {
     border: 3px dashed $grey-4;
     background-color: transparent;

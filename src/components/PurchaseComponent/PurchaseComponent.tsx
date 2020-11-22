@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, IconButton, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
@@ -14,14 +14,17 @@ const PurchaseComponent: React.FC<Purchase> = (purchase) => {
   const dispatch = useDispatch();
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const { id, message, username, cost, color } = purchase;
+  const isRemovePurchase = useMemo(() => cost < 0, [cost]);
 
   const handleRemove = (): void => {
     dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Deleted }));
     dispatch(removePurchase(id));
   };
 
+  const draggableItem = useMemo(() => ({ type: DragTypeEnum.Purchase, ...purchase }), [purchase]);
+
   const [, drag, preview] = useDrag({
-    item: { type: DragTypeEnum.Purchase, ...purchase },
+    item: draggableItem,
     end: (draggedItem?: PurchaseDragType, monitor?) => {
       setIsDragging(false);
       if (monitor && monitor.didDrop()) {
@@ -29,11 +32,15 @@ const PurchaseComponent: React.FC<Purchase> = (purchase) => {
         dispatch(removePurchase(id));
       }
     },
-    begin: () => setIsDragging(true),
+    begin: () => {
+      setIsDragging(true);
+
+      return draggableItem;
+    },
   });
 
   const cardStyles = { backgroundColor: isDragging ? undefined : color };
-  const purchaseClasses = classNames(['purchase', { 'drag-placeholder': isDragging }]);
+  const purchaseClasses = classNames(['purchase', { 'drag-placeholder': isDragging, 'remove-cost': isRemovePurchase }]);
 
   useEffect(() => {
     preview(getEmptyImage(), { captureDraggingState: true });

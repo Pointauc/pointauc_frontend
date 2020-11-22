@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
+import { normalizePurchase } from '../../utils/slots.utils';
 
 export enum PurchaseStatusEnum {
   Processed = 'Processed',
@@ -38,7 +39,7 @@ const purchasesSlice = createSlice({
       state.history = [...state.history, action.payload];
     },
     addPurchase(state, action: PayloadAction<Purchase>): void {
-      state.purchases = [...state.purchases, action.payload];
+      state.purchases = [...state.purchases, normalizePurchase(action.payload)];
     },
     removePurchase(state, action: PayloadAction<ReactText>): void {
       state.purchases = state.purchases.filter(({ id }) => id !== action.payload);

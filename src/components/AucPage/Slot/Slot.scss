@@ -47,6 +47,11 @@
     &.drag-over {
       background-color: $blue-gray-3;
       border-color: $blue-gray-2;
+
+      &.remove-cost {
+        background-color: $red-1;
+        border-color: $red-2;
+      }
     }
 
     &-name {
@@ -110,6 +115,11 @@
 
         .slot-input {
           background-color: transparent;
+        }
+
+        &.remove-cost {
+          background-color: rgba($red-1, .7);
+          border-color: $red-2;
         }
       }
     }

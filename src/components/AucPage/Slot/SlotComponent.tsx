@@ -72,7 +72,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
       <OutlinedInput
         className="slot-money slot-input"
         placeholder="₽"
-        value={currentAmount || ''}
+        value={currentAmount === undefined ? '' : currentAmount}
         onChange={handleAmountChange}
         ref={amountInput}
         type="number"
