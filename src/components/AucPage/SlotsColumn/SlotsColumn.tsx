@@ -7,6 +7,7 @@ import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import VerticalSplitRoundedIcon from '@material-ui/icons/VerticalSplitRounded';
 import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
+import FlipMove from 'react-flip-move';
 import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { PurchaseDragType } from '../../../models/purchase';
@@ -102,11 +103,13 @@ const SlotsColumn: React.FC = () => {
       <Grid container wrap="nowrap" className="slots-wrapper">
         <Grid container className="slots-column" direction="column" wrap="nowrap">
           <Grid container className="slots-column-list" spacing={1}>
-            {slots.map((slot, index) => (
-              <Grid key={slot.id} item xs={slotWidth}>
-                <DroppableSlot index={index + 1} {...slot} />
-              </Grid>
-            ))}
+            <FlipMove typeName={null} enterAnimation="fade" leaveAnimation="fade" maintainContainerHeight>
+              {slots.map((slot, index) => (
+                <Grid key={slot.id} item xs={slotWidth}>
+                  <DroppableSlot index={index + 1} {...slot} />
+                </Grid>
+              ))}
+            </FlipMove>
           </Grid>
           <IconButton onClick={handleAddSlot} className={addButtonClasses} title="Добавить слот" ref={drops}>
             <AddBoxIcon fontSize="large" />
