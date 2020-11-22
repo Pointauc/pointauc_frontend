@@ -15,9 +15,14 @@
     flex-grow: 1;
     height: 43px;
     padding: 10px;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     border-radius: 10px;
     align-items: center;
+
+    input {
+      font-size: 17px;
+      padding: 12px 14px;
+    }
 
     &-add-extra {
       padding: 7px;
@@ -57,19 +62,11 @@
     &-name {
       flex-grow: 1;
       margin-right: 25px;
-
-      input {
-        padding: 12px 15px;
-      }
     }
 
     &-money {
       width: 110px;
       padding-left: 5px;
-
-      input {
-        padding: 12px 15px;
-      }
     }
   }
 

@@ -10,7 +10,7 @@ import * as serviceWorker from './serviceWorker';
 import rootReducer, { RootState } from './reducers';
 import { Slot } from './models/slot.model';
 import { setSlots } from './reducers/Slots/Slots';
-import 'moment/locale/ru'; // without this line it didn't work
+import 'moment/locale/ru';
 
 moment.locale('ru');
 

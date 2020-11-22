@@ -25,6 +25,9 @@ const theme = createMuiTheme({
       main: '#f48fb1',
     },
   },
+  typography: {
+    fontFamily: ['Helvetica', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'].join(','),
+  },
 });
 
 const App: React.FC = () => {
