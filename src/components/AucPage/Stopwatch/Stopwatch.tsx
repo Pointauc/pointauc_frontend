@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../reducers';
 import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
+import { Slot } from '../../../models/slot.model';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SS',
@@ -32,8 +33,13 @@ const Stopwatch: React.FC = () => {
   const frameId = useRef<number>();
   const prevTimestamp = useRef<number>();
   const stopwatchElement = useRef<HTMLDivElement>(null);
+  const winnerRef = useRef<Slot>();
 
-  const winnerSlot = useMemo(() => slots[0], [slots]);
+  const winnerSlot = useMemo(() => {
+    [winnerRef.current] = slots;
+
+    return slots[0];
+  }, [slots]);
   const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 
   const updateStopwatch = useCallback(
@@ -42,13 +48,13 @@ const Stopwatch: React.FC = () => {
         time.current += timeDifference;
         if (time.current < 0) {
           time.current = 0;
-          const { name } = winnerSlot;
+          const { name } = winnerRef.current || {};
           dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }
         stopwatchElement.current.innerHTML = moment(time.current).format(STOPWATCH.FORMAT);
       }
     },
-    [dispatch, winnerSlot],
+    [dispatch],
   );
 
   useEffect(() => updateStopwatch(), [updateStopwatch]);
