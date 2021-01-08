@@ -1,0 +1,38 @@
+@import "colors";
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 50px 100px;
+
+  &-content {
+    display: flex;
+    height: 100%;
+
+    &.centralize {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.page-title {
+  margin-bottom: 25px;
+}
+
+.base-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.hint {
+  position: relative;
+  top: -5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 300;
+  width: 490px;
+  color: $grey-5;
+  letter-spacing: 0.8px;
+}

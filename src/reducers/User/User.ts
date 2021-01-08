@@ -4,10 +4,12 @@ import { getUsername } from '../../api/userApi';
 
 interface UserState {
   username: string | null;
+  hasDAAuth: boolean;
 }
 
 const initialState: UserState = {
   username: null,
+  hasDAAuth: false,
 };
 
 const userSlice = createSlice({
@@ -17,10 +19,13 @@ const userSlice = createSlice({
     setUsername(state, action: PayloadAction<string | null>): void {
       state.username = action.payload;
     },
+    setHasDAAuth(state, action: PayloadAction<boolean>): void {
+      state.hasDAAuth = action.payload;
+    },
   },
 });
 
-export const { setUsername } = userSlice.actions;
+export const { setUsername, setHasDAAuth } = userSlice.actions;
 
 export const updateUsername = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
   const newUsername = await getUsername();

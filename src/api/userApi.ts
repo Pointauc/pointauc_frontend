@@ -1,6 +1,7 @@
 import axios from 'axios';
 import ENDPOINTS from '../constants/api.constants';
-import { SettingFields } from '../reducers/AucSettings/AucSettings';
+import { IntegrationFields, SettingFields } from '../reducers/AucSettings/AucSettings';
+import { UserData } from '../models/user.model';
 
 export const getUsername = async (): Promise<string> => {
   const { data } = await axios.get(ENDPOINTS.USER.USERNAME);
@@ -8,12 +9,16 @@ export const getUsername = async (): Promise<string> => {
   return data;
 };
 
-export const updateAucSettings = async (settings: SettingFields): Promise<void> => {
-  await axios.post(ENDPOINTS.USER.AUC_SETTINGS, settings);
+export const updateSettings = async (settings: SettingFields): Promise<void> => {
+  await axios.post(ENDPOINTS.USER.SETTINGS, settings);
 };
 
-export const getAucSettings = async (): Promise<SettingFields> => {
-  const { data } = await axios.get(ENDPOINTS.USER.AUC_SETTINGS);
+export const updateIntegration = async (integration: IntegrationFields): Promise<void> => {
+  await axios.post(ENDPOINTS.USER.Integration, integration);
+};
+
+export const getUserData = async (): Promise<UserData> => {
+  const { data } = await axios.get(ENDPOINTS.USER.DATA);
 
   return data;
 };

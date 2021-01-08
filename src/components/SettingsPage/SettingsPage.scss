@@ -1,0 +1,63 @@
+.auc-settings {
+
+  &-list {
+    margin-bottom: 15px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  &-option {
+    margin-left: 15px;
+
+    .MuiSelect-selectMenu {
+      display: flex;
+    }
+
+    p {
+      margin-right: 5px;
+    }
+  }
+
+  &-row {
+    align-items: center;
+    margin-bottom: 10px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.mock-data-button {
+  width: 140px;
+  margin-left: 15px !important;
+}
+
+.settings {
+  .MuiFormControlLabel-labelPlacementStart {
+    margin: 0;
+  }
+
+  .MuiFormControlLabel-label {
+    width: 340px;
+  }
+
+  .field {
+    margin-right: 7px;
+
+    &.sm {
+      width: 60px;
+    }
+
+    &.md {
+      width: 150px;
+    }
+
+    input {
+      padding: 0 15px;
+      height: 2.6rem;
+    }
+  }
+}

@@ -5,12 +5,16 @@ import { AnyAction, configureStore, Middleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import moment from 'moment';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer, { RootState } from './reducers';
 import { Slot } from './models/slot.model';
 import { setSlots } from './reducers/Slots/Slots';
 import 'moment/locale/ru';
+import ROUTES from './constants/routes.constants';
+import TwitchRedirect from './components/TwitchRedirect/TwitchRedirect';
+import DARedirect from './components/DARedirect/DARedirect';
 
 moment.locale('ru');
 
@@ -45,7 +49,19 @@ const store = configureStore({
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <Switch>
+        <Route exact path={ROUTES.TWITCH_REDIRECT}>
+          <TwitchRedirect />
+        </Route>
+        <Route exact path={ROUTES.DA_REDIRECT}>
+          <DARedirect />
+        </Route>
+        <Route path={ROUTES.HOME}>
+          <App />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root'),
 );

@@ -1,76 +1,151 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.scss';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
+import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import classNames from 'classnames';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../AucPage/AucPage';
-import TwitchRedirect from '../TwitchRedirect/TwitchRedirect';
-import VideoPointsPage from '../VideoPointsPage/VideoPointsPage';
-import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
+import { MenuItem } from '../../models/common.model';
+import MENU_ITEMS from '../../constants/menuItems.constants';
+import SettingsPage from '../SettingsPage/SettingsPage';
+import { loadUserData } from '../../reducers/AucSettings/AucSettings';
+import withLoading from '../../decorators/withLoading';
+import LoadingPage from '../LoadingPage/LoadingPage';
+import IntegrationPage from '../IntegrationPage/IntegrationPage';
+import { getCookie } from '../../utils/common.utils';
+import TbdPage from '../TbdPage/TbdPage';
+import { theme } from '../../constants/theme.constants';
 import { RootState } from '../../reducers';
-import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
-import SkipWidget from '../SkipWidjet/SkipWidget';
-import PrivateRoute from '../PrivateRoute/PrivateRoute';
-import HomePage from '../HomePage/HomePage';
-import Login from '../Login/Login';
+import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
 
-const theme = createMuiTheme({
-  palette: {
-    type: 'dark',
-    primary: {
-      main: '#a6d4fa',
+const drawerWidth = 240;
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+      whiteSpace: 'nowrap',
+      overflowX: 'hidden',
     },
-    secondary: {
-      main: '#f48fb1',
+    drawerOpen: {
+      width: drawerWidth,
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
-  },
-  typography: {
-    fontFamily: ['Helvetica', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'].join(','),
-  },
-});
+    drawerClose: {
+      transition: theme.transitions.create('width', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      width: theme.spacing(7) + 3,
+    },
+    content: {
+      flexGrow: 1,
+    },
+    root: {
+      background: theme.palette.background.default,
+      color: theme.palette.text.primary,
+      display: 'flex',
+      fontFamily: theme.typography.fontFamily,
+      fontWeight: 300,
+      minHeight: '100vh',
+    },
+    menuIcon: {
+      width: 26,
+      height: 26,
+      fill: '#fff',
+    },
+  }),
+);
+
+const hasToken = !!getCookie('userToken');
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
+  const classes = useStyles();
+  const { pathname } = useLocation();
   const { username } = useSelector((root: RootState) => root.user);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(hasToken);
 
   useEffect(() => {
     if (username) {
-      dispatch(connectToServer());
+      dispatch(connectToServer(username));
     }
   }, [dispatch, username]);
 
+  const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
+  const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
+  const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
+  const isOpen = useMemo(() => pathname !== ROUTES.HOME || isDrawerOpen, [isDrawerOpen, pathname]);
+  const drawerClasses = useMemo(
+    () => classNames(classes.drawer, { [classes.drawerOpen]: isOpen, [classes.drawerClose]: !isOpen }),
+    [classes.drawer, classes.drawerClose, classes.drawerOpen, isOpen],
+  );
+
+  const createMenuItem = useCallback(
+    ({ IconComponent, title, path }: MenuItem) => (
+      <ListItem button key={title} selected={path === pathname} component={Link} to={path}>
+        <ListItemIcon>
+          <IconComponent className={classes.menuIcon} />
+        </ListItemIcon>
+        <ListItemText primary={title} />
+      </ListItem>
+    ),
+    [classes.menuIcon, pathname],
+  );
+
   useEffect(() => {
-    if (webSocket) {
-      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, username }));
+    if (hasToken) {
+      dispatch(withLoading(setIsLoading, loadUserData));
     }
-  }, [username, webSocket]);
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <LoadingPage helpText="Загрузка аккаунта..." />;
+  }
 
   return (
     <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Switch>
-          <PrivateRoute exact path={ROUTES.HOME}>
-            <HomePage />
-          </PrivateRoute>
-          <PrivateRoute path={ROUTES.AUC_PAGE}>
+      <div className={classes.root}>
+        <Drawer
+          variant="permanent"
+          className={drawerClasses}
+          classes={{ paper: drawerClasses }}
+          onMouseEnter={showDrawer}
+          onMouseLeave={hideDrawer}
+        >
+          <List>{MENU_ITEMS.map(createMenuItem)}</List>
+        </Drawer>
+        <main className={classes.content}>
+          <div hidden={!isHomePage}>
             <AucPage />
-          </PrivateRoute>
-          <PrivateRoute path={ROUTES.VIDEO_REQUESTS}>
-            <VideoPointsPage />
-          </PrivateRoute>
-          <PrivateRoute path={ROUTES.SKIP_WIDGET}>
-            <SkipWidget />
-          </PrivateRoute>
-          <Route path={ROUTES.TWITCH_REDIRECT}>
-            <TwitchRedirect />
-          </Route>
-          <Route path={ROUTES.LOGIN}>
-            <Login />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+          </div>
+          <Switch>
+            <Route exact path={ROUTES.INTEGRATION}>
+              <IntegrationPage />
+            </Route>
+            <Route exact path={ROUTES.SETTINGS}>
+              <SettingsPage />
+            </Route>
+            <Route exact path={ROUTES.WHEEL}>
+              <TbdPage />
+            </Route>
+            <Route exact path={ROUTES.HISTORY}>
+              <TbdPage />
+            </Route>
+            <Route exact path={ROUTES.HELP}>
+              <TbdPage />
+            </Route>
+          </Switch>
+        </main>
+      </div>
     </MuiThemeProvider>
   );
 };

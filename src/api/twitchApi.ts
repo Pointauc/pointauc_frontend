@@ -5,3 +5,7 @@ import ENDPOINTS from '../constants/api.constants';
 export const authenticateTwitch = async (code: string): Promise<void> => {
   return axios.post(ENDPOINTS.TWITCH_AUTH, { code });
 };
+
+export const authenticateDA = async (code: string): Promise<void> => {
+  return axios.post(ENDPOINTS.DA_AUTH, { code, redirect: `${window.location.origin}/da/redirect` });
+};

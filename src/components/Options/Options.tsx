@@ -3,7 +3,6 @@ import './Options.scss';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
@@ -14,19 +13,13 @@ import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import Wheel from '../AucPage/Wheel/Wheel';
 
 interface OptionsProps {
-  settingsComponent?: ReactNode;
   historyComponent?: ReactNode;
 }
 
-const Options: React.FC<OptionsProps> = ({ settingsComponent, historyComponent }) => {
+const Options: React.FC<OptionsProps> = ({ historyComponent }) => {
   const dispatch = useDispatch();
-  const [isSettingsOpened, setIsSettingsOpened] = useState(false);
   const [isHistoryOpened, setIsHistoryOpened] = useState(false);
   const [isWheelOpened, setIsWheelOpened] = useState(false);
-
-  const toggleSettings = (): void => {
-    setIsSettingsOpened((prevOpenedState) => !prevOpenedState);
-  };
 
   const toggleHistory = (): void => {
     setIsHistoryOpened((prevOpenedState) => !prevOpenedState);
@@ -50,15 +43,6 @@ const Options: React.FC<OptionsProps> = ({ settingsComponent, historyComponent }
 
   return (
     <div className="options">
-      <Dialog open={isSettingsOpened} onClose={toggleSettings} fullWidth maxWidth="sm">
-        <DialogTitle>Настройки</DialogTitle>
-        <DialogContent>{settingsComponent}</DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={toggleSettings} color="primary">
-            Закрыть
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Dialog open={isHistoryOpened} onClose={toggleHistory} fullWidth maxWidth="md">
         <DialogTitle>История</DialogTitle>
         <DialogContent>{historyComponent}</DialogContent>
@@ -87,9 +71,6 @@ const Options: React.FC<OptionsProps> = ({ settingsComponent, historyComponent }
       </IconButton>
       <IconButton onClick={toggleHistory} className="options-button" title="История">
         <AssignmentIcon />
-      </IconButton>
-      <IconButton onClick={toggleSettings} className="options-button" title="Настройки">
-        <SettingsIcon />
       </IconButton>
     </div>
   );

@@ -1,0 +1,12 @@
+.da-login-button {
+  background-color: #F57D07 !important;
+  color: #F1F1F1 !important;
+
+  &:hover {
+    background-color: #cb6a0a !important;
+  }
+
+  &:disabled {
+    background-color: #746d67 !important;
+  }
+}

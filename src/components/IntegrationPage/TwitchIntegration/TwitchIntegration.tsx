@@ -1,0 +1,218 @@
+import React, { FC, ReactNode, useCallback } from 'react';
+import {
+  Button,
+  createStyles,
+  FormGroup,
+  IconButton,
+  Paper,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Theme,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
+import { useSelector } from 'react-redux';
+import { useFieldArray } from 'react-hook-form';
+import { UseFormMethods } from 'react-hook-form/dist/types/form';
+import DeleteIcon from '@material-ui/icons/Delete';
+import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
+import { RootState } from '../../../reducers';
+import { getCookie } from '../../../utils/common.utils';
+import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
+import './TwitchIntegration.scss';
+import FormInput from '../../FormInput/FormInput';
+import FormSwitch from '../../FormSwitch/FormSwitch';
+import FormColorPicker from '../../FormColorPicker/FormColorPicker';
+import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
+
+const authParams = {
+  client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
+  redirect_uri: `${window.location.origin}/twitch/redirect`,
+  response_type: 'code',
+  scope: 'channel:read:redemptions channel:manage:redemptions',
+  force_verify: 'true',
+};
+
+const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
+
+const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    head: {
+      backgroundColor: '#505754',
+      color: theme.palette.common.white,
+      fontSize: 15,
+    },
+    body: {
+      paddingTop: 7,
+      paddingBottom: 7,
+      fontSize: 14,
+    },
+  }),
+)(TableCell);
+
+const StyledTableRow = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+  }),
+)(TableRow);
+
+interface TwitchIntegrationProps {
+  control: UseFormMethods['control'];
+}
+
+const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
+  const { username } = useSelector((root: RootState) => root.user);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+
+  const handleAuth = (): void => {
+    const params = new URLSearchParams(authParams);
+    authUrl.search = params.toString();
+
+    window.open(authUrl.toString(), '_self');
+  };
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'twitch.rewards',
+  });
+
+  const handleAppendReward = useCallback(() => append({ cost: 1000, color: '#fff' }), [append]);
+
+  const renderActionColumn = useCallback(
+    (index: number): ReactNode => {
+      const handleDeleteReward = (): void => remove(index);
+
+      return (
+        <IconButton onClick={handleDeleteReward}>
+          <DeleteIcon />
+        </IconButton>
+      );
+    },
+    [remove],
+  );
+
+  const renderCostColumn = useCallback(
+    (cost: number, index: number): ReactNode => {
+      return (
+        <FormInput
+          name={`twitch.rewards[${index}].cost`}
+          control={control}
+          type="number"
+          defaultValue={cost}
+          className="field md"
+        />
+      );
+    },
+    [control],
+  );
+
+  const renderColorColumn = useCallback(
+    (value: string, index: number) => (
+      <FormColorPicker name={`twitch.rewards[${index}].color`} control={control} defaultValue={value} />
+    ),
+    [control],
+  );
+
+  const subscribeTwitchPoints = useCallback((): void => {
+    if (webSocket) {
+      webSocket.send(
+        JSON.stringify({ type: MESSAGE_TYPES.CHANNEL_POINTS_SUBSCRIBE, channelId: getCookie('userToken') }),
+      );
+    }
+  }, [webSocket]);
+
+  const unsubscribeTwitchPoints = useCallback((): void => {
+    if (webSocket) {
+      webSocket.send(
+        JSON.stringify({ type: MESSAGE_TYPES.CHANNEL_POINTS_UNSUBSCRIBE, channelId: getCookie('userToken') }),
+      );
+    }
+  }, [webSocket]);
+
+  const handleSwitchChange = useCallback(
+    (e: any, checked: boolean): void => (checked ? subscribeTwitchPoints() : unsubscribeTwitchPoints()),
+    [subscribeTwitchPoints, unsubscribeTwitchPoints],
+  );
+
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <SettingsGroupTitle title="Twitch">
+        <Switch onChange={handleSwitchChange} disabled={!username} />
+      </SettingsGroupTitle>
+      {username ? (
+        <FormGroup className="auc-settings-list">
+          <Typography variant="h6">
+            Вы вошли как
+            <b className="username">{username}</b>
+          </Typography>
+          <FormGroup row className="auc-settings-row">
+            <FormSwitch name="twitch.dynamicRewards" control={control} label="Привязать включение наград к таймеру" />
+          </FormGroup>
+          <div className="hint">
+            Награды будут автомачески включаться при возобновлении таймера и отключаться при паузе или окончании.
+          </div>
+          <FormGroup row className="auc-settings-row">
+            <FormInput
+              name="twitch.rewardsPrefix"
+              control={control}
+              label="Общее название для наград"
+              className="field md"
+            />
+          </FormGroup>
+          <div className="hint">
+            При включении интеграции, на канале автоматически создаются награды в формате "Название + Стоимость".
+          </div>
+          <Typography variant="body1" className="MuiFormControlLabel-label">
+            Список наград:
+          </Typography>
+          <TableContainer component={Paper} style={{ width: 490, marginTop: 15 }}>
+            <Table>
+              <TableHead>
+                <StyledTableRow>
+                  <StyledTableCell>Стоимость</StyledTableCell>
+                  <StyledTableCell align="center">Цвет</StyledTableCell>
+                  <StyledTableCell />
+                </StyledTableRow>
+              </TableHead>
+              <TableBody>
+                {fields.map(({ cost, color, id }, index) => {
+                  return (
+                    <StyledTableRow key={id}>
+                      <StyledTableCell>{renderCostColumn(cost, index)}</StyledTableCell>
+                      <StyledTableCell align="center">{renderColorColumn(color, index)}</StyledTableCell>
+                      <StyledTableCell align="right">{renderActionColumn(index)}</StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Button onClick={handleAppendReward} color="primary" style={{ marginTop: 15, width: 220 }} variant="outlined">
+            Добавить награду
+          </Button>
+        </FormGroup>
+      ) : (
+        <Button
+          className="twitch-login-button"
+          variant="contained"
+          size="large"
+          startIcon={<TwitchSvg className="base-icon" />}
+          onClick={handleAuth}
+        >
+          Подключить twitch
+        </Button>
+      )}
+    </div>
+  );
+};
+
+export default TwitchIntegration;

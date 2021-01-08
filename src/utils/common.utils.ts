@@ -16,3 +16,8 @@ export const animateValue = (ref: HTMLInputElement, start: number, end: number, 
   };
   window.requestAnimationFrame(step);
 };
+
+export const getCookie = (name: string): string => {
+  const match = new RegExp(`(^| )${name}=([^;]+)`).exec(document.cookie);
+  return (match && match[2]) || '';
+};

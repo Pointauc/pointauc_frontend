@@ -1,8 +1,8 @@
-.page-container {
+.auc-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 0 50px;
+  padding: 0 50px !important;
 
   &-content {
     display: flex;

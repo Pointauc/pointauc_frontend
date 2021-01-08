@@ -1,15 +1,43 @@
 @import "./colors";
+@import "./common";
 
 @font-face {
-  font-family: 'Helvetica';
-  src: local('Helvetica'), url(../fonts/HelveticaCE.otf) format('woff');
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Roman.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Thin.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 200;
+  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Light.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeue-Medium.otf) format('woff');
+}
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Bold.woff) format('woff');
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;

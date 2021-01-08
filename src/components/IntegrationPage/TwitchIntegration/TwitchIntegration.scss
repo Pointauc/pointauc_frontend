@@ -1,0 +1,21 @@
+@import "../../../styles/colors";
+
+.username {
+  margin-left: 5px;
+  color: $red-4;
+}
+
+.rewards {
+  .ag-center-cols-container, .ag-center-cols-clipper {
+    min-height: 50px !important;
+  }
+}
+
+.twitch-login-button {
+  background-color: #9146FF !important;
+  color: #F1F1F1 !important;
+
+  &:hover {
+    background-color: #733ac6 !important;
+  }
+}
