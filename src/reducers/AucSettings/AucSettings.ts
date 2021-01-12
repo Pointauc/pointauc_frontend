@@ -31,6 +31,9 @@ export interface IntegrationFields {
     rewardsPrefix?: string;
     rewards?: RewardSetting[];
   };
+  da: {
+    pointsRate: number;
+  };
 }
 
 interface AucSettingsState {
@@ -55,6 +58,9 @@ export const initialState: AucSettingsState = {
       dynamicRewards: false,
       rewardsPrefix: 'ставка',
       rewards: [{ cost: 5000, color: '#fff' }],
+    },
+    da: {
+      pointsRate: 50,
     },
   },
   activeListeners: {

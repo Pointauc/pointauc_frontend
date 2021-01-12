@@ -20,6 +20,19 @@ const initialState: SlotsState = {
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);
 
+const updateSlotPosition = (slots: Slot[], index: number): void => {
+  if (Number(slots[index].amount) >= Number(slots[0].amount)) {
+    slots.unshift(slots.splice(index, 1)[0]);
+  }
+};
+
+const updateSlotAmount = (slots: Slot[], updatedId: ReactText, transform: (slot: Slot) => Slot): void => {
+  const updatedIndex = slots.findIndex(({ id }) => updatedId === id);
+
+  slots[updatedIndex] = transform(slots[updatedIndex]);
+  updateSlotPosition(slots, updatedIndex);
+};
+
 const slotsSlice = createSlice({
   name: 'slots',
   initialState,
@@ -30,7 +43,7 @@ const slotsSlice = createSlice({
     },
     setSlotAmount(state, action: PayloadAction<{ id: ReactText; amount: number }>): void {
       const { id, amount } = action.payload;
-      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, amount } : slot));
+      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount }));
     },
     setSlotExtra(state, action: PayloadAction<{ id: ReactText; extra: number }>): void {
       const { id, extra } = action.payload;
@@ -38,9 +51,7 @@ const slotsSlice = createSlice({
     },
     addExtra(state, action: PayloadAction<ReactText>): void {
       const id = action.payload;
-      state.slots = state.slots.map((slot) =>
-        slot.id === id ? { ...slot, extra: null, amount: getAmountSum(slot) } : slot,
-      );
+      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: getAmountSum(slot) }));
     },
     deleteSlot(state, action: PayloadAction<ReactText>): void {
       if (state.slots.length === 1) {
@@ -56,7 +67,8 @@ const slotsSlice = createSlice({
     createSlotFromPurchase(state, action: PayloadAction<Purchase>): void {
       const { id, message: name, cost: amount } = action.payload;
       const newSlot: Slot = { id, name, amount, extra: null };
-      state.slots = [...state.slots, newSlot];
+      state.slots.push(newSlot);
+      updateSlotPosition(state.slots, state.slots.length - 1);
     },
     resetSlots(state): void {
       state.slots = initialState.slots;

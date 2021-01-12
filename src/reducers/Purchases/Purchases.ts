@@ -19,7 +19,8 @@ export interface Purchase {
   message: string;
   color: string;
   id: ReactText;
-  rewardId: string;
+  rewardId?: string;
+  isDonation?: boolean;
 }
 
 export interface PurchaseLog {
@@ -63,15 +64,13 @@ export const processRedemption = (redemption: Purchase) => (
   getState: () => RootState,
 ): void => {
   const { slots } = getState().slots;
-  const comparedSlot = slots.find(
-    ({ name }) => name && !name.localeCompare(redemption.message, 'en', { sensitivity: 'accent' }),
-  );
+  const { cost, username, message, isDonation } = redemption;
+  const comparedSlot = slots.find(({ name }) => name && !name.localeCompare(message, 'en', { sensitivity: 'accent' }));
 
-  if (comparedSlot) {
+  if (comparedSlot && !isDonation) {
     const { id, amount, name } = comparedSlot;
-    const { cost, username } = redemption;
 
-    dispatch(setSlotAmount({ id, amount: Number(amount) + redemption.cost }));
+    dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
     dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed }));
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: `${username} добавил ${cost} к "${name}"!` }));
   } else {

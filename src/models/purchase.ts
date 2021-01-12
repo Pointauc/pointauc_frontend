@@ -5,6 +5,6 @@ import { SortOrder } from './common.model';
 export type PurchaseDragType = Purchase & DragObjectWithType;
 
 export interface PurchaseSortOption {
-  key: keyof Purchase;
+  key: 'timestamp' | 'cost';
   order: SortOrder;
 }

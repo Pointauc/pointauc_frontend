@@ -49,4 +49,14 @@ export const sendCpSubscribedState = (isSubscribed: boolean) => (
   webSocket?.send(JSON.stringify({ type, channelId: getCookie('userToken') }));
 };
 
+export const sendDaSubscribedState = (isSubscribed: boolean) => (
+  dispatch: ThunkDispatch<{}, {}, Action>,
+  getState: () => RootState,
+): void => {
+  const { webSocket } = getState().pubSubSocket;
+  const type = isSubscribed ? MESSAGE_TYPES.DA_SUBSCRIBE : MESSAGE_TYPES.DA_UNSUBSCRIBE;
+
+  webSocket?.send(JSON.stringify({ type, channelId: getCookie('userToken') }));
+};
+
 export default puSubSocketSlice.reducer;

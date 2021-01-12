@@ -27,6 +27,10 @@
     align-items: center;
     justify-content: space-between;
 
+    h6 {
+      font-weight: 400;
+    }
+
     &-remove-button {
       padding: 10px !important;
     }

@@ -10,7 +10,7 @@ import AucPage from '../AucPage/AucPage';
 import { MenuItem } from '../../models/common.model';
 import MENU_ITEMS from '../../constants/menuItems.constants';
 import SettingsPage from '../SettingsPage/SettingsPage';
-import { loadUserData, setTwitchListener } from '../../reducers/AucSettings/AucSettings';
+import { loadUserData, setTwitchListener, setDaListener } from '../../reducers/AucSettings/AucSettings';
 import withLoading from '../../decorators/withLoading';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
@@ -82,7 +82,7 @@ const App: React.FC = () => {
     }
   }, [dispatch, username]);
 
-  const handleCpSubscribe = useCallback(
+  const handleSubscribe = useCallback(
     ({ data }: MessageEvent) => {
       const { type } = JSON.parse(data);
 
@@ -93,15 +93,23 @@ const App: React.FC = () => {
       if (type === MESSAGE_TYPES.CP_UNSUBSCRIBED) {
         dispatch(setTwitchListener(false));
       }
+
+      if (type === MESSAGE_TYPES.DA_SUBSCRIBE) {
+        dispatch(setDaListener(true));
+      }
+
+      if (type === MESSAGE_TYPES.DA_UNSUBSCRIBE) {
+        dispatch(setDaListener(false));
+      }
     },
     [dispatch],
   );
 
   useEffect(() => {
     if (webSocket) {
-      webSocket.addEventListener('message', handleCpSubscribe);
+      webSocket.addEventListener('message', handleSubscribe);
     }
-  }, [dispatch, handleCpSubscribe, username, webSocket]);
+  }, [dispatch, handleSubscribe, username, webSocket]);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
