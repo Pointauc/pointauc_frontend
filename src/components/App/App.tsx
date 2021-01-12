@@ -10,7 +10,7 @@ import AucPage from '../AucPage/AucPage';
 import { MenuItem } from '../../models/common.model';
 import MENU_ITEMS from '../../constants/menuItems.constants';
 import SettingsPage from '../SettingsPage/SettingsPage';
-import { loadUserData } from '../../reducers/AucSettings/AucSettings';
+import { loadUserData, setTwitchListener } from '../../reducers/AucSettings/AucSettings';
 import withLoading from '../../decorators/withLoading';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
@@ -19,6 +19,8 @@ import TbdPage from '../TbdPage/TbdPage';
 import { theme } from '../../constants/theme.constants';
 import { RootState } from '../../reducers';
 import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
+import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
+import AlertsContainer from '../AlertsContainer/AlertsContainer';
 
 const drawerWidth = 240;
 
@@ -70,14 +72,36 @@ const App: React.FC = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { username } = useSelector((root: RootState) => root.user);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(hasToken);
 
   useEffect(() => {
     if (username) {
-      dispatch(connectToServer(username));
+      dispatch(connectToServer());
     }
   }, [dispatch, username]);
+
+  const handleCpSubscribe = useCallback(
+    ({ data }: MessageEvent) => {
+      const { type } = JSON.parse(data);
+
+      if (type === MESSAGE_TYPES.CP_SUBSCRIBED) {
+        dispatch(setTwitchListener(true));
+      }
+
+      if (type === MESSAGE_TYPES.CP_UNSUBSCRIBED) {
+        dispatch(setTwitchListener(false));
+      }
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
+    if (webSocket) {
+      webSocket.addEventListener('message', handleCpSubscribe);
+    }
+  }, [dispatch, handleCpSubscribe, username, webSocket]);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
@@ -127,6 +151,7 @@ const App: React.FC = () => {
           <div hidden={!isHomePage}>
             <AucPage />
           </div>
+          <AlertsContainer />
           <Switch>
             <Route exact path={ROUTES.INTEGRATION}>
               <IntegrationPage />

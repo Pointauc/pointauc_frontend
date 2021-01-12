@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, IconButton, Typography } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import { useDrag } from 'react-dnd';
 import classNames from 'classnames';
@@ -9,16 +9,42 @@ import { Purchase, removePurchase, logPurchase, PurchaseStatusEnum } from '../..
 import './PurchaseComponent.scss';
 import { PurchaseDragType } from '../../models/purchase';
 import { DragTypeEnum } from '../../enums/dragType.enum';
+import { RootState } from '../../reducers';
+import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
+import { getCookie } from '../../utils/common.utils';
 
 const PurchaseComponent: React.FC<Purchase> = (purchase) => {
   const dispatch = useDispatch();
+  const {
+    integration: {
+      twitch: { isRefundAvailable },
+    },
+  } = useSelector((root: RootState) => root.aucSettings);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const { id, message, username, cost, color } = purchase;
+  const { id, message, username, cost, color, rewardId } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
+
+  const refundRedemption = useCallback(
+    () =>
+      webSocket?.send(
+        JSON.stringify({
+          type: MESSAGE_TYPES.REFUND_REWARD,
+          channelId: getCookie('userToken'),
+          redemptionId: id,
+          rewardId,
+        }),
+      ),
+    [id, rewardId, webSocket],
+  );
 
   const handleRemove = (): void => {
     dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Deleted }));
     dispatch(removePurchase(id));
+
+    if (isRefundAvailable) {
+      refundRedemption();
+    }
   };
 
   const draggableItem = useMemo(() => ({ type: DragTypeEnum.Purchase, ...purchase }), [purchase]);

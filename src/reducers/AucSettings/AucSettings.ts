@@ -19,8 +19,14 @@ export interface RewardSetting {
   color?: string;
 }
 
+interface ActiveListeners {
+  twitch: boolean;
+  da: boolean;
+}
+
 export interface IntegrationFields {
   twitch: {
+    isRefundAvailable?: boolean;
     dynamicRewards?: boolean;
     rewardsPrefix?: string;
     rewards?: RewardSetting[];
@@ -30,6 +36,7 @@ export interface IntegrationFields {
 interface AucSettingsState {
   settings: SettingFields;
   integration: IntegrationFields;
+  activeListeners: ActiveListeners;
 }
 
 export const initialState: AucSettingsState = {
@@ -44,10 +51,15 @@ export const initialState: AucSettingsState = {
   },
   integration: {
     twitch: {
+      isRefundAvailable: false,
       dynamicRewards: false,
       rewardsPrefix: 'ставка',
       rewards: [{ cost: 5000, color: '#fff' }],
     },
+  },
+  activeListeners: {
+    twitch: false,
+    da: false,
   },
 };
 
@@ -63,10 +75,16 @@ const aucSettingsSlice = createSlice({
     setIntegration(state, action: PayloadAction<IntegrationFields>): void {
       state.integration = mergewith(state.integration, action.payload, mergeCheck);
     },
+    setTwitchListener(state, action: PayloadAction<boolean>): void {
+      state.activeListeners.twitch = action.payload;
+    },
+    setDaListener(state, action: PayloadAction<boolean>): void {
+      state.activeListeners.da = action.payload;
+    },
   },
 });
 
-export const { setAucSettings, setIntegration } = aucSettingsSlice.actions;
+export const { setAucSettings, setIntegration, setDaListener, setTwitchListener } = aucSettingsSlice.actions;
 
 export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
   const { username, settings, integration, hasDAAuth } = await getUserData();

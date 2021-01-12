@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback } from 'react';
+import React, { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import {
   Button,
   createStyles,
@@ -72,6 +72,9 @@ interface TwitchIntegrationProps {
 const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   const { username } = useSelector((root: RootState) => root.user);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const { activeListeners } = useSelector((root: RootState) => root.aucSettings);
+  const { twitch: isSubscribedStore } = activeListeners;
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(isSubscribedStore);
 
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
@@ -139,14 +142,19 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   }, [webSocket]);
 
   const handleSwitchChange = useCallback(
-    (e: any, checked: boolean): void => (checked ? subscribeTwitchPoints() : unsubscribeTwitchPoints()),
+    (e: any, checked: boolean): void => {
+      setIsSubscribed(checked);
+      checked ? subscribeTwitchPoints() : unsubscribeTwitchPoints();
+    },
     [subscribeTwitchPoints, unsubscribeTwitchPoints],
   );
+
+  const isSubscribeLoading = useMemo(() => isSubscribed !== isSubscribedStore, [isSubscribed, isSubscribedStore]);
 
   return (
     <div style={{ marginBottom: 20 }}>
       <SettingsGroupTitle title="Twitch">
-        <Switch onChange={handleSwitchChange} disabled={!username} />
+        <Switch onChange={handleSwitchChange} disabled={!username || isSubscribeLoading} checked={isSubscribed} />
       </SettingsGroupTitle>
       {username ? (
         <FormGroup className="auc-settings-list">
@@ -154,6 +162,9 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
             Вы вошли как
             <b className="username">{username}</b>
           </Typography>
+          <FormGroup row className="auc-settings-row">
+            <FormSwitch name="twitch.isRefundAvailable" control={control} label="Возвращать отмененные награды" />
+          </FormGroup>
           <FormGroup row className="auc-settings-row">
             <FormSwitch name="twitch.dynamicRewards" control={control} label="Привязать включение наград к таймеру" />
           </FormGroup>

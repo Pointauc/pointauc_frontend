@@ -1,6 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
+import { Action } from 'redux';
 import { normalizePurchase } from '../../utils/slots.utils';
+import { RootState } from '../index';
+import { setSlotAmount } from '../Slots/Slots';
+import { addAlert } from '../notifications/notifications';
+import { AlertTypeEnum } from '../../models/alert.model';
 
 export enum PurchaseStatusEnum {
   Processed = 'Processed',
@@ -14,6 +19,7 @@ export interface Purchase {
   message: string;
   color: string;
   id: ReactText;
+  rewardId: string;
 }
 
 export interface PurchaseLog {
@@ -51,5 +57,26 @@ const purchasesSlice = createSlice({
 });
 
 export const { addPurchase, removePurchase, logPurchase, resetPurchases } = purchasesSlice.actions;
+
+export const processRedemption = (redemption: Purchase) => (
+  dispatch: ThunkDispatch<{}, {}, Action>,
+  getState: () => RootState,
+): void => {
+  const { slots } = getState().slots;
+  const comparedSlot = slots.find(
+    ({ name }) => name && !name.localeCompare(redemption.message, 'en', { sensitivity: 'accent' }),
+  );
+
+  if (comparedSlot) {
+    const { id, amount, name } = comparedSlot;
+    const { cost, username } = redemption;
+
+    dispatch(setSlotAmount({ id, amount: Number(amount) + redemption.cost }));
+    dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed }));
+    dispatch(addAlert({ type: AlertTypeEnum.Success, message: `${username} добавил ${cost} к "${name}"!` }));
+  } else {
+    dispatch(addPurchase(redemption));
+  }
+};
 
 export default purchasesSlice.reducer;

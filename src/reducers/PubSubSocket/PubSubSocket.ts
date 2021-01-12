@@ -3,6 +3,7 @@ import { Action } from 'redux';
 import WebSocketService from '../../services/WebSocketService';
 import { Purchase } from '../Purchases/Purchases';
 import { MESSAGE_TYPES, WEBSOCKET_URL } from '../../constants/webSocket.constants';
+import { getCookie } from '../../utils/common.utils';
 
 interface PubSubSocketState {
   webSocket?: WebSocket;
@@ -24,9 +25,9 @@ const puSubSocketSlice = createSlice({
 
 export const { setWebSocket } = puSubSocketSlice.actions;
 
-export const connectToServer = (username: string) => (dispatch: ThunkDispatch<{}, {}, Action>): void => {
+export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): void => {
   const onOpen = (ws: WebSocket): void => {
-    ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, username }));
+    ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
     dispatch(setWebSocket(ws));
   };
   const onClose = (): void => {

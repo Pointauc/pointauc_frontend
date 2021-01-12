@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import './Options.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@material-ui/core';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
@@ -11,13 +11,19 @@ import { USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { resetSlots } from '../../reducers/Slots/Slots';
 import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import Wheel from '../AucPage/Wheel/Wheel';
+import { isProduction } from '../../utils/common.utils';
+import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
+import { RootState } from '../../reducers';
 
 interface OptionsProps {
   historyComponent?: ReactNode;
 }
 
+const isProd = isProduction();
+
 const Options: React.FC<OptionsProps> = ({ historyComponent }) => {
   const dispatch = useDispatch();
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [isHistoryOpened, setIsHistoryOpened] = useState(false);
   const [isWheelOpened, setIsWheelOpened] = useState(false);
 
@@ -40,6 +46,12 @@ const Options: React.FC<OptionsProps> = ({ historyComponent }) => {
       dispatch(setUsername(username));
     }
   }, [dispatch]);
+
+  const requestMockData = (): void => {
+    if (webSocket) {
+      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE }));
+    }
+  };
 
   return (
     <div className="options">
@@ -72,6 +84,11 @@ const Options: React.FC<OptionsProps> = ({ historyComponent }) => {
       <IconButton onClick={toggleHistory} className="options-button" title="История">
         <AssignmentIcon />
       </IconButton>
+      {!isProd && (
+        <Button color="primary" onClick={requestMockData}>
+          Get mock
+        </Button>
+      )}
     </div>
   );
 };

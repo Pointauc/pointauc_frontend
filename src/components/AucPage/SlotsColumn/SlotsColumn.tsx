@@ -12,8 +12,6 @@ import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { PurchaseDragType } from '../../../models/purchase';
 import { DragTypeEnum } from '../../../enums/dragType.enum';
-// import { setNotification } from '../../../reducers/notifications/notifications';
-// import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import DroppableSlot from '../Slot/DroppableSlot';
 
 const TwoColumnIcon = VerticalSplitRoundedIcon;
@@ -41,16 +39,6 @@ const SlotsColumn: React.FC = () => {
       canDrop: monitor.canDrop(),
     }),
   });
-
-  // const winnerSlot = useMemo(() => slots[0], [slots]);
-
-  // useEffect(() => {
-  //   const { name, amount } = winnerSlot;
-  //
-  //   if (isBuyoutVisible && buyout && amount && amount >= buyout) {
-  //     dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} выкупили за ${amount}!`));
-  //   }
-  // }, [buyout, dispatch, isBuyoutVisible, winnerSlot]);
 
   const addButtonClasses = useMemo(
     () =>

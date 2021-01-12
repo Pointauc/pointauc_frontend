@@ -1,0 +1,30 @@
+.alerts-container {
+  position: absolute;
+  bottom: 20px;
+  margin-left: 30px;
+
+  .MuiAlert-root {
+    margin-top: 10px;
+  }
+}
+
+.example-enter {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.example-enter-active {
+  opacity: 1;
+  height: 36px;
+  transition: opacity 250ms ease-in, height 150ms linear !important;
+}
+
+.example-exit {
+  opacity: 1;
+}
+
+.example-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in !important;
+}

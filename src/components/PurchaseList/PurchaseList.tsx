@@ -6,7 +6,7 @@ import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import './PurchaseList.scss';
 import CustomDragLayer from '../CustomDragLayer/CustomDragLayer';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
-import { addPurchase, Purchase } from '../../reducers/Purchases/Purchases';
+import { processRedemption, Purchase } from '../../reducers/Purchases/Purchases';
 import { PURCHASE_SORT_OPTIONS } from '../../constants/purchase.constants';
 
 const PurchaseList: React.FC = () => {
@@ -22,7 +22,7 @@ const PurchaseList: React.FC = () => {
       const { type, purchase } = JSON.parse(data);
 
       if (type === MESSAGE_TYPES.PURCHASE) {
-        dispatch(addPurchase(purchase));
+        dispatch(processRedemption(purchase));
       }
     },
     [dispatch],
