@@ -1,7 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
+import { Action } from 'redux';
 import { Slot } from '../../models/slot.model';
 import { Purchase } from '../Purchases/Purchases';
+import { RootState } from '../index';
+import { sortSlots } from '../../utils/common.utils';
 
 interface SlotsState {
   slots: Slot[];
@@ -85,10 +88,28 @@ export const {
   setSlotName,
   addExtra,
   addSlot,
-  createSlotFromPurchase,
   deleteSlot,
   resetSlots,
   setSlots,
 } = slotsSlice.actions;
+
+export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: Purchase) => (
+  dispatch: ThunkDispatch<{}, {}, Action>,
+  getState: () => RootState,
+): void => {
+  const {
+    aucSettings: {
+      integration: {
+        da: { pointsRate },
+      },
+    },
+    slots: { slots },
+  } = getState();
+  const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null };
+  const updatedSlots = [...slots, newSlot];
+
+  updateSlotPosition(updatedSlots, updatedSlots.length - 1);
+  dispatch(setSlots(sortSlots(updatedSlots)));
+};
 
 export default slotsSlice.reducer;

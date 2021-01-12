@@ -19,12 +19,16 @@ interface DroppableSlotProps extends Slot {
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) => {
   const dispatch = useDispatch();
   const { background } = useSelector((root: RootState) => root.aucSettings.settings);
+  const {
+    da: { pointsRate },
+  } = useSelector((root: RootState) => root.aucSettings.integration);
   const { id, amount, name } = slotProps;
 
   const [{ isOver, canDrop, showRemoveHelper }, drops] = useDrop({
     accept: DragTypeEnum.Purchase,
-    drop: ({ cost, message }: PurchaseDragType) => {
-      dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
+    drop: ({ cost, message, isDonation }: PurchaseDragType) => {
+      const addedCost = isDonation ? cost * pointsRate : cost;
+      dispatch(setSlotAmount({ id, amount: Number(amount) + addedCost }));
 
       if (!name) {
         dispatch(setSlotName({ id, name: message }));

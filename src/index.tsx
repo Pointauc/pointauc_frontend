@@ -15,28 +15,17 @@ import 'moment/locale/ru';
 import ROUTES from './constants/routes.constants';
 import TwitchRedirect from './components/TwitchRedirect/TwitchRedirect';
 import DARedirect from './components/DARedirect/DARedirect';
+import { sortSlots } from './utils/common.utils';
 
 moment.locale('ru');
 
-const SORTABLE_SLOT_EVENTS = [
-  'slots/setSlotAmount',
-  'slots/addExtra',
-  'slots/deleteSlot',
-  'slots/createSlotFromPurchase',
-  'slots/addSlot',
-];
+const SORTABLE_SLOT_EVENTS = ['slots/setSlotAmount', 'slots/addExtra', 'slots/deleteSlot', 'slots/addSlot'];
 
 const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => (action): AnyAction => {
   const result = next(action);
   if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
-    const slots = [...store.getState().slots.slots];
-    const sortedSlots = slots.sort((a: Slot, b: Slot) => {
-      if (a.amount === undefined) {
-        return 1;
-      }
+    const sortedSlots = sortSlots(store.getState().slots.slots);
 
-      return Number(b.amount) - Number(a.amount);
-    });
     return next(setSlots(sortedSlots));
   }
   return result;

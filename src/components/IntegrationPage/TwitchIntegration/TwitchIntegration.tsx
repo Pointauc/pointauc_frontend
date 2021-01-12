@@ -110,7 +110,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
           control={control}
           type="number"
           defaultValue={cost}
-          className="field md"
+          className="field lg"
         />
       );
     },
@@ -159,7 +159,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
               name="twitch.rewardsPrefix"
               control={control}
               label="Общее название для наград"
-              className="field md"
+              className="field lg"
             />
           </FormGroup>
           <div className="hint">

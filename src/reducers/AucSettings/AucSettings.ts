@@ -33,6 +33,8 @@ export interface IntegrationFields {
   };
   da: {
     pointsRate: number;
+    isIncrementActive: boolean;
+    incrementTime: number;
   };
 }
 
@@ -60,7 +62,9 @@ export const initialState: AucSettingsState = {
       rewards: [{ cost: 5000, color: '#fff' }],
     },
     da: {
-      pointsRate: 50,
+      pointsRate: 100,
+      isIncrementActive: false,
+      incrementTime: 30,
     },
   },
   activeListeners: {

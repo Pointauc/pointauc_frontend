@@ -1,12 +1,14 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Switch } from '@material-ui/core';
+import { Button, FormGroup, Switch, Typography } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
 import './DAIntegration.scss';
 import { sendDaSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
+import FormSwitch from '../../FormSwitch/FormSwitch';
+import FormInput from '../../FormInput/FormInput';
 
 const authParams = {
   client_id: '6727',
@@ -52,7 +54,22 @@ const DaIntegration: FC<DaIntegration> = ({ control }) => {
         <Switch onChange={handleSwitchChange} disabled={!hasDAAuth || isSubscribeLoading} checked={isSubscribed} />
       </SettingsGroupTitle>
       {hasDAAuth ? (
-        <></>
+        <FormGroup>
+          <FormGroup row className="auc-settings-row">
+            <FormInput
+              name="da.pointsRate"
+              control={control}
+              label="Курс рубля к поинтам"
+              type="number"
+              className="field md"
+            />
+          </FormGroup>
+          <FormGroup row className="auc-settings-row">
+            <FormSwitch name="da.isIncrementActive" control={control} label="Добавлять время при донате" />
+            <FormInput name="da.incrementTime" className="field sm" control={control} type="number" />
+            <Typography variant="body1">с.</Typography>
+          </FormGroup>
+        </FormGroup>
       ) : (
         <>
           <Button
