@@ -13,6 +13,7 @@ import { RootState } from '../../../reducers';
 import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import { Slot } from '../../../models/slot.model';
+import { sendCpSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SS',
@@ -23,17 +24,31 @@ const Stopwatch: React.FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const {
     settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime },
+    activeListeners: { twitch: isTwitchSubscribed },
+    integration: {
+      twitch: { dynamicRewards },
+    },
   } = useSelector((root: RootState) => root.aucSettings);
   const defaultTime = Number(startTime) * 60 * 1000;
   const stopwatchStep = Number(timeStep) * 1000;
   const stopwatchAutoincrement = Number(autoincrementTime) * 1000;
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
+  const [subscribedState, setSubscribedState] = useState<boolean>(isTwitchSubscribed);
   const time = useRef<number>(defaultTime);
   const frameId = useRef<number>();
   const prevTimestamp = useRef<number>();
   const stopwatchElement = useRef<HTMLDivElement>(null);
   const winnerRef = useRef<Slot>();
+
+  useEffect(() => {
+    if (!dynamicRewards || subscribedState !== isTwitchSubscribed || isStopped !== isTwitchSubscribed) {
+      return;
+    }
+
+    setSubscribedState(!isStopped);
+    dispatch(sendCpSubscribedState(!isStopped));
+  }, [dispatch, dynamicRewards, isStopped, isTwitchSubscribed, subscribedState]);
 
   const winnerSlot = useMemo(() => {
     [winnerRef.current] = slots;
@@ -48,6 +63,7 @@ const Stopwatch: React.FC = () => {
         time.current += timeDifference;
         if (time.current < 0) {
           time.current = 0;
+          setIsStopped(true);
           const { name } = winnerRef.current || {};
           dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }

@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AlertProps, AlertType, AlertTypeEnum } from '../../models/alert.model';
+import { AlertProps, AlertType } from '../../models/alert.model';
 import { MAX_ALERTS } from '../../constants/common.constants';
 
 interface NotificationsState {
   message: string | null;
   alerts: AlertType[];
 }
-// { type: AlertTypeEnum.Success, id: 1, message: `kozjar добавил 10000 к "Хранители"!` }
+
 const initialState: NotificationsState = {
   message: null,
-  alerts: [{ type: AlertTypeEnum.Success, id: 1, message: `kozjar добавил 10000 к "Хранители"!` }],
+  alerts: [],
 };
 
 const notificationsSlice = createSlice({

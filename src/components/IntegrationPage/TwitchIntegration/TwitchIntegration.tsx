@@ -16,19 +16,18 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFieldArray } from 'react-hook-form';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
-import { getCookie } from '../../../utils/common.utils';
 import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
 import './TwitchIntegration.scss';
 import FormInput from '../../FormInput/FormInput';
 import FormSwitch from '../../FormSwitch/FormSwitch';
 import FormColorPicker from '../../FormColorPicker/FormColorPicker';
-import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
+import { sendCpSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
 
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -70,8 +69,8 @@ interface TwitchIntegrationProps {
 }
 
 const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
+  const dispatch = useDispatch();
   const { username } = useSelector((root: RootState) => root.user);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const { activeListeners } = useSelector((root: RootState) => root.aucSettings);
   const { twitch: isSubscribedStore } = activeListeners;
   const [isSubscribed, setIsSubscribed] = useState<boolean>(isSubscribedStore);
@@ -125,28 +124,12 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     [control],
   );
 
-  const subscribeTwitchPoints = useCallback((): void => {
-    if (webSocket) {
-      webSocket.send(
-        JSON.stringify({ type: MESSAGE_TYPES.CHANNEL_POINTS_SUBSCRIBE, channelId: getCookie('userToken') }),
-      );
-    }
-  }, [webSocket]);
-
-  const unsubscribeTwitchPoints = useCallback((): void => {
-    if (webSocket) {
-      webSocket.send(
-        JSON.stringify({ type: MESSAGE_TYPES.CHANNEL_POINTS_UNSUBSCRIBE, channelId: getCookie('userToken') }),
-      );
-    }
-  }, [webSocket]);
-
   const handleSwitchChange = useCallback(
     (e: any, checked: boolean): void => {
       setIsSubscribed(checked);
-      checked ? subscribeTwitchPoints() : unsubscribeTwitchPoints();
+      dispatch(sendCpSubscribedState(checked));
     },
-    [subscribeTwitchPoints, unsubscribeTwitchPoints],
+    [dispatch],
   );
 
   const isSubscribeLoading = useMemo(() => isSubscribed !== isSubscribedStore, [isSubscribed, isSubscribedStore]);
