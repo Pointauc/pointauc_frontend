@@ -14,8 +14,6 @@ import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import { Slot } from '../../../models/slot.model';
 import { sendCpSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
-import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
-import { setTwitchListener } from '../../../reducers/AucSettings/AucSettings';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SS',
@@ -24,13 +22,13 @@ export const STOPWATCH = {
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  // const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const {
     settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime },
     activeListeners: { twitch: isTwitchSubscribed },
     integration: {
       twitch: { dynamicRewards },
-      da: { isIncrementActive, incrementTime },
+      // da: { isIncrementActive, incrementTime },
     },
   } = useSelector((root: RootState) => root.aucSettings);
   const defaultTime = Number(startTime) * 60 * 1000;

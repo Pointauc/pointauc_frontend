@@ -9,7 +9,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer, { RootState } from './reducers';
-import { Slot } from './models/slot.model';
 import { setSlots } from './reducers/Slots/Slots';
 import 'moment/locale/ru';
 import ROUTES from './constants/routes.constants';

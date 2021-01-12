@@ -1,5 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
-import { Purchase } from '../reducers/Purchases/Purchases';
 import { Slot } from '../models/slot.model';
 
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
