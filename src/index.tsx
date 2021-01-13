@@ -18,7 +18,13 @@ import { sortSlots } from './utils/common.utils';
 
 moment.locale('ru');
 
-const SORTABLE_SLOT_EVENTS = ['slots/setSlotAmount', 'slots/addExtra', 'slots/deleteSlot', 'slots/addSlot'];
+const SORTABLE_SLOT_EVENTS = [
+  'slots/setSlotAmount',
+  'slots/addExtra',
+  'slots/deleteSlot',
+  'slots/addSlot',
+  'slots/addSlotAmount',
+];
 
 const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => (action): AnyAction => {
   const result = next(action);
@@ -44,6 +50,12 @@ ReactDOM.render(
         </Route>
         <Route exact path={ROUTES.DA_REDIRECT}>
           <DARedirect />
+        </Route>
+        <Route path={ROUTES.HOME}>
+          <App />
+        </Route>
+        <Route path={ROUTES.HOME}>
+          <App />
         </Route>
         <Route path={ROUTES.HOME}>
           <App />

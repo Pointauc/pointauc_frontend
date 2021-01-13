@@ -12,6 +12,7 @@ const ROUTES = {
   HISTORY: '/history',
   HELP: '/help',
   INTEGRATION: '/integration',
+  CHAT_WHEEL: '/chatWheel',
 };
 
 export default ROUTES;
