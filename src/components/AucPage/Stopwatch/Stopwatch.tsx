@@ -14,6 +14,7 @@ import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import { Slot } from '../../../models/slot.model';
 import { sendCpSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
+import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SS',
@@ -22,13 +23,13 @@ export const STOPWATCH = {
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
-  // const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const {
     settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime },
     activeListeners: { twitch: isTwitchSubscribed },
     integration: {
       twitch: { dynamicRewards },
-      // da: { isIncrementActive, incrementTime },
+      da,
     },
   } = useSelector((root: RootState) => root.aucSettings);
   const defaultTime = Number(startTime) * 60 * 1000;
@@ -42,6 +43,11 @@ const Stopwatch: React.FC = () => {
   const prevTimestamp = useRef<number>();
   const stopwatchElement = useRef<HTMLDivElement>(null);
   const winnerRef = useRef<Slot>();
+  const daSettings = useRef(da);
+
+  useEffect(() => {
+    daSettings.current = da;
+  }, [da]);
 
   useEffect(() => {
     if (!dynamicRewards || subscribedState !== isTwitchSubscribed || isStopped !== isTwitchSubscribed) {
@@ -75,20 +81,21 @@ const Stopwatch: React.FC = () => {
     [dispatch],
   );
 
-  // const handleDonation = useCallback(
-  //   ({ data }: MessageEvent) => {
-  //     const { type, purchase } = JSON.parse(data);
-  //
-  //     if (isIncrementActive && type === MESSAGE_TYPES.PURCHASE && purchase.isDonation) {
-  //       updateStopwatch(incrementTime);
-  //     }
-  //   },
-  //   [incrementTime, isIncrementActive, updateStopwatch],
-  // );
+  const handleDonation = useCallback(
+    ({ data }: MessageEvent) => {
+      const { type, purchase } = JSON.parse(data);
+      const { isIncrementActive, incrementTime } = daSettings.current;
 
-  // useEffect(() => {
-  //   webSocket?.addEventListener('message', handleDonation);
-  // }, [handleDonation, webSocket]);
+      if (isIncrementActive && type === MESSAGE_TYPES.PURCHASE && purchase.isDonation) {
+        updateStopwatch(incrementTime * 1000);
+      }
+    },
+    [updateStopwatch],
+  );
+
+  useEffect(() => {
+    webSocket?.addEventListener('message', handleDonation);
+  }, [handleDonation, webSocket]);
 
   useEffect(() => updateStopwatch(), [updateStopwatch]);
 

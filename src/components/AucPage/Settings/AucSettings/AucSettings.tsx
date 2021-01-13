@@ -11,11 +11,12 @@ import { RootState } from '../../../../reducers';
 import FormSwitch from '../../../FormSwitch/FormSwitch';
 
 interface AucSettingsProps {
-  formMethods: UseFormMethods;
+  control: UseFormMethods['control'];
+  register: UseFormMethods['register'];
+  setValue: UseFormMethods['setValue'];
 }
 
-const AucSettings: FC<AucSettingsProps> = ({ formMethods }) => {
-  const { register, control, setValue } = formMethods;
+const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const { purchaseSort } = settings;
 
@@ -28,7 +29,7 @@ const AucSettings: FC<AucSettingsProps> = ({ formMethods }) => {
   };
 
   const resetBackground = (): void => {
-    setValue('background', undefined, { shouldDirty: true });
+    setValue('background', null, { shouldDirty: true });
   };
 
   return (

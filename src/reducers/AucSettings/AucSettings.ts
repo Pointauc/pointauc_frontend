@@ -10,7 +10,7 @@ export interface SettingFields {
   isAutoincrementActive?: boolean;
   autoincrementTime?: number;
   isBuyoutVisible?: boolean;
-  background?: string;
+  background: string | null;
   purchaseSort?: number;
 }
 
@@ -52,7 +52,7 @@ export const initialState: AucSettingsState = {
     isAutoincrementActive: false,
     autoincrementTime: 30,
     purchaseSort: 0,
-    background: undefined,
+    background: null,
   },
   integration: {
     twitch: {

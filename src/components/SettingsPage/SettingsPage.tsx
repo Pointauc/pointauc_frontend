@@ -23,6 +23,9 @@ const SettingsPage: FC = () => {
     handleSubmit,
     formState: { isDirty },
     reset,
+    control,
+    register,
+    setValue,
   } = formMethods;
 
   useEffect(() => {
@@ -45,8 +48,8 @@ const SettingsPage: FC = () => {
   return (
     <PageContainer title="Настройки" classes={{ root: 'settings' }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <StopwatchSettings formMethods={formMethods} />
-        <AucSettings formMethods={formMethods} />
+        <StopwatchSettings control={control} />
+        <AucSettings control={control} register={register} setValue={setValue} />
         <div style={{ marginTop: 40 }}>
           <LoadingButton
             isLoading={isSubmitting}
