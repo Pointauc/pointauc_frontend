@@ -15,6 +15,7 @@ import ROUTES from './constants/routes.constants';
 import TwitchRedirect from './components/TwitchRedirect/TwitchRedirect';
 import DARedirect from './components/DARedirect/DARedirect';
 import { sortSlots } from './utils/common.utils';
+import ChatWheelPage from './components/ChatWheelPage/ChatWheelPage';
 
 moment.locale('ru');
 
@@ -51,11 +52,8 @@ ReactDOM.render(
         <Route exact path={ROUTES.DA_REDIRECT}>
           <DARedirect />
         </Route>
-        <Route path={ROUTES.HOME}>
-          <App />
-        </Route>
-        <Route path={ROUTES.HOME}>
-          <App />
+        <Route exact path={ROUTES.CHAT_WHEEL}>
+          <ChatWheelPage />
         </Route>
         <Route path={ROUTES.HOME}>
           <App />

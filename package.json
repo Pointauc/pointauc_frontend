@@ -12,10 +12,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "@types/chart.js": "^2.9.29",
     "@types/lodash.merge": "^4.6.6",
     "ag-grid-community": "^24.0.0",
     "ag-grid-react": "^24.1.1",
+    "animejs": "^3.2.1",
     "axios": "^0.19.2",
+    "chart.js": "^2.9.4",
     "classnames": "^2.2.6",
     "js-cookie": "^2.2.1",
     "lodash.merge": "^4.6.2",
@@ -35,7 +38,9 @@
     "react-scripts": "3.4.1",
     "react-transition-group": "^4.4.1",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.2.1",
+    "tmi.js": "^1.7.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -60,6 +65,7 @@
     ]
   },
   "devDependencies": {
+    "@types/animejs": "^3.1.2",
     "@types/classnames": "^2.2.10",
     "@types/jest": "^24.0.0",
     "@types/js-cookie": "^2.2.6",
@@ -70,6 +76,8 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.5",
+    "@types/styled-components": "^5.1.7",
+    "@types/tmi.js": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "eslint-config-airbnb": "^18.2.0",
