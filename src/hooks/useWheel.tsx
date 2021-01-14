@@ -1,5 +1,6 @@
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
+import pradenW from '../assets/img/pradenW.png';
 
 interface WheelResult {
   wheelComponent: ReactNode;
@@ -7,6 +8,16 @@ interface WheelResult {
 }
 
 type Context = CanvasRenderingContext2D;
+
+const centerCircleStyles = {
+  backgroundImage: `url(${pradenW})`,
+  backgroundColor: 'transparent',
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat',
+};
+
+const borderWidth = 3;
 
 const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -43,7 +54,7 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
 
     ctx.fillStyle = color;
     ctx.strokeStyle = '#222';
-    ctx.lineWidth = 5;
+    ctx.lineWidth = borderWidth;
     const radius = center - ctx.lineWidth;
     ctx.beginPath();
     ctx.moveTo(center, center);
@@ -55,16 +66,20 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
   };
 
   const drawText = (ctx: Context, center: number, { startAngle, endAngle, name }: WheelItemWithAngle): void => {
-    const radius = center - 5;
+    const radius = center - 3;
 
     ctx.save();
     ctx.fillStyle = '#fff';
     ctx.font = '22px Arial';
     ctx.textBaseline = 'middle';
 
-    const textRadius = (radius - ctx.measureText(name).width) / 2 + 15;
+    const textRadius = (radius - ctx.measureText(name).width) / 1.3;
+    console.log(textRadius);
     const centerAngle = endAngle - (endAngle - startAngle) / 2;
-    const textCoords = { x: textRadius * Math.cos(centerAngle) + 5, y: textRadius * Math.sin(centerAngle) + 5 };
+    const textCoords = {
+      x: textRadius * Math.cos(centerAngle) + borderWidth,
+      y: textRadius * Math.sin(centerAngle) + borderWidth,
+    };
 
     ctx.translate(textCoords.x + radius, textCoords.y + radius);
     ctx.rotate(centerAngle);
@@ -141,11 +156,11 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
   const spin = (): void => {
     setWinnerItem(undefined);
     const randomSpin = Math.floor(Math.random() * 360);
-    const nextRotate = rotate + 2500 + randomSpin;
+    const nextRotate = rotate + 1700 + randomSpin;
     // animateWheel(rotate, nextRotate);
     setRotate(nextRotate);
 
-    setTimeout(() => updateWinner(nextRotate), 8300);
+    setTimeout(() => updateWinner(nextRotate), 9000);
   };
 
   const drawWheel = (): void => {
@@ -229,6 +244,20 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
   //   }
   // }, [interpolation]);
 
+  const circleStyles: CSSProperties = useMemo(() => {
+    const size = offset * 0.2;
+    return {
+      ...centerCircleStyles,
+      top: (offset - size) / 2,
+      left: (offset - size) / 2,
+      width: size,
+      height: size,
+      position: 'absolute',
+      borderRadius: '100%',
+      border: '3px solid #222',
+    };
+  }, [offset]);
+
   const wheelComponent = (
     <>
       {/* <div style={{ width: 800, height: 500, position: 'absolute', marginLeft: '50vw' }}> */}
@@ -236,10 +265,11 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
       {/* </div> */}
       <div style={{ width: '95vw', height: '95vh', position: 'absolute' }} ref={wrapper}>
         <canvas
-          style={{ transform: `rotate(${rotate}deg)`, transition: 'transform 7.5s cubic-bezier(.45,.0,.3,1)' }}
+          style={{ transform: `rotate(${rotate}deg)`, transition: 'transform 8s cubic-bezier(.4,.0,.25,1)' }}
           ref={canvas}
         />
         <div style={{ left: offset, top: offset / 2 }} className="wheel-selector" />
+        <div style={circleStyles} />
         {!!winnerItem && (
           <div style={{ width: offset, height: offset }} className="wheel-winner">
             {winnerItem.name}

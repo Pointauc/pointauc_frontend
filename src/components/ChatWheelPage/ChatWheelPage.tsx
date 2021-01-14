@@ -25,10 +25,12 @@ const getRandomColor = (): string =>
     .padStart(6, '0')}`;
 // const createItem = (index: number): WheelItem => ({
 //   id: index.toString(),
-//   name: Math.random().toString(),
+//   name: Math.random()
+//     .toString()
+//     .slice(0, Math.floor(Math.random() * 15 + 5)),
 //   color: getRandomColor(),
 // });
-// const defaultItems: WheelItem[] = Array(10)
+// const defaultItems: WheelItem[] = Array(40)
 //   .fill(null)
 //   .map((value, index) => createItem(index));
 
@@ -63,6 +65,7 @@ const ChatWheelPage: FC = () => {
 
   const handleConnection = useCallback(() => {
     console.log(`Connected`);
+    // setTimeout(() => spinRef.current(), 1000);
   }, []);
 
   const handleJoin = (userId: string, name: string, badges: Badges): void => {
