@@ -23,14 +23,14 @@ const getRandomColor = (): string =>
   `#${Math.floor(Math.random() * 2 ** 24)
     .toString(16)
     .padStart(6, '0')}`;
-const createItem = (index: number): WheelItem => ({
-  id: index.toString(),
-  name: Math.random().toString(),
-  color: getRandomColor(),
-});
-const defaultItems: WheelItem[] = Array(10)
-  .fill(null)
-  .map((value, index) => createItem(index));
+// const createItem = (index: number): WheelItem => ({
+//   id: index.toString(),
+//   name: Math.random().toString(),
+//   color: getRandomColor(),
+// });
+// const defaultItems: WheelItem[] = Array(10)
+//   .fill(null)
+//   .map((value, index) => createItem(index));
 
 const ChatWheelPage: FC = () => {
   const [participants, setParticipants] = useState<WheelItem[]>([]);

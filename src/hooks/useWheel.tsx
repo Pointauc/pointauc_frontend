@@ -1,9 +1,4 @@
-import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
-import { keyframes } from 'styled-components';
-import anime from 'animejs';
-import Chart from 'chart.js';
-import { width } from '@material-ui/system';
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 
 interface WheelResult {
@@ -20,10 +15,10 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
   const [rotate, setRotate] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
-  const [canvasStyles, setCanvasStyles] = useState<CSSProperties>({});
+  // const [canvasStyles, setCanvasStyles] = useState<CSSProperties>({});
 
-  const [interpolation, setInterpolation] = useState<number[]>([12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1]);
-  const chartRef = useRef<HTMLCanvasElement>(null);
+  // const [interpolation, setInterpolation] = useState<number[]>([12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1]);
+  // const chartRef = useRef<HTMLCanvasElement>(null);
 
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
@@ -98,50 +93,50 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
     }
   };
 
-  const animateWheel = (previousRotate: number, nextRotate: number): void => {
-    const rotationChange = nextRotate - previousRotate;
-    setCanvasStyles({ transition: 'transform 8s cubic-bezier(.55,0,.3,1)', transform: `rotate(${nextRotate}deg)` });
-    setInterpolation([]);
-    const interpolatedValues: number[] = [];
+  // const animateWheel = (previousRotate: number, nextRotate: number): void => {
+  //   const rotationChange = nextRotate - previousRotate;
+  // setCanvasStyles({ transition: 'transform 8s cubic-bezier(.55,0,.3,1)', transform: `rotate(${nextRotate}deg)` });
+  // setInterpolation([]);
+  // const interpolatedValues: number[] = [];
+  //
+  // anime({
+  //   targets: '.wheel',
+  // rotate: [
+  //   { value: previousRotate + rotationChange * 0.3, duration: 3000, easing: 'easeInCubic' },
+  //   { value: previousRotate + rotationChange * 0.85, duration: 2000, easing: 'linear' },
+  //   { value: nextRotate, duration: 5000, easing: 'easeOutExpo' },
+  // ],
+  // rotate: nextRotate,
+  // easing: 'cubicBezier(.37,0,.37,1)',
+  // easing: () => (t: number): number => {
+  //   let res = t;
+  // res = 1 - (1 - t) ** 4;
+  // interpolatedValues.push(res);
+  // return res;
 
-    anime({
-      targets: '.wheel',
-      // rotate: [
-      //   { value: previousRotate + rotationChange * 0.3, duration: 3000, easing: 'easeInCubic' },
-      //   { value: previousRotate + rotationChange * 0.85, duration: 2000, easing: 'linear' },
-      //   { value: nextRotate, duration: 5000, easing: 'easeOutExpo' },
-      // ],
-      rotate: nextRotate,
-      // easing: 'cubicBezier(.37,0,.37,1)',
-      easing: () => (t: number): number => {
-        let res = t;
-        // res = 1 - (1 - t) ** 4;
-        // interpolatedValues.push(res);
-        // return res;
+  // if (t < 0.2) {
+  //   const localTime = t / 0.2;
+  //   res = localTime ** 3 * 0.2;
+  // }
 
-        if (t < 0.2) {
-          const localTime = t / 0.2;
-          res = localTime ** 3 * 0.2;
-        }
+  // if (t > 0.6) {
+  //   const localTime = (t - 0.6) / 0.4;
+  //   res = 1 - (1 - localTime) ** 4;
+  //   res = res * 0.4 + 0.6;
+  // console.log(`${1 - Math.pow(1 - t, 3)} - ${res}`);
+  // }
 
-        if (t > 0.6) {
-          const localTime = (t - 0.6) / 0.4;
-          res = 1 - (1 - localTime) ** 4;
-          res = res * 0.4 + 0.6;
-          // console.log(`${1 - Math.pow(1 - t, 3)} - ${res}`);
-        }
-
-        // console.log(interpolation);
-        interpolatedValues.push(res);
-        return res;
-      },
-      duration: 8000,
-      complete: () => {
-        console.log('complete');
-        setInterpolation(interpolatedValues);
-      },
-    });
-  };
+  // console.log(interpolation);
+  // interpolatedValues.push(res);
+  // return res;
+  // },
+  //     duration: 8000,
+  //     complete: () => {
+  //       console.log('complete');
+  //       setInterpolation(interpolatedValues);
+  //     },
+  //   });
+  // };
 
   const spin = (): void => {
     setWinnerItem(undefined);
