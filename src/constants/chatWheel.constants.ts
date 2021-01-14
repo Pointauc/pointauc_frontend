@@ -1,8 +1,8 @@
 export enum WheelCommand {
-  OpenReg = 'OpenReg',
-  CloseReg = 'CloseReg',
-  Spin = 'Spin',
-  Join = 'Join',
+  OpenReg = 'openReg',
+  CloseReg = 'closeReg',
+  Spin = 'spin',
+  Join = 'join',
 }
 
-export const CHAT_WHEEL_PREFIX = '!kw';
+export const CHAT_WHEEL_PREFIX = '!w';
