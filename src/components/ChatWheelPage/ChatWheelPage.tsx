@@ -91,8 +91,11 @@ const ChatWheelPage: FC = () => {
           if (winner.current) {
             removeParticipant(winner.current);
           }
-          spinRef.current();
-          isSpinning.current = true;
+
+          if (!isSpinning.current) {
+            spinRef.current();
+            isSpinning.current = true;
+          }
         }
 
         break;
