@@ -1,4 +1,7 @@
 import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import gsap from 'gsap';
+// eslint-disable-next-line import/no-named-as-default
+import CustomEase from '../utils/CustomEase';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 import pradenW from '../assets/img/pradenW.png';
 
@@ -6,6 +9,8 @@ interface WheelResult {
   wheelComponent: ReactNode;
   spin: () => void;
 }
+
+window.gsap = gsap;
 
 type Context = CanvasRenderingContext2D;
 
@@ -74,7 +79,6 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
     ctx.textBaseline = 'middle';
 
     const textRadius = (radius - ctx.measureText(name).width) / 1.3;
-    console.log(textRadius);
     const centerAngle = endAngle - (endAngle - startAngle) / 2;
     const textCoords = {
       x: textRadius * Math.cos(centerAngle) + borderWidth,
@@ -108,59 +112,63 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
     }
   };
 
-  // const animateWheel = (previousRotate: number, nextRotate: number): void => {
-  //   const rotationChange = nextRotate - previousRotate;
-  // setCanvasStyles({ transition: 'transform 8s cubic-bezier(.55,0,.3,1)', transform: `rotate(${nextRotate}deg)` });
-  // setInterpolation([]);
-  // const interpolatedValues: number[] = [];
-  //
-  // anime({
-  //   targets: '.wheel',
-  // rotate: [
-  //   { value: previousRotate + rotationChange * 0.3, duration: 3000, easing: 'easeInCubic' },
-  //   { value: previousRotate + rotationChange * 0.85, duration: 2000, easing: 'linear' },
-  //   { value: nextRotate, duration: 5000, easing: 'easeOutExpo' },
-  // ],
-  // rotate: nextRotate,
-  // easing: 'cubicBezier(.37,0,.37,1)',
-  // easing: () => (t: number): number => {
-  //   let res = t;
-  // res = 1 - (1 - t) ** 4;
-  // interpolatedValues.push(res);
-  // return res;
-
-  // if (t < 0.2) {
-  //   const localTime = t / 0.2;
-  //   res = localTime ** 3 * 0.2;
-  // }
-
-  // if (t > 0.6) {
-  //   const localTime = (t - 0.6) / 0.4;
-  //   res = 1 - (1 - localTime) ** 4;
-  //   res = res * 0.4 + 0.6;
-  // console.log(`${1 - Math.pow(1 - t, 3)} - ${res}`);
-  // }
-
-  // console.log(interpolation);
-  // interpolatedValues.push(res);
-  // return res;
-  // },
-  //     duration: 8000,
-  //     complete: () => {
-  //       console.log('complete');
-  //       setInterpolation(interpolatedValues);
-  //     },
-  //   });
-  // };
+  const animateWheel = (previousRotate: number, nextRotate: number): void => {
+    if (canvas.current) {
+      gsap.to(canvas.current, {
+        duration: 8,
+        ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1'),
+        rotate: nextRotate,
+      });
+    }
+    //   const rotationChange = nextRotate - previousRotate;
+    // setCanvasStyles({ transition: 'transform 8s cubic-bezier(.55,0,.3,1)', transform: `rotate(${nextRotate}deg)` });
+    // setInterpolation([]);
+    // const interpolatedValues: number[] = [];
+    //
+    // anime({
+    //   targets: '.wheel',
+    // rotate: [
+    //   { value: previousRotate + rotationChange * 0.3, duration: 3000, easing: 'easeInCubic' },
+    //   { value: previousRotate + rotationChange * 0.85, duration: 2000, easing: 'linear' },
+    //   { value: nextRotate, duration: 5000, easing: 'easeOutExpo' },
+    // ],
+    // rotate: nextRotate,
+    // easing: 'cubicBezier(.37,0,.37,1)',
+    // easing: () => (t: number): number => {
+    //   let res = t;
+    // res = 1 - (1 - t) ** 4;
+    // interpolatedValues.push(res);
+    // return res;
+    // if (t < 0.2) {
+    //   const localTime = t / 0.2;
+    //   res = localTime ** 3 * 0.2;
+    // }
+    // if (t > 0.6) {
+    //   const localTime = (t - 0.6) / 0.4;
+    //   res = 1 - (1 - localTime) ** 4;
+    //   res = res * 0.4 + 0.6;
+    // console.log(`${1 - Math.pow(1 - t, 3)} - ${res}`);
+    // }
+    // console.log(interpolation);
+    // interpolatedValues.push(res);
+    // return res;
+    // },
+    //     duration: 8000,
+    //     complete: () => {
+    //       console.log('complete');
+    //       setInterpolation(interpolatedValues);
+    //     },
+    //   });
+  };
 
   const spin = (): void => {
     setWinnerItem(undefined);
     const randomSpin = Math.floor(Math.random() * 360);
-    const nextRotate = rotate + 1700 + randomSpin;
-    // animateWheel(rotate, nextRotate);
+    const nextRotate = rotate + 1900 + randomSpin;
+    animateWheel(rotate, nextRotate);
     setRotate(nextRotate);
 
-    setTimeout(() => updateWinner(nextRotate), 9000);
+    setTimeout(() => updateWinner(nextRotate), 8600);
   };
 
   const drawWheel = (): void => {
@@ -265,7 +273,7 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
       {/* </div> */}
       <div style={{ width: '95vw', height: '95vh', position: 'absolute' }} ref={wrapper}>
         <canvas
-          style={{ transform: `rotate(${rotate}deg)`, transition: 'transform 8s cubic-bezier(.4,.0,.25,1)' }}
+          // style={{ transform: `rotate(${rotate}deg)`, transition: 'transform 8s cubic-bezier(.4,.0,.25,1)' }}
           ref={canvas}
         />
         <div style={{ left: offset, top: offset / 2 }} className="wheel-selector" />

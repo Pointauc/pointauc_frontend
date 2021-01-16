@@ -12,6 +12,47 @@ const opts = {
   channels: ['Praden'],
 };
 
+const colors = [
+  '#00b6ac',
+  '#4a91ae',
+  '#63c575',
+  '#f85842',
+  '#5d60e2',
+  '#e58221',
+  '#966062',
+  '#7daee8',
+  '#6690ad',
+  '#2a8bea',
+  '#e385cf',
+  '#e35182',
+  '#36b5e9',
+  '#355f56',
+  '#375f4e',
+  '#519cc0',
+  '#d17175',
+  '#b062e7',
+  '#abcc9e',
+  '#80c18b',
+  '#717ff6',
+  '#7c9f30',
+  '#c3747f',
+  '#ea5461',
+  '#b87dc8',
+  '#978fbc',
+  '#df5f56',
+  '#f3bf41',
+  '#FFCE24',
+  '#EA631D',
+  '#E33055',
+  '#0085CB',
+  '#275483',
+  '#3CB787',
+  '#80A649',
+  '#E3904C',
+  '#C94D51',
+  '#5B4749',
+];
+
 const USER_BADGES = ['founder', 'subscriber', 'broadcaster'];
 const MODERATOR_BADGES = ['broadcaster'];
 
@@ -19,18 +60,18 @@ const getCommand = (command: WheelCommand): string => `${CHAT_WHEEL_PREFIX}${com
 const checkBadges = (badges: Badges, validBadges: string[]): boolean =>
   Object.keys(badges).some((badge) => validBadges.includes(badge));
 
-const getRandomColor = (): string =>
-  `#${Math.floor(Math.random() * 2 ** 24)
-    .toString(16)
-    .padStart(6, '0')}`;
+// const getRandomColor = (): string =>
+//   `#${Math.floor(Math.random() * 2 ** 24)
+//     .toString(16)
+//     .padStart(6, '0')}`;
 // const createItem = (index: number): WheelItem => ({
 //   id: index.toString(),
 //   name: Math.random()
 //     .toString()
 //     .slice(0, Math.floor(Math.random() * 15 + 5)),
-//   color: getRandomColor(),
+//   color: colors[Math.floor(Math.random() * colors.length)],
 // });
-// const defaultItems: WheelItem[] = Array(40)
+// const defaultItems: WheelItem[] = Array(20)
 //   .fill(null)
 //   .map((value, index) => createItem(index));
 
@@ -70,7 +111,7 @@ const ChatWheelPage: FC = () => {
 
   const handleJoin = (userId: string, name: string, badges: Badges): void => {
     if (checkBadges(badges, USER_BADGES) && !existUsers.current.find(({ id }) => id === userId)) {
-      const newParticipant: WheelItem = { id: userId, color: getRandomColor(), name };
+      const newParticipant: WheelItem = { id: userId, color: colors[Math.floor(Math.random() * colors.length)], name };
 
       setParticipants((prevState) => [...prevState, newParticipant]);
     }
