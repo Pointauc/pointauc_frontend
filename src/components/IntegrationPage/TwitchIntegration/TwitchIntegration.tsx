@@ -87,7 +87,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     name: 'twitch.rewards',
   });
 
-  const handleAppendReward = useCallback(() => append({ cost: 1000, color: '#fff' }), [append]);
+  const handleAppendReward = useCallback(() => append({ cost: 1000, color: '#e3924c' }), [append]);
 
   const renderActionColumn = useCallback(
     (index: number): ReactNode => {

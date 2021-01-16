@@ -59,7 +59,7 @@ export const initialState: AucSettingsState = {
       isRefundAvailable: false,
       dynamicRewards: false,
       rewardsPrefix: 'ставка',
-      rewards: [{ cost: 5000, color: '#fff' }],
+      rewards: [{ cost: 5000, color: '#e3924c' }],
     },
     da: {
       pointsRate: 100,
