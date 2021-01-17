@@ -1,18 +1,22 @@
-import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormControlLabel, Grid, IconButton, Input, Radio, RadioGroup, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import VerticalSplitRoundedIcon from '@material-ui/icons/VerticalSplitRounded';
 import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
-import FlipMove from 'react-flip-move';
 import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
-import { PurchaseDragType } from '../../../models/purchase';
-import { DragTypeEnum } from '../../../enums/dragType.enum';
-import DroppableSlot from '../Slot/DroppableSlot';
+import { handleDragOver } from '../../../utils/common.utils';
+import SlotsList from './SlotsList';
+import {
+  logPurchase,
+  Purchase,
+  PurchaseStatusEnum,
+  removePurchase,
+  setDraggedRedemption,
+} from '../../../reducers/Purchases/Purchases';
 
 const TwoColumnIcon = VerticalSplitRoundedIcon;
 const SingleColumnIcon = ReorderRoundedIcon;
@@ -24,31 +28,19 @@ const SlotsColumn: React.FC = () => {
   const {
     settings: { isBuyoutVisible, background },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
+  const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [, setBuyout] = useState<number | null>(null);
   const [slotWidth, setSlotWidth] = useState<6 | 12>(12);
+  const [enterCounter, setEnterCounter] = useState<number>(0);
+  const isOver = useMemo(() => !!enterCounter, [enterCounter]);
 
   const handleAddSlot = (): void => {
     dispatch(addSlot());
   };
 
-  const [{ isOver, canDrop }, drops] = useDrop({
-    accept: DragTypeEnum.Purchase,
-    drop: (purchase: PurchaseDragType) => dispatch(createSlotFromPurchase(purchase)),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  });
-
   const addButtonClasses = useMemo(
-    () =>
-      classNames(
-        'add-button',
-        { 'drop-help': canDrop && !isOver },
-        { 'drag-over': isOver },
-        { 'custom-background': background },
-      ),
-    [background, canDrop, isOver],
+    () => classNames('add-button', { 'drag-over': isOver }, { 'custom-background': background }),
+    [background, isOver],
   );
 
   const handleBuyoutChange = (): void => {
@@ -79,6 +71,30 @@ const SlotsColumn: React.FC = () => {
     }
   };
 
+  const handleDrop = useCallback(
+    (e: DragEvent<HTMLButtonElement>) => {
+      const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
+      dispatch(createSlotFromPurchase(redemption));
+      dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed }));
+      dispatch(removePurchase(redemption.id));
+      dispatch(setDraggedRedemption(null));
+      setEnterCounter(0);
+    },
+    [dispatch],
+  );
+
+  const handleDragEnter = useCallback(() => {
+    setEnterCounter((prevState) => prevState + 1);
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setEnterCounter((prevState) => prevState - 1);
+  }, []);
+
+  const slotsColumnClasses = useMemo(() => classNames('slots-column', { dragging: !!draggedRedemption }), [
+    draggedRedemption,
+  ]);
+
   return (
     <Grid container direction="column" wrap="nowrap" className="slots">
       <div className={buyoutStyles}>
@@ -89,17 +105,17 @@ const SlotsColumn: React.FC = () => {
       </div>
 
       <Grid container wrap="nowrap" className="slots-wrapper">
-        <Grid container className="slots-column" direction="column" wrap="nowrap">
-          <Grid container className="slots-column-list" spacing={1}>
-            <FlipMove typeName={null} enterAnimation="fade" leaveAnimation="fade" maintainContainerHeight>
-              {slots.map((slot, index) => (
-                <Grid key={slot.id} item xs={slotWidth}>
-                  <DroppableSlot index={index + 1} {...slot} />
-                </Grid>
-              ))}
-            </FlipMove>
-          </Grid>
-          <IconButton onClick={handleAddSlot} className={addButtonClasses} title="Добавить слот" ref={drops}>
+        <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
+          <SlotsList slots={slots} slotWidth={slotWidth} />
+          <IconButton
+            onClick={handleAddSlot}
+            className={addButtonClasses}
+            title="Добавить слот"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+          >
             <AddBoxIcon fontSize="large" />
           </IconButton>
         </Grid>

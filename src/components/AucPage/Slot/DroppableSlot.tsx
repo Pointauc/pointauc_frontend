@@ -1,16 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { DragEvent, useCallback, useMemo, useState } from 'react';
 import './Slot.scss';
 import { IconButton, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDrop } from 'react-dnd';
 import classNames from 'classnames';
 import SlotComponent from './SlotComponent';
 import { deleteSlot, setSlotAmount, setSlotName } from '../../../reducers/Slots/Slots';
 import { Slot } from '../../../models/slot.model';
-import { DragTypeEnum } from '../../../enums/dragType.enum';
-import { PurchaseDragType } from '../../../models/purchase';
 import { RootState } from '../../../reducers';
+import { handleDragOver } from '../../../utils/common.utils';
+import {
+  logPurchase,
+  Purchase,
+  PurchaseStatusEnum,
+  removePurchase,
+  setDraggedRedemption,
+} from '../../../reducers/Purchases/Purchases';
 
 interface DroppableSlotProps extends Slot {
   index: number;
@@ -22,29 +27,15 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
   const {
     da: { pointsRate },
   } = useSelector((root: RootState) => root.aucSettings.integration);
+  const [enterCounter, setEnterCounter] = useState<number>(0);
+  const [isRemoveCost, setIsRemoveCost] = useState<boolean>(false);
   const { id, amount, name } = slotProps;
+  const isOver = useMemo(() => !!enterCounter, [enterCounter]);
 
-  const [{ isOver, canDrop, showRemoveHelper }, drops] = useDrop({
-    accept: DragTypeEnum.Purchase,
-    drop: ({ cost, message, isDonation }: PurchaseDragType) => {
-      const addedCost = isDonation ? cost * pointsRate : cost;
-      dispatch(setSlotAmount({ id, amount: Number(amount) + addedCost }));
-
-      if (!name) {
-        dispatch(setSlotName({ id, name: message }));
-      }
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-      showRemoveHelper: monitor.getItem()?.cost < 0,
-    }),
-  });
-
-  const slotClasses = useMemo(
-    () => classNames('slot', { 'drop-help': canDrop && !isOver, 'drag-over': isOver, 'remove-cost': showRemoveHelper }),
-    [canDrop, isOver, showRemoveHelper],
-  );
+  const slotClasses = useMemo(() => classNames('slot', { 'drag-over': isOver, 'remove-cost': isRemoveCost }), [
+    isOver,
+    isRemoveCost,
+  ]);
 
   const handleDelete = (): void => {
     dispatch(deleteSlot(id));
@@ -52,9 +43,43 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
 
   const slotWrapperClasses = classNames('slot-wrapper', { 'custom-background': background });
 
+  const handleDrop = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
+      const { cost, message, isDonation, id: redemptionId } = redemption;
+      const addedCost = isDonation ? cost * pointsRate : cost;
+
+      dispatch(setSlotAmount({ id, amount: Number(amount) + addedCost }));
+      dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed }));
+      dispatch(removePurchase(redemptionId));
+      dispatch(setDraggedRedemption(null));
+
+      if (!name) {
+        dispatch(setSlotName({ id, name: message }));
+      }
+      setEnterCounter(0);
+    },
+    [amount, dispatch, id, name, pointsRate],
+  );
+
+  const handleDragEnter = useCallback((e: DragEvent<HTMLDivElement>) => {
+    setEnterCounter((prevState) => prevState + 1);
+    setIsRemoveCost(e.dataTransfer.types.includes('remove'));
+  }, []);
+
+  const handleDragLeave = useCallback(() => {
+    setEnterCounter((prevState) => prevState - 1);
+  }, []);
+
   return (
-    <div className={slotWrapperClasses}>
-      <div className={slotClasses} ref={drops}>
+    <div
+      className={slotWrapperClasses}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+    >
+      <div className={slotClasses}>
         <Typography className="slot-index">{`${index}.`}</Typography>
         <SlotComponent {...slotProps} />
       </div>

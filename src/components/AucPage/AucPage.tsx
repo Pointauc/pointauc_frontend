@@ -1,6 +1,4 @@
 import React from 'react';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import SlotsColumn from './SlotsColumn/SlotsColumn';
 import ControlColumn from '../ControlColumn/ControlColumn';
@@ -20,15 +18,13 @@ const AucPage: React.FC = () => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <PageContainer className="auc-container" style={backgroundStyles} maxWidth={false}>
-        <div className="auc-container-content">
-          <SlotsColumn />
-          <ControlColumn />
-        </div>
-        <Notification />
-      </PageContainer>
-    </DndProvider>
+    <PageContainer className="auc-container" style={backgroundStyles} maxWidth={false}>
+      <div className="auc-container-content">
+        <SlotsColumn />
+        <ControlColumn />
+      </div>
+      <Notification />
+    </PageContainer>
   );
 };
 

@@ -2,12 +2,11 @@ import React, { ReactText, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import { RootState } from '../../reducers';
-import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import './PurchaseList.scss';
-import CustomDragLayer from '../CustomDragLayer/CustomDragLayer';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { processRedemption, Purchase } from '../../reducers/Purchases/Purchases';
 import { PURCHASE_SORT_OPTIONS } from '../../constants/purchase.constants';
+import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 
 const PurchaseList: React.FC = () => {
   const dispatch = useDispatch();
@@ -51,9 +50,8 @@ const PurchaseList: React.FC = () => {
   return (
     <div className="purchase-container">
       <div className="purchase-list">
-        <CustomDragLayer />
         {sortedPurchases.map((purchase) => (
-          <PurchaseComponent {...purchase} key={purchase.id} />
+          <DraggableRedemption {...purchase} key={purchase.id} />
         ))}
       </div>
       {!!purchases.length && (

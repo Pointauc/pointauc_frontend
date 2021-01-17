@@ -1,3 +1,4 @@
+import { DragEvent } from 'react';
 import { Slot } from '../models/slot.model';
 
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
@@ -31,4 +32,8 @@ export const sortSlots = (slots: Slot[]): Slot[] => {
 
     return Number(b.amount) - Number(a.amount);
   });
+};
+
+export const handleDragOver = <T extends Element>(e: DragEvent<T>): void => {
+  e.preventDefault();
 };

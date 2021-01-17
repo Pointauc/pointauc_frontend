@@ -1,16 +1,12 @@
 @import "../../styles/colors";
 
-.drag-layer .purchase {
-  width: 304px;
-}
-
 .purchase {
   margin-bottom: 10px;
   cursor: pointer;
   border: 3px solid transparent;
 
   &.remove-cost {
-    border: solid 5px $red-3;
+    border: solid 3px $red-3;
   }
 
   &.drag-placeholder {
@@ -34,5 +30,11 @@
     &-remove-button {
       padding: 10px !important;
     }
+  }
+}
+
+.drag-context {
+  .purchase {
+    width: 304px;
   }
 }

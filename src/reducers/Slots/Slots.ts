@@ -11,7 +11,7 @@ interface SlotsState {
 }
 
 const createSlot = (): Slot => ({
-  id: Math.random(),
+  id: Math.random().toString(),
   extra: null,
   amount: null,
   name: '',

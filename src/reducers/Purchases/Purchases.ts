@@ -31,11 +31,13 @@ export interface PurchaseLog {
 interface PurchasesState {
   purchases: Purchase[];
   history: PurchaseLog[];
+  draggedRedemption: string | null;
 }
 
 const initialState: PurchasesState = {
   purchases: [],
   history: [],
+  draggedRedemption: null,
 };
 
 const purchasesSlice = createSlice({
@@ -54,10 +56,19 @@ const purchasesSlice = createSlice({
     resetPurchases(state): void {
       state.purchases = [];
     },
+    setDraggedRedemption(state, action: PayloadAction<string | null>): void {
+      state.draggedRedemption = action.payload;
+    },
   },
 });
 
-export const { addPurchase, removePurchase, logPurchase, resetPurchases } = purchasesSlice.actions;
+export const {
+  addPurchase,
+  removePurchase,
+  logPurchase,
+  resetPurchases,
+  setDraggedRedemption,
+} = purchasesSlice.actions;
 
 export const processRedemption = (redemption: Purchase) => (
   dispatch: ThunkDispatch<{}, {}, Action>,
