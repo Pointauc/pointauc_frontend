@@ -83,7 +83,7 @@ export const processRedemption = (redemption: Purchase) => (
     const { id, amount, name } = comparedSlot;
 
     dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
-    dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed }));
+    dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: `${username} добавил ${cost} к "${name}"!` }));
   } else {
     dispatch(addPurchase(redemption));
