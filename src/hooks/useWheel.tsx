@@ -120,45 +120,6 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
         rotate: nextRotate,
       });
     }
-    //   const rotationChange = nextRotate - previousRotate;
-    // setCanvasStyles({ transition: 'transform 8s cubic-bezier(.55,0,.3,1)', transform: `rotate(${nextRotate}deg)` });
-    // setInterpolation([]);
-    // const interpolatedValues: number[] = [];
-    //
-    // anime({
-    //   targets: '.wheel',
-    // rotate: [
-    //   { value: previousRotate + rotationChange * 0.3, duration: 3000, easing: 'easeInCubic' },
-    //   { value: previousRotate + rotationChange * 0.85, duration: 2000, easing: 'linear' },
-    //   { value: nextRotate, duration: 5000, easing: 'easeOutExpo' },
-    // ],
-    // rotate: nextRotate,
-    // easing: 'cubicBezier(.37,0,.37,1)',
-    // easing: () => (t: number): number => {
-    //   let res = t;
-    // res = 1 - (1 - t) ** 4;
-    // interpolatedValues.push(res);
-    // return res;
-    // if (t < 0.2) {
-    //   const localTime = t / 0.2;
-    //   res = localTime ** 3 * 0.2;
-    // }
-    // if (t > 0.6) {
-    //   const localTime = (t - 0.6) / 0.4;
-    //   res = 1 - (1 - localTime) ** 4;
-    //   res = res * 0.4 + 0.6;
-    // console.log(`${1 - Math.pow(1 - t, 3)} - ${res}`);
-    // }
-    // console.log(interpolation);
-    // interpolatedValues.push(res);
-    // return res;
-    // },
-    //     duration: 8000,
-    //     complete: () => {
-    //       console.log('complete');
-    //       setInterpolation(interpolatedValues);
-    //     },
-    //   });
   };
 
   const spin = (): void => {
@@ -196,62 +157,6 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedItems]);
 
-  // useEffect(() => {
-  //   const ctx: any = document.getElementById('chart');
-  //   const labels = interpolation.map((x, index) => index.toString());
-  //   if (ctx) {
-  //     console.log(interpolation);
-  //
-  //     const chart = new Chart(ctx, {
-  //       type: 'line',
-  //       data: {
-  //         labels,
-  //         datasets: [
-  //           {
-  //             label: 'Car Speed (mph)',
-  //             data: interpolation,
-  //           },
-  //         ],
-  //       },
-  //       options: {
-  //         responsive: false,
-  //         scales: {
-  //           xAxes: [
-  //             {
-  //               ticks: {
-  //                 maxRotation: 90,
-  //                 minRotation: 80,
-  //               },
-  //               gridLines: {
-  //                 offsetGridLines: true, // à rajouter
-  //               },
-  //             },
-  //             {
-  //               position: 'top',
-  //               ticks: {
-  //                 maxRotation: 90,
-  //                 minRotation: 80,
-  //               },
-  //               gridLines: {
-  //                 offsetGridLines: true, // et matcher pareil ici
-  //               },
-  //             },
-  //           ],
-  //           yAxes: [
-  //             {
-  //               ticks: {
-  //                 beginAtZero: true,
-  //               },
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     });
-  //
-  //     chart.update();
-  //   }
-  // }, [interpolation]);
-
   const circleStyles: CSSProperties = useMemo(() => {
     const size = offset * 0.2;
     return {
@@ -267,24 +172,16 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
   }, [offset]);
 
   const wheelComponent = (
-    <>
-      {/* <div style={{ width: 800, height: 500, position: 'absolute', marginLeft: '50vw' }}> */}
-      {/*  <canvas ref={chartRef} id="chart" width="800" height="500" /> */}
-      {/* </div> */}
-      <div style={{ width: '95vw', height: '95vh', position: 'absolute' }} ref={wrapper}>
-        <canvas
-          // style={{ transform: `rotate(${rotate}deg)`, transition: 'transform 8s cubic-bezier(.4,.0,.25,1)' }}
-          ref={canvas}
-        />
-        <div style={{ left: offset, top: offset / 2 }} className="wheel-selector" />
-        <div style={circleStyles} />
-        {!!winnerItem && (
-          <div style={{ width: offset, height: offset }} className="wheel-winner">
-            {winnerItem.name}
-          </div>
-        )}
-      </div>
-    </>
+    <div style={{ width: '75%', height: '75%', position: 'absolute' }} ref={wrapper}>
+      <canvas ref={canvas} />
+      <div style={{ left: offset, top: offset / 2 }} className="wheel-selector" />
+      <div style={circleStyles} />
+      {!!winnerItem && (
+        <div style={{ width: offset, height: offset }} className="wheel-winner">
+          {winnerItem.name}
+        </div>
+      )}
+    </div>
   );
 
   return { spin, wheelComponent };

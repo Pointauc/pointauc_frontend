@@ -75,7 +75,9 @@ const SlotsColumn: React.FC = () => {
     (e: DragEvent<HTMLButtonElement>) => {
       const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
       dispatch(createSlotFromPurchase(redemption));
-      dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed }));
+      dispatch(
+        logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed, target: redemption.id.toString() }),
+      );
       dispatch(removePurchase(redemption.id));
       dispatch(setDraggedRedemption(null));
       setEnterCounter(0);

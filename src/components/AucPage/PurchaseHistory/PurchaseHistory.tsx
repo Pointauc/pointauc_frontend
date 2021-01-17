@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { AgGridReact } from 'ag-grid-react';
 import moment from 'moment';
@@ -10,8 +10,18 @@ import { FORMAT } from '../../../constants/format.constants';
 import { COLORS } from '../../../constants/color.constants';
 import { PurchaseStatusEnum } from '../../../reducers/Purchases/Purchases';
 
+interface SlotsMap {
+  [key: string]: string | null;
+}
+
 const PurchaseHistory: React.FC = () => {
   const { history } = useSelector((root: RootState) => root.purchases);
+  const { slots } = useSelector((root: RootState) => root.slots);
+
+  const slotsMap = useMemo(
+    () => slots.reduce<SlotsMap>((acc, { id, name }) => ({ ...acc, [id.toString()]: name }), {}),
+    [slots],
+  );
 
   const getTime = (params: ValueGetterParams): string =>
     moment(params.data.purchase.timestamp).format(FORMAT.DATE.time);
@@ -19,6 +29,9 @@ const PurchaseHistory: React.FC = () => {
   const getStatusCellStyles = (params: ValueGetterParams): CSSProperties => ({
     color: COLORS.PURCHASE_STATUS[params.data.status as PurchaseStatusEnum],
   });
+
+  const getTargetName = (params: ValueGetterParams): string =>
+    params.data.target && (slotsMap[params.data.target] || '');
 
   const columnDefs: ColDef[] = [
     {
@@ -47,6 +60,14 @@ const PurchaseHistory: React.FC = () => {
       sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+    },
+    {
+      headerName: 'Добавлен к',
+      field: 'target',
+      sortable: true,
+      filter: 'agTextColumnFilter',
+      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+      valueGetter: getTargetName,
     },
     { headerName: 'Статус', field: 'status', cellStyle: getStatusCellStyles },
   ];

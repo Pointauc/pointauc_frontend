@@ -7,4 +7,5 @@ export interface MenuItem {
   title: string;
   path: string;
   IconComponent: StyledComponent<StyledProps>;
+  disabled?: boolean;
 }

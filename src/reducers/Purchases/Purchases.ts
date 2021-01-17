@@ -26,6 +26,7 @@ export interface Purchase {
 export interface PurchaseLog {
   purchase: Purchase;
   status: PurchaseStatusEnum;
+  target?: string;
 }
 
 interface PurchasesState {

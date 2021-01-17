@@ -1,5 +1,6 @@
 import { DragEvent } from 'react';
 import { Slot } from '../models/slot.model';
+import { COLORS } from '../constants/color.constants';
 
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
 
@@ -37,3 +38,5 @@ export const sortSlots = (slots: Slot[]): Slot[] => {
 export const handleDragOver = <T extends Element>(e: DragEvent<T>): void => {
   e.preventDefault();
 };
+
+export const getWheelColor = (): string => COLORS.WHEEL[Math.floor(Math.random() * COLORS.WHEEL.length)];

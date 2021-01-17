@@ -21,6 +21,8 @@ import { RootState } from '../../reducers';
 import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import AlertsContainer from '../AlertsContainer/AlertsContainer';
+import HistoryPage from '../HistoryPage/HistoryPage';
+import WheelPage from '../WheelPage/WheelPage';
 
 const drawerWidth = 240;
 
@@ -122,8 +124,8 @@ const App: React.FC = () => {
   );
 
   const createMenuItem = useCallback(
-    ({ IconComponent, title, path }: MenuItem) => (
-      <ListItem button key={title} selected={path === pathname} component={Link} to={path}>
+    ({ IconComponent, title, path, disabled }: MenuItem) => (
+      <ListItem disabled={disabled} button key={title} selected={path === pathname} component={Link} to={path}>
         <ListItemIcon>
           <IconComponent className={classes.menuIcon} />
         </ListItemIcon>
@@ -168,10 +170,10 @@ const App: React.FC = () => {
               <SettingsPage />
             </Route>
             <Route exact path={ROUTES.WHEEL}>
-              <TbdPage />
+              <WheelPage />
             </Route>
             <Route exact path={ROUTES.HISTORY}>
-              <TbdPage />
+              <HistoryPage />
             </Route>
             <Route exact path={ROUTES.HELP}>
               <TbdPage />
