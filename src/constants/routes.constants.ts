@@ -12,7 +12,7 @@ const ROUTES = {
   HISTORY: '/history',
   HELP: '/help',
   INTEGRATION: '/integration',
-  CHAT_WHEEL: '/chatWheel',
+  CHAT_WHEEL: '/chatWheel/:channel',
 };
 
 export default ROUTES;

@@ -1,17 +1,18 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import tmi, { Badges, ChatUserstate } from 'tmi.js';
+import { useParams } from 'react-router';
 import { CHAT_WHEEL_PREFIX, WheelCommand } from '../../constants/chatWheel.constants';
 import { WheelItem } from '../../models/wheel.model';
 import useWheel from '../../hooks/useWheel';
 import { getWheelColor } from '../../utils/common.utils';
 
-const opts = {
+const getOpts = (channel: string) => ({
   identity: {
     username: 'skipsome_bot',
     password: 'oauth:bzel1k13fcfoldritkwjbejzx42m2g',
   },
-  channels: ['Praden'],
-};
+  channels: [channel],
+});
 
 const USER_BADGES = ['founder', 'subscriber', 'broadcaster'];
 const MODERATOR_BADGES = ['broadcaster'];
@@ -40,6 +41,7 @@ const ChatWheelPage: FC = () => {
   const isRegOpened = useRef<boolean>(true);
   const [winners, setWinners] = useState<WheelItem[]>([]);
   const isSpinning = useRef<boolean>(false);
+  const { channel } = useParams();
 
   const existUsers = useRef<WheelItem[]>([]);
   useEffect(() => {
@@ -77,7 +79,7 @@ const ChatWheelPage: FC = () => {
     }
   };
 
-  const handleMessage = useCallback((channel: string, userState: ChatUserstate, message: string) => {
+  const handleMessage = useCallback((channelName: string, userState: ChatUserstate, message: string) => {
     const { 'display-name': name = '', badges, 'user-id': userId = Math.random().toString() } = userState;
 
     switch (message) {
@@ -121,7 +123,7 @@ const ChatWheelPage: FC = () => {
 
   useEffect(() => {
     // eslint-disable-next-line new-cap
-    const client = new tmi.client(opts);
+    const client = new tmi.client(getOpts(channel));
 
     client.on('connected', handleConnection);
     client.on('message', handleMessage);
@@ -131,7 +133,7 @@ const ChatWheelPage: FC = () => {
     return (): void => {
       client.disconnect();
     };
-  }, [handleConnection, handleMessage]);
+  }, [channel, handleConnection, handleMessage]);
 
   return <div style={{ width: '100vw', height: '100vh' }}>{wheelComponent}</div>;
 };
