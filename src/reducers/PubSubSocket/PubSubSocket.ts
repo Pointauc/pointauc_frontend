@@ -29,6 +29,12 @@ export const { setWebSocket } = puSubSocketSlice.actions;
 export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): void => {
   const onOpen = (ws: WebSocket): void => {
     ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
+
+    setInterval(() => {
+      if (ws) {
+        ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
+      }
+    }, 1000 * 60 * 60);
     dispatch(setWebSocket(ws));
   };
   const onClose = (): void => {
