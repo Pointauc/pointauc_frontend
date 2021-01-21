@@ -10,12 +10,11 @@ import AucPage from '../AucPage/AucPage';
 import { MenuItem } from '../../models/common.model';
 import MENU_ITEMS from '../../constants/menuItems.constants';
 import SettingsPage from '../SettingsPage/SettingsPage';
-import { loadUserData, setTwitchListener, setDaListener } from '../../reducers/AucSettings/AucSettings';
+import { loadUserData, setDaListener, setTwitchListener } from '../../reducers/AucSettings/AucSettings';
 import withLoading from '../../decorators/withLoading';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
 import { getCookie } from '../../utils/common.utils';
-import TbdPage from '../TbdPage/TbdPage';
 import { theme } from '../../constants/theme.constants';
 import { RootState } from '../../reducers';
 import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
@@ -23,6 +22,7 @@ import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import AlertsContainer from '../AlertsContainer/AlertsContainer';
 import HistoryPage from '../HistoryPage/HistoryPage';
 import WheelPage from '../WheelPage/WheelPage';
+import HelpPage from '../HelpPage/HelpPage';
 
 const drawerWidth = 240;
 
@@ -176,7 +176,7 @@ const App: React.FC = () => {
               <HistoryPage />
             </Route>
             <Route exact path={ROUTES.HELP}>
-              <TbdPage />
+              <HelpPage />
             </Route>
           </Switch>
         </main>
