@@ -10,7 +10,7 @@ import AucPage from '../AucPage/AucPage';
 import { MenuItem } from '../../models/common.model';
 import MENU_ITEMS from '../../constants/menuItems.constants';
 import SettingsPage from '../SettingsPage/SettingsPage';
-import { loadUserData, setDaListener, setTwitchListener } from '../../reducers/AucSettings/AucSettings';
+import { loadUserData } from '../../reducers/AucSettings/AucSettings';
 import withLoading from '../../decorators/withLoading';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
@@ -18,7 +18,6 @@ import { getCookie } from '../../utils/common.utils';
 import { theme } from '../../constants/theme.constants';
 import { RootState } from '../../reducers';
 import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
-import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import AlertsContainer from '../AlertsContainer/AlertsContainer';
 import HistoryPage from '../HistoryPage/HistoryPage';
 import WheelPage from '../WheelPage/WheelPage';
@@ -74,7 +73,6 @@ const App: React.FC = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { username } = useSelector((root: RootState) => root.user);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(hasToken);
 
@@ -83,35 +81,6 @@ const App: React.FC = () => {
       dispatch(connectToServer());
     }
   }, [dispatch, username]);
-
-  const handleSubscribe = useCallback(
-    ({ data }: MessageEvent) => {
-      const { type } = JSON.parse(data);
-
-      if (type === MESSAGE_TYPES.CP_SUBSCRIBED) {
-        dispatch(setTwitchListener(true));
-      }
-
-      if (type === MESSAGE_TYPES.CP_UNSUBSCRIBED) {
-        dispatch(setTwitchListener(false));
-      }
-
-      if (type === MESSAGE_TYPES.DA_SUBSCRIBE) {
-        dispatch(setDaListener(true));
-      }
-
-      if (type === MESSAGE_TYPES.DA_UNSUBSCRIBE) {
-        dispatch(setDaListener(false));
-      }
-    },
-    [dispatch],
-  );
-
-  useEffect(() => {
-    if (webSocket) {
-      webSocket.addEventListener('message', handleSubscribe);
-    }
-  }, [dispatch, handleSubscribe, username, webSocket]);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);

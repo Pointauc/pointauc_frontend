@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, FormGroup, Switch, Typography } from '@material-ui/core';
@@ -6,9 +6,9 @@ import { RootState } from '../../../reducers';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
 import './DAIntegration.scss';
-import { sendDaSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
 import FormSwitch from '../../FormSwitch/FormSwitch';
 import FormInput from '../../FormInput/FormInput';
+import { sendDaSubscribedState } from '../../../reducers/Subscription/Subscription';
 
 const authParams = {
   client_id: '6727',
@@ -27,9 +27,10 @@ interface DaIntegration {
 const DaIntegration: FC<DaIntegration> = ({ control }) => {
   const dispatch = useDispatch();
   const { username, hasDAAuth } = useSelector((root: RootState) => root.user);
-  const { activeListeners } = useSelector((root: RootState) => root.aucSettings);
-  const { da: isSubscribedStore } = activeListeners;
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(isSubscribedStore);
+  const {
+    da: { actual, loading },
+  } = useSelector((root: RootState) => root.subscription);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(actual);
 
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
@@ -46,12 +47,10 @@ const DaIntegration: FC<DaIntegration> = ({ control }) => {
     [dispatch],
   );
 
-  const isSubscribeLoading = useMemo(() => isSubscribed !== isSubscribedStore, [isSubscribed, isSubscribedStore]);
-
   return (
     <>
       <SettingsGroupTitle title="Donation Alerts">
-        <Switch onChange={handleSwitchChange} disabled={!hasDAAuth || isSubscribeLoading} checked={isSubscribed} />
+        <Switch onChange={handleSwitchChange} disabled={!hasDAAuth || loading} checked={isSubscribed} />
       </SettingsGroupTitle>
       {hasDAAuth ? (
         <FormGroup>

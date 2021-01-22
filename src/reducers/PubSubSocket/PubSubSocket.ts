@@ -4,7 +4,6 @@ import WebSocketService from '../../services/WebSocketService';
 import { Purchase } from '../Purchases/Purchases';
 import { MESSAGE_TYPES, WEBSOCKET_URL } from '../../constants/webSocket.constants';
 import { getCookie } from '../../utils/common.utils';
-import { RootState } from '../index';
 
 interface PubSubSocketState {
   webSocket?: WebSocket;
@@ -34,7 +33,7 @@ export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): 
       if (ws) {
         ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
       }
-    }, 1000 * 60 * 60);
+    }, 1000 * 60 * 30);
     dispatch(setWebSocket(ws));
   };
   const onClose = (): void => {
@@ -43,26 +42,6 @@ export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): 
 
   const webSocketService = new WebSocketService<Purchase>(onClose, onOpen);
   webSocketService.connect(WEBSOCKET_URL);
-};
-
-export const sendCpSubscribedState = (isSubscribed: boolean) => (
-  dispatch: ThunkDispatch<{}, {}, Action>,
-  getState: () => RootState,
-): void => {
-  const { webSocket } = getState().pubSubSocket;
-  const type = isSubscribed ? MESSAGE_TYPES.CHANNEL_POINTS_SUBSCRIBE : MESSAGE_TYPES.CHANNEL_POINTS_UNSUBSCRIBE;
-
-  webSocket?.send(JSON.stringify({ type, channelId: getCookie('userToken') }));
-};
-
-export const sendDaSubscribedState = (isSubscribed: boolean) => (
-  dispatch: ThunkDispatch<{}, {}, Action>,
-  getState: () => RootState,
-): void => {
-  const { webSocket } = getState().pubSubSocket;
-  const type = isSubscribed ? MESSAGE_TYPES.DA_SUBSCRIBE : MESSAGE_TYPES.DA_UNSUBSCRIBE;
-
-  webSocket?.send(JSON.stringify({ type, channelId: getCookie('userToken') }));
 };
 
 export default puSubSocketSlice.reducer;

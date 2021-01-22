@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useMemo, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useState } from 'react';
 import {
   Button,
   createStyles,
@@ -27,7 +27,7 @@ import './TwitchIntegration.scss';
 import FormInput from '../../FormInput/FormInput';
 import FormSwitch from '../../FormSwitch/FormSwitch';
 import FormColorPicker from '../../FormColorPicker/FormColorPicker';
-import { sendCpSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
+import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
 
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -71,9 +71,10 @@ interface TwitchIntegrationProps {
 const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   const dispatch = useDispatch();
   const { username } = useSelector((root: RootState) => root.user);
-  const { activeListeners } = useSelector((root: RootState) => root.aucSettings);
-  const { twitch: isSubscribedStore } = activeListeners;
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(isSubscribedStore);
+  const {
+    twitch: { actual, loading },
+  } = useSelector((root: RootState) => root.subscription);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(actual);
 
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
@@ -132,12 +133,10 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     [dispatch],
   );
 
-  const isSubscribeLoading = useMemo(() => isSubscribed !== isSubscribedStore, [isSubscribed, isSubscribedStore]);
-
   return (
     <div style={{ marginBottom: 20 }}>
       <SettingsGroupTitle title="Twitch">
-        <Switch onChange={handleSwitchChange} disabled={!username || isSubscribeLoading} checked={isSubscribed} />
+        <Switch onChange={handleSwitchChange} disabled={!username || loading} checked={isSubscribed} />
       </SettingsGroupTitle>
       {username ? (
         <FormGroup className="auc-settings-list">

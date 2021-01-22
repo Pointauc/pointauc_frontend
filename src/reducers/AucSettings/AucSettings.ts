@@ -19,11 +19,6 @@ export interface RewardSetting {
   color?: string;
 }
 
-interface ActiveListeners {
-  twitch: boolean;
-  da: boolean;
-}
-
 export interface IntegrationFields {
   twitch: {
     isRefundAvailable?: boolean;
@@ -41,7 +36,6 @@ export interface IntegrationFields {
 interface AucSettingsState {
   settings: SettingFields;
   integration: IntegrationFields;
-  activeListeners: ActiveListeners;
 }
 
 export const initialState: AucSettingsState = {
@@ -67,13 +61,9 @@ export const initialState: AucSettingsState = {
       incrementTime: 30,
     },
   },
-  activeListeners: {
-    twitch: false,
-    da: false,
-  },
 };
 
-const mergeCheck = (obj: any, src: any): any => (src === undefined ? obj : src);
+const mergeCheck = <T>(obj: T, src: T): T => (src === undefined ? obj : src);
 
 const aucSettingsSlice = createSlice({
   name: 'aucSettings',
@@ -85,16 +75,10 @@ const aucSettingsSlice = createSlice({
     setIntegration(state, action: PayloadAction<IntegrationFields>): void {
       state.integration = mergewith(state.integration, action.payload, mergeCheck);
     },
-    setTwitchListener(state, action: PayloadAction<boolean>): void {
-      state.activeListeners.twitch = action.payload;
-    },
-    setDaListener(state, action: PayloadAction<boolean>): void {
-      state.activeListeners.da = action.payload;
-    },
   },
 });
 
-export const { setAucSettings, setIntegration, setDaListener, setTwitchListener } = aucSettingsSlice.actions;
+export const { setAucSettings, setIntegration } = aucSettingsSlice.actions;
 
 export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
   const { username, settings, integration, hasDAAuth } = await getUserData();

@@ -13,8 +13,8 @@ import { RootState } from '../../../reducers';
 import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import { Slot } from '../../../models/slot.model';
-import { sendCpSubscribedState } from '../../../reducers/PubSubSocket/PubSubSocket';
 import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
+import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SS',
@@ -25,8 +25,10 @@ const Stopwatch: React.FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const {
+    twitch: { actual: actualTwitchSub, loading: loadingTwitchSub },
+  } = useSelector((root: RootState) => root.subscription);
+  const {
     settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime },
-    activeListeners: { twitch: isTwitchSubscribed },
     integration: {
       twitch: { dynamicRewards },
       da,
@@ -37,7 +39,7 @@ const Stopwatch: React.FC = () => {
   const stopwatchAutoincrement = Number(autoincrementTime) * 1000;
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
-  const [subscribedState, setSubscribedState] = useState<boolean>(isTwitchSubscribed);
+  const [isStopwatchChanged, setIsStopwatchChanged] = useState<boolean>(false);
   const time = useRef<number>(defaultTime);
   const frameId = useRef<number>();
   const prevTimestamp = useRef<number>();
@@ -50,13 +52,13 @@ const Stopwatch: React.FC = () => {
   }, [da]);
 
   useEffect(() => {
-    if (!dynamicRewards || subscribedState !== isTwitchSubscribed || isStopped !== isTwitchSubscribed) {
+    if (!dynamicRewards || loadingTwitchSub || !isStopwatchChanged || isStopped !== actualTwitchSub) {
       return;
     }
 
-    setSubscribedState(!isStopped);
+    setIsStopwatchChanged(false);
     dispatch(sendCpSubscribedState(!isStopped));
-  }, [dispatch, dynamicRewards, isStopped, isTwitchSubscribed, subscribedState]);
+  }, [actualTwitchSub, dispatch, dynamicRewards, isStopped, isStopwatchChanged, loadingTwitchSub]);
 
   const winnerSlot = useMemo(() => {
     [winnerRef.current] = slots;
@@ -113,6 +115,7 @@ const Stopwatch: React.FC = () => {
       frameId.current = undefined;
     }
     setIsStopped(true);
+    setIsStopwatchChanged(true);
   };
 
   const handleReset = useCallback((): void => {
@@ -124,6 +127,7 @@ const Stopwatch: React.FC = () => {
   const handleStart = (): void => {
     if (time.current) {
       setIsStopped(false);
+      setIsStopwatchChanged(true);
       prevTimestamp.current = undefined;
       frameId.current = requestAnimationFrame(updateTimeOnFrame);
     }
