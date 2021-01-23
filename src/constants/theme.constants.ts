@@ -45,7 +45,7 @@ export const theme = createMuiTheme({
     body2: {
       fontWeight: 300,
       fontSize: 17,
-      marginBottom: 15,
+      marginBottom: 13,
     },
     fontFamily: ['Helvetica Neue', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'].join(','),
   },
