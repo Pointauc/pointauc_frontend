@@ -13,15 +13,15 @@
   .slot {
     display: flex;
     flex-grow: 1;
-    height: 43px;
+    height: 45px;
     padding: 10px;
     border: 1px solid transparent;
     border-radius: 10px;
     align-items: center;
 
     input {
-      font-size: 17px;
-      padding: 12px 14px;
+      font-size: 19px;
+      padding: 10px 12px;
     }
 
     &-add-extra {

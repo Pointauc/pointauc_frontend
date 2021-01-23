@@ -1,5 +1,15 @@
 .help-page {
+  .MuiTypography-body1 {
+    max-width: 800px;
+    font-size: 19px;
+    margin-bottom: 5px;
+    font-weight: 300;
+  }
+
   .MuiTypography-body2 {
     max-width: 800px;
+    color: #ddd;
+    display: list-item;
+    margin-left: 20px;
   }
 }
