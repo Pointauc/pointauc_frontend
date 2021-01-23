@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
+import axios from 'axios';
 import WebSocketService from '../../services/WebSocketService';
 import { Purchase } from '../Purchases/Purchases';
 import { MESSAGE_TYPES, WEBSOCKET_URL } from '../../constants/webSocket.constants';
@@ -33,6 +34,8 @@ export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): 
       if (ws) {
         ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
       }
+
+      axios.get('api/isAlive');
     }, 1000 * 60 * 30);
     dispatch(setWebSocket(ws));
   };
