@@ -1,14 +1,21 @@
 import React, { useCallback, useMemo } from 'react';
-import { Card, CardContent, IconButton, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, IconButton, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import classNames from 'classnames';
-import { logPurchase, Purchase, PurchaseStatusEnum, removePurchase } from '../../reducers/Purchases/Purchases';
+import {
+  logPurchase,
+  Purchase,
+  PurchaseStatusEnum,
+  removePurchase,
+  setDraggedRedemption,
+} from '../../reducers/Purchases/Purchases';
 import './PurchaseComponent.scss';
 import { RootState } from '../../reducers';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { getCookie } from '../../utils/common.utils';
 import donationBackground from '../../assets/img/donationBackground.jpg';
+import { createSlotFromPurchase } from '../../reducers/Slots/Slots';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -65,6 +72,13 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     pointsRate,
   ]);
 
+  const handleAddNewSlot = useCallback(() => {
+    dispatch(createSlotFromPurchase(purchase));
+    dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
+    dispatch(removePurchase(id));
+    dispatch(setDraggedRedemption(null));
+  }, [dispatch, id, purchase]);
+
   return (
     <Card className={purchaseClasses} style={isDragging ? undefined : cardStyles}>
       <CardContent className="purchase-content">
@@ -75,6 +89,9 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
           </IconButton>
         </div>
         <Typography>{message}</Typography>
+        <Button variant="outlined" size="small" className="purchase-new-button" onClick={handleAddNewSlot}>
+          Новый
+        </Button>
       </CardContent>
     </Card>
   );

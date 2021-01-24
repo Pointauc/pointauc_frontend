@@ -22,7 +22,6 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
   };
 
   const handleExtraBlur: FilledInputProps['onBlur'] = (e): void => {
-
     dispatch(setSlotExtra({ id, extra: Number(e.target.value) }));
   };
   const handleExtraChange: FilledInputProps['onChange'] = (e): void => {

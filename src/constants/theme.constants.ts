@@ -40,11 +40,11 @@ export const theme = createMuiTheme({
     },
     h6: {
       fontWeight: 300,
-      marginBottom: 15,
+      marginBottom: 5,
     },
     body2: {
       fontWeight: 300,
-      fontSize: 17,
+      fontSize: 16,
       marginBottom: 13,
     },
     fontFamily: ['Helvetica Neue', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'].join(','),
