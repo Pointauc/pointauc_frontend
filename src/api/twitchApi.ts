@@ -7,5 +7,5 @@ export const authenticateTwitch = async (code: string): Promise<void> => {
 };
 
 export const authenticateDA = async (code: string): Promise<void> => {
-  return axios.post(ENDPOINTS.DA_AUTH, { code, redirect: `${window.location.origin}/da/redirect` });
+  return axios.post(ENDPOINTS.DA_AUTH, { code, redirectUri: `${window.location.origin}/da/redirect` });
 };

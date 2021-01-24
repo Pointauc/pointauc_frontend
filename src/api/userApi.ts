@@ -14,7 +14,7 @@ export const updateSettings = async (settings: SettingFields): Promise<void> => 
 };
 
 export const updateIntegration = async (integration: IntegrationFields): Promise<void> => {
-  await axios.post(ENDPOINTS.USER.Integration, integration);
+  await axios.post(ENDPOINTS.USER.INTEGRATION, integration);
 };
 
 export const getUserData = async (): Promise<UserData> => {

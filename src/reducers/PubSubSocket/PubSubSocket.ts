@@ -4,7 +4,6 @@ import axios from 'axios';
 import WebSocketService from '../../services/WebSocketService';
 import { Purchase } from '../Purchases/Purchases';
 import { MESSAGE_TYPES, WEBSOCKET_URL } from '../../constants/webSocket.constants';
-import { getCookie } from '../../utils/common.utils';
 
 interface PubSubSocketState {
   webSocket?: WebSocket;
@@ -28,11 +27,11 @@ export const { setWebSocket } = puSubSocketSlice.actions;
 
 export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): void => {
   const onOpen = (ws: WebSocket): void => {
-    ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
+    ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT }));
 
     setInterval(() => {
       if (ws) {
-        ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT, channelId: getCookie('userToken') }));
+        ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT }));
       }
 
       axios.get('api/isAlive');

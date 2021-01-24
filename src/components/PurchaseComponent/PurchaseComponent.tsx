@@ -13,7 +13,6 @@ import {
 import './PurchaseComponent.scss';
 import { RootState } from '../../reducers';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
-import { getCookie } from '../../utils/common.utils';
 import donationBackground from '../../assets/img/donationBackground.jpg';
 import { createSlotFromPurchase } from '../../reducers/Slots/Slots';
 
@@ -38,7 +37,6 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
       webSocket?.send(
         JSON.stringify({
           type: MESSAGE_TYPES.REFUND_REWARD,
-          channelId: getCookie('userToken'),
           redemptionId: id,
           rewardId,
         }),
