@@ -1,13 +1,10 @@
-import React, { CSSProperties, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { AgGridReact } from 'ag-grid-react';
-import moment from 'moment';
-import { AgGridEvent, ColDef, ValueGetterParams } from 'ag-grid-community';
+import { CellClassRules, CellValue, ColDef, ValueGetterParams, XGrid } from '@material-ui/x-grid';
+import dayjs from 'dayjs';
 import { RootState } from '../../../reducers';
 import './PurchaseHistory.scss';
-import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 import { FORMAT } from '../../../constants/format.constants';
-import { COLORS } from '../../../constants/color.constants';
 import { PurchaseStatusEnum } from '../../../reducers/Purchases/Purchases';
 
 interface SlotsMap {
@@ -23,73 +20,66 @@ const PurchaseHistory: React.FC = () => {
     [slots],
   );
 
-  const getTime = (params: ValueGetterParams): string =>
-    moment(params.data.purchase.timestamp).format(FORMAT.DATE.time);
+  const getTime = (params: ValueGetterParams): CellValue => dayjs(params.value?.toString()).format(FORMAT.DATE.time);
 
-  const getStatusCellStyles = (params: ValueGetterParams): CSSProperties => ({
-    color: COLORS.PURCHASE_STATUS[params.data.status as PurchaseStatusEnum],
-  });
+  const statusCellClassRules: CellClassRules = {
+    status: true,
+    deleted: ({ value }: ValueGetterParams) => value === PurchaseStatusEnum.Deleted,
+    processed: ({ value }: ValueGetterParams) => value === PurchaseStatusEnum.Processed,
+  };
 
-  const getTargetName = (params: ValueGetterParams): string =>
-    params.data.target && (slotsMap[params.data.target] || '');
+  const getTargetName = (params: ValueGetterParams): CellValue =>
+    params.value && (slotsMap[params.value.toString()] || '');
 
-  const columnDefs: ColDef[] = [
+  const columns: ColDef[] = [
     {
       headerName: 'Время',
-      field: 'purchase.timestamp',
+      field: 'timestamp',
       sortable: true,
       valueGetter: getTime,
+      width: 110,
     },
     {
       headerName: 'Пользователь',
-      field: 'purchase.username',
+      field: 'username',
       sortable: true,
-      filter: 'agTextColumnFilter',
-      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+      filterable: true,
+      flex: 0.6,
     },
     {
       headerName: 'Сообщение',
-      field: 'purchase.message',
-      suppressSizeToFit: true,
-      filter: 'agTextColumnFilter',
-      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+      field: 'message',
+      filterable: true,
+      flex: 1,
     },
     {
       headerName: 'Стоимость',
-      field: 'purchase.cost',
+      field: 'cost',
       sortable: true,
-      filter: 'agNumberColumnFilter',
-      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+      filterable: true,
+      width: 140,
     },
     {
       headerName: 'Добавлен к',
       field: 'target',
       sortable: true,
-      filter: 'agTextColumnFilter',
-      filterParams: { buttons: ['reset'], closeOnApply: true, suppressAndOrCondition: true },
+      filterable: true,
       valueGetter: getTargetName,
+      flex: 1,
     },
-    { headerName: 'Статус', field: 'status', cellStyle: getStatusCellStyles },
+    { headerName: 'Статус', field: 'status', cellClassRules: statusCellClassRules, width: 110 },
   ];
 
-  const resizeTable = ({ api, columnApi }: AgGridEvent): void => {
-    columnApi.autoSizeAllColumns();
-    api.sizeColumnsToFit();
-  };
-
   return (
-    <div className="ag-theme-alpine-dark" id="history-table">
-      <AgGridReact
-        onGridReady={resizeTable}
-        onPaginationChanged={resizeTable}
-        columnDefs={columnDefs}
-        rowData={history}
-        suppressCellSelection
-        enableCellTextSelection
-        suppressMenuHide
-        paginationPageSize={10}
+    <div className="history-table">
+      <XGrid
+        rows={history}
+        columns={columns}
+        autoHeight
         pagination
-        domLayout="autoHeight"
+        pageSize={5}
+        rowsPerPageOptions={[5, 10, 20, 50]}
+        disableSelectionOnClick
       />
     </div>
   );

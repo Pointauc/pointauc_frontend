@@ -45,7 +45,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
   );
 
   const handleRemove = (): void => {
-    dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Deleted }));
+    dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Deleted }));
     dispatch(removePurchase(id));
 
     if (isRefundAvailable && !isDonation) {
@@ -72,7 +72,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
 
   const handleAddNewSlot = useCallback(() => {
     dispatch(createSlotFromPurchase(purchase));
-    dispatch(logPurchase({ purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
+    dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
   }, [dispatch, id, purchase]);

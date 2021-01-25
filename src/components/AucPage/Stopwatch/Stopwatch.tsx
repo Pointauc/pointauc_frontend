@@ -7,8 +7,8 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import KeyboardCapslockIcon from '@material-ui/icons/KeyboardCapslock';
 import PauseIcon from '@material-ui/icons/Pause';
-import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 import { RootState } from '../../../reducers';
 import { setNotification } from '../../../reducers/notifications/notifications';
 import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
@@ -17,7 +17,7 @@ import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
 
 export const STOPWATCH = {
-  FORMAT: 'mm:ss:SS',
+  FORMAT: 'mm:ss:SSS',
 };
 
 const Stopwatch: React.FC = () => {
@@ -77,7 +77,7 @@ const Stopwatch: React.FC = () => {
           const { name } = winnerRef.current || {};
           dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }
-        stopwatchElement.current.innerHTML = moment(time.current).format(STOPWATCH.FORMAT);
+        stopwatchElement.current.innerHTML = dayjs(time.current).format(STOPWATCH.FORMAT).slice(0, -1);
       }
     },
     [dispatch],

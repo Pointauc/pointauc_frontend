@@ -66,7 +66,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const hasToken = !!getCookie('userToken');
+const hasToken = !!getCookie('jwtToken');
 
 const App: React.FC = () => {
   const dispatch = useDispatch();

@@ -18,13 +18,12 @@ export interface Purchase {
   username: string;
   message: string;
   color: string;
-  id: ReactText;
+  id: string;
   rewardId?: string;
   isDonation?: boolean;
 }
 
-export interface PurchaseLog {
-  purchase: Purchase;
+export interface PurchaseLog extends Purchase {
   status: PurchaseStatusEnum;
   target?: string;
 }
@@ -83,7 +82,7 @@ export const processRedemption = (redemption: Purchase) => (
     const { id, amount, name } = comparedSlot;
 
     dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
-    dispatch(logPurchase({ purchase: redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
+    dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: `${username} добавил ${cost} к "${name}"!` }));
   } else {
     dispatch(addPurchase(redemption));

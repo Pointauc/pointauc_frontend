@@ -1,8 +1,25 @@
-@import "~ag-grid-community/src/styles/ag-grid.scss";
-@import "~ag-grid-community/src/styles/ag-theme-alpine-dark/sass/ag-theme-alpine-dark-mixin";
+.history-table {
+  width: 100%;
+  min-height: 300px;
 
-#history-table {
-  @include ag-theme-alpine-dark((
-          font-size: 13.5px,
-  ));
+  .MuiTypography-body2 {
+    margin-bottom: 0;
+    font-weight: 400;
+  }
+
+  .MuiDataGrid-mainGridContainer {
+    &>div:first-of-type {
+      display: none !important;
+    }
+  }
+
+  .status {
+    &.deleted {
+      color: #F08080;
+    }
+
+    &.processed {
+      color: #AED581;
+    }
+  }
 }

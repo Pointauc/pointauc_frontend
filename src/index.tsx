@@ -4,14 +4,13 @@ import './styles/index.scss';
 import { AnyAction, configureStore, Middleware } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import App from './components/App/App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer, { RootState } from './reducers';
 import { setSlots } from './reducers/Slots/Slots';
-import 'moment/locale/ru';
 import ROUTES from './constants/routes.constants';
 import TwitchRedirect from './components/TwitchRedirect/TwitchRedirect';
 import DARedirect from './components/DARedirect/DARedirect';
@@ -20,7 +19,7 @@ import ChatWheelPage from './components/ChatWheelPage/ChatWheelPage';
 import { theme } from './constants/theme.constants';
 import NewDomainRedirect from './components/NewDomainRedirect/NewDomainRedirect';
 
-moment.locale('ru');
+dayjs.locale('ru');
 
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotAmount',
