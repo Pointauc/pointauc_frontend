@@ -25,6 +25,7 @@ export interface IntegrationFields {
     dynamicRewards?: boolean;
     rewardsPrefix?: string;
     rewards?: RewardSetting[];
+    slotRelevanceLimit?: number;
   };
   da: {
     pointsRate: number;
@@ -54,6 +55,7 @@ export const initialState: AucSettingsState = {
       dynamicRewards: false,
       rewardsPrefix: 'ставка',
       rewards: [{ cost: 5000, color: '#e3924c' }],
+      slotRelevanceLimit: 100,
     },
     da: {
       pointsRate: 100,
@@ -73,7 +75,8 @@ const aucSettingsSlice = createSlice({
       state.settings = mergewith(state.settings, action.payload, mergeCheck);
     },
     setIntegration(state, action: PayloadAction<IntegrationFields>): void {
-      state.integration = mergewith(state.integration, action.payload, mergeCheck);
+      state.integration.da = mergewith(state.integration.da, action.payload.da, mergeCheck);
+      state.integration.twitch = mergewith(state.integration.twitch, action.payload.twitch, mergeCheck);
     },
   },
 });

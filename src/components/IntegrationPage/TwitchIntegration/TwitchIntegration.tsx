@@ -28,6 +28,8 @@ import FormInput from '../../FormInput/FormInput';
 import FormSwitch from '../../FormSwitch/FormSwitch';
 import FormColorPicker from '../../FormColorPicker/FormColorPicker';
 import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
+import FormSlider from '../../FormSlider/FormSlider';
+import { toPercents } from '../../../utils/common.utils';
 
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -133,6 +135,17 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     [dispatch],
   );
 
+  const relevanceLimitMark = [
+    {
+      value: 40,
+      label: '40%',
+    },
+    {
+      value: 100,
+      label: '100%',
+    },
+  ];
+
   return (
     <div style={{ marginBottom: 20 }}>
       <SettingsGroupTitle title="Twitch">
@@ -144,6 +157,20 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
             Вы вошли как
             <b className="username">{username}</b>
           </Typography>
+          <FormGroup row className="auc-settings-row">
+            <FormSlider
+              name="twitch.slotRelevanceLimit"
+              control={control}
+              label="% совпадения для быстрого добавления"
+              hint="100% - требует полного совпадения\n 80% - допускает незначительные опечатки"
+              step={5}
+              marks={relevanceLimitMark}
+              getAriaValueText={toPercents}
+              valueLabelDisplay="auto"
+              min={40}
+              aria-labelledby="discrete-slider"
+            />
+          </FormGroup>
           <FormGroup row className="auc-settings-row">
             <FormSwitch name="twitch.isRefundAvailable" control={control} label="Возвращать отмененные награды" />
           </FormGroup>

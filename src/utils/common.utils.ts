@@ -40,3 +40,5 @@ export const handleDragOver = <T extends Element>(e: DragEvent<T>): void => {
 };
 
 export const getWheelColor = (): string => COLORS.WHEEL[Math.floor(Math.random() * COLORS.WHEEL.length)];
+
+export const toPercents = (value: number): string => `${value}%`;

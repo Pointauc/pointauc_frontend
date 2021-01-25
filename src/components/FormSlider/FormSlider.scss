@@ -1,0 +1,43 @@
+.form-slider-wrapper {
+  .MuiSlider-root {
+    position: relative;
+    top: 10px;
+    width: 150px;
+    color: #f68a9f;
+    height: 8px;
+  }
+
+  .hint {
+    margin-top: 15px;
+    margin-bottom: 0;
+  }
+
+  .MuiSlider-rail {
+    height: 8px;
+  }
+
+  .MuiSlider-track {
+    height: 8px;
+  }
+
+  .MuiSlider-mark {
+    height: 8px;
+  }
+
+  .MuiSlider-valueLabel {
+    left: calc(-50% + 4px);
+    font-weight: 400;
+  }
+
+  .MuiSlider-thumb {
+    height: 24px;
+    width: 24px;
+    background-color: #fff;
+    border: 2px solid currentColor;
+    margin-top: -8px;
+    margin-left: -12px;
+    &:focus, &:hover, &.active {
+      box-shadow: inherit;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
+import stringSimilarity from 'string-similarity';
 import { normalizePurchase } from '../../utils/slots.utils';
 import { RootState } from '../index';
 import { setSlotAmount } from '../Slots/Slots';
@@ -74,16 +75,31 @@ export const processRedemption = (redemption: Purchase) => (
   dispatch: ThunkDispatch<{}, {}, Action>,
   getState: () => RootState,
 ): void => {
-  const { slots } = getState().slots;
+  const {
+    slots: { slots },
+    aucSettings: {
+      integration: {
+        twitch: { slotRelevanceLimit = 1 },
+      },
+    },
+  } = getState();
   const { cost, username, message, isDonation } = redemption;
-  const comparedSlot = slots.find(({ name }) => name && !name.localeCompare(message, 'en', { sensitivity: 'accent' }));
+  const {
+    bestMatch: { rating },
+    bestMatchIndex,
+  } = stringSimilarity.findBestMatch(
+    message,
+    slots.map(({ name }) => name || ''),
+  );
+  const relevanceLimit = slotRelevanceLimit / 100;
 
-  if (comparedSlot && !isDonation) {
-    const { id, amount, name } = comparedSlot;
+  if (rating >= relevanceLimit && !isDonation) {
+    const { id, amount, name } = slots[bestMatchIndex];
+    const alertMessage = `${username} добавил ${cost} к "${name}"${rating < 1 ? ` ("${message}")` : ''}!`;
 
     dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
     dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
-    dispatch(addAlert({ type: AlertTypeEnum.Success, message: `${username} добавил ${cost} к "${name}"!` }));
+    dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
   } else {
     dispatch(addPurchase(redemption));
   }
