@@ -3,7 +3,8 @@ import { Action } from 'redux';
 import axios from 'axios';
 import WebSocketService from '../../services/WebSocketService';
 import { Purchase } from '../Purchases/Purchases';
-import { MESSAGE_TYPES, WEBSOCKET_URL } from '../../constants/webSocket.constants';
+import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
+import { getWebsocketUrl } from '../../utils/url.utils';
 
 interface PubSubSocketState {
   webSocket?: WebSocket;
@@ -43,7 +44,7 @@ export const connectToServer = () => (dispatch: ThunkDispatch<{}, {}, Action>): 
   };
 
   const webSocketService = new WebSocketService<Purchase>(onClose, onOpen);
-  webSocketService.connect(WEBSOCKET_URL);
+  webSocketService.connect(getWebsocketUrl());
 };
 
 export default puSubSocketSlice.reducer;
