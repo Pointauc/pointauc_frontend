@@ -1,15 +1,16 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { DeepPartial, useForm } from 'react-hook-form';
 import { Button } from '@material-ui/core';
 import PageContainer from '../PageContainer/PageContainer';
 import TwitchIntegration from './TwitchIntegration/TwitchIntegration';
 import { RootState } from '../../reducers';
-import { IntegrationFields, setIntegration } from '../../reducers/AucSettings/AucSettings';
+import { initialState, IntegrationFields, setIntegration } from '../../reducers/AucSettings/AucSettings';
 import LoadingButton from '../LoadingButton/LoadingButton';
 import withLoading from '../../decorators/withLoading';
 import { updateIntegration } from '../../api/userApi';
 import DaIntegration from './DAIntegration/DAIntegration';
+import { getDirtyValues } from '../../utils/common.utils';
 
 const IntegrationPage: FC = () => {
   const dispatch = useDispatch();
@@ -21,25 +22,34 @@ const IntegrationPage: FC = () => {
   const {
     control,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, dirtyFields },
     reset,
   } = formMethods;
+  const { twitch: twitchDirty, da: daDirty } = dirtyFields;
 
   useEffect(() => {
     reset(integration);
   }, [reset, integration]);
+
+  const getDirtyIntegration = useCallback(
+    ({ twitch, da }: IntegrationFields): DeepPartial<IntegrationFields> => ({
+      twitch: getDirtyValues(twitch, twitchDirty, initialState.integration.twitch),
+      da: getDirtyValues(da, daDirty, initialState.integration.da),
+    }),
+    [daDirty, twitchDirty],
+  );
 
   const handleReset = useCallback(() => reset(), [reset]);
   const onSubmit = useCallback(
     (data) =>
       withLoading(setIsSubmitting, async () => {
         if (username) {
-          await updateIntegration(data);
+          await updateIntegration(getDirtyIntegration(data));
         }
 
         return dispatch(setIntegration(data));
       })(),
-    [dispatch, username],
+    [dispatch, getDirtyIntegration, username],
   );
 
   return (

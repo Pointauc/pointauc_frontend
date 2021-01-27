@@ -19,19 +19,23 @@ export interface RewardSetting {
   color?: string;
 }
 
+export interface TwitchIntegration {
+  isRefundAvailable: boolean;
+  dynamicRewards: boolean;
+  rewardsPrefix: string;
+  rewards: RewardSetting[];
+  slotRelevanceLimit: number;
+}
+
+export interface DaIntegration {
+  pointsRate: number;
+  isIncrementActive: boolean;
+  incrementTime: number;
+}
+
 export interface IntegrationFields {
-  twitch: {
-    isRefundAvailable?: boolean;
-    dynamicRewards?: boolean;
-    rewardsPrefix?: string;
-    rewards?: RewardSetting[];
-    slotRelevanceLimit?: number;
-  };
-  da: {
-    pointsRate: number;
-    isIncrementActive: boolean;
-    incrementTime: number;
-  };
+  twitch: TwitchIntegration;
+  da: DaIntegration;
 }
 
 interface AucSettingsState {
@@ -54,7 +58,7 @@ export const initialState: AucSettingsState = {
       isRefundAvailable: false,
       dynamicRewards: false,
       rewardsPrefix: 'ставка',
-      rewards: [{ cost: 5000, color: '#e3924c' }],
+      rewards: [],
       slotRelevanceLimit: 100,
     },
     da: {

@@ -5,12 +5,13 @@ import { useForm } from 'react-hook-form';
 import PageContainer from '../PageContainer/PageContainer';
 import StopwatchSettings from '../AucPage/Settings/StopwatchSettings/StopwatchSettings';
 import { RootState } from '../../reducers';
-import { setAucSettings, SettingFields } from '../../reducers/AucSettings/AucSettings';
+import { initialState, setAucSettings, SettingFields } from '../../reducers/AucSettings/AucSettings';
 import AucSettings from '../AucPage/Settings/AucSettings/AucSettings';
 import './SettingsPage.scss';
 import LoadingButton from '../LoadingButton/LoadingButton';
 import withLoading from '../../decorators/withLoading';
 import { updateSettings } from '../../api/userApi';
+import { getDirtyValues } from '../../utils/common.utils';
 
 const SettingsPage: FC = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const SettingsPage: FC = () => {
   const formMethods = useForm<SettingFields>({ defaultValues: settings });
   const {
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, dirtyFields },
     reset,
     control,
     register,
@@ -37,12 +38,12 @@ const SettingsPage: FC = () => {
     (data) =>
       withLoading(setIsSubmitting, async () => {
         if (username) {
-          await updateSettings(data);
+          await updateSettings(getDirtyValues(data, dirtyFields, initialState.settings));
         }
 
         return dispatch(setAucSettings(data));
       })(),
-    [dispatch, username],
+    [dirtyFields, dispatch, username],
   );
 
   return (

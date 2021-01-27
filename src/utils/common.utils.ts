@@ -1,4 +1,6 @@
 import { DragEvent } from 'react';
+import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
+import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
 
@@ -42,3 +44,16 @@ export const handleDragOver = <T extends Element>(e: DragEvent<T>): void => {
 export const getWheelColor = (): string => COLORS.WHEEL[Math.floor(Math.random() * COLORS.WHEEL.length)];
 
 export const toPercents = (value: number): string => `${value}%`;
+
+export const getDirtyValues = <T extends FieldValues>(
+  values: T,
+  dirtyFields: FieldNamesMarkedBoolean<T> = {},
+  defaultValues: T,
+): Partial<T> =>
+  Object.keys(dirtyFields).reduce(
+    (accum, key) => ({
+      ...accum,
+      [key]: values[key] === undefined ? defaultValues[key] : values[key],
+    }),
+    {},
+  );

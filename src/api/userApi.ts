@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { DeepPartial } from 'react-hook-form';
 import ENDPOINTS from '../constants/api.constants';
 import { IntegrationFields, SettingFields } from '../reducers/AucSettings/AucSettings';
 import { UserData } from '../models/user.model';
@@ -9,11 +10,11 @@ export const getUsername = async (): Promise<string> => {
   return data;
 };
 
-export const updateSettings = async (settings: SettingFields): Promise<void> => {
+export const updateSettings = async (settings: DeepPartial<SettingFields>): Promise<void> => {
   await axios.post(ENDPOINTS.USER.SETTINGS, settings);
 };
 
-export const updateIntegration = async (integration: IntegrationFields): Promise<void> => {
+export const updateIntegration = async (integration: DeepPartial<IntegrationFields>): Promise<void> => {
   await axios.post(ENDPOINTS.USER.INTEGRATION, integration);
 };
 
