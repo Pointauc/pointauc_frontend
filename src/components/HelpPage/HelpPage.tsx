@@ -30,7 +30,7 @@ const HelpPage: FC = () => {
 <Link href="https://i.imgur.com/P6TUDXV.mp4"> https://i.imgur.com/P6TUDXV.mp4</Link>
       </Typography>
       <Typography variant="body2">
-        Когда вы добавляете ставку в слот, следующие ставки с таким же сообщение добавятся автоматически
+        Когда вы добавляете ставку в слот, следующие ставки с таким же сообщением добавятся автоматически
       </Typography>
       <Typography variant="body2">Чтобы отнимать поинты надо написать "-" в начале сообщения ("-дота 2")</Typography>
       <Typography variant="body2">При закрытии вкладки награды автоматически удалятся через ~ 20 секунд</Typography>

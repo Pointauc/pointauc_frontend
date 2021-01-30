@@ -5,7 +5,7 @@ import PurchaseHistory from '../AucPage/PurchaseHistory/PurchaseHistory';
 const HistoryPage: FC = () => {
   return (
     <PageContainer title="История выполненных заказов">
-      <div style={{ width: '70%' }}>
+      <div style={{ width: '75%' }}>
         <PurchaseHistory />
       </div>
     </PageContainer>

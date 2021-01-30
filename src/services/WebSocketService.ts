@@ -17,7 +17,6 @@ class WebSocketService<T> {
     this.ws.onopen = this.onOpen;
     this.ws.onerror = this.onError;
     this.ws.onclose = this.onClose;
-    this.ws.addEventListener('message', this.logMessage);
   };
 
   pingConnection = (): void => {
@@ -28,10 +27,6 @@ class WebSocketService<T> {
       this.ws.send(JSON.stringify(message));
     }
     console.log('ping');
-  };
-
-  private logMessage = (message: MessageEvent): void => {
-    console.log(JSON.parse(message.data));
   };
 
   private onOpen = (): void => {
