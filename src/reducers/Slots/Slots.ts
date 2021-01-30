@@ -5,6 +5,7 @@ import { Slot } from '../../models/slot.model';
 import { Purchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 import { sortSlots } from '../../utils/common.utils';
+import slotNamesMap from '../../services/SlotNamesMap';
 
 interface SlotsState {
   slots: Slot[];
@@ -40,9 +41,17 @@ const slotsSlice = createSlice({
   name: 'slots',
   initialState,
   reducers: {
-    setSlotName(state, action: PayloadAction<{ id: ReactText; name: string }>): void {
+    setSlotName(state, action: PayloadAction<{ id: string; name: string }>): void {
       const { id, name } = action.payload;
-      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, name } : slot));
+      state.slots = state.slots.map((slot) => {
+        if (slot.id === id) {
+          slotNamesMap.updateName(slot.name || '', name, slot.id);
+
+          return { ...slot, name };
+        }
+
+        return slot;
+      });
     },
     setSlotAmount(state, action: PayloadAction<{ id: ReactText; amount: number }>): void {
       const { id, amount } = action.payload;
@@ -56,13 +65,14 @@ const slotsSlice = createSlice({
       const id = action.payload;
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: getAmountSum(slot) }));
     },
-    deleteSlot(state, action: PayloadAction<ReactText>): void {
+    deleteSlot(state, action: PayloadAction<string>): void {
       if (state.slots.length === 1) {
         state.slots = initialState.slots;
         return;
       }
       const deletedId = action.payload;
       state.slots = state.slots.filter(({ id }) => deletedId !== id);
+      slotNamesMap.deleteBySlotId(deletedId);
     },
     addSlot(state): void {
       state.slots = [...state.slots, createSlot()];
@@ -72,9 +82,12 @@ const slotsSlice = createSlice({
       const newSlot: Slot = { id, name, amount, extra: null };
       state.slots.push(newSlot);
       updateSlotPosition(state.slots, state.slots.length - 1);
+
+      slotNamesMap.set(name, id);
     },
     resetSlots(state): void {
       state.slots = initialState.slots;
+      slotNamesMap.clear();
     },
     setSlots(state, action: PayloadAction<Slot[]>): void {
       state.slots = action.payload;
@@ -107,6 +120,7 @@ export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: 
   } = getState();
   const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null };
   const updatedSlots = [...slots, newSlot];
+  slotNamesMap.set(name, id);
 
   updateSlotPosition(updatedSlots, updatedSlots.length - 1);
   dispatch(setSlots(sortSlots(updatedSlots)));

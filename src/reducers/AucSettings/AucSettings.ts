@@ -24,7 +24,6 @@ export interface TwitchIntegration {
   dynamicRewards: boolean;
   rewardsPrefix: string;
   rewards: RewardSetting[];
-  slotRelevanceLimit: number;
 }
 
 export interface DaIntegration {
@@ -59,7 +58,6 @@ export const initialState: AucSettingsState = {
       dynamicRewards: false,
       rewardsPrefix: 'ставка',
       rewards: [],
-      slotRelevanceLimit: 100,
     },
     da: {
       pointsRate: 100,

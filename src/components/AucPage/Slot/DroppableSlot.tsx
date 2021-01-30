@@ -16,6 +16,7 @@ import {
   removePurchase,
   setDraggedRedemption,
 } from '../../../reducers/Purchases/Purchases';
+import slotNamesMap from '../../../services/SlotNamesMap';
 
 interface DroppableSlotProps extends Slot {
   index: number;
@@ -53,6 +54,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
       dispatch(removePurchase(redemptionId));
       dispatch(setDraggedRedemption(null));
+      slotNamesMap.set(message, id);
 
       if (!name) {
         dispatch(setSlotName({ id, name: message }));
