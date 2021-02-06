@@ -71,27 +71,50 @@ export const {
   setDraggedRedemption,
 } = purchasesSlice.actions;
 
-export const processRedemption = (redemption: Purchase) => (
-  dispatch: ThunkDispatch<{}, {}, Action>,
+export const fastAddBid = (bid: Purchase, slotId: string) => (
+  dispatch: ThunkDispatch<RootState, {}, Action>,
   getState: () => RootState,
 ): void => {
   const {
     slots: { slots },
   } = getState();
-  const { cost, username, message, isDonation } = redemption;
-  const similarSlotId = slotNamesMap.get(message);
-  const similarSlot = slots.find(({ id }) => id === similarSlotId);
+  const { cost, username, message, isDonation } = bid;
+  const similarSlot = slots.find(({ id }) => id === slotId);
 
   if (similarSlot && !isDonation) {
     const { id, amount, name } = similarSlot;
     const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
 
     dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
-    dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
+  }
+};
+
+export const processRedemption = (redemption: Purchase) => (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
+  const { message } = redemption;
+  const similarSlotId = slotNamesMap.get(message);
+
+  if (similarSlotId) {
+    dispatch(fastAddBid(redemption, similarSlotId));
   } else {
     dispatch(addPurchase(redemption));
   }
+};
+
+export const updateExistBids = (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+  const {
+    purchases: { purchases },
+  } = getState();
+
+  purchases.forEach((bid) => {
+    const similarSlotId = slotNamesMap.get(bid.message);
+
+    if (similarSlotId) {
+      dispatch(fastAddBid(bid, similarSlotId));
+      dispatch(removePurchase(bid.id));
+    }
+  });
 };
 
 export default purchasesSlice.reducer;

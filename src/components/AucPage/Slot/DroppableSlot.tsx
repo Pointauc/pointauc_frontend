@@ -15,6 +15,7 @@ import {
   PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
+  updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
 import slotNamesMap from '../../../services/SlotNamesMap';
 
@@ -50,11 +51,12 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       const { cost, message, isDonation, id: redemptionId } = redemption;
       const addedCost = isDonation ? cost * pointsRate : cost;
 
+      slotNamesMap.set(message, id);
       dispatch(setSlotAmount({ id, amount: Number(amount) + addedCost }));
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
       dispatch(removePurchase(redemptionId));
       dispatch(setDraggedRedemption(null));
-      slotNamesMap.set(message, id);
+      dispatch(updateExistBids);
 
       if (!name) {
         dispatch(setSlotName({ id, name: message }));

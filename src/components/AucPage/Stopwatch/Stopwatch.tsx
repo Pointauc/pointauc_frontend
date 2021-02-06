@@ -74,6 +74,7 @@ const Stopwatch: React.FC = () => {
         if (time.current < 0) {
           time.current = 0;
           setIsStopped(true);
+          setIsStopwatchChanged(true);
           const { name } = winnerRef.current || {};
           dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
         }

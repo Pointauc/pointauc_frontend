@@ -9,6 +9,7 @@ import {
   PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
+  updateExistBids,
 } from '../../reducers/Purchases/Purchases';
 import './PurchaseComponent.scss';
 import { RootState } from '../../reducers';
@@ -75,6 +76,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
+    dispatch(updateExistBids);
   }, [dispatch, id, purchase]);
 
   return (

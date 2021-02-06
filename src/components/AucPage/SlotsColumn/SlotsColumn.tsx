@@ -16,6 +16,7 @@ import {
   PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
+  updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
 
 const TwoColumnIcon = VerticalSplitRoundedIcon;
@@ -78,6 +79,7 @@ const SlotsColumn: React.FC = () => {
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: redemption.id.toString() }));
       dispatch(removePurchase(redemption.id));
       dispatch(setDraggedRedemption(null));
+      dispatch(updateExistBids);
       setEnterCounter(0);
     },
     [dispatch],
