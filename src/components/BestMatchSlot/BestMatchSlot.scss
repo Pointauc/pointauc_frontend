@@ -1,0 +1,12 @@
+@import "../../styles/colors";
+
+.best-match-container {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid $grey-9;
+
+  h6 {
+    font-weight: 500;
+    font-size: 19px;
+  }
+}

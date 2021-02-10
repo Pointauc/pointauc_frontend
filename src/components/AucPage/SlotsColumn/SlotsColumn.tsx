@@ -18,6 +18,7 @@ import {
   setDraggedRedemption,
   updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
+import BestMatchSlot from '../../BestMatchSlot/BestMatchSlot';
 
 const TwoColumnIcon = VerticalSplitRoundedIcon;
 const SingleColumnIcon = ReorderRoundedIcon;
@@ -108,6 +109,7 @@ const SlotsColumn: React.FC = () => {
 
       <Grid container wrap="nowrap" className="slots-wrapper">
         <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
+          <BestMatchSlot />
           <SlotsList slots={slots} slotWidth={slotWidth} />
           <IconButton
             onClick={handleAddSlot}
