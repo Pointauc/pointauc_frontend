@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import CustomEase from '../utils/CustomEase';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 import pradenW from '../assets/img/pradenW.png';
+import { shuffle } from '../utils/common.utils';
 
 interface WheelResult {
   wheelComponent: ReactNode;
@@ -24,9 +25,10 @@ const centerCircleStyles = {
 
 const borderWidth = 3;
 
-const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelResult => {
+const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
+  const items = useMemo(() => shuffle(rawItems), [rawItems]);
   const totalSize = useMemo(() => items.reduce((acc, { size }) => acc + (size || 1), 0), [items]);
   const [rotate, setRotate] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
@@ -115,7 +117,7 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
   const animateWheel = (previousRotate: number, nextRotate: number): void => {
     if (canvas.current) {
       gsap.to(canvas.current, {
-        duration: 8,
+        duration: 10,
         ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1'),
         rotate: nextRotate,
       });
@@ -124,12 +126,12 @@ const useWheel = (items: WheelItem[], onWin: (item: WheelItem) => void): WheelRe
 
   const spin = (): void => {
     setWinnerItem(undefined);
-    const randomSpin = Math.floor(Math.random() * 360);
-    const nextRotate = rotate + 1900 + randomSpin;
+    const randomSpin = Math.random() * 360;
+    const nextRotate = rotate + 2450 + randomSpin;
     animateWheel(rotate, nextRotate);
     setRotate(nextRotate);
 
-    setTimeout(() => updateWinner(nextRotate), 8600);
+    setTimeout(() => updateWinner(nextRotate), 10300);
   };
 
   const drawWheel = (): void => {
