@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { IconButton } from '@material-ui/core';
+import { CircularProgress, IconButton } from '@material-ui/core';
 import { Collection, Emote, EmoteFetcher } from '@mkody/twitch-emoticons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../reducers';
@@ -13,7 +13,7 @@ interface TwitchEmotesListProps {
 
 const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
   const { userId } = useSelector((root: RootState) => root.user);
-  const [emotes, setEmotes] = useState<Collection<string, Emote>[]>([]);
+  const [userEmotes, setUserEmotes] = useState<Collection<string, Emote>[]>();
 
   useEffect(() => {
     if (userId) {
@@ -21,19 +21,19 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
         fetcher.fetchTwitchEmotes(Number(userId)),
         fetcher.fetchBTTVEmotes(Number(userId)),
         fetcher.fetchFFZEmotes(Number(userId)),
-      ]).then(setEmotes);
+      ]).then(setUserEmotes);
     }
   }, [userId]);
 
   const crateEmoteList = useCallback(
-    (id: number) => {
-      if (!emotes[id]) {
+    (emotes?: Collection<string, Emote>) => {
+      if (!emotes) {
         return null;
       }
 
       return (
         <div className="emotes-group">
-          {Array.from(emotes[id].values()).map((emote) => {
+          {Array.from(emotes.values()).map((emote) => {
             const handleClick = (): void => setActiveEmote(emote.toLink(2));
 
             return (
@@ -45,14 +45,20 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
         </div>
       );
     },
-    [emotes, setActiveEmote],
+    [setActiveEmote],
   );
 
   return (
     <div className="emotes-container">
-      {crateEmoteList(0)}
-      {crateEmoteList(1)}
-      {crateEmoteList(2)}
+      {userEmotes ? (
+        <>
+          {crateEmoteList(userEmotes[0])}
+          {crateEmoteList(userEmotes[1])}
+          {crateEmoteList(userEmotes[2])}
+        </>
+      ) : (
+        <CircularProgress className="emotes-loading" />
+      )}
     </div>
   );
 };

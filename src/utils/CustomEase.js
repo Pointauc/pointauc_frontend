@@ -195,7 +195,6 @@ export class CustomEase {
 			if (point.nx < p) {
 				point = point.n;
 			}
-			console.log(point.y + ((p - point.x) / point.cx) * point.cy);
 			return point.y + ((p - point.x) / point.cx) * point.cy;
 		};
 

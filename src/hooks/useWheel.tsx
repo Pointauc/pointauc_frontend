@@ -15,7 +15,7 @@ window.gsap = gsap;
 
 type Context = CanvasRenderingContext2D;
 
-const centerCircleStyles = (background?: string) => ({
+const centerCircleStyles = (background?: string): CSSProperties => ({
   backgroundImage: `url(${background || pradenW})`,
   backgroundColor: 'transparent',
   backgroundPosition: 'center',
@@ -117,7 +117,7 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, backg
   const animateWheel = (previousRotate: number, nextRotate: number): void => {
     if (canvas.current) {
       gsap.to(canvas.current, {
-        duration: 10,
+        duration: 20,
         ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1'),
         rotate: nextRotate,
       });
@@ -127,11 +127,11 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, backg
   const spin = (): void => {
     setWinnerItem(undefined);
     const randomSpin = Math.random() * 360;
-    const nextRotate = rotate + 2450 + randomSpin;
+    const nextRotate = rotate + 4600 + randomSpin;
     animateWheel(rotate, nextRotate);
     setRotate(nextRotate);
 
-    setTimeout(() => updateWinner(nextRotate), 10300);
+    setTimeout(() => updateWinner(nextRotate), 20000);
   };
 
   const drawWheel = (): void => {
@@ -174,7 +174,7 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, backg
   }, [background, offset]);
 
   const wheelComponent = (
-    <div style={{ width: '75%', height: '75%', position: 'absolute' }} ref={wrapper}>
+    <div style={{ width: '80%', height: '80%', position: 'absolute' }} ref={wrapper}>
       <canvas ref={canvas} />
       <div style={{ left: offset, top: offset / 2 }} className="wheel-selector" />
       <div style={circleStyles} />
