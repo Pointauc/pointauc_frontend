@@ -15,17 +15,17 @@ window.gsap = gsap;
 
 type Context = CanvasRenderingContext2D;
 
-const centerCircleStyles = {
-  backgroundImage: `url(${pradenW})`,
+const centerCircleStyles = (background?: string) => ({
+  backgroundImage: `url(${background || pradenW})`,
   backgroundColor: 'transparent',
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
-};
+});
 
 const borderWidth = 3;
 
-const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void): WheelResult => {
+const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, background?: string): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const items = useMemo(() => shuffle(rawItems), [rawItems]);
@@ -162,7 +162,7 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void): Whee
   const circleStyles: CSSProperties = useMemo(() => {
     const size = offset * 0.2;
     return {
-      ...centerCircleStyles,
+      ...centerCircleStyles(background),
       top: (offset - size) / 2,
       left: (offset - size) / 2,
       width: size,
@@ -171,7 +171,7 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void): Whee
       borderRadius: '100%',
       border: '3px solid #222',
     };
-  }, [offset]);
+  }, [background, offset]);
 
   const wheelComponent = (
     <div style={{ width: '75%', height: '75%', position: 'absolute' }} ref={wrapper}>

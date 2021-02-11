@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import mergewith from 'lodash.mergewith';
 import { getUserData } from '../../api/userApi';
-import { setUsername, setHasDAAuth } from '../User/User';
+import { setUsername, setHasDAAuth, setUserId } from '../User/User';
 
 export interface SettingFields {
   startTime?: number;
@@ -86,7 +86,7 @@ const aucSettingsSlice = createSlice({
 export const { setAucSettings, setIntegration } = aucSettingsSlice.actions;
 
 export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
-  const { username, settings, integration, hasDAAuth } = await getUserData();
+  const { username, userId, settings, integration, hasDAAuth } = await getUserData();
 
   if (settings) {
     dispatch(setAucSettings(settings));
@@ -95,6 +95,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Pro
     dispatch(setIntegration(integration));
   }
   dispatch(setUsername(username));
+  dispatch(setUserId(userId));
   dispatch(setHasDAAuth(hasDAAuth));
 };
 

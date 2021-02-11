@@ -2,6 +2,7 @@ import { IntegrationFields, SettingFields } from '../reducers/AucSettings/AucSet
 
 export interface UserData {
   username: string;
+  userId: string;
   hasDAAuth: boolean;
   settings?: SettingFields;
   integration?: IntegrationFields;

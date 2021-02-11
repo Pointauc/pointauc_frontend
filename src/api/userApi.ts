@@ -3,8 +3,9 @@ import { DeepPartial } from 'react-hook-form';
 import ENDPOINTS from '../constants/api.constants';
 import { IntegrationFields, SettingFields } from '../reducers/AucSettings/AucSettings';
 import { UserData } from '../models/user.model';
+import { UserInfo } from '../reducers/User/User';
 
-export const getUsername = async (): Promise<string> => {
+export const getUsername = async (): Promise<UserInfo> => {
   const { data } = await axios.get(ENDPOINTS.USER.USERNAME);
 
   return data;

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
 import PageContainer from '../PageContainer/PageContainer';
@@ -6,9 +6,12 @@ import useWheel from '../../hooks/useWheel';
 import { RootState } from '../../reducers';
 import { WheelItem } from '../../models/wheel.model';
 import { getWheelColor } from '../../utils/common.utils';
+import TwitchEmotesList from '../TwitchEmotesList/TwitchEmotesList';
+import './WheelPage.scss';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
+  const [activeEmote, setActiveEmote] = useState<string | undefined>(undefined);
   const wheelItems = useMemo(
     () =>
       slots.map<WheelItem>(({ id, name, amount }) => ({
@@ -24,14 +27,17 @@ const WheelPage: FC = () => {
     console.log(winner);
   }, []);
 
-  const { wheelComponent, spin } = useWheel(wheelItems, handleWin);
+  const { wheelComponent, spin } = useWheel(wheelItems, handleWin, activeEmote);
 
   return (
     <PageContainer title="Колесо">
       <div>{wheelComponent}</div>
-      <Button variant="contained" color="primary" onClick={spin}>
-        Крутить
-      </Button>
+      <div className="wheel-controls">
+        <Button variant="contained" color="primary" onClick={spin}>
+          Крутить
+        </Button>
+        <TwitchEmotesList setActiveEmote={setActiveEmote} />
+      </div>
     </PageContainer>
   );
 };

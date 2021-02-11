@@ -1,14 +1,17 @@
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { Action } from 'redux';
-import { getUsername } from '../../api/userApi';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface UserState {
+export interface UserInfo {
   username: string | null;
+  userId: string | null;
+}
+
+interface UserState extends UserInfo {
   hasDAAuth: boolean;
 }
 
 const initialState: UserState = {
   username: null,
+  userId: null,
   hasDAAuth: false,
 };
 
@@ -19,18 +22,15 @@ const userSlice = createSlice({
     setUsername(state, action: PayloadAction<string | null>): void {
       state.username = action.payload;
     },
+    setUserId(state, action: PayloadAction<string | null>): void {
+      state.userId = action.payload;
+    },
     setHasDAAuth(state, action: PayloadAction<boolean>): void {
       state.hasDAAuth = action.payload;
     },
   },
 });
 
-export const { setUsername, setHasDAAuth } = userSlice.actions;
-
-export const updateUsername = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
-  const newUsername = await getUsername();
-
-  dispatch(setUsername(newUsername));
-};
+export const { setUsername, setHasDAAuth, setUserId } = userSlice.actions;
 
 export default userSlice.reducer;
