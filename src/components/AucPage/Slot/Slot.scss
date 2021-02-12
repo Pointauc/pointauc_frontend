@@ -41,7 +41,8 @@
 
     &-index {
       font-size: 1.1em;
-      width: 35px;
+      min-width: 35px;
+      margin-right: 10px;
     }
 
     &-name {

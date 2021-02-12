@@ -11,7 +11,11 @@ interface SlotsState {
   slots: Slot[];
 }
 
+let maxFastId = 0;
+
 const createSlot = (): Slot => ({
+  // eslint-disable-next-line no-plusplus
+  fastId: ++maxFastId,
   id: Math.random().toString(),
   extra: null,
   amount: null,
@@ -75,15 +79,19 @@ const slotsSlice = createSlice({
       slotNamesMap.deleteBySlotId(deletedId);
     },
     addSlot(state): void {
-      state.slots = [...state.slots, createSlot()];
+      const newSlot = createSlot();
+      state.slots = [...state.slots, newSlot];
+      slotNamesMap.set(`#${maxFastId}`, newSlot.id);
     },
     createSlotFromPurchase(state, action: PayloadAction<Purchase>): void {
       const { id, message: name, cost: amount } = action.payload;
-      const newSlot: Slot = { id, name, amount, extra: null };
+      // eslint-disable-next-line no-plusplus
+      const newSlot: Slot = { id, name, amount, extra: null, fastId: ++maxFastId };
       state.slots.push(newSlot);
       updateSlotPosition(state.slots, state.slots.length - 1);
 
       slotNamesMap.set(name, id);
+      slotNamesMap.set(`#${maxFastId}`, id);
     },
     resetSlots(state): void {
       state.slots = initialState.slots;
@@ -118,9 +126,11 @@ export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: 
     },
     slots: { slots },
   } = getState();
-  const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null };
+  // eslint-disable-next-line no-plusplus
+  const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null, fastId: ++maxFastId };
   const updatedSlots = [...slots, newSlot];
   slotNamesMap.set(name, id);
+  slotNamesMap.set(`#${maxFastId}`, id);
 
   updateSlotPosition(updatedSlots, updatedSlots.length - 1);
   dispatch(setSlots(sortSlots(updatedSlots)));

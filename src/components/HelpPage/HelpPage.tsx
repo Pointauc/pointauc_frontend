@@ -31,12 +31,18 @@ const HelpPage: FC = () => {
       </Typography>
       <Typography variant="body2">Слева внизу отображаются уведомления о мгновенно добавленных ставках</Typography>
       <Typography variant="body2">
+        Ставка мгновенно добавится, если отправить код лота, который указан в скобках рядом с лотом ("#1")
+      </Typography>
+      <Typography variant="body2">
         Когда вы добавляете ставку в лот, следующие ставки с таким же сообщением добавятся автоматически
       </Typography>
       <Typography variant="body2">
         Когда вы переносите ставку в лот, все другие ставки с такими же сообщениями сразу добавятся в этот же лот
       </Typography>
       <Typography variant="body2">Чтобы отнимать поинты надо написать "-" в начале сообщения ("-дота 2")</Typography>
+      <Typography variant="body2">
+        Для изображения в колесе можно выбрать любой смайл канала (Twitch, Bttv, FFZ), выбрав его в списке справа
+      </Typography>
       <Typography variant="body2">При закрытии вкладки награды автоматически удалятся через ~ 20 секунд</Typography>
       <Typography variant="body2">Нельзя создавать награды одной стоимости!</Typography>
     </PageContainer>
