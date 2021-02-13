@@ -14,10 +14,11 @@ interface SlotsMap {
 const PurchaseHistory: React.FC = () => {
   const { history } = useSelector((root: RootState) => root.purchases);
   const { slots } = useSelector((root: RootState) => root.slots);
+  const allSlots = useMemo(() => [...slots[0], ...slots[1]], [slots]);
 
   const slotsMap = useMemo(
-    () => slots.reduce<SlotsMap>((acc, { id, name }) => ({ ...acc, [id.toString()]: name }), {}),
-    [slots],
+    () => allSlots.reduce<SlotsMap>((acc, { id, name }) => ({ ...acc, [id.toString()]: name }), {}),
+    [allSlots],
   );
 
   const getTime = (params: ValueGetterParams): CellValue => dayjs(params.value?.toString()).format(FORMAT.DATE.time);

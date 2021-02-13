@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 import { RootState } from '../../reducers';
 import './PurchaseList.scss';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
-import { processRedemption, Purchase } from '../../reducers/Purchases/Purchases';
+import { processRedemption, Bid } from '../../reducers/Purchases/Purchases';
 import { PURCHASE_SORT_OPTIONS } from '../../constants/purchase.constants';
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 
@@ -38,7 +38,7 @@ const PurchaseList: React.FC = () => {
     const { key, order } = PURCHASE_SORT_OPTIONS[purchaseSort || 0];
     const orderModifier = order === 'ascend' ? 1 : -1;
 
-    return [...purchases].sort((a: Purchase, b: Purchase) => compareValues(a[key], b[key]) * orderModifier);
+    return [...purchases].sort((a: Bid, b: Bid) => compareValues(a[key], b[key]) * orderModifier);
   }, [purchaseSort, purchases]);
 
   useEffect(() => {

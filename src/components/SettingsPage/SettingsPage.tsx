@@ -36,13 +36,13 @@ const SettingsPage: FC = () => {
 
   const handleReset = useCallback(() => reset(), [reset]);
   const onSubmit = useCallback(
-    (data) =>
+    ({ isDoubleAuc, ...data }) =>
       withLoading(setIsSubmitting, async () => {
         if (username) {
           await updateSettings(getDirtyValues(data, dirtyFields, initialState.settings));
         }
 
-        return dispatch(setAucSettings(data));
+        return dispatch(setAucSettings({ ...data, isDoubleAuc }));
       })(),
     [dirtyFields, dispatch, username],
   );

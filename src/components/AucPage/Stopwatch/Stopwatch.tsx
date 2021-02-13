@@ -61,9 +61,9 @@ const Stopwatch: React.FC = () => {
   }, [actualTwitchSub, dispatch, dynamicRewards, isStopped, isStopwatchChanged, loadingTwitchSub]);
 
   const winnerSlot = useMemo(() => {
-    [winnerRef.current] = slots;
+    [[winnerRef.current]] = slots;
 
-    return slots[0];
+    return winnerRef.current;
   }, [slots]);
   const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 

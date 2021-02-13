@@ -5,7 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import classNames from 'classnames';
 import {
   logPurchase,
-  Purchase,
+  Bid,
   PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
@@ -18,7 +18,7 @@ import donationBackground from '../../assets/img/donationBackground.jpg';
 import { createSlotFromPurchase } from '../../reducers/Slots/Slots';
 import { useCostConvert } from '../../hooks/useCostConvert';
 
-interface PurchaseComponentProps extends Purchase {
+interface PurchaseComponentProps extends Bid {
   isDragging?: boolean;
 }
 

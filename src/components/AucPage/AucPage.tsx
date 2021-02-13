@@ -8,7 +8,8 @@ import { RootState } from '../../reducers';
 import PageContainer from '../PageContainer/PageContainer';
 
 const AucPage: React.FC = () => {
-  const { background } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { background, isDoubleAuc } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { slots } = useSelector((root: RootState) => root.slots);
 
   const backgroundStyles = {
     backgroundImage: `url(${background})`,
@@ -20,7 +21,10 @@ const AucPage: React.FC = () => {
   return (
     <PageContainer className="auc-container" style={backgroundStyles} maxWidth={false}>
       <div className="auc-container-content">
-        <SlotsColumn />
+        <div className="auc-container-content-slots">
+          <SlotsColumn slots={slots[0]} index={0} />
+          {isDoubleAuc && <SlotsColumn slots={slots[1]} index={1} />}
+        </div>
         <ControlColumn />
       </div>
       <Notification />

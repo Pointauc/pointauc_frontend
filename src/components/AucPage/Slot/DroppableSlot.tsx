@@ -11,7 +11,7 @@ import { RootState } from '../../../reducers';
 import { handleDragOver } from '../../../utils/common.utils';
 import {
   logPurchase,
-  Purchase,
+  Bid,
   PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
@@ -50,7 +50,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
 
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
-      const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
+      const redemption: Bid = JSON.parse(e.dataTransfer.getData('redemption'));
       const { cost, message, isDonation, id: redemptionId } = redemption;
       const addedCost = isDonation ? cost * pointsRate : cost;
 

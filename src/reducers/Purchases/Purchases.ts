@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
-import { normalizePurchase } from '../../utils/slots.utils';
+import { getSlotPosition, normalizePurchase } from '../../utils/slots.utils';
 import { RootState } from '../index';
 import { setSlotAmount } from '../Slots/Slots';
 import { addAlert } from '../notifications/notifications';
@@ -13,7 +13,7 @@ export enum PurchaseStatusEnum {
   Deleted = 'Deleted',
 }
 
-export interface Purchase {
+export interface Bid {
   timestamp: string;
   cost: number;
   username: string;
@@ -24,14 +24,18 @@ export interface Purchase {
   isDonation?: boolean;
 }
 
-export interface PurchaseLog extends Purchase {
+export interface RelatedBid extends Bid {
+  index?: number;
+}
+
+export interface BidLog extends Bid {
   status: PurchaseStatusEnum;
   target?: string;
 }
 
 interface PurchasesState {
-  purchases: Purchase[];
-  history: PurchaseLog[];
+  purchases: Bid[];
+  history: BidLog[];
   draggedRedemption: string | null;
 }
 
@@ -45,10 +49,10 @@ const purchasesSlice = createSlice({
   name: 'purchases',
   initialState,
   reducers: {
-    logPurchase(state, action: PayloadAction<PurchaseLog>): void {
+    logPurchase(state, action: PayloadAction<BidLog>): void {
       state.history = [...state.history, action.payload];
     },
-    addPurchase(state, action: PayloadAction<Purchase>): void {
+    addPurchase(state, action: PayloadAction<Bid>): void {
       state.purchases = [...state.purchases, normalizePurchase(action.payload)];
     },
     removePurchase(state, action: PayloadAction<ReactText>): void {
@@ -71,27 +75,18 @@ export const {
   setDraggedRedemption,
 } = purchasesSlice.actions;
 
-export const fastAddBid = (bid: Purchase, slotId: string) => (
+export const fastAddBid = (bid: RelatedBid, slotId: string) => (
   dispatch: ThunkDispatch<RootState, {}, Action>,
   getState: () => RootState,
 ): void => {
   const {
     slots: { slots },
-    aucSettings: {
-      settings: { marbleRate = 1, marblesAuc },
-    },
   } = getState();
+  const { cost, username, message, isDonation } = bid;
+  const { arrayIndex, listIndex } = getSlotPosition(slots, slotId);
 
-  const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
-
-  const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
-
-  const { cost: rawCost, username, message } = bid;
-  const cost = convertCost(rawCost);
-  const similarSlot = slots.find(({ id }) => id === slotId);
-
-  if (similarSlot) {
-    const { id, amount, name } = similarSlot;
+  if (listIndex > -1 && !isDonation) {
+    const { id, amount, name } = slots[listIndex][arrayIndex];
     const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
 
     dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
@@ -100,7 +95,7 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
   }
 };
 
-export const processRedemption = (redemption: Purchase) => (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
+export const processRedemption = (redemption: Bid) => (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
   const { message } = redemption;
   const similarSlotId = slotNamesMap.get(message);
 

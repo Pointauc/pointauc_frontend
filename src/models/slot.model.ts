@@ -5,3 +5,10 @@ export interface Slot {
   amount: number | null;
   extra: number | null;
 }
+
+export type SlotsList = [Slot[], Slot[]];
+
+export interface SlotPosition {
+  arrayIndex: number;
+  listIndex: number;
+}

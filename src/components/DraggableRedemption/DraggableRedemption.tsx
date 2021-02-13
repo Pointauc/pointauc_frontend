@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Purchase, setDraggedRedemption } from '../../reducers/Purchases/Purchases';
+import { Bid, setDraggedRedemption } from '../../reducers/Purchases/Purchases';
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import { isFirefox } from '../../utils/common.utils';
 
@@ -11,7 +11,7 @@ interface DragPosition {
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 
-const DraggableRedemption: FC<Purchase> = (purchase) => {
+const DraggableRedemption: FC<Bid> = (purchase) => {
   const dispatch = useDispatch();
   const { id, cost } = purchase;
   const [isDragging, setIsDragging] = useState<boolean>(false);

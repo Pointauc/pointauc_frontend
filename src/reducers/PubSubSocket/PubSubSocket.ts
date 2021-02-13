@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import axios from 'axios';
 import WebSocketService from '../../services/WebSocketService';
-import { Purchase } from '../Purchases/Purchases';
+import { Bid } from '../Purchases/Purchases';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { getWebsocketUrl } from '../../utils/url.utils';
 import { addAlert } from '../notifications/notifications';
@@ -74,7 +74,7 @@ export const connectToServer = () => (
     clearInterval(interval);
   };
 
-  const webSocketService = new WebSocketService<Purchase>(onClose, onOpen);
+  const webSocketService = new WebSocketService<Bid>(onClose, onOpen);
   webSocketService.connect(getWebsocketUrl());
 };
 

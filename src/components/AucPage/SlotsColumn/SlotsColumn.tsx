@@ -1,43 +1,45 @@
-import React, { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { DragEvent, FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormControlLabel, Grid, IconButton, Input, Radio, RadioGroup, Typography } from '@material-ui/core';
+import { Grid, IconButton, Input, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import classNames from 'classnames';
-import VerticalSplitRoundedIcon from '@material-ui/icons/VerticalSplitRounded';
-import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
 import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { handleDragOver } from '../../../utils/common.utils';
 import SlotsList from './SlotsList';
 import {
+  Bid,
   logPurchase,
-  Purchase,
   PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
   updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
-import { useCostConvert } from '../../../hooks/useCostConvert';
+import { Slot } from '../../../models/slot.model';
 
-const TwoColumnIcon = VerticalSplitRoundedIcon;
-const SingleColumnIcon = ReorderRoundedIcon;
+// const TwoColumnIcon = VerticalSplitRoundedIcon;
+// const SingleColumnIcon = ReorderRoundedIcon;
 
-const SlotsColumn: React.FC = () => {
+interface SlotsColumnProps {
+  slots: Slot[];
+  index: 0 | 1;
+}
+
+const SlotsColumn: FC<SlotsColumnProps> = ({ slots, index }) => {
   const dispatch = useDispatch();
   const buyoutInput = useRef<HTMLInputElement>(null);
-  const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
     settings: { isBuyoutVisible, background },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [, setBuyout] = useState<number | null>(null);
-  const [slotWidth, setSlotWidth] = useState<6 | 12>(12);
+  const [slotWidth] = useState<6 | 12>(12);
   const [enterCounter, setEnterCounter] = useState<number>(0);
   const isOver = useMemo(() => !!enterCounter, [enterCounter]);
 
   const handleAddSlot = (): void => {
-    dispatch(addSlot());
+    dispatch(addSlot(index));
   };
 
   const addButtonClasses = useMemo(
@@ -66,26 +68,24 @@ const SlotsColumn: React.FC = () => {
     }
   }, [buyoutInput]);
 
-  const handleSlotWidthChange = (e: ChangeEvent<HTMLInputElement>, value: string): void => {
-    const newWidth = Number(value);
-    if (newWidth === 6 || newWidth === 12) {
-      setSlotWidth(newWidth);
-    }
-  };
-
-  const convertCost = useCostConvert();
+  // const handleSlotWidthChange = (e: ChangeEvent<HTMLInputElement>, value: string): void => {
+  //   const newWidth = Number(value);
+  //   if (newWidth === 6 || newWidth === 12) {
+  //     setSlotWidth(newWidth);
+  //   }
+  // };
 
   const handleDrop = useCallback(
     (e: DragEvent<HTMLButtonElement>) => {
-      const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
-      dispatch(createSlotFromPurchase({ ...redemption, cost: convertCost(redemption.cost, true) }));
+      const redemption: Bid = JSON.parse(e.dataTransfer.getData('redemption'));
+      dispatch(createSlotFromPurchase({ ...redemption, index }));
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: redemption.id.toString() }));
       dispatch(removePurchase(redemption.id));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);
       setEnterCounter(0);
     },
-    [convertCost, dispatch],
+    [dispatch, index],
   );
 
   const handleDragEnter = useCallback(() => {
@@ -125,18 +125,18 @@ const SlotsColumn: React.FC = () => {
           </IconButton>
         </Grid>
 
-        <RadioGroup value={slotWidth} onChange={handleSlotWidthChange} row className="slots-width-wrapper">
-          <FormControlLabel
-            control={<Radio icon={<SingleColumnIcon />} checkedIcon={<SingleColumnIcon />} />}
-            label=""
-            value={12}
-          />
-          <FormControlLabel
-            control={<Radio icon={<TwoColumnIcon />} checkedIcon={<TwoColumnIcon />} />}
-            label=""
-            value={6}
-          />
-        </RadioGroup>
+        {/* <RadioGroup value={slotWidth} onChange={handleSlotWidthChange} row className="slots-width-wrapper"> */}
+        {/*  <FormControlLabel */}
+        {/*    control={<Radio icon={<SingleColumnIcon />} checkedIcon={<SingleColumnIcon />} />} */}
+        {/*    label="" */}
+        {/*    value={12} */}
+        {/*  /> */}
+        {/*  <FormControlLabel */}
+        {/*    control={<Radio icon={<TwoColumnIcon />} checkedIcon={<TwoColumnIcon />} />} */}
+        {/*    label="" */}
+        {/*    value={6} */}
+        {/*  /> */}
+        {/* </RadioGroup> */}
       </Grid>
     </Grid>
   );

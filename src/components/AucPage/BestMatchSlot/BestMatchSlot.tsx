@@ -5,10 +5,14 @@ import { Typography } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import DroppableSlot from '../Slot/DroppableSlot';
 import './BestMatchSlot.scss';
+import { Slot } from '../../models/slot.model';
 
-const BestMatchSlot: FC = () => {
+interface BestMatchSlotProps {
+  slots: Slot[];
+}
+
+const BestMatchSlot: FC<BestMatchSlotProps> = ({ slots }) => {
   const { draggedRedemption, purchases } = useSelector((root: RootState) => root.purchases);
-  const { slots } = useSelector((root: RootState) => root.slots);
 
   const draggedBidName = useMemo(() => purchases.find(({ id }) => id === draggedRedemption)?.message || '', [
     draggedRedemption,
@@ -18,6 +22,10 @@ const BestMatchSlot: FC = () => {
   const slotNames = useMemo(() => slots.map(({ name }) => name || ''), [slots]);
 
   const bestMatch = useMemo(() => {
+    if (!slotNames.length) {
+      return null;
+    }
+
     const {
       bestMatch: { rating },
       bestMatchIndex,
