@@ -13,14 +13,14 @@ interface TwitchEmotesListProps {
 
 const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
   const { userId } = useSelector((root: RootState) => root.user);
-  const [userEmotes, setUserEmotes] = useState<Collection<string, Emote>[]>();
+  const [userEmotes, setUserEmotes] = useState<(Collection<string, Emote> | undefined)[]>();
 
   useEffect(() => {
     if (userId) {
       Promise.all([
-        fetcher.fetchTwitchEmotes(Number(userId)),
-        fetcher.fetchBTTVEmotes(Number(userId)),
-        fetcher.fetchFFZEmotes(Number(userId)),
+        fetcher.fetchTwitchEmotes(Number(userId)).catch(() => undefined),
+        fetcher.fetchBTTVEmotes(Number(userId)).catch(() => undefined),
+        fetcher.fetchFFZEmotes(Number(userId)).catch(() => undefined),
       ]).then(setUserEmotes);
     }
   }, [userId]);
