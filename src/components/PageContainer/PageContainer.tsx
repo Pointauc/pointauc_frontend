@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { Container, ContainerProps, createStyles, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -19,11 +20,11 @@ interface PgeContainerProps extends ContainerProps {
   title?: string;
 }
 
-const PageContainer: FC<PgeContainerProps> = ({ title, children, ...props }) => {
+const PageContainer: FC<PgeContainerProps> = ({ title, children, className, ...props }) => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.root} {...props}>
+    <Container className={classNames(classes.root, className)} {...props}>
       {!!title && <Typography variant="h3">{title}</Typography>}
       {children}
     </Container>

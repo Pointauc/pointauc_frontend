@@ -24,6 +24,10 @@ const HelpPage: FC = () => {
         Shizov -
 <Link href="https://www.twitch.tv/shizov"> https://www.twitch.tv/shizov</Link>
       </Typography>
+      <Typography variant="body2">
+        Slexboy -
+<Link href="https://www.twitch.tv/shizov"> https://www.twitch.tv/slexboy</Link>
+      </Typography>
       <SettingsGroupTitle title="Советы" />
       <Typography variant="body2">
         Обзор основных фич (1:00) -
