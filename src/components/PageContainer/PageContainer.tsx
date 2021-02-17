@@ -24,7 +24,7 @@ const PageContainer: FC<PgeContainerProps> = ({ title, children, className, ...p
   const classes = useStyles();
 
   return (
-    <Container className={classNames(classes.root, className)} {...props}>
+    <Container className={classNames(classes.root, className)} style={{ maxWidth: '95%' }} {...props}>
       {!!title && <Typography variant="h3">{title}</Typography>}
       {children}
     </Container>
