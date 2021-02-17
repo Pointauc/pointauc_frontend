@@ -5,7 +5,6 @@ import {
   FormGroup,
   IconButton,
   Paper,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -20,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFieldArray } from 'react-hook-form';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import DeleteIcon from '@material-ui/icons/Delete';
+import classNames from 'classnames';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
 import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
@@ -28,6 +28,8 @@ import FormInput from '../../FormInput/FormInput';
 import FormSwitch from '../../FormSwitch/FormSwitch';
 import FormColorPicker from '../../FormColorPicker/FormColorPicker';
 import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
+import LoadingButton from '../../LoadingButton/LoadingButton';
+import { closeTwitchRewards } from '../../../api/twitchApi';
 
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -74,7 +76,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   const {
     twitch: { actual, loading },
   } = useSelector((root: RootState) => root.subscription);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(actual);
+  const [, setIsSubscribed] = useState<boolean>(actual);
 
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
@@ -125,25 +127,40 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     [control],
   );
 
-  const handleSwitchChange = useCallback(
-    (e: any, checked: boolean): void => {
-      setIsSubscribed(checked);
-      dispatch(sendCpSubscribedState(checked));
-    },
-    [dispatch],
-  );
+  const toggleSubscribe = useCallback((): void => {
+    setIsSubscribed((checked) => {
+      dispatch(sendCpSubscribedState(!checked));
+
+      return !checked;
+    });
+  }, [dispatch]);
 
   return (
     <div style={{ marginBottom: 20 }}>
       <SettingsGroupTitle title="Twitch">
-        <Switch onChange={handleSwitchChange} disabled={!username || loading} checked={isSubscribed} />
+        <span className="username">{username}</span>
       </SettingsGroupTitle>
       {username ? (
         <FormGroup className="auc-settings-list">
-          <Typography variant="h6">
-            Вы вошли как
-            <b className="username">{username}</b>
-          </Typography>
+          <div style={{ display: 'flex', marginBottom: 10 }}>
+            <LoadingButton
+              isLoading={loading}
+              variant="outlined"
+              color="primary"
+              className={classNames('open-rewards-button', { close: actual })}
+              onClick={toggleSubscribe}
+            >
+              {actual ? 'Скрыть награды' : 'Включить награды'}
+            </LoadingButton>
+            <Button
+              variant="outlined"
+              color="secondary"
+              style={{ width: 175, marginLeft: 20 }}
+              onClick={closeTwitchRewards}
+            >
+              Удалить награды
+            </Button>
+          </div>
           <FormGroup row className="auc-settings-row">
             <FormSwitch name="twitch.isRefundAvailable" control={control} label="Возвращать отмененные награды" />
           </FormGroup>

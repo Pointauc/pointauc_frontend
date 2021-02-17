@@ -8,7 +8,7 @@ interface LoadingButtonProps extends ButtonProps {
 
 const LoadingButton: React.FC<LoadingButtonProps> = ({ isLoading, children, ...buttonProps }) => {
   return (
-    <Button {...buttonProps}>
+    <Button disabled={isLoading} {...buttonProps}>
       {children}
       {isLoading && <CircularProgress size={30} className="button-loading" />}
     </Button>
