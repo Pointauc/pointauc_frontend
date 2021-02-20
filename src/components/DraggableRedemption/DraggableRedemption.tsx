@@ -1,7 +1,8 @@
-import React, { DragEvent, FC, memo, useCallback, useRef, useState } from 'react';
+import React, { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Purchase, setDraggedRedemption } from '../../reducers/Purchases/Purchases';
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
+import { isFirefox } from '../../utils/common.utils';
 
 interface DragPosition {
   left: number;
@@ -19,7 +20,7 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
   const dragRef = useRef<HTMLDivElement>(null);
 
   const handleDragStart = useCallback(
-    (e: DragEvent<HTMLDivElement>): void => {
+    (e: React.DragEvent<HTMLDivElement>): void => {
       e.dataTransfer.setData('redemption', JSON.stringify(purchase));
       e.dataTransfer.setDragImage(new Image(), 0, 0);
       if (cost < 0) {
@@ -31,7 +32,8 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
 
       if (redemptionRef.current) {
         const { left, top } = redemptionRef.current.getBoundingClientRect();
-        setMouseOffset({ left: e.clientX - left, top: e.clientY - top });
+
+        setMouseOffset({ left: e.pageX - left, top: e.pageY - top });
 
         if (dragRef.current) {
           dragRef.current.style.left = `${left}px`;
@@ -53,20 +55,42 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
   }, [dispatch]);
 
   const handleDrag = useCallback(
-    (e: DragEvent<HTMLDivElement>) => {
-      e.persist();
+    (e: React.DragEvent) => {
+      e.preventDefault();
 
       if (dragRef.current) {
-        dragRef.current.style.left = `${e.clientX - mouseOffset.left}px`;
-        dragRef.current.style.top = `${e.clientY - mouseOffset.top}px`;
+        dragRef.current.style.left = `${e.pageX - mouseOffset.left}px`;
+        dragRef.current.style.top = `${e.pageY - mouseOffset.top}px`;
       }
     },
     [mouseOffset.left, mouseOffset.top],
   );
 
+  // eslint-disable-next-line consistent-return
+  useEffect(() => {
+    let isFrameRequested = false;
+    const handleDragOver = (e: DragEvent): void => {
+      if (!isFrameRequested) {
+        requestAnimationFrame(() => {
+          handleDrag(e as any);
+
+          isFrameRequested = false;
+        });
+
+        isFrameRequested = true;
+      }
+    };
+
+    if (isFirefox()) {
+      document.addEventListener('dragover', handleDragOver);
+
+      return (): void => document.removeEventListener('dragover', handleDragOver);
+    }
+  }, [handleDrag]);
+
   return (
     <>
-      <div draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDrag={handleDrag} ref={redemptionRef}>
+      <div draggable onDragStart={handleDragStart} onDrag={handleDrag} onDragEnd={handleDragEnd} ref={redemptionRef}>
         <PurchaseComponent {...purchase} isDragging={isDragging} />
       </div>
       <div style={{ pointerEvents: 'none', position: 'absolute' }} hidden className="drag-context" ref={dragRef}>

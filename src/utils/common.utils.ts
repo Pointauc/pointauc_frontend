@@ -3,6 +3,7 @@ import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
+import { WheelItem } from '../models/wheel.model';
 
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
 
@@ -65,3 +66,7 @@ export const shuffle = <T>(a: T[]): T[] => {
   }
   return a;
 };
+
+export const isFirefox = (): boolean => navigator.userAgent.toLowerCase().includes('firefox');
+
+export const getTotalSize = (items: WheelItem[]): number => items.reduce((acc, { size }) => acc + (size || 0), 0);
