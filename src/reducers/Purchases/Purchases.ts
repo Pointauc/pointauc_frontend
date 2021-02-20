@@ -78,10 +78,10 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
   const {
     slots: { slots },
   } = getState();
-  const { cost, username, message, isDonation } = bid;
+  const { cost, username, message } = bid;
   const similarSlot = slots.find(({ id }) => id === slotId);
 
-  if (similarSlot && !isDonation) {
+  if (similarSlot) {
     const { id, amount, name } = similarSlot;
     const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
 
@@ -95,7 +95,7 @@ export const processRedemption = (redemption: Purchase) => (dispatch: ThunkDispa
   const { message } = redemption;
   const similarSlotId = slotNamesMap.get(message);
 
-  if (similarSlotId) {
+  if (similarSlotId && !redemption.isDonation) {
     dispatch(fastAddBid(redemption, similarSlotId));
   } else {
     dispatch(addPurchase(redemption));
