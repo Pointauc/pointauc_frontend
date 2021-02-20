@@ -11,6 +11,7 @@ import withLoading from '../../decorators/withLoading';
 import { updateIntegration } from '../../api/userApi';
 import DaIntegration from './DAIntegration/DAIntegration';
 import { getDirtyValues } from '../../utils/common.utils';
+import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
 
 const IntegrationPage: FC = () => {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ const IntegrationPage: FC = () => {
   return (
     <PageContainer title="Интеграции">
       <form className="settings" onSubmit={handleSubmit(onSubmit)}>
+        <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
         <TwitchIntegration control={control} />
         <DaIntegration control={control} />
         <div style={{ marginTop: 40 }}>

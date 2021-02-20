@@ -1,0 +1,26 @@
+@import "../../styles/colors";
+
+.form-confirm-dialog {
+  .MuiDialog-container {
+    align-items: start;
+
+    .MuiDialog-paper {
+      margin-top: 10%;
+
+      .MuiDialogTitle-root {
+        border-bottom: 1px  solid $grey-9;
+        padding-bottom: 16px;
+      }
+
+      h2 {
+        color: $grey-1;
+        font-weight: 400;
+      }
+
+      .MuiDialogActions-root {
+        padding-top: 6px;
+        padding-bottom: 6px;
+      }
+    }
+  }
+}

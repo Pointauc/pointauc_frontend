@@ -12,6 +12,7 @@ import LoadingButton from '../LoadingButton/LoadingButton';
 import withLoading from '../../decorators/withLoading';
 import { updateSettings } from '../../api/userApi';
 import { getDirtyValues } from '../../utils/common.utils';
+import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
 
 const SettingsPage: FC = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const SettingsPage: FC = () => {
   return (
     <PageContainer title="Настройки" classes={{ root: 'settings' }}>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
         <StopwatchSettings control={control} />
         <AucSettings control={control} register={register} setValue={setValue} />
         <div style={{ marginTop: 40 }}>
