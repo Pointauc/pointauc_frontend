@@ -64,12 +64,11 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
   };
   const cardStyles = isDonation ? donationStyles : redemptionStyles;
   const purchaseClasses = classNames(['purchase', { 'drag-placeholder': isDragging, 'remove-cost': isRemovePurchase }]);
-
-  const costString = useMemo(() => (isDonation ? `${cost * pointsRate} (${cost} ₽)` : cost), [
+  const donationCost = useMemo(() => (pointsRate === 1 ? `${cost}₽` : `${cost * pointsRate} (${cost} ₽)`), [
     cost,
-    isDonation,
     pointsRate,
   ]);
+  const costString = useMemo(() => (isDonation ? donationCost : cost), [cost, donationCost, isDonation]);
 
   const handleAddNewSlot = useCallback(() => {
     dispatch(createSlotFromPurchase(purchase));
