@@ -21,21 +21,19 @@
   animation-iteration-count: infinite;
 }
 
-
-
 .server-status {
   display: flex;
   align-items: center;
   color: white;
   border: 2px solid $blue-gray-2;
-  height: 38px;
+  height: 36px;
   border-radius: 22px;
   background-color: rgba($blue-gray-5, .3);
   padding: 0 15px;
 
   &-label {
     font-weight: 400;
-    font-size: 17px;
+    font-size: 16px;
     color: $grey-1;
     white-space: nowrap;
     margin-right: 10px;

@@ -4,6 +4,7 @@ import { FieldValues } from 'react-hook-form/dist/types/fields';
 import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
 import { WheelItem } from '../models/wheel.model';
+import { ATTRIBUTES, TAGS } from '../constants/common.constants';
 
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
 
@@ -70,3 +71,15 @@ export const shuffle = <T>(a: T[]): T[] => {
 export const isFirefox = (): boolean => navigator.userAgent.toLowerCase().includes('firefox');
 
 export const getTotalSize = (items: WheelItem[]): number => items.reduce((acc, { size }) => acc + (size || 0), 0);
+
+export const loadFile = (filename: string, data: string): void => {
+  const element = document.createElement(TAGS.A);
+  element.setAttribute(ATTRIBUTES.HREF, `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`);
+  element.setAttribute(ATTRIBUTES.DOWNLOAD, filename);
+
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+};
