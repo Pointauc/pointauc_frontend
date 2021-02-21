@@ -83,16 +83,6 @@ const slotsSlice = createSlice({
       state.slots = [...state.slots, newSlot];
       slotNamesMap.set(`#${maxFastId}`, newSlot.id);
     },
-    createSlotFromPurchase(state, action: PayloadAction<Purchase>): void {
-      const { id, message: name, cost: amount } = action.payload;
-      // eslint-disable-next-line no-plusplus
-      const newSlot: Slot = { id, name, amount, extra: null, fastId: ++maxFastId };
-      state.slots.push(newSlot);
-      updateSlotPosition(state.slots, state.slots.length - 1);
-
-      slotNamesMap.set(name, id);
-      slotNamesMap.set(`#${maxFastId}`, id);
-    },
     resetSlots(state): void {
       state.slots = initialState.slots;
       slotNamesMap.clear();

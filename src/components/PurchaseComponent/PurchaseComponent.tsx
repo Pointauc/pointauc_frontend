@@ -16,6 +16,7 @@ import { RootState } from '../../reducers';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import donationBackground from '../../assets/img/donationBackground.jpg';
 import { createSlotFromPurchase } from '../../reducers/Slots/Slots';
+import { useCostConvert } from '../../hooks/useCostConvert';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -54,6 +55,8 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     }
   };
 
+  const convertCost = useCostConvert();
+
   const redemptionStyles = { backgroundColor: color };
   const donationStyles = {
     backgroundImage: `url(${donationBackground})`,
@@ -68,15 +71,20 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     cost,
     pointsRate,
   ]);
-  const costString = useMemo(() => (isDonation ? donationCost : cost), [cost, donationCost, isDonation]);
+  const costString = useMemo(() => (isDonation ? donationCost : convertCost(cost)), [
+    convertCost,
+    cost,
+    donationCost,
+    isDonation,
+  ]);
 
   const handleAddNewSlot = useCallback(() => {
-    dispatch(createSlotFromPurchase(purchase));
+    dispatch(createSlotFromPurchase({ ...purchase, cost: convertCost(purchase.cost, true) }));
     dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
     dispatch(updateExistBids);
-  }, [dispatch, id, purchase]);
+  }, [convertCost, dispatch, id, purchase]);
 
   return (
     <Card className={purchaseClasses} style={isDragging ? undefined : cardStyles}>

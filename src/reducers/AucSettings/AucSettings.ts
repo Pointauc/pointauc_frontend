@@ -12,6 +12,9 @@ export interface SettingFields {
   isBuyoutVisible?: boolean;
   background: string | null;
   purchaseSort?: number;
+  marblesAuc?: boolean;
+  marbleRate?: number;
+  marbleCategory?: number;
 }
 
 export interface RewardSetting {
@@ -51,6 +54,9 @@ export const initialState: AucSettingsState = {
     autoincrementTime: 30,
     purchaseSort: 0,
     background: null,
+    marblesAuc: false,
+    marbleRate: 50,
+    marbleCategory: 100,
   },
   integration: {
     twitch: {

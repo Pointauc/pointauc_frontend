@@ -18,6 +18,7 @@ import {
   updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
 import slotNamesMap from '../../../services/SlotNamesMap';
+import { useCostConvert } from '../../../hooks/useCostConvert';
 
 interface DroppableSlotProps extends Slot {
   index: number;
@@ -33,6 +34,8 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
   const [isRemoveCost, setIsRemoveCost] = useState<boolean>(false);
   const { id, amount, name } = slotProps;
   const isOver = useMemo(() => !!enterCounter, [enterCounter]);
+
+  const convertCost = useCostConvert();
 
   const slotClasses = useMemo(() => classNames('slot', { 'drag-over': isOver, 'remove-cost': isRemoveCost }), [
     isOver,
@@ -52,7 +55,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       const addedCost = isDonation ? cost * pointsRate : cost;
 
       slotNamesMap.set(message, id);
-      dispatch(setSlotAmount({ id, amount: Number(amount) + addedCost }));
+      dispatch(setSlotAmount({ id, amount: Number(amount) + convertCost(addedCost, !name) }));
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
       dispatch(removePurchase(redemptionId));
       dispatch(setDraggedRedemption(null));
@@ -63,7 +66,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       }
       setEnterCounter(0);
     },
-    [amount, dispatch, id, name, pointsRate],
+    [amount, convertCost, dispatch, id, name, pointsRate],
   );
 
   const handleDragEnter = useCallback((e: DragEvent<HTMLDivElement>) => {

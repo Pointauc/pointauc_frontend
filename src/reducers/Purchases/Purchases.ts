@@ -77,8 +77,17 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
 ): void => {
   const {
     slots: { slots },
+    aucSettings: {
+      settings: { marbleRate = 1, marblesAuc },
+    },
   } = getState();
-  const { cost, username, message } = bid;
+
+  const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
+
+  const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
+
+  const { cost: rawCost, username, message } = bid;
+  const cost = convertCost(rawCost);
   const similarSlot = slots.find(({ id }) => id === slotId);
 
   if (similarSlot) {

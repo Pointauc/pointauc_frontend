@@ -18,7 +18,7 @@ import {
   setDraggedRedemption,
   updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
-import BestMatchSlot from '../BestMatchSlot/BestMatchSlot';
+import { useCostConvert } from '../../../hooks/useCostConvert';
 
 const TwoColumnIcon = VerticalSplitRoundedIcon;
 const SingleColumnIcon = ReorderRoundedIcon;
@@ -73,17 +73,19 @@ const SlotsColumn: React.FC = () => {
     }
   };
 
+  const convertCost = useCostConvert();
+
   const handleDrop = useCallback(
     (e: DragEvent<HTMLButtonElement>) => {
       const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
-      dispatch(createSlotFromPurchase(redemption));
+      dispatch(createSlotFromPurchase({ ...redemption, cost: convertCost(redemption.cost, true) }));
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: redemption.id.toString() }));
       dispatch(removePurchase(redemption.id));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);
       setEnterCounter(0);
     },
-    [dispatch],
+    [convertCost, dispatch],
   );
 
   const handleDragEnter = useCallback(() => {
@@ -109,7 +111,6 @@ const SlotsColumn: React.FC = () => {
 
       <Grid container wrap="nowrap" className="slots-wrapper">
         <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
-          <BestMatchSlot />
           <SlotsList slots={slots} slotWidth={slotWidth} />
           <IconButton
             onClick={handleAddSlot}

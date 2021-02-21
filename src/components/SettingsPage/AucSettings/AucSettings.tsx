@@ -9,6 +9,7 @@ import ImageLinkInput from '../../ImageLinkInput/ImageLinkInput';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
 import FormSwitch from '../../Form/FormSwitch/FormSwitch';
+import FormInput from '../../Form/FormInput/FormInput';
 
 interface AucSettingsProps {
   control: UseFormMethods['control'];
@@ -76,6 +77,21 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
               <ArrowDownwardOutlinedIcon fontSize="small" />
             </MenuItem>
           </Controller>
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <FormSwitch name="marblesAuc" control={control} label="Шаровой аукцион" />
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <FormInput name="marbleRate" control={control} label="Стоимость шара" type="number" className="field md" />
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
+          <FormInput
+            name="marbleCategory"
+            control={control}
+            label="Стоимость новой категории"
+            type="number"
+            className="field md"
+          />
         </FormGroup>
       </FormGroup>
     </>
