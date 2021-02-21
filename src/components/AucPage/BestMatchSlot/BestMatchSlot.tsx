@@ -2,8 +2,8 @@ import React, { FC, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { findBestMatch } from 'string-similarity';
 import { Typography } from '@material-ui/core';
-import { RootState } from '../../reducers';
-import DroppableSlot from '../AucPage/Slot/DroppableSlot';
+import { RootState } from '../../../reducers';
+import DroppableSlot from '../Slot/DroppableSlot';
 import './BestMatchSlot.scss';
 
 const BestMatchSlot: FC = () => {

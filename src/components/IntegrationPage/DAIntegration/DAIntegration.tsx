@@ -6,8 +6,8 @@ import { RootState } from '../../../reducers';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
 import './DAIntegration.scss';
-import FormSwitch from '../../FormSwitch/FormSwitch';
-import FormInput from '../../FormInput/FormInput';
+import FormSwitch from '../../Form/FormSwitch/FormSwitch';
+import FormInput from '../../Form/FormInput/FormInput';
 import { sendDaSubscribedState } from '../../../reducers/Subscription/Subscription';
 
 const authParams = {

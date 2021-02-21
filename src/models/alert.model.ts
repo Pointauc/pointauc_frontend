@@ -6,6 +6,7 @@ export enum AlertTypeEnum {
 export interface AlertProps {
   message: string;
   type: AlertTypeEnum;
+  duration?: number;
 }
 
 export interface AlertType extends AlertProps {

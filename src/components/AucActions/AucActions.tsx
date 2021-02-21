@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './Options.scss';
+import './AucActions.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import { Button, IconButton } from '@material-ui/core';
@@ -11,10 +11,11 @@ import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import { isProduction } from '../../utils/common.utils';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { RootState } from '../../reducers';
+import ServerStatus from '../ServerStatus/ServerStatus';
 
 const isProd = isProduction();
 
-const Options: React.FC = () => {
+const AucActions: React.FC = () => {
   const dispatch = useDispatch();
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
 
@@ -41,6 +42,7 @@ const Options: React.FC = () => {
       <IconButton onClick={handleResetSlots} className="options-button" title="Очистить все">
         <DeleteSweepIcon />
       </IconButton>
+      <ServerStatus />
       {!isProd && (
         <Button color="primary" onClick={requestMockData}>
           Get mock
@@ -50,4 +52,4 @@ const Options: React.FC = () => {
   );
 };
 
-export default Options;
+export default AucActions;

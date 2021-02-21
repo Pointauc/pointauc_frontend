@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import { Controller, ControllerRenderProps } from 'react-hook-form';
-import ColorPicker from '../ColorPicker/ColorPicker';
+import ColorPicker from '../../ColorPicker/ColorPicker';
 
 interface FormColorPickerProps {
   name: string;

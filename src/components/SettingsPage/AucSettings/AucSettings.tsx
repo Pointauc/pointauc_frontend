@@ -5,10 +5,10 @@ import { Controller, UseFormMethods } from 'react-hook-form';
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import { useSelector } from 'react-redux';
-import ImageLinkInput from '../../../ImageLinkInput/ImageLinkInput';
-import SettingsGroupTitle from '../../../SettingsGroupTitle/SettingsGroupTitle';
-import { RootState } from '../../../../reducers';
-import FormSwitch from '../../../FormSwitch/FormSwitch';
+import ImageLinkInput from '../../ImageLinkInput/ImageLinkInput';
+import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
+import { RootState } from '../../../reducers';
+import FormSwitch from '../../Form/FormSwitch/FormSwitch';
 
 interface AucSettingsProps {
   control: UseFormMethods['control'];

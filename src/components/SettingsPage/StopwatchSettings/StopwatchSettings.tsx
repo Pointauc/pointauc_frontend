@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { FormGroup, Typography } from '@material-ui/core';
 import { UseFormMethods } from 'react-hook-form';
-import SettingsGroupTitle from '../../../SettingsGroupTitle/SettingsGroupTitle';
-import FormInput from '../../../FormInput/FormInput';
-import FormSwitch from '../../../FormSwitch/FormSwitch';
+import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
+import FormInput from '../../Form/FormInput/FormInput';
+import FormSwitch from '../../Form/FormSwitch/FormSwitch';
 
 interface StopwatchSettingsProps {
   control: UseFormMethods['control'];

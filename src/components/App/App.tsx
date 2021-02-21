@@ -5,6 +5,7 @@ import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import classNames from 'classnames';
+import axios from 'axios';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../AucPage/AucPage';
 import { MenuItem } from '../../models/common.model';
@@ -73,14 +74,27 @@ const App: React.FC = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { username } = useSelector((root: RootState) => root.user);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(hasToken);
 
-  useEffect(() => {
-    if (username) {
+  const reconnectToServer = useCallback(async () => {
+    try {
+      await axios.get('api/isAlive');
+
       dispatch(connectToServer());
+    } catch (e) {
+      setTimeout(() => {
+        (async (): Promise<void> => reconnectToServer())();
+      }, 1000 * 3);
     }
-  }, [dispatch, username]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (username && !webSocket) {
+      reconnectToServer();
+    }
+  }, [dispatch, reconnectToServer, username, webSocket]);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);

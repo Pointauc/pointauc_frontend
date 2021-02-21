@@ -5,14 +5,14 @@ import { AlertType } from '../../../models/alert.model';
 import { deleteAlert } from '../../../reducers/notifications/notifications';
 import { ALERT_LIFETIME } from '../../../constants/common.constants';
 
-const BaseAlert: FC<AlertType> = ({ id, type, message }) => {
+const BaseAlert: FC<AlertType> = ({ id, type, message, duration }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const timeout = setTimeout(() => dispatch(deleteAlert(id)), ALERT_LIFETIME);
+    const timeout = setTimeout(() => dispatch(deleteAlert(id)), duration || ALERT_LIFETIME);
 
     return (): void => clearTimeout(timeout);
-  }, [dispatch, id]);
+  }, [dispatch, duration, id]);
 
   return (
     <Alert severity={type} variant="filled">

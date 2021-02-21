@@ -18,7 +18,7 @@ import {
   setDraggedRedemption,
   updateExistBids,
 } from '../../../reducers/Purchases/Purchases';
-import BestMatchSlot from '../../BestMatchSlot/BestMatchSlot';
+import BestMatchSlot from '../BestMatchSlot/BestMatchSlot';
 
 const TwoColumnIcon = VerticalSplitRoundedIcon;
 const SingleColumnIcon = ReorderRoundedIcon;
