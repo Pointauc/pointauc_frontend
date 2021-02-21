@@ -104,7 +104,7 @@ export const processRedemption = (redemption: Purchase) => (dispatch: ThunkDispa
   const { message } = redemption;
   const similarSlotId = slotNamesMap.get(message);
 
-  if (similarSlotId && !redemption.isDonation) {
+  if (similarSlotId) {
     dispatch(fastAddBid(redemption, similarSlotId));
   } else {
     dispatch(addPurchase(redemption));

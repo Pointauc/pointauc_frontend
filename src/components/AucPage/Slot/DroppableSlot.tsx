@@ -55,7 +55,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       const addedCost = isDonation ? cost * pointsRate : cost;
 
       slotNamesMap.set(message, id);
-      dispatch(setSlotAmount({ id, amount: Number(amount) + convertCost(addedCost, !name) }));
+      dispatch(setSlotAmount({ id, amount: Number(amount) + convertCost(addedCost, !amount) }));
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
       dispatch(removePurchase(redemptionId));
       dispatch(setDraggedRedemption(null));
