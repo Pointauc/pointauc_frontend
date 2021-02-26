@@ -40,7 +40,7 @@ const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => (act
   return result;
 };
 
-const store = configureStore({
+export const store = configureStore({
   reducer: rootReducer,
   middleware: [thunk, sortSlotsMiddleware],
 });

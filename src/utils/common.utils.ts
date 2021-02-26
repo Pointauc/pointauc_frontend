@@ -10,6 +10,12 @@ export const isProduction = (): boolean => process.env.NODE_ENV === 'production'
 
 export const animateValue = (ref: HTMLInputElement, start: number, end: number, duration = 500): void => {
   let startTimestamp = 0;
+
+  if (!duration) {
+    ref.value = end.toString();
+    return;
+  }
+
   const step = (timestamp: number): void => {
     if (!startTimestamp) startTimestamp = timestamp;
 

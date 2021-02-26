@@ -17,6 +17,7 @@ import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import donationBackground from '../../assets/img/donationBackground.jpg';
 import { createSlotFromPurchase } from '../../reducers/Slots/Slots';
 import { useCostConvert } from '../../hooks/useCostConvert';
+import Marble from '../../assets/img/Marble.png';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -29,6 +30,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
       twitch: { isRefundAvailable },
       da: { pointsRate },
     },
+    settings: { marblesAuc },
   } = useSelector((root: RootState) => root.aucSettings);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
@@ -71,12 +73,26 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     cost,
     pointsRate,
   ]);
-  const costString = useMemo(() => (isDonation ? donationCost : convertCost(cost)), [
+  const costString = useMemo(() => (isDonation && !marblesAuc ? donationCost : convertCost(cost)), [
     convertCost,
     cost,
     donationCost,
     isDonation,
+    marblesAuc,
   ]);
+  const bidTitle = useMemo(
+    () =>
+      marblesAuc ? (
+        <>
+          <span>{costString}</span>
+          <img src={Marble} alt="шар" width={15} height={15} style={{ marginLeft: 5, marginRight: 5 }} />
+          <span>{username}</span>
+        </>
+      ) : (
+        `${costString} ${username}`
+      ),
+    [costString, marblesAuc, username],
+  );
 
   const handleAddNewSlot = useCallback(() => {
     dispatch(createSlotFromPurchase({ ...purchase, cost: convertCost(purchase.cost, true) }));
@@ -90,7 +106,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     <Card className={purchaseClasses} style={isDragging ? undefined : cardStyles}>
       <CardContent className="purchase-content">
         <div className="purchase-header">
-          <Typography variant="h6">{`${costString} ${username}`}</Typography>
+          <Typography variant="h6">{bidTitle}</Typography>
           <IconButton onClick={handleRemove} className="purchase-header-remove-button" title="Удалить слот">
             <CloseIcon />
           </IconButton>

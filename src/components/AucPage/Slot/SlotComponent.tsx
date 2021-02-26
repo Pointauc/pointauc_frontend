@@ -2,14 +2,16 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { IconButton, OutlinedInput } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import './Slot.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FilledInputProps } from '@material-ui/core/FilledInput';
 import { Slot } from '../../../models/slot.model';
 import { addExtra, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
 import { animateValue } from '../../../utils/common.utils';
+import { RootState } from '../../../reducers';
 
 const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
   const dispatch = useDispatch();
+  const { marblesAuc } = useSelector((root: RootState) => root.aucSettings.settings);
   const [currentName, setCurrentName] = useState(name);
   const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
@@ -56,10 +58,15 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
       if (amount === null) {
         amountInput.current.value = '';
       } else {
-        animateValue(amountInput.current, Number(amountInput.current.value), Number(amount));
+        animateValue(
+          amountInput.current,
+          Number(amountInput.current.value),
+          Number(amount),
+          marblesAuc ? 0 : undefined,
+        );
       }
     }
-  }, [amount]);
+  }, [amount, marblesAuc]);
   useEffect(() => setCurrentName(name), [name]);
   useEffect(() => setCurrentExtra(extra), [extra]);
 
