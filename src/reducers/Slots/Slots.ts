@@ -70,13 +70,14 @@ const slotsSlice = createSlice({
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: getAmountSum(slot) }));
     },
     deleteSlot(state, action: PayloadAction<string>): void {
-      if (state.slots.length === 1) {
-        state.slots = initialState.slots;
-        return;
-      }
       const deletedId = action.payload;
-      state.slots = state.slots.filter(({ id }) => deletedId !== id);
       slotNamesMap.deleteBySlotId(deletedId);
+
+      if (state.slots.length === 1) {
+        state.slots = [createSlot()];
+      } else {
+        state.slots = state.slots.filter(({ id }) => deletedId !== id);
+      }
     },
     addSlot(state): void {
       const newSlot = createSlot();
