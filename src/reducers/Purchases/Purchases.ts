@@ -49,7 +49,7 @@ const purchasesSlice = createSlice({
       state.history = [...state.history, action.payload];
     },
     addPurchase(state, action: PayloadAction<Purchase>): void {
-      state.purchases = [...state.purchases, normalizePurchase(action.payload)];
+      state.purchases = [...state.purchases, action.payload];
     },
     removePurchase(state, action: PayloadAction<ReactText>): void {
       state.purchases = state.purchases.filter(({ id }) => id !== action.payload);
@@ -101,13 +101,13 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
 };
 
 export const processRedemption = (redemption: Purchase) => (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
-  const { message } = redemption;
-  const similarSlotId = slotNamesMap.get(message);
+  const normalizedBid = normalizePurchase(redemption);
+  const similarSlotId = slotNamesMap.get(normalizedBid.message);
 
   if (similarSlotId) {
-    dispatch(fastAddBid(redemption, similarSlotId));
+    dispatch(fastAddBid(normalizedBid, similarSlotId));
   } else {
-    dispatch(addPurchase(redemption));
+    dispatch(addPurchase(normalizedBid));
   }
 };
 
