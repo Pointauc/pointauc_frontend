@@ -13,14 +13,20 @@ interface SlotsState {
 
 let maxFastId = 0;
 
-const createSlot = (): Slot => ({
-  // eslint-disable-next-line no-plusplus
-  fastId: ++maxFastId,
-  id: Math.random().toString(),
-  extra: null,
-  amount: null,
-  name: '',
-});
+const createSlot = (): Slot => {
+  const slot = {
+    // eslint-disable-next-line no-plusplus
+    fastId: ++maxFastId,
+    id: Math.random().toString(),
+    extra: null,
+    amount: null,
+    name: '',
+  };
+
+  slotNamesMap.set(`#${slot.fastId}`, slot.id);
+
+  return slot;
+};
 
 const initialState: SlotsState = {
   slots: [createSlot()],
