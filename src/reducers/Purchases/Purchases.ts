@@ -79,6 +79,9 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
     slots: { slots },
     aucSettings: {
       settings: { marbleRate = 1, marblesAuc },
+      integration: {
+        da: { pointsRate },
+      },
     },
   } = getState();
 
@@ -87,15 +90,16 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
   const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
 
   const { cost: rawCost, username, message } = bid;
-  const cost = convertCost(rawCost);
   const similarSlot = slots.find(({ id }) => id === slotId);
 
   if (similarSlot) {
     const { id, amount, name } = similarSlot;
+    const addedCost = bid.isDonation ? rawCost * pointsRate : rawCost;
+    const cost = convertCost(addedCost);
     const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
 
     dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString() }));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }));
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
   }
 };
