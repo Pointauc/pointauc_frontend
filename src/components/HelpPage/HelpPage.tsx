@@ -26,7 +26,15 @@ const HelpPage: FC = () => {
       </Typography>
       <Typography variant="body2">
         Slexboy -
-<Link href="https://www.twitch.tv/shizov"> https://www.twitch.tv/slexboy</Link>
+<Link href="https://www.twitch.tv/slexboy"> https://www.twitch.tv/slexboy</Link>
+      </Typography>
+      <Typography variant="body2">
+        SlowLadin -
+<Link href="https://www.twitch.tv/slowladin"> https://www.twitch.tv/slowladin</Link>
+      </Typography>
+      <Typography variant="body2">
+        Adash -
+<Link href="https://www.twitch.tv/adash"> https://www.twitch.tv/adash</Link>
       </Typography>
       <SettingsGroupTitle title="Советы" />
       <Typography variant="body2">
