@@ -25,7 +25,12 @@ const centerCircleStyles = (background?: string): CSSProperties => ({
 
 const borderWidth = 3;
 
-const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, background?: string): WheelResult => {
+const useWheel = (
+  rawItems: WheelItem[],
+  onWin: (item: WheelItem) => void,
+  background?: string,
+  spinTime = 20000,
+): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const items = useMemo(() => shuffle(rawItems), [rawItems]);
@@ -117,7 +122,7 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, backg
   const animateWheel = (previousRotate: number, nextRotate: number): void => {
     if (canvas.current) {
       gsap.to(canvas.current, {
-        duration: 20,
+        duration: spinTime / 1000,
         ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1'),
         rotate: nextRotate,
       });
@@ -131,7 +136,7 @@ const useWheel = (rawItems: WheelItem[], onWin: (item: WheelItem) => void, backg
     animateWheel(rotate, nextRotate);
     setRotate(nextRotate);
 
-    setTimeout(() => updateWinner(nextRotate), 20000);
+    setTimeout(() => updateWinner(nextRotate), spinTime);
   };
 
   const drawWheel = (): void => {

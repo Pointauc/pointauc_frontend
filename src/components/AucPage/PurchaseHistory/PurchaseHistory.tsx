@@ -93,7 +93,7 @@ const PurchaseHistory: React.FC = () => {
         );
       }
     });
-  }, [history, selection?.rowIds, webSocket]);
+  }, [history, selection, webSocket]);
 
   return (
     <div className="history-table">

@@ -59,7 +59,7 @@ const ChatWheelPage: FC = () => {
     isSpinning.current = false;
   };
 
-  const { spin, wheelComponent } = useWheel(participants, handleWinner);
+  const { spin, wheelComponent } = useWheel(participants, handleWinner, undefined, 6000);
 
   const spinRef = useRef(spin);
   useEffect(() => {
