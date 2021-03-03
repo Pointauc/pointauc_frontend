@@ -1,11 +1,20 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CellClassRules, CellValue, ColDef, ValueGetterParams, XGrid } from '@material-ui/x-grid';
+import {
+  CellClassRules,
+  CellValue,
+  ColDef,
+  SelectionChangeParams,
+  ValueGetterParams,
+  XGrid,
+} from '@material-ui/x-grid';
 import dayjs from 'dayjs';
+import { Button } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import './PurchaseHistory.scss';
 import { FORMAT } from '../../../constants/format.constants';
 import { PurchaseStatusEnum } from '../../../reducers/Purchases/Purchases';
+import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 
 interface SlotsMap {
   [key: string]: string | null;
@@ -14,6 +23,8 @@ interface SlotsMap {
 const PurchaseHistory: React.FC = () => {
   const { history } = useSelector((root: RootState) => root.purchases);
   const { slots } = useSelector((root: RootState) => root.slots);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const [selection, setSelection] = useState<SelectionChangeParams>();
 
   const slotsMap = useMemo(
     () => slots.reduce<SlotsMap>((acc, { id, name }) => ({ ...acc, [id.toString()]: name }), {}),
@@ -70,9 +81,28 @@ const PurchaseHistory: React.FC = () => {
     { headerName: 'Статус', field: 'status', cellClassRules: statusCellClassRules, width: 110 },
   ];
 
+  const handleRefund = useCallback(() => {
+    history.forEach(({ id, rewardId, isDonation, target }) => {
+      if (selection?.rowIds.includes(id) && !isDonation && target) {
+        webSocket?.send(
+          JSON.stringify({
+            type: MESSAGE_TYPES.REFUND_REWARD,
+            redemptionId: id,
+            rewardId,
+          }),
+        );
+      }
+    });
+  }, [history, selection?.rowIds, webSocket]);
+
   return (
     <div className="history-table">
+      <Button variant="outlined" color="primary" onClick={handleRefund}>
+        Вернуть выбранные награды
+      </Button>
       <XGrid
+        checkboxSelection
+        onSelectionChange={setSelection}
         rows={history}
         columns={columns}
         autoHeight
