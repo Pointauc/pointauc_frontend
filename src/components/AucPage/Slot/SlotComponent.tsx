@@ -8,13 +8,25 @@ import { Slot } from '../../../models/slot.model';
 import { addExtra, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
 import { animateValue } from '../../../utils/common.utils';
 import { RootState } from '../../../reducers';
+import { percentsRefMap } from '../../../services/PercentsRefMap';
 
 const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
   const dispatch = useDispatch();
-  const { marblesAuc } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { marblesAuc, showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const [currentName, setCurrentName] = useState(name);
   const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
+  const percentsRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (percentsRef.current) {
+      percentsRefMap.set(id, percentsRef.current);
+    }
+
+    return (): void => {
+      percentsRefMap.delete(id);
+    };
+  }, [id, showChances]);
 
   const handleNameBlur: FilledInputProps['onBlur'] = (e): void => {
     dispatch(setSlotName({ id, name: e.target.value }));
@@ -82,6 +94,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
         onChange={handleNameChange}
         value={currentName}
       />
+      {showChances && <span className="slot-chance" ref={percentsRef} />}
       <OutlinedInput className="slot-money slot-input" placeholder="₽" inputRef={amountInput} type="number" />
       <IconButton className="slot-add-extra" onClick={handleAddExtra} title="Прибавить стоимость">
         <AddIcon />

@@ -15,6 +15,7 @@ export interface SettingFields {
   marblesAuc?: boolean;
   marbleRate?: number;
   marbleCategory?: number;
+  showChances?: boolean;
 }
 
 export interface RewardSetting {
@@ -57,6 +58,7 @@ export const initialState: AucSettingsState = {
     marblesAuc: false,
     marbleRate: 50,
     marbleCategory: 100,
+    showChances: false,
   },
   integration: {
     twitch: {
