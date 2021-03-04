@@ -9,10 +9,10 @@ import { LINE_BREAK, USERNAME_COOKIE_KEY } from '../../constants/common.constant
 import { resetSlots } from '../../reducers/Slots/Slots';
 import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import { isProduction, loadFile } from '../../utils/common.utils';
-import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { RootState } from '../../reducers';
 import ServerStatus from '../ServerStatus/ServerStatus';
 import { Slot } from '../../models/slot.model';
+import MockBidForm from './MockBidForm/MockBidForm';
 
 const isProd = isProduction();
 
@@ -22,7 +22,6 @@ const createMarbleConfig = (slots: Slot[]): string => slots.map(getSlotNamesByCo
 
 const AucActions: React.FC = () => {
   const dispatch = useDispatch();
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const { slots } = useSelector((root: RootState) => root.slots);
 
   const handleResetSlots = (): void => {
@@ -37,12 +36,6 @@ const AucActions: React.FC = () => {
     }
   }, [dispatch]);
 
-  const requestMockData = (): void => {
-    if (webSocket) {
-      webSocket.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE }));
-    }
-  };
-
   const downloadMarbles = (): void => {
     loadFile('marbles.csv', createMarbleConfig(slots));
   };
@@ -54,11 +47,7 @@ const AucActions: React.FC = () => {
       </IconButton>
       <ServerStatus />
       <Button onClick={downloadMarbles}>Скачать шары</Button>
-      {!isProd && (
-        <Button color="primary" onClick={requestMockData}>
-          Get mock
-        </Button>
-      )}
+      {!isProd && <MockBidForm />}
     </div>
   );
 };

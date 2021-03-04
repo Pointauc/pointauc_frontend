@@ -1,0 +1,15 @@
+@import "../../../styles/colors";
+
+.mock-bid-form {
+  background-color: $grey-11;
+  padding: 20px;
+  border: 2px solid $grey-6;
+
+  .MuiFormControlLabel-label {
+    width: 150px;
+  }
+
+  button {
+    margin-top: 15px;
+  }
+}
