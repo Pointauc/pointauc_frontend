@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 // eslint-disable-next-line import/no-named-as-default
 import CustomEase from '../utils/CustomEase';
@@ -9,6 +9,14 @@ import { shuffle } from '../utils/common.utils';
 interface WheelResult {
   wheelComponent: ReactNode;
   spin: () => void;
+}
+
+interface WheelConfig {
+  rawItems: WheelItem[];
+  onWin: (item: WheelItem) => void;
+  background?: string;
+  spinTime?: number;
+  dropout?: boolean;
 }
 
 window.gsap = gsap;
@@ -25,12 +33,7 @@ const centerCircleStyles = (background?: string): CSSProperties => ({
 
 const borderWidth = 3;
 
-const useWheel = (
-  rawItems: WheelItem[],
-  onWin: (item: WheelItem) => void,
-  background?: string,
-  spinTime = 20000,
-): WheelResult => {
+const useWheel = ({ rawItems, background, dropout, onWin, spinTime = 20 }: WheelConfig): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const items = useMemo(() => shuffle(rawItems), [rawItems]);
@@ -43,17 +46,23 @@ const useWheel = (
   // const [interpolation, setInterpolation] = useState<number[]>([12, 19, 3, 5, 2, 3, 20, 3, 5, 6, 2, 1]);
   // const chartRef = useRef<HTMLCanvasElement>(null);
 
+  const getReverseSize = useCallback((size: number) => (totalSize - size) / totalSize / (rawItems.length - 1), [
+    rawItems.length,
+    totalSize,
+  ]);
+
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
 
     return items.map<WheelItemWithAngle>((item) => {
-      const angle = (2 * Math.PI * (item.size || 1)) / totalSize;
+      const size = dropout ? getReverseSize(item.size || 1) : (item.size || 1) / totalSize;
+      const angle = 2 * Math.PI * size;
       const resultItem = { ...item, startAngle: angleOffset, endAngle: angleOffset + angle };
       angleOffset = resultItem.endAngle;
 
       return resultItem;
     });
-  }, [items, totalSize]);
+  }, [dropout, getReverseSize, items, totalSize]);
   const normalizedRef = useRef(normalizedItems);
   useEffect(() => {
     normalizedRef.current = normalizedItems;
@@ -122,7 +131,7 @@ const useWheel = (
   const animateWheel = (previousRotate: number, nextRotate: number): void => {
     if (canvas.current) {
       gsap.to(canvas.current, {
-        duration: spinTime / 1000,
+        duration: spinTime,
         ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1'),
         rotate: nextRotate,
       });
@@ -132,11 +141,11 @@ const useWheel = (
   const spin = (): void => {
     setWinnerItem(undefined);
     const randomSpin = Math.random() * 360;
-    const nextRotate = rotate + 4600 + randomSpin;
+    const nextRotate = rotate + 230 * spinTime + randomSpin;
     animateWheel(rotate, nextRotate);
     setRotate(nextRotate);
 
-    setTimeout(() => updateWinner(nextRotate), spinTime);
+    setTimeout(() => updateWinner(nextRotate), spinTime * 1000);
   };
 
   const drawWheel = (): void => {

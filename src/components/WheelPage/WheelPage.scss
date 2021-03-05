@@ -1,4 +1,25 @@
 .wheel-controls {
   position: absolute;
   left: 65%;
+
+  &-button {
+    height: 40px;
+  }
+
+  &-row {
+    display: flex;
+    align-items: center;
+  }
+
+  &-input {
+    margin-left: 15px !important;
+    margin-right: 5px !important;
+    width: 110px;
+  }
+
+  &-tip {
+    position: relative;
+    font-size: 18px !important;
+    top: 8px;
+  }
 }
