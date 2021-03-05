@@ -162,6 +162,10 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
             </Button>
           </div>
           <FormGroup row className="auc-settings-row">
+            <FormSwitch name="twitch.alwaysAddNew" control={control} label="Сразу добавлять все новые награды" />
+          </FormGroup>
+          <div className="hint">Не рекомендуется для обычных аукционов!</div>
+          <FormGroup row className="auc-settings-row">
             <FormSwitch name="twitch.isRefundAvailable" control={control} label="Возвращать отмененные награды" />
           </FormGroup>
           <FormGroup row className="auc-settings-row">

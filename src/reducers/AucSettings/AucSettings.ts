@@ -26,6 +26,7 @@ export interface RewardSetting {
 export interface TwitchIntegration {
   isRefundAvailable: boolean;
   dynamicRewards: boolean;
+  alwaysAddNew: boolean;
   rewardsPrefix: string;
   rewards: RewardSetting[];
 }
@@ -64,6 +65,7 @@ export const initialState: AucSettingsState = {
     twitch: {
       isRefundAvailable: false,
       dynamicRewards: false,
+      alwaysAddNew: false,
       rewardsPrefix: 'ставка',
       rewards: [],
     },

@@ -3,7 +3,7 @@ import { ReactText } from 'react';
 import { Action } from 'redux';
 import { normalizePurchase } from '../../utils/slots.utils';
 import { RootState } from '../index';
-import { setSlotAmount } from '../Slots/Slots';
+import { createSlotFromPurchase, setSlotAmount } from '../Slots/Slots';
 import { addAlert } from '../notifications/notifications';
 import { AlertTypeEnum } from '../../models/alert.model';
 import slotNamesMap from '../../services/SlotNamesMap';
@@ -104,12 +104,37 @@ export const fastAddBid = (bid: Purchase, slotId: string) => (
   }
 };
 
-export const processRedemption = (redemption: Purchase) => (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
+export const processRedemption = (redemption: Purchase) => (
+  dispatch: ThunkDispatch<RootState, {}, Action>,
+  getState: () => RootState,
+): void => {
+  const {
+    aucSettings: {
+      settings: { marbleRate = 1, marblesAuc, marbleCategory },
+      integration: {
+        twitch: { alwaysAddNew },
+      },
+    },
+  } = getState();
   const normalizedBid = normalizePurchase(redemption);
   const similarSlotId = slotNamesMap.get(normalizedBid.message);
+  const convertToMarble = (cost: number): number => {
+    const minValue = marbleCategory || 0;
+
+    if (cost < minValue) {
+      return 0;
+    }
+    const total = cost - minValue;
+
+    return Math.floor(total / marbleRate) + 1;
+  };
+  const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
+  const cost = convertCost(normalizedBid.cost);
 
   if (similarSlotId) {
     dispatch(fastAddBid(normalizedBid, similarSlotId));
+  } else if (alwaysAddNew) {
+    dispatch(createSlotFromPurchase({ ...normalizedBid, cost }));
   } else {
     dispatch(addPurchase(normalizedBid));
   }
