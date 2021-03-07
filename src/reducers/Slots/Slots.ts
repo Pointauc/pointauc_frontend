@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
 import { Slot } from '../../models/slot.model';
-import { Purchase } from '../Purchases/Purchases';
+import { Purchase, PurchaseStatusEnum, logPurchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 import { sortSlots } from '../../utils/common.utils';
 import slotNamesMap from '../../services/SlotNamesMap';
@@ -63,6 +63,10 @@ const slotsSlice = createSlice({
         return slot;
       });
     },
+    addSlotAmount(state, action: PayloadAction<{ id: ReactText; amount: number }>): void {
+      const { id, amount } = action.payload;
+      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount: (slot.amount || 0) + amount }));
+    },
     setSlotAmount(state, action: PayloadAction<{ id: ReactText; amount: number }>): void {
       const { id, amount } = action.payload;
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount }));
@@ -109,6 +113,7 @@ export const {
   deleteSlot,
   resetSlots,
   setSlots,
+  addSlotAmount,
 } = slotsSlice.actions;
 
 export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: Purchase) => (
@@ -131,6 +136,35 @@ export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: 
 
   updateSlotPosition(updatedSlots, updatedSlots.length - 1);
   dispatch(setSlots(sortSlots(updatedSlots)));
+};
+
+export const addBid = (slotId: string, bid: Purchase) => (
+  dispatch: ThunkDispatch<{}, {}, Action>,
+  getState: () => RootState,
+): void => {
+  const {
+    aucSettings: {
+      settings: { marbleRate = 1, marblesAuc },
+      integration: {
+        da: { pointsRate },
+      },
+    },
+    slots: { slots },
+  } = getState();
+
+  if (!slots.find(({ id }) => id === slotId)) {
+    return;
+  }
+
+  const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
+  const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
+  const { message, cost, isDonation, id } = bid;
+  const addedCost = isDonation ? cost * pointsRate : cost;
+
+  slotNamesMap.set(message, slotId);
+  dispatch(addSlotAmount({ id: slotId, amount: convertCost(addedCost) }));
+  dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }));
+  dispatch(removePurchase(id));
 };
 
 export default slotsSlice.reducer;

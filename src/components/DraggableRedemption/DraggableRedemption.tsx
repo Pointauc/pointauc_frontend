@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Purchase, setDraggedRedemption } from '../../reducers/Purchases/Purchases';
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import { isFirefox } from '../../utils/common.utils';
+import { draggedBid } from '../DragBidContext/DragBidContext';
 
 interface DragPosition {
   left: number;
@@ -13,11 +14,10 @@ const initialPosition: DragPosition = { left: -1000, top: -1000 };
 
 const DraggableRedemption: FC<Purchase> = (purchase) => {
   const dispatch = useDispatch();
-  const { id, cost } = purchase;
+  const { cost } = purchase;
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [mouseOffset, setMouseOffset] = useState<DragPosition>(initialPosition);
   const redemptionRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<HTMLDivElement>(null);
 
   const handleDragStart = useCallback(
     (e: React.DragEvent<HTMLDivElement>): void => {
@@ -27,7 +27,7 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
         e.dataTransfer.setData('remove', 'true');
       }
 
-      dispatch(setDraggedRedemption(id.toString()));
+      dispatch(setDraggedRedemption(purchase));
       setIsDragging(true);
 
       if (redemptionRef.current) {
@@ -35,22 +35,22 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
 
         setMouseOffset({ left: e.pageX - left, top: e.pageY - top });
 
-        if (dragRef.current) {
-          dragRef.current.style.left = `${left}px`;
-          dragRef.current.style.top = `${top}px`;
-          dragRef.current.hidden = false;
+        if (draggedBid.ref) {
+          draggedBid.ref.style.left = `${left}px`;
+          draggedBid.ref.style.top = `${top}px`;
+          draggedBid.ref.hidden = false;
         }
       }
     },
-    [cost, dispatch, id, purchase],
+    [cost, dispatch, purchase],
   );
 
   const handleDragEnd = useCallback((): void => {
     dispatch(setDraggedRedemption(null));
     setIsDragging(false);
 
-    if (dragRef.current) {
-      dragRef.current.hidden = true;
+    if (draggedBid.ref) {
+      draggedBid.ref.hidden = true;
     }
   }, [dispatch]);
 
@@ -58,9 +58,9 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
     (e: React.DragEvent) => {
       e.preventDefault();
 
-      if (dragRef.current) {
-        dragRef.current.style.left = `${e.pageX - mouseOffset.left}px`;
-        dragRef.current.style.top = `${e.pageY - mouseOffset.top}px`;
+      if (draggedBid.ref) {
+        draggedBid.ref.style.left = `${e.pageX - mouseOffset.left}px`;
+        draggedBid.ref.style.top = `${e.pageY - mouseOffset.top}px`;
       }
     },
     [mouseOffset.left, mouseOffset.top],
@@ -92,9 +92,6 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
     <>
       <div draggable onDragStart={handleDragStart} onDrag={handleDrag} onDragEnd={handleDragEnd} ref={redemptionRef}>
         <PurchaseComponent {...purchase} isDragging={isDragging} />
-      </div>
-      <div style={{ pointerEvents: 'none', position: 'absolute' }} hidden className="drag-context" ref={dragRef}>
-        <PurchaseComponent {...purchase} />
       </div>
     </>
   );

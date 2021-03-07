@@ -3,6 +3,7 @@ import { Button, Card, CardContent, IconButton, Typography } from '@material-ui/
 import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import classNames from 'classnames';
+import { findBestMatch } from 'string-similarity';
 import {
   logPurchase,
   Purchase,
@@ -15,15 +16,17 @@ import './PurchaseComponent.scss';
 import { RootState } from '../../reducers';
 import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import donationBackground from '../../assets/img/donationBackground.jpg';
-import { createSlotFromPurchase } from '../../reducers/Slots/Slots';
+import { addBid, createSlotFromPurchase } from '../../reducers/Slots/Slots';
 import { useCostConvert } from '../../hooks/useCostConvert';
 import Marble from '../../assets/img/Marble.png';
+import { store } from '../../index';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
+  showBestMatch?: boolean;
 }
 
-const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...purchase }) => {
+const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showBestMatch = true, ...purchase }) => {
   const dispatch = useDispatch();
   const {
     integration: {
@@ -35,6 +38,22 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
+
+  const bestMatch = useMemo(() => {
+    if (!showBestMatch) {
+      return null;
+    }
+
+    const { slots } = store.getState().slots;
+    const slotNames = slots.map(({ name }) => name || '');
+    const {
+      bestMatch: { rating },
+      bestMatchIndex,
+    } = findBestMatch(message, slotNames);
+
+    return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const refundRedemption = useCallback(
     () =>
@@ -99,8 +118,14 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
     dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
-    dispatch(updateExistBids);
   }, [convertCost, dispatch, id, purchase]);
+
+  const handleAddToBestMatch = useCallback(() => {
+    if (bestMatch) {
+      dispatch(addBid(bestMatch.id, purchase));
+      dispatch(updateExistBids);
+    }
+  }, [bestMatch, dispatch, purchase]);
 
   return (
     <Card className={purchaseClasses} style={isDragging ? undefined : cardStyles}>
@@ -115,6 +140,11 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, ...pu
         <Button variant="outlined" size="small" className="purchase-new-button" onClick={handleAddNewSlot}>
           Новый
         </Button>
+        {bestMatch && (
+          <Button variant="outlined" size="small" className="purchase-new-button" onClick={handleAddToBestMatch}>
+            {`К ${bestMatch.name}`}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

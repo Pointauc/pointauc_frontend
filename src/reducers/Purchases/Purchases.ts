@@ -32,7 +32,7 @@ export interface PurchaseLog extends Purchase {
 interface PurchasesState {
   purchases: Purchase[];
   history: PurchaseLog[];
-  draggedRedemption: string | null;
+  draggedRedemption: Purchase | null;
 }
 
 const initialState: PurchasesState = {
@@ -57,7 +57,7 @@ const purchasesSlice = createSlice({
     resetPurchases(state): void {
       state.purchases = [];
     },
-    setDraggedRedemption(state, action: PayloadAction<string | null>): void {
+    setDraggedRedemption(state, action: PayloadAction<Purchase | null>): void {
       state.draggedRedemption = action.payload;
     },
   },

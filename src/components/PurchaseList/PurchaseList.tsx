@@ -7,6 +7,7 @@ import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { processRedemption, Purchase } from '../../reducers/Purchases/Purchases';
 import { PURCHASE_SORT_OPTIONS } from '../../constants/purchase.constants';
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
+import DragBidContext from '../DragBidContext/DragBidContext';
 
 const PurchaseList: React.FC = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const PurchaseList: React.FC = () => {
 
   return (
     <div className="purchase-container">
+      <DragBidContext />
       <div className="purchase-list">
         {sortedPurchases.map((purchase) => (
           <DraggableRedemption {...purchase} key={purchase.id} />
