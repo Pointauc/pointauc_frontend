@@ -17,3 +17,12 @@ export const ATTRIBUTES = {
 export const TAGS = {
   A: 'a',
 };
+
+export const BACKGROUND_PRESETS = [
+  'v1615110548/15879138916140_zgjk6z.jpg',
+  'bg.0c0d8acb_egc7mv.jpg',
+  'v1615113668/tree_mm3ewn.webp',
+  'v1615114028/95bQSF_q97014.jpg',
+  'v1615116150/523452345_zwdwmu.png',
+  '15614987449380_vllmkt.jpg',
+];

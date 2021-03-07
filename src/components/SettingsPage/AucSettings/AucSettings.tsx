@@ -5,11 +5,13 @@ import { Controller, UseFormMethods } from 'react-hook-form';
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import { useSelector } from 'react-redux';
-import ImageLinkInput from '../../ImageLinkInput/ImageLinkInput';
+import ImageLinkInput from '../../Form/ImageLinkInput/ImageLinkInput';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
 import FormSwitch from '../../Form/FormSwitch/FormSwitch';
 import FormInput from '../../Form/FormInput/FormInput';
+import ImagePresetsInput from '../../Form/ImagePresetsInput/ImagePresetsInput';
+import { BACKGROUND_PRESETS } from '../../../constants/common.constants';
 
 interface AucSettingsProps {
   control: UseFormMethods['control'];
@@ -47,7 +49,8 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
           <Typography variant="body1" className="MuiFormControlLabel-label">
             Фон аукциона
           </Typography>
-          <ImageLinkInput buttonTitle="Изменить" buttonClass="mock-data-button" onChange={handleImageChange} />
+          <ImageLinkInput buttonTitle="Загрузить фон" buttonClass="upload-background" onChange={handleImageChange} />
+          <ImagePresetsInput images={BACKGROUND_PRESETS} buttonTitle="Выбрать из списка" onChange={handleImageChange} />
           <IconButton className="auc-settings-reset-background" onClick={resetBackground}>
             <ReplayIcon />
           </IconButton>
@@ -81,6 +84,7 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
             </MenuItem>
           </Controller>
         </FormGroup>
+        <SettingsGroupTitle title="Шары" />
         <FormGroup row className="auc-settings-row">
           <FormSwitch name="marblesAuc" control={control} label="Шаровой аукцион" />
         </FormGroup>

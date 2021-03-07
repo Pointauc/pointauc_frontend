@@ -17,3 +17,6 @@ export const getWebsocketUrl = (): string =>
   isProduction()
     ? `wss://woods-service.herokuapp.com?jwtToken=${getCookie('jwtToken')}`
     : `ws://localhost:8000?jwtToken=${getCookie('jwtToken')}`;
+
+export const getCloudifyUrl = (imageId: string): string =>
+  `https://res.cloudinary.com/dn4ue0pj9/image/upload/${imageId}`;

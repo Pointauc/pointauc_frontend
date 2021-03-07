@@ -1,0 +1,35 @@
+@import "../../../styles/colors";
+
+.image-container {
+  width: 660px;
+  height: 260px;
+  overflow-y: auto;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  display: flex;
+  padding: 15px 15px 0;
+  border: 2px solid $blue-gray-2;
+  background-color: $blue-gray-4 !important;
+
+  .image-item {
+    padding: 0;
+    margin-bottom: 15px;
+    position: relative;
+    border: 2px solid $grey-2;
+
+    &-shadow {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, .2);
+    }
+
+    &:hover {
+      .image-item-shadow {
+        background-color: rgba(0, 0, 0, 0);
+      }
+    }
+  }
+}
