@@ -1,0 +1,38 @@
+@import "../../styles/colors";
+
+.resizable-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: $grey-11;
+  border: 1px solid $grey-5;
+  top: 20vh;
+  left: 30vw;
+  user-select: none;
+
+  &-close {
+    padding: 10px !important;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    height: 46px;
+    background-color: $blue-gray-6;
+    border-bottom: 1px solid $grey-6;
+    margin: 0 !important;
+
+    &:hover {
+      cursor: move !important;
+    }
+  }
+
+  &-content {
+    position: relative;
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+}

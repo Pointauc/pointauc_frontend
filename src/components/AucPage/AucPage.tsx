@@ -7,6 +7,7 @@ import './AucPage.scss';
 import { RootState } from '../../reducers';
 import PageContainer from '../PageContainer/PageContainer';
 import { updatePercents } from '../../services/PercentsRefMap';
+import TrailersContainer from '../TrailersContainer/TrailersContainer';
 
 const AucPage: React.FC = () => {
   const { background } = useSelector((root: RootState) => root.aucSettings.settings);
@@ -33,6 +34,7 @@ const AucPage: React.FC = () => {
         <ControlColumn />
       </div>
       <Notification />
+      <TrailersContainer />
     </PageContainer>
   );
 };

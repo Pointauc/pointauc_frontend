@@ -4,11 +4,7 @@ import { Purchase, setDraggedRedemption } from '../../reducers/Purchases/Purchas
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import { isFirefox } from '../../utils/common.utils';
 import { draggedBid } from '../DragBidContext/DragBidContext';
-
-interface DragPosition {
-  left: number;
-  top: number;
-}
+import { DragPosition } from '../../models/common.model';
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 

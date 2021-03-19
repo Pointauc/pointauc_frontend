@@ -1,11 +1,9 @@
-import React, { ChangeEvent, DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormControlLabel, Grid, IconButton, Input, Radio, RadioGroup, Typography } from '@material-ui/core';
+import { Grid, IconButton, Input, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import classNames from 'classnames';
-import VerticalSplitRoundedIcon from '@material-ui/icons/VerticalSplitRounded';
-import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
 import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { handleDragOver } from '../../../utils/common.utils';
@@ -20,9 +18,6 @@ import {
 } from '../../../reducers/Purchases/Purchases';
 import { useCostConvert } from '../../../hooks/useCostConvert';
 
-const TwoColumnIcon = VerticalSplitRoundedIcon;
-const SingleColumnIcon = ReorderRoundedIcon;
-
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();
   const buyoutInput = useRef<HTMLInputElement>(null);
@@ -32,7 +27,6 @@ const SlotsColumn: React.FC = () => {
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [, setBuyout] = useState<number | null>(null);
-  const [slotWidth, setSlotWidth] = useState<6 | 12>(12);
   const [enterCounter, setEnterCounter] = useState<number>(0);
   const isOver = useMemo(() => !!enterCounter, [enterCounter]);
 
@@ -65,13 +59,6 @@ const SlotsColumn: React.FC = () => {
       buyoutInput.current.addEventListener('change', handleBuyoutChange);
     }
   }, [buyoutInput]);
-
-  const handleSlotWidthChange = (e: ChangeEvent<HTMLInputElement>, value: string): void => {
-    const newWidth = Number(value);
-    if (newWidth === 6 || newWidth === 12) {
-      setSlotWidth(newWidth);
-    }
-  };
 
   const convertCost = useCostConvert();
 
@@ -111,7 +98,7 @@ const SlotsColumn: React.FC = () => {
 
       <Grid container wrap="nowrap" className="slots-wrapper">
         <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
-          <SlotsList slots={slots} slotWidth={slotWidth} />
+          <SlotsList slots={slots} />
           <IconButton
             onClick={handleAddSlot}
             className={addButtonClasses}
@@ -124,19 +111,6 @@ const SlotsColumn: React.FC = () => {
             <AddBoxIcon fontSize="large" />
           </IconButton>
         </Grid>
-
-        <RadioGroup value={slotWidth} onChange={handleSlotWidthChange} row className="slots-width-wrapper">
-          <FormControlLabel
-            control={<Radio icon={<SingleColumnIcon />} checkedIcon={<SingleColumnIcon />} />}
-            label=""
-            value={12}
-          />
-          <FormControlLabel
-            control={<Radio icon={<TwoColumnIcon />} checkedIcon={<TwoColumnIcon />} />}
-            label=""
-            value={6}
-          />
-        </RadioGroup>
       </Grid>
     </Grid>
   );

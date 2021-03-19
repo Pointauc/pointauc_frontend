@@ -9,3 +9,13 @@ export interface MenuItem {
   IconComponent: StyledComponent<StyledProps>;
   disabled?: boolean;
 }
+
+export interface Size {
+  height: number;
+  width: number;
+}
+
+export interface DragPosition {
+  left: number;
+  top: number;
+}

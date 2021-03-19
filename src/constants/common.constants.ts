@@ -26,3 +26,14 @@ export const BACKGROUND_PRESETS = [
   'v1615116150/523452345_zwdwmu.png',
   '15614987449380_vllmkt.jpg',
 ];
+
+export const TRAILER_MIN_SIZE = {
+  width: 400,
+  height: 250,
+};
+
+export const YOUTUBE_API_KEYS = [
+  'AIzaSyCVPinFlGHMn0uzeWFjNTA38QOZBejOlSs',
+  'AIzaSyD0WjHt1tEIzdYLWSbcArCXTdBbDvyxDMk',
+  'AIzaSyAbkUdit9z4zGiSmXtYAuBoJYKMDeZ6rSM',
+];

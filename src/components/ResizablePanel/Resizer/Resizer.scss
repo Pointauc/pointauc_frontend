@@ -1,0 +1,18 @@
+@import "../../../styles/colors";
+
+.resizer {
+  position: absolute;
+  padding: 6px;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+  user-select: none;
+  outline: none;
+
+  &-icon {
+    border-bottom: 2px solid $grey-6;
+    border-right: 2px solid $grey-6;
+    width: 15px;
+    height: 15px;
+  }
+}
