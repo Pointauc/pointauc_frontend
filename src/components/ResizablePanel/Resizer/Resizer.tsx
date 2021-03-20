@@ -15,12 +15,17 @@ const Resizer: FC<ResizerProps> = ({ container, onResize }) => {
     if (container.current) {
       const { bottom, right } = container.current.getBoundingClientRect();
 
+      container.current.classList.add('interaction');
       setMouseOffset({ bottom, right });
     }
   }, [container]);
   const handleMouseUp = useCallback(() => {
     setMouseOffset(undefined);
-  }, []);
+
+    if (container.current) {
+      container.current.classList.remove('interaction');
+    }
+  }, [container]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {

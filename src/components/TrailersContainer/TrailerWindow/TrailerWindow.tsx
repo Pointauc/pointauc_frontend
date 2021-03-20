@@ -61,7 +61,7 @@ const TrailerWindow: FC<Trailer> = ({ id, title: windowTitle }) => {
   return (
     <ResizablePanel initialSize={initialSize} onClose={handleCloseTrailer} title={windowTitle} onResize={setWindowSize}>
       {currentVideo ? (
-        <div style={{ position: 'absolute', top: 0, left: 0 }}>
+        <div style={{ position: 'absolute', top: 0, left: 0 }} className="youtube-container">
           <YoutubePlayer videoId={currentVideo} {...playerOptions} />
         </div>
       ) : (

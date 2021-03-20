@@ -1,9 +1,10 @@
 import React, { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { DragPosition, Size } from '../../models/common.model';
 import './ResizablePanel.scss';
 import { IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import classNames from 'classnames';
 import Resizer from './Resizer/Resizer';
+import { DragPosition, Size } from '../../models/common.model';
 
 interface ResizablePanelProps {
   initialSize: Size;
@@ -75,7 +76,7 @@ const ResizablePanel: FC<ResizablePanelProps> = ({ children, initialSize, title,
   );
 
   return (
-    <div className="resizable-panel" ref={container}>
+    <div className={classNames('resizable-panel', { interaction: !!mouseOffset })} ref={container}>
       <Typography role="button" className="resizable-panel-header" onMouseDown={handleMouseDown} variant="h5">
         {`Трейлер: ${title}`}
         <IconButton onClick={onClose} className="resizable-panel-close" title="Закрыть">

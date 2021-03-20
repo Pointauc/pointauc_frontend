@@ -107,7 +107,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       </IconButton>
       <IconButton
         onClick={openExtra}
-        onMouseEnter={openExtra}
+        onMouseOver={openExtra}
         className="delete-button"
         title="Дополнительно"
         aria-controls="extra"
@@ -121,6 +121,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
         onClose={closeExtra}
         anchorEl={extraIcon.current}
         PaperProps={{ style: { width: '20ch' }, onMouseLeave: closeExtra }}
+        TransitionProps={{ timeout: 0 }}
       >
         <MenuItem onClick={handleOpenTrailer}>Трейлер</MenuItem>
       </Menu>
