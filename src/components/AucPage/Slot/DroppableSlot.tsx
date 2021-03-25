@@ -99,7 +99,8 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       onDragLeave={handleDragLeave}
     >
       <div className={slotClasses}>
-        <Typography className="slot-index">{`${index}. (#${slotProps.fastId})`}</Typography>
+        <Typography className="slot-index">{`${index}.`}</Typography>
+        <Typography className="slot-fast-index">{`#${slotProps.fastId}`}</Typography>
         <SlotComponent {...slotProps} />
       </div>
       <IconButton onClick={handleDelete} className="delete-button" title="Удалить слот">

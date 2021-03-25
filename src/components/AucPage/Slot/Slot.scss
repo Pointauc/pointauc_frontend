@@ -47,8 +47,20 @@
 
     &-index {
       font-size: 1.1em;
-      min-width: 35px;
+      width: 35px;
+    }
+
+    &-fast-index {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1em;
       margin-right: 10px;
+      width: 45px;
+      height: 80%;
+      border: 2px solid $blue-gray-2;
+      border-radius: 10px;
+      background-color: rgba($blue-gray-5, .3);
     }
 
     &-name {
