@@ -13,15 +13,17 @@ interface TwitchEmotesListProps {
 
 const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
   const { userId } = useSelector((root: RootState) => root.user);
-  const [userEmotes, setUserEmotes] = useState<(Collection<string, Emote> | undefined)[]>();
+  const [userEmotes, setUserEmotes] = useState<Collection<string, Emote>[]>();
 
   useEffect(() => {
     if (userId) {
       Promise.all([
-        fetcher.fetchTwitchEmotes(Number(userId)).catch(() => undefined),
-        fetcher.fetchBTTVEmotes(Number(userId)).catch(() => undefined),
-        fetcher.fetchFFZEmotes(Number(userId)).catch(() => undefined),
+        fetcher.fetchTwitchEmotes(Number(userId)).catch(() => new Collection<string, Emote>()),
+        fetcher.fetchBTTVEmotes(Number(userId)).catch(() => new Collection<string, Emote>()),
+        fetcher.fetchFFZEmotes(Number(userId)).catch(() => new Collection<string, Emote>()),
       ]).then(setUserEmotes);
+    } else {
+      setUserEmotes([]);
     }
   }, [userId]);
 
@@ -50,15 +52,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
 
   return (
     <div className="emotes-container">
-      {userEmotes ? (
-        <>
-          {crateEmoteList(userEmotes[0])}
-          {crateEmoteList(userEmotes[1])}
-          {crateEmoteList(userEmotes[2])}
-        </>
-      ) : (
-        <CircularProgress className="emotes-loading" />
-      )}
+      {userEmotes ? <>{userEmotes.map(crateEmoteList)}</> : <CircularProgress className="emotes-loading" />}
     </div>
   );
 };

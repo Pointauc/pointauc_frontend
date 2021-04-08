@@ -39,16 +39,18 @@
 
 .wheel-selector {
   position: absolute;
-  margin-top: -23px;
+  margin-top: calc(58px + 2px);
+  margin-left: -23px;
   height: 46px;
   width: 64px;
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  clip-path: polygon(50% 50%, 0 0, 100% 0);
   background-color: $grey-10;
+  border: 3px solid #eee;
 }
 
 .wheel-winner {
   position: absolute;
-  top: 0;
+  top: 58px;
   left: 0;
   //background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 50%, rgba(255,255,255,0) 100%);
   //background-color: rgba(#000, 0.6);
@@ -60,4 +62,12 @@
   font-size: 40px;
   font-family: Arial;
   background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.3) 68%, rgba(0,0,0,0) 72%);
+}
+
+.wheel-target {
+  text-align: center;
+  font-size: 35px;
+  font-weight: 400;
+  color: $grey-2;
+  margin-bottom: 20px;
 }

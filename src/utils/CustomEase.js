@@ -195,7 +195,14 @@ export class CustomEase {
 			if (point.nx < p) {
 				point = point.n;
 			}
-			return point.y + ((p - point.x) / point.cx) * point.cy;
+
+			let res = point.y + ((p - point.x) / point.cx) * point.cy
+
+			if (config.onUpdate) {
+				config.onUpdate(res);
+			}
+
+			return res;
 		};
 
 		this.ease.custom = this;

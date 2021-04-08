@@ -4,7 +4,7 @@ import { Action } from 'redux';
 import { Slot } from '../../models/slot.model';
 import { Purchase, PurchaseStatusEnum, logPurchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
-import { sortSlots } from '../../utils/common.utils';
+import { getRandomIntInclusive, sortSlots } from '../../utils/common.utils';
 import slotNamesMap from '../../services/SlotNamesMap';
 
 interface SlotsState {
@@ -13,7 +13,7 @@ interface SlotsState {
 
 let maxFastId = 0;
 
-const createSlot = (): Slot => {
+const createSlot = (props: Partial<Slot> = {}): Slot => {
   const slot = {
     // eslint-disable-next-line no-plusplus
     fastId: ++maxFastId,
@@ -21,12 +21,22 @@ const createSlot = (): Slot => {
     extra: null,
     amount: null,
     name: '',
+    ...props,
   };
 
   slotNamesMap.set(`#${slot.fastId}`, slot.id);
 
   return slot;
 };
+
+export const createRandomSlots = (): Slot[] =>
+  Array(100)
+    .fill(null)
+    .map(() => {
+      const amount = getRandomIntInclusive(1, 100000);
+
+      return createSlot({ amount, name: amount.toString() });
+    });
 
 const initialState: SlotsState = {
   slots: [createSlot()],
