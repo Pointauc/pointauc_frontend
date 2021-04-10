@@ -21,6 +21,20 @@ const MockBidForm: FC = () => {
     [webSocket],
   );
 
+  // useEffect(() => {
+  //   let count = 0;
+  //
+  //   const interval = setInterval(() => {
+  //     if (count > 30) {
+  //       clearInterval(interval);
+  //     }
+  //
+  //     // eslint-disable-next-line no-plusplus
+  //     count++;
+  //     webSocket?.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE }));
+  //   }, 100);
+  // }, [webSocket]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mock-bid-form settings">
       <FormGroup row className="auc-settings-row">

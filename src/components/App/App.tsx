@@ -23,6 +23,7 @@ import AlertsContainer from '../AlertsContainer/AlertsContainer';
 import HistoryPage from '../HistoryPage/HistoryPage';
 import WheelPage from '../WheelPage/WheelPage';
 import HelpPage from '../HelpPage/HelpPage';
+import Statistic from '../Statistic/Statistic';
 
 const drawerWidth = 240;
 
@@ -160,6 +161,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path={ROUTES.HELP}>
               <HelpPage />
+            </Route>
+            <Route exact path={ROUTES.STATISTIC}>
+              <Statistic />
             </Route>
           </Switch>
         </main>

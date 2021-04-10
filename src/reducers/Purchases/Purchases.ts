@@ -45,7 +45,7 @@ const purchasesSlice = createSlice({
   name: 'purchases',
   initialState,
   reducers: {
-    logPurchase(state, action: PayloadAction<PurchaseLog>): void {
+    addPurchaseLog(state, action: PayloadAction<PurchaseLog>): void {
       state.history = [...state.history, action.payload];
     },
     addPurchase(state, action: PayloadAction<Purchase>): void {
@@ -66,10 +66,22 @@ const purchasesSlice = createSlice({
 export const {
   addPurchase,
   removePurchase,
-  logPurchase,
+  addPurchaseLog,
   resetPurchases,
   setDraggedRedemption,
 } = purchasesSlice.actions;
+
+export const logPurchase = (bid: PurchaseLog) => (
+  dispatch: ThunkDispatch<RootState, {}, Action>,
+  getState: () => RootState,
+): void => {
+  const { pointsRate } = getState().aucSettings.integration.da;
+  const { cost, isDonation } = bid;
+
+  dispatch(
+    addPurchaseLog({ ...bid, timestamp: new Date().toISOString(), cost: isDonation ? cost * pointsRate : cost }),
+  );
+};
 
 export const fastAddBid = (bid: Purchase, slotId: string) => (
   dispatch: ThunkDispatch<RootState, {}, Action>,

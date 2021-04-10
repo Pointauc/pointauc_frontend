@@ -1,0 +1,12 @@
+@import "../../../styles/colors";
+
+.scoreboard {
+  width: 250px;
+  height: 350px;
+  margin-right: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 3px solid $blue-gray-2;
+  background-color: rgba($blue-gray-5, .3);
+  overflow: auto;
+}

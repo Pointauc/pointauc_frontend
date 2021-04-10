@@ -1,5 +1,5 @@
 export const FORMAT = {
   DATE: {
-    time: 'hh:mm:ss',
+    time: 'HH:mm:ss',
   },
 };

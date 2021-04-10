@@ -96,3 +96,21 @@ export const getRandomIntInclusive = (min: number, max: number): number => {
 
 export const fitText = (text: string, maxLength: number): string =>
   text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+export const createMapByKey = <TKey, TData>(
+  data: TData[],
+  keySelector: (record: TData) => TKey,
+  filter: (record: TData) => boolean,
+): Map<TKey, TData[]> => {
+  const map = new Map<TKey, TData[]>();
+
+  data.forEach((record: TData) => {
+    if (filter(record)) {
+      const restData = map.get(keySelector(record)) || [];
+
+      map.set(keySelector(record), [...restData, record]);
+    }
+  });
+
+  return map;
+};

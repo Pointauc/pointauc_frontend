@@ -126,8 +126,8 @@ export const {
   addSlotAmount,
 } = slotsSlice.actions;
 
-export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: Purchase) => (
-  dispatch: ThunkDispatch<{}, {}, Action>,
+export const createSlotFromPurchase = (bid: Purchase) => (
+  dispatch: ThunkDispatch<RootState, {}, Action>,
   getState: () => RootState,
 ): void => {
   const {
@@ -138,6 +138,7 @@ export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: 
     },
     slots: { slots },
   } = getState();
+  const { id, message: name, cost, isDonation } = bid;
   // eslint-disable-next-line no-plusplus
   const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null, fastId: ++maxFastId };
   const updatedSlots = [...slots, newSlot];
@@ -146,10 +147,11 @@ export const createSlotFromPurchase = ({ id, message: name, cost, isDonation }: 
 
   updateSlotPosition(updatedSlots, updatedSlots.length - 1);
   dispatch(setSlots(sortSlots(updatedSlots)));
+  dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }));
 };
 
 export const addBid = (slotId: string, bid: Purchase) => (
-  dispatch: ThunkDispatch<{}, {}, Action>,
+  dispatch: ThunkDispatch<RootState, {}, Action>,
   getState: () => RootState,
 ): void => {
   const {
