@@ -10,3 +10,9 @@ export const normalizePurchase = ({ message, cost, ...restPurchase }: Purchase):
   cost: message.startsWith(REMOVE_COST_PREFIX) ? -cost : cost,
   ...restPurchase,
 });
+
+export const parseSlotsPreset = (text: string): Slot[] => {
+  return text
+    .split('\n')
+    .map<Slot>((value, id) => ({ fastId: id, id: id.toString(), name: value, amount: 1, extra: null }));
+};

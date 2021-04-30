@@ -8,13 +8,15 @@ import { WheelItem } from '../../models/wheel.model';
 import { getTotalSize, getWheelColor } from '../../utils/common.utils';
 import TwitchEmotesList from '../TwitchEmotesList/TwitchEmotesList';
 import './WheelPage.scss';
+import SlotsPresetInput from '../Form/SlotsPresetInput/SlotsPresetInput';
+import { Slot } from '../../models/slot.model';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const [activeEmote, setActiveEmote] = useState<string | undefined>(undefined);
   const [spinTime, setSpinTime] = useState<number>(20);
   const [dropout, setDropout] = useState<boolean>(false);
-  const [rawItems, setRawItems] = useState(slots);
+  const [rawItems, setRawItems] = useState<Slot[]>(slots);
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -40,6 +42,10 @@ const WheelPage: FC = () => {
     [dropout],
   );
 
+  const handleCustomWheel = useCallback((customSlots: Slot[]) => {
+    setRawItems(customSlots);
+  }, []);
+
   const { wheelComponent, spin } = useWheel({
     rawItems: wheelItems,
     onWin: handleWin,
@@ -55,6 +61,14 @@ const WheelPage: FC = () => {
   const handleDropoutChange = useCallback((e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setDropout(checked);
   }, []);
+
+  const presetHint = (
+    <>
+      <div>* Принимается простой текстовый файл, где позиции лотов разделены новой строкой *</div>
+      <br />
+      <div>Новые лоты появятся в колесе, но не будут влиять на аукцион</div>
+    </>
+  );
 
   return (
     <PageContainer title="Колесо">
@@ -78,6 +92,9 @@ const WheelPage: FC = () => {
         <div className="wheel-controls-row">
           <Typography>Колесо на выбывание</Typography>
           <Switch onChange={handleDropoutChange} />
+        </div>
+        <div className="wheel-controls-row">
+          <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
         </div>
         <TwitchEmotesList setActiveEmote={setActiveEmote} />
       </div>
