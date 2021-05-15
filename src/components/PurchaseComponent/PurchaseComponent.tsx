@@ -118,6 +118,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
     dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
+    dispatch(updateExistBids);
   }, [convertCost, dispatch, id, purchase]);
 
   const handleAddToBestMatch = useCallback(() => {
