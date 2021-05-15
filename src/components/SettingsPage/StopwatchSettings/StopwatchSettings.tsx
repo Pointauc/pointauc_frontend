@@ -34,6 +34,11 @@ const StopwatchSettings: FC<StopwatchSettingsProps> = ({ control }) => (
         <FormInput name="autoincrementTime" className="field sm" control={control} type="number" />
         <Typography variant="body1">с.</Typography>
       </FormGroup>
+      <FormGroup row className="auc-settings-row">
+        <FormSwitch name="isMaxTimeActive" control={control} label="Макс. время автоматического добавления" />
+        <FormInput name="maxTime" className="field sm" control={control} type="number" />
+        <Typography variant="body1">мин.</Typography>
+      </FormGroup>
     </FormGroup>
   </>
 );

@@ -28,7 +28,7 @@ const Stopwatch: React.FC = () => {
     twitch: { actual: actualTwitchSub, loading: loadingTwitchSub },
   } = useSelector((root: RootState) => root.subscription);
   const {
-    settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime },
+    settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime, maxTime = 15, isMaxTimeActive },
     integration: {
       twitch: { dynamicRewards },
       da,
@@ -84,16 +84,30 @@ const Stopwatch: React.FC = () => {
     [dispatch],
   );
 
+  const autoUpdateTimer = useCallback(
+    (timeChange: number) => {
+      const maxMilliseconds = maxTime * 60 * 1000;
+      if (isMaxTimeActive) {
+        if (time.current < maxMilliseconds) {
+          updateStopwatch(time.current + timeChange > maxMilliseconds ? maxMilliseconds - time.current : timeChange);
+        }
+      } else {
+        updateStopwatch(timeChange);
+      }
+    },
+    [isMaxTimeActive, maxTime, updateStopwatch],
+  );
+
   const handleDonation = useCallback(
     ({ data }: MessageEvent) => {
       const { type, purchase } = JSON.parse(data);
       const { isIncrementActive, incrementTime } = daSettings.current;
 
       if (isIncrementActive && type === MESSAGE_TYPES.PURCHASE && purchase.isDonation) {
-        updateStopwatch(incrementTime * 1000);
+        autoUpdateTimer(incrementTime * 1000);
       }
     },
-    [updateStopwatch],
+    [autoUpdateTimer],
   );
 
   useEffect(() => {
@@ -146,10 +160,10 @@ const Stopwatch: React.FC = () => {
 
   useEffect(() => {
     if (isAutoincrementActive && winnerSlot.amount && previousWinnerSlotId.current !== winnerSlot.id) {
-      updateStopwatch(Number(stopwatchAutoincrement));
+      autoUpdateTimer(Number(stopwatchAutoincrement));
     }
     previousWinnerSlotId.current = winnerSlot.id;
-  }, [isAutoincrementActive, stopwatchAutoincrement, updateStopwatch, winnerSlot]);
+  }, [autoUpdateTimer, isAutoincrementActive, stopwatchAutoincrement, updateStopwatch, winnerSlot]);
 
   return (
     <div className="stopwatch-wrapper">
