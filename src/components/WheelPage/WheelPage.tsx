@@ -17,6 +17,7 @@ const WheelPage: FC = () => {
   const [spinTime, setSpinTime] = useState<number>(20);
   const [dropout, setDropout] = useState<boolean>(false);
   const [rawItems, setRawItems] = useState<Slot[]>(slots);
+  const [dropoutRate, setDropoutRate] = useState<number>(10);
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -52,10 +53,15 @@ const WheelPage: FC = () => {
     background: activeEmote,
     spinTime,
     dropout,
+    dropoutRate,
   });
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSpinTime(Number(e.target.value));
+  }, []);
+
+  const handleDropoutRateChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setDropoutRate(Number(e.target.value));
   }, []);
 
   const handleDropoutChange = useCallback((e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -89,6 +95,19 @@ const WheelPage: FC = () => {
           />
           <Typography className="wheel-controls-tip">с.</Typography>
         </div>
+        <div className="wheel-controls-row">
+          <TextField
+            className="wheel-controls-input"
+            variant="outlined"
+            margin="dense"
+            type="number"
+            onChange={handleDropoutRateChange}
+            value={dropoutRate}
+          />
+        </div>
+        <Typography className="wheel-controls-tip low">
+          Коэф. инвертирования (чем больше число, тем меньше у дорогих лотов шансов на вылет)
+        </Typography>
         <div className="wheel-controls-row">
           <Typography>Колесо на выбывание</Typography>
           <Switch onChange={handleDropoutChange} />

@@ -21,5 +21,11 @@
     position: relative;
     font-size: 18px !important;
     top: 8px;
+
+    &.low {
+      font-size: 14px !important;
+      display: block;
+      color: #aaa;
+    }
   }
 }

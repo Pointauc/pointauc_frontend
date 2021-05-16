@@ -17,6 +17,7 @@ interface WheelConfig {
   background?: string;
   spinTime?: number;
   dropout?: boolean;
+  dropoutRate?: number;
 }
 
 window.gsap = gsap;
@@ -42,7 +43,14 @@ const getWheelAngle = (rotate: number): number => {
   return angle > Math.PI * 2 ? angle - Math.PI * 2 : angle;
 };
 
-const useWheel = ({ rawItems, background, dropout, onWin, spinTime = 20 }: WheelConfig): WheelResult => {
+const useWheel = ({
+  rawItems,
+  background,
+  dropout,
+  onWin,
+  spinTime = 20,
+  dropoutRate = 10,
+}: WheelConfig): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wheelSelector = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
@@ -53,10 +61,10 @@ const useWheel = ({ rawItems, background, dropout, onWin, spinTime = 20 }: Wheel
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
-  const getReverseSize = useCallback((size: number) => (1 - size / totalSize) ** (rawItems.length * 1.3), [
-    rawItems.length,
-    totalSize,
-  ]);
+  const getReverseSize = useCallback(
+    (size: number) => (1 - size / totalSize) ** ((rawItems.length * 1.3 * dropoutRate) / 10),
+    [dropoutRate, rawItems.length, totalSize],
+  );
 
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
