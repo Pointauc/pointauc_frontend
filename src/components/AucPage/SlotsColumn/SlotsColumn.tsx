@@ -1,15 +1,15 @@
-import React, {DragEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
-import {useDispatch, useSelector} from 'react-redux';
-import {Grid, IconButton, Input, Typography} from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { Grid, IconButton, Input, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import classNames from 'classnames';
-import {RootState} from '../../../reducers';
-import {addSlot, createSlotFromPurchase} from '../../../reducers/Slots/Slots';
-import {handleDragOver} from '../../../utils/common.utils';
+import { RootState } from '../../../reducers';
+import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
+import { handleDragOver } from '../../../utils/common.utils';
 import SlotsList from './SlotsList';
-import {Purchase, removePurchase, setDraggedRedemption, updateExistBids,} from '../../../reducers/Purchases/Purchases';
-import {useCostConvert} from '../../../hooks/useCostConvert';
+import { Purchase, removePurchase, setDraggedRedemption, updateExistBids } from '../../../reducers/Purchases/Purchases';
+import { useCostConvert } from '../../../hooks/useCostConvert';
 
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();

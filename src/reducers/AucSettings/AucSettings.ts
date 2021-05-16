@@ -20,6 +20,10 @@ export interface SettingFields {
   maxTime?: number;
 }
 
+export interface ViewSettings {
+  compact: boolean;
+}
+
 export interface RewardSetting {
   cost?: number;
   color?: string;
@@ -45,11 +49,15 @@ export interface IntegrationFields {
 }
 
 interface AucSettingsState {
+  view: ViewSettings;
   settings: SettingFields;
   integration: IntegrationFields;
 }
 
 export const initialState: AucSettingsState = {
+  view: {
+    compact: false,
+  },
   settings: {
     startTime: 10,
     isBuyoutVisible: true,
@@ -94,10 +102,13 @@ const aucSettingsSlice = createSlice({
       state.integration.da = mergewith(state.integration.da, action.payload.da, mergeCheck);
       state.integration.twitch = mergewith(state.integration.twitch, action.payload.twitch, mergeCheck);
     },
+    setCompact(state, action: PayloadAction<boolean>): void {
+      state.view.compact = action.payload;
+    },
   },
 });
 
-export const { setAucSettings, setIntegration } = aucSettingsSlice.actions;
+export const { setAucSettings, setIntegration, setCompact } = aucSettingsSlice.actions;
 
 export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
   const { username, userId, settings, integration, hasDAAuth } = await getUserData();

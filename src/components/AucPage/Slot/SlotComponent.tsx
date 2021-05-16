@@ -2,6 +2,7 @@ import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { IconButton, OutlinedInput } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import './Slot.scss';
+import './SlotCompact.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { FilledInputProps } from '@material-ui/core/FilledInput';
 import { Slot } from '../../../models/slot.model';

@@ -1,0 +1,165 @@
+@import "../../../styles/colors";
+
+.compact-view {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.23);
+
+  .slot-wrapper {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    margin-bottom: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.23);
+    border-right: 1px solid rgba(255, 255, 255, 0.23);
+    border-left: 1px solid rgba(255, 255, 255, 0.23);
+    height: 40px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .slot {
+      display: flex;
+      flex-grow: 1;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 0;
+      align-items: center;
+
+      .PrivateNotchedOutline-root-8 {
+        border: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.23);
+        border-radius: 0;
+      }
+
+      input {
+        font-size: 15px;
+        padding: 11px 12px;
+        border: none;
+      }
+
+      &-chance {
+        font-weight: 400;
+        margin-right: 15px;
+        font-size: 18px;
+      }
+
+      &-add-extra {
+        padding: 7px;
+        margin: 5px;
+      }
+
+      &-crown {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      &-index {
+        font-size: 1.1em;
+        width: 35px;
+        margin-left: 10px;
+      }
+
+      &-fast-index {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9em;
+        margin-right: 10px;
+        width: 45px;
+        height: 70%;
+        border: 2px solid $blue-gray-2;
+        border-radius: 10px;
+        background-color: rgba($blue-gray-5, .3);
+      }
+
+      &-name {
+        flex-grow: 1;
+        margin-right: 25px;
+      }
+
+      &-money {
+        width: 110px;
+        padding-left: 5px;
+
+        .PrivateNotchedOutline-root-8 {
+          border-right: 1px solid rgba(255, 255, 255, 0.23);
+        }
+      }
+    }
+
+    .delete-button {
+      opacity: 0.9;
+      width: 40px;
+      height: 40px;
+    }
+
+    &:hover {
+      .delete-button {
+        opacity: 1;
+      }
+    }
+
+    &.custom-background {
+      .slot {
+        .MuiOutlinedInput-notchedOutline {
+          border-color: $grey-5;
+        }
+
+        &-input {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+}
+
+.slots-column.dragging {
+  .slot-wrapper {
+    .slot {
+      background-color: $grey-11;
+      border-color: $grey-9;
+
+      &.drag-over {
+        background-color: $blue-gray-3;
+        border-color: $blue-gray-2;
+
+        &.remove-cost {
+          background-color: $red-1;
+          border-color: $red-2;
+        }
+      }
+    }
+
+    &.custom-background {
+      .slot {
+        background-color: rgba(100, 100, 100, 0.5);
+        border-color: $grey-5;
+
+        .slot-input {
+          background-color: transparent;
+        }
+
+        &.drag-over {
+          background-color: rgba($blue-gray-3, 0.7);
+          border-color: $blue-gray-2;
+
+          .slot-input {
+            background-color: transparent;
+          }
+
+          &.remove-cost {
+            background-color: rgba($red-1, .7);
+            border-color: $red-2;
+          }
+        }
+      }
+    }
+  }
+}

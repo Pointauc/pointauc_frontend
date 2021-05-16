@@ -24,6 +24,7 @@ import ServerStatus from '../ServerStatus/ServerStatus';
 import { Slot } from '../../models/slot.model';
 import MockBidForm from './MockBidForm/MockBidForm';
 import { LocalStorageEnum } from '../../models/common.model';
+import { setCompact } from '../../reducers/AucSettings/AucSettings';
 
 const isProd = isProduction();
 
@@ -34,6 +35,7 @@ const createMarbleConfig = (slots: Slot[]): string => slots.map(getSlotNamesByCo
 const AucActions: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
+  const { compact } = useSelector((root: RootState) => root.aucSettings.view);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
   const [saveCurrentSlots, setSaveCurrentSlots] = useState<boolean>(false);
 
@@ -77,11 +79,23 @@ const AucActions: React.FC = () => {
     setSaveCurrentSlots(checked);
   }, []);
 
+  const handleSetCompact = useCallback(
+    (e, checked: boolean) => {
+      dispatch(setCompact(checked));
+    },
+    [dispatch],
+  );
+
   return (
     <div className="options">
       <IconButton onClick={handleResetSlots} className="clear-button" title="Очистить все">
         <DeleteSweepIcon />
       </IconButton>
+      <FormControlLabel
+        control={<Checkbox checked={compact} onChange={handleSetCompact} color="primary" />}
+        label="Компактный режим (W.I.P.)"
+        className="save-current-slots"
+      />
       <ServerStatus />
       <Button className="button marbles" onClick={downloadMarbles} variant="outlined">
         Скачать шары
