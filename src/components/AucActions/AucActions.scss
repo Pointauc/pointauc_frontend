@@ -1,8 +1,10 @@
+@import "../../styles/colors";
+
 .options {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin: 10px 30px 10px 0;
+  margin: 10px 0;
   align-self: flex-end;
 
   &-menu {
@@ -12,7 +14,45 @@
     padding: 20px;
   }
 
-  &-button {
+  .clear-button {
     margin-right: 10px !important;
+  }
+
+  .button {
+    margin-left: 10px !important;
+    border-color: rgba(#fff, 0.4) !important;
+
+    &.marbles {
+      width: 180px;
+    }
+
+    &.restore {
+      width: 200px;
+    }
+  }
+}
+
+.confirm-restore {
+  .MuiDialogContentText-root {
+    margin-bottom: 0;
+  }
+
+  .MuiTypography-h6 {
+    margin-bottom: 0;
+  }
+
+  .save-current-slots {
+    .MuiCheckbox-root {
+      padding: 0 !important;
+      margin-right: 5px;
+    }
+
+    .MuiFormControlLabel-label {
+      margin-top: 3px;
+      font-weight: 400;
+      font-size: 0.9rem;
+      letter-spacing: normal;
+      color: $grey-4;
+    }
   }
 }

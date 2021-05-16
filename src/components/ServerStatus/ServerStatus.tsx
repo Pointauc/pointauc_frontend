@@ -23,7 +23,7 @@ const ServerStatus: FC = () => {
 
   return (
     <div className="server-status">
-      <div className="server-status-label">Статус сервера:</div>
+      <div className="server-status-label">Подключение:</div>
       <div className={thumbClasses} />
       {(isIntegrationActive || !webSocket) && (
         <div className="active-integration">

@@ -4,6 +4,10 @@
   background-color: $grey-11;
   padding: 20px;
   border: 2px solid $grey-6;
+  position: absolute;
+  right: 10px;
+  bottom: 100px;
+  width: 330px;
 
   .MuiFormControlLabel-label {
     width: 150px;

@@ -19,3 +19,7 @@ export interface DragPosition {
   left: number;
   top: number;
 }
+
+export enum LocalStorageEnum {
+  Slots = 'slots',
+}

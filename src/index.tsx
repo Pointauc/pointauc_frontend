@@ -19,6 +19,7 @@ import ChatWheelPage from './components/ChatWheelPage/ChatWheelPage';
 import { theme } from './constants/theme.constants';
 import NewDomainRedirect from './components/NewDomainRedirect/NewDomainRedirect';
 import history from './constants/history';
+import { LocalStorageEnum } from './models/common.model';
 
 dayjs.locale('ru');
 
@@ -44,6 +45,14 @@ export const store = configureStore({
   reducer: rootReducer,
   middleware: [thunk, sortSlotsMiddleware],
 });
+
+window.onbeforeunload = (): undefined => {
+  const { slots } = store.getState().slots;
+
+  localStorage.setItem(LocalStorageEnum.Slots, JSON.stringify(slots));
+
+  return undefined;
+};
 
 if (window.location.host === 'woodsauc-reneawal.netlify.app') {
   ReactDOM.render(
