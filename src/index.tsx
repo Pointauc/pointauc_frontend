@@ -49,7 +49,9 @@ export const store = configureStore({
 window.onbeforeunload = (): undefined => {
   const { slots } = store.getState().slots;
 
-  localStorage.setItem(LocalStorageEnum.Slots, JSON.stringify(slots));
+  if (slots.length > 1) {
+    localStorage.setItem(LocalStorageEnum.Slots, JSON.stringify(slots));
+  }
 
   return undefined;
 };
