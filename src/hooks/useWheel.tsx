@@ -170,12 +170,6 @@ const useWheel = ({
     if (progress === 1) {
       onWin(winner);
       setWinnerItem(winner);
-      setRotate(0);
-      gsap.to(canvas.current, {
-        duration: 0.1,
-        ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1'),
-        rotate: 0,
-      });
     }
     spinTarget.current.innerHTML = winner.name;
   };
@@ -185,7 +179,7 @@ const useWheel = ({
       gsap.to(canvas.current, {
         duration: spinTime,
         ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1', {
-          onUpdate: onWheelSpin.bind(undefined, previousRotate, nextRotate),
+          onUpdate: onWheelSpin.bind(undefined, previousRotate, nextRotate - previousRotate),
         }),
         rotate: nextRotate,
       });
