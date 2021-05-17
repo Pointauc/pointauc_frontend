@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Switch, TextField, Typography } from '@material-ui/core';
+import { Button, Slider, Switch, TextField, Typography } from '@material-ui/core';
 import PageContainer from '../PageContainer/PageContainer';
 import useWheel from '../../hooks/useWheel';
 import { RootState } from '../../reducers';
@@ -17,6 +17,7 @@ const WheelPage: FC = () => {
   const [spinTime, setSpinTime] = useState<number>(20);
   const [dropout, setDropout] = useState<boolean>(false);
   const [rawItems, setRawItems] = useState<Slot[]>(slots);
+  const [dropoutRate, setDropoutRate] = useState<number>(1);
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -52,10 +53,15 @@ const WheelPage: FC = () => {
     background: activeEmote,
     spinTime,
     dropout,
+    dropoutRate,
   });
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSpinTime(Number(e.target.value));
+  }, []);
+
+  const handleDropoutRateChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
+    setDropoutRate(Number(value));
   }, []);
 
   const handleDropoutChange = useCallback((e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -88,6 +94,22 @@ const WheelPage: FC = () => {
             value={spinTime}
           />
           <Typography className="wheel-controls-tip">с.</Typography>
+        </div>
+        <div className="wheel-controls-row" style={{ marginTop: 15 }}>
+          <Typography className="wheel-controls-tip md">Коэф. наеба</Typography>
+          <Slider
+            defaultValue={1}
+            step={0.1}
+            min={0.1}
+            max={2}
+            valueLabelDisplay="auto"
+            onChange={handleDropoutRateChange}
+            marks={[
+              { value: 0.1, label: '0.1' },
+              { value: 1, label: '1' },
+              { value: 2, label: '2' },
+            ]}
+          />
         </div>
         <div className="wheel-controls-row">
           <Typography>Колесо на выбывание</Typography>

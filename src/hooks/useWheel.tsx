@@ -49,20 +49,24 @@ const useWheel = ({
   dropout,
   onWin,
   spinTime = 20,
-  dropoutRate = 10,
+  dropoutRate = 1,
 }: WheelConfig): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wheelSelector = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
-  const items = useMemo(() => shuffle(rawItems), [rawItems]);
+  const shuffledItems = useMemo(() => shuffle(rawItems), [rawItems]);
+  const items = useMemo(
+    () => shuffledItems.map(({ size, ...rest }) => ({ ...rest, size: (size || 1) ** dropoutRate })),
+    [dropoutRate, shuffledItems],
+  );
   const totalSize = useMemo(() => items.reduce((acc, { size }) => acc + (size || 1), 0), [items]);
   const [rotate, setRotate] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
   const getReverseSize = useCallback(
-    (size: number) => (1 - size / totalSize) ** ((rawItems.length * 1.3 * dropoutRate) / 10),
+    (size: number) => (1 - size / totalSize) ** (rawItems.length * 1.3 * dropoutRate),
     [dropoutRate, rawItems.length, totalSize],
   );
 

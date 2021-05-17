@@ -22,10 +22,22 @@
     font-size: 18px !important;
     top: 8px;
 
+    &.md {
+      width: 210px;
+      font-size: 16px;
+      color: #ccc;
+      align-self: start;
+      margin-bottom: 10px;
+    }
+
     &.low {
-      font-size: 14px !important;
+      font-size: 14px ;
       display: block;
       color: #aaa;
     }
+  }
+
+  .MuiSlider-valueLabel {
+    font-weight: 400;
   }
 }
