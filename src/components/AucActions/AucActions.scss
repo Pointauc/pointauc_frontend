@@ -7,6 +7,18 @@
   margin: 10px 0;
   align-self: flex-end;
 
+  .da-link {
+    color: #aaa;
+    margin-right: 20px;
+    letter-spacing: 1.5px;
+    text-decoration: underline;
+    font-family: Arial;
+
+    &:hover {
+      color: white;
+    }
+  }
+
   &-menu {
     position: absolute;
     right: 35px;

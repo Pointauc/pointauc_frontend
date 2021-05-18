@@ -12,6 +12,7 @@ import {
   DialogTitle,
   FormControlLabel,
   IconButton,
+  Link,
 } from '@material-ui/core';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import { setUsername } from '../../reducers/User/User';
@@ -88,6 +89,14 @@ const AucActions: React.FC = () => {
 
   return (
     <div className="options">
+      <Link
+        target="_blank"
+        rel="noopener noreferrer"
+        className="da-link"
+        href="https://www.donationalerts.com/r/kozjar"
+      >
+        поддержка
+      </Link>
       <IconButton onClick={handleResetSlots} className="clear-button" title="Очистить все">
         <DeleteSweepIcon />
       </IconButton>
