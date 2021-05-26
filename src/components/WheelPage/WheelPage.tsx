@@ -18,6 +18,7 @@ const WheelPage: FC = () => {
   const [dropout, setDropout] = useState<boolean>(false);
   const [rawItems, setRawItems] = useState<Slot[]>(slots);
   const [dropoutRate, setDropoutRate] = useState<number>(1);
+  const [isSpinning, setIsSpinning] = useState<boolean>(false);
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -36,6 +37,8 @@ const WheelPage: FC = () => {
 
   const handleWin = useCallback(
     (winner: WheelItem) => {
+      setIsSpinning(false);
+
       if (dropout) {
         setRawItems((items) => items.filter(({ id }) => id !== winner.id));
       }
@@ -55,6 +58,11 @@ const WheelPage: FC = () => {
     dropout,
     dropoutRate,
   });
+
+  const handleSpin = useCallback(() => {
+    setIsSpinning(true);
+    spin();
+  }, [spin]);
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSpinTime(Number(e.target.value));
@@ -81,8 +89,14 @@ const WheelPage: FC = () => {
       <div>{wheelComponent}</div>
       <div className="wheel-controls">
         <div className="wheel-controls-row">
-          <Button className="wheel-controls-button" variant="contained" color="primary" onClick={spin}>
-            Крутить
+          <Button
+            disabled={isSpinning}
+            className="wheel-controls-button"
+            variant="contained"
+            color="primary"
+            onClick={handleSpin}
+          >
+            {isSpinning ? 'Крутимся...' : 'Крутить'}
           </Button>
           <TextField
             className="wheel-controls-input"
