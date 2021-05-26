@@ -8,7 +8,7 @@ import { fitText, shuffle } from '../utils/common.utils';
 
 interface WheelResult {
   wheelComponent: ReactNode;
-  spin: () => void;
+  spin: (seed?: number) => void;
 }
 
 interface WheelConfig {
@@ -186,9 +186,10 @@ const useWheel = ({
     }
   };
 
-  const spin = (): void => {
+  const spin = (seed?: number | null): void => {
     setWinnerItem(undefined);
-    const randomSpin = Math.random() * 360;
+    const winningSeed = seed ? seed / totalSize : Math.random();
+    const randomSpin = winningSeed * 360;
     const nextRotate = rotate + 230 * spinTime + randomSpin;
     animateWheel(rotate, nextRotate);
     setRotate(nextRotate);

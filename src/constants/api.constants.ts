@@ -10,6 +10,9 @@ const ENDPOINTS = {
     DATA: '/api/user/userData',
     INTEGRATION: '/api/integration',
   },
+  RANDOM: {
+    INTEGER: '/api/random/integer',
+  },
 };
 
 export default ENDPOINTS;

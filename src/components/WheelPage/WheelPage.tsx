@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Slider, Switch, TextField, Typography } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Slider, Switch, TextField, Typography } from '@material-ui/core';
 import PageContainer from '../PageContainer/PageContainer';
 import useWheel from '../../hooks/useWheel';
 import { RootState } from '../../reducers';
@@ -10,6 +10,9 @@ import TwitchEmotesList from '../TwitchEmotesList/TwitchEmotesList';
 import './WheelPage.scss';
 import SlotsPresetInput from '../Form/SlotsPresetInput/SlotsPresetInput';
 import { Slot } from '../../models/slot.model';
+import { getRandomNumber } from '../../api/randomApi';
+import LoadingButton from '../LoadingButton/LoadingButton';
+import withLoading from '../../decorators/withLoading';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
@@ -19,6 +22,9 @@ const WheelPage: FC = () => {
   const [rawItems, setRawItems] = useState<Slot[]>(slots);
   const [dropoutRate, setDropoutRate] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
+  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(false);
+  const totalSize = useMemo(() => rawItems.reduce((acc, { amount }) => acc + (amount || 1), 0), [rawItems]);
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -59,10 +65,16 @@ const WheelPage: FC = () => {
     dropoutRate,
   });
 
-  const handleSpin = useCallback(() => {
+  const handleSpin = useCallback(async () => {
+    let seed: number | undefined;
+
+    if (useRandomOrg) {
+      seed = await withLoading(setIsLoadingSeed, getRandomNumber)(1, totalSize);
+    }
+
     setIsSpinning(true);
-    spin();
-  }, [spin]);
+    spin(seed);
+  }, [spin, totalSize, useRandomOrg]);
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSpinTime(Number(e.target.value));
@@ -84,20 +96,25 @@ const WheelPage: FC = () => {
     </>
   );
 
+  const handleUseRandomOrg = useCallback((e, checked: boolean) => {
+    setUseRandomOrg(checked);
+  }, []);
+
   return (
     <PageContainer title="Колесо">
       <div>{wheelComponent}</div>
       <div className="wheel-controls">
         <div className="wheel-controls-row">
-          <Button
-            disabled={isSpinning}
+          <LoadingButton
+            isLoading={isLoadingSeed}
+            disabled={isSpinning || isLoadingSeed}
             className="wheel-controls-button"
             variant="contained"
             color="primary"
             onClick={handleSpin}
           >
             {isSpinning ? 'Крутимся...' : 'Крутить'}
-          </Button>
+          </LoadingButton>
           <TextField
             className="wheel-controls-input"
             variant="outlined"
@@ -109,7 +126,12 @@ const WheelPage: FC = () => {
           />
           <Typography className="wheel-controls-tip">с.</Typography>
         </div>
-        <div className="wheel-controls-row" style={{ marginTop: 15 }}>
+        <FormControlLabel
+          control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
+          label="Использовать сервис random.org"
+          className="wheel-controls-checkbox"
+        />
+        <div className="wheel-controls-row">
           <Typography className="wheel-controls-tip md">Коэф. наеба</Typography>
           <Slider
             defaultValue={1}
