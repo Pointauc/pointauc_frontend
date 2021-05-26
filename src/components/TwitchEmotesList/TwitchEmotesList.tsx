@@ -52,6 +52,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
 
   return (
     <div className="emotes-container">
+      {!userId && <div className="emote-hint">Подключите Twitch, чтобы выбрать изображение в колесе</div>}
       {userEmotes ? <>{userEmotes.map(crateEmoteList)}</> : <CircularProgress className="emotes-loading" />}
     </div>
   );

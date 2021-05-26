@@ -2,10 +2,16 @@
 
 .emotes-container {
   width: 340px;
-  max-height: 700px;
+  max-height: 63vh;
   overflow: auto;
   border: 2px solid $grey-8;
   margin-top: 30px;
+
+  .emote-hint {
+    margin: 30px;
+    text-align: center;
+    line-height: 1.4rem;
+  }
 
   .emotes-group {
     padding: 15px;
