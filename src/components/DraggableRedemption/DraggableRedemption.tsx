@@ -2,7 +2,6 @@ import React, { FC, memo, useCallback, useEffect, useRef, useState } from 'react
 import { useDispatch } from 'react-redux';
 import { Purchase, setDraggedRedemption } from '../../reducers/Purchases/Purchases';
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
-import { isFirefox } from '../../utils/common.utils';
 import { draggedBid } from '../DragBidContext/DragBidContext';
 import { DragPosition } from '../../models/common.model';
 
@@ -77,16 +76,14 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
       }
     };
 
-    if (isFirefox()) {
-      document.addEventListener('dragover', handleDragOver);
+    document.addEventListener('dragover', handleDragOver);
 
-      return (): void => document.removeEventListener('dragover', handleDragOver);
-    }
+    return (): void => document.removeEventListener('dragover', handleDragOver);
   }, [handleDrag]);
 
   return (
     <>
-      <div draggable onDragStart={handleDragStart} onDrag={handleDrag} onDragEnd={handleDragEnd} ref={redemptionRef}>
+      <div draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd} ref={redemptionRef}>
         <PurchaseComponent {...purchase} isDragging={isDragging} />
       </div>
     </>

@@ -1,6 +1,6 @@
-import React, { DragEvent, useCallback, useMemo, useRef, useState } from 'react';
+import React, { DragEvent, useCallback, useRef, useState } from 'react';
 import './Slot.scss';
-import { IconButton, Typography, MenuItem, Menu } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,6 @@ import SlotComponent from './SlotComponent';
 import { deleteSlot, setSlotAmount, setSlotName } from '../../../reducers/Slots/Slots';
 import { Slot } from '../../../models/slot.model';
 import { RootState } from '../../../reducers';
-import { handleDragOver } from '../../../utils/common.utils';
 import {
   logPurchase,
   Purchase,
@@ -21,6 +20,7 @@ import {
 import slotNamesMap from '../../../services/SlotNamesMap';
 import { useCostConvert } from '../../../hooks/useCostConvert';
 import { openTrailer } from '../../../reducers/ExtraWindows/ExtraWindows';
+import { handleDragOver } from '../../../utils/common.utils';
 
 interface DroppableSlotProps extends Slot {
   index: number;
@@ -32,19 +32,45 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
   const {
     da: { pointsRate },
   } = useSelector((root: RootState) => root.aucSettings.integration);
-  const [enterCounter, setEnterCounter] = useState<number>(0);
-  const [isRemoveCost, setIsRemoveCost] = useState<boolean>(false);
   const [isExtraOpen, setIsExtraOpen] = useState<boolean>(false);
   const extraIcon = useRef<HTMLButtonElement>(null);
   const { id, amount, name } = slotProps;
-  const isOver = useMemo(() => !!enterCounter, [enterCounter]);
+  const slotElement = useRef<HTMLDivElement>(null);
+  const enterCounter = useRef<number>(0);
 
   const convertCost = useCostConvert();
 
-  const slotClasses = useMemo(() => classNames('slot', { 'drag-over': isOver, 'remove-cost': isRemoveCost }), [
-    isOver,
-    isRemoveCost,
-  ]);
+  const resetOverStyle = useCallback(() => {
+    enterCounter.current = 0;
+
+    requestAnimationFrame(() => {
+      if (slotElement.current) {
+        slotElement.current.classList.remove('drag-over');
+        slotElement.current.classList.remove('remove-cost');
+      }
+    });
+  }, []);
+
+  const updateOverStyle = useCallback(
+    (enterCounterChange: number, isRemove?: boolean) => {
+      enterCounter.current += enterCounterChange;
+
+      if (enterCounter.current > 0) {
+        requestAnimationFrame(() => {
+          if (slotElement.current) {
+            slotElement.current.classList.add('drag-over');
+
+            if (isRemove) {
+              slotElement.current.classList.add('remove-cost');
+            }
+          }
+        });
+      } else {
+        resetOverStyle();
+      }
+    },
+    [resetOverStyle],
+  );
 
   const handleDelete = (): void => {
     dispatch(deleteSlot(id));
@@ -68,19 +94,21 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       if (!name) {
         dispatch(setSlotName({ id, name: message }));
       }
-      setEnterCounter(0);
+      resetOverStyle();
     },
-    [amount, convertCost, dispatch, id, name, pointsRate],
+    [amount, convertCost, dispatch, id, name, pointsRate, resetOverStyle],
   );
 
-  const handleDragEnter = useCallback((e: DragEvent<HTMLDivElement>) => {
-    setEnterCounter((prevState) => prevState + 1);
-    setIsRemoveCost(e.dataTransfer.types.includes('remove'));
-  }, []);
+  const handleDragEnter = useCallback(
+    (e: DragEvent<HTMLDivElement>) => {
+      updateOverStyle(1, e.dataTransfer.types.includes('remove'));
+    },
+    [updateOverStyle],
+  );
 
   const handleDragLeave = useCallback(() => {
-    setEnterCounter((prevState) => prevState - 1);
-  }, []);
+    updateOverStyle(-1);
+  }, [updateOverStyle]);
 
   const openExtra = useCallback(() => setIsExtraOpen(true), []);
   const closeExtra = useCallback(() => setIsExtraOpen(false), []);
@@ -98,7 +126,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      <div className={slotClasses}>
+      <div className="slot" ref={slotElement}>
         <Typography className="slot-index">{`${index}.`}</Typography>
         <Typography className="slot-fast-index">{`#${slotProps.fastId}`}</Typography>
         <SlotComponent {...slotProps} />
