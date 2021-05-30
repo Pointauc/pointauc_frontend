@@ -23,7 +23,7 @@ const WheelPage: FC = () => {
   const [dropoutRate, setDropoutRate] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
-  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(false);
+  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(true);
   const totalSize = useMemo(() => rawItems.reduce((acc, { amount }) => acc + (amount || 1), 0), [rawItems]);
 
   const wheelItems = useMemo(() => {
