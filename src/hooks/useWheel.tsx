@@ -14,7 +14,7 @@ interface WheelResult {
 interface WheelConfig {
   rawItems: WheelItem[];
   onWin: (item: WheelItem) => void;
-  background?: string;
+  background?: string | null;
   spinTime?: number;
   dropout?: boolean;
   dropoutRate?: number;
@@ -24,7 +24,7 @@ window.gsap = gsap;
 
 type Context = CanvasRenderingContext2D;
 
-const centerCircleStyles = (background?: string): CSSProperties => ({
+const centerCircleStyles = (background?: string | null): CSSProperties => ({
   backgroundImage: `url(${background || pradenW})`,
   backgroundColor: 'transparent',
   backgroundPosition: 'center',
