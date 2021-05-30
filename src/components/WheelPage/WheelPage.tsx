@@ -16,7 +16,7 @@ import withLoading from '../../decorators/withLoading';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
-  const [activeEmote, setActiveEmote] = useState<string | undefined>(localStorage.getItem('wheelEmote'));
+  const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(20);
   const [dropout, setDropout] = useState<boolean>(false);
   const [rawItems, setRawItems] = useState<Slot[]>(slots);
