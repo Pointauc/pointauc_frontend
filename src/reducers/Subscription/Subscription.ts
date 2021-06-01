@@ -41,7 +41,7 @@ const subscriptionSlice = createSlice({
 
 const { setDaSubscribeState, setTwitchSubscribeState } = subscriptionSlice.actions;
 
-export const sendCpSubscribedState = (isSubscribed: boolean) => (
+export const sendCpSubscribedState = (isSubscribed: boolean, setState?: (actual: boolean) => void) => (
   dispatch: ThunkDispatch<{}, {}, Action>,
   getState: () => RootState,
 ): void => {
@@ -52,11 +52,13 @@ export const sendCpSubscribedState = (isSubscribed: boolean) => (
 
     if (responseType === SERVER_MESSAGES.CP_SUBSCRIBED) {
       dispatch(setTwitchSubscribeState({ actual: true, loading: false }));
+      setState && setState(false);
       webSocket?.removeEventListener('message', handleSubscribeResponse);
     }
 
     if (responseType === SERVER_MESSAGES.CP_UNSUBSCRIBED) {
       dispatch(setTwitchSubscribeState({ actual: false, loading: false }));
+      setState && setState(false);
       webSocket?.removeEventListener('message', handleSubscribeResponse);
     }
 
@@ -68,6 +70,8 @@ export const sendCpSubscribedState = (isSubscribed: boolean) => (
         }),
       );
       dispatch(setTwitchSubscribeState({ actual: false, loading: false }));
+      setState && setState(false);
+      webSocket?.removeEventListener('message', handleSubscribeResponse);
     }
   };
 

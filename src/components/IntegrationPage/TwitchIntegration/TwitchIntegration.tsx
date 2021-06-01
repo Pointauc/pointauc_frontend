@@ -22,7 +22,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import classNames from 'classnames';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
-import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
 import './TwitchIntegration.scss';
 import FormInput from '../../Form/FormInput/FormInput';
 import FormSwitch from '../../Form/FormSwitch/FormSwitch';
@@ -30,16 +29,7 @@ import FormColorPicker from '../../Form/FormColorPicker/FormColorPicker';
 import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
 import LoadingButton from '../../LoadingButton/LoadingButton';
 import { closeTwitchRewards } from '../../../api/twitchApi';
-
-const authParams = {
-  client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
-  redirect_uri: `${window.location.origin}/twitch/redirect`,
-  response_type: 'code',
-  scope: 'channel:read:redemptions channel:manage:redemptions',
-  force_verify: 'true',
-};
-
-const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
+import TwitchLoginButton from '../TwitchLoginButton/TwitchLoginButton';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -77,13 +67,6 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     twitch: { actual, loading },
   } = useSelector((root: RootState) => root.subscription);
   const [, setIsSubscribed] = useState<boolean>(actual);
-
-  const handleAuth = (): void => {
-    const params = new URLSearchParams(authParams);
-    authUrl.search = params.toString();
-
-    window.open(authUrl.toString(), '_self');
-  };
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -215,15 +198,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
           </Button>
         </FormGroup>
       ) : (
-        <Button
-          className="twitch-login-button"
-          variant="contained"
-          size="large"
-          startIcon={<TwitchSvg className="base-icon" />}
-          onClick={handleAuth}
-        >
-          Подключить twitch
-        </Button>
+        <TwitchLoginButton />
       )}
     </div>
   );

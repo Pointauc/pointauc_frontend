@@ -30,7 +30,7 @@ const puSubSocketSlice = createSlice({
 
 export const { setWebSocket } = puSubSocketSlice.actions;
 
-export const connectToServer = () => (
+export const connectToServer = (showSuccessMessage?: boolean) => (
   dispatch: ThunkDispatch<RootState, {}, Action>,
   getState: () => RootState,
 ): void => {
@@ -52,6 +52,15 @@ export const connectToServer = () => (
     }, 1000 * 60 * 30);
 
     dispatch(setWebSocket(ws));
+    if (showSuccessMessage) {
+      dispatch(
+        addAlert({
+          message: 'Соединение установлено',
+          type: AlertTypeEnum.Success,
+          duration: 3000,
+        }),
+      );
+    }
 
     if (twitchSub) {
       dispatch(sendCpSubscribedState(twitchSub));

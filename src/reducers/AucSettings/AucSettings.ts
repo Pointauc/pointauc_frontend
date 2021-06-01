@@ -82,7 +82,7 @@ export const initialState: AucSettingsState = {
       rewards: [],
     },
     da: {
-      pointsRate: 100,
+      pointsRate: 1,
       isIncrementActive: false,
       incrementTime: 30,
     },

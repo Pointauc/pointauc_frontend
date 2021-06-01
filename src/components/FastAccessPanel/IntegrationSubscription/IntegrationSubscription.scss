@@ -1,0 +1,46 @@
+@import "../../../styles/colors";
+
+.fast-access {
+  width: 100%;
+
+  .MuiAccordionSummary-root.Mui-expanded {
+    border-bottom: 1px $grey-10 solid;
+    min-height: 0 !important;
+
+    .MuiAccordionSummary-content {
+      margin: 0 !important;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    font-weight: 400;
+
+    .base-icon {
+      width: 22px;
+      height: 22px;
+      margin-right: 5px;
+    }
+
+    .row {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .twitch-login-button {
+      margin-bottom: 15px;
+    }
+
+    .da-login-button {
+      font-size: 13px;
+      padding: 8px 5px;
+    }
+  }
+}

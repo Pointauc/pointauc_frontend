@@ -21,7 +21,6 @@ import { resetSlots, setSlots } from '../../reducers/Slots/Slots';
 import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import { isProduction, loadFile } from '../../utils/common.utils';
 import { RootState } from '../../reducers';
-import ServerStatus from '../ServerStatus/ServerStatus';
 import { Slot } from '../../models/slot.model';
 import MockBidForm from './MockBidForm/MockBidForm';
 import { LocalStorageEnum } from '../../models/common.model';
@@ -105,7 +104,7 @@ const AucActions: React.FC = () => {
         label="Компактный режим (W.I.P.)"
         className="save-current-slots"
       />
-      <ServerStatus />
+      {/* <ServerStatus /> */}
       <Button className="button marbles" onClick={downloadMarbles} variant="outlined">
         Скачать шары
       </Button>

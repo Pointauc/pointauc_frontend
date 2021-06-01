@@ -8,5 +8,9 @@
 
   &:disabled {
     background-color: #746d67 !important;
+
+    .da path {
+      fill: #c4bbb4;
+    }
   }
 }

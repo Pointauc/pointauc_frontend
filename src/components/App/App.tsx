@@ -79,17 +79,20 @@ const App: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(hasToken);
 
-  const reconnectToServer = useCallback(async () => {
-    try {
-      await axios.get('api/isAlive');
+  const reconnectToServer = useCallback(
+    async (showSuccessMessage?: boolean) => {
+      try {
+        await axios.get('api/isAlive');
 
-      dispatch(connectToServer());
-    } catch (e) {
-      setTimeout(() => {
-        (async (): Promise<void> => reconnectToServer())();
-      }, 1000 * 3);
-    }
-  }, [dispatch]);
+        dispatch(connectToServer(showSuccessMessage));
+      } catch (e) {
+        setTimeout(() => {
+          (async (): Promise<void> => reconnectToServer(true))();
+        }, 1000 * 3);
+      }
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     if (username && !webSocket) {
