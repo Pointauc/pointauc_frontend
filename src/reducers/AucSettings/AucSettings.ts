@@ -18,6 +18,8 @@ export interface SettingFields {
   showChances?: boolean;
   isMaxTimeActive?: boolean;
   maxTime?: number;
+  newSlotIncrement?: number;
+  isNewSlotIncrement?: boolean;
 }
 
 export interface ViewSettings {
@@ -72,6 +74,8 @@ export const initialState: AucSettingsState = {
     showChances: false,
     maxTime: 15,
     isMaxTimeActive: false,
+    newSlotIncrement: 60,
+    isNewSlotIncrement: false,
   },
   integration: {
     twitch: {

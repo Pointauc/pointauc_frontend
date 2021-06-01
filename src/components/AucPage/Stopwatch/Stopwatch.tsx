@@ -28,7 +28,16 @@ const Stopwatch: React.FC = () => {
     twitch: { actual: actualTwitchSub, loading: loadingTwitchSub },
   } = useSelector((root: RootState) => root.subscription);
   const {
-    settings: { startTime, timeStep, isAutoincrementActive, autoincrementTime, maxTime = 15, isMaxTimeActive },
+    settings: {
+      startTime,
+      timeStep,
+      isAutoincrementActive,
+      autoincrementTime,
+      maxTime = 15,
+      isMaxTimeActive,
+      isNewSlotIncrement,
+      newSlotIncrement,
+    },
     integration: {
       twitch: { dynamicRewards },
       da,
@@ -40,6 +49,7 @@ const Stopwatch: React.FC = () => {
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
   const [isStopwatchChanged, setIsStopwatchChanged] = useState<boolean>(false);
+  const previousSlotsLength = useRef(1);
   const time = useRef<number>(defaultTime);
   const frameId = useRef<number>();
   const prevTimestamp = useRef<number>();
@@ -115,6 +125,14 @@ const Stopwatch: React.FC = () => {
   }, [handleDonation, webSocket]);
 
   useEffect(() => updateStopwatch(), [updateStopwatch]);
+
+  useEffect(() => {
+    if (slots.length > previousSlotsLength.current && isNewSlotIncrement) {
+      autoUpdateTimer(Number(newSlotIncrement) * 1000);
+    }
+
+    previousSlotsLength.current = slots.length;
+  }, [autoUpdateTimer, isNewSlotIncrement, newSlotIncrement, slots.length]);
 
   const updateTimeOnFrame = (timestamp: number): void => {
     if (prevTimestamp.current) {
