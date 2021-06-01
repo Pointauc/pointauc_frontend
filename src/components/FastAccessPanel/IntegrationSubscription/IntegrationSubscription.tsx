@@ -49,16 +49,16 @@ const IntegrationSubscription: FC = () => {
           <div className="row">
             <TwitchSvg className="base-icon twitch" />
             <span className="label">Twitch</span>
-            <Switch onChange={subscribeTwitch} disabled={!hasDAAuth || twitchLoading} checked={isSubscribedTwitch} />
+            <Switch onChange={subscribeTwitch} disabled={twitchLoading} checked={isSubscribedTwitch} />
           </div>
         ) : (
           <TwitchLoginButton />
         )}
-        {username ? (
+        {username && hasDAAuth ? (
           <div className="row">
             <DASvg className="base-icon da" />
             <span className="label">Donation Alerts</span>
-            <Switch onChange={subscribeDA} disabled={!hasDAAuth || loading} checked={isSubscribedDA} />
+            <Switch onChange={subscribeDA} disabled={loading} checked={isSubscribedDA} />
           </div>
         ) : (
           <DALoginButton />
