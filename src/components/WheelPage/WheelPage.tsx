@@ -16,15 +16,20 @@ import withLoading from '../../decorators/withLoading';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
-  const [activeEmote, setActiveEmote] = useState<string | undefined>(undefined);
+  const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(20);
   const [dropout, setDropout] = useState<boolean>(false);
   const [rawItems, setRawItems] = useState<Slot[]>(slots);
   const [dropoutRate, setDropoutRate] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
-  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(false);
+  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(true);
   const totalSize = useMemo(() => rawItems.reduce((acc, { amount }) => acc + (amount || 1), 0), [rawItems]);
+
+  const handleEmoteChange = useCallback((emote: string) => {
+    localStorage.setItem('wheelEmote', emote);
+    setActiveEmote(emote);
+  }, []);
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -154,7 +159,7 @@ const WheelPage: FC = () => {
         <div className="wheel-controls-row">
           <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
         </div>
-        <TwitchEmotesList setActiveEmote={setActiveEmote} />
+        <TwitchEmotesList setActiveEmote={handleEmoteChange} />
       </div>
     </PageContainer>
   );
