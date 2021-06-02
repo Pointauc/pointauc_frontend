@@ -65,11 +65,10 @@ const useWheel = ({
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
-  const getReverseSize = useCallback((size: number) => (1 - size / totalSize) ** (rawItems.length * dropoutRate), [
-    dropoutRate,
-    rawItems.length,
-    totalSize,
-  ]);
+  const getReverseSize = useCallback(
+    (size: number) => (1 - size / totalSize) ** (Math.log(rawItems.length) * dropoutRate),
+    [dropoutRate, rawItems.length, totalSize],
+  );
 
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
