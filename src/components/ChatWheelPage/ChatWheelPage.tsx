@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import tmi, { Badges, ChatUserstate } from 'tmi.js';
 import { useParams } from 'react-router';
-import { CHAT_WHEEL_PREFIX, WheelCommand } from '../../constants/chatWheel.constants';
+import { CHAT_WHEEL_PREFIX, WheelCommand } from '../../constants/wheel';
 import { WheelItem } from '../../models/wheel.model';
 import useWheel from '../../hooks/useWheel';
 import { getWheelColor } from '../../utils/common.utils';

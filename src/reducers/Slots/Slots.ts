@@ -29,17 +29,18 @@ const createSlot = (props: Partial<Slot> = {}): Slot => {
   return slot;
 };
 
-export const createRandomSlots = (): Slot[] =>
-  Array(100)
+export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =>
+  Array(count)
     .fill(null)
     .map(() => {
-      const amount = getRandomIntInclusive(1, 100000);
+      const amount = getRandomIntInclusive(min, max);
 
       return createSlot({ amount, name: amount.toString() });
     });
 
 const initialState: SlotsState = {
   slots: [createSlot()],
+  // slots: [...new Array(6).fill(null).map(() => createSlot({ amount: 100, name: '100' }))],
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);

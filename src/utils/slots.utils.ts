@@ -16,3 +16,7 @@ export const parseSlotsPreset = (text: string): Slot[] => {
     .split('\n')
     .map<Slot>((value, id) => ({ fastId: id, id: id.toString(), name: value, amount: 1, extra: null }));
 };
+
+export const getTotalSize = (slots: Slot[]): number => slots.reduce((accum, { amount }) => accum + Number(amount), 0);
+
+export const getSlot = (slots: Slot[], slotId: string): Slot | undefined => slots.find(({ id }) => id === slotId);
