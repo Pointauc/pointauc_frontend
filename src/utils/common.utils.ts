@@ -53,12 +53,6 @@ export const getWheelColor = (): string => COLORS.WHEEL[Math.floor(Math.random()
 
 export const toPercents = (value: number): string => `${value}%`;
 
-export const formatPercents = (value: number): string => `${Math.round(value * 100)}%`;
-
-export const formatDegree = (value: number): string => `${value}°`;
-
-export const formatSeconds = (value: number): string => `${value}c.`;
-
 export const getDirtyValues = <T extends FieldValues>(
   values: T,
   dirtyFields: FieldNamesMarkedBoolean<T> = {},
@@ -98,10 +92,6 @@ export const loadFile = (filename: string, data: string): void => {
 
 export const getRandomIntInclusive = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-export const getRandomInclusive = (min: number, max: number): number => {
-  return Math.random() * (max - min + 1) + min;
 };
 
 export const fitText = (text: string, maxLength: number): string =>

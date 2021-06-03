@@ -5,8 +5,6 @@ import CustomEase from '../utils/CustomEase';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 import pradenW from '../assets/img/pradenW.png';
 import { fitText, shuffle } from '../utils/common.utils';
-import SpinPaceService, { RandomPaceConfig } from '../services/SpinPaceService';
-import { SPIN_PATH } from '../constants/wheel';
 
 interface WheelResult {
   wheelComponent: ReactNode;
@@ -20,7 +18,6 @@ interface WheelConfig {
   spinTime?: number;
   dropout?: boolean;
   dropoutRate?: number;
-  randomPaceConfig?: RandomPaceConfig;
 }
 
 window.gsap = gsap;
@@ -53,7 +50,6 @@ const useWheel = ({
   onWin,
   spinTime = 20,
   dropoutRate = 1,
-  randomPaceConfig,
 }: WheelConfig): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wheelSelector = useRef<HTMLCanvasElement>(null);
@@ -69,11 +65,10 @@ const useWheel = ({
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
-  const getReverseSize = useCallback((size: number) => (1 - size / totalSize) ** (rawItems.length * dropoutRate), [
-    dropoutRate,
-    rawItems.length,
-    totalSize,
-  ]);
+  const getReverseSize = useCallback(
+    (size: number) => (1 - size / totalSize) ** (Math.log(rawItems.length) * dropoutRate),
+    [dropoutRate, rawItems.length, totalSize],
+  );
 
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
@@ -163,45 +158,29 @@ const useWheel = ({
     }
   };
 
-  const getWinner = (previousRotate: number, nextRotate: number, progress = 1): WheelItemWithAngle | undefined => {
+  const onWheelSpin = (previousRotate: number, nextRotate: number, progress: number): void => {
     const currentRotate = previousRotate + nextRotate * progress;
     const angle = getWheelAngle(currentRotate);
-
-    return normalizedRef.current.find(({ startAngle, endAngle }) => angle >= startAngle && angle <= endAngle);
-  };
-
-  const onWheelSpin = (previousRotate: number, nextRotate: number, progress: number): void => {
-    const winner = getWinner(previousRotate, nextRotate, progress);
+    const winner = normalizedRef.current.find(({ startAngle, endAngle }) => angle >= startAngle && angle <= endAngle);
 
     if (!winner || !spinTarget.current) {
       return;
     }
 
-    spinTarget.current.innerHTML = winner.name;
-  };
-
-  const handleWin = (previousRotate: number, nextRotate: number): void => {
-    const winner = getWinner(previousRotate, nextRotate);
-
-    if (winner && spinTarget.current) {
+    if (progress === 1) {
       onWin(winner);
       setWinnerItem(winner);
-      spinTarget.current.innerHTML = winner.name;
     }
+    spinTarget.current.innerHTML = winner.name;
   };
 
   const animateWheel = (previousRotate: number, nextRotate: number): void => {
     if (canvas.current) {
-      const wheelPath = randomPaceConfig
-        ? new SpinPaceService(randomPaceConfig, 230 * spinTime, spinTime).createPath()
-        : SPIN_PATH;
-      console.log(wheelPath);
       gsap.to(canvas.current, {
         duration: spinTime,
-        ease: CustomEase.create('custom', wheelPath, {
+        ease: CustomEase.create('custom', 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1', {
           onUpdate: onWheelSpin.bind(undefined, previousRotate, nextRotate - previousRotate),
         }),
-        onComplete: handleWin.bind(undefined, previousRotate, nextRotate - previousRotate),
         rotate: nextRotate,
       });
     }
