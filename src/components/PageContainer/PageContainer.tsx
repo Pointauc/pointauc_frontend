@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Container, ContainerProps, createStyles, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
+import './PageContainer.scss';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -24,7 +25,7 @@ const PageContainer: FC<PgeContainerProps> = ({ title, children, className, ...p
   const classes = useStyles();
 
   return (
-    <Container className={classNames(classes.root, className)} style={{ maxWidth: '95%' }} {...props}>
+    <Container className={classNames(classes.root, className, 'page-container')} style={{ maxWidth: '95%' }} {...props}>
       {!!title && <Typography variant="h3">{title}</Typography>}
       {children}
     </Container>

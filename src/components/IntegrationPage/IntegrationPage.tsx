@@ -44,11 +44,11 @@ const IntegrationPage: FC = () => {
   const onSubmit = useCallback(
     (data) =>
       withLoading(setIsSubmitting, async () => {
+        dispatch(setIntegration(data));
+
         if (username) {
           await updateIntegration(getDirtyIntegration(data));
         }
-
-        return dispatch(setIntegration(data));
       })(),
     [dispatch, getDirtyIntegration, username],
   );

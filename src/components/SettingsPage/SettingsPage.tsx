@@ -38,11 +38,11 @@ const SettingsPage: FC = () => {
   const onSubmit = useCallback(
     (data) =>
       withLoading(setIsSubmitting, async () => {
+        dispatch(setAucSettings(data));
+
         if (username) {
           await updateSettings(getDirtyValues(data, dirtyFields, initialState.settings));
         }
-
-        return dispatch(setAucSettings(data));
       })(),
     [dirtyFields, dispatch, username],
   );

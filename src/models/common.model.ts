@@ -23,3 +23,8 @@ export interface DragPosition {
 export enum LocalStorageEnum {
   Slots = 'slots',
 }
+
+export interface Paragraph {
+  title: string;
+  key: string;
+}

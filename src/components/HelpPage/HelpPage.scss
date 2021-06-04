@@ -1,4 +1,8 @@
 .help-page {
+  .content {
+    display: flex;
+    align-items: start;
+  }
   .MuiTypography-body1 {
     max-width: 800px;
     font-size: 19px;

@@ -15,6 +15,7 @@ import {
   Link,
 } from '@material-ui/core';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
+import { Link as RouteLink } from 'react-router-dom';
 import { setUsername } from '../../reducers/User/User';
 import { LINE_BREAK, USERNAME_COOKIE_KEY } from '../../constants/common.constants';
 import { resetSlots, setSlots } from '../../reducers/Slots/Slots';
@@ -25,6 +26,7 @@ import { Slot } from '../../models/slot.model';
 import MockBidForm from './MockBidForm/MockBidForm';
 import { LocalStorageEnum } from '../../models/common.model';
 import { setCompact } from '../../reducers/AucSettings/AucSettings';
+import ROUTES from '../../constants/routes.constants';
 
 const isProd = isProduction();
 
@@ -105,6 +107,11 @@ const AucActions: React.FC = () => {
         className="save-current-slots"
       />
       {/* <ServerStatus /> */}
+      <RouteLink to={ROUTES.HELP}>
+        <Button className="button" variant="outlined">
+          Гайд
+        </Button>
+      </RouteLink>
       <Button className="button marbles" onClick={downloadMarbles} variant="outlined">
         Скачать шары
       </Button>

@@ -15,7 +15,7 @@ const MENU_ITEMS: MenuItem[] = [
   { title: 'Колесо рандома', IconComponent: WheelSvg, path: ROUTES.WHEEL },
   { title: 'Статистика', IconComponent: EqualizerIcon, path: ROUTES.STATISTIC },
   { title: 'История', IconComponent: AssignmentIcon, path: ROUTES.HISTORY },
-  { title: 'Справка', IconComponent: HelpIcon, path: ROUTES.HELP },
+  { title: 'Гайд', IconComponent: HelpIcon, path: ROUTES.HELP },
 ];
 
 export default MENU_ITEMS;
