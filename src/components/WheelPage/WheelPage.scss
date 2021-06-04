@@ -25,8 +25,21 @@
     font-size: 1.1rem !important;
     top: 8px;
 
+    &.hint {
+      width: 370px;
+      font-size: 14px !important;
+      top: 2px;
+    }
+
     &.md {
       width: 210px;
+      font-size: 16px;
+      align-self: start;
+      margin-bottom: 10px;
+    }
+
+    &.lg {
+      width: 330px;
       font-size: 16px;
       align-self: start;
       margin-bottom: 10px;
