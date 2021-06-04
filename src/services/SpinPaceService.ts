@@ -12,7 +12,7 @@ export interface Point {
   y: number;
 }
 
-const initialCurve = 'M0,0,C0.083,0.294,0.182,0.718,0.448,0.908,0.579,1.001';
+const initialCurve = 'M0,0,C0.102,0.044,0.182,0.718,0.448,0.908,0.579,1.001';
 // const initialPoints: Point[] = [{ x: 0.448, y: 0.908 }];
 
 class SpinPaceService {

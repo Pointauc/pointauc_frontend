@@ -9,7 +9,7 @@ export enum WheelCommand {
 
 export const CHAT_WHEEL_PREFIX = '!w';
 
-export const SPIN_PATH = 'M0,0,C0.102,0.044,0.157,0.377,0.198,0.554,0.33,1,0.604,1,1,1';
+export const SPIN_PATH = 'M0,0,C0.102,0.044,0.171,0.365,0.212,0.542,0.344,0.988,0.808,1,1,1';
 
 export const PACE_PRESETS: Record<string, RandomPaceConfig> = {
   suddenFinal: {

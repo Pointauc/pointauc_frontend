@@ -224,7 +224,7 @@ const WheelPage: FC = () => {
         </div>
         {dropout && <Typography>{`Осталось: ${wheelItems.length}`}</Typography>}
         <div className="wheel-controls-row">
-          <Typography>Докрут колеса</Typography>
+          <Typography>Рандомный докрут</Typography>
           <Switch onChange={handleIsRandomPaceChange} />
         </div>
         {isRandomPace && <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />}
