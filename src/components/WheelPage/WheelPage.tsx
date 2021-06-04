@@ -222,6 +222,7 @@ const WheelPage: FC = () => {
           <Typography>Колесо на выбывание</Typography>
           <Switch onChange={handleDropoutChange} />
         </div>
+        {dropout && <Typography>{`Осталось: ${wheelItems.length}`}</Typography>}
         <div className="wheel-controls-row">
           <Typography>Докрут колеса</Typography>
           <Switch onChange={handleIsRandomPaceChange} />
