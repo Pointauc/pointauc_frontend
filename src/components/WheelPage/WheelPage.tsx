@@ -72,13 +72,15 @@ const WheelPage: FC = () => {
 
   const handleSpin = useCallback(async () => {
     let seed: number | undefined;
+    const size = totalSize > 720 ? totalSize : totalSize * 720;
 
     if (useRandomOrg) {
-      seed = await withLoading(setIsLoadingSeed, getRandomNumber)(1, totalSize);
+      seed = await withLoading(setIsLoadingSeed, getRandomNumber)(1, size);
     }
 
     setIsSpinning(true);
-    spin(seed);
+
+    spin(seed && seed / size);
   }, [spin, totalSize, useRandomOrg]);
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {

@@ -188,7 +188,7 @@ const useWheel = ({
 
   const spin = (seed?: number | null): void => {
     setWinnerItem(undefined);
-    const winningSeed = seed ? seed / totalSize : Math.random();
+    const winningSeed = seed || Math.random();
     const randomSpin = winningSeed * 360;
     const nextRotate = rotate + 230 * spinTime + randomSpin;
     animateWheel(rotate, nextRotate);
