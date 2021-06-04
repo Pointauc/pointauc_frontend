@@ -3,7 +3,10 @@
 .compact-view {
   display: flex;
   flex-wrap: wrap;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.23);
+
+  .MuiGrid-item:last-child .slot-wrapper{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.23);
+  }
 
   .slot-wrapper {
     display: flex;
@@ -27,10 +30,14 @@
       border-radius: 0;
       align-items: center;
 
-      .PrivateNotchedOutline-root-8 {
+      &-input {
         border: none;
         border-left: 1px solid rgba(255, 255, 255, 0.23);
         border-radius: 0;
+      }
+
+      .PrivateNotchedOutline-root-8 {
+        border: none;
       }
 
       input {

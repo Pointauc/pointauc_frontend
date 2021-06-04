@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Checkbox, FormControlLabel, Slider, Switch, TextField, Typography } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Slider, Switch, Tab, TextField, Typography } from '@material-ui/core';
 import PageContainer from '../PageContainer/PageContainer';
 import useWheel from '../../hooks/useWheel';
 import { RootState } from '../../reducers';
@@ -107,6 +107,7 @@ const WheelPage: FC = () => {
 
   return (
     <PageContainer title="Колесо">
+      <Tab />
       <div>{wheelComponent}</div>
       <div className="wheel-controls">
         <div className="wheel-controls-row">
