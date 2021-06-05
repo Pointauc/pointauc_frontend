@@ -37,3 +37,7 @@ export const YOUTUBE_API_KEYS = [
   'AIzaSyD0WjHt1tEIzdYLWSbcArCXTdBbDvyxDMk',
   'AIzaSyAbkUdit9z4zGiSmXtYAuBoJYKMDeZ6rSM',
 ];
+
+export enum LocalStorage {
+  SaveConfig = 'saveConfig',
+}

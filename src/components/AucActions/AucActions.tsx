@@ -6,9 +6,7 @@ import {
   Button,
   Checkbox,
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControlLabel,
   IconButton,
@@ -18,15 +16,15 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import { Link as RouteLink } from 'react-router-dom';
 import { setUsername } from '../../reducers/User/User';
 import { LINE_BREAK, USERNAME_COOKIE_KEY } from '../../constants/common.constants';
-import { resetSlots, setSlots } from '../../reducers/Slots/Slots';
+import { resetSlots } from '../../reducers/Slots/Slots';
 import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import { isProduction, loadFile } from '../../utils/common.utils';
 import { RootState } from '../../reducers';
 import { Slot } from '../../models/slot.model';
 import MockBidForm from './MockBidForm/MockBidForm';
-import { LocalStorageEnum } from '../../models/common.model';
 import { setCompact } from '../../reducers/AucSettings/AucSettings';
 import ROUTES from '../../constants/routes.constants';
+import SaveLoad from '../SaveLoad/SaveLoad';
 
 const isProd = isProduction();
 
@@ -39,7 +37,6 @@ const AucActions: React.FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const { compact } = useSelector((root: RootState) => root.aucSettings.view);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
-  const [saveCurrentSlots, setSaveCurrentSlots] = useState<boolean>(false);
 
   const handleResetSlots = (): void => {
     dispatch(resetSlots());
@@ -63,22 +60,6 @@ const AucActions: React.FC = () => {
 
   const handleRestoreClose = useCallback(() => {
     setConfirmRestoreOpen(false);
-    setSaveCurrentSlots(false);
-  }, []);
-
-  const restoreSlots = useCallback(() => {
-    const nextSlots = JSON.parse(localStorage.getItem(LocalStorageEnum.Slots) || '[]');
-
-    if (saveCurrentSlots) {
-      localStorage.setItem(LocalStorageEnum.Slots, JSON.stringify(slots));
-    }
-
-    dispatch(setSlots(nextSlots));
-    handleRestoreClose();
-  }, [dispatch, handleRestoreClose, saveCurrentSlots, slots]);
-
-  const handleCheck = useCallback((event, checked: boolean) => {
-    setSaveCurrentSlots(checked);
   }, []);
 
   const handleSetCompact = useCallback(
@@ -116,28 +97,20 @@ const AucActions: React.FC = () => {
         Скачать шары
       </Button>
       <Button className="button restore" onClick={handleRestoreOpen} variant="outlined">
-        Восстановить лоты
+        Сохранение/загрузка
       </Button>
       {!isProd && <MockBidForm />}
-      <Dialog open={confirmRestoreOpen} onClose={handleRestoreClose} className="confirm-restore">
-        <DialogTitle>Внимание</DialogTitle>
-        <DialogContent dividers>
-          <DialogContentText>
-            Текущие лоты будут перезаписаны сохраненной версией, которая была перед прошлым закрытием/обновлением
-            страницы.
-          </DialogContentText>
+      <Dialog
+        open={confirmRestoreOpen}
+        onClose={handleRestoreClose}
+        className="confirm-restore"
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Ваши сохранения</DialogTitle>
+        <DialogContent dividers className="content">
+          <SaveLoad />
         </DialogContent>
-        <DialogActions>
-          <FormControlLabel
-            control={<Checkbox checked={saveCurrentSlots} onChange={handleCheck} color="primary" />}
-            label="Сохранить текущие лоты"
-            className="save-current-slots"
-          />
-          <Button onClick={handleRestoreClose}>Отменить</Button>
-          <Button color="primary" onClick={restoreSlots}>
-            Перезаписать
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

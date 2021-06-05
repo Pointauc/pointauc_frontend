@@ -19,7 +19,7 @@ import ChatWheelPage from './components/ChatWheelPage/ChatWheelPage';
 import { theme } from './constants/theme.constants';
 import NewDomainRedirect from './components/NewDomainRedirect/NewDomainRedirect';
 import history from './constants/history';
-import { LocalStorageEnum } from './models/common.model';
+import SaveLoadService from './services/SaveLoadService';
 
 dayjs.locale('ru');
 
@@ -50,7 +50,7 @@ window.onbeforeunload = (): undefined => {
   const { slots } = store.getState().slots;
 
   if (slots.length > 1) {
-    localStorage.setItem(LocalStorageEnum.Slots, JSON.stringify(slots));
+    SaveLoadService.rewrite(slots, 'Автосохранение');
   }
 
   return undefined;
