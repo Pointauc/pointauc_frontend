@@ -10,8 +10,6 @@ import PauseIcon from '@material-ui/icons/Pause';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { RootState } from '../../../reducers';
-import { setNotification } from '../../../reducers/notifications/notifications';
-import { DEFAULT_SLOT_NAME } from '../../../constants/slots.constants';
 import { Slot } from '../../../models/slot.model';
 import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
@@ -77,22 +75,19 @@ const Stopwatch: React.FC = () => {
   }, [slots]);
   const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 
-  const updateStopwatch = useCallback(
-    (timeDifference = 0): void => {
-      if (stopwatchElement.current) {
-        time.current += timeDifference;
-        if (time.current < 0) {
-          time.current = 0;
-          setIsStopped(true);
-          setIsStopwatchChanged(true);
-          const { name } = winnerRef.current || {};
-          dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
-        }
-        stopwatchElement.current.innerHTML = dayjs(time.current).format(STOPWATCH.FORMAT).slice(0, -1);
+  const updateStopwatch = useCallback((timeDifference = 0): void => {
+    if (stopwatchElement.current) {
+      time.current += timeDifference;
+      if (time.current < 0) {
+        time.current = 0;
+        setIsStopped(true);
+        setIsStopwatchChanged(true);
+        // const { name } = winnerRef.current || {};
+        // dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
       }
-    },
-    [dispatch],
-  );
+      stopwatchElement.current.innerHTML = dayjs(time.current).format(STOPWATCH.FORMAT).slice(0, -1);
+    }
+  }, []);
 
   const autoUpdateTimer = useCallback(
     (timeChange: number) => {

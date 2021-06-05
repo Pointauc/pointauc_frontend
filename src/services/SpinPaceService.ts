@@ -12,9 +12,8 @@ export interface Point {
   y: number;
 }
 
-const initialCurve = 'M0,0,C0.102,0.044,0.182,0.718,0.448,0.908,0.579,1.001';
+const initialCurve = 'M0,0,C0.104,0.204';
 // const initialPoints: Point[] = [{ x: 0.448, y: 0.908 }];
-
 class SpinPaceService {
   config: RandomPaceConfig;
   path = initialCurve;
@@ -23,7 +22,7 @@ class SpinPaceService {
     this.config = { ...config, valueRandomZone: valueRandomZone / rotation, randomOffset: randomOffset / spinTime };
   }
 
-  getInitialCurvePoint = (progress: number): number => 1 - (1 - progress) ** 4;
+  getInitialCurvePoint = (progress: number): number => 1 - (1 - progress) ** 2;
 
   addStartPoint = (): void => {
     const { randomOffset } = this.config;
@@ -32,7 +31,7 @@ class SpinPaceService {
 
     this.points.push({ x, y });
 
-    this.path = `${this.path},${1 - randomOffset - (1 - randomOffset - 0.448) / 3},${y},${x},${y}`;
+    this.path = `${this.path},${1 - randomOffset - (1 - randomOffset) / 2},${y - (1 - y) * 2},${x},${y}`;
   };
 
   addPoint = (): void => {
