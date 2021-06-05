@@ -190,21 +190,26 @@ const useWheel = ({
     }
   };
 
-  const animateWheel = (previousRotate: number, nextRotate: number): void => {
+  const animateWheel = (previousRotate: number, nextRotate: number): number => {
     if (canvas.current) {
       const wheelPath = randomPaceConfig
         ? new SpinPaceService(randomPaceConfig, 230 * spinTime, spinTime).createPath()
         : SPIN_PATH;
-      console.log(wheelPath);
+      const realSpinChange = Number(wheelPath.split(',').splice(-1, 1)[0]) * (nextRotate - previousRotate);
+
       gsap.to(canvas.current, {
         duration: spinTime,
         ease: CustomEase.create('custom', wheelPath, {
           onUpdate: onWheelSpin.bind(undefined, previousRotate, nextRotate - previousRotate),
         }),
-        onComplete: handleWin.bind(undefined, previousRotate, nextRotate - previousRotate),
+        onComplete: handleWin.bind(undefined, previousRotate, realSpinChange),
         rotate: nextRotate,
       });
+
+      return previousRotate + realSpinChange;
     }
+
+    return 0;
   };
 
   const spin = (seed?: number | null): void => {
@@ -212,8 +217,8 @@ const useWheel = ({
     const winningSeed = seed || Math.random();
     const randomSpin = winningSeed * 360;
     const nextRotate = rotate + 230 * spinTime + randomSpin;
-    animateWheel(rotate, nextRotate);
-    setRotate(nextRotate);
+    const correctNextRotate = animateWheel(rotate, nextRotate);
+    setRotate(correctNextRotate);
   };
 
   const drawWheel = (): void => {

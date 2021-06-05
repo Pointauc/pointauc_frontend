@@ -227,6 +227,7 @@ const WheelPage: FC = () => {
           <Typography>Рандомный докрут</Typography>
           <Switch onChange={handleIsRandomPaceChange} />
         </div>
+        <Typography className="wheel-controls-tip hint">ТЕПЕРЬ ЭТО АБСОЛЮТНО ТОЧНО РАБОТАЕТ</Typography>
         {isRandomPace && <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />}
 
         {/* <div className="wheel-controls-row"> */}
