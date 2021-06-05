@@ -1,66 +1,96 @@
 @import "../../styles/colors";
 
-.wheel-controls {
-  position: absolute;
-  left: 65%;
-  color: $grey-2;
+.wheel-wrapper {
+  display: flex !important;
+  //padding-bottom: 0 !important;
+  //padding-right: 0 !important;
+  max-width: 100% !important;
+  padding-left: 50px !important;
+  margin: 0 !important;
+  flex-direction: column;
 
-  &-button {
-    height: 40px;
-  }
-
-  &-row {
+  .content {
     display: flex;
-    align-items: center;
-  }
-
-  &-input {
-    margin-left: 15px !important;
-    margin-right: 5px !important;
-    width: 110px;
-  }
-
-  &-tip {
     position: relative;
-    font-size: 1.1rem !important;
-    top: 8px;
+    flex-grow: 1;
+    overflow-y: hidden;
+    width: 100%;
+  }
 
-    &.hint {
+  .wheel-controls {
+    color: $grey-2;
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+
+    .settings {
+      display: flex;
       width: 370px;
-      font-size: 14px !important;
-      top: 0;
+      flex-direction: column;
+      margin-right: 20px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
     }
 
-    &.md {
-      width: 210px;
-      font-size: 16px;
-      align-self: start;
-      margin-bottom: 10px;
+    &-button {
+      height: 40px;
     }
 
-    &.lg {
-      width: 330px;
-      font-size: 16px;
-      align-self: start;
-      margin-bottom: 10px;
+    &-row {
+      display: flex;
+      align-items: center;
     }
 
-    &.low {
-      font-size: 16px;
-      display: block;
+    &-input {
+      margin-left: 15px !important;
+      margin-right: 5px !important;
+      width: 110px;
     }
-  }
 
-  .MuiSlider-valueLabel {
-    font-weight: 400;
-  }
+    &-tip {
+      position: relative;
+      font-size: 1.1rem !important;
+      top: 8px;
 
-  &-checkbox {
-    .MuiFormControlLabel-label {
-      margin-top: 3px;
+      &.hint {
+        width: 100%;
+        font-size: 14px !important;
+        top: 0;
+      }
+
+      &.md {
+        width: 210px;
+        font-size: 16px;
+        align-self: start;
+        margin-bottom: 10px;
+      }
+
+      &.lg {
+        width: 330px;
+        font-size: 16px;
+        align-self: start;
+        margin-bottom: 10px;
+      }
+
+      &.low {
+        font-size: 16px;
+        display: block;
+      }
+    }
+
+    .MuiSlider-valueLabel {
       font-weight: 400;
-      font-size: 1rem;
-      letter-spacing: normal;
+    }
+
+    &-checkbox {
+      .MuiFormControlLabel-label {
+        margin-top: 3px;
+        font-weight: 400;
+        font-size: 1rem;
+        letter-spacing: normal;
+      }
     }
   }
 }

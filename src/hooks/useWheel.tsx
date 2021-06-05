@@ -10,7 +10,7 @@ import { SPIN_PATH } from '../constants/wheel';
 
 interface WheelResult {
   wheelComponent: ReactNode;
-  spin: (seed?: number) => void;
+  spin: (seed?: number, paceConfig?: RandomPaceConfig) => void;
 }
 
 interface WheelConfig {
@@ -53,7 +53,6 @@ const useWheel = ({
   onWin,
   spinTime = 20,
   dropoutRate = 1,
-  randomPaceConfig,
 }: WheelConfig): WheelResult => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const wheelSelector = useRef<HTMLCanvasElement>(null);
@@ -155,10 +154,10 @@ const useWheel = ({
 
   const resizeCanvas = (canvasElement: HTMLCanvasElement | null): void => {
     if (wrapper.current && canvasElement) {
-      const canvasSize = Math.min(wrapper.current.clientHeight, wrapper.current.clientWidth) + 8;
-
+      const canvasSize = Math.max(wrapper.current.clientHeight, wrapper.current.clientWidth) + 8 - 72;
       canvasElement.height = canvasSize;
       canvasElement.width = canvasSize;
+      wrapper.current.style.width = `${canvasSize}px`;
       setOffset(canvasSize);
     }
   };
@@ -190,11 +189,9 @@ const useWheel = ({
     }
   };
 
-  const animateWheel = (previousRotate: number, nextRotate: number): number => {
+  const animateWheel = (previousRotate: number, nextRotate: number, paceConfig?: RandomPaceConfig): number => {
     if (canvas.current) {
-      const wheelPath = randomPaceConfig
-        ? new SpinPaceService(randomPaceConfig, 270 * spinTime, spinTime).createPath()
-        : SPIN_PATH;
+      const wheelPath = paceConfig ? new SpinPaceService(paceConfig, 270 * spinTime, spinTime).createPath() : SPIN_PATH;
       const realSpinChange = Number(wheelPath.split(',').splice(-1, 1)[0]) * (nextRotate - previousRotate);
       console.log(wheelPath);
       gsap.to(canvas.current, {
@@ -212,12 +209,12 @@ const useWheel = ({
     return 0;
   };
 
-  const spin = (seed?: number | null): void => {
+  const spin = (seed?: number | null, paceConfig?: RandomPaceConfig): void => {
     setWinnerItem(undefined);
     const winningSeed = seed || Math.random();
     const randomSpin = winningSeed * 360;
-    const nextRotate = rotate + (randomPaceConfig ? 270 : 240) * spinTime + randomSpin;
-    const correctNextRotate = animateWheel(rotate, nextRotate);
+    const nextRotate = rotate + (paceConfig ? 270 : 240) * spinTime + randomSpin;
+    const correctNextRotate = animateWheel(rotate, nextRotate, paceConfig);
     setRotate(correctNextRotate);
   };
 
@@ -248,7 +245,7 @@ const useWheel = ({
   };
 
   useEffect(() => {
-    window.addEventListener('resize', updateWheel);
+    // window.addEventListener('resize', updateWheel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -272,7 +269,7 @@ const useWheel = ({
   }, [background, offset]);
 
   const wheelComponent = (
-    <div style={{ width: '80%', height: '80%', position: 'absolute' }} ref={wrapper}>
+    <div style={{ width: '0', height: '100%', display: 'inline-block', marginRight: 45 }} ref={wrapper}>
       <div style={{ width: offset }} className="wheel-target" ref={spinTarget}>
         Победитель
       </div>

@@ -2,10 +2,10 @@
 
 .emotes-container {
   width: 340px;
-  max-height: 50vh;
+  max-height: 65vh;
   overflow: auto;
   border: 2px solid $grey-8;
-  margin-top: 15px;
+  align-self: center;
 
   .emote-hint {
     margin: 30px;

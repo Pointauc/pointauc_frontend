@@ -58,4 +58,4 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
   );
 };
 
-export default TwitchEmotesList;
+export default React.memo(TwitchEmotesList);

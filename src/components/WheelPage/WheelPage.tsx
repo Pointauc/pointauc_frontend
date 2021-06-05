@@ -97,7 +97,6 @@ const WheelPage: FC = () => {
     spinTime,
     dropout,
     dropoutRate,
-    randomPaceConfig: isRandomPace ? paceConfig : undefined,
   });
 
   const handleSpin = useCallback(async () => {
@@ -110,8 +109,8 @@ const WheelPage: FC = () => {
 
     setIsSpinning(true);
 
-    spin(seed && seed / size);
-  }, [spin, totalSize, useRandomOrg]);
+    spin(seed && seed / size, isRandomPace ? paceConfig : undefined);
+  }, [isRandomPace, paceConfig, spin, totalSize, useRandomOrg]);
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSpinTime(Number(e.target.value));
@@ -153,90 +152,96 @@ const WheelPage: FC = () => {
   // }, [dropoutRate, slots]);
 
   return (
-    <PageContainer title="Колесо">
-      <div>{wheelComponent}</div>
-      <div className="wheel-controls">
-        <div className="wheel-controls-row">
-          <LoadingButton
-            isLoading={isLoadingSeed}
-            disabled={isSpinning || isLoadingSeed}
-            className="wheel-controls-button"
-            variant="contained"
-            color="primary"
-            onClick={handleSpin}
-          >
-            {isSpinning ? 'Крутимся...' : 'Крутить'}
-          </LoadingButton>
-          <TextField
-            className="wheel-controls-input"
-            variant="outlined"
-            margin="dense"
-            label="Длительность"
-            onChange={handleSpinTimeChange}
-            value={spinTime}
-          />
-          <Typography className="wheel-controls-tip">с.</Typography>
-        </div>
-        <FormControlLabel
-          control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
-          label="Использовать сервис random.org"
-          className="wheel-controls-checkbox"
-        />
-        <div className="wheel-controls-row">
-          <Typography className="wheel-controls-tip md">Коэф. наеба</Typography>
-          <Slider
-            defaultValue={1}
-            step={0.1}
-            min={0.1}
-            max={2}
-            valueLabelDisplay="auto"
-            onChange={handleDropoutRateChange}
-            marks={[
-              { value: 0.1, label: '0.1' },
-              { value: 1, label: '1' },
-              { value: 2, label: '2' },
-            ]}
-          />
-        </div>
-        <div className="wheel-controls-row">
-          <Typography className="wheel-controls-tip md">Разделить</Typography>
-          <Slider
-            defaultValue={maxValidValue}
-            step={1}
-            min={maxSize / 10}
-            max={maxSize}
-            valueLabelDisplay="auto"
-            onChange={handleMaxValueChange}
-            marks={[
-              { value: maxSize / 10, label: 'макс / 10' },
-              { value: maxSize, label: 'макс' },
-            ]}
-          />
-        </div>
-        <Typography className="wheel-controls-tip hint">
-          делит дорогие лоты на несколько позиций.
-          <br />
-          НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ
-        </Typography>
-        <div className="wheel-controls-row">
-          <Typography>Колесо на выбывание</Typography>
-          <Switch onChange={handleDropoutChange} />
-        </div>
-        {dropout && <Typography>{`Осталось: ${wheelItems.length}`}</Typography>}
-        <div className="wheel-controls-row">
-          <Typography>Рандомный докрут</Typography>
-          <Switch onChange={handleIsRandomPaceChange} />
-        </div>
-        <Typography className="wheel-controls-tip hint">ТЕПЕРЬ ЭТО АБСОЛЮТНО ТОЧНО РАБОТАЕТ</Typography>
-        {isRandomPace && <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />}
+    <PageContainer className="wheel-wrapper" title="Колесо">
+      <div className="content">
+        {wheelComponent}
+        <div className="wheel-controls">
+          <div className="settings">
+            <div className="wheel-controls-row">
+              <LoadingButton
+                isLoading={isLoadingSeed}
+                disabled={isSpinning || isLoadingSeed}
+                className="wheel-controls-button"
+                variant="contained"
+                color="primary"
+                onClick={handleSpin}
+              >
+                {isSpinning ? 'Крутимся...' : 'Крутить'}
+              </LoadingButton>
+              <TextField
+                className="wheel-controls-input"
+                variant="outlined"
+                margin="dense"
+                label="Длительность"
+                onChange={handleSpinTimeChange}
+                value={spinTime}
+              />
+              <Typography className="wheel-controls-tip">с.</Typography>
+            </div>
+            <FormControlLabel
+              control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
+              label="Использовать сервис random.org"
+              className="wheel-controls-checkbox"
+            />
+            <div className="wheel-controls-row">
+              <Typography className="wheel-controls-tip md">Коэф. наеба</Typography>
+              <Slider
+                defaultValue={1}
+                step={0.1}
+                min={0.1}
+                max={2}
+                valueLabelDisplay="auto"
+                onChange={handleDropoutRateChange}
+                marks={[
+                  { value: 0.1, label: '0.1' },
+                  { value: 1, label: '1' },
+                  { value: 2, label: '2' },
+                ]}
+              />
+            </div>
+            <div className="wheel-controls-row">
+              <Typography className="wheel-controls-tip md">Разделить</Typography>
+              <Slider
+                defaultValue={maxValidValue}
+                step={1}
+                min={maxSize / 10}
+                max={maxSize}
+                valueLabelDisplay="auto"
+                onChange={handleMaxValueChange}
+                marks={[
+                  { value: maxSize / 10, label: 'макс / 10' },
+                  { value: maxSize, label: 'макс' },
+                ]}
+              />
+            </div>
+            <Typography className="wheel-controls-tip hint">
+              делит дорогие лоты на несколько позиций.
+              <br />
+              НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ
+            </Typography>
+            <div className="wheel-controls-row">
+              <Typography>Колесо на выбывание</Typography>
+              <Switch onChange={handleDropoutChange} />
+            </div>
+            {dropout && <Typography>{`Осталось: ${wheelItems.length}`}</Typography>}
+            <div className="wheel-controls-row">
+              <Typography>Финал с перчинкой</Typography>
+              <Switch onChange={handleIsRandomPaceChange} />
+            </div>
+            <Typography className="wheel-controls-tip hint">ТЕПЕРЬ ЭТО АБСОЛЮТНО ТОЧНО РАБОТАЕТ</Typography>
+            {isRandomPace && <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />}
 
-        {/* <div className="wheel-controls-row"> */}
-        {/*  <Button onClick={handlePredictChances}>Рассчитать итоговые шансы на выбывание</Button> */}
-        {/* </div> */}
-        <div className="wheel-controls-row">
-          <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
+            {/* <div className="wheel-controls-row"> */}
+            {/*  <Button onClick={handlePredictChances}>Рассчитать итоговые шансы на выбывание</Button> */}
+            {/* </div> */}
+            <div className="wheel-controls-row" style={{ marginTop: 20 }}>
+              <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
+            </div>
+          </div>
+          <div className="settings">
+            <TwitchEmotesList setActiveEmote={handleEmoteChange} />
+          </div>
         </div>
-        <TwitchEmotesList setActiveEmote={handleEmoteChange} />
       </div>
     </PageContainer>
   );

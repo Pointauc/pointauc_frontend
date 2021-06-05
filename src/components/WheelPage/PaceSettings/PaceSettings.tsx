@@ -99,20 +99,17 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
         value={valueDisabledZone}
         step={0.01}
         min={0}
-        max={0.8}
+        max={0.7}
         valueLabelDisplay="auto"
         valueLabelFormat={formatPercents}
         onChange={handleDisabledZoneChange}
         marks={[
           { value: 0, label: '0%' },
-          { value: 0.8, label: '80%' },
+          { value: 0.7, label: '70%' },
         ]}
       />
       <Typography className="wheel-controls-tip hint">
-        Зона относительно прошлой точки, в которой не может быть зароллена дистанция.
-        <br />
-        То есть если макс дистанция 360, а заблокированная зона 50%, то дистанция докрута будет рандомится в пределах
-        180-360
+        Чем больше значение, тем ближе к макс дистанции будет рандомится докрут.
       </Typography>
     </>
   );
