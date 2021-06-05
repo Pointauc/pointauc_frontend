@@ -10,6 +10,7 @@ import { SPIN_PATH } from '../constants/wheel';
 
 interface WheelResult {
   wheelComponent: ReactNode;
+  clearWinner: () => void;
   spin: (seed?: number, paceConfig?: RandomPaceConfig) => void;
 }
 
@@ -254,6 +255,14 @@ const useWheel = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedItems]);
 
+  const clearWinner = useCallback(() => {
+    setWinnerItem(undefined);
+
+    if (spinTarget.current) {
+      spinTarget.current.innerHTML = 'Победитель';
+    }
+  }, []);
+
   const circleStyles: CSSProperties = useMemo(() => {
     const size = offset * 0.2;
     return {
@@ -269,11 +278,14 @@ const useWheel = ({
   }, [background, offset]);
 
   const wheelComponent = (
-    <div style={{ width: '0', height: '100%', display: 'inline-block', marginRight: 45 }} ref={wrapper}>
+    <div
+      style={{ width: '0', height: '100%', display: 'inline-block', marginRight: 45, pointerEvents: 'none' }}
+      ref={wrapper}
+    >
       <div style={{ width: offset }} className="wheel-target" ref={spinTarget}>
         Победитель
       </div>
-      <canvas style={{ position: 'absolute', zIndex: 100 }} ref={wheelSelector} />
+      <canvas style={{ position: 'absolute', zIndex: 1 }} ref={wheelSelector} />
       <canvas ref={canvas} />
       <div style={circleStyles} />
       {!!winnerItem && (
@@ -284,7 +296,7 @@ const useWheel = ({
     </div>
   );
 
-  return { spin, wheelComponent };
+  return { spin, wheelComponent, clearWinner };
 };
 
 export default useWheel;

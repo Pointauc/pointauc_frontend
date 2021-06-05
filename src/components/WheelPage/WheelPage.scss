@@ -8,6 +8,60 @@
   padding-left: 50px !important;
   margin: 0 !important;
   flex-direction: column;
+  padding-bottom: 0 !important;
+  position: relative;
+
+  .wheel-info-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bracket-wrapper {
+    margin-top: 10px;
+    width: 100%;
+    flex-basis: 50%;
+    //height: 50%;
+    max-width: 800px;
+    max-height: 50%;
+    //overflow: hidden;
+  }
+
+  .bracket-sub-wrapper {
+    position: relative;
+    height: 100%;
+    max-width: 95%;
+    max-height: 100%;
+    border-radius: 10px;
+    border: 2px solid $grey-4;
+    background-color: $grey-11;
+    overflow: hidden;
+
+    .hint {
+      position: absolute;
+      font-size: 14px;
+      left: 160px;
+      top: 10px;
+      font-weight: 400;
+    }
+
+    .fullscreen-button {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background-color: $grey-11;
+      z-index: 100;
+    }
+
+    &.fullscreen {
+      position: absolute;
+      height: 98%;
+      width: 100%;
+      max-height: 98%;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+  }
 
   .content {
     display: flex;
@@ -21,13 +75,14 @@
     color: $grey-2;
     display: flex;
     align-items: stretch;
-    height: 100%;
 
     .settings {
       display: flex;
       width: 370px;
       flex-direction: column;
-      margin-right: 20px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 0 15px;
 
       &:last-of-type {
         margin-right: 0;

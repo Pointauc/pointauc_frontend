@@ -59,6 +59,7 @@ const useStyles = makeStyles(() =>
       fontFamily: theme.typography.fontFamily,
       fontWeight: 300,
       minHeight: '100vh',
+      maxWidth: '100vw',
     },
     menuIcon: {
       width: 26,

@@ -1,4 +1,5 @@
 import { RandomPaceConfig } from '../services/SpinPaceService';
+import { Option } from '../components/RadioButtonGroup/RadioButtonGroup';
 
 export enum WheelCommand {
   OpenReg = 'openReg',
@@ -21,3 +22,15 @@ export const PACE_PRESETS: Record<string, RandomPaceConfig> = {
     points: 0,
   },
 };
+
+export enum WheelFormat {
+  Default,
+  Dropout,
+  BattleRoyal,
+}
+
+export const WHEEL_OPTIONS: Option[] = [
+  { key: WheelFormat.Default, value: 'Обычное' },
+  { key: WheelFormat.Dropout, value: 'Выбывание' },
+  { key: WheelFormat.BattleRoyal, value: 'Батл рояль' },
+];
