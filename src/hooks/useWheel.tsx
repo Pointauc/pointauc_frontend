@@ -211,7 +211,7 @@ const useWheel = ({
 
   const spin = (seed?: number | null, paceConfig?: RandomPaceConfig): void => {
     setWinnerItem(undefined);
-    const winningSeed = seed || Math.random();
+    const winningSeed = (seed && !dropout) ? seed : Math.random();
     const randomSpin = winningSeed * 360;
     const nextRotate = rotate + (paceConfig ? 270 : 240) * spinTime + randomSpin;
     const correctNextRotate = animateWheel(rotate, nextRotate, paceConfig);
