@@ -35,4 +35,8 @@ export const DOCUMENTATION_PARAGRAPHS = [
     title: 'Спонсоры',
     key: 'sponsors',
   },
+  {
+    title: 'Мои контакты',
+    key: 'contacts',
+  },
 ];

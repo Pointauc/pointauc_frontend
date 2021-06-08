@@ -66,6 +66,24 @@ const Documentation: FC = () => {
       <h2 id="statistic">Статистика</h2>
       <h2 id="history">История</h2>
       <h2 id="sponsors">Спонсоры</h2>
+      <div className="sponsor tier-1">UselessMouth</div>
+      <div className="sponsor tier-2">Slexboy</div>
+      <div className="sponsor tier-2">Shizov</div>
+      <div className="sponsor tier-3">Gedo</div>
+      <div className="sponsor tier-3">Никита</div>
+      <div className="sponsor tier-4">фанибон</div>
+      <div className="sponsor tier-4">ndrusha</div>
+      <div className="sponsor tier-4">SlowLadin</div>
+      <div className="sponsor tier-5">Adash</div>
+      <div className="sponsor tier-5">Han_Soda</div>
+      <div className="sponsor tier-5">cabbakid</div>
+      <div className="sponsor tier-5">danzer</div>
+      <h2 id="contacts">Мои контакты</h2>
+      <ul>
+        <li>Discord — kozjar#4193</li>
+        <li>Telegram — @Cougho</li>
+        <li>Twitch — kozjar</li>
+      </ul>
     </div>
   );
 };
