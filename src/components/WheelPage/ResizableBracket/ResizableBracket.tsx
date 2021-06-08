@@ -19,9 +19,12 @@ const ResizableBracket: FC<ResizableBracket> = ({ currentGame, ...props }) => {
   const bracketWrapper = useRef<HTMLDivElement>(null);
 
   const scrollToCurrentGame = useCallback(() => {
-    if (currentGame?.x && currentGame?.y && bracketWrapper.current) {
+    if (currentGame && bracketWrapper.current) {
+      const x = currentGame.x || 0;
+      const y = currentGame.y || 0;
       const { clientWidth, clientHeight } = bracketWrapper.current;
-      setTranslation({ x: -currentGame.x + (clientWidth / 2 - 160), y: -currentGame.y + (clientHeight / 2 - 60) });
+
+      setTranslation({ x: -x + (clientWidth / 2 - 160), y: -y + (clientHeight / 2 - 60) });
       setScale(1);
     }
   }, [currentGame]);
