@@ -70,15 +70,6 @@ const WheelPage: FC = () => {
     setActiveEmote(emote);
   }, []);
 
-  // const maxSize = useMemo(
-  //   () =>
-  //     Math.max(
-  //       ...rawItems.map<number>(({ amount }) => Number(amount)),
-  //     ),
-  //   [rawItems],
-  // );
-  // const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
-
   // const splitedItems = useMemo(
   //   () =>
   //     rawItems.reduce<any[]>((acc, { amount, ...slot }) => {
@@ -107,6 +98,37 @@ const WheelPage: FC = () => {
 
     return items;
   }, [rawItems]);
+
+  const maxSize = useMemo(
+    () =>
+      Math.max(
+        ...wheelItems.map<number>(({ size }) => Number(size)),
+      ),
+    [wheelItems],
+  );
+  const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
+
+  const splittedItems = useMemo(
+    () =>
+      wheelItems.reduce<WheelItem[]>((acc, { size, ...item }) => {
+        const part = Number(size) / maxValidValue;
+
+        if (part > 1) {
+          return [
+            ...acc,
+            ...new Array<WheelItem>(Math.ceil(part)).fill({ ...item, size: Number(size) / Math.ceil(part) }),
+          ];
+        }
+
+        return [...acc, { ...item, size }];
+      }, []),
+    [maxValidValue, wheelItems],
+  );
+
+  const finalItems = useMemo(() => {
+    return splittedItems;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [splittedItems.length, wheelItems]);
 
   const handleWin = useCallback(
     (winner: WheelItem) => {
@@ -140,7 +162,7 @@ const WheelPage: FC = () => {
   }, []);
 
   const { wheelComponent, spin, clearWinner } = useWheel({
-    rawItems: wheelItems,
+    rawItems: finalItems,
     onWin: handleWin,
     background: activeEmote,
     spinTime,
@@ -180,13 +202,17 @@ const WheelPage: FC = () => {
     setDropoutRate(Number(value));
   }, []);
 
-  // const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
-  //   setMaxValidValue(Number(value));
-  // }, []);
+  const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
+    setMaxValidValue(Number(value));
+  }, []);
 
   const handleIsRandomPaceChange = useCallback((e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setIsRandomPace(checked);
   }, []);
+
+  useEffect(() => {
+    setMaxValidValue(maxSize);
+  }, [maxSize]);
 
   const presetHint = (
     <>
@@ -338,26 +364,26 @@ const WheelPage: FC = () => {
                   ]}
                 />
               </div>
-              {/* <div className="wheel-controls-row"> */}
-              {/*  <Typography className="wheel-controls-tip md">Разделить</Typography> */}
-              {/*  <Slider */}
-              {/*    defaultValue={maxValidValue} */}
-              {/*    step={1} */}
-              {/*    min={maxSize / 10} */}
-              {/*    max={maxSize} */}
-              {/*    valueLabelDisplay="auto" */}
-              {/*    onChange={handleMaxValueChange} */}
-              {/*    marks={[ */}
-              {/*      { value: maxSize / 10, label: 'макс / 10' }, */}
-              {/*      { value: maxSize, label: 'макс' }, */}
-              {/*    ]} */}
-              {/*  /> */}
-              {/* </div> */}
-              {/* <Typography className="wheel-controls-tip hint"> */}
-              {/*  делит дорогие лоты на несколько позиций. */}
-              {/*  <br /> */}
-              {/*  НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ */}
-              {/* </Typography> */}
+              <div className="wheel-controls-row">
+                <Typography className="wheel-controls-tip md">Разделить</Typography>
+                <Slider
+                  step={1}
+                  min={maxSize / 10}
+                  max={maxSize}
+                  valueLabelDisplay="auto"
+                  onChange={handleMaxValueChange}
+                  value={maxValidValue}
+                  marks={[
+                    { value: maxSize / 10, label: 'макс / 10' },
+                    { value: maxSize, label: 'макс' },
+                  ]}
+                />
+              </div>
+              <Typography className="wheel-controls-tip hint">
+                делит дорогие лоты на несколько позиций.
+                <br />
+                НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ
+              </Typography>
               <div className="wheel-controls-row">
                 <Typography>Финал с перчинкой</Typography>
                 <Switch onChange={handleIsRandomPaceChange} />
