@@ -75,6 +75,14 @@ const AucActions: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         className="da-link"
+        href="https://gitlab.com/Ankirig/woodsauc-renewal"
+      >
+        GitLab
+      </Link>
+      <Link
+        target="_blank"
+        rel="noopener noreferrer"
+        className="da-link"
         href="https://www.donationalerts.com/r/kozjar"
       >
         поддержка
