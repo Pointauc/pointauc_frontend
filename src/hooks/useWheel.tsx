@@ -69,11 +69,10 @@ const useWheel = ({
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
-  const getReverseSize = useCallback((size: number) => (1 - size / totalSize) ** (rawItems.length * dropoutRate), [
-    dropoutRate,
-    rawItems.length,
-    totalSize,
-  ]);
+  const getReverseSize = useCallback(
+    (size: number) => (1 - size / totalSize) ** (Math.log(rawItems.length) * dropoutRate * 0.95),
+    [dropoutRate, rawItems.length, totalSize],
+  );
 
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
@@ -212,7 +211,7 @@ const useWheel = ({
 
   const spin = (seed?: number | null, paceConfig?: RandomPaceConfig): void => {
     setWinnerItem(undefined);
-    const winningSeed = (seed && !dropout) ? seed : Math.random();
+    const winningSeed = seed && !dropout ? seed : Math.random();
     const randomSpin = winningSeed * 360;
     const nextRotate = rotate + (paceConfig ? 270 : 240) * spinTime + randomSpin;
     const correctNextRotate = animateWheel(rotate, nextRotate, paceConfig);
