@@ -16,6 +16,11 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, slots 
 
   useEffect(() => {
     const gameOrder: Game[] = [];
+
+    if (slots.length < 2) {
+      return;
+    }
+
     const createdGame = createGame(
       slots.filter(({ amount }) => amount),
       0,
