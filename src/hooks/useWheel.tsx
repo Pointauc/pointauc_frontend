@@ -70,7 +70,7 @@ const useWheel = ({
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
   const getReverseSize = useCallback(
-    (size: number) => (1 - size / totalSize) ** (Math.log(rawItems.length) * dropoutRate * 0.95),
+    (size: number) => (1 - size / totalSize) ** (Math.log(rawItems.length) * dropoutRate * 0.9),
     [dropoutRate, rawItems.length, totalSize],
   );
 
