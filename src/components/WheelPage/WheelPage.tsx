@@ -1,6 +1,17 @@
 import React, { ChangeEvent, FC, Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Checkbox, FormControlLabel, Slider, Switch, TextField, Typography } from '@material-ui/core';
+import {
+  Button,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  Slider,
+  Switch,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import classNames from 'classnames';
 import PageContainer from '../PageContainer/PageContainer';
 import useWheel from '../../hooks/useWheel';
@@ -36,6 +47,7 @@ const WheelPage: FC = () => {
   const [gamesOrder, setGamesOrder] = useState<Game[]>([]);
   const [nextWinner, setNextWinner] = useState<WheelItem | null>(null);
   const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
+  const [isDuelHelpOpen, setIsDuelHelpOpen] = useState<boolean>(false);
 
   const currentDuel = useMemo(() => {
     if (!gamesOrder.length) {
@@ -195,6 +207,10 @@ const WheelPage: FC = () => {
   //   console.log(sortSlots(predictionService.correctAmount(5, count)));
   // }, [dropoutRate, slots]);
 
+  const toggleHelp = useCallback(() => {
+    setIsDuelHelpOpen((prev) => !prev);
+  }, []);
+
   useEffect(() => {
     if (wheelFormat === WheelFormat.BattleRoyal) {
       setSelectedGame(gamesOrder && gamesOrder[0]);
@@ -244,7 +260,59 @@ const WheelPage: FC = () => {
                 onChangeActive={setWheelFormat}
               />
               {wheelFormat === WheelFormat.BattleRoyal && (
-                <Typography className="wheel-controls-tip hint">Аторы оригинальной идеи - Browjey и Вирал</Typography>
+                <>
+                  <Typography className="wheel-controls-tip hint">Аторы оригинальной идеи - Browjey и Вирал</Typography>
+
+                  <Dialog open={isDuelHelpOpen} onClose={toggleHelp} className="description" maxWidth="sm" fullWidth>
+                    <DialogTitle>Описание дуэльного режима</DialogTitle>
+                    <DialogContent dividers className="description-content">
+                      <div style={{ color: '#e5c938' }}>Как работает этот режим?</div>
+                      <div>
+                        Варианты аукциона сражаются друг с другом, победивший вариант забирает себе стоимость
+                        проигравшего и продвигается дальше в турнирной сетке.
+                        <br />
+                        (порядок ходов выстроен так, что сначала играется нижняя сетка, затем верхняя)
+                      </div>
+                      <div>
+                        Просто жмите крутить, а дальше разберетесь. Также вы можете поизучать турнирную сетку, нажмите
+                        на позицию, чтобы проследить весь путь лота.
+                      </div>
+                      <div style={{ color: '#e5c938' }}>Сохраняются ли шансы при таком формате?</div>
+                      <div>
+                        Могу сказать наверняка, что
+                        <span style={{ color: '#59ce4b' }}> ДА! </span>
+                        Бровян и Вирал, которые первыми придумали такой формат, сказали, что высчитали все математически
+                        и разницы никакой нет. Генерацию турнирной сетки я писал сам, но не думаю, что есть какие-то
+                        альтернативы. Чтобы сказать со 100% вероятностью это надо писать отдельный скрипт, который будет
+                        прогонять данный формат, но времени у меня на такое пока нет.
+                      </div>
+                      <div style={{ color: '#e5c938' }}>Но как?</div>
+                      <div>
+                        На самом деле такой формат даже на интуитивном уровне честен, если подумать немного в другом
+                        ключе.
+                      </div>
+                      <div>
+                        Представьте мы разворачиваем все в обратную сторону. Тогда у нас к примеру крутится колесо с
+                        1-ым лотом и суммой всех остальных. При таком раскладе у первого лота шансы абсолютно те же
+                        самые.
+                      </div>
+                      <div>
+                        Допустим победили объединенные силы остальных лотов, тогда мы уже крутим колесо на то, кто из
+                        остальных лотов победил и победа внутри этой группы тоже будет легетимной. Это можно и дальше
+                        разворачивать, но суть я думаю вы уловили.
+                      </div>
+                      <div style={{ color: '#e5c938' }}>Что в итоге?</div>
+                      <div>
+                        Я считаю, что этот формат даже более честный чем колесо на выбывание и я
+                        <span style={{ color: '#ff3030' }}> ОЧЕНЬ РЕКОМЕНДУЮ </span>
+                        использовать именно этот режим.
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                  <button onClick={toggleHelp} type="button" className="description-link">
+                    Как это работает?
+                  </button>
+                </>
               )}
               {wheelFormat === WheelFormat.Dropout && (
                 <Typography style={{ marginTop: 10 }}>{`Осталось: ${wheelItems.length}`}</Typography>
@@ -302,7 +370,7 @@ const WheelPage: FC = () => {
               {/* <div className="wheel-controls-row"> */}
               {/*  <Button onClick={handlePredictChances}>Рассчитать итоговые шансы на выбывание</Button> */}
               {/* </div> */}
-              <div className="wheel-controls-row" style={{ marginTop: 20 }}>
+              <div className="wheel-controls-row" style={{ marginTop: 10 }}>
                 <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
               </div>
             </div>
