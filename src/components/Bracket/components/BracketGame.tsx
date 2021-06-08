@@ -57,6 +57,9 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
       ...this.props,
     };
 
+    game.x = rest.x;
+    game.y = rest.y;
+
     const {
       backgroundColor,
       hoverBackgroundColor,

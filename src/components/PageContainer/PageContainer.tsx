@@ -12,7 +12,8 @@ const useStyles = makeStyles((theme) =>
       height: '100vh',
       paddingTop: theme.spacing(4),
       paddingBottom: theme.spacing(4),
-      overflow: 'auto',
+      overflowX: 'hidden',
+      overflowY: 'auto',
     },
   }),
 );

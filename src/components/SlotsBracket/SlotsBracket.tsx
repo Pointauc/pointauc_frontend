@@ -4,7 +4,7 @@ import { Game } from '../Bracket/components/model';
 import { createGame, setOffsets } from '../../utils/slots.utils';
 import { Slot } from '../../models/slot.model';
 
-interface SlotsBracketProps {
+export interface SlotsBracketProps {
   value?: number;
   onGamesOrder: (games: Game[]) => void;
   currentGame: Key;
@@ -37,4 +37,4 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, slots 
   return <Bracket game={game} currentGame={currentGame} />;
 };
 
-export default SlotsBracket;
+export default React.memo(SlotsBracket);

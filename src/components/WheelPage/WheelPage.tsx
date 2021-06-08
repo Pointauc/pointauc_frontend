@@ -1,9 +1,6 @@
-import React, { ChangeEvent, FC, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Checkbox, FormControlLabel, Slider, Switch, TextField, Typography } from '@material-ui/core';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { MapInteractionCSS } from 'react-map-interaction';
 import classNames from 'classnames';
 import PageContainer from '../PageContainer/PageContainer';
 import useWheel from '../../hooks/useWheel';
@@ -21,8 +18,8 @@ import PaceSettings from './PaceSettings/PaceSettings';
 import { RandomPaceConfig } from '../../services/SpinPaceService';
 import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
 import RadioButtonGroup from '../RadioButtonGroup/RadioButtonGroup';
-import SlotsBracket from '../SlotsBracket/SlotsBracket';
 import { Game, Side } from '../Bracket/components/model';
+import ResizableBracket from './ResizableBracket/ResizableBracket';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
@@ -34,13 +31,11 @@ const WheelPage: FC = () => {
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const [useRandomOrg, setUseRandomOrg] = useState<boolean>(true);
   const [isRandomPace, setIsRandomPace] = useState<boolean>(false);
-  const [isFullscreenBracket, setIsFullscreenBracket] = useState<boolean>(false);
   const [wheelFormat, setWheelFormat] = useState<Key>(WheelFormat.Default);
   const [paceConfig, setPaceConfig] = useState<RandomPaceConfig>(PACE_PRESETS.suddenFinal);
-  const bracketWrapper = useRef<HTMLDivElement>(null);
   const [gamesOrder, setGamesOrder] = useState<Game[]>([]);
   const [nextWinner, setNextWinner] = useState<WheelItem | null>(null);
-  const [selectedGame, setSelectedGame] = useState<Key>('');
+  const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
 
   const currentDuel = useMemo(() => {
     if (!gamesOrder.length) {
@@ -63,31 +58,31 @@ const WheelPage: FC = () => {
     setActiveEmote(emote);
   }, []);
 
-  const maxSize = useMemo(
-    () =>
-      Math.max(
-        ...rawItems.map<number>(({ amount }) => Number(amount)),
-      ),
-    [rawItems],
-  );
-  const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
+  // const maxSize = useMemo(
+  //   () =>
+  //     Math.max(
+  //       ...rawItems.map<number>(({ amount }) => Number(amount)),
+  //     ),
+  //   [rawItems],
+  // );
+  // const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
 
-  const splitedItems = useMemo(
-    () =>
-      rawItems.reduce<any[]>((acc, { amount, ...slot }) => {
-        const part = Number(amount) / maxValidValue;
-
-        if (part > 1) {
-          return [...acc, ...new Array(Math.ceil(part)).fill({ ...slot, amount: Number(amount) / Math.ceil(part) })];
-        }
-
-        return [...acc, { ...slot, amount }];
-      }, []),
-    [maxValidValue, rawItems],
-  );
+  // const splitedItems = useMemo(
+  //   () =>
+  //     rawItems.reduce<any[]>((acc, { amount, ...slot }) => {
+  //       const part = Number(amount) / maxSize;
+  //
+  //       if (part > 1) {
+  //         return [...acc, ...new Array(Math.ceil(part)).fill({ ...slot, amount: Number(amount) / Math.ceil(part) })];
+  //       }
+  //
+  //       return [...acc, { ...slot, amount }];
+  //     }, []),
+  //   [maxValidValue, rawItems],
+  // );
 
   const wheelItems = useMemo(() => {
-    const items = splitedItems.map<WheelItem>(({ id, name, amount }) => ({
+    const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
       id: id.toString(),
       name: name || '',
       size: Number(amount),
@@ -99,8 +94,7 @@ const WheelPage: FC = () => {
     }
 
     return items;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [splitedItems.length, rawItems, currentDuel, wheelFormat]);
+  }, [rawItems]);
 
   const handleWin = useCallback(
     (winner: WheelItem) => {
@@ -123,7 +117,7 @@ const WheelPage: FC = () => {
         if (parentTitle) {
           parentTitle.innerHTML = winner.name;
         }
-        setSelectedGame('');
+        setSelectedGame(null);
       }
     },
     [gamesOrder, wheelFormat],
@@ -146,7 +140,7 @@ const WheelPage: FC = () => {
     clearWinner();
     setNextWinner(null);
     setGamesOrder((prev) => prev.slice(1));
-    setSelectedGame(gamesOrder && gamesOrder[0] ? gamesOrder[0].id : '');
+    setSelectedGame(gamesOrder && gamesOrder[0]);
   }, [clearWinner, gamesOrder]);
 
   const handleSpin = useCallback(async () => {
@@ -174,9 +168,9 @@ const WheelPage: FC = () => {
     setDropoutRate(Number(value));
   }, []);
 
-  const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
-    setMaxValidValue(Number(value));
-  }, []);
+  // const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
+  //   setMaxValidValue(Number(value));
+  // }, []);
 
   const handleIsRandomPaceChange = useCallback((e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setIsRandomPace(checked);
@@ -201,13 +195,9 @@ const WheelPage: FC = () => {
   //   console.log(sortSlots(predictionService.correctAmount(5, count)));
   // }, [dropoutRate, slots]);
 
-  const handleChangeFullscreen = useCallback(() => {
-    setIsFullscreenBracket((prev) => !prev);
-  }, []);
-
   useEffect(() => {
     if (wheelFormat === WheelFormat.BattleRoyal) {
-      setSelectedGame(gamesOrder && gamesOrder[0] ? gamesOrder[0].id : '');
+      setSelectedGame(gamesOrder && gamesOrder[0]);
     }
   }, [gamesOrder, wheelFormat]);
 
@@ -218,10 +208,7 @@ const WheelPage: FC = () => {
         {wheelComponent}
         {/* </div> */}
         <div className="wheel-info-wrapper">
-          <div
-            style={{ maxHeight: wheelFormat === WheelFormat.BattleRoyal ? '50%' : '100%' }}
-            className="wheel-controls"
-          >
+          <div className={classNames('wheel-controls', { shrink: wheelFormat === WheelFormat.BattleRoyal })}>
             <div className="settings">
               <div className="wheel-controls-row">
                 {wheelFormat === WheelFormat.BattleRoyal && nextWinner ? (
@@ -283,26 +270,26 @@ const WheelPage: FC = () => {
                   ]}
                 />
               </div>
-              <div className="wheel-controls-row">
-                <Typography className="wheel-controls-tip md">Разделить</Typography>
-                <Slider
-                  defaultValue={maxValidValue}
-                  step={1}
-                  min={maxSize / 10}
-                  max={maxSize}
-                  valueLabelDisplay="auto"
-                  onChange={handleMaxValueChange}
-                  marks={[
-                    { value: maxSize / 10, label: 'макс / 10' },
-                    { value: maxSize, label: 'макс' },
-                  ]}
-                />
-              </div>
-              <Typography className="wheel-controls-tip hint">
-                делит дорогие лоты на несколько позиций.
-                <br />
-                НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ
-              </Typography>
+              {/* <div className="wheel-controls-row"> */}
+              {/*  <Typography className="wheel-controls-tip md">Разделить</Typography> */}
+              {/*  <Slider */}
+              {/*    defaultValue={maxValidValue} */}
+              {/*    step={1} */}
+              {/*    min={maxSize / 10} */}
+              {/*    max={maxSize} */}
+              {/*    valueLabelDisplay="auto" */}
+              {/*    onChange={handleMaxValueChange} */}
+              {/*    marks={[ */}
+              {/*      { value: maxSize / 10, label: 'макс / 10' }, */}
+              {/*      { value: maxSize, label: 'макс' }, */}
+              {/*    ]} */}
+              {/*  /> */}
+              {/* </div> */}
+              {/* <Typography className="wheel-controls-tip hint"> */}
+              {/*  делит дорогие лоты на несколько позиций. */}
+              {/*  <br /> */}
+              {/*  НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ */}
+              {/* </Typography> */}
               <div className="wheel-controls-row">
                 <Typography>Финал с перчинкой</Typography>
                 <Switch onChange={handleIsRandomPaceChange} />
@@ -324,31 +311,7 @@ const WheelPage: FC = () => {
             </div>
           </div>
           {wheelFormat === WheelFormat.BattleRoyal && (
-            <div className="bracket-wrapper">
-              <div
-                className={classNames('bracket-sub-wrapper', { fullscreen: isFullscreenBracket })}
-                ref={bracketWrapper}
-              >
-                <Button
-                  color="primary"
-                  variant="outlined"
-                  onClick={handleChangeFullscreen}
-                  className="fullscreen-button"
-                >
-                  {isFullscreenBracket ? 'Свернуть' : 'На весь экран'}
-                </Button>
-                <Typography className="hint">можно перемежать и масштабировать</Typography>
-                {/* <TransformWrapper> */}
-                {/*  <TransformComponent> */}
-                {/*    <div style={{ scale: minBracketScale }}> */}
-                <MapInteractionCSS>
-                  <SlotsBracket onGamesOrder={setGamesOrder} currentGame={selectedGame} slots={rawItemsBase} />
-                </MapInteractionCSS>
-                {/* </div> */}
-                {/*  </TransformComponent> */}
-                {/* </TransformWrapper> */}
-              </div>
-            </div>
+            <ResizableBracket onGamesOrder={setGamesOrder} currentGame={selectedGame} slots={rawItemsBase} />
           )}
         </div>
       </div>

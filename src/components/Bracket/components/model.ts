@@ -24,6 +24,8 @@ export interface Offset {
 
 export interface Game {
   id: ID;
+  x?: number;
+  y?: number;
   // the game name
   name: string;
   // optional: the label for the game within the bracket, e.g. Gold Finals, Silver Semi-Finals

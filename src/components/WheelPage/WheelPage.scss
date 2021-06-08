@@ -19,10 +19,11 @@
   .bracket-wrapper {
     margin-top: 10px;
     width: 100%;
-    flex-basis: 50%;
+    flex-basis: 56%;
     //height: 50%;
     max-width: 800px;
-    max-height: 50%;
+    max-height: 56%;
+    flex-grow: 1;
     //overflow: hidden;
   }
 
@@ -36,20 +37,30 @@
     background-color: $grey-11;
     overflow: hidden;
 
-    .hint {
+    .bracket-controls {
       position: absolute;
-      font-size: 14px;
-      left: 160px;
-      top: 10px;
-      font-weight: 400;
-    }
-
-    .fullscreen-button {
-      position: absolute;
-      top: 5px;
+      top:5px;
       left: 5px;
-      background-color: $grey-11;
-      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+      z-index: 10;
+
+      .hint {
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      .fullscreen-button {
+        background-color: $grey-11;
+        margin-right: 5px;
+        flex-shrink: 0;
+      }
+
+      .current-game-button {
+        background-color: $grey-11;
+        margin-right: 5px;
+        flex-shrink: 0;
+      }
     }
 
     &.fullscreen {
@@ -75,6 +86,11 @@
     color: $grey-2;
     display: flex;
     align-items: stretch;
+
+    &.shrink {
+      height: 40%;
+      max-height: 40%
+    }
 
     .settings {
       display: flex;
