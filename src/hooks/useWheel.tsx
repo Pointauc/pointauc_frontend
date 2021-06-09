@@ -7,6 +7,7 @@ import pradenW from '../assets/img/pradenW.png';
 import { fitText, shuffle } from '../utils/common.utils';
 import SpinPaceService, { RandomPaceConfig } from '../services/SpinPaceService';
 import { SPIN_PATH } from '../constants/wheel';
+import PredictionService from '../services/PredictionService';
 
 interface WheelResult {
   wheelComponent: ReactNode;
@@ -70,8 +71,8 @@ const useWheel = ({
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
 
   const getReverseSize = useCallback(
-    (size: number) => (1 - size / totalSize) ** (Math.log(rawItems.length) * dropoutRate * 0.95),
-    [dropoutRate, rawItems.length, totalSize],
+    (size: number) => PredictionService.getReverseSize(size, totalSize, rawItems.length),
+    [rawItems.length, totalSize],
   );
 
   const normalizedItems = useMemo(() => {

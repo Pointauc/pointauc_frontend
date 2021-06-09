@@ -37,7 +37,6 @@ const WheelPage: FC = () => {
   const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(20);
   const [rawItemsBase, setRawItems] = useState<Slot[]>(slots);
-  const [dropoutRate, setDropoutRate] = useState<number>(1);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const [useRandomOrg, setUseRandomOrg] = useState<boolean>(true);
@@ -48,6 +47,7 @@ const WheelPage: FC = () => {
   const [nextWinner, setNextWinner] = useState<WheelItem | null>(null);
   const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
   const [isDuelHelpOpen, setIsDuelHelpOpen] = useState<boolean>(false);
+  const [isKoefDescriptionOpen, setIsKoefDescriptionOpen] = useState<boolean>(false);
 
   const currentDuel = useMemo(() => {
     if (!gamesOrder.length) {
@@ -69,20 +69,6 @@ const WheelPage: FC = () => {
     localStorage.setItem('wheelEmote', emote);
     setActiveEmote(emote);
   }, []);
-
-  // const splitedItems = useMemo(
-  //   () =>
-  //     rawItems.reduce<any[]>((acc, { amount, ...slot }) => {
-  //       const part = Number(amount) / maxSize;
-  //
-  //       if (part > 1) {
-  //         return [...acc, ...new Array(Math.ceil(part)).fill({ ...slot, amount: Number(amount) / Math.ceil(part) })];
-  //       }
-  //
-  //       return [...acc, { ...slot, amount }];
-  //     }, []),
-  //   [maxValidValue, rawItems],
-  // );
 
   const wheelItems = useMemo(() => {
     const items = rawItems.map<WheelItem>(({ id, name, amount }) => ({
@@ -167,7 +153,6 @@ const WheelPage: FC = () => {
     background: activeEmote,
     spinTime,
     dropout: wheelFormat === WheelFormat.Dropout,
-    dropoutRate,
   });
 
   const nextTurn = useCallback(() => {
@@ -198,10 +183,6 @@ const WheelPage: FC = () => {
     setSpinTime(Number(e.target.value));
   }, []);
 
-  const handleDropoutRateChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
-    setDropoutRate(Number(value));
-  }, []);
-
   const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
     setMaxValidValue(Number(value));
   }, []);
@@ -226,15 +207,12 @@ const WheelPage: FC = () => {
     setUseRandomOrg(checked);
   }, []);
 
-  // const handlePredictChances = useCallback(() => {
-  //   const count = 10000;
-  //   const predictionService = new PredictionService(slots, dropoutRate);
-  //
-  //   console.log(sortSlots(predictionService.correctAmount(5, count)));
-  // }, [dropoutRate, slots]);
-
   const toggleHelp = useCallback(() => {
     setIsDuelHelpOpen((prev) => !prev);
+  }, []);
+
+  const toggleKoefDescription = useCallback(() => {
+    setIsKoefDescriptionOpen((prev) => !prev);
   }, []);
 
   useEffect(() => {
@@ -288,13 +266,13 @@ const WheelPage: FC = () => {
               {wheelFormat === WheelFormat.BattleRoyal && (
                 <>
                   <Typography className="wheel-controls-tip hint">Аторы оригинальной идеи - Browjey и Вирал</Typography>
-
                   <Dialog open={isDuelHelpOpen} onClose={toggleHelp} className="description" maxWidth="sm" fullWidth>
                     <DialogTitle>Описание дуэльного режима</DialogTitle>
                     <DialogContent dividers className="description-content">
                       <div style={{ color: '#e5c938' }}>Как работает этот режим?</div>
                       <div>
-                        Варианты аукциона сражаются друг с другом, победивший вариант забирает себе стоимость
+                        Варианты аукциона сражаются друг с другом, победивший вариант
+                        <span style={{ color: '#ff5c36' }}> забирает себе стоимость </span>
                         проигравшего и продвигается дальше в турнирной сетке.
                         <br />
                         (порядок ходов выстроен так, что сначала играется нижняя сетка, затем верхняя)
@@ -305,34 +283,11 @@ const WheelPage: FC = () => {
                       </div>
                       <div style={{ color: '#e5c938' }}>Сохраняются ли шансы при таком формате?</div>
                       <div>
-                        Могу сказать наверняка, что
-                        <span style={{ color: '#59ce4b' }}> ДА! </span>
-                        Бровян и Вирал, которые первыми придумали такой формат, сказали, что высчитали все математически
-                        и разницы никакой нет. Генерацию турнирной сетки я писал сам, но не думаю, что есть какие-то
-                        альтернативы. Чтобы сказать со 100% вероятностью это надо писать отдельный скрипт, который будет
-                        прогонять данный формат, но времени у меня на такое пока нет.
+                        <span style={{ color: '#59ce4b' }}> Абсолютно точно ДА! </span>
+                        Шанс лота выграть в этом формате точно такой же как и в обычном колесе, а что самое интересное,
+                        нет никакой разницы в каком порядке проводятся дуэли, шансы остаются теми же.
                       </div>
-                      <div style={{ color: '#e5c938' }}>Но как?</div>
-                      <div>
-                        На самом деле такой формат даже на интуитивном уровне честен, если подумать немного в другом
-                        ключе.
-                      </div>
-                      <div>
-                        Представьте мы разворачиваем все в обратную сторону. Тогда у нас к примеру крутится колесо с
-                        1-ым лотом и суммой всех остальных. При таком раскладе у первого лота шансы абсолютно те же
-                        самые.
-                      </div>
-                      <div>
-                        Допустим победили объединенные силы остальных лотов, тогда мы уже крутим колесо на то, кто из
-                        остальных лотов победил и победа внутри этой группы тоже будет легетимной. Это можно и дальше
-                        разворачивать, но суть я думаю вы уловили.
-                      </div>
-                      <div style={{ color: '#e5c938' }}>Что в итоге?</div>
-                      <div>
-                        Я считаю, что этот формат даже более честный чем колесо на выбывание и я
-                        <span style={{ color: '#ff3030' }}> ОЧЕНЬ РЕКОМЕНДУЮ </span>
-                        использовать именно этот режим.
-                      </div>
+                      <div>У меня пока не было времени оформить пруфы, но скоро я их добавлю.</div>
                     </DialogContent>
                   </Dialog>
                   <button onClick={toggleHelp} type="button" className="description-link">
@@ -340,6 +295,43 @@ const WheelPage: FC = () => {
                   </button>
                 </>
               )}
+              <Dialog
+                open={isKoefDescriptionOpen}
+                onClose={toggleKoefDescription}
+                className="description"
+                maxWidth="sm"
+                fullWidth
+              >
+                <DialogTitle>Эквивалентность форматов колеса</DialogTitle>
+                <DialogContent dividers className="description-content">
+                  <div>
+                    Недавно я смог на 100% доказать, что
+                    <span style={{ color: '#59ce4b' }}> ВСЕ ФОРМАТЫ КОЛЕСА АБСОЛЮТНО ИДЕНТИЧНЫ ПО ШАНСАМ. </span>
+                  </div>
+                  <div>
+                    Нет никакой разницы крутите вы обычное колесо, колесо на выбывание или колесо батл рояль, шансы на
+                    победу по итогу во всех колесах будут идентичны.
+                  </div>
+                  <div>
+                    Пруфы всего этого вы найдете при выборе отдельного режима. (пока еще не успел оформить, но скоро
+                    добавлю). Даже если кому-то интуитивно может показаться обратное, то это заключение неверно и тому
+                    есть доказательство.
+                  </div>
+                  <div>
+                    Огромная благодарность
+                    <span style={{ color: '#c669ff' }}> dzyaka </span>
+                    за оказание помощи в математической экспертизе)
+                  </div>
+                  <div>
+                    Раньше кэф использовался чтобы более правильно откалибровать выбывание, но теперь в этом нет
+                    необходимости. Возможно в будущем он вернется, но на какое-то время я его удалю, чтобы привлечь
+                    внимание.
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <button onClick={toggleKoefDescription} type="button" className="description-link">
+                Куда делся кэф наеба? (важная инфа, прочтите)
+              </button>
               {wheelFormat === WheelFormat.Dropout && (
                 <Typography style={{ marginTop: 10 }}>{`Осталось: ${wheelItems.length}`}</Typography>
               )}
@@ -348,22 +340,6 @@ const WheelPage: FC = () => {
                 label="Использовать сервис random.org"
                 className="wheel-controls-checkbox"
               />
-              <div className="wheel-controls-row">
-                <Typography className="wheel-controls-tip md">Коэф. наеба</Typography>
-                <Slider
-                  defaultValue={1}
-                  step={0.1}
-                  min={0.1}
-                  max={2}
-                  valueLabelDisplay="auto"
-                  onChange={handleDropoutRateChange}
-                  marks={[
-                    { value: 0.1, label: '0.1' },
-                    { value: 1, label: '1' },
-                    { value: 2, label: '2' },
-                  ]}
-                />
-              </div>
               <div className="wheel-controls-row">
                 <Typography className="wheel-controls-tip md">Разделить</Typography>
                 <Slider
@@ -379,23 +355,14 @@ const WheelPage: FC = () => {
                   ]}
                 />
               </div>
-              <Typography className="wheel-controls-tip hint">
-                делит дорогие лоты на несколько позиций.
-                <br />
-                НЕ ИСПОЛЬЗУЙТЕ ПРИ КОЛЕСЕ НА ВЫБЫВАНИЕ
-              </Typography>
+              <Typography className="wheel-controls-tip hint">делит дорогие лоты на несколько позиций.</Typography>
               <div className="wheel-controls-row">
                 <Typography>Финал с перчинкой</Typography>
                 <Switch onChange={handleIsRandomPaceChange} />
               </div>
-              <Typography className="wheel-controls-tip hint">ТЕПЕРЬ ЭТО АБСОЛЮТНО ТОЧНО РАБОТАЕТ</Typography>
               {isRandomPace && (
                 <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />
               )}
-
-              {/* <div className="wheel-controls-row"> */}
-              {/*  <Button onClick={handlePredictChances}>Рассчитать итоговые шансы на выбывание</Button> */}
-              {/* </div> */}
               <div className="wheel-controls-row" style={{ marginTop: 10 }}>
                 <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
               </div>

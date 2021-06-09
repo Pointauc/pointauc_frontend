@@ -20,25 +20,26 @@ class PredictionService {
     this.slots = [...slots];
     this.initialSlots = [...slots];
     this.dropoutRate = dropoutRate;
-    console.log(sortSlots(this.getReverseSlots([...slots])));
+    // console.log(sortSlots(this.getReverseSlots([...slots])));
   }
 
   private getReverseSlots = (slots: Slot[]): Slot[] => {
-    const upperSlots = slots.map(({ amount, ...rest }) => ({ ...rest, amount: Number(amount) ** 3 }));
-    const totalSize = getTotalSize(upperSlots);
+    const totalSize = getTotalSize(slots);
 
-    return upperSlots.map(({ amount, ...props }) => {
+    return slots.map(({ amount, ...props }) => {
       return {
         ...props,
-        amount: this.getReverseSize(Number(amount), totalSize),
+        amount: PredictionService.getReverseSize(Number(amount), totalSize, slots.length),
       };
     });
   };
 
-  private getReverseSize = (size: number, totalSize: number): number => ((1 - size / totalSize) * 10) ** 3;
+  static getReverseSize = (size: number, totalSize: number, length: number): number =>
+    (1 - size / totalSize) / (length - 1);
 
   private getWinner = (slots: Slot[]): number => {
     // console.log(getTotalSize(slots));
+    // console.log(slots);
     const seed = Math.random();
     let restAmount = seed * getTotalSize(slots);
     // console.log(seed);
@@ -59,15 +60,17 @@ class PredictionService {
   };
 
   private performIteration = (slots: Slot[]): string => {
-    while (slots.length > 1) {
+    const updatedSlots = [...slots];
+    while (updatedSlots.length > 1) {
       // console.log([...slots]);
-      const winner = this.getWinner(slots);
+      const winner = this.getWinner(this.getReverseSlots(updatedSlots));
+      // console.log(winner);
 
       // console.log(`${[...slots][winner]?.name} (index - ${winner})`);
-      slots.splice(winner, 1);
+      updatedSlots.splice(winner, 1);
     }
 
-    return slots[0].id;
+    return updatedSlots[0].id;
   };
 
   normalizeWinnersData = (data: Map<string, number>, iterations: number): SlotChance[] => {
@@ -96,7 +99,7 @@ class PredictionService {
 
   predictChances = (count: number): Map<string, number> => {
     const winningMap = new Map<string, number>();
-    const slots = this.getReverseSlots([...this.slots]);
+    const slots = [...this.slots];
     // console.log([...this.slots]);
 
     new Array(count).fill(null).forEach(() => {
@@ -104,6 +107,7 @@ class PredictionService {
       // const win = this.getWinner(slots);
       const winner = this.performIteration([...slots]);
       // console.log(`${[...slots][win]?.name} (index - ${win})`);
+      // console.log(winner);
       const previousWins = winningMap.get(winner);
 
       previousWins ? winningMap.set(winner, previousWins + 1) : winningMap.set(winner, 1);
