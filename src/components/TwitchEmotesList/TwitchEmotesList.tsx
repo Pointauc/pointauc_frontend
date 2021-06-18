@@ -1,10 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { CircularProgress, IconButton } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../reducers';
-import './TwitchEmotesList..scss';
 // @ts-ignore
 import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
+import { RootState } from '../../reducers';
+import './TwitchEmotesList..scss';
 
 const fetcher = new EmoteFetcher();
 
