@@ -1,9 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { CircularProgress, IconButton } from '@material-ui/core';
-import { Collection, Emote, EmoteFetcher } from '@mkody/twitch-emoticons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../reducers';
 import './TwitchEmotesList..scss';
+// @ts-ignore
+import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
 
 const fetcher = new EmoteFetcher();
 
@@ -35,7 +36,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
 
       return (
         <div className="emotes-group">
-          {Array.from(emotes.values()).map((emote) => {
+          {Array.from<Emote>(emotes.values()).map((emote) => {
             const handleClick = (): void => setActiveEmote(emote.toLink(2));
 
             return (
