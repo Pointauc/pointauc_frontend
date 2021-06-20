@@ -8,6 +8,7 @@ import { QUERIES } from '../../constants/common.constants';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import withLoading from '../../decorators/withLoading';
 import { loadUserData } from '../../reducers/AucSettings/AucSettings';
+import { setHasTwitchAuth } from '../../reducers/User/User';
 
 const TwitchRedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const TwitchRedirect: React.FC = () => {
     if (code) {
       authenticateTwitch(code).then(() => {
         setLoadingMessage('Загрузка аккаунта...');
+        dispatch(setHasTwitchAuth(true));
         return dispatch(withLoading(setIsLoading, loadUserData));
       });
     }

@@ -4,6 +4,7 @@ export interface UserData {
   username: string;
   userId: string;
   hasDAAuth: boolean;
+  hasTwitchAuth: boolean;
   settings?: SettingFields;
   integration?: IntegrationFields;
 }

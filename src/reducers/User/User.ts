@@ -7,12 +7,14 @@ export interface UserInfo {
 
 interface UserState extends UserInfo {
   hasDAAuth: boolean;
+  hasTwitchAuth: boolean;
 }
 
 const initialState: UserState = {
   username: null,
   userId: null,
   hasDAAuth: false,
+  hasTwitchAuth: false,
 };
 
 const userSlice = createSlice({
@@ -28,9 +30,12 @@ const userSlice = createSlice({
     setHasDAAuth(state, action: PayloadAction<boolean>): void {
       state.hasDAAuth = action.payload;
     },
+    setHasTwitchAuth(state, action: PayloadAction<boolean>): void {
+      state.hasTwitchAuth = action.payload;
+    },
   },
 });
 
-export const { setUsername, setHasDAAuth, setUserId } = userSlice.actions;
+export const { setUsername, setHasDAAuth, setUserId, setHasTwitchAuth } = userSlice.actions;
 
 export default userSlice.reducer;

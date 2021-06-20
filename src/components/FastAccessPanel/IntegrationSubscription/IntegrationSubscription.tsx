@@ -1,6 +1,6 @@
 import { Accordion, AccordionDetails, AccordionSummary, Switch, Typography } from '@material-ui/core';
 
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
@@ -13,7 +13,7 @@ import DALoginButton from '../../IntegrationPage/DALoginButton/DALoginButton';
 
 const IntegrationSubscription: FC = () => {
   const dispatch = useDispatch();
-  const { hasDAAuth, username } = useSelector((root: RootState) => root.user);
+  const { hasDAAuth, hasTwitchAuth, username } = useSelector((root: RootState) => root.user);
 
   const {
     da: { actual, loading },
@@ -23,9 +23,17 @@ const IntegrationSubscription: FC = () => {
   const [isSubscribedDA, setIsSubscribedDA] = useState<boolean>(actual);
   const [isSubscribedTwitch, setIsSubscribedTwitch] = useState<boolean>(twitchActual);
 
+  useEffect(() => {
+    setIsSubscribedTwitch(twitchActual);
+  }, [twitchActual]);
+
+  useEffect(() => {
+    setIsSubscribedDA(actual);
+  }, [actual]);
+
   const subscribeTwitch = useCallback((): void => {
     setIsSubscribedTwitch((checked) => {
-      dispatch(sendCpSubscribedState(!checked));
+      dispatch(sendCpSubscribedState(!checked, setIsSubscribedTwitch));
 
       return !checked;
     });
@@ -45,7 +53,7 @@ const IntegrationSubscription: FC = () => {
         <Typography>Интеграции</Typography>
       </AccordionSummary>
       <AccordionDetails className="content">
-        {username ? (
+        {username && hasTwitchAuth ? (
           <div className="row">
             <TwitchSvg className="base-icon twitch" />
             <span className="label">Twitch</span>

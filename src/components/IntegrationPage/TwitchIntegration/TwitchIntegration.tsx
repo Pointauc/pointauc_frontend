@@ -62,7 +62,7 @@ interface TwitchIntegrationProps {
 
 const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   const dispatch = useDispatch();
-  const { username } = useSelector((root: RootState) => root.user);
+  const { username, hasTwitchAuth } = useSelector((root: RootState) => root.user);
   const {
     twitch: { actual, loading },
   } = useSelector((root: RootState) => root.subscription);
@@ -121,9 +121,9 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   return (
     <div style={{ marginBottom: 20 }}>
       <SettingsGroupTitle title="Twitch">
-        <span className="username">{username}</span>
+        {hasTwitchAuth && <span className="username">{username}</span>}
       </SettingsGroupTitle>
-      {username ? (
+      {username && hasTwitchAuth ? (
         <FormGroup className="auc-settings-list">
           <div style={{ display: 'flex', marginBottom: 10 }}>
             <LoadingButton

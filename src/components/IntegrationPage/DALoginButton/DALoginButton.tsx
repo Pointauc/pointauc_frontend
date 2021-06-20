@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
-import { RootState } from '../../../reducers';
 import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
 
 const authParams = {
@@ -15,8 +13,6 @@ const authParams = {
 const authUrl = new URL('https://www.donationalerts.com/oauth/authorize');
 
 const TwitchLoginButton: FC = () => {
-  const { username } = useSelector((root: RootState) => root.user);
-
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
     authUrl.search = params.toString();
@@ -32,15 +28,9 @@ const TwitchLoginButton: FC = () => {
         size="large"
         startIcon={<DASvg className="base-icon da" />}
         onClick={handleAuth}
-        disabled={!username}
       >
         Подключить Donation Alerts
       </Button>
-      {!username && (
-        <div className="hint" style={{ marginTop: 12 }}>
-          (Требуется Twitch авторизация)
-        </div>
-      )}
     </>
   );
 };
