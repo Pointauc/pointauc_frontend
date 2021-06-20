@@ -16,7 +16,6 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import { Link as RouteLink } from 'react-router-dom';
 import { setUsername } from '../../reducers/User/User';
 import { LINE_BREAK, USERNAME_COOKIE_KEY } from '../../constants/common.constants';
-import {resetSlots, setSlots} from '../../reducers/Slots/Slots';
 import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import { isProduction, loadFile } from '../../utils/common.utils';
 import { RootState } from '../../reducers';
@@ -25,6 +24,7 @@ import MockBidForm from './MockBidForm/MockBidForm';
 import { setCompact } from '../../reducers/AucSettings/AucSettings';
 import ROUTES from '../../constants/routes.constants';
 import SaveLoad from '../SaveLoad/SaveLoad';
+import { resetSlots } from '../../reducers/Slots/Slots';
 
 const isProd = isProduction();
 
@@ -36,7 +36,6 @@ const AucActions: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { compact } = useSelector((root: RootState) => root.aucSettings.view);
-  const { marbleRate } = useSelector((root: RootState) => root.aucSettings.settings);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 
   const handleResetSlots = (): void => {
@@ -53,10 +52,6 @@ const AucActions: React.FC = () => {
 
   const downloadMarbles = (): void => {
     loadFile('marbles.csv', createMarbleConfig(slots));
-  };
-
-  const divideSlots = (): void => {
-    dispatch(setSlots(slots.map(({ amount, ...slot }) => ({ ...slot, amount: Math.round(Number(amount) / Number(marbleRate)) }))))
   };
 
   const handleRestoreOpen = useCallback(() => {
@@ -106,9 +101,6 @@ const AucActions: React.FC = () => {
           Гайд
         </Button>
       </RouteLink>
-      <Button className="button restore" onClick={divideSlots} variant="outlined">
-        Поделить стоимости
-      </Button>
       <Button className="button marbles" onClick={downloadMarbles} variant="outlined">
         Скачать шары
       </Button>
