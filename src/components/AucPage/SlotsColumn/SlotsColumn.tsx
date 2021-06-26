@@ -79,29 +79,34 @@ const SlotsColumn: React.FC = () => {
     draggedRedemption,
   ]);
 
+  const totalSum = useMemo(() => slots.reduce((sum, slot) => slot.amount ? sum + slot.amount : sum, 0), [slots]);
+
   return (
-    <Grid container direction="column" wrap="nowrap" className="slots">
+    <Grid container direction='column' wrap='nowrap' className='slots'>
       <div className={buyoutStyles}>
-        <Typography className="slots-column-buyout-title" variant="h4">
+        <Typography className='slots-column-buyout-title' variant='h4'>
           Выкуп...
         </Typography>
-        <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
+        <Input className='slots-column-buyout-input' placeholder='₽' inputRef={buyoutInput} type='number' />
       </div>
 
-      <Grid container wrap="nowrap" className="slots-wrapper">
-        <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
+      <Grid container wrap='nowrap' className='slots-wrapper'>
+        <Grid container className={slotsColumnClasses} direction='column' wrap='nowrap'>
           <SlotsList slots={slots} />
-          <IconButton
-            onClick={handleAddSlot}
-            className={addButtonClasses}
-            title="Добавить слот"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-          >
-            <AddBoxIcon fontSize="large" />
-          </IconButton>
+          <div className='slots-footer'>
+            <IconButton
+              onClick={handleAddSlot}
+              className={addButtonClasses}
+              title='Добавить слот'
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+            >
+              <AddBoxIcon fontSize='large' />
+            </IconButton>
+            <Typography variant='h5'>Всего: {totalSum} ₽</Typography>
+          </div>
         </Grid>
       </Grid>
     </Grid>
