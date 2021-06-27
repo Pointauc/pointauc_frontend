@@ -1,6 +1,7 @@
 import { DragEvent } from 'react';
 import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
 import { FieldValues } from 'react-hook-form/dist/types/fields';
+import { CellValue, ValueGetterParams } from '@material-ui/x-grid';
 import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
 import { WheelItem } from '../models/wheel.model';
@@ -124,3 +125,5 @@ export const createMapByKey = <TKey, TData>(
 
   return map;
 };
+
+export const percentsFormatter = (params: ValueGetterParams): CellValue => `${params.value}%`;

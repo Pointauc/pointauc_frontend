@@ -1,12 +1,21 @@
 import { Slot } from '../models/slot.model';
 import { getSlot, getTotalSize } from '../utils/slots.utils';
-import { sortSlots } from '../utils/common.utils';
 
 export interface SlotChance {
   name: string;
   id: string;
   chance: number;
-  count?: number;
+  winsCount?: number;
+}
+
+export interface SlotChanceDifference {
+  name: string;
+  id: string;
+  amount: number;
+  originalChance: number;
+  dropoutChance: number;
+  chanceDifference: number;
+  winsCount?: number;
 }
 
 class PredictionService {
@@ -14,12 +23,14 @@ class PredictionService {
   slots: Slot[];
   initialChances: SlotChance[];
   dropoutRate: number;
+  preserveLogs: boolean;
 
-  constructor(slots: Slot[], dropoutRate = 1) {
+  constructor(slots: Slot[], preserveLogs = false, dropoutRate = 1) {
     this.initialChances = this.normalizeSlotsChances([...slots]);
     this.slots = [...slots];
     this.initialSlots = [...slots];
     this.dropoutRate = dropoutRate;
+    this.preserveLogs = preserveLogs;
     // console.log(sortSlots(this.getReverseSlots([...slots])));
   }
 
@@ -38,22 +49,17 @@ class PredictionService {
     (1 - size / totalSize) / (length - 1);
 
   private getWinner = (slots: Slot[]): number => {
-    // console.log(getTotalSize(slots));
-    // console.log(slots);
     const seed = Math.random();
     let restAmount = seed * getTotalSize(slots);
-    // console.log(seed);
-    // console.log(restAmount);
-    // console.log(slots);
-    // console.log(getTotalSize(slots));
-    // const value = Math.floor(seed * 10);
-    // const previousWins = testMap.get(value);
-    //
-    // previousWins ? testMap.set(value, previousWins + 1) : testMap.set(value, 1);
+
+    if (this.preserveLogs) {
+      console.log('оставшиеся лоты:');
+      console.log(slots);
+      console.log(`рандом - ${restAmount}`);
+    }
 
     return slots.findIndex(({ amount }) => {
       restAmount -= Number(amount);
-      // console.log(`cur${name}, left ${restAmount}`);
 
       return restAmount <= 0;
     });
@@ -62,11 +68,12 @@ class PredictionService {
   private performIteration = (slots: Slot[]): string => {
     const updatedSlots = [...slots];
     while (updatedSlots.length > 1) {
-      // console.log([...slots]);
       const winner = this.getWinner(this.getReverseSlots(updatedSlots));
-      // console.log(winner);
 
-      // console.log(`${[...slots][winner]?.name} (index - ${winner})`);
+      if (this.preserveLogs) {
+        console.log(`${updatedSlots[winner]?.name} вылетел`);
+      }
+
       updatedSlots.splice(winner, 1);
     }
 
@@ -79,7 +86,7 @@ class PredictionService {
         name: getSlot(this.slots, id)?.name || '',
         chance: (wins / iterations) * 100,
         id,
-        count: wins,
+        winsCount: wins,
       }))
       .sort(({ chance: a }, { chance: b }) => b - a);
   };
@@ -102,12 +109,12 @@ class PredictionService {
     const slots = [...this.slots];
     // console.log([...this.slots]);
 
-    new Array(count).fill(null).forEach(() => {
-      // const slots = shuffle([...this.slots]);
-      // const win = this.getWinner(slots);
+    new Array(count).fill(null).forEach((_, i) => {
+      if (this.preserveLogs) {
+        console.log(`итерация - ${i}`);
+      }
+
       const winner = this.performIteration([...slots]);
-      // console.log(`${[...slots][win]?.name} (index - ${win})`);
-      // console.log(winner);
       const previousWins = winningMap.get(winner);
 
       previousWins ? winningMap.set(winner, previousWins + 1) : winningMap.set(winner, 1);
@@ -118,18 +125,25 @@ class PredictionService {
     return winningMap;
   };
 
-  researchDifference = (count: number): SlotChance[] => {
+  researchDifference = (count: number): SlotChanceDifference[] => {
     const winners = this.predictChances(count);
-    const winnerChances = this.normalizeWinnersData(winners, count);
 
-    // console.log(this.initialChances);
-    // console.log(winnerChances);
-    console.log(this.initialChances);
-    console.log(winnerChances);
+    return this.initialSlots.map<SlotChanceDifference>(({ name, id, amount }) => {
+      const winsCount = winners.get(id) || 0;
+      const dropoutChance = winsCount ? (winsCount / count) * 100 : 0;
+      const originalChance = this.initialChances.find(({ id: slotId }) => id === slotId)?.chance || 0;
+      const chanceDifference = dropoutChance - originalChance;
 
-    console.log(this.getChanceDifference(winnerChances, this.initialChances));
-
-    return this.getChanceDifference(winnerChances, this.initialChances);
+      return {
+        name: name || '',
+        id,
+        amount: Number(amount),
+        originalChance: Number(originalChance.toFixed(3)),
+        dropoutChance: Number(dropoutChance.toFixed(3)),
+        chanceDifference: Number(chanceDifference.toFixed(3)),
+        winsCount,
+      };
+    });
   };
 
   updateAmount = (slotId: string, diff: number): void => {
@@ -141,19 +155,6 @@ class PredictionService {
       // console.log(`${name} - ${diff} - ${amountChange}`);
       this.slots[index] = { ...this.slots[index], amount: Number(amount) - amountChange };
     }
-  };
-
-  correctAmount = (iteration: number, count: number): Slot[] => {
-    new Array(iteration).fill(null).forEach(() => {
-      console.log('start iteration');
-      const diffData = this.researchDifference(count);
-
-      diffData.forEach(({ id, chance }) => this.updateAmount(id, chance));
-    });
-
-    console.log(sortSlots(this.getReverseSlots(this.slots)));
-
-    return [...this.slots];
   };
 }
 

@@ -1,0 +1,61 @@
+@import "../../../styles/colors";
+
+.dropout-wheel-proof {
+  color: $grey-4;
+  line-height: 20px;
+  font-family: 'Helvetica Neue', Helvetica, "Roboto Light", sans-serif;
+
+  .dropout_formula {
+    width: 90%;
+  }
+
+  h2 {
+    text-align: center;
+    color: $grey-2;
+  }
+
+  h3 {
+    font-weight: 400;
+    margin-left: 2em;
+    color: $grey-3;
+  }
+
+  .iteration-input {
+    margin: 0 20px;
+  }
+
+  p {
+    margin-bottom: 15px;
+
+    &.warning {
+      color: $red-5;
+    }
+  }
+
+  .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  .history-table {
+    min-height: 0;
+
+    .MuiDataGrid-window {
+      overflow-x: hidden;
+    }
+
+    .MuiDataGrid-colCellTitle {
+      font-size: 14px;
+      color: $grey-1;
+    }
+
+    div {
+      font-weight: 400;
+      color: $grey-3;
+    }
+  }
+}

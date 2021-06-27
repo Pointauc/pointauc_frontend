@@ -1,6 +1,12 @@
 @import "../../styles/colors";
 
 .description {
+  &.dropout {
+    .description-content-dropout {
+      height: 100vh;
+    }
+  }
+
   &-content {
     color: $grey-4;
     line-height: 20px;

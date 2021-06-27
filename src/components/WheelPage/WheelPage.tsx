@@ -31,6 +31,7 @@ import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel'
 import RadioButtonGroup from '../RadioButtonGroup/RadioButtonGroup';
 import { Game, Side } from '../Bracket/components/model';
 import ResizableBracket from './ResizableBracket/ResizableBracket';
+import DropoutWheelProof from './DropoutWheelProof/DropoutWheelProof';
 
 const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
@@ -48,6 +49,7 @@ const WheelPage: FC = () => {
   const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
   const [isDuelHelpOpen, setIsDuelHelpOpen] = useState<boolean>(false);
   const [isKoefDescriptionOpen, setIsKoefDescriptionOpen] = useState<boolean>(false);
+  const [isDropoutProofOpen, setIsDropoutProofOpen] = useState<boolean>(false);
 
   const currentDuel = useMemo(() => {
     if (!gamesOrder.length) {
@@ -58,11 +60,10 @@ const WheelPage: FC = () => {
     return [home, visitor] as any[];
   }, [gamesOrder]);
 
-  const rawItems = useMemo(() => (wheelFormat === WheelFormat.BattleRoyal ? currentDuel : rawItemsBase), [
-    currentDuel,
-    rawItemsBase,
-    wheelFormat,
-  ]);
+  const rawItems = useMemo(
+    () => (wheelFormat === WheelFormat.BattleRoyal ? currentDuel : rawItemsBase),
+    [currentDuel, rawItemsBase, wheelFormat],
+  );
   const totalSize = useMemo(() => rawItems.reduce((acc, { amount }) => acc + (amount || 1), 0), [rawItems]);
 
   const handleEmoteChange = useCallback((emote: string) => {
@@ -85,13 +86,7 @@ const WheelPage: FC = () => {
     return items;
   }, [rawItems]);
 
-  const maxSize = useMemo(
-    () =>
-      Math.max(
-        ...wheelItems.map<number>(({ size }) => Number(size)),
-      ),
-    [wheelItems],
-  );
+  const maxSize = useMemo(() => Math.max(...wheelItems.map<number>(({ size }) => Number(size))), [wheelItems]);
   const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
 
   const splittedItems = useMemo(
@@ -215,6 +210,10 @@ const WheelPage: FC = () => {
     setIsKoefDescriptionOpen((prev) => !prev);
   }, []);
 
+  const toggleDropoutProof = useCallback(() => {
+    setIsDropoutProofOpen((prev) => !prev);
+  }, []);
+
   useEffect(() => {
     if (wheelFormat === WheelFormat.BattleRoyal) {
       setSelectedGame(gamesOrder && gamesOrder[0]);
@@ -329,9 +328,23 @@ const WheelPage: FC = () => {
                   </div>
                 </DialogContent>
               </Dialog>
-              <button onClick={toggleKoefDescription} type="button" className="description-link">
-                Куда делся кэф наеба? (важная инфа, прочтите)
-              </button>
+              <Dialog
+                open={isDropoutProofOpen}
+                onClose={toggleDropoutProof}
+                className="description dropout"
+                maxWidth="md"
+                fullWidth
+              >
+                <DialogTitle>ДОКАЗАТЕЛЬСТВО, что выбывание не отличается от обычного колеса!</DialogTitle>
+                <DialogContent dividers className="description-content-dropout">
+                  <DropoutWheelProof />
+                </DialogContent>
+              </Dialog>
+              {(wheelFormat === WheelFormat.Default || wheelFormat === WheelFormat.Dropout) && (
+                <button onClick={toggleDropoutProof} type="button" className="description-link">
+                  ДОКАЗАТЕЛЬСТВО, что выбывание не отличается от обычного колеса!
+                </button>
+              )}
               {wheelFormat === WheelFormat.Dropout && (
                 <Typography style={{ marginTop: 10 }}>{`Осталось: ${wheelItems.length}`}</Typography>
               )}
