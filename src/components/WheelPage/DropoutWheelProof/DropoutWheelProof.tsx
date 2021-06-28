@@ -72,7 +72,7 @@ const DropoutWheelProof: FC = () => {
   const predictChances = useCallback(() => {
     console.clear();
 
-    const safeIterations = preserveLogs ? Math.min(2, iterations) : iterations;
+    const safeIterations = preserveLogs ? Math.min(30, iterations) : iterations;
     const slotsToPredict = slotsPresetType === SlotsPresetType.Current ? slots : createRandomSlots(20, 2000, 10);
     const predictionService = new PredictionService(slotsToPredict, preserveLogs);
     const difference = predictionService.researchDifference(safeIterations);
@@ -96,8 +96,8 @@ const DropoutWheelProof: FC = () => {
       <div>Формула для рассчета инвертированного размера (написано от руки, делать для этого ui долго):</div>
       <img src={DropoutFormula} alt="DropoutFormula" className="dropout_formula" />
       <p>
-        Математическое доказательство этой формулы я еще не решил. Я уже забыл всю матешу и задачка эта практически
-        непосильна для меня.
+        Математическое доказательство этой формулы я еще не решил. Это довольно сложно, к тому же я уже забыл всю матешу
+        с универа и задачка эта практическинепосильна для меня.
       </p>
       <p>
         Изначально находил я эту формулу около интуитивным образом, чтобы получалось нечно похожее на инвертирование для
