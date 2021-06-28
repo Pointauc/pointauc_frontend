@@ -105,7 +105,7 @@ const SlotsColumn: React.FC = () => {
             >
               <AddBoxIcon fontSize='large' />
             </IconButton>
-            <Typography variant='h5'>Всего: {totalSum} ₽</Typography>
+            <Typography className="total-sum">Всего: {totalSum} ₽</Typography>
           </div>
         </Grid>
       </Grid>
