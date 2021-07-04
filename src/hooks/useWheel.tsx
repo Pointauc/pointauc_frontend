@@ -39,6 +39,7 @@ const centerCircleStyles = (background?: string | null): CSSProperties => ({
 
 const borderWidth = 3;
 const maxTextLength = 21;
+const maxWinnerLength = 35;
 const selectorAngle = (Math.PI / 2) * 3;
 
 const getWheelAngle = (rotate: number): number => {
@@ -87,7 +88,7 @@ const useWheel = ({
         ...item,
         startAngle: angleOffset,
         endAngle: angleOffset + angle,
-        name: fitText(item.name, maxTextLength),
+        name: item.name,
       };
       angleOffset = resultItem.endAngle;
 
@@ -133,14 +134,15 @@ const useWheel = ({
     }
 
     const radius = center - 3;
+    const text = fitText(name, maxTextLength);
 
     ctx.save();
     ctx.fillStyle = '#fff';
     ctx.font = '22px Arial';
     ctx.textBaseline = 'middle';
 
-    const offsetModifier = -name.length * 0.007 + 1.3;
-    const textRadius = (radius - ctx.measureText(name).width) / offsetModifier;
+    const offsetModifier = -text.length * 0.007 + 1.3;
+    const textRadius = (radius - ctx.measureText(text).width) / offsetModifier;
     const centerAngle = endAngle - (endAngle - startAngle) / 2;
     const textCoords = {
       x: textRadius * Math.cos(centerAngle) + borderWidth,
@@ -149,7 +151,7 @@ const useWheel = ({
 
     ctx.translate(textCoords.x + radius, textCoords.y + radius);
     ctx.rotate(centerAngle);
-    ctx.fillText(name, 0, 0);
+    ctx.fillText(text, 0, 0);
     ctx.restore();
   };
 
@@ -177,7 +179,7 @@ const useWheel = ({
       return;
     }
 
-    spinTarget.current.innerHTML = winner.name;
+    spinTarget.current.innerHTML = fitText(winner.name, maxWinnerLength);
   };
 
   const handleWin = (previousRotate: number, nextRotate: number): void => {
@@ -186,7 +188,7 @@ const useWheel = ({
     if (winner && spinTarget.current) {
       onWin(winner);
       setWinnerItem(winner);
-      spinTarget.current.innerHTML = winner.name;
+      spinTarget.current.innerHTML = fitText(winner.name, maxWinnerLength);
     }
   };
 
