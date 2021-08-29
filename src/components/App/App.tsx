@@ -24,6 +24,7 @@ import HistoryPage from '../HistoryPage/HistoryPage';
 import WheelPage from '../WheelPage/WheelPage';
 import HelpPage from '../HelpPage/HelpPage';
 import Statistic from '../Statistic/Statistic';
+import StopwatchPage from "../StopwatchPage/StopwatchPage";
 
 const drawerWidth = 240;
 
@@ -70,6 +71,7 @@ const useStyles = makeStyles(() =>
 );
 
 const hasToken = !!getCookie('jwtToken');
+const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -105,7 +107,7 @@ const App: React.FC = () => {
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
-  const isOpen = useMemo(() => pathname !== ROUTES.HOME || isDrawerOpen, [isDrawerOpen, pathname]);
+  const isOpen = useMemo(() => !hiddenDrawerRoutes.includes(pathname) || isDrawerOpen, [isDrawerOpen, pathname]);
   const drawerClasses = useMemo(
     () => classNames(classes.drawer, { [classes.drawerOpen]: isOpen, [classes.drawerClose]: !isOpen }),
     [classes.drawer, classes.drawerClose, classes.drawerOpen, isOpen],
@@ -168,6 +170,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path={ROUTES.STATISTIC}>
               <Statistic />
+            </Route>
+            <Route exact path={ROUTES.STOPWATCH}>
+              <StopwatchPage />
             </Route>
           </Switch>
         </main>

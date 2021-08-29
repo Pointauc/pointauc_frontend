@@ -13,6 +13,7 @@ const ROUTES = {
   HELP: '/help',
   INTEGRATION: '/integration',
   STATISTIC: '/statistic',
+  STOPWATCH: '/stopwatch',
   CHAT_WHEEL: '/chatWheel/:channel',
 };
 
