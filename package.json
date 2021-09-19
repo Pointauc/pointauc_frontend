@@ -50,7 +50,7 @@
     "test": "react-app-rewired test",
     "lint": "eslint src/**/*.{ts,tsx}",
     "eject": "react-scripts eject",
-    "analyze": "source-map-explorer build/static/js/2.439dde69.chunk.js"
+    "analyze": "source-map-explorer build/static/js/2.58a98568.chunk.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -101,6 +101,7 @@
     "prettier-eslint": "^11.0.0",
     "react-app-rewired": "^2.1.6",
     "sass": "^1.35.1",
+    "source-map-explorer": "^2.5.2",
     "tslint-plugin-prettier": "^2.3.0"
   }
 }
