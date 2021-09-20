@@ -59,3 +59,11 @@ export const theme = createMuiTheme({
     },
   },
 });
+
+export const successTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#80de84',
+    },
+  },
+});

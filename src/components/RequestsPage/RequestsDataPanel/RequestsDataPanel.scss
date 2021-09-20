@@ -1,0 +1,16 @@
+@import "../../../styles/colors";
+
+.requests-list-panel {
+  display: flex;
+  justify-content: center;
+
+  .label {
+    font-weight: 400;
+    font-size: 1.2em;
+    color: $grey-3;
+  }
+
+  &>button,div {
+    margin-right: 15px;
+  }
+}

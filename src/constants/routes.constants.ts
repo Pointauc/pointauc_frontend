@@ -15,6 +15,7 @@ const ROUTES = {
   STATISTIC: '/statistic',
   STOPWATCH: '/stopwatch',
   CHAT_WHEEL: '/chatWheel/:channel',
+  REQUESTS: '/requests',
 };
 
 export default ROUTES;

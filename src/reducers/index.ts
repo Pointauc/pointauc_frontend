@@ -7,6 +7,7 @@ import pubSubSocket from './PubSubSocket/PubSubSocket';
 import aucSettings from './AucSettings/AucSettings';
 import subscription from './Subscription/Subscription';
 import extraWindows from './ExtraWindows/ExtraWindows';
+import requests from './Requests/Requests';
 
 const rootReducer = combineReducers({
   slots,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   aucSettings,
   subscription,
   extraWindows,
+  requests,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

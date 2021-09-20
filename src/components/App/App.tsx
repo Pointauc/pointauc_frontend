@@ -3,7 +3,7 @@ import './App.scss';
 import { createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import classNames from 'classnames';
 import axios from 'axios';
 import ROUTES from '../../constants/routes.constants';
@@ -24,7 +24,8 @@ import HistoryPage from '../HistoryPage/HistoryPage';
 import WheelPage from '../WheelPage/WheelPage';
 import HelpPage from '../HelpPage/HelpPage';
 import Statistic from '../Statistic/Statistic';
-import StopwatchPage from "../StopwatchPage/StopwatchPage";
+import StopwatchPage from '../StopwatchPage/StopwatchPage';
+import RequestsPage from '../RequestsPage/RequestsPage';
 
 const drawerWidth = 240;
 
@@ -114,13 +115,16 @@ const App: React.FC = () => {
   );
 
   const createMenuItem = useCallback(
-    ({ IconComponent, title, path, disabled }: MenuItem) => (
-      <ListItem disabled={disabled} button key={title} selected={path === pathname} component={Link} to={path}>
-        <ListItemIcon>
-          <IconComponent className={classes.menuIcon} />
-        </ListItemIcon>
-        <ListItemText primary={title} />
-      </ListItem>
+    ({ IconComponent, title, path, disabled, divide }: MenuItem) => (
+      <>
+        {divide && <Divider style={{ margin: '10px 0' }} />}
+        <ListItem disabled={disabled} button key={title} selected={path === pathname} component={Link} to={path}>
+          <ListItemIcon>
+            <IconComponent className={classes.menuIcon} />
+          </ListItemIcon>
+          <ListItemText primary={title} />
+        </ListItem>
+      </>
     ),
     [classes.menuIcon, pathname],
   );
@@ -173,6 +177,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path={ROUTES.STOPWATCH}>
               <StopwatchPage />
+            </Route>
+            <Route exact path={ROUTES.REQUESTS}>
+              <RequestsPage />
             </Route>
           </Switch>
         </main>

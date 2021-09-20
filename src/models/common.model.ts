@@ -8,6 +8,7 @@ export interface MenuItem {
   path: string;
   IconComponent: StyledComponent<StyledProps>;
   disabled?: boolean;
+  divide?: boolean;
 }
 
 export interface Size {
