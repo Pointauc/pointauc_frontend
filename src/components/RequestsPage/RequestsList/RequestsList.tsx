@@ -5,7 +5,7 @@ import { RootState } from '../../../reducers';
 import RequestsTable from '../RequestsTable/RequestsTable';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { UserRequest } from '../../../models/requests.model';
-import { setCurrentList } from '../../../reducers/Requests/Requests';
+import { deleteRequest, setCurrentList } from '../../../reducers/Requests/Requests';
 
 interface RequestsListProps {
   openWheel: (data: UserRequest[]) => void;
@@ -23,6 +23,13 @@ const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
     openWheel(currentListData || []);
   }, [openWheel, currentListData]);
 
+  const handleDelete = useCallback(
+    (id: string): void => {
+      dispatch(deleteRequest(id));
+    },
+    [dispatch],
+  );
+
   return (
     <div>
       <SettingsGroupTitle title="Все заказы" />
@@ -34,7 +41,7 @@ const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
           Очистить
         </Button>
       </div>
-      <RequestsTable requests={currentListData || []} loading={!currentListData} />
+      <RequestsTable requests={currentListData || []} loading={!currentListData} onDelete={handleDelete} />
     </div>
   );
 };

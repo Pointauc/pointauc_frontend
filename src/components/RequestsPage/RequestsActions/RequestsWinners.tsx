@@ -6,7 +6,7 @@ import RequestsTable from '../RequestsTable/RequestsTable';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { getRandomIntInclusive } from '../../../utils/common.utils';
 import { UserRequest } from '../../../models/requests.model';
-import { addRequestWinner, setWinnersList } from '../../../reducers/Requests/Requests';
+import { addRequestWinner, deleteRequestWinner, setWinnersList } from '../../../reducers/Requests/Requests';
 
 interface RequestsWinnersProps {
   openWheel: (data: UserRequest[]) => void;
@@ -39,6 +39,13 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
     openWheel(winnersListData);
   }, [openWheel, winnersListData]);
 
+  const handleDelete = useCallback(
+    (id: string): void => {
+      dispatch(deleteRequestWinner(id));
+    },
+    [dispatch],
+  );
+
   return (
     <div style={{ marginBottom: 10 }}>
       <SettingsGroupTitle title="Победители" />
@@ -61,7 +68,7 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
           Очистить
         </Button>
       </div>
-      <RequestsTable requests={winnersListData} />
+      <RequestsTable requests={winnersListData} onDelete={handleDelete} />
     </div>
   );
 };
