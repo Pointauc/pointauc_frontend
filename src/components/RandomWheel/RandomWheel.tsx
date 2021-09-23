@@ -37,7 +37,7 @@ interface RandomWheelProps {
 const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
   const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(20);
-  const [rawItemsBase, setRawItems] = useState<WheelItem[]>(items);
+  const [rawItems, setRawItems] = useState<WheelItem[]>(items);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const [useRandomOrg, setUseRandomOrg] = useState<boolean>(true);
@@ -64,9 +64,17 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
     [currentDuel],
   );
 
+  const filteredItems = useMemo(
+    () =>
+      getTotalSize(rawItems)
+        ? rawItems.filter(({ amount }) => amount)
+        : rawItems.map((item) => ({ ...item, amount: 1 })),
+    [rawItems],
+  );
+
   const currentItems = useMemo(
-    () => (wheelFormat === WheelFormat.BattleRoyal ? duelItems : rawItemsBase),
-    [duelItems, rawItemsBase, wheelFormat],
+    () => (wheelFormat === WheelFormat.BattleRoyal ? duelItems : filteredItems),
+    [duelItems, filteredItems, wheelFormat],
   );
   const totalSize = useMemo(() => getTotalSize(currentItems), [currentItems]);
 
@@ -75,23 +83,12 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
     setActiveEmote(emote);
   }, []);
 
-  const filteredItems = useMemo(() => {
-    if (totalSize) {
-      return currentItems.filter(({ amount }) => amount);
-    }
-
-    return currentItems;
-  }, [currentItems, totalSize]);
-
-  const maxSize = useMemo(
-    () => Math.max(...filteredItems.map<number>(({ amount }) => Number(amount))),
-    [filteredItems],
-  );
+  const maxSize = useMemo(() => Math.max(...currentItems.map<number>(({ amount }) => Number(amount))), [currentItems]);
   const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
 
   const splittedItems = useMemo(
     () =>
-      filteredItems.reduce<WheelItem[]>((acc, { amount, ...item }) => {
+      currentItems.reduce<WheelItem[]>((acc, { amount, ...item }) => {
         const part = Number(amount) / maxValidValue;
 
         if (part > 1) {
@@ -103,13 +100,13 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
 
         return [...acc, { ...item, amount }];
       }, []),
-    [maxValidValue, filteredItems],
+    [maxValidValue, currentItems],
   );
 
   const finalItems = useMemo(() => {
     return splittedItems;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [splittedItems.length, filteredItems]);
+  }, [splittedItems.length, currentItems]);
 
   const handleWin = useCallback(
     (winner: WheelItem) => {
@@ -332,7 +329,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
           </div>
         </div>
         {wheelFormat === WheelFormat.BattleRoyal && (
-          <ResizableBracket onGamesOrder={setGamesOrder} currentGame={selectedGame} items={rawItemsBase} />
+          <ResizableBracket onGamesOrder={setGamesOrder} currentGame={selectedGame} items={filteredItems} />
         )}
       </div>
     </div>
