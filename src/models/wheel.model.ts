@@ -1,8 +1,10 @@
+import { Key } from 'react';
+
 export interface WheelItem {
   name: string;
-  id: string;
+  id: Key;
   color: string;
-  size?: number;
+  amount?: number;
 }
 
 export interface WheelItemWithAngle extends WheelItem {

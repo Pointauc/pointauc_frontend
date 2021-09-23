@@ -3,6 +3,8 @@ import { Slot } from '../models/slot.model';
 import { REMOVE_COST_PREFIX } from '../constants/purchase.constants';
 import { Purchase } from '../reducers/Purchases/Purchases';
 import { Game, Side, SideInfo } from '../components/Bracket/components/model';
+import { WheelItem } from '../models/wheel.model';
+import { getWheelColor } from './common.utils';
 
 export const getWinnerSlot = (slots: Slot[]): Slot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
@@ -13,18 +15,17 @@ export const normalizePurchase = ({ message, cost, ...restPurchase }: Purchase):
   ...restPurchase,
 });
 
-export const parseSlotsPreset = (text: string): Slot[] => {
-  return text
-    .split('\n')
-    .map<Slot>((value, id) => ({ fastId: id, id: id.toString(), name: value, amount: 1, extra: null }));
+export const parseWheelPreset = (text: string): WheelItem[] => {
+  return text.split('\n').map<WheelItem>((value, id) => ({ id: id.toString(), name: value, color: getWheelColor() }));
 };
 
-export const getTotalSize = (slots: Slot[]): number => slots.reduce((accum, { amount }) => accum + Number(amount), 0);
+export const getTotalSize = (slots: { amount?: number | null }[]): number =>
+  slots.reduce((accum, { amount }) => accum + Number(amount), 0);
 
 export const getSlot = (slots: Slot[], slotId: string): Slot | undefined => slots.find(({ id }) => id === slotId);
 
-export const splitSlotsWitchMostSimilarValues = (slots: Slot[]): [Slot[], Slot[]] => {
-  const restSlots = [...slots];
+export const splitSlotsWitchMostSimilarValues = (items: WheelItem[]): [WheelItem[], WheelItem[]] => {
+  const restSlots = [...items];
   const a = [restSlots.splice(0, 1)[0]];
   let aSize = Number(a[0]?.amount);
   const b = [restSlots.splice(-1, 1)[0]];
@@ -43,32 +44,37 @@ export const splitSlotsWitchMostSimilarValues = (slots: Slot[]): [Slot[], Slot[]
   return [a, b];
 };
 
-export const createGame = (slots: Slot[], level = 0, matchOrder: Game[] = [], parentSide?: SideInfo): Game | null => {
-  if (!slots.length) {
+export const createGame = (
+  items: WheelItem[],
+  level = 0,
+  matchOrder: Game[] = [],
+  parentSide?: SideInfo,
+): Game | null => {
+  if (!items.length) {
     return null;
   }
-  const [a, b] = splitSlotsWitchMostSimilarValues(slots);
+  const [a, b] = splitSlotsWitchMostSimilarValues(items);
 
-  const createSide = (restSlots: Slot[], side: Side, gameId: Key): SideInfo => {
+  const createSide = (restItms: WheelItem[], side: Side, gameId: Key): SideInfo => {
     const createdSide: SideInfo =
-      restSlots.length === 1
+      restItms.length === 1
         ? {
-            amount: Number(restSlots[0]?.amount),
-            name: restSlots[0].name || '',
-            id: restSlots[0].id,
+            amount: Number(restItms[0]?.amount),
+            name: restItms[0].name || '',
+            id: restItms[0].id,
             side,
             gameId,
           }
         : {
             side,
-            amount: getTotalSize(restSlots),
+            amount: getTotalSize(restItms),
             name: '',
             id: Math.random(),
             gameId,
           };
 
-    if (restSlots.length > 1) {
-      createdSide.sourceGame = createGame(restSlots, level + 1, matchOrder, createdSide);
+    if (restItms.length > 1) {
+      createdSide.sourceGame = createGame(restItms, level + 1, matchOrder, createdSide);
     }
 
     return createdSide;

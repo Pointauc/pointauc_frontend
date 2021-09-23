@@ -40,7 +40,7 @@
     "redux-thunk": "^2.3.0",
     "string-similarity": "^4.0.4",
     "styled-components": "^5.2.1",
-    "tmi.js": "^1.7.1",
+    "tmi.js": "^1.8.5",
     "uuid": "^8.3.2",
     "youtube-player": "^5.5.2"
   },

@@ -1,13 +1,13 @@
 import React, { FC, ReactNode, useState } from 'react';
 import { Button, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { Slot } from '../../../models/slot.model';
-import { parseSlotsPreset } from '../../../utils/slots.utils';
+import { parseWheelPreset } from '../../../utils/slots.utils';
 import './SlotsPresetInput.scss';
+import { WheelItem } from '../../../models/wheel.model';
 
 interface SlotsPresetInput {
   buttonTitle: string;
-  onChange: (slots: Slot[]) => void;
+  onChange: (items: WheelItem[]) => void;
   buttonClass?: string;
   dialogTitle?: ReactNode;
   hint?: ReactNode;
@@ -24,7 +24,7 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
 
     reader.onloadend = (): void => {
       if (typeof reader.result === 'string') {
-        onChange(parseSlotsPreset(reader.result));
+        onChange(parseWheelPreset(reader.result));
         setIsInputOpened(false);
       }
     };

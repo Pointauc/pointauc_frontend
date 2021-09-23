@@ -83,7 +83,7 @@ export const shuffle = <T>(a: T[]): T[] => {
 
 export const isFirefox = (): boolean => navigator.userAgent.toLowerCase().includes('firefox');
 
-export const getTotalSize = (items: WheelItem[]): number => items.reduce((acc, { size }) => acc + (size || 0), 0);
+export const getTotalSize = (items: WheelItem[]): number => items.reduce((acc, { amount }) => acc + (amount || 0), 0);
 
 export const loadFile = (filename: string, data: string): void => {
   const element = document.createElement(TAGS.A);

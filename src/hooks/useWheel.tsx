@@ -62,11 +62,11 @@ const useWheel = ({
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const shuffledItems = useMemo(() => shuffle(rawItems), [rawItems]);
-  const items = useMemo(
-    () => shuffledItems.map(({ size, ...rest }) => ({ ...rest, size: (size || 1) ** dropoutRate })),
+  const items = useMemo<WheelItem[]>(
+    () => shuffledItems.map(({ amount, ...rest }) => ({ ...rest, amount: (amount || 1) ** dropoutRate })),
     [dropoutRate, shuffledItems],
   );
-  const totalSize = useMemo(() => items.reduce((acc, { size }) => acc + (size || 1), 0), [items]);
+  const totalSize = useMemo(() => items.reduce((acc, { amount }) => acc + (amount || 1), 0), [items]);
   const [rotate, setRotate] = useState<number>(0);
   const [offset, setOffset] = useState<number>(0);
   const [winnerItem, setWinnerItem] = useState<WheelItem>();
@@ -78,11 +78,11 @@ const useWheel = ({
 
   const normalizedItems = useMemo(() => {
     let angleOffset = 0;
-    const actualItems = dropout ? items.map((item) => ({ ...item, size: getReverseSize(item.size || 1) })) : items;
-    const actualTotalSize = dropout ? actualItems.reduce((acc, { size }) => acc + (size || 1), 0) : totalSize;
+    const actualItems = dropout ? items.map((item) => ({ ...item, amount: getReverseSize(item.amount || 1) })) : items;
+    const actualTotalSize = dropout ? actualItems.reduce((acc, { amount }) => acc + (amount || 1), 0) : totalSize;
 
     return actualItems.map<WheelItemWithAngle>((item) => {
-      const size = (item.size || 1) / actualTotalSize;
+      const size = (item.amount || 1) / actualTotalSize;
       const angle = 2 * Math.PI * size;
       const resultItem = {
         ...item,

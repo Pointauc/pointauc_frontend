@@ -13,8 +13,8 @@ import { Button } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import './PurchaseHistory.scss';
 import { FORMAT } from '../../../constants/format.constants';
-import { PurchaseStatusEnum } from '../../../reducers/Purchases/Purchases';
 import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
+import { PurchaseStatusEnum } from '../../../models/purchase';
 
 interface SlotsMap {
   [key: string]: string | null;

@@ -2,10 +2,11 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
 import { Slot } from '../../models/slot.model';
-import { Purchase, PurchaseStatusEnum, logPurchase, removePurchase } from '../Purchases/Purchases';
+import { Purchase, logPurchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 import { getRandomIntInclusive, sortSlots } from '../../utils/common.utils';
 import slotNamesMap from '../../services/SlotNamesMap';
+import { PurchaseStatusEnum } from '../../models/purchase';
 
 interface SlotsState {
   slots: Slot[];
@@ -42,7 +43,7 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
 
 const initialState: SlotsState = {
   slots: [createSlot()],
-  // slots: [...createRandomSlots(5, 10000, 500), ...createRandomSlots(30, 300, 100)],
+  // slots: [...createRandomSlots(5, 10000, 500), ...createRandomSlots(10, 300, 100)],
   // slots: [...new Array(6).fill(null).map(() => createSlot({ amount: 100, name: '100' }))],
 };
 
@@ -130,57 +131,55 @@ export const {
   addSlotAmount,
 } = slotsSlice.actions;
 
-export const createSlotFromPurchase = (bid: Purchase) => (
-  dispatch: ThunkDispatch<RootState, {}, Action>,
-  getState: () => RootState,
-): void => {
-  const {
-    aucSettings: {
-      integration: {
-        da: { pointsRate },
+export const createSlotFromPurchase =
+  (bid: Purchase) =>
+  (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+    const {
+      aucSettings: {
+        integration: {
+          da: { pointsRate },
+        },
       },
-    },
-    slots: { slots },
-  } = getState();
-  const { id, message: name, cost, isDonation } = bid;
-  // eslint-disable-next-line no-plusplus
-  const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null, fastId: ++maxFastId };
-  const updatedSlots = [...slots, newSlot];
-  slotNamesMap.set(name, id);
-  slotNamesMap.set(`#${maxFastId}`, id);
+      slots: { slots },
+    } = getState();
+    const { id, message: name, cost, isDonation } = bid;
+    // eslint-disable-next-line no-plusplus
+    const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null, fastId: ++maxFastId };
+    const updatedSlots = [...slots, newSlot];
+    slotNamesMap.set(name, id);
+    slotNamesMap.set(`#${maxFastId}`, id);
 
-  updateSlotPosition(updatedSlots, updatedSlots.length - 1);
-  dispatch(setSlots(sortSlots(updatedSlots)));
-  dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }));
-};
+    updateSlotPosition(updatedSlots, updatedSlots.length - 1);
+    dispatch(setSlots(sortSlots(updatedSlots)));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }));
+  };
 
-export const addBid = (slotId: string, bid: Purchase) => (
-  dispatch: ThunkDispatch<RootState, {}, Action>,
-  getState: () => RootState,
-): void => {
-  const {
-    aucSettings: {
-      settings: { marbleRate = 1, marblesAuc },
-      integration: {
-        da: { pointsRate },
+export const addBid =
+  (slotId: string, bid: Purchase) =>
+  (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+    const {
+      aucSettings: {
+        settings: { marbleRate = 1, marblesAuc },
+        integration: {
+          da: { pointsRate },
+        },
       },
-    },
-    slots: { slots },
-  } = getState();
+      slots: { slots },
+    } = getState();
 
-  if (!slots.find(({ id }) => id === slotId)) {
-    return;
-  }
+    if (!slots.find(({ id }) => id === slotId)) {
+      return;
+    }
 
-  const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
-  const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
-  const { message, cost, isDonation, id } = bid;
-  const addedCost = isDonation ? cost * pointsRate : cost;
+    const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
+    const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
+    const { message, cost, isDonation, id } = bid;
+    const addedCost = isDonation ? cost * pointsRate : cost;
 
-  slotNamesMap.set(message, slotId);
-  dispatch(addSlotAmount({ id: slotId, amount: convertCost(addedCost) }));
-  dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }));
-  dispatch(removePurchase(id));
-};
+    slotNamesMap.set(message, slotId);
+    dispatch(addSlotAmount({ id: slotId, amount: convertCost(addedCost) }));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }));
+    dispatch(removePurchase(id));
+  };
 
 export default slotsSlice.reducer;

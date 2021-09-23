@@ -2,27 +2,27 @@ import React, { FC, Key, useEffect, useState } from 'react';
 import Bracket from '../Bracket/components/Bracket';
 import { Game } from '../Bracket/components/model';
 import { createGame, setOffsets } from '../../utils/slots.utils';
-import { Slot } from '../../models/slot.model';
+import { WheelItem } from '../../models/wheel.model';
 
 export interface SlotsBracketProps {
   value?: number;
   onGamesOrder: (games: Game[]) => void;
   currentGame: Key;
-  slots: Slot[];
+  items: WheelItem[];
 }
 
-const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, slots }) => {
+const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items }) => {
   const [game, setGame] = useState<Game | null>(null);
 
   useEffect(() => {
     const gameOrder: Game[] = [];
 
-    if (slots.length < 2) {
+    if (items.length < 2) {
       return;
     }
 
     const createdGame = createGame(
-      slots.filter(({ amount }) => amount),
+      items.filter(({ amount }) => amount),
       0,
       gameOrder,
     );
@@ -33,7 +33,7 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, slots 
     }
 
     onGamesOrder(gameOrder);
-  }, [onGamesOrder, slots]);
+  }, [onGamesOrder, items]);
 
   if (!game) {
     return null;

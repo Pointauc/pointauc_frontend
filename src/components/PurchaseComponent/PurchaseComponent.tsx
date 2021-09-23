@@ -7,7 +7,6 @@ import { findBestMatch } from 'string-similarity';
 import {
   logPurchase,
   Purchase,
-  PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
   updateExistBids,
@@ -20,6 +19,7 @@ import { addBid, createSlotFromPurchase } from '../../reducers/Slots/Slots';
 import { useCostConvert } from '../../hooks/useCostConvert';
 import Marble from '../../assets/img/Marble.png';
 import { store } from '../../index';
+import { PurchaseStatusEnum } from '../../models/purchase';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -88,17 +88,14 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
   };
   const cardStyles = isDonation ? donationStyles : redemptionStyles;
   const purchaseClasses = classNames(['purchase', { 'drag-placeholder': isDragging, 'remove-cost': isRemovePurchase }]);
-  const donationCost = useMemo(() => (pointsRate === 1 ? `${cost}₽` : `${cost * pointsRate} (${cost} ₽)`), [
-    cost,
-    pointsRate,
-  ]);
-  const costString = useMemo(() => (isDonation && !marblesAuc ? donationCost : convertCost(cost)), [
-    convertCost,
-    cost,
-    donationCost,
-    isDonation,
-    marblesAuc,
-  ]);
+  const donationCost = useMemo(
+    () => (pointsRate === 1 ? `${cost}₽` : `${cost * pointsRate} (${cost} ₽)`),
+    [cost, pointsRate],
+  );
+  const costString = useMemo(
+    () => (isDonation && !marblesAuc ? donationCost : convertCost(cost)),
+    [convertCost, cost, donationCost, isDonation, marblesAuc],
+  );
   const bidTitle = useMemo(
     () =>
       marblesAuc ? (

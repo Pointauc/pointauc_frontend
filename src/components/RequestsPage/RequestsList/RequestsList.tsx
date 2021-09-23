@@ -1,15 +1,40 @@
-import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import React, { FC, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import RequestsTable from '../RequestsTable/RequestsTable';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
+import { UserRequest } from '../../../models/requests.model';
+import { setCurrentList } from '../../../reducers/Requests/Requests';
 
-const RequestsList: FC = () => {
+interface RequestsListProps {
+  openWheel: (data: UserRequest[]) => void;
+}
+
+const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
+  const dispatch = useDispatch();
   const { currentListData } = useSelector((root: RootState) => root.requests);
+
+  const clearWinnersList = useCallback(() => {
+    dispatch(setCurrentList([]));
+  }, [dispatch]);
+
+  const handleWheelClick = useCallback(() => {
+    openWheel(currentListData || []);
+  }, [openWheel, currentListData]);
+
   return (
     <div>
       <SettingsGroupTitle title="Все заказы" />
-      <RequestsTable requests={currentListData} />
+      <div className="row">
+        <Button variant="outlined" color="primary" onClick={handleWheelClick}>
+          крутить колесо
+        </Button>
+        <Button variant="outlined" onClick={clearWinnersList}>
+          Очистить
+        </Button>
+      </div>
+      <RequestsTable requests={currentListData || []} loading={!currentListData} />
     </div>
   );
 };

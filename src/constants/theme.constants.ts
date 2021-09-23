@@ -39,7 +39,7 @@ export const theme = createMuiTheme({
       marginBottom: 15,
     },
     h6: {
-      fontWeight: 300,
+      fontWeight: 400,
       marginBottom: 5,
     },
     body2: {
@@ -62,6 +62,7 @@ export const theme = createMuiTheme({
 
 export const successTheme = createMuiTheme({
   palette: {
+    type: 'dark',
     primary: {
       main: '#80de84',
     },

@@ -1,0 +1,29 @@
+@import "../../../styles/colors";
+
+.history-table {
+  min-height: 50px;
+
+  .MuiDataGrid-root {
+    font-weight: 400 !important;
+    color: $grey-2;
+  }
+
+  .MuiDataGrid-columnsContainer {
+    color: white;
+    font-size: 1.05em;
+  }
+
+  &>div {
+    height: initial !important;
+  }
+
+  &.empty {
+    .MuiDataGrid-root {
+      max-height: 130px;
+    }
+
+    .MuiDataGrid-overlay {
+      display: none;
+    }
+  }
+}

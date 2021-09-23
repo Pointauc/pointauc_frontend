@@ -1,9 +1,12 @@
 import React, { FC } from 'react';
 import { ColDef, XGrid } from '@material-ui/x-grid';
-import { Request } from '../../../models/requests.model';
+import classNames from 'classnames';
+import { UserRequest } from '../../../models/requests.model';
+import './RequestsTable.scss';
 
 interface RequestsTableProps {
-  requests: Request[];
+  requests: UserRequest[];
+  loading?: boolean;
 }
 
 const columns: ColDef[] = [
@@ -23,10 +26,20 @@ const columns: ColDef[] = [
   },
 ];
 
-const RequestsTable: FC<RequestsTableProps> = ({ requests }) => {
+const RequestsTable: FC<RequestsTableProps> = ({ requests, loading }) => {
   return (
-    <div className="history-table">
-      <XGrid columns={columns} rows={requests} />
+    <div className={classNames('history-table', { empty: !requests.length && !loading })}>
+      <XGrid
+        columns={columns}
+        rows={requests}
+        autoHeight
+        pagination
+        pageSize={25}
+        rowsPerPageOptions={[25]}
+        disableSelectionOnClick
+        rowHeight={38}
+        loading={loading}
+      />
     </div>
   );
 };

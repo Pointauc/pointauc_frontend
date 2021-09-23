@@ -12,7 +12,6 @@ import { RootState } from '../../../reducers';
 import {
   logPurchase,
   Purchase,
-  PurchaseStatusEnum,
   removePurchase,
   setDraggedRedemption,
   updateExistBids,
@@ -21,6 +20,7 @@ import slotNamesMap from '../../../services/SlotNamesMap';
 import { useCostConvert } from '../../../hooks/useCostConvert';
 import { openTrailer } from '../../../reducers/ExtraWindows/ExtraWindows';
 import { handleDragOver } from '../../../utils/common.utils';
+import { PurchaseStatusEnum } from '../../../models/purchase';
 
 interface DroppableSlotProps extends Slot {
   index: number;

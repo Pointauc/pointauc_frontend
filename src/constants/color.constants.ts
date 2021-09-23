@@ -1,4 +1,4 @@
-import { PurchaseStatusEnum } from '../reducers/Purchases/Purchases';
+import { PurchaseStatusEnum } from '../models/purchase';
 
 export const COLORS = {
   PURCHASE_STATUS: {

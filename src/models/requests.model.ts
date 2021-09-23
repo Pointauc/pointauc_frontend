@@ -11,8 +11,8 @@ export interface RequestsListInfo {
   disabled?: boolean;
 }
 
-export interface Request {
+export interface UserRequest {
   username: string;
   id: string;
-  request: string;
+  request?: string;
 }

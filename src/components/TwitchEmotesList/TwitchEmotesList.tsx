@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { CircularProgress, IconButton } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
 import { RootState } from '../../reducers';
@@ -29,13 +30,13 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
   }, [userId]);
 
   const crateEmoteList = useCallback(
-    (emotes?: Collection<string, Emote>) => {
+    (emotes: Collection<string, Emote> | null, id: number) => {
       if (!emotes) {
         return null;
       }
 
       return (
-        <div className="emotes-group">
+        <div className="emotes-group" key={id}>
           {Array.from<Emote>(emotes.values()).map((emote) => {
             const handleClick = (): void => setActiveEmote(emote.toLink(2));
 
