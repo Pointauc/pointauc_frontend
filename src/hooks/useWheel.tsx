@@ -242,12 +242,12 @@ const useWheel = ({
   };
 
   const updateWheel = (): void => {
-    resizeCanvas(canvas.current);
-    resizeCanvas(wheelSelector.current);
     drawWheel();
   };
 
   useEffect(() => {
+    resizeCanvas(canvas.current);
+    resizeCanvas(wheelSelector.current);
     // window.addEventListener('resize', updateWheel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
