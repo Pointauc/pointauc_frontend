@@ -7,7 +7,6 @@ const authParams = {
   redirect_uri: `${window.location.origin}/da/redirect`,
   response_type: 'code',
   scope: 'oauth-donation-subscribe oauth-user-show',
-  force_verify: 'true',
 };
 
 const authUrl = new URL('https://www.donationalerts.com/oauth/authorize');
