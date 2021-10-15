@@ -30,12 +30,17 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
   const addRandomWinners = useCallback(() => {
     if (currentListData.length) {
       for (let i = 0; i < randomCount; i++) {
-        const winnerIndex = getRandomIntInclusive(0, currentListData.length - 1);
+        if (currentListData.length !== winnersListData.length) {
+          let winnerIndex = -1;
+          while (winnerIndex === -1 || winnersListData.includes(currentListData[winnerIndex])) {
+            winnerIndex = getRandomIntInclusive(0, currentListData.length - 1);
+          }
 
-        dispatch(addRequestWinner(currentListData[winnerIndex]));
+          dispatch(addRequestWinner(currentListData[winnerIndex]));
+        }
       }
     }
-  }, [currentListData, dispatch, randomCount]);
+  }, [currentListData, dispatch, randomCount, winnersListData]);
 
   const handleWheelClick = useCallback(() => {
     openWheel(winnersListData);

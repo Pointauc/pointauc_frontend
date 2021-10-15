@@ -55,8 +55,10 @@ const IntegrationSubscription: FC = () => {
       <AccordionDetails className="content">
         {username && hasTwitchAuth ? (
           <div className="row">
-            <TwitchSvg className="base-icon twitch" />
-            <span className="label">Twitch</span>
+            <div className="col">
+              <TwitchSvg className="base-icon twitch" />
+              <span className="label">Twitch</span>
+            </div>
             <Switch onChange={subscribeTwitch} disabled={twitchLoading} checked={isSubscribedTwitch} />
           </div>
         ) : (
@@ -64,8 +66,10 @@ const IntegrationSubscription: FC = () => {
         )}
         {username && hasDAAuth ? (
           <div className="row">
-            <DASvg className="base-icon da" />
-            <span className="label">Donation Alerts</span>
+            <div className="col">
+              <DASvg className="base-icon da" />
+              <span className="label">Donation Alerts</span>
+            </div>
             <Switch onChange={subscribeDA} disabled={loading} checked={isSubscribedDA} />
           </div>
         ) : (
