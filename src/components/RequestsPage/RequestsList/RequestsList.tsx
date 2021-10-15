@@ -34,12 +34,14 @@ const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
     <div>
       <SettingsGroupTitle title="Все заказы" />
       <div className="row">
-        <Button variant="outlined" color="primary" onClick={handleWheelClick}>
-          крутить колесо
-        </Button>
-        <Button variant="outlined" onClick={clearWinnersList}>
-          Очистить
-        </Button>
+        <div className="col">
+          <Button variant="outlined" color="primary" onClick={handleWheelClick}>
+            крутить колесо
+          </Button>
+          <Button variant="outlined" onClick={clearWinnersList}>
+            Очистить
+          </Button>
+        </div>
       </div>
       <RequestsTable requests={currentListData || []} loading={!currentListData} onDelete={handleDelete} />
     </div>

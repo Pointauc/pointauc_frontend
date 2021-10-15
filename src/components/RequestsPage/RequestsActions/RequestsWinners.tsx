@@ -7,6 +7,8 @@ import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { getRandomIntInclusive } from '../../../utils/common.utils';
 import { UserRequest } from '../../../models/requests.model';
 import { addRequestWinner, deleteRequestWinner, setWinnersList } from '../../../reducers/Requests/Requests';
+import { addAlert } from '../../../reducers/notifications/notifications';
+import { AlertTypeEnum } from '../../../models/alert.model';
 
 interface RequestsWinnersProps {
   openWheel: (data: UserRequest[]) => void;
@@ -46,27 +48,41 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
     [dispatch],
   );
 
+  const copyTableData = useCallback(async () => {
+    const dataText = winnersListData.map(({ request }) => request).join('; ');
+
+    await navigator.clipboard.writeText(dataText);
+    dispatch(addAlert({ duration: 3000, type: AlertTypeEnum.Success, message: 'Победители скопированы' }));
+  }, [dispatch, winnersListData]);
+
   return (
     <div style={{ marginBottom: 10 }}>
       <SettingsGroupTitle title="Победители" />
       <div className="row">
-        <Button variant="contained" color="primary" onClick={addRandomWinners}>
-          Выбрать случайно
-        </Button>
-        <TextField
-          style={{ width: 50, margin: 0 }}
-          variant="outlined"
-          margin="dense"
-          InputProps={{ type: 'number' }}
-          onChange={handleRandomCountChange}
-          value={randomCount || ''}
-        />
-        <Button variant="outlined" color="primary" onClick={handleWheelClick}>
-          крутить колесо
-        </Button>
-        <Button variant="outlined" onClick={clearWinnersList}>
-          Очистить
-        </Button>
+        <div className="col">
+          <Button variant="contained" color="primary" onClick={addRandomWinners}>
+            Выбрать случайно
+          </Button>
+          <TextField
+            style={{ width: 50, margin: 0 }}
+            variant="outlined"
+            margin="dense"
+            InputProps={{ type: 'number' }}
+            onChange={handleRandomCountChange}
+            value={randomCount || ''}
+          />
+          <Button variant="outlined" color="primary" onClick={handleWheelClick}>
+            крутить колесо
+          </Button>
+          <Button variant="outlined" onClick={clearWinnersList}>
+            Очистить
+          </Button>
+        </div>
+        <div className="col">
+          <Button variant="outlined" onClick={copyTableData}>
+            Копировать
+          </Button>
+        </div>
       </div>
       <RequestsTable requests={winnersListData} onDelete={handleDelete} />
     </div>

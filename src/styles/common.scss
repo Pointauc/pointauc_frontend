@@ -94,9 +94,15 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  justify-content: space-between;
 
-  & > * {
-    margin-right: 10px !important;
+  .col {
+    display: flex;
+    align-items: center;
+
+    & > * {
+      margin-right: 10px !important;
+    }
   }
 }
 
