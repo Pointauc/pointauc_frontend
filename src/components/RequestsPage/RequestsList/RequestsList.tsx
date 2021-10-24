@@ -1,11 +1,12 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
+import { Button, MuiThemeProvider } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import RequestsTable from '../RequestsTable/RequestsTable';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { UserRequest } from '../../../models/requests.model';
-import { deleteRequest, setCurrentList } from '../../../reducers/Requests/Requests';
+import { deleteRequest, getList, setAllData, setSyncState, syncWithAuc } from '../../../reducers/Requests/Requests';
+import { successTheme } from '../../../constants/theme.constants';
 
 interface RequestsListProps {
   openWheel: (data: UserRequest[]) => void;
@@ -13,22 +14,31 @@ interface RequestsListProps {
 
 const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
   const dispatch = useDispatch();
-  const { currentListData } = useSelector((root: RootState) => root.requests);
+  const { lists, currentList, isLoading } = useSelector((root: RootState) => root.requests);
+  const { allData, isSyncWithAuc } = useMemo(() => getList(lists, currentList), [currentList, lists]);
 
   const clearWinnersList = useCallback(() => {
-    dispatch(setCurrentList([]));
+    dispatch(setAllData({ data: [] }));
   }, [dispatch]);
 
   const handleWheelClick = useCallback(() => {
-    openWheel(currentListData || []);
-  }, [openWheel, currentListData]);
+    openWheel(allData || []);
+  }, [openWheel, allData]);
 
   const handleDelete = useCallback(
     (id: string): void => {
-      dispatch(deleteRequest(id));
+      dispatch(deleteRequest({ data: id }));
     },
     [dispatch],
   );
+
+  const handleSync = (): void => {
+    dispatch(syncWithAuc());
+  };
+
+  const handleDeSync = (): void => {
+    dispatch(setSyncState({ data: false }));
+  };
 
   return (
     <div>
@@ -41,9 +51,20 @@ const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
           <Button variant="outlined" onClick={clearWinnersList}>
             Очистить
           </Button>
+          <MuiThemeProvider theme={successTheme}>
+            {isSyncWithAuc ? (
+              <Button variant="outlined" onClick={handleDeSync}>
+                отменить синхронизацию
+              </Button>
+            ) : (
+              <Button variant="outlined" color="primary" onClick={handleSync}>
+                синхронизировать с аукционом
+              </Button>
+            )}
+          </MuiThemeProvider>
         </div>
       </div>
-      <RequestsTable requests={currentListData || []} loading={!currentListData} onDelete={handleDelete} />
+      <RequestsTable requests={allData} loading={isLoading} onDelete={handleDelete} />
     </div>
   );
 };

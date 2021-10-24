@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, MenuItem, MuiThemeProvider, Select } from '@material-ui/core';
+import { Button, MenuItem, MuiThemeProvider, Select, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { useForm } from 'react-hook-form';
@@ -13,37 +13,44 @@ import { CamilleList, RequestsListInfo } from '../../../models/requests.model';
 import {
   addRequest,
   addRequestsList,
+  getList,
   setCurrentList,
-  setWinnersList,
   updateFromCamilleBot,
   updateRequestsList,
 } from '../../../reducers/Requests/Requests';
 import ListSettingsDialog from './ListSettings/ListSettingsDialog';
-import { useChatBot } from '../../../hooks/useChatBot';
-import LoadingButton from '../../LoadingButton/LoadingButton';
 
 const newListTemplate: RequestsListInfo = {
   uuid: v4(),
   name: 'Новый список',
   command: '!play',
+  isSyncWithAuc: false,
+  winnersData: [],
+  allData: [],
 };
 
 const RequestsDataPanel: FC = () => {
   const dispatch = useDispatch();
-  const { lists } = useSelector((root: RootState) => root.requests);
+  const { lists, currentList, chatClient } = useSelector((root: RootState) => root.requests);
   const { username: channelName } = useSelector((root: RootState) => root.user);
-  const [selectedList, setSelectedList] = useState<string>(lists[0].uuid);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [isCreationOpen, setIsCreationOpen] = useState<boolean>(false);
 
-  const currentList = useMemo(() => lists.find(({ uuid }) => selectedList === uuid), [lists, selectedList]);
+  const listInfo = useMemo(() => getList(lists, currentList), [currentList, lists]);
+  const { command } = listInfo;
 
-  const settingsForm = useForm<RequestsListInfo>({ defaultValues: currentList });
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsConnected(!!command && !!chatClient && chatClient.commandListeners.has(command));
+  }, [chatClient, command, listInfo]);
+
+  const settingsForm = useForm<RequestsListInfo>({ defaultValues: listInfo });
   const { reset } = settingsForm;
 
   useEffect(() => {
-    reset(currentList);
-  }, [currentList, reset]);
+    reset(listInfo);
+  }, [currentList, listInfo, reset]);
 
   const creationForm = useForm<RequestsListInfo>({ defaultValues: newListTemplate });
 
@@ -57,49 +64,52 @@ const RequestsDataPanel: FC = () => {
 
   const updateSettings = useCallback(
     (data: RequestsListInfo) => {
-      dispatch(updateRequestsList({ id: selectedList, data }));
+      dispatch(updateRequestsList({ id: currentList, data }));
       toggleSettingsOpen();
     },
-    [dispatch, selectedList, toggleSettingsOpen],
+    [dispatch, currentList, toggleSettingsOpen],
   );
 
   const createList = useCallback(
     (data: RequestsListInfo) => {
       const uuid = v4();
 
-      dispatch(addRequestsList({ ...data, uuid }));
-      setSelectedList(uuid);
+      dispatch(addRequestsList({ ...newListTemplate, ...data, uuid }));
+      dispatch(setCurrentList(uuid));
       toggleCreationOpen();
     },
     [dispatch, toggleCreationOpen],
   );
 
-  const handleListChange = useCallback((event: ChangeEvent<any>) => setSelectedList(event.target.value), []);
+  const handleListChange = useCallback(
+    (event: ChangeEvent<any>) => dispatch(setCurrentList(event.target.value)),
+    [dispatch],
+  );
 
   useEffect(() => {
-    if (Object.values<any>(CamilleList).includes(selectedList) && channelName) {
-      dispatch(updateFromCamilleBot(channelName, selectedList as CamilleList));
-    } else {
-      dispatch(setCurrentList([]));
+    if (Object.values<any>(CamilleList).includes(currentList) && channelName) {
+      dispatch(updateFromCamilleBot(channelName, currentList as CamilleList));
     }
-
-    dispatch(setWinnersList([]));
-  }, [dispatch, selectedList, channelName]);
+  }, [dispatch, currentList, channelName]);
 
   const handleNewRequest = useCallback(
     ({ username: id = '', 'display-name': username = '', badges }: ChatUserstate, request?: string) => {
-      if (!currentList?.subOnly || badges?.subscriber) {
-        dispatch(addRequest({ username, id, request }));
+      if (!listInfo.subOnly || badges?.subscriber) {
+        dispatch(addRequest({ data: { username, id, request } }));
       }
     },
-    [currentList, dispatch],
+    [dispatch, listInfo.subOnly],
   );
 
-  const { connect, disconnect, isConnected, loading } = useChatBot(
-    channelName || '',
-    currentList?.command || '%',
-    handleNewRequest,
-  );
+  const handleConnect = useCallback(() => {
+    chatClient?.listenCommand(listInfo.command || '', handleNewRequest);
+    setIsConnected(true);
+  }, [chatClient, handleNewRequest, listInfo.command]);
+
+  const handleDisconnect = useCallback(() => {
+    chatClient?.unListenCommand(listInfo.command || '');
+    setIsConnected(false);
+  }, [chatClient, listInfo.command]);
 
   return (
     <div className="requests-list-panel">
@@ -120,7 +130,7 @@ const RequestsDataPanel: FC = () => {
       />
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div className="label">Текущий список:</div>
-        <Select value={selectedList} onChange={handleListChange}>
+        <Select value={currentList} onChange={handleListChange}>
           {lists.map(({ name, uuid }) => (
             <MenuItem value={uuid} key={uuid}>
               {name}
@@ -131,29 +141,22 @@ const RequestsDataPanel: FC = () => {
       <Button variant="outlined" color="primary" startIcon={<AddIcon />} onClick={toggleCreationOpen}>
         Новый список
       </Button>
-      <Button
-        variant="outlined"
-        startIcon={<SettingsIcon />}
-        onClick={toggleSettingsOpen}
-        disabled={currentList?.disabled}
-      >
-        Настройки
-      </Button>
+      <Tooltip title="Изменение настроек пока что недоступно">
+        <span>
+          <Button variant="outlined" startIcon={<SettingsIcon />} onClick={toggleSettingsOpen} disabled>
+            Настройки
+          </Button>
+        </span>
+      </Tooltip>
       <MuiThemeProvider theme={successTheme}>
         {isConnected ? (
-          <Button variant="outlined" onClick={disconnect}>
+          <Button variant="outlined" onClick={handleDisconnect}>
             Закрыть голосование
           </Button>
         ) : (
-          <LoadingButton
-            isLoading={loading}
-            variant="outlined"
-            color="primary"
-            disabled={!currentList?.command}
-            onClick={connect}
-          >
+          <Button variant="outlined" color="primary" disabled={!listInfo.command} onClick={handleConnect}>
             Открыть голосование
-          </LoadingButton>
+          </Button>
         )}
       </MuiThemeProvider>
     </div>

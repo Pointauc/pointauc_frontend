@@ -6,9 +6,12 @@ export enum CamilleList {
 export interface RequestsListInfo {
   name: string;
   uuid: string;
+  isSyncWithAuc: boolean;
   command?: string;
   subOnly?: boolean;
   disabled?: boolean;
+  allData: UserRequest[];
+  winnersData: UserRequest[];
 }
 
 export interface UserRequest {

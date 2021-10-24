@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import mergewith from 'lodash.mergewith';
 import { getUserData } from '../../api/userApi';
-import { setUsername, setHasDAAuth, setUserId, setHasTwitchAuth } from '../User/User';
+import { setHasDAAuth, setHasTwitchAuth, setUserId, updateUsername } from '../User/User';
 
 export interface SettingFields {
   startTime?: number;
@@ -123,7 +123,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Pro
   if (integration) {
     dispatch(setIntegration(integration));
   }
-  dispatch(setUsername(username));
+  dispatch(updateUsername(username));
   dispatch(setUserId(userId));
   dispatch(setHasDAAuth(hasDAAuth));
   dispatch(setHasTwitchAuth(hasTwitchAuth));

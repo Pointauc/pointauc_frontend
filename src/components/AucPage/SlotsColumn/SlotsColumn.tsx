@@ -24,7 +24,7 @@ const SlotsColumn: React.FC = () => {
   const isOver = useMemo(() => !!enterCounter, [enterCounter]);
 
   const handleAddSlot = (): void => {
-    dispatch(addSlot());
+    dispatch(addSlot({}));
   };
 
   const addButtonClasses = useMemo(
@@ -75,37 +75,38 @@ const SlotsColumn: React.FC = () => {
     setEnterCounter((prevState) => prevState - 1);
   }, []);
 
-  const slotsColumnClasses = useMemo(() => classNames('slots-column', { dragging: !!draggedRedemption }), [
-    draggedRedemption,
-  ]);
+  const slotsColumnClasses = useMemo(
+    () => classNames('slots-column', { dragging: !!draggedRedemption }),
+    [draggedRedemption],
+  );
 
-  const totalSum = useMemo(() => slots.reduce((sum, slot) => slot.amount ? sum + slot.amount : sum, 0), [slots]);
+  const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
 
   return (
-    <Grid container direction='column' wrap='nowrap' className='slots'>
+    <Grid container direction="column" wrap="nowrap" className="slots">
       <div className={buyoutStyles}>
-        <Typography className='slots-column-buyout-title' variant='h4'>
+        <Typography className="slots-column-buyout-title" variant="h4">
           Выкуп...
         </Typography>
-        <Input className='slots-column-buyout-input' placeholder='₽' inputRef={buyoutInput} type='number' />
+        <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
       </div>
 
-      <Grid container wrap='nowrap' className='slots-wrapper'>
-        <Grid container className={slotsColumnClasses} direction='column' wrap='nowrap'>
+      <Grid container wrap="nowrap" className="slots-wrapper">
+        <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
           <SlotsList slots={slots} />
-          <div className='slots-footer'>
+          <div className="slots-footer">
             <IconButton
               onClick={handleAddSlot}
               className={addButtonClasses}
-              title='Добавить слот'
+              title="Добавить слот"
               onDragOver={handleDragOver}
               onDrop={handleDrop}
               onDragEnter={handleDragEnter}
               onDragLeave={handleDragLeave}
             >
-              <AddBoxIcon fontSize='large' />
+              <AddBoxIcon fontSize="large" />
             </IconButton>
-            <Typography className="total-sum">Всего: {totalSum} ₽</Typography>
+            <Typography className="total-sum">{`Всего: ${totalSum} ₽`}</Typography>
           </div>
         </Grid>
       </Grid>

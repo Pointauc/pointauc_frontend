@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField } from '@material-ui/core';
 import { RootState } from '../../../reducers';
@@ -6,7 +6,7 @@ import RequestsTable from '../RequestsTable/RequestsTable';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { getRandomIntInclusive } from '../../../utils/common.utils';
 import { UserRequest } from '../../../models/requests.model';
-import { addRequestWinner, deleteRequestWinner, setWinnersList } from '../../../reducers/Requests/Requests';
+import { addRequestWinner, deleteRequestWinner, getList, setWinnersData } from '../../../reducers/Requests/Requests';
 import { addAlert } from '../../../reducers/notifications/notifications';
 import { AlertTypeEnum } from '../../../models/alert.model';
 
@@ -16,11 +16,13 @@ interface RequestsWinnersProps {
 
 const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
   const dispatch = useDispatch();
-  const { winnersListData, currentListData = [] } = useSelector((root: RootState) => root.requests);
+  const { lists, currentList } = useSelector((root: RootState) => root.requests);
   const [randomCount, setRandomCount] = useState<number>(1);
 
+  const { winnersData, allData } = useMemo(() => getList(lists, currentList), [currentList, lists]);
+
   const clearWinnersList = useCallback(() => {
-    dispatch(setWinnersList([]));
+    dispatch(setWinnersData({ data: [] }));
   }, [dispatch]);
 
   const handleRandomCountChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -28,37 +30,37 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
   }, []);
 
   const addRandomWinners = useCallback(() => {
-    if (currentListData.length) {
+    if (allData.length) {
       for (let i = 0; i < randomCount; i++) {
-        if (currentListData.length !== winnersListData.length) {
+        if (allData.length !== winnersData.length) {
           let winnerIndex = -1;
-          while (winnerIndex === -1 || winnersListData.includes(currentListData[winnerIndex])) {
-            winnerIndex = getRandomIntInclusive(0, currentListData.length - 1);
+          while (winnerIndex === -1 || winnersData.includes(allData[winnerIndex])) {
+            winnerIndex = getRandomIntInclusive(0, allData.length - 1);
           }
 
-          dispatch(addRequestWinner(currentListData[winnerIndex]));
+          dispatch(addRequestWinner({ data: allData[winnerIndex] }));
         }
       }
     }
-  }, [currentListData, dispatch, randomCount, winnersListData]);
+  }, [allData, dispatch, randomCount, winnersData]);
 
   const handleWheelClick = useCallback(() => {
-    openWheel(winnersListData);
-  }, [openWheel, winnersListData]);
+    openWheel(winnersData);
+  }, [openWheel, winnersData]);
 
   const handleDelete = useCallback(
     (id: string): void => {
-      dispatch(deleteRequestWinner(id));
+      dispatch(deleteRequestWinner({ data: id }));
     },
     [dispatch],
   );
 
   const copyTableData = useCallback(async () => {
-    const dataText = winnersListData.map(({ request }) => request).join('; ');
+    const dataText = winnersData.map(({ request }) => request).join('; ');
 
     await navigator.clipboard.writeText(dataText);
     dispatch(addAlert({ duration: 3000, type: AlertTypeEnum.Success, message: 'Победители скопированы' }));
-  }, [dispatch, winnersListData]);
+  }, [dispatch, winnersData]);
 
   return (
     <div style={{ marginBottom: 10 }}>
@@ -89,7 +91,7 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
           </Button>
         </div>
       </div>
-      <RequestsTable requests={winnersListData} onDelete={handleDelete} />
+      <RequestsTable requests={winnersData} onDelete={handleDelete} />
     </div>
   );
 };

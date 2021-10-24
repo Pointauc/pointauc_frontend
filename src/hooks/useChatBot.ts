@@ -29,7 +29,7 @@ export const useChatBot = (
 
   const handleMessage = (_channel: string, user: ChatUserstate, message: string): void => {
     if (message.startsWith(command)) {
-      const regExp = new RegExp(`${command} (.*)`);
+      const regExp = new RegExp(`${command}(?:$|\\s(.*))`);
       const payload = (regExp.exec(message) || [])[1];
 
       onCommand(user, payload);

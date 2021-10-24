@@ -1,4 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { Action } from 'redux';
+import { RootState } from '../index';
+import { initChatClient } from '../Requests/Requests';
 
 export interface UserInfo {
   username: string | null;
@@ -37,5 +40,12 @@ const userSlice = createSlice({
 });
 
 export const { setUsername, setHasDAAuth, setUserId, setHasTwitchAuth } = userSlice.actions;
+
+export const updateUsername =
+  (username: string) =>
+  (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
+    dispatch(setUsername(username));
+    dispatch(initChatClient(username));
+  };
 
 export default userSlice.reducer;

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
 import { Slot } from '../../models/slot.model';
-import { Purchase, logPurchase, removePurchase } from '../Purchases/Purchases';
+import { logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 import { getRandomIntInclusive, sortSlots } from '../../utils/common.utils';
 import slotNamesMap from '../../services/SlotNamesMap';
@@ -104,8 +104,8 @@ const slotsSlice = createSlice({
         state.slots = state.slots.filter(({ id }) => deletedId !== id);
       }
     },
-    addSlot(state): void {
-      const newSlot = createSlot();
+    addSlot(state, action?: PayloadAction<Partial<Slot>>): void {
+      const newSlot = { ...createSlot(), ...action?.payload };
       state.slots = [...state.slots, newSlot];
       slotNamesMap.set(`#${maxFastId}`, newSlot.id);
     },

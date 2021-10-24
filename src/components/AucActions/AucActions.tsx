@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './AucActions.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import Cookies from 'js-cookie';
 import {
   Button,
   Checkbox,
@@ -14,8 +13,7 @@ import {
 } from '@material-ui/core';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import { Link as RouteLink } from 'react-router-dom';
-import { setUsername } from '../../reducers/User/User';
-import { LINE_BREAK, USERNAME_COOKIE_KEY } from '../../constants/common.constants';
+import { LINE_BREAK } from '../../constants/common.constants';
 import { resetPurchases } from '../../reducers/Purchases/Purchases';
 import { isProduction, loadFile } from '../../utils/common.utils';
 import { RootState } from '../../reducers';
@@ -42,13 +40,6 @@ const AucActions: React.FC = () => {
     dispatch(resetSlots());
     dispatch(resetPurchases());
   };
-
-  useEffect(() => {
-    const username = Cookies.get(USERNAME_COOKIE_KEY);
-    if (username) {
-      dispatch(setUsername(username));
-    }
-  }, [dispatch]);
 
   const downloadMarbles = (): void => {
     loadFile('marbles.csv', createMarbleConfig(slots));
