@@ -169,8 +169,10 @@ export const addRequest =
 
       arr[dataIndex] = data;
       dispatch(setAllData({ listId, data: arr }));
+      const { slots } = state.slots;
+      const slot = getSlot(slots, id);
 
-      if (isSyncWithAuc) {
+      if (isSyncWithAuc && slot?.amount === 1) {
         dispatch(setSlotName({ id, name }));
       }
     }
@@ -203,7 +205,7 @@ export const syncWithAuc =
 
       if (!slot) {
         dispatch(addSlot({ id, amount: 1, name }));
-      } else if (slot.name !== name) {
+      } else if (slot.name !== name && slot.amount === 1) {
         dispatch(setSlotName({ id, name }));
       }
     });
