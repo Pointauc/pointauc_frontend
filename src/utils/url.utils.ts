@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-import { getCookie } from './common.utils';
+import { getCookie, isProduction } from './common.utils';
 
 export const getQueryValue = (url: string, queryName: string): string | null => {
   const regexp = new RegExp(`[?&]${queryName}=([^&]*)&|[?&]${queryName}=([^&]*)$`);
@@ -19,6 +19,9 @@ export const splitByUrls = (text: string): string[] => {
 //     : `ws://localhost:8000?jwtToken=${getCookie('jwtToken')}`;
 
 export const getWebsocketUrl = (): string => `wss://woods-service.herokuapp.com?jwtToken=${getCookie('jwtToken')}`;
+
+export const getSocketIOUrl = (): string =>
+  isProduction() ? `https://woods-service.herokuapp.com` : `http://localhost:8000`;
 
 export const getCloudifyUrl = (imageId: string): string =>
   `https://res.cloudinary.com/dn4ue0pj9/image/upload/${imageId}`;

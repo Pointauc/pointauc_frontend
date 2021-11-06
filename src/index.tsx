@@ -20,6 +20,7 @@ import { theme } from './constants/theme.constants';
 import NewDomainRedirect from './components/NewDomainRedirect/NewDomainRedirect';
 import history from './constants/history';
 import SaveLoadService from './services/SaveLoadService';
+import AudioRoom from './components/AudioRoom/AudioRoom';
 
 dayjs.locale('ru');
 
@@ -31,15 +32,18 @@ const SORTABLE_SLOT_EVENTS = [
   'slots/addSlotAmount',
 ];
 
-const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => (action): AnyAction => {
-  const result = next(action);
-  if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
-    const sortedSlots = sortSlots(store.getState().slots.slots);
+const sortSlotsMiddleware: Middleware<{}, RootState> =
+  (store) =>
+  (next) =>
+  (action): AnyAction => {
+    const result = next(action);
+    if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
+      const sortedSlots = sortSlots(store.getState().slots.slots);
 
-    return next(setSlots(sortedSlots));
-  }
-  return result;
-};
+      return next(setSlots(sortedSlots));
+    }
+    return result;
+  };
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -76,6 +80,11 @@ if (window.location.host === 'woodsauc-reneawal.netlify.app') {
           </Route>
           <Route exact path={ROUTES.CHAT_WHEEL}>
             <ChatWheelPage />
+          </Route>
+          <Route exact path={ROUTES.AUDIO_ROOM}>
+            <MuiThemeProvider theme={theme}>
+              <AudioRoom />
+            </MuiThemeProvider>
           </Route>
           <Route path={ROUTES.HOME}>
             <App />

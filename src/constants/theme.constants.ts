@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme, createStyles, makeStyles } from '@material-ui/core/styles';
 
 export const theme = createMuiTheme({
   palette: {
@@ -34,6 +34,11 @@ export const theme = createMuiTheme({
       color: '#f1f1f1',
       marginBottom: 30,
     },
+    h4: {
+      fontWeight: 300,
+      color: '#f1f1f1',
+      marginBottom: 20,
+    },
     h5: {
       fontWeight: 300,
       marginBottom: 15,
@@ -68,3 +73,23 @@ export const successTheme = createMuiTheme({
     },
   },
 });
+
+export const useAudioPageStyles = makeStyles(() =>
+  createStyles({
+    content: {
+      flexGrow: 1,
+    },
+    root: {
+      background: theme.palette.background.default,
+      color: theme.palette.text.primary,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontFamily: theme.typography.fontFamily,
+      fontWeight: 300,
+      height: '100vh',
+      width: '100vw',
+    },
+  }),
+);

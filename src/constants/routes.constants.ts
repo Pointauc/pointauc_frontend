@@ -16,6 +16,7 @@ const ROUTES = {
   STOPWATCH: '/stopwatch',
   CHAT_WHEEL: '/chatWheel/:channel',
   REQUESTS: '/requests',
+  AUDIO_ROOM: '/audioRoom',
 };
 
 export default ROUTES;

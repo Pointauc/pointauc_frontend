@@ -41,7 +41,8 @@
     "react/jsx-props-no-spreading": [0],
     "no-unused-expressions": [0],
     "no-case-declarations": [0],
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-underscore-dangle": [1]
   },
   "settings": {
     "import/resolver": {

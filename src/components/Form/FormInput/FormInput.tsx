@@ -1,7 +1,9 @@
 import React, { ChangeEvent, FC, useCallback, useMemo } from 'react';
-import { FormControlLabel, OutlinedInput, OutlinedInputProps } from '@material-ui/core';
+import { FormControlLabel, OutlinedInput, OutlinedInputProps, Typography } from '@material-ui/core';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import { Controller, ControllerRenderProps } from 'react-hook-form';
+import { RegisterOptions } from 'react-hook-form/dist/types/validator';
+import { ErrorMessage } from '@hookform/error-message';
 
 interface FormInputProps extends OutlinedInputProps {
   name: string;
@@ -10,9 +12,21 @@ interface FormInputProps extends OutlinedInputProps {
   className?: string;
   type?: string;
   hint?: string;
+  rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
+  errors?: UseFormMethods['errors'];
 }
 
-const FormInput: FC<FormInputProps> = ({ label, control, type, name, defaultValue, hint, ...restProps }) => {
+const FormInput: FC<FormInputProps> = ({
+  label,
+  control,
+  type,
+  name,
+  defaultValue,
+  hint,
+  errors = {},
+  rules,
+  ...restProps
+}) => {
   const isNumber = useMemo(() => type === 'number', [type]);
   const normalizeNumber = useCallback((value) => value && Number(value), []);
   const renderInput = useCallback(
@@ -20,9 +34,14 @@ const FormInput: FC<FormInputProps> = ({ label, control, type, name, defaultValu
       const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>): void =>
         onChange(isNumber ? normalizeNumber(value) : value);
 
-      return <OutlinedInput onChange={handleChange} value={formValue} type={type} onBlur={onBlur} {...restProps} />;
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <OutlinedInput onChange={handleChange} value={formValue} type={type} onBlur={onBlur} {...restProps} />
+          <ErrorMessage as={<Typography className="error-hint" />} errors={errors} name={name} />
+        </div>
+      );
     },
-    [isNumber, normalizeNumber, restProps, type],
+    [errors, isNumber, name, normalizeNumber, restProps, type],
   );
 
   const renderField = useCallback(
@@ -33,7 +52,7 @@ const FormInput: FC<FormInputProps> = ({ label, control, type, name, defaultValu
 
   return (
     <div>
-      <Controller name={name} defaultValue={defaultValue} control={control} render={renderField} />
+      <Controller rules={rules} name={name} defaultValue={defaultValue} control={control} render={renderField} />
       {!!hint && <div className="hint">{hint}</div>}
     </div>
   );

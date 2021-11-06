@@ -1,0 +1,40 @@
+@import "../../../styles/colors";
+
+.login-page {
+  max-width: 40vw;
+
+  &-error {
+    color: $red-3 !important;
+    font-size: 1.1rem !important;
+  }
+
+  &-error-hint {
+    color: $red-3 !important;
+    align-self: start;
+    position: relative;
+    top: -10px;
+  }
+
+  &-submit {
+    align-self: end;
+    font-weight: 400 !important;
+  }
+
+  &-divider {
+    background-color: $grey-7 !important;
+    margin: 10px 0 !important;
+  }
+
+  .MuiFormControlLabel-root {
+    margin: 0 0 15px 0;
+
+    .MuiInputBase-input {
+      padding: 10px 10px;
+    }
+
+    .MuiFormControlLabel-label {
+      margin-right: 30px;
+      font-size: 1.1em;
+    }
+  }
+}

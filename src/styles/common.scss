@@ -46,6 +46,14 @@
   letter-spacing: 0.8px;
 }
 
+.error-hint {
+  color: $red-3 !important;
+}
+
+.MuiFormControlLabel-root {
+  align-items: start !important;
+}
+
 .wheel-selector {
   position: absolute;
   margin-top: calc(58px + 2px);
