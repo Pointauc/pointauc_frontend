@@ -32,9 +32,10 @@ import './RandomWheel.scss';
 
 interface RandomWheelProps {
   items: WheelItem[];
+  deleteItem?: (id: Key) => void;
 }
 
-const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
+const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(20);
   const [rawItems, setRawItems] = useState<WheelItem[]>(items);
@@ -49,6 +50,13 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
   const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
   const [isDuelHelpOpen, setIsDuelHelpOpen] = useState<boolean>(false);
   const [isDropoutProofOpen, setIsDropoutProofOpen] = useState<boolean>(false);
+
+  const onDelete = (id: Key) => {
+    if (deleteItem) {
+      deleteItem(id);
+    }
+    setRawItems((prevItems) => prevItems.filter(({ id: _id }) => _id !== id));
+  };
 
   const currentDuel = useMemo(() => {
     if (!gamesOrder.length) {
@@ -145,6 +153,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
     background: activeEmote,
     spinTime,
     dropout: wheelFormat === WheelFormat.Dropout,
+    deleteItem: onDelete,
   });
 
   const nextTurn = useCallback(() => {

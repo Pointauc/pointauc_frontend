@@ -1,7 +1,8 @@
-import React, { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 // eslint-disable-next-line import/no-named-as-default
-import { Link } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, Link, Typography } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import CustomEase from '../utils/CustomEase';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 import pradenW from '../assets/img/pradenW.png';
@@ -9,6 +10,8 @@ import { fitText, shuffle } from '../utils/common.utils';
 import SpinPaceService, { RandomPaceConfig } from '../services/SpinPaceService';
 import { SPIN_PATH } from '../constants/wheel';
 import PredictionService from '../services/PredictionService';
+import { addAlert } from '../reducers/notifications/notifications';
+import { AlertTypeEnum } from '../models/alert.model';
 
 interface WheelResult {
   wheelComponent: ReactNode;
@@ -24,6 +27,7 @@ interface WheelConfig {
   dropout?: boolean;
   dropoutRate?: number;
   randomPaceConfig?: RandomPaceConfig;
+  deleteItem?: (id: Key) => void;
 }
 
 window.gsap = gsap;
@@ -55,9 +59,11 @@ const useWheel = ({
   background,
   dropout,
   onWin,
+  deleteItem,
   spinTime = 20,
   dropoutRate = 1,
 }: WheelConfig): WheelResult => {
+  const dispatch = useDispatch();
   const canvas = useRef<HTMLCanvasElement>(null);
   const wheelSelector = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
@@ -280,11 +286,35 @@ const useWheel = ({
     };
   }, [background, offset]);
 
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const toggleDialog = () => {
+    setDialogOpen((prev) => !prev);
+  };
+
+  const deleteWinner = () => {
+    if (deleteItem && winnerItem) {
+      deleteItem(winnerItem.id);
+      toggleDialog();
+      dispatch(addAlert({ type: AlertTypeEnum.Success, message: 'лот был удален' }));
+    }
+  };
+
   const wheelComponent = (
     <div
       style={{ width: '0', height: '100%', display: 'inline-block', marginRight: 45, pointerEvents: 'none' }}
       ref={wrapper}
     >
+      <Dialog open={dialogOpen} onClose={toggleDialog}>
+        <DialogContent>
+          <Typography>Это действие удалит лот не только из колеса, но и из самого аукциона.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={deleteWinner} variant="outlined" color="secondary">
+            Удалить
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div style={{ width: offset }} className="wheel-target" ref={spinTarget}>
         Победитель
       </div>
@@ -292,13 +322,18 @@ const useWheel = ({
       <canvas ref={canvas} />
       <div style={circleStyles} />
       {!!winnerItem && (
-        <div style={{ width: offset, height: offset }} className="wheel-winner">
+        <div style={{ width: offset, height: offset, pointerEvents: 'all' }} className="wheel-winner">
           {winnerItem.name.startsWith('https://') ? (
-            <Link href={winnerItem.name} target="_blank" style={{ pointerEvents: 'all' }}>
+            <Link href={winnerItem.name} target="_blank">
               {winnerItem.name}
             </Link>
           ) : (
             <>{winnerItem.name}</>
+          )}
+          {deleteItem && !dropout && (
+            <Button onClick={toggleDialog} variant="outlined" color="secondary">
+              Удалить лот
+            </Button>
           )}
         </div>
       )}
