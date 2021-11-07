@@ -13,7 +13,7 @@ interface AddPresetButtonProps {
   addPreset: (preset: AudioPreset) => void;
 }
 
-const AddPresetButton: FC<AddPresetButtonProps> = ({ addPreset }) => {
+const AddPresetButton: FC<AddPresetButtonProps> = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
@@ -56,9 +56,8 @@ const AddPresetButton: FC<AddPresetButtonProps> = ({ addPreset }) => {
         // const file = await audioFile.arrayBuffer();
         // console.log(file);
         setIsLoading(true);
-        const newPreset = await audioRoomApi.postPreset({ name: presetName, file: audioFile, volume });
+        await audioRoomApi.postPreset({ name: presetName, file: audioFile, volume });
 
-        addPreset(newPreset);
         toggleFormOpen();
       } else {
         dispatch(addAlert({ type: AlertTypeEnum.Error, message: 'заполните все поля!' }));

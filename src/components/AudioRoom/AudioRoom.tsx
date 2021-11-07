@@ -22,7 +22,6 @@ const AudioRoom = () => {
   };
 
   const deletePreset = (id: string) => {
-    audioRoomApi.deletePreset(id);
     setPresets((prevState) => prevState.filter(({ _id }) => _id !== id));
   };
 
@@ -73,6 +72,8 @@ const AudioRoom = () => {
       _socket.on('userLeave', (username) =>
         setConnectedUsers((prevState) => prevState.filter((_username) => _username !== username)),
       );
+      _socket.on('addPreset', addPreset);
+      _socket.on('deletePreset', deletePreset);
 
       _socket.connect();
 

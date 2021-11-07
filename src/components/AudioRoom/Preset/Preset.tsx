@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Button, IconButton, Typography } from '@material-ui/core';
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import { AudioPreset } from '../../../api/audioRoomApi';
+import audioRoomApi, { AudioPreset } from '../../../api/audioRoomApi';
 
 interface PresetProps {
   data: AudioPreset;
@@ -9,7 +9,7 @@ interface PresetProps {
   playPreset: (id: string) => void;
 }
 
-const Preset: FC<PresetProps> = ({ data, deletePreset, playPreset }) => {
+const Preset: FC<PresetProps> = ({ data, playPreset }) => {
   const { name, _id } = data;
 
   const playAudio = () => {
@@ -17,7 +17,7 @@ const Preset: FC<PresetProps> = ({ data, deletePreset, playPreset }) => {
   };
 
   const handleClickDelete = () => {
-    deletePreset(_id);
+    audioRoomApi.deletePreset(_id);
   };
 
   return (
