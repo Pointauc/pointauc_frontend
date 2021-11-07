@@ -286,7 +286,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items }) => {
             </Dialog>
             {wheelFormat === WheelFormat.Dropout && (
               <button onClick={toggleDropoutProof} type="button" className="description-link">
-                ДОКАЗАТЕЛЬСТВО, что выбывание не отличается от обычного колеса!
+                ПРОЧТИТЕ ПЕРЕД ИСПОЛЬЗОВАНИЕМ!
               </button>
             )}
             {wheelFormat === WheelFormat.Dropout && (
