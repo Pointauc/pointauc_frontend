@@ -1,6 +1,7 @@
 import React, { CSSProperties, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 // eslint-disable-next-line import/no-named-as-default
+import { Link } from '@material-ui/core';
 import CustomEase from '../utils/CustomEase';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 import pradenW from '../assets/img/pradenW.png';
@@ -292,7 +293,13 @@ const useWheel = ({
       <div style={circleStyles} />
       {!!winnerItem && (
         <div style={{ width: offset, height: offset }} className="wheel-winner">
-          {winnerItem.name}
+          {winnerItem.name.startsWith('https://') ? (
+            <Link href={winnerItem.name} target="_blank" style={{ pointerEvents: 'all' }}>
+              {winnerItem.name}
+            </Link>
+          ) : (
+            <>{winnerItem.name}</>
+          )}
         </div>
       )}
     </div>
