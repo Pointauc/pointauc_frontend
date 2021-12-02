@@ -7,12 +7,14 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
+  OutlinedInput,
   Slider,
   Switch,
   TextField,
   Typography,
 } from '@material-ui/core';
-import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
+import { TextFieldsOutlined } from '@material-ui/icons';
+import { GROUP_STAGES, GroupStage, PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
 import { RandomPaceConfig } from '../../services/SpinPaceService';
 import { Game, Side } from '../Bracket/components/model';
 import { WheelItem } from '../../models/wheel.model';
@@ -50,8 +52,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
   const [isDuelHelpOpen, setIsDuelHelpOpen] = useState<boolean>(false);
   const [isDropoutProofOpen, setIsDropoutProofOpen] = useState<boolean>(false);
+  const [groupMaxAmount, setGroupMaxAmount] = useState<number | null>(null);
+  const [submittedGroupAmount, setSubmittedGroupAmount] = useState<number | null>(null);
 
-  const onDelete = (id: Key) => {
+  const onDelete = (id: Key): void => {
     if (deleteItem) {
       deleteItem(id);
     }
@@ -62,7 +66,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
     if (!gamesOrder.length) {
       return [];
     }
-    const { home, visitor } = gamesOrder[0];
+    const [visitor, home] = gamesOrder[0].sides;
 
     return [home, visitor];
   }, [gamesOrder]);
@@ -127,7 +131,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
 
       if (wheelFormat === WheelFormat.BattleRoyal) {
         const game = gamesOrder[0];
-        game.winner = game.home.id === winner.id ? Side.HOME : Side.VISITOR;
+        game.winner = game.sides[1].id === winner.id ? Side.HOME : Side.VISITOR;
         if (game.parentSide) {
           game.parentSide.id = winner.id;
           game.parentSide.name = winner.name;
@@ -184,6 +188,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
     setSpinTime(Number(e.target.value));
   }, []);
 
+  const handleGroupMaxAmountChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setGroupMaxAmount(e.target.value ? Number(e.target.value) : null);
+  }, []);
+
   const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
     setMaxValidValue(Number(value));
   }, []);
@@ -191,6 +199,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const handleIsRandomPaceChange = useCallback((e: ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setIsRandomPace(checked);
   }, []);
+
+  const submitGroupAmount = useCallback(() => {
+    setSubmittedGroupAmount(groupMaxAmount);
+  }, [groupMaxAmount]);
 
   useEffect(() => {
     setMaxValidValue(maxSize);
@@ -263,7 +275,6 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
             />
             {wheelFormat === WheelFormat.BattleRoyal && (
               <>
-                <Typography className="wheel-controls-tip hint">Аторы оригинальной идеи - Browjey и Вирал</Typography>
                 <Dialog
                   open={isDuelHelpOpen}
                   onClose={toggleHelp}
@@ -279,6 +290,27 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
                 <button onClick={toggleHelp} type="button" className="description-link">
                   Как это работает?
                 </button>
+                <FormControlLabel
+                  control={(
+                    <>
+                      <Button variant="contained" color="primary" onClick={submitGroupAmount}>
+                        ОК
+                      </Button>
+                      <Typography className="wheel-controls-tip" style={{ margin: 10 }}>
+                        ₽
+                      </Typography>
+                      <OutlinedInput
+                        type="number"
+                        value={groupMaxAmount}
+                        onChange={handleGroupMaxAmountChange}
+                        margin="dense"
+                      />
+                    </>
+                  )}
+                  labelPlacement="start"
+                  label="Деление на группы"
+                  className="wheel-controls-checkbox"
+                />
               </>
             )}
             <Dialog
@@ -338,7 +370,12 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
           </div>
         </div>
         {wheelFormat === WheelFormat.BattleRoyal && (
-          <ResizableBracket onGamesOrder={setGamesOrder} currentGame={selectedGame} items={filteredItems} />
+          <ResizableBracket
+            onGamesOrder={setGamesOrder}
+            currentGame={selectedGame}
+            items={filteredItems}
+            maxGroupAmount={submittedGroupAmount}
+          />
         )}
       </div>
     </div>

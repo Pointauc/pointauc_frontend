@@ -53,16 +53,17 @@ const toBracketGames = ({
   const { width: gameWidth, height: gameHeight } = gameDimensions;
 
   // game.name = `${game.name} (${y})`;
-  const data = [game.home, game.visitor]
-    .map((sideInfo, index) => ({ ...sideInfo, side: index ? Side.VISITOR : Side.HOME }))
+  const data = game.sides
+    // .reverse()
+    .map((sideInfo, index) => ({ ...sideInfo, index }))
     // filter to the teams that come from winning other games
     .filter(({ sourceGame }) => sourceGame)
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    .map(({ sourceGame, side }) => {
+    .map(({ sourceGame, index }) => {
       // we put visitor teams on the bottom
-      const isTop = side === Side.HOME ? homeOnTop : !homeOnTop;
-      const offset = side === Side.HOME ? -Number(sourceGame?.offset?.bot) - 1 : Number(sourceGame?.offset?.top) + 1;
+      const isTop = index === Side.HOME ? homeOnTop : !homeOnTop;
+      const offset = index === Side.HOME ? -Number(sourceGame?.offset?.bot) - 1 : Number(sourceGame?.offset?.top) + 1;
       const multiplier = isTop ? -1 : 1;
 
       const pathInfo = [
@@ -75,14 +76,14 @@ const toBracketGames = ({
       ];
 
       return [
-        <path key={`${game.id}-${side}-${y}-path`} d={pathInfo.join(' ')} fill="transparent" stroke="black" />,
+        <path key={`${game.id}-${index}-${y}-path`} d={pathInfo.join(' ')} fill="transparent" stroke="black" />,
       ].concat(
         toBracketGames({
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           game: sourceGame,
           homeOnTop,
-          fromSide: side,
+          fromSide: index,
           lineInfo,
           gameDimensions,
           hoveredTeamId,

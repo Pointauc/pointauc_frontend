@@ -13,7 +13,9 @@ export default function winningPathLength(game: Game, visited: { [id: string]: t
       ? // eslint-disable-next-line prefer-spread
         Math.max.apply(
           Math,
-          [game.home, game.visitor].map(({ sourceGame }) => (sourceGame ? winningPathLength(sourceGame, visited) : 0)),
+          [game.sides[1], game.sides[0]].map(({ sourceGame }) =>
+            sourceGame ? winningPathLength(sourceGame, visited) : 0,
+          ),
         )
       : 0)
   );

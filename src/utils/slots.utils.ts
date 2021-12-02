@@ -4,7 +4,9 @@ import { REMOVE_COST_PREFIX } from '../constants/purchase.constants';
 import { Purchase } from '../reducers/Purchases/Purchases';
 import { Game, Side, SideInfo } from '../components/Bracket/components/model';
 import { WheelItem } from '../models/wheel.model';
-import { getWheelColor } from './common.utils';
+import { getTotal, getWheelColor } from './common.utils';
+
+type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: Key) => SideInfo;
 
 export const getWinnerSlot = (slots: Slot[]): Slot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
@@ -24,7 +26,7 @@ export const getTotalSize = (slots: { amount?: number | null }[]): number =>
 
 export const getSlot = (slots: Slot[], slotId: string): Slot | undefined => slots.find(({ id }) => id === slotId);
 
-export const splitSlotsWitchMostSimilarValues = (items: WheelItem[]): [WheelItem[], WheelItem[]] => {
+export const splitSlotsWitchMostSimilarValues = (items: WheelItem[], groups = 2): [WheelItem[], WheelItem[]] => {
   const restSlots = [...items];
   const a = [restSlots.splice(0, 1)[0]];
   let aSize = Number(a[0]?.amount);
@@ -44,16 +46,21 @@ export const splitSlotsWitchMostSimilarValues = (items: WheelItem[]): [WheelItem
   return [a, b];
 };
 
+const getDuelSides = (items: WheelItem[], gameId: Key, createSide: CreateSideFunc): SideInfo[] => {
+  const [a, b] = splitSlotsWitchMostSimilarValues(items);
+  return [createSide(a, Side.VISITOR, gameId), createSide(b, Side.HOME, gameId)];
+};
+
 export const createGame = (
   items: WheelItem[],
   level = 0,
   matchOrder: Game[] = [],
   parentSide?: SideInfo,
+  maxGroupAmount?: number | null,
 ): Game | null => {
   if (!items.length) {
     return null;
   }
-  const [a, b] = splitSlotsWitchMostSimilarValues(items);
 
   const createSide = (restItems: WheelItem[], side: Side, gameId: Key): SideInfo => {
     const createdSide: SideInfo =
@@ -74,21 +81,19 @@ export const createGame = (
           };
 
     if (restItems.length > 1) {
-      createdSide.sourceGame = createGame(restItems, level + 1, matchOrder, createdSide);
+      createdSide.sourceGame = createGame(restItems, level + 1, matchOrder, createdSide, maxGroupAmount);
     }
 
     return createdSide;
   };
-  const id = Math.random();
 
-  const game: Game = {
-    id,
-    name: '',
-    level,
-    visitor: createSide(a, Side.VISITOR, id),
-    home: createSide(b, Side.HOME, id),
-    parentSide,
-  };
+  const id = Math.random();
+  const shouldBeGrouped = maxGroupAmount && getTotal(items, ({ amount }) => Number(amount)) <= maxGroupAmount;
+  const sides = shouldBeGrouped
+    ? items.map((item) => createSide([item], Side.VISITOR, id))
+    : getDuelSides(items, id, createSide);
+
+  const game: Game = { id, name: '', level, sides, parentSide };
 
   matchOrder.push(game);
 
@@ -98,19 +103,19 @@ export const createGame = (
 export const setOffsets = (game: Game): Game => {
   let botOffsets = { top: 0, bot: 0 };
   let topOffsets = { top: 0, bot: 0 };
-  let visitorGame = game.visitor.sourceGame;
-  let homeGame = game.home.sourceGame;
+  let visitorGame = game.sides[0].sourceGame;
+  let homeGame = game.sides[1].sourceGame;
 
   if (visitorGame) {
     visitorGame = setOffsets(visitorGame);
-    game.visitor.sourceGame = visitorGame;
+    game.sides[0].sourceGame = visitorGame;
 
     botOffsets = visitorGame.offset || botOffsets;
   }
 
   if (homeGame) {
     homeGame = setOffsets(homeGame);
-    game.home.sourceGame = homeGame;
+    game.sides[1].sourceGame = homeGame;
 
     topOffsets = homeGame.offset || topOffsets;
   }

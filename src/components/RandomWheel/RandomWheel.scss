@@ -177,6 +177,9 @@
     }
 
     &-checkbox {
+      display: flex;
+      align-items: center !important;
+
       .MuiFormControlLabel-label {
         margin-top: 3px;
         font-weight: 400;

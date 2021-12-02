@@ -6,12 +6,13 @@ import { WheelItem } from '../../models/wheel.model';
 
 export interface SlotsBracketProps {
   value?: number;
+  maxGroupAmount?: number | null;
   onGamesOrder: (games: Game[]) => void;
   currentGame: Key;
   items: WheelItem[];
 }
 
-const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items }) => {
+const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items, maxGroupAmount }) => {
   const [game, setGame] = useState<Game | null>(null);
 
   useEffect(() => {
@@ -21,7 +22,8 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items 
       return;
     }
 
-    const createdGame = createGame(items.filter(({ amount }) => amount).reverse(), 0, gameOrder);
+    const data = items.filter(({ amount }) => amount).reverse();
+    const createdGame = createGame(data, 0, gameOrder, undefined, maxGroupAmount);
 
     if (createdGame) {
       const gameData = setOffsets(createdGame);
@@ -29,7 +31,7 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items 
     }
 
     onGamesOrder(gameOrder);
-  }, [onGamesOrder, items]);
+  }, [onGamesOrder, items, maxGroupAmount]);
 
   if (!game) {
     return null;

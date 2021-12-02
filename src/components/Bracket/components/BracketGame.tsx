@@ -72,8 +72,8 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
       teamSeparatorStyle,
     } = styles || {};
 
-    const top = game[homeOnTop ? Side.HOME : Side.VISITOR];
-    const bottom = game[homeOnTop ? Side.VISITOR : Side.HOME];
+    const top = game.sides[homeOnTop ? 1 : 0];
+    const bottom = game.sides[homeOnTop ? 0 : 1];
 
     const winnerBackground =
       // eslint-disable-next-line no-nested-ternary
