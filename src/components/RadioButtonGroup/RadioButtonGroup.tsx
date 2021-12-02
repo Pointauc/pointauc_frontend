@@ -1,20 +1,25 @@
-import React, { FC, Key, useCallback } from 'react';
+import React, { Key, useCallback } from 'react';
 import { Button, ButtonGroup, ButtonGroupProps } from '@material-ui/core';
 
-export interface Option {
-  key: Key;
+export interface Option<KeyType = Key> {
+  key: KeyType;
   value: string;
 }
 
-interface RadioButtonGroupProps extends ButtonGroupProps {
-  options: Option[];
+interface RadioButtonGroupProps<T = Key> extends ButtonGroupProps {
+  options: Option<T>[];
   activeKey: Key;
-  onChangeActive: (key: Key) => void;
+  onChangeActive: (key: T) => void;
 }
 
-const RadioButtonGroup: FC<RadioButtonGroupProps> = ({ onChangeActive, options, activeKey, ...props }) => {
+const RadioButtonGroup = <T extends Key = Key>({
+  onChangeActive,
+  options,
+  activeKey,
+  ...props
+}: RadioButtonGroupProps<T>): JSX.Element => {
   const createButton = useCallback(
-    ({ key, value }: Option) => {
+    ({ key, value }: Option<T>) => {
       const handleClick = (): void => onChangeActive(key);
 
       return (

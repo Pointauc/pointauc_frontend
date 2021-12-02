@@ -29,8 +29,20 @@ export enum WheelFormat {
   BattleRoyal,
 }
 
-export const WHEEL_OPTIONS: Option[] = [
+export enum GroupStage {
+  FFA,
+  Teams,
+  Dropout,
+}
+
+export const WHEEL_OPTIONS: Option<WheelFormat>[] = [
   { key: WheelFormat.Default, value: 'Обычное' },
   { key: WheelFormat.Dropout, value: 'Выбывание' },
   { key: WheelFormat.BattleRoyal, value: 'Батл рояль' },
+];
+
+export const GROUP_STAGES: Option<GroupStage>[] = [
+  { key: GroupStage.FFA, value: 'FFA' },
+  { key: GroupStage.Teams, value: 'Команды' },
+  { key: GroupStage.Dropout, value: 'Выбывание' },
 ];

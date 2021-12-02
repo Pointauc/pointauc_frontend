@@ -25,7 +25,7 @@
   .description-link {
     background-color: transparent;
     border: none;
-    color: $grey-5;
+    color: $grey-4;
     display: inline-block;
     width: fit-content;
     cursor: pointer;
@@ -36,7 +36,7 @@
     text-align: start;
 
     &:hover {
-      color: $grey-2;
+      color: $grey-1;
     }
   }
 
@@ -177,6 +177,9 @@
     }
 
     &-checkbox {
+      display: flex;
+      align-items: center !important;
+
       .MuiFormControlLabel-label {
         margin-top: 3px;
         font-weight: 400;

@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
 import { RandomPaceConfig } from '../../services/SpinPaceService';
-import { Game, Side } from '../Bracket/components/model';
+import { Game } from '../Bracket/components/model';
 import { WheelItem } from '../../models/wheel.model';
 import { getTotalSize, getWheelColor } from '../../utils/common.utils';
 import useWheel from '../../hooks/useWheel';
@@ -50,8 +50,27 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const [selectedGame, setSelectedGame] = useState<Game | null | undefined>(null);
   const [isDuelHelpOpen, setIsDuelHelpOpen] = useState<boolean>(false);
   const [isDropoutProofOpen, setIsDropoutProofOpen] = useState<boolean>(false);
+  const [maxDepth, setMaxDepth] = useState<number>();
+  const [depthRestrict, setDepthRestrict] = useState<number>();
 
-  const onDelete = (id: Key) => {
+  const initBattleRoyale = useCallback((games: Game[]) => {
+    setGamesOrder((prevGames) => {
+      if (!prevGames.length) {
+        setMaxDepth(games[0]?.level);
+        setDepthRestrict(games[0]?.level);
+      }
+      return games;
+    });
+  }, []);
+
+  const handleWheelFormatChange = useCallback((format: WheelFormat) => {
+    setGamesOrder([]);
+    setMaxDepth(undefined);
+    setDepthRestrict(undefined);
+    setWheelFormat(format);
+  }, []);
+
+  const onDelete = (id: Key): void => {
     if (deleteItem) {
       deleteItem(id);
     }
@@ -62,9 +81,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
     if (!gamesOrder.length) {
       return [];
     }
-    const { home, visitor } = gamesOrder[0];
-
-    return [home, visitor];
+    return gamesOrder[0].sides;
   }, [gamesOrder]);
 
   const duelItems = useMemo(
@@ -127,7 +144,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
 
       if (wheelFormat === WheelFormat.BattleRoyal) {
         const game = gamesOrder[0];
-        game.winner = game.home.id === winner.id ? Side.HOME : Side.VISITOR;
+        game.winner = game.sides.findIndex(({ id }) => winner.id === id);
         if (game.parentSide) {
           game.parentSide.id = winner.id;
           game.parentSide.name = winner.name;
@@ -182,6 +199,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSpinTime(Number(e.target.value));
+  }, []);
+
+  const handleDepthRestrictChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
+    setDepthRestrict(Number(value));
   }, []);
 
   const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
@@ -259,11 +280,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
               style={{ marginTop: 10 }}
               options={WHEEL_OPTIONS}
               activeKey={wheelFormat}
-              onChangeActive={setWheelFormat}
+              onChangeActive={handleWheelFormatChange}
             />
             {wheelFormat === WheelFormat.BattleRoyal && (
               <>
-                <Typography className="wheel-controls-tip hint">Аторы оригинальной идеи - Browjey и Вирал</Typography>
                 <Dialog
                   open={isDuelHelpOpen}
                   onClose={toggleHelp}
@@ -279,6 +299,24 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
                 <button onClick={toggleHelp} type="button" className="description-link">
                   Как это работает?
                 </button>
+                <div className="wheel-controls-row">
+                  <Typography className="wheel-controls-tip md">Вложенность</Typography>
+                  <Slider
+                    step={1}
+                    min={1}
+                    max={maxDepth}
+                    valueLabelDisplay="auto"
+                    onChange={handleDepthRestrictChange}
+                    value={depthRestrict || 1}
+                    marks={[
+                      { value: maxDepth || 1, label: maxDepth },
+                      { value: 1, label: '1' },
+                    ]}
+                  />
+                </div>
+                <Typography className="wheel-controls-tip hint">
+                  группирует дешевые лоты, чтобы уменьшить кол-во прокрутов
+                </Typography>
               </>
             )}
             <Dialog
@@ -301,14 +339,9 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
             {wheelFormat === WheelFormat.Dropout && (
               <Typography style={{ marginTop: 10 }}>{`Осталось: ${filteredItems.length}`}</Typography>
             )}
-            <FormControlLabel
-              control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
-              label="Использовать сервис random.org"
-              className="wheel-controls-checkbox"
-            />
             {!!totalSize && (
               <div className="wheel-controls-row">
-                <Typography className="wheel-controls-tip md">Разделить</Typography>
+                <Typography className="wheel-controls-tip md">Разделение</Typography>
                 <Slider
                   step={1}
                   min={maxSize / 10}
@@ -329,6 +362,11 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
               <Switch onChange={handleIsRandomPaceChange} />
             </div>
             {isRandomPace && <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />}
+            <FormControlLabel
+              control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
+              label="Использовать сервис random.org"
+              className="wheel-controls-checkbox"
+            />
             <div className="wheel-controls-row" style={{ marginTop: 10 }}>
               <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
             </div>
@@ -338,7 +376,12 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
           </div>
         </div>
         {wheelFormat === WheelFormat.BattleRoyal && (
-          <ResizableBracket onGamesOrder={setGamesOrder} currentGame={selectedGame} items={filteredItems} />
+          <ResizableBracket
+            onGamesOrder={initBattleRoyale}
+            currentGame={selectedGame}
+            items={filteredItems}
+            maxDepth={depthRestrict}
+          />
         )}
       </div>
     </div>

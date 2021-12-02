@@ -1,8 +1,8 @@
 import { Key } from 'react';
 
 export enum Side {
-  HOME = 'home',
-  VISITOR = 'visitor',
+  VISITOR,
+  HOME,
 }
 
 export type ID = Key;
@@ -44,7 +44,5 @@ export interface Game {
       name: string;
     };
   };
-
-  home: SideInfo;
-  visitor: SideInfo;
+  sides: SideInfo[];
 }

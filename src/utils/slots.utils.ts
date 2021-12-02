@@ -6,6 +6,8 @@ import { Game, Side, SideInfo } from '../components/Bracket/components/model';
 import { WheelItem } from '../models/wheel.model';
 import { getWheelColor } from './common.utils';
 
+type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: Key) => SideInfo;
+
 export const getWinnerSlot = (slots: Slot[]): Slot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
 
@@ -34,14 +36,19 @@ export const splitSlotsWitchMostSimilarValues = (items: WheelItem[]): [WheelItem
   while (restSlots.length > 0) {
     if (aSize + Number(restSlots[0].amount) < bSize + Number(restSlots[restSlots.length - 1].amount)) {
       aSize += Number(restSlots[0].amount);
-      a.push(restSlots.splice(0, 1)[0]);
+      a.unshift(restSlots.splice(0, 1)[0]);
     } else {
       bSize += Number(restSlots[restSlots.length - 1].amount);
-      b.push(restSlots.splice(-1, 1)[0]);
+      b.unshift(restSlots.splice(-1, 1)[0]);
     }
   }
 
   return [a, b];
+};
+
+const getDuelSides = (items: WheelItem[], gameId: Key, createSide: CreateSideFunc): SideInfo[] => {
+  const [a, b] = splitSlotsWitchMostSimilarValues(items);
+  return [createSide(b, Side.VISITOR, gameId), createSide(a, Side.HOME, gameId)];
 };
 
 export const createGame = (
@@ -49,11 +56,11 @@ export const createGame = (
   level = 0,
   matchOrder: Game[] = [],
   parentSide?: SideInfo,
+  maxDepth?: number,
 ): Game | null => {
   if (!items.length) {
     return null;
   }
-  const [a, b] = splitSlotsWitchMostSimilarValues(items);
 
   const createSide = (restItems: WheelItem[], side: Side, gameId: Key): SideInfo => {
     const createdSide: SideInfo =
@@ -74,52 +81,51 @@ export const createGame = (
           };
 
     if (restItems.length > 1) {
-      createdSide.sourceGame = createGame(restItems, level + 1, matchOrder, createdSide);
+      createdSide.sourceGame = createGame(restItems, level + 1, matchOrder, createdSide, maxDepth);
     }
 
     return createdSide;
   };
-  const id = Math.random();
 
-  const game: Game = {
-    id,
-    name: '',
-    level,
-    visitor: createSide(a, Side.VISITOR, id),
-    home: createSide(b, Side.HOME, id),
-    parentSide,
-  };
+  const id = Math.random();
+  const shouldBeGrouped = maxDepth && level >= maxDepth;
+  const sides = shouldBeGrouped
+    ? items.map((item) => createSide([item], Side.VISITOR, id))
+    : getDuelSides(items, id, createSide);
+
+  const game: Game = { id, name: '', level, sides, parentSide };
 
   matchOrder.push(game);
 
   return game;
 };
 
+const getOffset = ({ sides }: Game): number => Math.ceil(sides.length / 4);
+
 export const setOffsets = (game: Game): Game => {
   let botOffsets = { top: 0, bot: 0 };
   let topOffsets = { top: 0, bot: 0 };
-  let visitorGame = game.visitor.sourceGame;
-  let homeGame = game.home.sourceGame;
+  let visitorGame = game.sides[Side.VISITOR].sourceGame;
+  let homeGame = game.sides[Side.HOME].sourceGame;
 
   if (visitorGame) {
     visitorGame = setOffsets(visitorGame);
-    game.visitor.sourceGame = visitorGame;
+    game.sides[Side.VISITOR].sourceGame = visitorGame;
 
     botOffsets = visitorGame.offset || botOffsets;
   }
 
   if (homeGame) {
     homeGame = setOffsets(homeGame);
-    game.home.sourceGame = homeGame;
+    game.sides[Side.HOME].sourceGame = homeGame;
 
     topOffsets = homeGame.offset || topOffsets;
   }
 
   game.offset = {
-    top: topOffsets.top + topOffsets.bot + (homeGame ? 1 : 0),
-    bot: botOffsets.bot + botOffsets.top + (visitorGame ? 1 : 0),
+    top: topOffsets.top + topOffsets.bot + (homeGame ? getOffset(homeGame) : 0),
+    bot: botOffsets.bot + botOffsets.top + (visitorGame ? getOffset(visitorGame) : 0),
   };
-  // game.name = `${game.name} ${offset.top}x${offset.bot}`;
 
   return game;
 };

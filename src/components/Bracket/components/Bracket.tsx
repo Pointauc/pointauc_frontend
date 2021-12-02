@@ -28,7 +28,6 @@ interface BracketGamesFunctionProps {
   gameDimensions: { width: number; height: number };
   roundSeparatorWidth: number;
   round: number;
-  homeOnTop: boolean;
   hoveredTeamId: Key | null;
   setHoveredTeamId: (id: Key | null) => void;
   lineInfo: LineInfo;
@@ -43,46 +42,42 @@ const toBracketGames = ({
   roundSeparatorWidth,
   round,
   lineInfo,
-  homeOnTop,
   hoveredTeamId,
   setHoveredTeamId,
   fromSide,
   currentGame,
   ...rest
 }: BracketGamesFunctionProps): JSX.Element[] => {
-  const { width: gameWidth, height: gameHeight } = gameDimensions;
+  const { width: gameWidth, height } = gameDimensions;
 
-  // game.name = `${game.name} (${y})`;
-  const data = [game.home, game.visitor]
-    .map((sideInfo, index) => ({ ...sideInfo, side: index ? Side.VISITOR : Side.HOME }))
-    // filter to the teams that come from winning other games
+  const data = game.sides
+    .map((sideInfo, index) => ({ ...sideInfo, index }))
     .filter(({ sourceGame }) => sourceGame)
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    .map(({ sourceGame, side }) => {
-      // we put visitor teams on the bottom
-      const isTop = side === Side.HOME ? homeOnTop : !homeOnTop;
-      const offset = side === Side.HOME ? -Number(sourceGame?.offset?.bot) - 1 : Number(sourceGame?.offset?.top) + 1;
-      const multiplier = isTop ? -1 : 1;
+    .map(({ sourceGame, index }) => {
+      const offset = index === Side.HOME ? -Number(sourceGame?.offset?.bot) - 1 : Number(sourceGame?.offset?.top) + 1;
+      const calcOffset = (offset * height) / 2;
+      const realOffset =
+        index === Side.HOME ? calcOffset - Math.max((sourceGame?.sides.length || 0) - 4, 0) * 22.5 : calcOffset;
 
       const pathInfo = [
         `M${x - lineInfo.separation} ${
-          y + gameHeight / 2 + lineInfo.yOffset + multiplier * lineInfo.homeVisitorSpread
+          y + height / 2 + lineInfo.yOffset + (game.sides.length - index) * lineInfo.homeVisitorSpread - 33
         }`,
         `H${x - roundSeparatorWidth / 2}`,
-        `V${y + gameHeight / 2 + lineInfo.yOffset + (offset * gameHeight) / 2}`,
+        `V${y + height / 2 + lineInfo.yOffset + realOffset}`,
         `H${x - roundSeparatorWidth + lineInfo.separation}`,
       ];
 
       return [
-        <path key={`${game.id}-${side}-${y}-path`} d={pathInfo.join(' ')} fill="transparent" stroke="black" />,
+        <path key={`${game.id}-${index}-${y}-path`} d={pathInfo.join(' ')} fill="transparent" stroke="black" />,
       ].concat(
         toBracketGames({
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           game: sourceGame,
-          homeOnTop,
-          fromSide: side,
+          fromSide: index,
           lineInfo,
           gameDimensions,
           hoveredTeamId,
@@ -90,7 +85,7 @@ const toBracketGames = ({
           roundSeparatorWidth,
           currentGame,
           x: x - gameWidth - roundSeparatorWidth,
-          y: y + (offset * gameHeight) / 2,
+          y: y + realOffset,
           round: round - 1,
           ...rest,
         }),
@@ -102,8 +97,8 @@ const toBracketGames = ({
       <BracketGame
         {...rest}
         {...gameDimensions}
+        fromSide={fromSide}
         key={game.id}
-        homeOnTop={homeOnTop}
         game={game}
         isCurrent={currentGame === game.id}
         x={x}
@@ -130,10 +125,9 @@ export interface BracketProps {
 }
 
 const Bracket: FC<BracketProps> = ({
-  homeOnTop = true,
   currentGame,
   gameDimensions = {
-    height: 160,
+    height: 140,
     width: 200,
   },
   svgPadding = 20,
@@ -141,7 +135,7 @@ const Bracket: FC<BracketProps> = ({
   lineInfo = {
     yOffset: -6,
     separation: 6,
-    homeVisitorSpread: 11,
+    homeVisitorSpread: 22,
   },
   game,
   ...rest
@@ -173,16 +167,12 @@ const Bracket: FC<BracketProps> = ({
           roundSeparatorWidth,
           game,
           round: numRounds,
-          homeOnTop,
           lineInfo,
           currentGame,
           hoveredTeamId,
           setHoveredTeamId,
-          // svgPadding away from the right
           x: svgDimensions.width - svgPadding - gameDimensions.width,
-          // vertically centered first game
           y: 0,
-
           ...rest,
         })}
       </g>

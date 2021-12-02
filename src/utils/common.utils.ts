@@ -102,7 +102,7 @@ export const getRandomIntInclusive = (min: number, max: number): number => {
 };
 
 export const getRandomInclusive = (min: number, max: number): number => {
-  return Math.random() * (max - min + 1) + min;
+  return Math.random() * (max - min) + min;
 };
 
 export const fitText = (text: string, maxLength: number): string =>
@@ -127,3 +127,35 @@ export const createMapByKey = <TKey, TData>(
 };
 
 export const percentsFormatter = (params: ValueGetterParams): CellValue => `${params.value}%`;
+
+export const getUniqItems = <T>(items: T[], count: number): T[] => {
+  if (items.length <= count) {
+    return items;
+  }
+
+  const indexes: number[] = [];
+
+  while (indexes.length < count) {
+    const index = getRandomIntInclusive(0, items.length - 1);
+
+    if (!indexes.includes(index)) {
+      indexes.push(index);
+    }
+  }
+
+  return indexes.map((index) => items[index]);
+};
+
+export const getTotal = <T>(items: T[], selectValue: (item: T) => number): number =>
+  items.reduce((acc, value) => acc + selectValue(value), 0);
+
+export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): number => {
+  const seed = Math.random();
+  let restAmount = seed * getTotal(items, selectValue);
+
+  return items.findIndex((item) => {
+    restAmount -= Number(selectValue(item));
+
+    return restAmount <= 0;
+  });
+};

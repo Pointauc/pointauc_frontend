@@ -13,6 +13,8 @@ interface BracketGameProps {
   x: number;
   y: number;
 
+  fromSide: number;
+
   onHoveredTeamIdChange: (id: Key | null) => void;
   styles?: {
     backgroundColor: string;
@@ -52,7 +54,7 @@ const defaultProps: Partial<BracketGameProps> = {
 
 class BracketGame extends React.PureComponent<BracketGameProps> {
   render() {
-    const { game, hoveredTeamId, onHoveredTeamIdChange, styles, homeOnTop, topText, bottomText, isCurrent, ...rest } = {
+    const { game, hoveredTeamId, onHoveredTeamIdChange, styles, fromSide, isCurrent, ...rest } = {
       ...defaultProps,
       ...this.props,
     };
@@ -67,23 +69,10 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
       winningScoreBackground,
       teamNameStyle,
       teamScoreStyle,
-      gameNameStyle,
-      gameTimeStyle,
       teamSeparatorStyle,
     } = styles || {};
 
-    const top = game[homeOnTop ? Side.HOME : Side.VISITOR];
-    const bottom = game[homeOnTop ? Side.VISITOR : Side.HOME];
-
-    const winnerBackground =
-      // eslint-disable-next-line no-nested-ternary
-      game.winner ? (
-        game.winner === Side.HOME ? (
-          <rect x="170" y="12" width="30" height="22.5" style={{ fill: winningScoreBackground }} rx="3" ry="3" />
-        ) : (
-          <rect x="170" y="34.5" width="30" height="22.5" style={{ fill: winningScoreBackground }} rx="3" ry="3" />
-        )
-      ) : null;
+    const { sides } = game;
 
     interface SideComponentProps {
       x: number;
@@ -91,92 +80,77 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
       side: SideInfo;
       sideType: Side;
       onHover: (id: Key | null) => void;
+      winner?: boolean;
+      hovered?: boolean;
     }
 
-    const SideComponent = ({ x, y, side, onHover, sideType }: SideComponentProps) => {
+    const SideComponent = ({ x, y, side, onHover, sideType, winner, hovered }: SideComponentProps) => {
       const tooltip = side ? <title>{side.name}</title> : null;
+      const offset = sideType * 22 + 12.5;
+      const lineOffset = sideType * 22 + 34.5;
 
       return (
         <g fontWeight={400} onClick={() => onHover(side ? side.id : null)} style={{ cursor: 'pointer' }}>
+          <rect
+            x="0"
+            y={offset}
+            width="200"
+            height="22.5"
+            fill={hovered ? hoverBackgroundColor : backgroundColor}
+            rx="3"
+            ry="3"
+          />
+          <rect
+            x="160"
+            y={offset}
+            width="40"
+            height="22.5"
+            fill={winner ? winningScoreBackground : scoreBackground}
+            rx="3"
+            ry="3"
+          />
           {/* trigger mouse events on the entire block */}
           <rect x={x} y={y} height={22.5} width={200} fillOpacity={0}>
             {tooltip}
           </rect>
 
           <RectClipped x={x} y={y} height={22.5} width={165}>
-            <text x={x + 5} y={y + 16} style={{ ...teamNameStyle }} id={`${game.id}${sideType}`}>
+            <text x={x + 5} y={y + 16} style={{ ...teamNameStyle }} id={`${game.id}${side.side}`}>
               {side.name}
             </text>
           </RectClipped>
 
-          <text x={x + 185} y={y + 16} style={teamScoreStyle} textAnchor="middle">
+          <text x={x + 175} y={y + 16} style={teamScoreStyle} textAnchor="middle">
             {side.amount || null}
           </text>
+
+          {side.side !== sides.length && (
+            <line x1="0" y1={lineOffset} x2="200" y2={lineOffset} style={teamSeparatorStyle} />
+          )}
         </g>
       );
     };
 
-    const topHovered = top && top.id === hoveredTeamId;
-    const bottomHovered = bottom && bottom.id === hoveredTeamId;
-
     return (
       <svg
         width="200"
-        height="82"
-        viewBox="0 0 200 82"
         {...rest}
+        y={rest.y + 29}
+        height={34.5 * sides.length}
         style={{ outline: isCurrent ? '2px solid #ff1717' : 'none' }}
       >
-        {/* game time */}
-        <text x="100" y="8" textAnchor="middle" style={gameTimeStyle}>
-          {topText && topText(game)}
-        </text>
-
-        {/* backgrounds */}
-
-        {/* base background */}
-        <rect x="0" y="12" width="200" height="45" fill={backgroundColor} rx="3" ry="3" />
-
-        {/* background for the top team */}
-        <rect
-          x="0"
-          y="12"
-          width="200"
-          height="22.5"
-          fill={topHovered ? hoverBackgroundColor : backgroundColor}
-          rx="3"
-          ry="3"
-        />
-        {/* background for the bottom team */}
-        <rect
-          x="0"
-          y="34.5"
-          width="200"
-          height="22.5"
-          fill={bottomHovered ? hoverBackgroundColor : backgroundColor}
-          rx="3"
-          ry="3"
-        />
-
-        {/* scores background */}
-        <rect x="170" y="12" width="30" height="45" fill={scoreBackground} rx="3" ry="3" />
-
-        {/* winner background */}
-        {winnerBackground}
-
-        {/* the players */}
-        {top ? <SideComponent x={0} y={12} side={top} onHover={onHoveredTeamIdChange} sideType={Side.HOME} /> : null}
-
-        {bottom ? (
-          <SideComponent x={0} y={34.5} side={bottom} onHover={onHoveredTeamIdChange} sideType={Side.VISITOR} />
-        ) : null}
-
-        <line x1="0" y1="34.5" x2="200" y2="34.5" style={teamSeparatorStyle} />
-
-        {/* game name */}
-        <text x="100" y="68" textAnchor="middle" style={gameNameStyle}>
-          {bottomText && bottomText(game)}
-        </text>
+        {game.sides.map((side, index) => (
+          <SideComponent
+            key={side.id}
+            x={0}
+            y={(sides.length - index) * 22 - 12}
+            side={side}
+            onHover={onHoveredTeamIdChange}
+            sideType={sides.length - index - 1}
+            winner={game.winner === index}
+            hovered={hoveredTeamId === side.id}
+          />
+        ))}
       </svg>
     );
   }
