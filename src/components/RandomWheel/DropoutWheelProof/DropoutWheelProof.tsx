@@ -9,6 +9,7 @@ import { RootState } from '../../../reducers';
 import { createRandomSlots } from '../../../reducers/Slots/Slots';
 import { percentsFormatter } from '../../../utils/common.utils';
 import DropoutFormula from '../../../assets/img/dropout_formula.png';
+import BattleRoyalePredictionService from '../../../services/BattleRoyalePredictionService';
 
 enum SlotsPresetType {
   Random,
@@ -72,9 +73,11 @@ const DropoutWheelProof: FC = () => {
   const predictChances = useCallback(() => {
     console.clear();
 
+    const array = new Uint32Array(10000);
+
     const safeIterations = preserveLogs ? Math.min(30, iterations) : iterations;
     const slotsToPredict = slotsPresetType === SlotsPresetType.Current ? slots : createRandomSlots(20, 2000, 10);
-    const predictionService = new PredictionService(slotsToPredict, preserveLogs);
+    const predictionService = new BattleRoyalePredictionService(slotsToPredict, preserveLogs);
     const difference = predictionService.researchDifference(safeIterations);
 
     setChanceDifference(difference);

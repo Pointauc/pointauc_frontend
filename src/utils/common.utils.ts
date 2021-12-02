@@ -84,6 +84,8 @@ export const shuffle = <T>(a: T[]): T[] => {
 export const isFirefox = (): boolean => navigator.userAgent.toLowerCase().includes('firefox');
 
 export const getTotalSize = (items: WheelItem[]): number => items.reduce((acc, { amount }) => acc + (amount || 0), 0);
+export const getTotalSize2 = (items: { value: number }[]): number => items.reduce((acc, { value }) => acc + value, 0);
+export const getTotalSize3 = (items: number[]): number => items.reduce((acc, value) => acc + value, 0);
 
 export const loadFile = (filename: string, data: string): void => {
   const element = document.createElement(TAGS.A);
@@ -101,8 +103,8 @@ export const getRandomIntInclusive = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const getRandomInclusive = (min: number, max: number): number => {
-  return Math.random() * (max - min + 1) + min;
+export const getRandomInclusive = (max: number): number => {
+  return Math.random() * max;
 };
 
 export const fitText = (text: string, maxLength: number): string =>
@@ -127,3 +129,35 @@ export const createMapByKey = <TKey, TData>(
 };
 
 export const percentsFormatter = (params: ValueGetterParams): CellValue => `${params.value}%`;
+
+export const getUniqItems = <T>(items: T[], count: number): T[] => {
+  if (items.length <= count) {
+    return items;
+  }
+
+  const indexes: number[] = [];
+
+  while (indexes.length < count) {
+    const index = getRandomIntInclusive(0, items.length - 1);
+
+    if (!indexes.includes(index)) {
+      indexes.push(index);
+    }
+  }
+
+  return indexes.map((index) => items[index]);
+};
+
+export const getTotal = <T>(items: T[], selectValue: (item: T) => number): number =>
+  items.reduce((acc, value) => acc + selectValue(value), 0);
+
+export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): number => {
+  const seed = Math.random();
+  let restAmount = seed * getTotal(items, selectValue);
+
+  return items.findIndex((item) => {
+    restAmount -= Number(selectValue(item));
+
+    return restAmount <= 0;
+  });
+};

@@ -34,7 +34,7 @@ class PredictionService {
     // console.log(sortSlots(this.getReverseSlots([...slots])));
   }
 
-  private getReverseSlots = (slots: Slot[]): Slot[] => {
+  protected getReverseSlots = (slots: Slot[]): Slot[] => {
     const totalSize = getTotalSize(slots);
 
     return slots.map(({ amount, ...props }) => {
@@ -48,7 +48,7 @@ class PredictionService {
   static getReverseSize = (size: number, totalSize: number, length: number): number =>
     (1 - size / totalSize) / (length - 1);
 
-  private getWinner = (slots: Slot[]): number => {
+  protected getWinner = (slots: Slot[]): number => {
     const seed = Math.random();
     let restAmount = seed * getTotalSize(slots);
 
@@ -65,7 +65,7 @@ class PredictionService {
     });
   };
 
-  private performIteration = (slots: Slot[]): string => {
+  protected performIteration = (slots: Slot[]): string => {
     const updatedSlots = [...slots];
     while (updatedSlots.length > 1) {
       const winner = this.getWinner(this.getReverseSlots(updatedSlots));
@@ -91,7 +91,7 @@ class PredictionService {
       .sort(({ chance: a }, { chance: b }) => b - a);
   };
 
-  normalizeSlotsChances = (slots: Slot[]): SlotChance[] => {
+  protected normalizeSlotsChances = (slots: Slot[]): SlotChance[] => {
     const total = getTotalSize(slots);
     return slots
       .map<SlotChance>(({ amount, name, id }) => ({ id, chance: (Number(amount) / total) * 100, name: name || '' }))
