@@ -55,26 +55,26 @@ export const createGame = (
   }
   const [a, b] = splitSlotsWitchMostSimilarValues(items);
 
-  const createSide = (restItms: WheelItem[], side: Side, gameId: Key): SideInfo => {
+  const createSide = (restItems: WheelItem[], side: Side, gameId: Key): SideInfo => {
     const createdSide: SideInfo =
-      restItms.length === 1
+      restItems.length === 1
         ? {
-            amount: Number(restItms[0]?.amount),
-            name: restItms[0].name || '',
-            id: restItms[0].id,
+            amount: Number(restItems[0]?.amount),
+            name: restItems[0].name || '',
+            id: restItems[0].id,
             side,
             gameId,
           }
         : {
             side,
-            amount: getTotalSize(restItms),
+            amount: getTotalSize(restItems),
             name: '',
             id: Math.random(),
             gameId,
           };
 
-    if (restItms.length > 1) {
-      createdSide.sourceGame = createGame(restItms, level + 1, matchOrder, createdSide);
+    if (restItems.length > 1) {
+      createdSide.sourceGame = createGame(restItems, level + 1, matchOrder, createdSide);
     }
 
     return createdSide;
@@ -85,8 +85,8 @@ export const createGame = (
     id,
     name: '',
     level,
-    visitor: createSide(b, Side.VISITOR, id),
-    home: createSide(a, Side.HOME, id),
+    visitor: createSide(a, Side.VISITOR, id),
+    home: createSide(b, Side.HOME, id),
     parentSide,
   };
 

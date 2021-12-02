@@ -21,11 +21,7 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items 
       return;
     }
 
-    const createdGame = createGame(
-      items.filter(({ amount }) => amount),
-      0,
-      gameOrder,
-    );
+    const createdGame = createGame(items.filter(({ amount }) => amount).reverse(), 0, gameOrder);
 
     if (createdGame) {
       const gameData = setOffsets(createdGame);
