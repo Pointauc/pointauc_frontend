@@ -17,6 +17,7 @@ const MENU_ITEMS: MenuItem[] = [
   { title: 'Статистика', IconComponent: EqualizerIcon, path: ROUTES.STATISTIC },
   { title: 'История', IconComponent: AssignmentIcon, path: ROUTES.HISTORY },
   { title: 'Гайд', IconComponent: HelpIcon, path: ROUTES.HELP },
+  { title: 'Арена', IconComponent: HowToVoteIcon, path: ROUTES.ARENA, divide: true },
   { title: 'Заказы зрителей', IconComponent: HowToVoteIcon, path: ROUTES.REQUESTS, divide: true },
 ];
 

@@ -149,13 +149,15 @@ export const getUniqItems = <T>(items: T[], count: number): T[] => {
 export const getTotal = <T>(items: T[], selectValue: (item: T) => number): number =>
   items.reduce((acc, value) => acc + selectValue(value), 0);
 
-export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): number => {
+export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): T => {
   const seed = Math.random();
   let restAmount = seed * getTotal(items, selectValue);
 
-  return items.findIndex((item) => {
-    restAmount -= Number(selectValue(item));
+  return (
+    items.find((item) => {
+      restAmount -= Number(selectValue(item));
 
-    return restAmount <= 0;
-  });
+      return restAmount <= 0;
+    }) || items[items.length - 1]
+  );
 };

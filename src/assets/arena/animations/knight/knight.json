@@ -1,0 +1,341 @@
+{"frames": {
+
+"KnightAttack-0.png":
+{
+	"frame": {"x":23,"y":158,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-1.png":
+{
+	"frame": {"x":49,"y":158,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-2.png":
+{
+	"frame": {"x":75,"y":158,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-3.png":
+{
+	"frame": {"x":0,"y":127,"w":23,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":14,"w":23,"h":31},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-4.png":
+{
+	"frame": {"x":23,"y":127,"w":23,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":14,"w":23,"h":31},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-5.png":
+{
+	"frame": {"x":0,"y":66,"w":43,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":15,"w":43,"h":30},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-6.png":
+{
+	"frame": {"x":43,"y":66,"w":39,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":15,"w":39,"h":30},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-7.png":
+{
+	"frame": {"x":82,"y":66,"w":39,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":15,"w":39,"h":30},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-8.png":
+{
+	"frame": {"x":46,"y":127,"w":35,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":14,"w":35,"h":31},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-9.png":
+{
+	"frame": {"x":0,"y":190,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":43,"y":13,"w":32,"h":32},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-10.png":
+{
+	"frame": {"x":26,"y":254,"w":50,"h":35},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":46,"y":10,"w":50,"h":35},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-11.png":
+{
+	"frame": {"x":66,"y":96,"w":41,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":14,"w":41,"h":31},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightAttack-12.png":
+{
+	"frame": {"x":60,"y":37,"w":41,"h":29},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":54,"y":16,"w":41,"h":29},
+	"sourceSize": {"w":128,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-0.png":
+{
+	"frame": {"x":32,"y":190,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-1.png":
+{
+	"frame": {"x":58,"y":190,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-2.png":
+{
+	"frame": {"x":84,"y":190,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-3.png":
+{
+	"frame": {"x":0,"y":222,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-4.png":
+{
+	"frame": {"x":81,"y":127,"w":29,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":14,"w":29,"h":31},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-5.png":
+{
+	"frame": {"x":60,"y":9,"w":30,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":17,"w":30,"h":28},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-6.png":
+{
+	"frame": {"x":90,"y":9,"w":30,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":17,"w":30,"h":28},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-7.png":
+{
+	"frame": {"x":0,"y":37,"w":30,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":17,"w":30,"h":28},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-8.png":
+{
+	"frame": {"x":30,"y":37,"w":30,"h":28},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":17,"w":30,"h":28},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-9.png":
+{
+	"frame": {"x":30,"y":9,"w":30,"h":24},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":21,"w":30,"h":24},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-10.png":
+{
+	"frame": {"x":0,"y":0,"w":31,"h":7},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":38,"w":31,"h":7},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-11.png":
+{
+	"frame": {"x":31,"y":0,"w":30,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":36,"w":30,"h":9},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-12.png":
+{
+	"frame": {"x":61,"y":0,"w":30,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":36,"w":30,"h":9},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-13.png":
+{
+	"frame": {"x":91,"y":0,"w":30,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":36,"w":30,"h":9},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightDeath-14.png":
+{
+	"frame": {"x":0,"y":9,"w":30,"h":9},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":37,"y":36,"w":30,"h":9},
+	"sourceSize": {"w":96,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightIdle-0.png":
+{
+	"frame": {"x":26,"y":222,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":64,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-0.png":
+{
+	"frame": {"x":52,"y":222,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-1.png":
+{
+	"frame": {"x":78,"y":222,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-2.png":
+{
+	"frame": {"x":0,"y":254,"w":26,"h":32},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":13,"w":26,"h":32},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-3.png":
+{
+	"frame": {"x":0,"y":158,"w":23,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":14,"w":23,"h":31},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-4.png":
+{
+	"frame": {"x":0,"y":96,"w":22,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":15,"w":22,"h":30},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-5.png":
+{
+	"frame": {"x":22,"y":96,"w":22,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":15,"w":22,"h":30},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+},
+"KnightShield-6.png":
+{
+	"frame": {"x":44,"y":96,"w":22,"h":30},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":15,"w":22,"h":30},
+	"sourceSize": {"w":32,"h":45},
+	"anchor": {"x":0.5,"y":0.5}
+}},
+"animations": {
+	"KnightAttack": ["KnightAttack-0.png","KnightAttack-1.png","KnightAttack-2.png","KnightAttack-3.png","KnightAttack-4.png","KnightAttack-5.png","KnightAttack-6.png","KnightAttack-7.png","KnightAttack-8.png","KnightAttack-9.png","KnightAttack-10.png","KnightAttack-11.png","KnightAttack-12.png"],
+	"KnightDeath": ["KnightDeath-0.png","KnightDeath-1.png","KnightDeath-2.png","KnightDeath-3.png","KnightDeath-4.png","KnightDeath-5.png","KnightDeath-6.png","KnightDeath-7.png","KnightDeath-8.png","KnightDeath-9.png","KnightDeath-10.png","KnightDeath-11.png","KnightDeath-12.png","KnightDeath-13.png","KnightDeath-14.png"],
+	"KnightShield": ["KnightShield-0.png","KnightShield-1.png","KnightShield-2.png","KnightShield-3.png","KnightShield-4.png","KnightShield-5.png","KnightShield-6.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "knight.png",
+	"format": "RGBA8888",
+	"size": {"w":121,"h":289},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:23b3d740cef6c63ac567f32236e503d6:0501b90332b8098688dc8604c941b6e7:775abec68cea152a8c833d779d2191cb$"
+}
+}

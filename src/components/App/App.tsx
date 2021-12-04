@@ -26,6 +26,7 @@ import HelpPage from '../HelpPage/HelpPage';
 import Statistic from '../Statistic/Statistic';
 import StopwatchPage from '../StopwatchPage/StopwatchPage';
 import RequestsPage from '../RequestsPage/RequestsPage';
+import ArenaPage from '../ArenaPage/ArenaPage';
 
 const drawerWidth = 240;
 
@@ -72,7 +73,7 @@ const useStyles = makeStyles(() =>
 );
 
 const hasToken = !!getCookie('jwtToken');
-const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
+const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH, ROUTES.ARENA];
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
@@ -180,6 +181,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path={ROUTES.REQUESTS}>
               <RequestsPage />
+            </Route>
+            <Route exact path={ROUTES.ARENA}>
+              <ArenaPage />
             </Route>
           </Switch>
         </main>

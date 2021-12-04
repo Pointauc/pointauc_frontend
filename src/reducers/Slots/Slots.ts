@@ -42,13 +42,13 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
   );
 
 const initialState: SlotsState = {
-  slots: [createSlot()],
-  // slots: [
-  // ...createRandomSlots(2, 20000, 10000),
-  // ...createRandomSlots(5, 10000, 500),
-  // ...createRandomSlots(4, 650, 600),
-  // ...createRandomSlots(100, 300, 100),
-  // ],
+  // slots: [createSlot()],
+  slots: [
+    // ...createRandomSlots(2, 20000, 10000),
+    ...createRandomSlots(5, 10000, 500),
+    ...createRandomSlots(4, 650, 600),
+    ...createRandomSlots(15, 300, 100),
+  ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
   // slots: [...new Array(6).fill(null).map(() => createSlot({ amount: 100, name: '100' }))],
 };

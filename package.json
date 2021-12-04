@@ -24,6 +24,7 @@
     "lodash.merge": "^4.6.2",
     "lodash.mergewith": "^4.6.2",
     "material-ui-dropzone": "^3.5.0",
+    "pixi.js": "^6.2.0",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.11.1",
     "react-color": "^2.19.3",

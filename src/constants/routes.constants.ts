@@ -17,6 +17,7 @@ const ROUTES = {
   CHAT_WHEEL: '/chatWheel/:channel',
   REQUESTS: '/requests',
   AUDIO_ROOM: '/audioRoom',
+  ARENA: '/arena/',
 };
 
 export default ROUTES;
