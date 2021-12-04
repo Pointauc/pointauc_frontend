@@ -21,7 +21,7 @@ const GladPreviewInfo: FC<GladPreviewInfoProps> = ({ glad }) => {
     <div className="glad-preview">
       <PersonIcon className="glad-preview-portrait" />
       <div className="glad-preview-stat-list">
-        <Typography className="glad-preview-name">{glad.slot.name}</Typography>
+        <Typography className="glad-preview-name">{glad.name}</Typography>
         {visibleStats.map((stat) => (
           <Typography key={stat} className="glad-preview-stat">
             {`${statNames[stat]}: ${glad[stat]}`}

@@ -13,7 +13,6 @@ interface ArenaSlotChartInfoProps {
 
 const ArenaSlotChartInfo: FC<ArenaSlotChartInfoProps> = ({ glad, maxValue, isSelected, isCandidate, onSelect }) => {
   const handleSelect = (): void => {
-    console.log('select');
     onSelect(glad);
   };
 
@@ -25,7 +24,7 @@ const ArenaSlotChartInfo: FC<ArenaSlotChartInfoProps> = ({ glad, maxValue, isSel
       onClick={handleSelect}
     >
       <div className="arena-chart-item-wrapper">
-        <div className="arena-chart-item-name">{glad.slot.name}</div>
+        <div className="arena-chart-item-name">{glad.name}</div>
         <LinearProgress variant="determinate" value={((glad.stat || 0) / maxValue) * 100} />
         <Divider />
       </div>

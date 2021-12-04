@@ -32,7 +32,7 @@ export default class GameController {
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(null);
-      }, 1500);
+      }, 1100);
     });
 
     battleManagerView.stage?.destroy();

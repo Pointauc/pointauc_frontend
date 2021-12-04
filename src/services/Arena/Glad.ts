@@ -1,7 +1,7 @@
 import { Key } from 'react';
 import { Slot } from '../../models/slot.model';
 import { StatType } from '../../models/Arena/Glad';
-import { getRandomIntInclusive, getTotal, randomizeItem } from '../../utils/common.utils';
+import { fitText, getRandomIntInclusive, getTotal, randomizeItem } from '../../utils/common.utils';
 
 const initialStatDistribution: Record<StatType, number> = {
   [StatType.atk]: 1,
@@ -15,6 +15,8 @@ export default class Glad {
   damageDelta = 0.2;
   readonly maxHp = 100;
   readonly id: Key;
+  readonly name: string;
+  readonly fullName: string;
   readonly slot: Slot;
 
   [StatType.atk] = 0;
@@ -27,6 +29,8 @@ export default class Glad {
 
   constructor(slot: Slot) {
     this.id = slot.id;
+    this.name = fitText(slot.name || '', 16);
+    this.fullName = fitText(slot.name || '', 35);
     this.slot = slot;
 
     this.distributesStats(Number(slot.amount));

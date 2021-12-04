@@ -57,9 +57,6 @@ export default class GladView extends Glad {
     text.x = startPosX;
     text.y = startPosY;
 
-    console.log(startPosX);
-    console.log(startPosY);
-
     this.stage!.addChild(text);
 
     await Promise.all([
@@ -114,7 +111,7 @@ export default class GladView extends Glad {
   };
 
   setupName(): void {
-    const text = new PIXI.Text(this.slot.name || '', nameStyle);
+    const text = new PIXI.Text(this.fullName || '', nameStyle);
     text.x = this.x - text.width / 2;
     text.y = this.y - this.avatar!.height / 2 - nameGraphics.offset - text.height;
 
