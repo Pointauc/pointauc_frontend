@@ -10,13 +10,14 @@ class BattleManager<GladType extends Glad> {
   };
 
   getWinner(glads: GladType[]): GladType {
-    const total = getTotal(glads, ({ stat }) => stat);
+    const updatedData = glads.map(({ stat }) => stat ** (1 / 2));
+    const total = getTotal(updatedData, (stat) => stat);
     let restAmount = getRandomInclusive(0, total);
     // console.log(restAmount);
     // console.log(total ** 0.5);
     // console.log(modded);
 
-    const index = glads.findIndex(({ stat }) => {
+    const index = updatedData.findIndex((stat) => {
       restAmount -= stat;
 
       return restAmount <= 0;

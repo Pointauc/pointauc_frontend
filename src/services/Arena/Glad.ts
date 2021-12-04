@@ -37,7 +37,7 @@ export default class Glad {
 
   applyDamage(damage: number): Promise<void> {
     return new Promise((resolve) => {
-      console.log(`${this.slot.name} recive ${damage} damage`);
+      // console.log(`${this.slot.name} recive ${damage} damage`);
 
       this.hp -= damage;
       resolve();
@@ -46,7 +46,7 @@ export default class Glad {
 
   attack(glad: Glad): Promise<void> {
     return new Promise((resolve) => {
-      console.log(`${this.slot.name} attack ${glad.slot.name} with ${this.damage} damage`);
+      // console.log(`${this.slot.name} attack ${glad.slot.name} with ${this.damage} damage`);
       resolve(glad.applyDamage(this.damage));
     });
   }

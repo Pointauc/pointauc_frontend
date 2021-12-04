@@ -14,7 +14,7 @@ interface SlotsState {
 
 let maxFastId = 0;
 
-const createSlot = (props: Partial<Slot> = {}): Slot => {
+export const createSlot = (props: Partial<Slot> = {}): Slot => {
   const slot = {
     // eslint-disable-next-line no-plusplus
     fastId: ++maxFastId,
