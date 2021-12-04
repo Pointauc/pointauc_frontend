@@ -1,7 +1,7 @@
 import { Key } from 'react';
 import { Slot } from '../../models/slot.model';
 import { StatType } from '../../models/Arena/Glad';
-import { getTotal, randomizeItem } from '../../utils/common.utils';
+import { getRandomIntInclusive, getTotal, randomizeItem } from '../../utils/common.utils';
 
 const initialStatDistribution: Record<StatType, number> = {
   [StatType.atk]: 1,
@@ -12,6 +12,7 @@ const initialStatDistribution: Record<StatType, number> = {
 export default class Glad {
   hp = 100;
   damage = 34;
+  damageDelta = 0.2;
   readonly maxHp = 100;
   readonly id: Key;
   readonly slot: Slot;
@@ -44,10 +45,18 @@ export default class Glad {
     });
   }
 
+  interpolateDamage(): number {
+    return getRandomIntInclusive(
+      Math.round(this.damage - this.damage * this.damageDelta),
+      Math.round(this.damage + this.damage * this.damageDelta),
+    );
+  }
+
   attack(glad: Glad): Promise<void> {
     return new Promise((resolve) => {
       // console.log(`${this.slot.name} attack ${glad.slot.name} with ${this.damage} damage`);
-      resolve(glad.applyDamage(this.damage));
+      const dealtDamage = this.interpolateDamage();
+      resolve(glad.applyDamage(dealtDamage));
     });
   }
 
