@@ -146,12 +146,17 @@ export default class GladView extends Glad {
   renderHpBar(): void {
     const xPos = this.x - hpBarGraphics.width / 2;
     const yPos = this.y + avatarGraphics.radius + hpBarGraphics.offset;
-    const healthWidth = Math.max((hpBarGraphics.width * this.hp) / this.maxHp, 0);
+    const healthWidth = Math.max(((hpBarGraphics.width - 2 * avatarGraphics.border + 4) * this.hp) / this.maxHp, 0);
 
     this.hpBar?.clear();
 
     this.hpBar?.beginFill(0x6cc16c);
-    this.hpBar?.drawRect(xPos, yPos, healthWidth, hpBarGraphics.height);
+    this.hpBar?.drawRect(
+      xPos + avatarGraphics.border - 2,
+      yPos + avatarGraphics.border - 2,
+      healthWidth,
+      hpBarGraphics.height - 2 * avatarGraphics.border + 4,
+    );
     this.hpBar?.endFill();
 
     this.hpBar?.lineStyle(avatarGraphics.border, 0xf0f0f0);
