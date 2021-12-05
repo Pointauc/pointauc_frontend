@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Typography } from '@material-ui/core';
-import { AudioRoomUser } from '../../../api/audioRoomApi';
+import audioRoomApi, { AudioRoomUser } from '../../../api/audioRoomApi';
 import { useAudioPageStyles } from '../../../constants/theme.constants';
 import FormInput from '../../Form/FormInput/FormInput';
 import './RoomLoginPage.scss';
@@ -16,9 +16,9 @@ const RoomLoginPage: FC<RoomLoginPageProps> = ({ setUser }) => {
   // const [isLoading, setIsLoading] = useState(!!token);
   const { control, handleSubmit, errors } = useForm<AudioRoomUser>();
 
-  const onSubmit = (user: AudioRoomUser) => {
+  const onSubmit = async (user: AudioRoomUser): Promise<void> => {
     try {
-      // await audioRoomApi.login(user);
+      await audioRoomApi.login(user);
 
       setUser(user);
     } catch (e) {

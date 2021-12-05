@@ -42,7 +42,7 @@ const AudioRoom = () => {
 
   useEffect(() => {
     if (user) {
-      const _socket = io(getSocketIOUrl(), { query: { username: user.username } });
+      const _socket = io(getSocketIOUrl(), { query: { username: user.username, password: user.password } });
 
       _socket.on('connect', () => {
         console.log('connected');
