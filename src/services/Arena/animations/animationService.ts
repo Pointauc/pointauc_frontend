@@ -12,12 +12,13 @@ export enum KnightAnimation {
 
 class AnimationService {
   app?: PIXI.Application;
-  knightSheet?: PIXI.LoaderResource;
+
+  get knightSheet(): PIXI.LoaderResource {
+    return PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`];
+  }
 
   prepareLoad(): void {
-    PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`, () => {
-      this.knightSheet = PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`];
-    });
+    PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`);
   }
 
   getAnimation(name: string): PIXI.Texture<PIXI.Resource>[] {

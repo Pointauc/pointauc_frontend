@@ -67,10 +67,14 @@ const ArenaPage: FC = () => {
       updateCandidates(initialGlads);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateCandidates]);
+  }, []);
 
   useEffect(() => {
     setupEngine();
+
+    return (): void => {
+      gameController.current?.app.destroy(true);
+    };
   }, [setupEngine]);
 
   const startRound = async (): Promise<void> => {

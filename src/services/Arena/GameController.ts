@@ -21,10 +21,12 @@ export default class GameController {
   }
 
   loadData(): void {
-    BattleManagerView.prepareLoad();
-    animationService.prepareLoad();
+    if (!Object.values(PIXI.Loader.shared.resources).length) {
+      BattleManagerView.prepareLoad();
+      animationService.prepareLoad();
 
-    PIXI.Loader.shared.load();
+      PIXI.Loader.shared.load();
+    }
   }
 
   makeBattle = async (glads: GladView[]): Promise<GladView> => {
@@ -47,7 +49,6 @@ export default class GameController {
 
   setBackground = (): void => {
     this.stageBackground = PIXI.Sprite.from(StageBackground);
-    this.stageBackground.name = 'mainBkg';
     this.stageBackground.width = this.app.screen.width;
     this.stageBackground.height = this.app.screen.height;
     this.stageBackground.anchor.set(0, 0);

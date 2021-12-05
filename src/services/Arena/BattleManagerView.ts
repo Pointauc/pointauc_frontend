@@ -10,7 +10,9 @@ export default class BattleManagerView extends BattleManager<GladView> {
   height = 0;
   _fightDelay = 500;
 
-  static backgroundTexture?: PIXI.Texture;
+  static get backgroundTexture(): PIXI.Texture | undefined {
+    return PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`].texture;
+  }
 
   get fightDelay(): number {
     // eslint-disable-next-line no-underscore-dangle
@@ -18,10 +20,7 @@ export default class BattleManagerView extends BattleManager<GladView> {
   }
 
   static prepareLoad(): void {
-    PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`, () => {
-      this.backgroundTexture =
-        PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`].texture;
-    });
+    PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`);
   }
 
   private setupBackground(): void {
