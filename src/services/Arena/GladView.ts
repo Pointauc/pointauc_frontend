@@ -39,6 +39,28 @@ const damageStyle = new PIXI.TextStyle({
   fill: '#d93a3a',
 });
 
+const shaderFrag = `
+precision highp float;
+
+varying vec2 vTextureCoord;
+
+uniform vec2 mouse;
+uniform vec4 inputSize;
+uniform vec4 outputFrame;
+uniform float time;
+uniform sampler2D uSampler;
+
+void main() {
+  vec4 color = texture2D(uSampler, vTextureCoord);
+  
+  if (color.a != .0) {
+    color.r = color.r + 0.4;
+  }
+  
+  gl_FragColor = color;
+}
+`;
+
 export default class GladView extends Glad {
   stage?: PIXI.Container;
   avatar?: PIXI.AnimatedSprite;
@@ -76,6 +98,9 @@ export default class GladView extends Glad {
 
     await super.applyDamage(damage);
     this.animateDamage(damage);
+
+    const filter = new PIXI.Filter(undefined, shaderFrag, {});
+    animationService.applyFilter(this.avatar!, filter, 1000);
     this.renderHpBar();
 
     if (this.hp <= 0) {

@@ -97,6 +97,26 @@ class AnimationService {
       PIXI.Ticker.shared.add(onTick);
     });
   }
+
+  async applyFilter(sprite: PIXI.Container, filter: PIXI.Filter, time: number): Promise<void> {
+    await new Promise<void>((resolve) => {
+      let passedTime = 0;
+      const initialFilters = sprite.filters;
+      sprite.filters = [filter];
+
+      const onTick = (dt: number): void => {
+        passedTime += dt * 100;
+
+        if (passedTime >= time) {
+          sprite.filters = initialFilters;
+          PIXI.Ticker.shared.remove(onTick);
+          resolve();
+        }
+      };
+
+      PIXI.Ticker.shared.add(onTick);
+    });
+  }
 }
 
 export const animationService = new AnimationService();

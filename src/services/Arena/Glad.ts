@@ -1,6 +1,6 @@
 import { Key } from 'react';
 import { Slot } from '../../models/slot.model';
-import { StatType } from '../../models/Arena/Glad';
+import { Position, StatType, Team } from '../../models/Arena/Glad';
 import { fitText, getRandomIntInclusive, getTotal, randomizeItem } from '../../utils/common.utils';
 
 const initialStatDistribution: Record<StatType, number> = {
@@ -11,9 +11,14 @@ const initialStatDistribution: Record<StatType, number> = {
 
 export default class Glad {
   hp = 100;
+  position: Position = { x: 0, y: 0 };
+  team = Team.Red;
+
   damage = 34;
   damageDelta = 0.2;
+
   readonly maxHp = 100;
+
   readonly id: Key;
   readonly name: string;
   readonly fullName: string;

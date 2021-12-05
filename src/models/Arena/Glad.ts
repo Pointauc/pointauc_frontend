@@ -25,3 +25,18 @@ export interface AnimationSource {
 }
 
 export type AnimationMap = Record<string, AnimationSource>;
+
+export interface Position {
+  x: number;
+  y: number;
+}
+
+export interface Rect {
+  width: number;
+  height: number;
+}
+
+export enum Team {
+  Red,
+  Blue,
+}
