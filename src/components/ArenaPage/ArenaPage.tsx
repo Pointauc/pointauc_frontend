@@ -1,7 +1,8 @@
 import React, { FC, Key, useCallback, useEffect, useRef, useState } from 'react';
 import './ArenaPage.scss';
 import { useSelector } from 'react-redux';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
+import ResizeObserver from 'resize-observer-polyfill';
 import ArenaSideBlock, { Sides } from './ArenaSideBlock/ArenaSideBlock';
 import { RootState } from '../../reducers';
 import ArenaSlotsChart from './ArenaSlotsChart/ArenaSlotsChart';
@@ -11,9 +12,17 @@ import { getTotal } from '../../utils/common.utils';
 import GameController from '../../services/Arena/GameController';
 import GladView from '../../services/Arena/GladView';
 import ArenaGladsPreview from './ArenaGladsPreview/ArenaGladsPreview';
+import RadioButtonGroup, { Option } from '../RadioButtonGroup/RadioButtonGroup';
+
+const speedOptions: Option<number>[] = [
+  { key: 1, value: 'x1' },
+  { key: 1.5, value: 'x1.5' },
+  { key: 2, value: 'x2' },
+];
 
 const ArenaPage: FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
+  const [gameSpeed, setGameSpeed] = useState<number>(1);
   const [battleDisabled, setBattleDisabled] = useState<boolean>(false);
   const [gladsMap] = useState<Map<Key, GladType>>(new Map());
 
@@ -29,16 +38,31 @@ const ArenaPage: FC = () => {
     setCandidates(matchSelectorService.selectLast(glads, 2));
   }, []);
 
+  useEffect(() => {
+    const onResize = (): void => {
+      const { width = 0, height = 0 } = gameContainerRef.current?.getBoundingClientRect() || {};
+      gameController.current?.resize(width, height);
+    };
+    const observer = new ResizeObserver(onResize);
+
+    if (gameContainerRef.current) {
+      observer.observe(gameContainerRef.current);
+    }
+
+    return (): void => {
+      return observer.disconnect();
+    };
+  }, [gameContainerRef]);
+
   const setupEngine = useCallback((): void => {
     if (pageContainerRef.current && gameContainerRef.current) {
-      const { width, height } = pageContainerRef.current?.getBoundingClientRect();
       const initialGlads = slots.map((slot) => {
         const glad = new GladView(slot);
         gladsMap.set(glad.id, glad);
         return glad;
       });
 
-      gameController.current = new GameController(gameContainerRef.current, width, height);
+      gameController.current = new GameController(gameContainerRef.current);
       setRestGlads(initialGlads);
       updateCandidates(initialGlads);
     }
@@ -72,6 +96,12 @@ const ArenaPage: FC = () => {
     }
   };
 
+  const onGameSpeedChange = (speed: number): void => {
+    setGameSpeed(speed);
+
+    gameController.current?.setSpeed(speed);
+  };
+
   return (
     <div className="arena-container" ref={pageContainerRef}>
       <div className="game-container" ref={gameContainerRef} />
@@ -83,9 +113,15 @@ const ArenaPage: FC = () => {
           setSelectedGlads={setSelectedGlads}
         />
       </ArenaSideBlock>
-      <Button className="start-battle-btn" onClick={startRound} disabled={battleDisabled}>
-        Битва
-      </Button>
+      <div className="arena-controls">
+        <Button className="start-battle-btn" onClick={startRound} disabled={battleDisabled}>
+          Битва
+        </Button>
+        <div className="speed-controls">
+          <Typography>Скорость боя: </Typography>
+          <RadioButtonGroup options={speedOptions} activeKey={gameSpeed} onChangeActive={onGameSpeedChange} />
+        </div>
+      </div>
       <ArenaSideBlock side={Sides.right}>
         <ArenaGladsPreview allGlads={restGlads} selectedGlads={selectedGlads} candidates={candidates} />
       </ArenaSideBlock>

@@ -6,7 +6,7 @@ import BattleManager from './BattleManager';
 describe('Arena', () => {
   const initGlads = (values: number[]): Glad[] => values.map((amount) => new Glad(createSlot({ amount })));
 
-  const testCase = async (values: number[], delta = 5, count = 3000): Promise<void> => {
+  const testCase = async (values: number[], delta = 5, count = 5000): Promise<void> => {
     const glads = initGlads(values);
     const battleManager = new BattleManager(glads);
     const winsMap = new Map<Key, number>();
@@ -22,10 +22,12 @@ describe('Arena', () => {
     }
 
     // console.log(Array.from(winsMap.values()));
+    const chances = Array.from(winsMap.values()).map((wins) => (wins / count) * 100);
+    console.log(chances);
 
-    Array.from(winsMap.values()).forEach((wins, index) => {
-      expect((wins / count) * 100).toBeGreaterThanOrEqual(Math.max(values[index] - delta, 1));
-      expect((wins / count) * 100).toBeLessThanOrEqual(Math.min(values[index] + delta, 99));
+    chances.forEach((chance, index) => {
+      expect(chance).toBeGreaterThanOrEqual(Math.max(values[index] - delta, 1));
+      expect(chance).toBeLessThanOrEqual(Math.min(values[index] + delta, 99));
     });
   };
 

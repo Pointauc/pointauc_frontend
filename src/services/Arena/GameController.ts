@@ -6,20 +6,25 @@ import { animationService } from './animations/animationService';
 
 export default class GameController {
   readonly app: PIXI.Application;
+  stageBackground?: PIXI.Sprite;
 
-  constructor(container: HTMLElement, width: number, height: number) {
+  constructor(container: HTMLElement) {
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-    this.app = new PIXI.Application({ width, height });
+    this.app = new PIXI.Application({ resizeTo: container });
     this.setBackground();
 
     animationService.app = this.app;
 
-    this.app.loader.add(`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`).load(() => {
-      animationService.knightSheet =
-        this.app.loader.resources[`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`];
-    });
+    this.loadData();
 
     container.appendChild(this.app.view);
+  }
+
+  loadData(): void {
+    BattleManagerView.prepareLoad();
+    animationService.prepareLoad();
+
+    PIXI.Loader.shared.load();
   }
 
   makeBattle = async (glads: GladView[]): Promise<GladView> => {
@@ -41,13 +46,27 @@ export default class GameController {
   };
 
   setBackground = (): void => {
-    const stageBackground = PIXI.Sprite.from(StageBackground);
-    stageBackground.width = this.app.screen.width;
-    stageBackground.height = this.app.screen.height;
-    stageBackground.anchor.set(0, 0);
-    stageBackground.x = 0;
-    stageBackground.y = 0;
+    this.stageBackground = PIXI.Sprite.from(StageBackground);
+    this.stageBackground.name = 'mainBkg';
+    this.stageBackground.width = this.app.screen.width;
+    this.stageBackground.height = this.app.screen.height;
+    this.stageBackground.anchor.set(0, 0);
+    this.stageBackground.x = 0;
+    this.stageBackground.y = 0;
 
-    this.app.stage.addChild(stageBackground);
+    this.app.stage.addChild(this.stageBackground);
   };
+
+  setSpeed = (speed: number): void => {
+    PIXI.Ticker.shared.speed = speed;
+  };
+
+  resize(width: number, height: number): void {
+    this.app.renderer.resize(width, height);
+
+    if (this.stageBackground) {
+      this.stageBackground.width = width;
+      this.stageBackground.height = height;
+    }
+  }
 }

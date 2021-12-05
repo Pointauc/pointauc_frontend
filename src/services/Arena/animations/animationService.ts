@@ -14,6 +14,12 @@ class AnimationService {
   app?: PIXI.Application;
   knightSheet?: PIXI.LoaderResource;
 
+  prepareLoad(): void {
+    PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`, () => {
+      this.knightSheet = PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`];
+    });
+  }
+
   getAnimation(name: string): PIXI.Texture<PIXI.Resource>[] {
     if (this.knightSheet && this.knightSheet.textures) {
       const res = [];
@@ -61,12 +67,12 @@ class AnimationService {
         sprite.y = y + deltaY * modifier;
 
         if (passedTime >= time) {
-          this.app?.ticker.remove(onTick);
+          PIXI.Ticker.shared.remove(onTick);
           resolve();
         }
       };
 
-      this.app?.ticker.add(onTick);
+      PIXI.Ticker.shared.add(onTick);
     });
   }
 
@@ -82,12 +88,12 @@ class AnimationService {
         sprite.alpha = 1 - modifier;
 
         if (passedTime >= time) {
-          this.app?.ticker.remove(onTick);
+          PIXI.Ticker.shared.remove(onTick);
           resolve();
         }
       };
 
-      this.app?.ticker.add(onTick);
+      PIXI.Ticker.shared.add(onTick);
     });
   }
 }

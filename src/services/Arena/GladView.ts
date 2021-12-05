@@ -99,7 +99,7 @@ export default class GladView extends Glad {
 
   setupAvatar = (flip: boolean): void => {
     this.avatar = new PIXI.AnimatedSprite(animationService.getAnimation('KnightIdle'));
-    this.avatar.animationSpeed = 0.25;
+    this.avatar.animationSpeed = 0.28 * PIXI.Ticker.shared.speed;
     this.avatar.x = this.x;
     this.avatar.y = this.y;
     this.avatar.scale.x = flip ? -5 : 5;

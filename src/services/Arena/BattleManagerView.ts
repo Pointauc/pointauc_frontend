@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import BattleManager from './BattleManager';
 import GladView from './GladView';
-import ArenaBackground from '../../assets/arena/ArenaBackground.png';
 
 const gladsPlacementRadius = 200;
 
@@ -9,9 +8,28 @@ export default class BattleManagerView extends BattleManager<GladView> {
   stage?: PIXI.Container;
   width = 0;
   height = 0;
+  _fightDelay = 500;
+
+  static backgroundTexture?: PIXI.Texture;
+
+  get fightDelay(): number {
+    // eslint-disable-next-line no-underscore-dangle
+    return this._fightDelay / PIXI.Ticker.shared.speed;
+  }
+
+  static prepareLoad(): void {
+    PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`, () => {
+      this.backgroundTexture =
+        PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`].texture;
+    });
+  }
 
   private setupBackground(): void {
-    const arenaBackground = PIXI.Sprite.from(ArenaBackground);
+    if (!BattleManagerView.backgroundTexture) {
+      return;
+    }
+
+    const arenaBackground = PIXI.Sprite.from(BattleManagerView.backgroundTexture);
     arenaBackground.width = this.width;
     arenaBackground.height = this.height;
     arenaBackground.anchor.set(0, 0);
@@ -41,7 +59,7 @@ export default class BattleManagerView extends BattleManager<GladView> {
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(null);
-      }, 500);
+      }, this.fightDelay);
     });
 
     await super.fight(first, second);
