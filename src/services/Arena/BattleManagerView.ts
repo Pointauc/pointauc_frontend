@@ -6,6 +6,7 @@ const gladsPlacementRadius = 200;
 
 export default class BattleManagerView extends BattleManager<GladView> {
   stage?: PIXI.Container;
+  arenaBackground?: PIXI.Sprite;
   width = 0;
   height = 0;
   _fightDelay = 500;
@@ -23,27 +24,28 @@ export default class BattleManagerView extends BattleManager<GladView> {
     PIXI.Loader.shared.add(`${process.env.PUBLIC_URL}/arena/ArenaBackground.png`);
   }
 
-  private setupBackground(): void {
+  private setupBackground(container: PIXI.Container): void {
     if (!BattleManagerView.backgroundTexture) {
       return;
     }
 
-    const arenaBackground = PIXI.Sprite.from(BattleManagerView.backgroundTexture);
-    arenaBackground.width = this.width;
-    arenaBackground.height = this.height;
-    arenaBackground.anchor.set(0, 0);
-    arenaBackground.x = 0;
-    arenaBackground.y = 0;
+    this.arenaBackground = PIXI.Sprite.from(BattleManagerView.backgroundTexture);
+    this.arenaBackground.width = this.width;
+    this.arenaBackground.height = this.height;
+    this.arenaBackground.anchor.set(0, 0);
+    this.arenaBackground.x = 0;
+    this.arenaBackground.y = 0;
 
-    this.stage!.addChild(arenaBackground);
+    container.addChild(this.arenaBackground);
   }
 
   setup(container: PIXI.Container, width: number, height: number): void {
     this.stage = new PIXI.Container();
     this.width = width;
     this.height = height;
+    this.stage.zIndex = 10;
 
-    this.setupBackground();
+    this.setupBackground(container);
 
     const xOffset = width / 2 - gladsPlacementRadius;
 
@@ -62,5 +64,10 @@ export default class BattleManagerView extends BattleManager<GladView> {
     });
 
     await super.fight(first, second);
+  }
+
+  destroy(): void {
+    this.stage?.destroy();
+    this.arenaBackground?.destroy();
   }
 }

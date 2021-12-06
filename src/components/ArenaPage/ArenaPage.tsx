@@ -15,6 +15,7 @@ import ArenaGladsPreview from './ArenaGladsPreview/ArenaGladsPreview';
 import RadioButtonGroup, { Option } from '../RadioButtonGroup/RadioButtonGroup';
 
 const speedOptions: Option<number>[] = [
+  { key: 0.5, value: 'x0.5' },
   { key: 1, value: 'x1' },
   { key: 1.5, value: 'x1.5' },
   { key: 2, value: 'x2' },

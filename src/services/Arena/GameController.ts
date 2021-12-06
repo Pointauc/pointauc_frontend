@@ -3,6 +3,7 @@ import GladView from './GladView';
 import BattleManagerView from './BattleManagerView';
 import StageBackground from '../../assets/arena/StageBackground.png';
 import { animationService } from './animations/animationService';
+import globalParticleService from './Particles/globalParticleService';
 
 export default class GameController {
   readonly app: PIXI.Application;
@@ -11,19 +12,33 @@ export default class GameController {
   constructor(container: HTMLElement) {
     PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
     this.app = new PIXI.Application({ resizeTo: container });
+    this.app.stage.sortableChildren = true;
     this.setBackground();
 
     animationService.app = this.app;
 
+    globalParticleService.setup(this.app.stage);
+
     this.loadData();
 
     container.appendChild(this.app.view);
+
+    // const testGlad = new Glad(createSlot());
+    // testGlad[StatType.def] = 100;
+
+    // new Array(300).fill(null).forEach((x, index) => {
+    //   if (index === 100) {
+    //     console.log('border ------------------------------------------');
+    //   }
+    //   console.log(Math.ceil(testGlad.reduceIncomingDamage(index + 1)));
+    // });
   }
 
   loadData(): void {
     if (!Object.values(PIXI.Loader.shared.resources).length) {
       BattleManagerView.prepareLoad();
       animationService.prepareLoad();
+      globalParticleService.prepareLoad();
 
       PIXI.Loader.shared.load();
     }
@@ -42,7 +57,8 @@ export default class GameController {
       }, 1100);
     });
 
-    battleManagerView.stage?.destroy();
+    battleManagerView.destroy();
+    globalParticleService.blood.clearBlood();
 
     return Promise.resolve(winner);
   };

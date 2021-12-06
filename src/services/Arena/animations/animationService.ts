@@ -13,8 +13,8 @@ export enum KnightAnimation {
 class AnimationService {
   app?: PIXI.Application;
 
-  get knightSheet(): PIXI.LoaderResource {
-    return PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`];
+  get knightSheet(): PIXI.LoaderResource['textures'] | undefined {
+    return PIXI.Loader.shared.resources[`${process.env.PUBLIC_URL}/arena/animations/knight/knight.json`].textures;
   }
 
   prepareLoad(): void {
@@ -22,11 +22,11 @@ class AnimationService {
   }
 
   getAnimation(name: string): PIXI.Texture<PIXI.Resource>[] {
-    if (this.knightSheet && this.knightSheet.textures) {
+    if (this.knightSheet) {
       const res = [];
 
-      while (this.knightSheet.textures[`${name}-${res.length}.png`]) {
-        res.push(this.knightSheet.textures[`${name}-${res.length}.png`]);
+      while (this.knightSheet[`${name}-${res.length}.png`]) {
+        res.push(this.knightSheet[`${name}-${res.length}.png`]);
       }
 
       return res;
@@ -109,6 +109,23 @@ class AnimationService {
 
         if (passedTime >= time) {
           sprite.filters = initialFilters;
+          PIXI.Ticker.shared.remove(onTick);
+          resolve();
+        }
+      };
+
+      PIXI.Ticker.shared.add(onTick);
+    });
+  }
+
+  async wait(time: number): Promise<void> {
+    await new Promise<void>((resolve) => {
+      let passedTime = 0;
+
+      const onTick = (dt: number): void => {
+        passedTime += dt * 100;
+
+        if (passedTime >= time) {
           PIXI.Ticker.shared.remove(onTick);
           resolve();
         }

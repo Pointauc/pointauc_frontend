@@ -3,10 +3,11 @@ import Glad from './Glad';
 import { GladChar } from '../../models/Arena/Glad';
 import { animationService, KnightAnimation } from './animations/animationService';
 import { getRandomInclusive } from '../../utils/common.utils';
+import globalParticleService from './Particles/globalParticleService';
 
 const hpBarGraphics = {
   width: 200,
-  height: 30,
+  height: 25,
   offset: 80,
 };
 
@@ -94,13 +95,17 @@ export default class GladView extends Glad {
   }
 
   async applyDamage(damage: number): Promise<void> {
+    const prevHp = this.hp;
     await animationService.animate(this.avatar!, KnightAnimation.Shield);
 
     await super.applyDamage(damage);
-    this.animateDamage(damage);
+
+    globalParticleService.blood.splat({ x: this.x, y: this.y });
+    this.animateDamage(prevHp - this.hp);
 
     const filter = new PIXI.Filter(undefined, shaderFrag, {});
     animationService.applyFilter(this.avatar!, filter, 1000);
+
     this.renderHpBar();
 
     if (this.hp <= 0) {

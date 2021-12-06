@@ -1,0 +1,63 @@
+{"frames": {
+
+"blood_1.png":
+{
+	"frame": {"x":1,"y":1,"w":2,"h":2},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
+	"sourceSize": {"w":2,"h":2}
+},
+"blood_2.png":
+{
+	"frame": {"x":5,"y":1,"w":2,"h":2},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
+	"sourceSize": {"w":2,"h":2}
+},
+"blood_3.png":
+{
+	"frame": {"x":9,"y":1,"w":2,"h":2},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
+	"sourceSize": {"w":2,"h":2}
+},
+"blood_4.png":
+{
+	"frame": {"x":13,"y":1,"w":2,"h":2},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
+	"sourceSize": {"w":2,"h":2}
+},
+"blood_5.png":
+{
+	"frame": {"x":17,"y":1,"w":2,"h":2},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
+	"sourceSize": {"w":2,"h":2}
+},
+"blood_6.png":
+{
+	"frame": {"x":21,"y":1,"w":2,"h":2},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
+	"sourceSize": {"w":2,"h":2}
+}},
+"animations": {
+	"blood": ["blood_1.png","blood_2.png","blood_3.png","blood_4.png","blood_5.png","blood_6.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "particles.png",
+	"format": "RGBA8888",
+	"size": {"w":24,"h":4},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:771ce1146aac1bba41ed6bf8ba7b42b0:80e9db091661837b3e66a0d9799c1a93:767f0aa26e08023d62afa20c0c952bea$"
+}
+}

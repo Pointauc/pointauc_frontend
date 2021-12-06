@@ -43,7 +43,8 @@
     "no-case-declarations": [0],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
     "no-underscore-dangle": [1],
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "class-methods-use-this": "off"
   },
   "settings": {
     "import/resolver": {
