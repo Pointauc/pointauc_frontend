@@ -13,6 +13,7 @@ import GameController from '../../services/Arena/GameController';
 import GladView from '../../services/Arena/GladView';
 import ArenaGladsPreview from './ArenaGladsPreview/ArenaGladsPreview';
 import RadioButtonGroup, { Option } from '../RadioButtonGroup/RadioButtonGroup';
+import globalConfig from '../../services/Arena/globalConfig';
 
 const speedOptions: Option<number>[] = [
   { key: 0.5, value: 'x0.5' },
@@ -80,6 +81,8 @@ const ArenaPage: FC = () => {
 
   const startRound = async (): Promise<void> => {
     if (gameController.current) {
+      globalConfig.isFinal = restGlads.length === 2;
+
       setBattleDisabled(true);
       const winner = await gameController.current.makeBattle(candidates);
       const reward = getTotal(candidates, ({ stat }) => stat);

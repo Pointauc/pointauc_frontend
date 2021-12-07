@@ -2,7 +2,7 @@
 
 "blood_1.png":
 {
-	"frame": {"x":1,"y":1,"w":2,"h":2},
+	"frame": {"x":10,"y":1,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -10,7 +10,7 @@
 },
 "blood_2.png":
 {
-	"frame": {"x":5,"y":1,"w":2,"h":2},
+	"frame": {"x":10,"y":5,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -18,7 +18,7 @@
 },
 "blood_3.png":
 {
-	"frame": {"x":9,"y":1,"w":2,"h":2},
+	"frame": {"x":14,"y":1,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -26,7 +26,7 @@
 },
 "blood_4.png":
 {
-	"frame": {"x":13,"y":1,"w":2,"h":2},
+	"frame": {"x":14,"y":5,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -34,7 +34,7 @@
 },
 "blood_5.png":
 {
-	"frame": {"x":17,"y":1,"w":2,"h":2},
+	"frame": {"x":18,"y":1,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -42,11 +42,19 @@
 },
 "blood_6.png":
 {
-	"frame": {"x":21,"y":1,"w":2,"h":2},
+	"frame": {"x":18,"y":5,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
 	"sourceSize": {"w":2,"h":2}
+},
+"head_1.png":
+{
+	"frame": {"x":1,"y":1,"w":7,"h":6},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":7,"h":6},
+	"sourceSize": {"w":7,"h":6}
 }},
 "animations": {
 	"blood": ["blood_1.png","blood_2.png","blood_3.png","blood_4.png","blood_5.png","blood_6.png"]
@@ -56,8 +64,8 @@
 	"version": "1.0",
 	"image": "particles.png",
 	"format": "RGBA8888",
-	"size": {"w":24,"h":4},
+	"size": {"w":21,"h":8},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:771ce1146aac1bba41ed6bf8ba7b42b0:80e9db091661837b3e66a0d9799c1a93:767f0aa26e08023d62afa20c0c952bea$"
+	"smartupdate": "$TexturePacker:SmartUpdate:c220c897d0a7697fdc0563e5dfeee17c:5b28700e7851c49963d3f320e546c03d:767f0aa26e08023d62afa20c0c952bea$"
 }
 }

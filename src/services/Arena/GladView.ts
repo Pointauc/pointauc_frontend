@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js';
 import Glad from './Glad';
-import { GladChar } from '../../models/Arena/Glad';
+import { GladChar, Vector2 } from '../../models/Arena/Glad';
 import { animationService, KnightAnimation } from './animations/animationService';
-import { getRandomInclusive } from '../../utils/common.utils';
+import { getRandomInclusive, getRandomIntInclusive } from '../../utils/common.utils';
 import globalParticleService from './Particles/globalParticleService';
+import globalConfig from './globalConfig';
 
 const hpBarGraphics = {
   width: 200,
@@ -69,6 +70,7 @@ export default class GladView extends Glad {
   char: GladChar = GladChar.Knight;
   x = 0;
   y = 0;
+  direction = 1;
 
   async animateDamage(damage: number): Promise<void> {
     const startPosX = getRandomInclusive(this.x - damageProps.xZone, this.x + damageProps.xZone);
@@ -91,7 +93,34 @@ export default class GladView extends Glad {
   }
 
   async animateDeath(): Promise<void> {
-    await animationService.animate(this.avatar!, KnightAnimation.Death, null);
+    if (globalConfig.isFinal || getRandomIntInclusive(0, 3) > 2) {
+      const fountainPosition = { x: this.x, y: this.y };
+      const positionsDelta: Vector2[] = [
+        { x: 3, y: 0 },
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+        { x: 0, y: 0 },
+        { x: -1, y: 1 },
+        { x: -1, y: 3 },
+        { x: 0, y: 0 },
+        { x: 0, y: 2 },
+        { x: -2, y: 10 },
+        { x: 0, y: 0 },
+      ];
+      globalParticleService.blood.createFountain(fountainPosition, 70);
+
+      this.avatar!.onFrameChange = (frame: number): void => {
+        if (positionsDelta[frame]) {
+          fountainPosition.x += positionsDelta[frame].x * 5 * this.direction;
+          fountainPosition.y += positionsDelta[frame].y * 5;
+        }
+      };
+      globalParticleService.blood.pushHead({ x: this.x, y: this.y }, -this.direction);
+      await animationService.animate(this.avatar!, KnightAnimation.Death2, null);
+      this.avatar!.onFrameChange = undefined;
+    } else {
+      await animationService.animate(this.avatar!, KnightAnimation.Death, null);
+    }
   }
 
   async applyDamage(damage: number): Promise<void> {
@@ -128,11 +157,12 @@ export default class GladView extends Glad {
   }
 
   setupAvatar = (flip: boolean): void => {
+    this.direction = flip ? -1 : 1;
     this.avatar = new PIXI.AnimatedSprite(animationService.getAnimation('KnightIdle'));
     this.avatar.animationSpeed = 0.28 * PIXI.Ticker.shared.speed;
     this.avatar.x = this.x;
     this.avatar.y = this.y;
-    this.avatar.scale.x = flip ? -5 : 5;
+    this.avatar.scale.x = 5 * this.direction;
     this.avatar.scale.y = 5;
     this.avatar.loop = false;
     this.avatar.play();

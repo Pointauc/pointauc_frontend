@@ -8,6 +8,7 @@ export enum KnightAnimation {
   Idle = 'KnightIdle',
   Shield = 'KnightShield',
   Death = 'KnightDeath',
+  Death2 = 'KnightDeath2',
 }
 
 class AnimationService {
@@ -25,8 +26,8 @@ class AnimationService {
     if (this.knightSheet) {
       const res = [];
 
-      while (this.knightSheet[`${name}-${res.length}.png`]) {
-        res.push(this.knightSheet[`${name}-${res.length}.png`]);
+      while (this.knightSheet[`${name}_${res.length + 1}.png`]) {
+        res.push(this.knightSheet[`${name}_${res.length + 1}.png`]);
       }
 
       return res;

@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { IDestroyOptions } from 'pixi.js';
 import PhysicObject from '../Phisics/PhysicObject';
 import { Vector2 } from '../../../models/Arena/Glad';
 import { getRandomIntInclusive } from '../../../utils/common.utils';
@@ -7,6 +8,7 @@ const spriteCounts = 5;
 
 export default class BloodParticle extends PhysicObject {
   lifeTime: number;
+  updater: (dt: number) => void;
   onDestroy?: (particle: BloodParticle, forceDestroy?: boolean) => boolean;
 
   constructor(container: PIXI.Container, position: Vector2) {
@@ -22,31 +24,36 @@ export default class BloodParticle extends PhysicObject {
     this.scale.y = scale;
     const startY = position.y;
 
-    const update = (dt: number): void => {
+    this.updater = (dt: number): void => {
       this.lifeTime -= dt * 100;
-      const destroy = (forceDestroy?: boolean): void => {
-        PIXI.Ticker.shared.remove(update);
-        if (!this.onDestroy || this.onDestroy(this, forceDestroy)) {
-          this.destroy();
-        }
-      };
-
       if (this.lifeTime <= 0) {
-        destroy();
+        this.onDeath();
         return;
       }
 
       if (this.position.y >= startY + 200) {
-        destroy(true);
+        this.onDeath(true);
         return;
       }
 
       this.updatePosition(dt);
     };
 
-    PIXI.Ticker.shared.add(update);
+    PIXI.Ticker.shared.add(this.updater);
 
     container.addChild(this);
+  }
+
+  onDeath(forceDestroy?: boolean): void {
+    PIXI.Ticker.shared.remove(this.updater);
+    if (!this.onDestroy || this.onDestroy(this, forceDestroy)) {
+      this.destroy();
+    }
+  }
+
+  destroy(options?: IDestroyOptions | boolean): void {
+    PIXI.Ticker.shared.remove(this.updater);
+    super.destroy(options);
   }
 
   static getTexture(): PIXI.Texture {
