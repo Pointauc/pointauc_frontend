@@ -1,19 +1,19 @@
 import React, { FC, Key, useCallback, useEffect, useRef, useState } from 'react';
 import './ArenaPage.scss';
 import { useSelector } from 'react-redux';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, Link, Typography } from '@material-ui/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import ArenaSideBlock, { Sides } from './ArenaSideBlock/ArenaSideBlock';
 import { RootState } from '../../reducers';
 import ArenaSlotsChart from './ArenaSlotsChart/ArenaSlotsChart';
 import matchSelectorService from '../../services/MatchSelectorService';
 import { GladType } from '../../models/Arena/Glad';
-import { getTotal } from '../../utils/common.utils';
 import GameController from '../../services/Arena/GameController';
 import GladView from '../../services/Arena/GladView';
 import ArenaGladsPreview from './ArenaGladsPreview/ArenaGladsPreview';
 import RadioButtonGroup, { Option } from '../RadioButtonGroup/RadioButtonGroup';
 import globalConfig from '../../services/Arena/globalConfig';
+import { getTotal } from '../../utils/common.utils';
 
 const speedOptions: Option<number>[] = [
   { key: 0.5, value: 'x0.5' },
@@ -31,6 +31,11 @@ const ArenaPage: FC = () => {
   const [restGlads, setRestGlads] = useState<GladType[]>([]);
   const [candidates, setCandidates] = useState<GladType[]>([]);
   const [selectedGlads, setSelectedGlads] = useState<GladType[]>([]);
+  const [isDescrOpen, setIsDescrOpen] = useState<boolean>(true);
+
+  const toggleDescr = (): void => {
+    setIsDescrOpen((prev) => !prev);
+  };
 
   const pageContainerRef = useRef<HTMLDivElement>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -85,7 +90,8 @@ const ArenaPage: FC = () => {
 
       setBattleDisabled(true);
       const winner = await gameController.current.makeBattle(candidates);
-      const reward = getTotal(candidates, ({ stat }) => stat);
+      const losers = candidates.filter((candidate) => candidate !== winner);
+      const reward = getTotal(losers, ({ stat }) => stat);
 
       candidates.forEach((glad) => {
         if (glad === winner) {
@@ -112,6 +118,25 @@ const ArenaPage: FC = () => {
 
   return (
     <div className="arena-container" ref={pageContainerRef}>
+      <Dialog open={isDescrOpen} onClose={toggleDescr}>
+        <DialogContent>
+          <Typography>Если вы еще не смешарик, рекомендую прочитать сперва </Typography>
+          <Typography>
+            <Link
+              rel="noopener noreferrer"
+              target="_blank"
+              href="https://docs.google.com/document/d/1nrblJPzpu3-wnllUcVFqkL13TVd51yLa-L_8S2HSRhc/edit?usp=sharing"
+            >
+              руководство
+            </Link>
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={toggleDescr}>
+            закрыть
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className="game-container" ref={gameContainerRef} />
       <ArenaSideBlock side={Sides.left}>
         <ArenaSlotsChart
