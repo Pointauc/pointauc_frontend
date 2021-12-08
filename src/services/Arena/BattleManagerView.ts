@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import BattleManager from './BattleManager';
 import GladView from './GladView';
 
-const gladsPlacementRadius = 200;
+const gladsPlacementRadius = 500;
 
 export default class BattleManagerView extends BattleManager<GladView> {
   stage?: PIXI.Container;
@@ -44,26 +44,21 @@ export default class BattleManagerView extends BattleManager<GladView> {
     this.width = width;
     this.height = height;
     this.stage.zIndex = 10;
+    this.stage.sortableChildren = true;
 
     this.setupBackground(container);
 
     const xOffset = width / 2 - gladsPlacementRadius;
 
     this.glads.forEach((glad, index) =>
-      glad.setup(this.stage!, xOffset + index * gladsPlacementRadius * 2, height / 2, !!index),
+      glad.setup(this.stage!, xOffset + index * gladsPlacementRadius * 2, height / 2 + 20, !!index),
     );
 
     container.addChild(this.stage);
   }
 
-  async fight(first: GladView, second: GladView): Promise<void> {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(null);
-      }, this.fightDelay);
-    });
-
-    await super.fight(first, second);
+  async fight(): Promise<void> {
+    await super.fight();
   }
 
   destroy(): void {

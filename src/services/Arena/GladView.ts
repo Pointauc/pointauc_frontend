@@ -2,19 +2,19 @@ import * as PIXI from 'pixi.js';
 import Glad from './Glad';
 import { GladChar, Vector2 } from '../../models/Arena/Glad';
 import { animationService, KnightAnimation } from './animations/animationService';
-import { getRandomInclusive, getRandomIntInclusive } from '../../utils/common.utils';
+import { getRandomInclusive } from '../../utils/common.utils';
 import globalParticleService from './Particles/globalParticleService';
 import globalConfig from './globalConfig';
+import AnimatedCharacter from './animations/AnimatedCharacter';
+import { Slot } from '../../models/slot.model';
+import { GladSeekingStateView } from './GladState/characterStatesView/GladSeekingStateView';
+import { gladViewStateMap } from './GladState/characterStatesView/GladViewStateMap';
 
 const hpBarGraphics = {
-  width: 200,
-  height: 25,
-  offset: 80,
-};
-
-const avatarGraphics = {
-  radius: 34,
-  border: 4,
+  width: 100,
+  height: 12,
+  offset: 10,
+  border: 1,
 };
 
 const nameGraphics = {
@@ -65,12 +65,36 @@ void main() {
 
 export default class GladView extends Glad {
   stage?: PIXI.Container;
-  avatar?: PIXI.AnimatedSprite;
+  avatar?: AnimatedCharacter;
   hpBar?: PIXI.Graphics;
+  activeArea?: PIXI.Graphics;
   char: GladChar = GladChar.Knight;
-  x = 0;
-  y = 0;
-  direction = 1;
+  _direction = 1;
+  //
+  // state: GladState<GladView> = new GladSeekingStateView(this);
+
+  set direction(value: number) {
+    if (value !== this._direction) {
+      this._direction = value;
+
+      if (this.avatar) {
+        this.avatar.scale.x = 4 * this._direction;
+      }
+    }
+  }
+
+  constructor(slot: Slot) {
+    super(slot, PIXI.Ticker.shared);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    this.stateMap = gladViewStateMap;
+    this.state = new GladSeekingStateView(this);
+  }
+
+  get avatarCenter(): Vector2 {
+    return { x: this.x, y: this.y - this.avatar!.height / 2 };
+  }
 
   async animateDamage(damage: number): Promise<void> {
     const startPosX = getRandomInclusive(this.x - damageProps.xZone, this.x + damageProps.xZone);
@@ -93,8 +117,8 @@ export default class GladView extends Glad {
   }
 
   async animateDeath(): Promise<void> {
-    if (globalConfig.isFinal || getRandomIntInclusive(0, 3) > 2) {
-      const fountainPosition = { x: this.x, y: this.y };
+    if (globalConfig.isFinal || Math.random() >= 0.75) {
+      const fountainPosition = this.avatarCenter;
       const positionsDelta: Vector2[] = [
         { x: 3, y: 0 },
         { x: 0, y: 0 },
@@ -111,25 +135,27 @@ export default class GladView extends Glad {
 
       this.avatar!.onFrameChange = (frame: number): void => {
         if (positionsDelta[frame]) {
-          fountainPosition.x += positionsDelta[frame].x * 5 * this.direction;
+          fountainPosition.x += positionsDelta[frame].x * 5 * this._direction;
           fountainPosition.y += positionsDelta[frame].y * 5;
         }
       };
-      globalParticleService.blood.pushHead({ x: this.x, y: this.y }, -this.direction);
-      await animationService.animate(this.avatar!, KnightAnimation.Death2, null);
+      globalParticleService.blood.pushHead(this.avatarCenter, -this._direction);
+      await this.avatar?.animate(KnightAnimation.Death2, 700, false);
       this.avatar!.onFrameChange = undefined;
     } else {
-      await animationService.animate(this.avatar!, KnightAnimation.Death, null);
+      this.avatar?.animate(KnightAnimation.Death, 700, false);
     }
   }
 
-  async applyDamage(damage: number): Promise<void> {
+  async applyDamage(damage: number, knockBack = 0): Promise<boolean> {
     const prevHp = this.hp;
-    await animationService.animate(this.avatar!, KnightAnimation.Shield);
+    if (!(await super.applyDamage(damage, knockBack))) {
+      return false;
+    }
 
-    await super.applyDamage(damage);
+    animationService.wait(300);
 
-    globalParticleService.blood.splat({ x: this.x, y: this.y });
+    globalParticleService.blood.splat(this.avatarCenter);
     this.animateDamage(prevHp - this.hp);
 
     const filter = new PIXI.Filter(undefined, shaderFrag, {});
@@ -137,33 +163,22 @@ export default class GladView extends Glad {
 
     this.renderHpBar();
 
-    if (this.hp <= 0) {
-      await this.animateDeath();
-    }
+    return true;
   }
 
-  async attack(glad: Glad): Promise<void> {
-    await Promise.all([
-      new Promise((resolve) => {
-        this.avatar!.onFrameChange = (): void => {
-          if (this.avatar!.currentFrame === 3) {
-            resolve(super.attack(glad));
-            this.avatar!.onFrameChange = undefined;
-          }
-        };
-      }),
-      animationService.animate(this.avatar!, KnightAnimation.Attack),
-    ]);
-  }
+  // async attack(glad: Glad): Promise<void> {
+  //   this.avatar?.animate(KnightAnimation.Attack, this.attackSpeed, true);
+  //   await super.attack(glad);
+  // }
 
   setupAvatar = (flip: boolean): void => {
-    this.direction = flip ? -1 : 1;
-    this.avatar = new PIXI.AnimatedSprite(animationService.getAnimation('KnightIdle'));
+    this._direction = flip ? -1 : 1;
+    this.avatar = new AnimatedCharacter('knight', KnightAnimation.Idle);
     this.avatar.animationSpeed = 0.28 * PIXI.Ticker.shared.speed;
-    this.avatar.x = this.x;
-    this.avatar.y = this.y;
-    this.avatar.scale.x = 5 * this.direction;
-    this.avatar.scale.y = 5;
+    this.avatar.anchor.x = 0.5;
+    this.avatar.anchor.y = 1;
+    this.avatar.scale.x = 4 * this._direction;
+    this.avatar.scale.y = 4;
     this.avatar.loop = false;
     this.avatar.play();
 
@@ -172,29 +187,24 @@ export default class GladView extends Glad {
 
   setupName(): void {
     const text = new PIXI.Text(this.fullName || '', nameStyle);
-    text.x = this.x - text.width / 2;
-    text.y = this.y - this.avatar!.height / 2 - nameGraphics.offset - text.height;
+    text.x = -text.width / 2;
+    text.y = -this.avatar!.height - nameGraphics.offset - text.height;
 
     this.stage?.addChild(text);
   }
 
   renderHpBar(): void {
-    const xPos = this.x - hpBarGraphics.width / 2;
-    const yPos = this.y + avatarGraphics.radius + hpBarGraphics.offset;
-    const healthWidth = Math.max(((hpBarGraphics.width - 2 * avatarGraphics.border + 4) * this.hp) / this.maxHp, 0);
+    const xPos = -hpBarGraphics.width / 2;
+    const yPos = hpBarGraphics.offset;
+    const healthWidth = Math.max((hpBarGraphics.width * this.hp) / this.maxHp, 0);
 
     this.hpBar?.clear();
 
     this.hpBar?.beginFill(0x6cc16c);
-    this.hpBar?.drawRect(
-      xPos + avatarGraphics.border - 2,
-      yPos + avatarGraphics.border - 2,
-      healthWidth,
-      hpBarGraphics.height - 2 * avatarGraphics.border + 4,
-    );
+    this.hpBar?.drawRect(xPos, yPos, healthWidth, hpBarGraphics.height);
     this.hpBar?.endFill();
 
-    this.hpBar?.lineStyle(avatarGraphics.border, 0xf0f0f0);
+    this.hpBar?.lineStyle(hpBarGraphics.border, 0xf0f0f0);
     this.hpBar?.drawRect(xPos, yPos, hpBarGraphics.width, hpBarGraphics.height);
     this.hpBar?.endFill();
   }
@@ -211,15 +221,55 @@ export default class GladView extends Glad {
     this.stage?.addChild(this.hpBar);
   }
 
+  renderAttackRange(): void {
+    if (this.activeArea) {
+      this.activeArea.beginFill(0xffe5b4, 0.2);
+      this.activeArea.drawEllipse(0, 0, this.attackRange, this.attackRange / 2);
+      this.activeArea.endFill();
+    }
+  }
+
+  setupActiveArea(): void {
+    this.activeArea = new PIXI.Graphics();
+    this.activeArea.zIndex = -10;
+
+    this.stage?.addChild(this.activeArea);
+  }
+
   setup(container: PIXI.Container, x: number, y: number, flip: boolean): void {
     this.x = x;
     this.y = y;
     this.stage = new PIXI.Container();
+    this.stage.x = x;
+    this.stage.y = y;
+    this.stage.sortableChildren = true;
 
     this.setupAvatar(flip);
     this.setupHpBar();
     this.setupName();
+    // this.setupActiveArea();
+    // this.renderAttackRange();
 
     container.addChild(this.stage);
+
+    const updateDirection = (): void => {
+      this.direction = this.x > (this.target?.x || 0) ? -1 : 1;
+
+      if (this.avatar?.destroyed) {
+        PIXI.Ticker.shared.remove(updateDirection);
+      }
+    };
+
+    PIXI.Ticker.shared.add(updateDirection);
+
+    // this.startAI();
+  }
+
+  move(dx: number, dy: number): void {
+    super.move(dx, dy);
+
+    this.stage!.x = this.x;
+    this.stage!.y = this.y;
+    this.stage!.zIndex = this.y;
   }
 }

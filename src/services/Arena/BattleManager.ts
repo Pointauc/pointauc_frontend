@@ -1,7 +1,10 @@
 import Glad from './Glad';
 import { getRandomInclusive, getTotal } from '../../utils/common.utils';
+import { TickerType } from '../../models/Arena/Glad';
 
 class BattleManager<GladType extends Glad> {
+  private _stopUpdates?: () => void;
+  winner?: GladType;
   // eslint-disable-next-line no-useless-constructor
   constructor(readonly glads: GladType[]) {}
 
@@ -32,26 +35,65 @@ class BattleManager<GladType extends Glad> {
     return glads[index] || glads[glads.length - 1];
   }
 
-  async fight(first: GladType, second: GladType): Promise<void> {
-    const winner = this.getWinner([first, second]);
-    const victim = winner === first ? second : first;
+  async fight(): Promise<void> {
+    const [first, second] = this.glads;
+    // console.log(first.x);
+    // console.log(first.y);
+    // console.log(first.state);
+    // console.log('fight');
+    if (first.readyToAttack && second.readyToAttack) {
+      const winner = this.getWinner([first, second]);
+      // console.log(`fight success ${winner === first ? 0 : 1}`);
+      const victim = winner === first ? second : first;
 
-    await winner.attack(victim);
-  }
-
-  async battle(): Promise<GladType> {
-    let winner: GladType | null = null;
-
-    while (!winner) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.fight(this.glads[0], this.glads[1]);
+      await winner.attack(victim);
 
       if (this.glads[0].hp <= 0 || this.glads[1].hp <= 0) {
-        winner = this.glads[0].hp > this.glads[1].hp ? this.glads[0] : this.glads[1];
+        this.winner = this.glads[0].hp > this.glads[1].hp ? this.glads[0] : this.glads[1];
       }
     }
+  }
 
-    return winner;
+  setupPositions(): void {
+    this.winner = undefined;
+    const width = 1100;
+    const height = 800;
+    const gladsPlacementRadius = 500;
+    const xOffset = width / 2 - gladsPlacementRadius;
+    this.glads[0].x = xOffset + gladsPlacementRadius * 2;
+    this.glads[1].x = xOffset - gladsPlacementRadius * 2;
+    this.glads[0].y = height / 2 + 100;
+    this.glads[1].y = height / 2 + 100;
+  }
+
+  async battle(ticker: TickerType): Promise<GladType> {
+    return new Promise((resolve) => {
+      this.glads[0].setEnemy(this.glads[1]);
+      this.glads[1].setEnemy(this.glads[0]);
+      const update = (): void => {
+        this.fight();
+
+        if (this.winner) {
+          // console.log('winner');
+          this.stopUpdates();
+          resolve(this.winner);
+        }
+      };
+
+      ticker.add(update);
+
+      this.glads[0].startAI();
+      this.glads[1].startAI();
+
+      this._stopUpdates = () => ticker.remove(update);
+    });
+  }
+
+  stopUpdates(): void {
+    this.glads[0].stopUpdates();
+    this.glads[1].stopUpdates();
+    this._stopUpdates && this._stopUpdates();
+    this._stopUpdates = undefined;
   }
 }
 

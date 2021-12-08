@@ -51,3 +51,14 @@ export interface Vector3 {
   y: number;
   z: number;
 }
+
+export interface Ellipse extends Vector2 {
+  rx: number;
+  ry: number;
+}
+
+export interface TickerType {
+  deltaMS: number;
+  add: (callback: (dt: number) => void) => void;
+  remove: (callback: (dt: number) => void) => void;
+}

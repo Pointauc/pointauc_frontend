@@ -49,12 +49,12 @@ export default class GameController {
 
     battleManagerView.setup(this.app.stage, this.app.screen.width, this.app.screen.height);
 
-    const winner = await battleManagerView.battle();
+    const winner = await battleManagerView.battle(PIXI.Ticker.shared);
 
     await new Promise((resolve) => {
       setTimeout(() => {
         resolve(null);
-      }, 1100);
+      }, 2000);
     });
 
     battleManagerView.destroy();

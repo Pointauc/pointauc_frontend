@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Vector2 } from '../../../models/Arena/Glad';
 //
 // interface AnimationController {
 //   knightSheet?: PIXI.LoaderResource;
@@ -9,6 +10,8 @@ export enum KnightAnimation {
   Shield = 'KnightShield',
   Death = 'KnightDeath',
   Death2 = 'KnightDeath2',
+  Run = 'KnightRun',
+  Roll = 'KnightRoll',
 }
 
 class AnimationService {
@@ -53,7 +56,7 @@ class AnimationService {
     });
   }
 
-  async animateMove(sprite: PIXI.Container, x: number, y: number, time: number): Promise<void> {
+  async animateMove(sprite: Vector2, x: number, y: number, time: number): Promise<void> {
     await new Promise<void>((resolve) => {
       let passedTime = 0;
       const deltaX = x - sprite.x;
@@ -123,8 +126,8 @@ class AnimationService {
     await new Promise<void>((resolve) => {
       let passedTime = 0;
 
-      const onTick = (dt: number): void => {
-        passedTime += dt * 100;
+      const onTick = (): void => {
+        passedTime += PIXI.Ticker.shared.deltaMS;
 
         if (passedTime >= time) {
           PIXI.Ticker.shared.remove(onTick);

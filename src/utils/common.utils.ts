@@ -6,6 +6,7 @@ import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
 import { WheelItem } from '../models/wheel.model';
 import { ATTRIBUTES, TAGS } from '../constants/common.constants';
+import { Ellipse, TickerType, Vector2 } from '../models/Arena/Glad';
 
 export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
 
@@ -161,3 +162,45 @@ export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): 
     }) || items[items.length - 1]
   );
 };
+
+export const isPointInEllipse = (point: Vector2, ellipse: Ellipse): boolean => {
+  const xFactor = (point.x - ellipse.x) ** 2 / ellipse.rx ** 2;
+  const yFactor = (point.y - ellipse.y) ** 2 / ellipse.ry ** 2;
+
+  return xFactor + yFactor <= 1;
+};
+
+export const getAngle = (a: Vector2, b: Vector2): number => {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+
+  return Math.atan2(dy, dx);
+};
+
+export const getRandomPointInCircle = (radius: number, minDistance = 0): Vector2 => {
+  const angle = Math.random() * Math.PI * 2;
+  const randomRadius = radius * getRandomInclusive(minDistance, 1);
+  console.log(randomRadius);
+
+  return {
+    x: Math.cos(angle) * randomRadius,
+    y: Math.sin(angle) * randomRadius,
+  };
+};
+
+export const wait = async (time: number, ticker: TickerType): Promise<void> =>
+  new Promise((resolve) => {
+    let passedTime = 0;
+
+    const onTick = (): void => {
+      passedTime += ticker.deltaMS;
+
+      if (passedTime >= time) {
+        // console.log('resolve wait');
+        ticker.remove(onTick);
+        resolve();
+      }
+    };
+
+    ticker.add(onTick);
+  });
