@@ -29,6 +29,7 @@ import TwitchEmotesList from '../TwitchEmotesList/TwitchEmotesList';
 import ResizableBracket from './ResizableBracket/ResizableBracket';
 import DuelWheelProof from './DuelWheelProof/DuelWheelProof';
 import './RandomWheel.scss';
+import ImageLinkInput from '../Form/ImageLinkInput/ImageLinkInput';
 
 interface RandomWheelProps {
   items: WheelItem[];
@@ -373,6 +374,11 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
           </div>
           <div className="settings" style={{ width: 325 }}>
             <TwitchEmotesList setActiveEmote={handleEmoteChange} />
+            <ImageLinkInput
+              buttonTitle="загрузить изображение"
+              buttonClass="upload-wheel-image"
+              onChange={handleEmoteChange}
+            />
           </div>
         </div>
         {wheelFormat === WheelFormat.BattleRoyal && (

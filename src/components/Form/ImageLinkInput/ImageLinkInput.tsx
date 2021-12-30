@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogContent, DialogTitle, TextField } from '@material-ui/core';
+import { Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
 import './ImageLinkInput.scss';
 
@@ -51,7 +51,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
   };
 
   return (
-    <div>
+    <>
       <Dialog open={isInputOpened} onClose={toggleDialog} maxWidth={false}>
         {!!dialogTitle && <DialogTitle>{dialogTitle}</DialogTitle>}
         <DialogContent className="image-input-wrapper">
@@ -61,7 +61,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
             onDrop={handleFileUpload}
             filesLimit={1}
           />
-          <div className="divider">ИЛИ</div>
+          <Typography className="divider">ИЛИ</Typography>
           <TextField
             onPaste={handleLinkPaste}
             placeholder="Вставьте ссылку на изображение..."
@@ -75,7 +75,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
       <Button variant="outlined" color="primary" onClick={toggleDialog} className={buttonClass}>
         {buttonTitle}
       </Button>
-    </div>
+    </>
   );
 };
 

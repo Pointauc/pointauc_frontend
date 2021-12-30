@@ -121,6 +121,11 @@
       overflow-y: auto;
       padding: 0 15px;
 
+      .upload-wheel-image {
+        align-self: center;
+        margin-top: 15px;
+      }
+
       &:last-of-type {
         margin-right: 0;
       }
