@@ -43,6 +43,7 @@
       &-title {
         margin-right: 35px !important;
         margin-left: 10px !important;
+        margin-bottom: 0 !important;
       }
 
       &-input {
@@ -89,11 +90,32 @@
     margin-top: 10px;
     position: relative;
 
+    .total-sum-container {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      left: 0;
+
+      .hide-sum {
+        margin: 10px !important;
+        padding: 7px !important;
+
+        svg {
+          font-size: 22px;
+          color: $grey-6;
+        }
+
+        &:hover {
+          svg {
+            color: $grey-2;
+          }
+        }
+      }
+    }
+
     .total-sum {
       font-size: 20px;
       color: $grey-2;
-      position: absolute;
-      left: 0;
     }
   }
 }

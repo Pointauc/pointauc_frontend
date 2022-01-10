@@ -18,6 +18,11 @@
     text-decoration: underline;
     font-size: 1.1rem;
     font-family: Arial;
+    width: 215px;
+
+    &.gitlab {
+      width: 61px;
+    }
 
     &:hover {
       color: white;

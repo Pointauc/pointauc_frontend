@@ -65,7 +65,7 @@ const AucActions: React.FC = () => {
       <Link
         target="_blank"
         rel="noopener noreferrer"
-        className="da-link"
+        className="da-link gitlab"
         href="https://gitlab.com/Ankirig/woodsauc-renewal"
       >
         GitLab
@@ -76,7 +76,7 @@ const AucActions: React.FC = () => {
         className="da-link"
         href="https://www.donationalerts.com/r/kozjar"
       >
-        поддержка
+        поддержать автора
       </Link>
       <IconButton onClick={handleResetSlots} className="clear-button" title="Очистить все">
         <DeleteSweepIcon />

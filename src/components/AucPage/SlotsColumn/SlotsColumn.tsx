@@ -4,19 +4,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, IconButton, Input, Typography } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import classNames from 'classnames';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { handleDragOver } from '../../../utils/common.utils';
 import SlotsList from './SlotsList';
 import { Purchase, removePurchase, setDraggedRedemption, updateExistBids } from '../../../reducers/Purchases/Purchases';
 import { useCostConvert } from '../../../hooks/useCostConvert';
+import { setAucSettings } from '../../../reducers/AucSettings/AucSettings';
 
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch();
   const buyoutInput = useRef<HTMLInputElement>(null);
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
-    settings: { isBuyoutVisible, background },
+    settings: { isBuyoutVisible, background, isTotalVisible },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [, setBuyout] = useState<number | null>(null);
@@ -82,6 +85,10 @@ const SlotsColumn: React.FC = () => {
 
   const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
 
+  const toggleTotalSumVisability = useCallback(() => {
+    dispatch(setAucSettings({ isTotalVisible: !isTotalVisible }));
+  }, [dispatch, isTotalVisible]);
+
   return (
     <Grid container direction="column" wrap="nowrap" className="slots">
       <div className={buyoutStyles}>
@@ -90,7 +97,6 @@ const SlotsColumn: React.FC = () => {
         </Typography>
         <Input className="slots-column-buyout-input" placeholder="₽" inputRef={buyoutInput} type="number" />
       </div>
-
       <Grid container wrap="nowrap" className="slots-wrapper">
         <Grid container className={slotsColumnClasses} direction="column" wrap="nowrap">
           <SlotsList slots={slots} />
@@ -106,7 +112,12 @@ const SlotsColumn: React.FC = () => {
             >
               <AddBoxIcon fontSize="large" />
             </IconButton>
-            <Typography className="total-sum">{`Всего: ${totalSum} ₽`}</Typography>
+            <div className="total-sum-container">
+              {isTotalVisible && <Typography className="total-sum">{`Всего: ${totalSum} ₽`}</Typography>}
+              <IconButton onClick={toggleTotalSumVisability} className="hide-sum">
+                {isTotalVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              </IconButton>
+            </div>
           </div>
         </Grid>
       </Grid>

@@ -43,6 +43,9 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
           <FormSwitch name="isBuyoutVisible" control={control} label="Показать выкуп" />
         </FormGroup>
         <FormGroup row className="auc-settings-row">
+          <FormSwitch name="isTotalVisible" control={control} label="Показать итоговую сумму" />
+        </FormGroup>
+        <FormGroup row className="auc-settings-row">
           <FormSwitch name="showChances" control={control} label="Показать шансы выигрыша" />
         </FormGroup>
         <FormGroup row className="auc-settings-row">

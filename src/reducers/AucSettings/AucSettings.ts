@@ -20,6 +20,7 @@ export interface SettingFields {
   maxTime?: number;
   newSlotIncrement?: number;
   isNewSlotIncrement?: boolean;
+  isTotalVisible?: boolean;
 }
 
 export interface ViewSettings {
@@ -76,6 +77,7 @@ export const initialState: AucSettingsState = {
     isMaxTimeActive: false,
     newSlotIncrement: 60,
     isNewSlotIncrement: false,
+    isTotalVisible: true,
   },
   integration: {
     twitch: {
@@ -99,7 +101,7 @@ const aucSettingsSlice = createSlice({
   name: 'aucSettings',
   initialState,
   reducers: {
-    setAucSettings(state, action: PayloadAction<SettingFields>): void {
+    setAucSettings(state, action: PayloadAction<Partial<SettingFields>>): void {
       state.settings = mergewith(state.settings, action.payload, mergeCheck);
     },
     setIntegration(state, action: PayloadAction<IntegrationFields>): void {
