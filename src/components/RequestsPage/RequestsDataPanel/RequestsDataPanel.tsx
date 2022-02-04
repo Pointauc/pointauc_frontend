@@ -94,7 +94,7 @@ const RequestsDataPanel: FC = () => {
 
   const handleNewRequest = useCallback(
     ({ username: id = '', 'display-name': username = '', badges }: ChatUserstate, request?: string) => {
-      if (!listInfo.subOnly || badges?.subscriber) {
+      if (!listInfo.subOnly || badges?.subscriber || badges?.founder) {
         dispatch(addRequest({ data: { username, id, request } }));
       }
     },
