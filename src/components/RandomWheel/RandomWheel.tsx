@@ -16,7 +16,7 @@ import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel'
 import { RandomPaceConfig } from '../../services/SpinPaceService';
 import { Game } from '../Bracket/components/model';
 import { WheelItem } from '../../models/wheel.model';
-import { getTotalSize, getWheelColor } from '../../utils/common.utils';
+import { getCookie, getTotalSize, getWheelColor } from '../../utils/common.utils';
 import useWheel from '../../hooks/useWheel';
 import withLoading from '../../decorators/withLoading';
 import { getRandomNumber } from '../../api/randomApi';
@@ -69,6 +69,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
     setMaxDepth(undefined);
     setDepthRestrict(undefined);
     setWheelFormat(format);
+
+    if (format === WheelFormat.Dropout && !getCookie('seenDropoutProof')) {
+      setIsDropoutProofOpen(true);
+    }
   }, []);
 
   const onDelete = (id: Key): void => {
@@ -236,6 +240,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
 
   const toggleDropoutProof = useCallback(() => {
     setIsDropoutProofOpen((prev) => !prev);
+    document.cookie = 'seenDropoutProof=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
   }, []);
 
   useEffect(() => {
