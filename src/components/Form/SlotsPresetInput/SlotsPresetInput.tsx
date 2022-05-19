@@ -1,13 +1,13 @@
 import React, { FC, ReactNode, useState } from 'react';
-import { Button, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
+import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { parseWheelPreset } from '../../../utils/slots.utils';
+import { parseSlotsPreset } from '../../../utils/slots.utils';
 import './SlotsPresetInput.scss';
-import { WheelItem } from '../../../models/wheel.model';
+import { Slot } from '../../../models/slot.model';
 
 interface SlotsPresetInput {
   buttonTitle: string;
-  onChange: (items: WheelItem[]) => void;
+  onChange: (items: Slot[], saveSlots: boolean) => void;
   buttonClass?: string;
   dialogTitle?: ReactNode;
   hint?: ReactNode;
@@ -15,6 +15,7 @@ interface SlotsPresetInput {
 
 const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonClass, dialogTitle, hint }) => {
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
+  const [saveSlots, setSaveSlots] = useState<boolean>(false);
   const toggleDialog = (): void => {
     setIsInputOpened((prevOpened) => !prevOpened);
   };
@@ -24,11 +25,15 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
 
     reader.onloadend = (): void => {
       if (typeof reader.result === 'string') {
-        onChange(parseWheelPreset(reader.result));
+        onChange(parseSlotsPreset(reader.result), saveSlots);
         setIsInputOpened(false);
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleSaveSlotsChange = (event: any): void => {
+    setSaveSlots(event.target.checked);
   };
 
   return (
@@ -41,6 +46,11 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
             dropzoneText="Перетащите сюда файл или нажмите"
             onDrop={handleFileUpload}
             filesLimit={1}
+          />
+          <FormControlLabel
+            className="save-slots-checkbox"
+            control={<Checkbox checked={saveSlots} onChange={handleSaveSlotsChange} color="primary" />}
+            label="Сохранить лоты в аук"
           />
           {hint && <div className="slots-preset-input-hint">{hint}</div>}
         </DialogContent>

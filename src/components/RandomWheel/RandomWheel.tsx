@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
 import { RandomPaceConfig } from '../../services/SpinPaceService';
 import { Game } from '../Bracket/components/model';
@@ -30,6 +31,9 @@ import ResizableBracket from './ResizableBracket/ResizableBracket';
 import DuelWheelProof from './DuelWheelProof/DuelWheelProof';
 import './RandomWheel.scss';
 import ImageLinkInput from '../Form/ImageLinkInput/ImageLinkInput';
+import { slotToWheel } from '../../utils/slots.utils';
+import { Slot } from '../../models/slot.model';
+import { setSlots } from '../../reducers/Slots/Slots';
 
 interface RandomWheelProps {
   items: WheelItem[];
@@ -53,6 +57,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const [isDropoutProofOpen, setIsDropoutProofOpen] = useState<boolean>(false);
   const [maxDepth, setMaxDepth] = useState<number>();
   const [depthRestrict, setDepthRestrict] = useState<number>();
+  const dispatch = useDispatch();
 
   const initBattleRoyale = useCallback((games: Game[]) => {
     setGamesOrder((prevGames) => {
@@ -165,9 +170,16 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
     [gamesOrder, wheelFormat],
   );
 
-  const handleCustomWheel = useCallback((customItems: WheelItem[]) => {
-    setRawItems(customItems);
-  }, []);
+  const handleCustomWheel = useCallback(
+    (customItems: Slot[], saveSlots: boolean) => {
+      setRawItems(customItems.map(slotToWheel));
+
+      if (saveSlots) {
+        dispatch(setSlots(customItems));
+      }
+    },
+    [dispatch],
+  );
 
   const { wheelComponent, spin, clearWinner } = useWheel({
     rawItems: finalItems,

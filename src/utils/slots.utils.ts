@@ -21,6 +21,23 @@ export const parseWheelPreset = (text: string): WheelItem[] => {
   return text.split('\n').map<WheelItem>((value, id) => ({ id: id.toString(), name: value, color: getWheelColor() }));
 };
 
+export const parseSlotsPreset = (text: string): Slot[] => {
+  const items = text.split('\n');
+
+  return items.map<Slot>((item, fastId) => {
+    const [name, amount = 1] = item.split(',');
+
+    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null };
+  });
+};
+
+export const slotToWheel = ({ id, name, amount }: Slot): WheelItem => ({
+  id: id.toString(),
+  name: name || '',
+  amount: Number(amount),
+  color: getWheelColor(),
+});
+
 export const getTotalSize = (slots: { amount?: number | null }[]): number =>
   slots.reduce((accum, { amount }) => accum + Number(amount), 0);
 

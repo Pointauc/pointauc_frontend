@@ -3,24 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '../PageContainer/PageContainer';
 import { RootState } from '../../reducers';
 import { WheelItem } from '../../models/wheel.model';
-import { getWheelColor } from '../../utils/common.utils';
 import RandomWheel from '../RandomWheel/RandomWheel';
 import { deleteSlot } from '../../reducers/Slots/Slots';
+import { slotToWheel } from '../../utils/slots.utils';
 
 const WheelPage: FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
 
-  const wheelItems = useMemo(
-    () =>
-      slots.map<WheelItem>(({ id, name, amount }) => ({
-        id: id.toString(),
-        name: name || '',
-        amount: Number(amount),
-        color: getWheelColor(),
-      })),
-    [slots],
-  );
+  const wheelItems = useMemo(() => slots.map<WheelItem>(slotToWheel), [slots]);
 
   const deleteItem = (id: Key) => {
     dispatch(deleteSlot(id.toString()));

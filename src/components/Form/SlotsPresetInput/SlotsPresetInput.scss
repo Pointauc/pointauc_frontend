@@ -8,8 +8,13 @@
     align-items: center;
     color: $grey-4;
     font-family: 'Helvetica Neue', Helvetica, "Roboto Light", sans-serif;
-    margin-top: 20px;
+    margin-top: 10px;
     padding: 3px;
     font-size: 1.05rem;
   }
+}
+
+.save-slots-checkbox {
+  align-items: center !important;
+  margin-top: 10px;
 }
