@@ -15,10 +15,11 @@ export const splitByUrls = (text: string): string[] => {
 
 // export const getWebsocketUrl = (): string =>
 //   isProduction()
-//     ? `wss://woods-service.herokuapp.com?jwtToken=${getCookie('jwtToken')}`
-//     : `ws://localhost:8000?jwtToken=${getCookie('jwtToken')}`;
+//     ? `wss://woods-service.herokuapp.com?userSession=${getCookie('userSession')}`
+//     : `ws://localhost:8000?userSession=${getCookie('userSession')}`;
 
-export const getWebsocketUrl = (): string => `wss://woods-service.herokuapp.com?jwtToken=${getCookie('jwtToken')}`;
+export const getWebsocketUrl = (): string =>
+  `wss://woods-service.herokuapp.com?userSession=${getCookie('userSession')}`;
 
 export const getSocketIOUrl = (): string =>
   isProduction() ? `https://woods-service.herokuapp.com` : `http://localhost:8000`;

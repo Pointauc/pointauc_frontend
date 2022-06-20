@@ -15,9 +15,9 @@ export interface SettingFields {
   marblesAuc?: boolean;
   marbleRate?: number;
   marbleCategory?: number;
-  showChances?: boolean;
   isMaxTimeActive?: boolean;
   maxTime?: number;
+  showChances?: boolean;
   newSlotIncrement?: number;
   isNewSlotIncrement?: boolean;
   isTotalVisible?: boolean;
@@ -37,7 +37,7 @@ export interface TwitchIntegration {
   dynamicRewards: boolean;
   alwaysAddNew: boolean;
   rewardsPrefix: string;
-  rewards: RewardSetting[];
+  rewardPresets: RewardSetting[];
 }
 
 export interface DaIntegration {
@@ -85,7 +85,7 @@ export const initialState: AucSettingsState = {
       dynamicRewards: false,
       alwaysAddNew: false,
       rewardsPrefix: 'ставка',
-      rewards: [],
+      rewardPresets: [],
     },
     da: {
       pointsRate: 1,
@@ -117,18 +117,16 @@ const aucSettingsSlice = createSlice({
 export const { setAucSettings, setIntegration, setCompact } = aucSettingsSlice.actions;
 
 export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
-  const { username, userId, settings, integration, hasDAAuth, hasTwitchAuth } = await getUserData();
+  const { twitchAuth, twitchSettings, aucSettings, daSettings, daAuth } = await getUserData();
 
-  if (settings) {
-    dispatch(setAucSettings(settings));
+  if (aucSettings) {
+    dispatch(setAucSettings(aucSettings));
   }
-  if (integration) {
-    dispatch(setIntegration(integration));
-  }
-  dispatch(updateUsername(username));
-  dispatch(setUserId(userId));
-  dispatch(setHasDAAuth(hasDAAuth));
-  dispatch(setHasTwitchAuth(hasTwitchAuth));
+  dispatch(setIntegration({ twitch: twitchSettings, da: daSettings }));
+  dispatch(updateUsername(twitchAuth?.username || daAuth?.username || ''));
+  dispatch(setUserId(twitchAuth?.id as any));
+  dispatch(setHasDAAuth(!!daAuth));
+  dispatch(setHasTwitchAuth(!!twitchAuth));
 };
 
 export default aucSettingsSlice.reducer;

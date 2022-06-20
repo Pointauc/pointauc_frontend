@@ -5,7 +5,6 @@ import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import classNames from 'classnames';
-import axios from 'axios';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../AucPage/AucPage';
 import { MenuItem } from '../../models/common.model';
@@ -15,10 +14,7 @@ import { loadUserData } from '../../reducers/AucSettings/AucSettings';
 import withLoading from '../../decorators/withLoading';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
-import { getCookie } from '../../utils/common.utils';
 import { theme } from '../../constants/theme.constants';
-import { RootState } from '../../reducers';
-import { connectToServer } from '../../reducers/PubSubSocket/PubSubSocket';
 import AlertsContainer from '../AlertsContainer/AlertsContainer';
 import HistoryPage from '../HistoryPage/HistoryPage';
 import WheelPage from '../WheelPage/WheelPage';
@@ -71,38 +67,14 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-const hasToken = !!getCookie('jwtToken');
 const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
 
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { pathname } = useLocation();
-  const { username } = useSelector((root: RootState) => root.user);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(hasToken);
-
-  const reconnectToServer = useCallback(
-    async (showSuccessMessage?: boolean) => {
-      try {
-        await axios.get('api/isAlive');
-
-        dispatch(connectToServer(showSuccessMessage));
-      } catch (e) {
-        setTimeout(() => {
-          (async (): Promise<void> => reconnectToServer(true))();
-        }, 1000 * 3);
-      }
-    },
-    [dispatch],
-  );
-
-  useEffect(() => {
-    if (username && !webSocket) {
-      reconnectToServer();
-    }
-  }, [dispatch, reconnectToServer, username, webSocket]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
@@ -130,9 +102,7 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    if (hasToken) {
-      dispatch(withLoading(setIsLoading, loadUserData));
-    }
+    dispatch(withLoading(setIsLoading, loadUserData));
   }, [dispatch]);
 
   if (isLoading) {

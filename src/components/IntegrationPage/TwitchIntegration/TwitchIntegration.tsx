@@ -70,7 +70,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'twitch.rewards',
+    name: 'twitch.rewardPresets',
   });
 
   const handleAppendReward = useCallback(() => append({ cost: 1000, color: '#e3924c' }), [append]);
@@ -92,7 +92,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     (cost: number, index: number): ReactNode => {
       return (
         <FormInput
-          name={`twitch.rewards[${index}].cost`}
+          name={`twitch.rewardPresets[${index}].cost`}
           control={control}
           type="number"
           defaultValue={cost}
@@ -105,7 +105,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
 
   const renderColorColumn = useCallback(
     (value: string, index: number) => (
-      <FormColorPicker name={`twitch.rewards[${index}].color`} control={control} defaultValue={value} />
+      <FormColorPicker name={`twitch.rewardPresets[${index}].color`} control={control} defaultValue={value} />
     ),
     [control],
   );
