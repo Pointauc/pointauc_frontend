@@ -22,6 +22,9 @@ import HelpPage from '../HelpPage/HelpPage';
 import Statistic from '../Statistic/Statistic';
 import StopwatchPage from '../StopwatchPage/StopwatchPage';
 import RequestsPage from '../RequestsPage/RequestsPage';
+import { RootState } from '../../reducers';
+import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
+import { getCookie } from '../../utils/common.utils';
 
 const drawerWidth = 240;
 
@@ -67,6 +70,7 @@ const useStyles = makeStyles(() =>
   }),
 );
 
+const hasToken = !!getCookie('userSession');
 const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
 
 const App: React.FC = () => {
@@ -75,9 +79,17 @@ const App: React.FC = () => {
   const { pathname } = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { username } = useSelector((root: RootState) => root.user);
+  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
+  useEffect(() => {
+    if (username && !webSocket) {
+      dispatch(connectToSocketIo);
+    }
+  }, [dispatch, username, webSocket]);
 
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
   const isOpen = useMemo(() => !hiddenDrawerRoutes.includes(pathname) || isDrawerOpen, [isDrawerOpen, pathname]);
@@ -102,7 +114,9 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(withLoading(setIsLoading, loadUserData));
+    if (hasToken) {
+      dispatch(withLoading(setIsLoading, loadUserData));
+    }
   }, [dispatch]);
 
   if (isLoading) {

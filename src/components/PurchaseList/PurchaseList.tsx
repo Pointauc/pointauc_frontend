@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import { RootState } from '../../reducers';
 import './PurchaseList.scss';
-import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import { processRedemption, Purchase } from '../../reducers/Purchases/Purchases';
 import { PURCHASE_SORT_OPTIONS } from '../../constants/purchase.constants';
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
@@ -12,18 +11,14 @@ import DragBidContext from '../DragBidContext/DragBidContext';
 const PurchaseList: React.FC = () => {
   const dispatch = useDispatch();
   const { purchases } = useSelector((root: RootState) => root.purchases);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const { twitchSocket, daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
 
-  const handleNewPurchase = useCallback(
-    ({ data }: MessageEvent): void => {
-      const { type, purchase } = JSON.parse(data);
-
-      if (type === MESSAGE_TYPES.PURCHASE) {
-        dispatch(processRedemption(purchase));
-      }
+  const handleRedemption = useCallback(
+    (redemption: Purchase): void => {
+      dispatch(processRedemption(redemption));
     },
     [dispatch],
   );
@@ -43,10 +38,9 @@ const PurchaseList: React.FC = () => {
   }, [purchaseSort, purchases]);
 
   useEffect(() => {
-    if (webSocket) {
-      webSocket.addEventListener('message', handleNewPurchase);
-    }
-  }, [handleNewPurchase, webSocket]);
+    twitchSocket?.on('Bid', handleRedemption);
+    daSocket?.on('Bid', handleRedemption);
+  }, [daSocket, handleRedemption, twitchSocket]);
 
   return (
     <div className="purchase-container">
