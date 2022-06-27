@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import { RootState } from '../index';
+import { addAlert } from '../notifications/notifications';
+import { AlertTypeEnum } from '../../models/alert.model';
 
 interface SubscribeState {
   actual: boolean;
@@ -48,9 +50,13 @@ export const sendCpSubscribedState =
       return;
     }
 
-    twitchSocket.once('bidsStateChange', ({ state }) => {
+    twitchSocket.once('bidsStateChange', ({ state, error }) => {
       dispatch(setTwitchSubscribeState({ actual: state, loading: false }));
       setState && setState(state);
+
+      if (error) {
+        dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
+      }
     });
     twitchSocket.emit(event);
 
@@ -67,8 +73,12 @@ export const sendDaSubscribedState =
       return;
     }
 
-    daSocket.once('bidsStateChange', ({ state }) => {
+    daSocket.once('bidsStateChange', ({ state, error }) => {
       dispatch(setDaSubscribeState({ actual: state, loading: false }));
+
+      if (error) {
+        dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
+      }
     });
 
     daSocket.emit(event);

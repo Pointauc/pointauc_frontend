@@ -3,6 +3,7 @@ import { Action } from 'redux';
 import mergewith from 'lodash.mergewith';
 import { getUserData } from '../../api/userApi';
 import { setHasDAAuth, setHasTwitchAuth, setUserId, updateUsername } from '../User/User';
+import { GetUserDto } from '../../models/user.model';
 
 export interface SettingFields {
   startTime?: number;
@@ -116,8 +117,9 @@ const aucSettingsSlice = createSlice({
 
 export const { setAucSettings, setIntegration, setCompact } = aucSettingsSlice.actions;
 
-export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
-  const { twitchAuth, twitchSettings, aucSettings, daSettings, daAuth } = await getUserData();
+export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<GetUserDto> => {
+  const user = await getUserData();
+  const { twitchAuth, twitchSettings, aucSettings, daSettings, daAuth } = user;
 
   if (aucSettings) {
     dispatch(setAucSettings(aucSettings));
@@ -127,6 +129,8 @@ export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Pro
   dispatch(setUserId(twitchAuth?.id as any));
   dispatch(setHasDAAuth(!!daAuth));
   dispatch(setHasTwitchAuth(!!twitchAuth));
+
+  return user;
 };
 
 export default aucSettingsSlice.reducer;

@@ -29,3 +29,8 @@ export interface Paragraph {
   title: string;
   key: string;
 }
+
+export interface AppLocationState {
+  isNew?: boolean;
+  idKey?: string;
+}

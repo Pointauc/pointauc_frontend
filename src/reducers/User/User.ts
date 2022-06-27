@@ -11,6 +11,8 @@ export interface UserInfo {
 interface UserState extends UserInfo {
   hasDAAuth: boolean;
   hasTwitchAuth: boolean;
+  canBeRestored?: boolean;
+  authId?: string;
 }
 
 const initialState: UserState = {
@@ -18,6 +20,7 @@ const initialState: UserState = {
   userId: null,
   hasDAAuth: false,
   hasTwitchAuth: false,
+  canBeRestored: false,
 };
 
 const userSlice = createSlice({
@@ -36,10 +39,17 @@ const userSlice = createSlice({
     setHasTwitchAuth(state, action: PayloadAction<boolean>): void {
       state.hasTwitchAuth = action.payload;
     },
+    setCanBeRestored(state, action: PayloadAction<boolean>): void {
+      state.canBeRestored = action.payload;
+    },
+    setAuthId(state, action: PayloadAction<string>): void {
+      state.authId = action.payload;
+    },
   },
 });
 
-export const { setUsername, setHasDAAuth, setUserId, setHasTwitchAuth } = userSlice.actions;
+export const { setUsername, setHasDAAuth, setUserId, setHasTwitchAuth, setCanBeRestored, setAuthId } =
+  userSlice.actions;
 
 export const updateUsername =
   (username: string) =>

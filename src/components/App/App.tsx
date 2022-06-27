@@ -3,7 +3,19 @@ import './App.scss';
 import { createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
 import classNames from 'classnames';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../AucPage/AucPage';
@@ -25,6 +37,10 @@ import RequestsPage from '../RequestsPage/RequestsPage';
 import { RootState } from '../../reducers';
 import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
 import { getCookie } from '../../utils/common.utils';
+import { setCanBeRestored } from '../../reducers/User/User';
+import { postRestoreSettings } from '../../api/userApi';
+import { addAlert } from '../../reducers/notifications/notifications';
+import { AlertTypeEnum } from '../../models/alert.model';
 
 const drawerWidth = 240;
 
@@ -79,7 +95,7 @@ const App: React.FC = () => {
   const { pathname } = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(hasToken);
-  const { username } = useSelector((root: RootState) => root.user);
+  const { username, canBeRestored, authId } = useSelector((root: RootState) => root.user);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
 
   const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
@@ -119,12 +135,53 @@ const App: React.FC = () => {
     }
   }, [dispatch]);
 
+  const restoreSettings = useCallback(async () => {
+    try {
+      await postRestoreSettings(authId || '');
+      await loadUserData(dispatch);
+
+      dispatch(addAlert({ type: AlertTypeEnum.Success, message: 'Настройки были успешно перенесены' }));
+    } catch (e) {
+      dispatch(addAlert({ type: AlertTypeEnum.Error, message: 'Ошибка. Настройки не были перенесены.' }));
+    }
+  }, [authId, dispatch]);
+
+  const handleClose = useCallback(() => dispatch(setCanBeRestored(false)), [dispatch]);
+  const handleConfirm = useCallback(() => {
+    restoreSettings();
+    handleClose();
+  }, [handleClose, restoreSettings]);
+
   if (isLoading) {
     return <LoadingPage helpText="Загрузка аккаунта..." />;
   }
 
   return (
     <MuiThemeProvider theme={theme}>
+      <Dialog open={!!canBeRestored} maxWidth="md" fullWidth>
+        <DialogTitle>Восстановление настроек</DialogTitle>
+        <DialogContent dividers className="description-dialog-content">
+          <p>
+            Недавно у сайта были большие изменения в серверной части, значительно повысилась стабильность работы, а так
+            же был переход на более мощный сервер.
+          </p>
+          <p>
+            Но в связи с новым форматом хранения данных все аккаунты не могут быть перенесены автоматически. Но мы можем
+            перенести ваши прошлые настройки на этот аккаунт (кроме подключенных интеграций).
+          </p>
+          <p style={{ color: '#e5c938' }}>
+            Хотите восстановить ваши прошлые настройки или продолжить с чистым аккаунтом?
+          </p>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={handleClose} color="default">
+            Продолжить как есть
+          </Button>
+          <Button variant="contained" onClick={handleConfirm} color="primary">
+            Восстановить
+          </Button>
+        </DialogActions>
+      </Dialog>
       <div className={classes.root}>
         <Drawer
           variant="permanent"

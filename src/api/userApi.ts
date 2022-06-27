@@ -24,3 +24,13 @@ export const getUserData = async (): Promise<GetUserDto> => {
 
   return data;
 };
+
+export const getIsCanRestoreSettings = async (id: string): Promise<boolean> => {
+  const { data } = await axios.get(ENDPOINTS.RESTORE_SETTINGS.HAS_USER, { params: { id } });
+
+  return data;
+};
+
+export const postRestoreSettings = async (id: string): Promise<void> => {
+  await axios.post(ENDPOINTS.RESTORE_SETTINGS.RESTORE_SETTINGS, { id });
+};

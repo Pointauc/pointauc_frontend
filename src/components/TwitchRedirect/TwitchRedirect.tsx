@@ -8,7 +8,8 @@ import { QUERIES } from '../../constants/common.constants';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import withLoading from '../../decorators/withLoading';
 import { loadUserData } from '../../reducers/AucSettings/AucSettings';
-import { setHasTwitchAuth } from '../../reducers/User/User';
+import { setAuthId, setCanBeRestored, setHasTwitchAuth } from '../../reducers/User/User';
+import { getIsCanRestoreSettings } from '../../api/userApi';
 
 const TwitchRedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -19,10 +20,21 @@ const TwitchRedirect: React.FC = () => {
   useEffect(() => {
     const code = getQueryValue(location.search, QUERIES.CODE);
     if (code) {
-      authenticateTwitch(code).then(() => {
+      authenticateTwitch(code).then(({ isNew }) => {
         setLoadingMessage('Загрузка аккаунта...');
         dispatch(setHasTwitchAuth(true));
-        return dispatch(withLoading(setIsLoading, loadUserData));
+
+        return withLoading(setIsLoading, async () => {
+          const user: any = await loadUserData(dispatch);
+
+          if (isNew) {
+            const { id } = user.twitchAuth;
+            const canRestoreSettings = await getIsCanRestoreSettings(id);
+
+            dispatch(setCanBeRestored(canRestoreSettings));
+            dispatch(setAuthId(id));
+          }
+        })();
       });
     }
   }, [dispatch, location]);

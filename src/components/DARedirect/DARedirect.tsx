@@ -6,9 +6,10 @@ import ROUTES from '../../constants/routes.constants';
 import { authenticateDA } from '../../api/twitchApi';
 import { QUERIES } from '../../constants/common.constants';
 import LoadingPage from '../LoadingPage/LoadingPage';
-import { setHasDAAuth } from '../../reducers/User/User';
+import { setAuthId, setCanBeRestored, setHasDAAuth } from '../../reducers/User/User';
 import withLoading from '../../decorators/withLoading';
 import { loadUserData } from '../../reducers/AucSettings/AucSettings';
+import { getIsCanRestoreSettings } from '../../api/userApi';
 
 const DARedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,10 +21,21 @@ const DARedirect: React.FC = () => {
     const code = getQueryValue(location.search, QUERIES.CODE);
 
     if (code) {
-      authenticateDA(code).then(() => {
+      authenticateDA(code).then(({ isNew }) => {
         setLoadingMessage('Загрузка аккаунта...');
         dispatch(setHasDAAuth(true));
-        return dispatch(withLoading(setIsLoading, loadUserData));
+
+        return withLoading(setIsLoading, async () => {
+          const user: any = await loadUserData(dispatch);
+
+          if (isNew) {
+            const { id } = user.daAuth;
+            const canRestoreSettings = await getIsCanRestoreSettings(`da${id}`);
+
+            dispatch(setCanBeRestored(canRestoreSettings));
+            dispatch(setAuthId(`da${id}`));
+          }
+        })();
       });
     }
   }, [dispatch, location]);

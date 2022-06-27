@@ -11,6 +11,10 @@ const ENDPOINTS = {
     DATA: '/api/user',
     INTEGRATION: '/api/user/settings/integration',
   },
+  RESTORE_SETTINGS: {
+    HAS_USER: '/api/oldUsers/hasUser',
+    RESTORE_SETTINGS: '/api/oldUsers/restoreSettings',
+  },
   RANDOM: {
     INTEGER: '/api/random/integer',
   },
