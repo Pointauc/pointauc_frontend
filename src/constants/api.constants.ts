@@ -10,6 +10,7 @@ const ENDPOINTS = {
     SETTINGS: '/api/user/settings/auc',
     DATA: '/api/user',
     INTEGRATION: '/api/user/settings/integration',
+    VALIDATE_INTEGRATIONS: '/api/user/integration/validate',
   },
   RESTORE_SETTINGS: {
     HAS_USER: '/api/oldUsers/hasUser',

@@ -38,7 +38,7 @@ import { RootState } from '../../reducers';
 import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
 import { getCookie } from '../../utils/common.utils';
 import { setCanBeRestored } from '../../reducers/User/User';
-import { postRestoreSettings } from '../../api/userApi';
+import { postRestoreSettings, validateIntegrations } from '../../api/userApi';
 import { addAlert } from '../../reducers/notifications/notifications';
 import { AlertTypeEnum } from '../../models/alert.model';
 
@@ -106,6 +106,21 @@ const App: React.FC = () => {
       dispatch(connectToSocketIo);
     }
   }, [dispatch, username, webSocket]);
+
+  useEffect(() => {
+    let interval: any;
+    if (hasToken && username) {
+      interval = setInterval(() => {
+        validateIntegrations();
+      }, 1000 * 60 * 60 * 3);
+    }
+
+    return (): void => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [username]);
 
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
   const isOpen = useMemo(() => !hiddenDrawerRoutes.includes(pathname) || isDrawerOpen, [isDrawerOpen, pathname]);

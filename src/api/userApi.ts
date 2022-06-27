@@ -34,3 +34,7 @@ export const getIsCanRestoreSettings = async (id: string): Promise<boolean> => {
 export const postRestoreSettings = async (id: string): Promise<void> => {
   await axios.post(ENDPOINTS.RESTORE_SETTINGS.RESTORE_SETTINGS, { id });
 };
+
+export const validateIntegrations = async (): Promise<void> => {
+  await axios.get(ENDPOINTS.USER.VALIDATE_INTEGRATIONS);
+};
