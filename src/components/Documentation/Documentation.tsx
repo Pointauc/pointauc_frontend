@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import Marble from '../../assets/img/pradenW.png';
+import Eblan from '../../assets/img/eblan.png';
 import './Documentation.scss';
 
 const Documentation: FC = () => {
@@ -69,11 +70,15 @@ const Documentation: FC = () => {
       <h2 id="sponsors">Спонсоры</h2>
       <div className="sponsor tier-1">UselessMouth</div>
       <div className="sponsor tier-2">MistaFaker</div>
-      <div className="sponsor tier-2">Slexboy</div>
       <div className="sponsor tier-2">Shizov</div>
+      <div className="sponsor tier-2" style={{ display: 'flex', alignItems: 'center' }}>
+        <span>Archiedos</span>
+        <img src={Eblan} alt="шар" width={25} height={25} style={{ marginLeft: 5, marginRight: 5 }} />
+      </div>
+      <div className="sponsor tier-2">Slexboy</div>
       <div className="sponsor tier-3" style={{ display: 'flex', alignItems: 'center' }}>
-          <span>Pradenw</span>
-          <img src={Marble} alt="шар" width={25} height={25} style={{ marginLeft: 5, marginRight: 5 }} />
+        <span>Pradenw</span>
+        <img src={Marble} alt="шар" width={25} height={25} style={{ marginLeft: 5, marginRight: 5 }} />
       </div>
       <div className="sponsor tier-3">Adash</div>
       <div className="sponsor tier-3">Gedo</div>
