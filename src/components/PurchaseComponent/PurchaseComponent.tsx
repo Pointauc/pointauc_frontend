@@ -13,13 +13,14 @@ import {
 } from '../../reducers/Purchases/Purchases';
 import './PurchaseComponent.scss';
 import { RootState } from '../../reducers';
-import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
 import donationBackground from '../../assets/img/donationBackground.jpg';
 import { addBid, createSlotFromPurchase } from '../../reducers/Slots/Slots';
 import { useCostConvert } from '../../hooks/useCostConvert';
 import Marble from '../../assets/img/Marble.png';
 import { store } from '../../index';
 import { PurchaseStatusEnum } from '../../models/purchase';
+import { updateRedemption } from '../../api/twitchApi';
+import { RedemptionStatus } from '../../models/redemption.model';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -35,7 +36,6 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
     },
     settings: { marblesAuc },
   } = useSelector((root: RootState) => root.aucSettings);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
 
@@ -57,14 +57,13 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
 
   const refundRedemption = useCallback(
     () =>
-      webSocket?.send(
-        JSON.stringify({
-          type: MESSAGE_TYPES.REFUND_REWARD,
-          redemptionId: id,
-          rewardId,
-        }),
-      ),
-    [id, rewardId, webSocket],
+      rewardId &&
+      updateRedemption({
+        status: RedemptionStatus.Canceled,
+        redemptionId: id,
+        rewardId,
+      }),
+    [id, rewardId],
   );
 
   const handleRemove = (): void => {

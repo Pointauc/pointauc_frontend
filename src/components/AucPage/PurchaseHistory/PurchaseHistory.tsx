@@ -13,8 +13,9 @@ import { Button } from '@material-ui/core';
 import { RootState } from '../../../reducers';
 import './PurchaseHistory.scss';
 import { FORMAT } from '../../../constants/format.constants';
-import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { PurchaseStatusEnum } from '../../../models/purchase';
+import { updateRedemption } from '../../../api/twitchApi';
+import { RedemptionStatus } from '../../../models/redemption.model';
 
 interface SlotsMap {
   [key: string]: string | null;
@@ -23,7 +24,6 @@ interface SlotsMap {
 const PurchaseHistory: React.FC = () => {
   const { history } = useSelector((root: RootState) => root.purchases);
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const [selection, setSelection] = useState<SelectionChangeParams>();
 
   const slotsMap = useMemo(
@@ -83,17 +83,15 @@ const PurchaseHistory: React.FC = () => {
 
   const handleRefund = useCallback(() => {
     history.forEach(({ id, rewardId, isDonation, target }) => {
-      if (selection?.rowIds.includes(id) && !isDonation && target) {
-        webSocket?.send(
-          JSON.stringify({
-            type: MESSAGE_TYPES.REFUND_REWARD,
-            redemptionId: id,
-            rewardId,
-          }),
-        );
+      if (selection?.rowIds.includes(id) && !isDonation && target && rewardId) {
+        updateRedemption({
+          status: RedemptionStatus.Canceled,
+          redemptionId: id,
+          rewardId,
+        });
       }
     });
-  }, [history, selection, webSocket]);
+  }, [history, selection]);
 
   return (
     <div className="history-table">

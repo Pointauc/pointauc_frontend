@@ -17,6 +17,7 @@ export interface UserData {
 export interface IntegrationDataDto {
   username: string;
   id: string;
+  isValid: number;
 }
 
 export interface TwitchRewardPresetDto {

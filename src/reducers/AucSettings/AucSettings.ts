@@ -127,8 +127,8 @@ export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Pro
   dispatch(setIntegration({ twitch: twitchSettings, da: daSettings }));
   dispatch(updateUsername(twitchAuth?.username || daAuth?.username || ''));
   dispatch(setUserId(twitchAuth?.id as any));
-  dispatch(setHasDAAuth(!!daAuth));
-  dispatch(setHasTwitchAuth(!!twitchAuth));
+  dispatch(setHasDAAuth(!!daAuth?.isValid));
+  dispatch(setHasTwitchAuth(!!twitchAuth?.isValid));
 
   return user;
 };
