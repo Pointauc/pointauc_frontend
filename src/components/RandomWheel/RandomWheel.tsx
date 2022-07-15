@@ -13,11 +13,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import { Emote } from '@kozjar/twitch-emoticons';
 import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
 import { RandomPaceConfig } from '../../services/SpinPaceService';
 import { Game } from '../Bracket/components/model';
 import { WheelItem } from '../../models/wheel.model';
-import { getCookie, getTotalSize, getWheelColor } from '../../utils/common.utils';
+import { getCookie, getRandomIntInclusive, getTotalSize, getWheelColor } from '../../utils/common.utils';
 import useWheel from '../../hooks/useWheel';
 import withLoading from '../../decorators/withLoading';
 import { getRandomNumber } from '../../api/randomApi';
@@ -184,7 +187,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const { wheelComponent, spin, clearWinner } = useWheel({
     rawItems: finalItems,
     onWin: handleWin,
-    background: activeEmote,
+    background: activeEmote || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x',
     spinTime,
     dropout: wheelFormat === WheelFormat.Dropout,
     deleteItem: onDelete,
@@ -254,6 +257,20 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
     setIsDropoutProofOpen((prev) => !prev);
     document.cookie = 'seenDropoutProof=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
   }, []);
+
+  const getRandomEmote = useCallback((emotes: Emote[]): string => {
+    const index = getRandomIntInclusive(0, emotes.length - 1);
+    const { max = 2 } = emotes[index] as any;
+
+    return emotes[index].toLink(max);
+  }, []);
+
+  const handleEmotesLoad = useCallback(
+    (emotes: Emote[]) => {
+      setActiveEmote((emote) => emote || getRandomEmote(emotes));
+    },
+    [getRandomEmote],
+  );
 
   useEffect(() => {
     if (wheelFormat === WheelFormat.BattleRoyal) {
@@ -390,9 +407,9 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
             </div>
           </div>
           <div className="settings" style={{ width: 325 }}>
-            <TwitchEmotesList setActiveEmote={handleEmoteChange} />
+            <TwitchEmotesList setActiveEmote={handleEmoteChange} onEmotesLoad={handleEmotesLoad} />
             <ImageLinkInput
-              buttonTitle="загрузить изображение"
+              buttonTitle="загрузить свое изображение"
               buttonClass="upload-wheel-image"
               onChange={handleEmoteChange}
             />

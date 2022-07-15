@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
+import SevenTV, { SevenTVEmote } from '7tv';
 import { RootState } from '../../reducers';
 import './TwitchEmotesList..scss';
 
@@ -11,38 +12,71 @@ const fetcher = new EmoteFetcher();
 
 interface TwitchEmotesListProps {
   setActiveEmote: (emote: string) => void;
+  onEmotesLoad?: (emotes: Emote[]) => void;
 }
 
-const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
-  const { userId } = useSelector((root: RootState) => root.user);
-  const [userEmotes, setUserEmotes] = useState<Collection<string, Emote>[]>();
+const sevenTVApi = SevenTV();
+
+const createSevenTVEmote = ({ id, width }: SevenTVEmote): Emote => ({
+  min: 1,
+  max: width.length,
+  id,
+  toLink: (size: number): string => `https://cdn.7tv.app/emote/${id}/${size}x`,
+});
+
+const flattenCollection = (collection: Collection<string, Emote>): Emote[] => Array.from<Emote>(collection.values());
+
+const emoteLists = ['default', 'twitch', '7tv', 'bttv', 'ffz'];
+
+const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesLoad }) => {
+  const { userId, username } = useSelector((root: RootState) => root.user);
+  const [userEmotes, setUserEmotes] = useState<(Emote[] | null)[]>();
+
+  const updateEmotes = useCallback(async () => {
+    const defaultEmotes = sevenTVApi.fetchUserEmotes('kozjar').then((emotes) => emotes.map(createSevenTVEmote));
+    let loadedEmotes = [];
+
+    if (userId) {
+      loadedEmotes = await Promise.all(
+        [
+          defaultEmotes,
+          sevenTVApi.fetchUserEmotes(username || '').then((emotes) => emotes.map(createSevenTVEmote)),
+          fetcher.fetchTwitchEmotes(Number(userId)).then(flattenCollection),
+          fetcher.fetchBTTVEmotes(Number(userId)).then(flattenCollection),
+          fetcher.fetchFFZEmotes(Number(userId)).then(flattenCollection),
+        ].map((request) => request.catch(() => null)),
+      );
+    } else {
+      loadedEmotes = [await defaultEmotes];
+    }
+
+    setUserEmotes(loadedEmotes);
+
+    if (onEmotesLoad) {
+      const flatEmotes = loadedEmotes.reduce((accum, emotes) => (emotes ? [...accum, ...emotes] : accum), []);
+      onEmotesLoad(flatEmotes);
+    }
+  }, [onEmotesLoad, userId, username]);
 
   useEffect(() => {
-    if (userId) {
-      Promise.all([
-        fetcher.fetchTwitchEmotes(Number(userId)).catch(() => new Collection<string, Emote>()),
-        fetcher.fetchBTTVEmotes(Number(userId)).catch(() => new Collection<string, Emote>()),
-        fetcher.fetchFFZEmotes(Number(userId)).catch(() => new Collection<string, Emote>()),
-      ]).then(setUserEmotes);
-    } else {
-      setUserEmotes([]);
-    }
-  }, [userId]);
+    updateEmotes();
+  }, [updateEmotes]);
 
   const crateEmoteList = useCallback(
-    (emotes: Collection<string, Emote> | null, id: number) => {
+    (emotes: Emote[] | null, id: string) => {
       if (!emotes) {
         return null;
       }
 
       return (
         <div className="emotes-group" key={id}>
-          {Array.from<Emote>(emotes.values()).map((emote) => {
-            const handleClick = (): void => setActiveEmote(emote.toLink(2));
+          {emotes.map((emote) => {
+            const { min = 0, max = 2 } = emote as any;
+            const handleClick = (): void => setActiveEmote(emote.toLink(max));
 
             return (
               <IconButton key={emote.id} className="emote-button" onClick={handleClick}>
-                <img alt="emote" src={emote.toLink(0)} />
+                <img alt="emote" src={emote.toLink(min)} />
               </IconButton>
             );
           })}
@@ -54,8 +88,12 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote }) => {
 
   return (
     <div className="emotes-container">
-      {!userId && <div className="emote-hint">Подключите Twitch, чтобы выбрать изображение в колесе</div>}
-      {userEmotes ? <>{userEmotes.map(crateEmoteList)}</> : <CircularProgress className="emotes-loading" />}
+      {userEmotes ? (
+        <>{userEmotes.map((emotes, index) => crateEmoteList(emotes, emoteLists[index]))}</>
+      ) : (
+        <CircularProgress className="emotes-loading" />
+      )}
+      {!userId && <div className="emote-hint">Подключите Twitch, чтобы выбрать больше изображений в колесе</div>}
     </div>
   );
 };
