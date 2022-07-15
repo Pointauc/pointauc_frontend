@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.scss';
 import { createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import { Link as MatLink, Typography } from '@material-ui/core';
-import { Redirect } from 'react-router';
 import { theme } from '../../constants/theme.constants';
 
 const drawerWidth = 240;
