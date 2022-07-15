@@ -84,7 +84,7 @@ const AucActions: React.FC = () => {
       <FormControlLabel
         control={<Checkbox checked={compact} onChange={handleSetCompact} color="primary" />}
         label="Компактный режим"
-        className="save-current-slots"
+        className="save-current-slots compact-view-checkbox"
       />
       {/* <ServerStatus /> */}
       <RouteLink to={ROUTES.HELP}>

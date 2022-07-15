@@ -6,6 +6,8 @@
   align-items: center;
   margin: 10px 0;
   align-self: flex-end;
+  gap: 15px;
+  width: 100vw;
 
   a {
     text-decoration: none;
@@ -13,12 +15,10 @@
 
   .da-link {
     color: #aaa;
-    margin-right: 20px;
     letter-spacing: 1.5px;
     text-decoration: underline;
     font-size: 1.1rem;
     font-family: Arial;
-    width: 215px;
 
     &.gitlab {
       width: 61px;
@@ -36,12 +36,7 @@
     padding: 20px;
   }
 
-  .clear-button {
-    margin-right: 10px !important;
-  }
-
   .button {
-    margin-left: 10px !important;
     border-color: rgba(#fff, 0.4) !important;
 
     &.marbles {
@@ -76,5 +71,13 @@
       letter-spacing: normal;
       color: $grey-4;
     }
+  }
+}
+
+.compact-view-checkbox {
+  align-items: center !important;
+
+  .MuiFormControlLabel-label {
+    font-size: 1.1rem;
   }
 }
