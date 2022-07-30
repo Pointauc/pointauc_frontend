@@ -8,7 +8,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { RootState } from '../../../reducers';
 import { addSlot, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
-import { handleDragOver } from '../../../utils/common.utils';
+import { getCookie, handleDragOver } from '../../../utils/common.utils';
 import SlotsList from './SlotsList';
 import { Purchase, removePurchase, setDraggedRedemption, updateExistBids } from '../../../reducers/Purchases/Purchases';
 import { useCostConvert } from '../../../hooks/useCostConvert';
@@ -56,6 +56,12 @@ const SlotsColumn: React.FC = () => {
     }
   }, [buyoutInput]);
 
+  useEffect(() => {
+    const newVisible = getCookie('showTotal');
+
+    dispatch(setAucSettings({ isTotalVisible: newVisible === 'true' }));
+  }, [dispatch]);
+
   const convertCost = useCostConvert();
 
   const handleDrop = useCallback(
@@ -86,6 +92,7 @@ const SlotsColumn: React.FC = () => {
   const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
 
   const toggleTotalSumVisability = useCallback(() => {
+    document.cookie = `showTotal=${!isTotalVisible}; expires=Fri, 31 Dec 9999 23:59:59 GMT\``;
     dispatch(setAucSettings({ isTotalVisible: !isTotalVisible }));
   }, [dispatch, isTotalVisible]);
 
