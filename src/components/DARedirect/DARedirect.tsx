@@ -9,7 +9,7 @@ import LoadingPage from '../LoadingPage/LoadingPage';
 import { setAuthId, setCanBeRestored, setHasDAAuth } from '../../reducers/User/User';
 import withLoading from '../../decorators/withLoading';
 import { loadUserData } from '../../reducers/AucSettings/AucSettings';
-import { getIsCanRestoreSettings } from '../../api/userApi';
+import { getIsCanRestoreSettings, updateIntegration } from '../../api/userApi';
 
 const DARedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,6 +26,10 @@ const DARedirect: React.FC = () => {
         dispatch(setHasDAAuth(true));
 
         return withLoading(setIsLoading, async () => {
+          if (isNew) {
+            await updateIntegration({ da: { pointsRate: 1 } });
+          }
+
           const user: any = await loadUserData(dispatch);
 
           if (isNew) {
