@@ -9,7 +9,7 @@ import LoadingPage from '../LoadingPage/LoadingPage';
 import withLoading from '../../decorators/withLoading';
 import { loadUserData } from '../../reducers/AucSettings/AucSettings';
 import { setAuthId, setCanBeRestored, setHasTwitchAuth } from '../../reducers/User/User';
-import { getIsCanRestoreSettings } from '../../api/userApi';
+import { getIsCanRestoreSettings, updateIntegration } from '../../api/userApi';
 
 const TwitchRedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,6 +25,9 @@ const TwitchRedirect: React.FC = () => {
         dispatch(setHasTwitchAuth(true));
 
         return withLoading(setIsLoading, async () => {
+          if (isNew) {
+            await updateIntegration({ da: { pointsRate: 1 } });
+          }
           const user: any = await loadUserData(dispatch);
 
           if (isNew) {
