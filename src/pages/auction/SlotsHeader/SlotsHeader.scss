@@ -1,0 +1,26 @@
+@import "../../../styles/colors";
+
+.slots-header {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  flex-shrink: 0;
+  padding-bottom: 1.5em;
+
+  &>.item {
+
+  }
+
+  .vertical-divider {
+    height: 75%;
+    border: 1px solid $grey-8;
+  }
+
+  .new-slot-wrapper {
+    flex-grow: 7;
+  }
+
+  .slot-search-wrapper {
+    flex-grow: 3;
+  }
+}

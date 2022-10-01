@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 import classNames from 'classnames';
 import ROUTES from '../../constants/routes.constants';
-import AucPage from '../AucPage/AucPage';
+import AucPage from '../../pages/auction/AucPage';
 import { MenuItem } from '../../models/common.model';
 import MENU_ITEMS from '../../constants/menuItems.constants';
 import SettingsPage from '../SettingsPage/SettingsPage';
@@ -28,8 +28,8 @@ import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
 import { theme } from '../../constants/theme.constants';
 import AlertsContainer from '../AlertsContainer/AlertsContainer';
-import HistoryPage from '../HistoryPage/HistoryPage';
-import WheelPage from '../WheelPage/WheelPage';
+import HistoryPage from '../../pages/history/HistoryPage/HistoryPage';
+import WheelPage from '../../pages/wheel/WheelPage/WheelPage';
 import HelpPage from '../HelpPage/HelpPage';
 import Statistic from '../Statistic/Statistic';
 import StopwatchPage from '../StopwatchPage/StopwatchPage';
@@ -89,6 +89,8 @@ const useStyles = makeStyles(() =>
 const hasToken = !!getCookie('userSession');
 const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
 
+let openDriverTimeout: NodeJS.Timeout;
+
 const App: React.FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -98,8 +100,13 @@ const App: React.FC = () => {
   const { username, canBeRestored, authId } = useSelector((root: RootState) => root.user);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
 
-  const showDrawer = useCallback(() => setIsDrawerOpen(true), []);
-  const hideDrawer = useCallback(() => setIsDrawerOpen(false), []);
+  const showDrawer = useCallback(() => {
+    openDriverTimeout = setTimeout(() => setIsDrawerOpen(true), 70);
+  }, []);
+  const hideDrawer = useCallback(() => {
+    clearTimeout(openDriverTimeout);
+    setIsDrawerOpen(false);
+  }, []);
 
   useEffect(() => {
     if (username && !webSocket) {

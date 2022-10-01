@@ -1,0 +1,38 @@
+@import "../../../../styles/colors";
+
+.save-record {
+  display: flex;
+  flex-direction: column;
+  background-color: $grey-10;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  padding: 15px;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  .name-input {
+    margin-right: 10px;
+
+    input {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      width: 250px;
+    }
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &.actions {
+      margin-top: 15px;
+
+      .save-actions>* {
+        margin-right: 10px;
+      }
+    }
+  }
+}

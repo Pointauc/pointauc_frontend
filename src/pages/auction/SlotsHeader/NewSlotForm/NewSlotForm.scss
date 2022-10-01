@@ -1,0 +1,42 @@
+@import "../../../../styles/colors";
+
+.new-slot-form {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 1em;
+
+  .add-slot-button {
+    font-size: 16px;
+  }
+
+  .slot-name {
+    flex-grow: 1;
+  }
+
+  .slot-money {
+    width: 125px;
+  }
+
+  .slot-chance {
+    font-weight: 400;
+    font-size: 18px;
+  }
+
+  .slot-input {
+    input {
+      font-size: 18px;
+      padding: 11px 12px;
+    }
+  }
+
+  &.custom-background {
+    .MuiOutlinedInput-notchedOutline {
+      border-color: $grey-5;
+    }
+
+    .slot-input {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+}

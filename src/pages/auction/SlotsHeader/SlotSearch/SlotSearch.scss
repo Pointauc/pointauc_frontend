@@ -1,0 +1,25 @@
+.slot-search {
+  padding: 0.25em 1em;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+
+  .search-input-wrapper {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  .search-input {
+    flex-grow: 1;
+    font-size: 18px;
+  }
+
+  .close-button-wrapper {
+    width: 34px;
+  }
+
+  .close-button {
+    padding: 5px;
+  }
+}

@@ -10,6 +10,7 @@ import { PurchaseStatusEnum } from '../../models/purchase';
 
 interface SlotsState {
   slots: Slot[];
+  searchTerm: string;
 }
 
 let maxFastId = 0;
@@ -43,6 +44,7 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
 
 const initialState: SlotsState = {
   slots: [createSlot()],
+  searchTerm: '',
   // slots: [
   // ...createRandomSlots(2, 20000, 10000),
   // ...createRandomSlots(5, 10000, 500),
@@ -122,6 +124,9 @@ const slotsSlice = createSlice({
     setSlots(state, action: PayloadAction<Slot[]>): void {
       state.slots = action.payload;
     },
+    setSearchTerm(state, action: PayloadAction<string>): void {
+      state.searchTerm = action.payload;
+    },
   },
 });
 
@@ -135,6 +140,7 @@ export const {
   resetSlots,
   setSlots,
   addSlotAmount,
+  setSearchTerm,
 } = slotsSlice.actions;
 
 export const createSlotFromPurchase =

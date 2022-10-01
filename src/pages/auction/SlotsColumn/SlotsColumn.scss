@@ -1,0 +1,135 @@
+@import "../../../styles/colors";
+
+.slots {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  .slot-grid-wrapper {
+    right: 0 !important;
+  }
+
+  &-wrapper {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
+  .slots-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-width-wrapper {
+    flex-wrap: nowrap !important;
+    align-self: flex-start;
+    width: 10%;
+    justify-content: center;
+    margin-right: 2%;
+  }
+
+  &-column {
+    flex-grow: 1;
+
+    &-list {
+      display: flex;
+      width: 100%;
+      gap: 2px;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      &>div:last-of-type {
+        flex-grow: 0;
+        max-width: 100%;
+        flex-basis: 100%;
+      }
+    }
+
+    &-buyout {
+      display: flex;
+      align-self: flex-start;
+      margin-bottom: 20px;
+
+      &.hidden {
+        display: none;
+      }
+
+      &-title {
+        margin-right: 35px !important;
+        margin-left: 10px !important;
+        margin-bottom: 0 !important;
+      }
+
+      &-input {
+        width: 100px;
+        font-size: 1.5em !important;
+      }
+    }
+
+    .add-button {
+      width: 20%;
+      border-radius: 10px;
+      border: 2px solid transparent;
+      align-self: center;
+      transition: 0s;
+    }
+
+    &.dragging {
+      .add-button {
+        background-color: $grey-11;
+        border-color: $grey-9;
+
+        &.custom-background {
+          background-color: rgba(100, 100, 100, 0.5);
+          border-color: $grey-5;
+        }
+
+        &.drag-over {
+          background-color: $blue-gray-3;
+          border-color: $blue-gray-2;
+
+          &.custom-background {
+            background-color: rgba($blue-gray-3, 0.7);
+            border-color: $blue-gray-2;
+          }
+        }
+      }
+    }
+  }
+
+  &-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    position: relative;
+
+    .total-sum-container {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      left: 0;
+      top: -10px;
+
+      .hide-sum {
+        padding: 7px !important;
+
+        svg {
+          font-size: 22px;
+          color: $grey-6;
+        }
+
+        &:hover {
+          svg {
+            color: $grey-2;
+          }
+        }
+      }
+    }
+
+    .total-sum {
+      font-size: 16px;
+      color: $grey-2;
+    }
+  }
+}

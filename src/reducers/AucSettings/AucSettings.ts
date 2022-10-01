@@ -112,10 +112,13 @@ const aucSettingsSlice = createSlice({
     setCompact(state, action: PayloadAction<boolean>): void {
       state.view.compact = action.payload;
     },
+    setShowChances(state, action: PayloadAction<boolean>): void {
+      state.settings.showChances = action.payload;
+    },
   },
 });
 
-export const { setAucSettings, setIntegration, setCompact } = aucSettingsSlice.actions;
+export const { setAucSettings, setIntegration, setCompact, setShowChances } = aucSettingsSlice.actions;
 
 export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<GetUserDto> => {
   const user = await getUserData();

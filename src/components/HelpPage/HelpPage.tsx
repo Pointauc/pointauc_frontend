@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import PageContainer from '../PageContainer/PageContainer';
 import './HelpPage.scss';
-import Documentation from '../Documentation/Documentation';
+import Documentation from '../../pages/documentation/Documentation';
 import TableOfContents from '../TableOfContents/TableOfContents';
 import { DOCUMENTATION_PARAGRAPHS } from '../../constants/documentation';
 import ROUTES from '../../constants/routes.constants';
