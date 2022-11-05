@@ -12,6 +12,7 @@ import {
   Link,
 } from '@material-ui/core';
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
+import { useTranslation } from 'react-i18next';
 import { LINE_BREAK } from '../../../constants/common.constants';
 import { resetPurchases } from '../../../reducers/Purchases/Purchases';
 import { isProduction, loadFile } from '../../../utils/common.utils';
@@ -21,6 +22,7 @@ import { setCompact, setShowChances } from '../../../reducers/AucSettings/AucSet
 import SaveLoad from '../SaveLoad/SaveLoad';
 import { resetSlots } from '../../../reducers/Slots/Slots';
 import { updateSettings } from '../../../api/userApi';
+import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 
 const isProd = isProduction();
 
@@ -30,6 +32,7 @@ const createMarbleConfig = (slots: Slot[]): string => slots.map(getSlotNamesByCo
 
 const AucActions: React.FC = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const { compact } = useSelector((root: RootState) => root.aucSettings.view);
@@ -71,7 +74,7 @@ const AucActions: React.FC = () => {
     <div className="options-wrapper">
       <FormControlLabel
         control={<Checkbox checked={showChances} onChange={handleSetShowChances} color="primary" />}
-        label="Показать шансы на победу"
+        label={t('auc.showWinningChances')}
         className="save-current-slots compact-view-checkbox"
       />
       <div className="options">
@@ -89,14 +92,14 @@ const AucActions: React.FC = () => {
           className="da-link"
           href="https://www.donationalerts.com/r/kozjar"
         >
-          поддержать автора
+          {t('auc.supportCreator')}
         </Link>
         <IconButton onClick={handleResetSlots} className="clear-button" title="Очистить все">
           <DeleteSweepIcon />
         </IconButton>
         <FormControlLabel
           control={<Checkbox checked={compact} onChange={handleSetCompact} color="primary" />}
-          label="Компактный режим"
+          label={t('auc.compactView')}
           className="save-current-slots compact-view-checkbox"
         />
         {/* <RouteLink to={ROUTES.HELP}> */}
@@ -105,11 +108,12 @@ const AucActions: React.FC = () => {
         {/*  </Button> */}
         {/* </RouteLink> */}
         <Button className="button marbles" onClick={downloadMarbles} variant="outlined">
-          Скачать шары
+          {t('auc.downloadMarbles')}
         </Button>
         <Button className="button restore" onClick={handleRestoreOpen} variant="outlined">
-          Сохранение/загрузка
+          {t('auc.saveLoad')}
         </Button>
+        <LanguageDropdown />
         {/* {!isProd && <MockBidForm />} */}
         <Dialog
           open={confirmRestoreOpen}

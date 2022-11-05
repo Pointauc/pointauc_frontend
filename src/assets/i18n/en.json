@@ -1,0 +1,100 @@
+{
+  "translation": {
+    "common": {
+      "connectTwitch": "Connect twitch",
+      "connectDA": "Connect Donation Alerts",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "sec": "s.",
+      "min": "min.",
+      "max": "max",
+      "left": "remaining",
+      "delete": "Delete",
+      "currencySign": "$"
+    },
+    "auc": {
+      "addPosition": "Add lot",
+      "saveLoad": "Save/Load",
+      "downloadMarbles": "Download Marbles",
+      "compactView": "Compact View",
+      "supportCreator": "support the author",
+      "showWinningChances": "Show winning chances",
+      "language": "Language: {{lng}}",
+
+      "lotSearch": "Search among lots...",
+      "newLotName": "Name of the new lot",
+      "lotName": "Name",
+      "integrations": "Integrations"
+    },
+    "settings": {
+      "settings": "Settings",
+      "integrations": "Integrations",
+      "addNewBids": "Add all new rewards at once",
+      "twitch": {
+        "openRewards": "Enable Rewards",
+        "closeRewards": "Hide Rewards",
+        "deleteRewards": "Delete Rewards",
+        "bindRewardsToTimer": "Bind enabling rewards to a timer",
+        "bindRewardsToTimerDesc": "Rewards will automatically turn on when the timer resumes and turn off when paused or ended.",
+        "returnCanceledBids": "Return canceled bounties",
+        "commonRewardsName": "Common name for rewards",
+        "commonRewardsNameDesc": "Enabling the integration will automatically generate rewards in the channel in the format \"Name + Cost\".",
+        "rewardsList": "Rewards list:",
+        "cost": "Cost",
+        "color": "Color",
+        "addReward": "Add Reward"
+      },
+      "donations": {
+        "pointsRate": "Ruble exchange rate to points",
+        "addTimeOnDonation": "Add Time On Donation"
+      },
+      "auc": {
+        "auc": "Auction",
+        "showBuyout": "Show Buyout",
+        "showTotal": "Show total",
+        "showWinningChances": "Show WinningChances",
+        "background": "Auction background",
+        "uploadBackground": "Upload background",
+        "selectFromList": "Select from list",
+        "sortBids": "Sort purchases by points",
+        "dateSort": "Date",
+        "costSort": "Cost"
+      },
+      "marbles": {
+        "marbles": "balls",
+        "marbleAuc": "Marble Auction",
+        "marbleCost": "Marble Cost",
+        "newPositionCost": "New Category Cost"
+      },
+      "stopwatch": {
+        "stopwatch": "Timer",
+        "startTime": "Start time",
+        "startTimeDesc": "Time to reset the timer to.",
+        "additionalTime": "Additional Time",
+        "additionalTimeDesc": "The amount of time the timer will change when +/- is pressed.",
+        "addTimeOnLeaderChange": "Add time on leader change",
+        "addTimeOnNewPosition": "Add time for new position",
+        "maxAdditionalTime": "Max Auto Add Time"
+      }
+    },
+    "wheel": {
+      "wheel": "Wheel",
+      "spin": "Spin",
+      "nextDuel": "next duel",
+      "spinning": "Spinning...",
+      "duration": "Duration",
+      "howItWorks": "How does it work?",
+      "nesting": "Nesting",
+      "nestingDesc": "groups cheap lots to reduce scrolls",
+      "dropoutProof": "PROOF that a dropout is no different than a normal wheel!",
+      "readBeforeUsage": "READ BEFORE USING!",
+      "dividing": "Dividing",
+      "dividingDesc": "divides expensive lots into multiple positions.",
+      "useRandomOrg": "Use random.org service",
+      "loadCustomMessage": "load custom image",
+      "importToWheel": "Import to Wheel",
+      "deleteLot": "Delete Lot",
+      "winner": "Winner"
+    }
+  }
+}

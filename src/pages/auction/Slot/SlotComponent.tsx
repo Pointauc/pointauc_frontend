@@ -5,6 +5,7 @@ import './Slot.scss';
 import './SlotCompact.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { FilledInputProps } from '@material-ui/core/FilledInput';
+import { useTranslation } from 'react-i18next';
 import { Slot } from '../../../models/slot.model';
 import { addExtra, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
 import { animateValue } from '../../../utils/common.utils';
@@ -13,6 +14,7 @@ import { percentsRefMap } from '../../../services/PercentsRefMap';
 
 const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { marblesAuc, showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const [currentName, setCurrentName] = useState(name);
   const [currentExtra, setCurrentExtra] = useState(extra);
@@ -90,20 +92,25 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
     <>
       <OutlinedInput
         className="slot-name slot-input"
-        placeholder="Название"
+        placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
         value={currentName}
       />
       {showChances && <span className="slot-chance" ref={percentsRef} />}
-      <OutlinedInput className="slot-money slot-input" placeholder="₽" inputRef={amountInput} type="number" />
+      <OutlinedInput
+        className="slot-money slot-input"
+        placeholder={t('common.currencySign')}
+        inputRef={amountInput}
+        type="number"
+      />
       <IconButton className="slot-add-extra" onClick={handleAddExtra} title="Прибавить стоимость">
         <AddIcon />
       </IconButton>
       <OutlinedInput
         className="slot-money slot-input"
         style={{ width: extraFieldWidth }}
-        placeholder="₽"
+        placeholder={t('common.currencySign')}
         onBlur={handleExtraBlur}
         onChange={handleExtraChange}
         value={currentExtra || ''}

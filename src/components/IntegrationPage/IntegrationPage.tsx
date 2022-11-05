@@ -2,6 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeepPartial, useForm } from 'react-hook-form';
 import { Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import PageContainer from '../PageContainer/PageContainer';
 import TwitchIntegration from './TwitchIntegration/TwitchIntegration';
 import { RootState } from '../../reducers';
@@ -15,6 +16,7 @@ import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
 
 const IntegrationPage: FC = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { integration } = useSelector((root: RootState) => root.aucSettings);
   const { username } = useSelector((root: RootState) => root.user);
   const formMethods = useForm<IntegrationFields>({ defaultValues: integration });
@@ -54,7 +56,7 @@ const IntegrationPage: FC = () => {
   );
 
   return (
-    <PageContainer title="Интеграции">
+    <PageContainer title={t('settings.integrations')}>
       <form className="settings" onSubmit={handleSubmit(onSubmit)}>
         <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
         <TwitchIntegration control={control} />
@@ -68,10 +70,10 @@ const IntegrationPage: FC = () => {
             style={{ marginRight: 20 }}
             disabled={!isDirty || isSubmitting}
           >
-            Применить
+            {t('common.apply')}
           </LoadingButton>
           <Button onClick={handleReset} variant="outlined" disabled={!isDirty || isSubmitting}>
-            Отменить
+            {t('common.cancel')}
           </Button>
         </div>
       </form>

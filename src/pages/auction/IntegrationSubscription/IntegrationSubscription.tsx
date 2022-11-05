@@ -3,6 +3,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Switch, Typography } fro
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
 import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
 import './IntegrationSubscription.scss';
@@ -13,6 +14,7 @@ import DALoginButton from '../../../components/IntegrationPage/DALoginButton/DAL
 
 const IntegrationSubscription: FC = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { hasDAAuth, hasTwitchAuth, username } = useSelector((root: RootState) => root.user);
 
   const {
@@ -50,7 +52,7 @@ const IntegrationSubscription: FC = () => {
   return (
     <Accordion defaultExpanded className="fast-access">
       <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-        <Typography>Интеграции</Typography>
+        <Typography>{t('auc.integrations')}</Typography>
       </AccordionSummary>
       <AccordionDetails className="content">
         {username && hasTwitchAuth ? (

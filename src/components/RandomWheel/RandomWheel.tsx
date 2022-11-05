@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Emote } from '@kozjar/twitch-emoticons';
+import { useTranslation } from 'react-i18next';
 import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
 import { RandomPaceConfig } from '../../services/SpinPaceService';
 import { Game } from '../Bracket/components/model';
@@ -61,6 +62,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
   const [maxDepth, setMaxDepth] = useState<number>();
   const [depthRestrict, setDepthRestrict] = useState<number>();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const initBattleRoyale = useCallback((games: Game[]) => {
     setGamesOrder((prevGames) => {
@@ -287,7 +289,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
             <div className="wheel-controls-row">
               {wheelFormat === WheelFormat.BattleRoyal && nextWinner ? (
                 <Button className="wheel-controls-button" variant="contained" color="primary" onClick={nextTurn}>
-                  следующая дуэль
+                  {t('wheel.nextDuel')}
                 </Button>
               ) : (
                 <LoadingButton
@@ -298,14 +300,14 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
                   color="primary"
                   onClick={handleSpin}
                 >
-                  {isSpinning ? 'Крутимся...' : 'Крутить'}
+                  {isSpinning ? t('wheel.spinning') : t('wheel.spin')}
                 </LoadingButton>
               )}
               <TextField
                 className="wheel-controls-input"
                 variant="outlined"
                 margin="dense"
-                label="Длительность"
+                label={t('wheel.duration')}
                 onChange={handleSpinTimeChange}
                 value={spinTime || ''}
               />
@@ -332,10 +334,10 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
                   </DialogContent>
                 </Dialog>
                 <button onClick={toggleHelp} type="button" className="description-link">
-                  Как это работает?
+                  {t('wheel.howItWorks')}
                 </button>
                 <div className="wheel-controls-row">
-                  <Typography className="wheel-controls-tip md">Вложенность</Typography>
+                  <Typography className="wheel-controls-tip md">{t('wheel.nesting')}</Typography>
                   <Slider
                     step={1}
                     min={1}
@@ -349,9 +351,7 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
                     ]}
                   />
                 </div>
-                <Typography className="wheel-controls-tip hint">
-                  группирует дешевые лоты, чтобы уменьшить кол-во прокрутов
-                </Typography>
+                <Typography className="wheel-controls-tip hint">{t('wheel.nestingDesc')}</Typography>
               </>
             )}
             <Dialog
@@ -361,22 +361,22 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
               maxWidth="md"
               fullWidth
             >
-              <DialogTitle>ДОКАЗАТЕЛЬСТВО, что выбывание не отличается от обычного колеса!</DialogTitle>
+              <DialogTitle>{t('wheel.dropoutProof')}</DialogTitle>
               <DialogContent dividers className="description-content-dropout">
                 <DropoutWheelProof />
               </DialogContent>
             </Dialog>
             {wheelFormat === WheelFormat.Dropout && (
               <button onClick={toggleDropoutProof} type="button" className="description-link">
-                ПРОЧТИТЕ ПЕРЕД ИСПОЛЬЗОВАНИЕМ!
+                {t('wheel.readBeforeUsage')}
               </button>
             )}
             {wheelFormat === WheelFormat.Dropout && (
-              <Typography style={{ marginTop: 10 }}>{`Осталось: ${filteredItems.length}`}</Typography>
+              <Typography style={{ marginTop: 10 }}>{`${t('common.left')}: ${filteredItems.length}`}</Typography>
             )}
             {!!totalSize && (
               <div className="wheel-controls-row">
-                <Typography className="wheel-controls-tip md">Разделение</Typography>
+                <Typography className="wheel-controls-tip md">{t('wheel.dividing')}</Typography>
                 <Slider
                   step={1}
                   min={maxSize / 10}
@@ -385,13 +385,13 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
                   onChange={handleMaxValueChange}
                   value={maxValidValue}
                   marks={[
-                    { value: maxSize / 10, label: 'макс / 10' },
-                    { value: maxSize, label: 'макс' },
+                    { value: maxSize / 10, label: `${t('common.max')} / 10` },
+                    { value: maxSize, label: t('common.max') },
                   ]}
                 />
               </div>
             )}
-            <Typography className="wheel-controls-tip hint">делит дорогие лоты на несколько позиций.</Typography>
+            <Typography className="wheel-controls-tip hint">{t('wheel.dividingDesc')}</Typography>
             <div className="wheel-controls-row">
               <Typography>Финал с перчинкой</Typography>
               <Switch onChange={handleIsRandomPaceChange} />
@@ -399,17 +399,17 @@ const RandomWheel: FC<RandomWheelProps> = ({ items, deleteItem }) => {
             {isRandomPace && <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />}
             <FormControlLabel
               control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
-              label="Использовать сервис random.org"
+              label={t('wheel.useRandomOrg')}
               className="wheel-controls-checkbox"
             />
             <div className="wheel-controls-row" style={{ marginTop: 10 }}>
-              <SlotsPresetInput buttonTitle="Импорт в колесо" onChange={handleCustomWheel} hint={presetHint} />
+              <SlotsPresetInput buttonTitle={t('wheel.importToWheel')} onChange={handleCustomWheel} hint={presetHint} />
             </div>
           </div>
           <div className="settings" style={{ width: 325 }}>
             <TwitchEmotesList setActiveEmote={handleEmoteChange} onEmotesLoad={handleEmotesLoad} />
             <ImageLinkInput
-              buttonTitle="загрузить свое изображение"
+              buttonTitle={t('wheel.loadCustomMessage')}
               buttonClass="upload-wheel-image"
               onChange={handleEmoteChange}
             />

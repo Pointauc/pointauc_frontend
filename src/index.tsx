@@ -21,6 +21,7 @@ import NewDomainRedirect from './components/NewDomainRedirect/NewDomainRedirect'
 import history from './constants/history';
 import SaveLoadService from './services/SaveLoadService';
 import AudioRoom from './components/AudioRoom/AudioRoom';
+import './assets/i18n';
 
 dayjs.locale('ru');
 

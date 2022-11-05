@@ -3,6 +3,7 @@ import { Button, OutlinedInput } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import { RootState } from '../../../../reducers';
 import './NewSlotForm.scss';
 import { addSlot } from '../../../../reducers/Slots/Slots';
@@ -11,6 +12,7 @@ import { updatePercents } from '../../../../services/PercentsRefMap';
 
 const NewSlotForm = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances, background } = useSelector((root: RootState) => root.aucSettings.settings);
   const [enterIconVisible, setEnterIconVisible] = useState(false);
@@ -75,7 +77,7 @@ const NewSlotForm = () => {
     <div className={wrapperClasses}>
       <OutlinedInput
         className="slot-name slot-input"
-        placeholder="Название нового лота"
+        placeholder={t('auc.newLotName')}
         type="text"
         inputRef={nameInput}
         onKeyPress={createSlotOnEnter}
@@ -88,7 +90,7 @@ const NewSlotForm = () => {
       <OutlinedInput type="number" style={{ display: 'none' }} />
       <OutlinedInput
         className="slot-money slot-input"
-        placeholder="₽"
+        placeholder={t('common.currencySign')}
         type="number"
         inputRef={amountInput}
         onKeyPress={createSlotOnEnter}
@@ -104,7 +106,7 @@ const NewSlotForm = () => {
         startIcon={<AddIcon />}
         onClick={createNewSlot}
       >
-        Добавить лот
+        {t('auc.addPosition')}
         {enterIconVisible && <span> &#9166;</span>}
       </Button>
     </div>
