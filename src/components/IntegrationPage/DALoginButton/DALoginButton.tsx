@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
 import './DALoginButton.scss';
 
@@ -14,6 +15,7 @@ const authParams = {
 const authUrl = new URL('https://www.donationalerts.com/oauth/authorize');
 
 const TwitchLoginButton: FC = () => {
+  const { t } = useTranslation();
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
     authUrl.search = params.toString();
@@ -30,7 +32,7 @@ const TwitchLoginButton: FC = () => {
         startIcon={<DASvg className="base-icon da" />}
         onClick={handleAuth}
       >
-        Подключить Donation Alerts
+        {t('common.connectDA')}
       </Button>
     </>
   );

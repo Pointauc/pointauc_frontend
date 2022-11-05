@@ -2,6 +2,7 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import PageContainer from '../PageContainer/PageContainer';
 import StopwatchSettings from './StopwatchSettings/StopwatchSettings';
 import { RootState } from '../../reducers';
@@ -16,6 +17,7 @@ import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
 
 const SettingsPage: FC = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const { username } = useSelector((root: RootState) => root.user);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,7 +50,7 @@ const SettingsPage: FC = () => {
   );
 
   return (
-    <PageContainer title="Настройки" classes={{ root: 'settings' }}>
+    <PageContainer title={t('settings.settings')} classes={{ root: 'settings' }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
         <StopwatchSettings control={control} />
@@ -62,10 +64,10 @@ const SettingsPage: FC = () => {
             style={{ marginRight: 20 }}
             disabled={!isDirty || isSubmitting}
           >
-            Применить
+            {t('common.apply')}
           </LoadingButton>
           <Button onClick={handleReset} variant="outlined" disabled={!isDirty}>
-            Отменить
+            {t('common.cancel')}
           </Button>
         </div>
       </form>

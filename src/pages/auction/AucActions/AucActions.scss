@@ -41,12 +41,8 @@
   .button {
     border-color: rgba(#fff, 0.4) !important;
 
-    &.marbles {
-      width: 180px;
-    }
-
     &.restore {
-      width: 250px;
+      margin-right: 12px;
     }
   }
 }

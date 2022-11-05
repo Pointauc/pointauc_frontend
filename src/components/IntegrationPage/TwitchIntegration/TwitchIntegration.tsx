@@ -20,6 +20,7 @@ import { useFieldArray } from 'react-hook-form';
 import { UseFormMethods } from 'react-hook-form/dist/types/form';
 import DeleteIcon from '@material-ui/icons/Delete';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
 import './TwitchIntegration.scss';
@@ -62,6 +63,7 @@ interface TwitchIntegrationProps {
 
 const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { username, hasTwitchAuth } = useSelector((root: RootState) => root.user);
   const {
     twitch: { actual, loading },
@@ -133,7 +135,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
               className={classNames('open-rewards-button', { close: actual })}
               onClick={toggleSubscribe}
             >
-              {actual ? 'Скрыть награды' : 'Включить награды'}
+              {actual ? t('settings.twitch.closeRewards') : t('settings.twitch.openRewards')}
             </LoadingButton>
             <Button
               variant="outlined"
@@ -141,42 +143,46 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
               style={{ width: 175, marginLeft: 20 }}
               onClick={closeTwitchRewards}
             >
-              Удалить награды
+              {t('settings.twitch.deleteRewards')}
             </Button>
           </div>
           <FormGroup row className="auc-settings-row">
-            <FormSwitch name="twitch.alwaysAddNew" control={control} label="Сразу добавлять все новые награды" />
+            <FormSwitch name="twitch.alwaysAddNew" control={control} label={t('settings.addNewBids')} />
           </FormGroup>
           <div className="hint">Не рекомендуется для обычных аукционов!</div>
           <FormGroup row className="auc-settings-row">
-            <FormSwitch name="twitch.isRefundAvailable" control={control} label="Возвращать отмененные награды" />
+            <FormSwitch
+              name="twitch.isRefundAvailable"
+              control={control}
+              label={t('settings.twitch.returnCanceledBids')}
+            />
           </FormGroup>
           <FormGroup row className="auc-settings-row">
-            <FormSwitch name="twitch.dynamicRewards" control={control} label="Привязать включение наград к таймеру" />
+            <FormSwitch
+              name="twitch.dynamicRewards"
+              control={control}
+              label={t('settings.twitch.bindRewardsToTimer')}
+            />
           </FormGroup>
-          <div className="hint">
-            Награды будут автомачески включаться при возобновлении таймера и отключаться при паузе или окончании.
-          </div>
+          <div className="hint">{t('settings.twitch.bindRewardsToTimerDesc')}</div>
           <FormGroup row className="auc-settings-row">
             <FormInput
               name="twitch.rewardsPrefix"
               control={control}
-              label="Общее название для наград"
+              label={t('settings.twitch.commonRewardsName')}
               className="field lg"
             />
           </FormGroup>
-          <div className="hint">
-            При включении интеграции, на канале автоматически создаются награды в формате "Название + Стоимость".
-          </div>
+          <div className="hint">{t('settings.twitch.commonRewardsNameDesc')}</div>
           <Typography variant="body1" className="MuiFormControlLabel-label">
-            Список наград:
+            {t('settings.twitch.rewardsList')}
           </Typography>
           <TableContainer component={Paper} style={{ width: 490, marginTop: 15 }}>
             <Table>
               <TableHead>
                 <StyledTableRow>
-                  <StyledTableCell>Стоимость</StyledTableCell>
-                  <StyledTableCell align="center">Цвет</StyledTableCell>
+                  <StyledTableCell>{t('settings.twitch.cost')}</StyledTableCell>
+                  <StyledTableCell align="center">{t('settings.twitch.color')}</StyledTableCell>
                   <StyledTableCell />
                 </StyledTableRow>
               </TableHead>
@@ -194,7 +200,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
             </Table>
           </TableContainer>
           <Button onClick={handleAppendReward} color="primary" style={{ marginTop: 15, width: 220 }} variant="outlined">
-            Добавить награду
+            {t('settings.twitch.addReward')}
           </Button>
         </FormGroup>
       ) : (

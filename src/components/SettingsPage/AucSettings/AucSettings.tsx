@@ -5,6 +5,7 @@ import { Controller, UseFormMethods } from 'react-hook-form';
 import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import ImageLinkInput from '../../Form/ImageLinkInput/ImageLinkInput';
 import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '../../../reducers';
@@ -20,6 +21,7 @@ interface AucSettingsProps {
 }
 
 const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
+  const { t } = useTranslation();
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const { purchaseSort } = settings;
 
@@ -37,30 +39,38 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
 
   return (
     <>
-      <SettingsGroupTitle title="Аукцион" />
+      <SettingsGroupTitle title={t('settings.auc.auc')} />
       <FormGroup className="auc-settings-list">
         <FormGroup row className="auc-settings-row">
-          <FormSwitch name="isBuyoutVisible" control={control} label="Показать выкуп" />
+          <FormSwitch name="isBuyoutVisible" control={control} label={t('settings.auc.showBuyout')} />
         </FormGroup>
         <FormGroup row className="auc-settings-row">
-          <FormSwitch name="isTotalVisible" control={control} label="Показать итоговую сумму" />
+          <FormSwitch name="isTotalVisible" control={control} label={t('settings.auc.showTotal')} />
         </FormGroup>
         <FormGroup row className="auc-settings-row">
-          <FormSwitch name="showChances" control={control} label="Показать шансы выигрыша" />
+          <FormSwitch name="showChances" control={control} label={t('settings.auc.showWinningChances')} />
         </FormGroup>
         <FormGroup row className="auc-settings-row">
           <Typography variant="body1" className="MuiFormControlLabel-label">
-            Фон аукциона
+            {t('settings.auc.background')}
           </Typography>
-          <ImageLinkInput buttonTitle="Загрузить фон" buttonClass="upload-background" onChange={handleImageChange} />
-          <ImagePresetsInput images={BACKGROUND_PRESETS} buttonTitle="Выбрать из списка" onChange={handleImageChange} />
+          <ImageLinkInput
+            buttonTitle={t('settings.auc.uploadBackground')}
+            buttonClass="upload-background"
+            onChange={handleImageChange}
+          />
+          <ImagePresetsInput
+            images={BACKGROUND_PRESETS}
+            buttonTitle={t('settings.auc.selectFromList')}
+            onChange={handleImageChange}
+          />
           <IconButton className="auc-settings-reset-background" onClick={resetBackground}>
             <ReplayIcon />
           </IconButton>
         </FormGroup>
         <FormGroup row className="auc-settings-row">
           <Typography variant="body1" className="MuiFormControlLabel-label">
-            Сортировать покупки за поинты
+            {t('settings.auc.sortBids')}
           </Typography>
           <Controller
             control={control}
@@ -70,35 +80,41 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
             defaultValue={purchaseSort}
           >
             <MenuItem value={0}>
-              <Typography>Дата</Typography>
+              <Typography>{t('settings.auc.dateSort')}</Typography>
               <ArrowUpwardOutlinedIcon fontSize="small" />
             </MenuItem>
             <MenuItem value={1}>
-              <Typography>Дата</Typography>
+              <Typography>{t('settings.auc.dateSort')}</Typography>
               <ArrowDownwardOutlinedIcon fontSize="small" />
             </MenuItem>
             <MenuItem value={2}>
-              <Typography>Стоимость</Typography>
+              <Typography>{t('settings.auc.costSort')}</Typography>
               <ArrowUpwardOutlinedIcon fontSize="small" />
             </MenuItem>
             <MenuItem value={3}>
-              <Typography>Стоимость</Typography>
+              <Typography>{t('settings.auc.costSort')}</Typography>
               <ArrowDownwardOutlinedIcon fontSize="small" />
             </MenuItem>
           </Controller>
         </FormGroup>
-        <SettingsGroupTitle title="Шары" />
+        <SettingsGroupTitle title={t('settings.marbles.marbles')} />
         <FormGroup row className="auc-settings-row">
-          <FormSwitch name="marblesAuc" control={control} label="Шаровой аукцион" />
+          <FormSwitch name="marblesAuc" control={control} label={t('settings.marbles.marbleAuc')} />
         </FormGroup>
         <FormGroup row className="auc-settings-row">
-          <FormInput name="marbleRate" control={control} label="Стоимость шара" type="number" className="field md" />
+          <FormInput
+            name="marbleRate"
+            control={control}
+            label={t('settings.marbles.marbleCost')}
+            type="number"
+            className="field md"
+          />
         </FormGroup>
         <FormGroup row className="auc-settings-row">
           <FormInput
             name="marbleCategory"
             control={control}
-            label="Стоимость новой категории"
+            label={t('settings.marbles.newPositionCost')}
             type="number"
             className="field md"
           />

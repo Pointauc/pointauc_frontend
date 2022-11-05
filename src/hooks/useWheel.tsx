@@ -3,6 +3,7 @@ import gsap from 'gsap';
 // eslint-disable-next-line import/no-named-as-default
 import { Button, Dialog, DialogActions, DialogContent, Link, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import CustomEase from '../utils/CustomEase';
 import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
 import pradenW from '../assets/img/pradenW.png';
@@ -64,6 +65,7 @@ const useWheel = ({
   dropoutRate = 1,
 }: WheelConfig): WheelResult => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const canvas = useRef<HTMLCanvasElement>(null);
   const wheelSelector = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
@@ -203,7 +205,7 @@ const useWheel = ({
     if (canvas.current) {
       const wheelPath = paceConfig ? new SpinPaceService(paceConfig, 270 * spinTime, spinTime).createPath() : SPIN_PATH;
       const realSpinChange = Number(wheelPath.split(',').splice(-1, 1)[0]) * (nextRotate - previousRotate);
-      console.log(wheelPath);
+
       gsap.to(canvas.current, {
         duration: spinTime,
         ease: CustomEase.create('custom', wheelPath, {
@@ -268,9 +270,9 @@ const useWheel = ({
     setWinnerItem(undefined);
 
     if (spinTarget.current) {
-      spinTarget.current.innerHTML = 'Победитель';
+      spinTarget.current.innerHTML = t('wheel.winner');
     }
-  }, []);
+  }, [t]);
 
   const circleStyles: CSSProperties = useMemo(() => {
     const size = offset * 0.2;
@@ -311,12 +313,12 @@ const useWheel = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={deleteWinner} variant="outlined" color="secondary">
-            Удалить
+            {t('wheel.delete')}
           </Button>
         </DialogActions>
       </Dialog>
       <div style={{ width: offset }} className="wheel-target" ref={spinTarget}>
-        Победитель
+        {t('wheel.winner')}
       </div>
       <canvas style={{ position: 'absolute', zIndex: 1 }} ref={wheelSelector} />
       <canvas ref={canvas} />
@@ -332,7 +334,7 @@ const useWheel = ({
           )}
           {deleteItem && !dropout && (
             <Button onClick={toggleDialog} variant="outlined" color="secondary">
-              Удалить лот
+              {t('wheel.deleteLot')}
             </Button>
           )}
         </div>

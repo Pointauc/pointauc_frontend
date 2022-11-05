@@ -1,0 +1,100 @@
+{
+  "translation": {
+    "common": {
+      "connectTwitch": "Подключить twitch",
+      "connectDA": "Подключить Donation Alerts",
+      "apply": "Применить",
+      "cancel": "Отменить",
+      "sec": "с.",
+      "min": "мин.",
+      "max": "макс",
+      "left": "Осталось",
+      "delete": "Удалить",
+      "currencySign": "₽"
+    },
+    "auc": {
+      "addPosition": "Добавить лот",
+      "saveLoad": "Сохранение/загрузка",
+      "downloadMarbles": "Скачать шары",
+      "compactView": "Компактный режим",
+      "supportCreator": "поддержать автора",
+      "showWinningChances": "Показать шансы на победу",
+      "language": "Language: {{lng}}",
+
+      "lotSearch": "Поиск среди лотов...",
+      "newLotName": "Название нового лота",
+      "lotName": "Название",
+      "integrations": "Интеграции"
+    },
+    "settings": {
+      "settings": "Настройки",
+      "integrations": "Интеграции",
+      "addNewBids": "Сразу добавлять все новые награды",
+      "twitch": {
+        "openRewards": "Включить награды",
+        "closeRewards": "Скрыть награды",
+        "deleteRewards": "Удалить награды",
+        "bindRewardsToTimer": "Привязать включение наград к таймеру",
+        "bindRewardsToTimerDesc": "Награды будут автомачески включаться при возобновлении таймера и отключаться при паузе или окончании.",
+        "returnCanceledBids": "Возвращать отмененные награды",
+        "commonRewardsName": "Общее название для наград",
+        "commonRewardsNameDesc": "При включении интеграции, на канале автоматически создаются награды в формате \"Название + Стоимость\".",
+        "rewardsList": "Список наград:",
+        "cost": "Стоимость",
+        "color": "Цвет",
+        "addReward": "Добавить награду"
+      },
+      "donations": {
+        "pointsRate": "Курс рубля к поинтам",
+        "addTimeOnDonation": "Добавлять время при донате"
+      },
+      "auc": {
+        "auc": "Аукцион",
+        "showBuyout": "Показать выкуп",
+        "showTotal": "Показать итоговую сумму",
+        "showWinningChances": "Показать шансы выигрыша",
+        "background": "Фон аукциона",
+        "uploadBackground": "Загрузить фон",
+        "selectFromList": "Выбрать из списка",
+        "sortBids": "Сортировать покупки за поинты",
+        "dateSort": "Дата",
+        "costSort": "Стоимость"
+      },
+      "marbles": {
+        "marbles": "Шары",
+        "marbleAuc": "Шаровой аукцион",
+        "marbleCost": "Стоимость шара",
+        "newPositionCost": "Стоимость новой категории"
+      },
+      "stopwatch": {
+        "stopwatch": "Таймер",
+        "startTime": "Начальное время",
+        "startTimeDesc": "Время на которое возвращается таймер при сбросе.",
+        "additionalTime": "Время прибавления таймера",
+        "additionalTimeDesc": "Время на которое изменится таймер при нажатии на +/-.",
+        "addTimeOnLeaderChange": "Добавлять время при смене лидера",
+        "addTimeOnNewPosition": "Добавлять время за новую позицию",
+        "maxAdditionalTime": "Макс. время автоматического добавления"
+      }
+    },
+    "wheel": {
+      "wheel": "Колесо",
+      "spin": "Крутить",
+      "nextDuel": "следующая дуэль",
+      "spinning": "Крутимся...",
+      "duration": "Длительность",
+      "howItWorks": "Как это работает?",
+      "nesting": "Вложенность",
+      "nestingDesc": "группирует дешевые лоты, чтобы уменьшить кол-во прокрутов",
+      "dropoutProof": "ДОКАЗАТЕЛЬСТВО, что выбывание не отличается от обычного колеса!",
+      "readBeforeUsage": "ПРОЧТИТЕ ПЕРЕД ИСПОЛЬЗОВАНИЕМ!",
+      "dividing": "Разделение",
+      "dividingDesc": "делит дорогие лоты на несколько позиций.",
+      "useRandomOrg": "Использовать сервис random.org",
+      "loadCustomMessage": "загрузить свое изображение",
+      "importToWheel": "Импорт в колесо",
+      "deleteLot": "Удалить лот",
+      "winner": "Победитель"
+    }
+  }
+}

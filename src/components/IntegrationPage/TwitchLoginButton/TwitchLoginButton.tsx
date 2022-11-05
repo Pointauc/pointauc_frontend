@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Button } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
 
 const authParams = {
@@ -13,6 +14,7 @@ const authParams = {
 const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
 
 const TwitchLoginButton: FC = () => {
+  const { t } = useTranslation();
   const handleAuth = (): void => {
     const params = new URLSearchParams(authParams);
     authUrl.search = params.toString();
@@ -28,7 +30,7 @@ const TwitchLoginButton: FC = () => {
       startIcon={<TwitchSvg className="base-icon" />}
       onClick={handleAuth}
     >
-      Подключить twitch
+      {t('common.connectTwitch')}
     </Button>
   );
 };
