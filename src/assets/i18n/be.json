@@ -1,0 +1,99 @@
+{
+  "translation":{
+    "common":{
+      "connectTwitch":"Падключыць twitch",
+      "connectDA":"Падключыць Donation Alerts",
+      "apply":"Прымяніць",
+      "cancel":"Адмяніць",
+      "sec":"с.",
+      "min":"мін.",
+      "max":"макс",
+      "left":"Засталося",
+      "delete":"Выдаліць",
+      "currencySign":"₽"
+    },
+    "auc":{
+      "addPosition":"Дадаць лот",
+      "saveLoad":"Захаваньне/Спампоўка",
+      "downloadMarbles":"Спампаваць шары",
+      "compactView":"Кампактны рэжым",
+      "supportCreator":"Падтрымаць аўтара",
+      "showWinningChances":"Паказаць шанец на перамогу",
+      "language":"Language: {{lng}}",
+      "lotSearch":"Пошук сярод латоў...",
+      "newLotName":"Назва новага лота",
+      "lotName":"Назва",
+      "integrations":"Інтэграцыя"
+    },
+    "settings":{
+      "settings":"Налады",
+      "integrations":"\"Інтэграцыі\"",
+      "addNewBids":"Адразу дадаваць усе новыя ўзнагароды",
+      "twitch":{
+        "openRewards":"Уключыць узнагароды",
+        "closeRewards":"Схаваць узнагароды",
+        "deleteRewards":"Выдаліць узнагароды",
+        "bindRewardsToTimer":"Прывязаць уключэньне ўзнагарод да таймера",
+        "bindRewardsToTimerDesc":"Узнагароды будуць аўтаматычна ўключацца пры аднаўленьні таймера й адключацца пры паўзе або заканчэньні.",
+        "returnCanceledBids":"Вяртаць адмененыя ўзнагароды",
+        "commonRewardsName":"Агульная назва для ўзнагарод",
+        "commonRewardsNameDesc":"Пры ўключэньні інтэграцыі, на канале аўтаматычна ствараюцца ўзнагароды ў фармаце \"Назва + Кошт\".",
+        "rewardsList":"Сьпіс узнагарод:",
+        "cost":"Кошт",
+        "color":"Колер",
+        "addReward":"Дадаць узнагароду"
+      },
+      "donations":{
+        "pointsRate":"Курс рубля да пойнтаў",
+        "addTimeOnDonation":"Дадаваць час пры данаце"
+      },
+      "auc":{
+        "auc":"Аўкцыён",
+        "showBuyout":"Показаць выкуп",
+        "showTotal":"Показаць выніковую суму",
+        "showWinningChances":"Показаць шанец перамогі",
+        "background":"Фон аўкцыёна",
+        "uploadBackground":"Спампаваць фон",
+        "selectFromList":"Выбраць са сьпіса",
+        "sortBids":"Сартаваць пакупкі за пойнты",
+        "dateSort":"Дата",
+        "costSort":"Кошт"
+      },
+      "marbles":{
+        "marbles":"Шары",
+        "marbleAuc":"Шаравы аўкцыён",
+        "marbleCost":"Кошт шара",
+        "newPositionCost":"Кошт новай катэгорыі"
+      },
+      "stopwatch":{
+        "stopwatch":"Таймер",
+        "startTime":"Пачатковы час",
+        "startTimeDesc":"Час на які вяртаецца таймер пры ськідзе.",
+        "additionalTime":"Час прыбаўленьня таймера",
+        "additionalTimeDesc":"Час на які зьменіцца таймер пры націсканьні на +/-.",
+        "addTimeOnLeaderChange":"Дадаць час пры зьмене лідэра",
+        "addTimeOnNewPosition":"Дадаваць час за новую пазіцыю",
+        "maxAdditionalTime":"Макс. час аўтаматычнага дадаваньня"
+      }
+    },
+    "wheel":{
+      "wheel":"Кола",
+      "spin":"Круціць",
+      "nextDuel":"наступная дуэль",
+      "spinning":"Круцімся...",
+      "duration":"Працягласьць",
+      "howItWorks":"Як гэта работае?",
+      "nesting":"Укладзенасьць",
+      "nestingDesc":"групуе танныя лоты, каб паменшыць колькасьць пракрутаў",
+      "dropoutProof":"ДОКАЗ, што выбываньне не адрозьніваецца ад звычайнага кола!",
+      "readBeforeUsage":"ПРАЧЫТАЙЦЕ ПЕРАД ВЫКАРЫСТАНЬНЕМ!",
+      "dividing":"Падзел",
+      "dividingDesc":"дзеліць дарагія лоты на некалькі пазіцый.",
+      "useRandomOrg":"Выкарыстоўваць сэрвіс random.org",
+      "loadCustomMessage":"спампаваць свой малюнак",
+      "importToWheel":"Імпарт у кола",
+      "deleteLot":"Выдаліць лот",
+      "winner":"Пераможца"
+    }
+  }
+}
