@@ -33,12 +33,16 @@ export const useCostConvert = (): UseCostConvertResult => {
 
   const formatMarblesCost = useCallback(
     (cost: number): ReactText => {
+      if (!marblesAuc) {
+        return cost;
+      }
+
       const newSlotCost = convertToMarble(cost, true);
       const addToSlotCost = convertToMarble(cost, false);
 
       return newSlotCost === addToSlotCost ? newSlotCost : `${newSlotCost}|${addToSlotCost}`;
     },
-    [convertToMarble],
+    [convertToMarble, marblesAuc],
   );
 
   return {
