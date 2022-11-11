@@ -101,6 +101,7 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
         <FormGroup row className="auc-settings-row">
           <FormSwitch name="marblesAuc" control={control} label={t('settings.marbles.marbleAuc')} />
         </FormGroup>
+        <div className="hint">{t('settings.marbles.marblesAucDesc')}</div>
         <FormGroup row className="auc-settings-row">
           <FormInput
             name="marbleRate"
@@ -110,6 +111,7 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
             className="field md"
           />
         </FormGroup>
+        <div className="hint">{t('settings.marbles.marbleCostDesc')}</div>
         <FormGroup row className="auc-settings-row">
           <FormInput
             name="marbleCategory"
@@ -119,6 +121,7 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
             className="field md"
           />
         </FormGroup>
+        <div className="hint">{t('settings.marbles.newPositionCostDesc')}</div>
       </FormGroup>
     </>
   );

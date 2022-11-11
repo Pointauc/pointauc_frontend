@@ -38,7 +38,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
   const slotElement = useRef<HTMLDivElement>(null);
   const enterCounter = useRef<number>(0);
 
-  const convertCost = useCostConvert();
+  const { getMarblesAmount } = useCostConvert();
 
   const resetOverStyle = useCallback(() => {
     enterCounter.current = 0;
@@ -85,7 +85,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       const addedCost = isDonation ? cost * pointsRate : cost;
 
       slotNamesMap.set(message, id);
-      dispatch(setSlotAmount({ id, amount: Number(amount) + convertCost(addedCost, !amount) }));
+      dispatch(setSlotAmount({ id, amount: Number(amount) + getMarblesAmount(addedCost, !amount) }));
       dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
       dispatch(removePurchase(redemptionId));
       dispatch(setDraggedRedemption(null));
@@ -96,7 +96,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) =>
       }
       resetOverStyle();
     },
-    [amount, convertCost, dispatch, id, name, pointsRate, resetOverStyle],
+    [amount, getMarblesAmount, dispatch, id, name, pointsRate, resetOverStyle],
   );
 
   const handleDragEnter = useCallback(

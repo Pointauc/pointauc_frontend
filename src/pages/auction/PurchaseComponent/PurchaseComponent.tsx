@@ -75,7 +75,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
     }
   };
 
-  const convertCost = useCostConvert();
+  const { getMarblesAmount, formatMarblesCost } = useCostConvert();
 
   const redemptionStyles = { backgroundColor: color };
   const donationStyles = {
@@ -92,8 +92,8 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
     [cost, pointsRate],
   );
   const costString = useMemo(
-    () => (isDonation && !marblesAuc ? donationCost : convertCost(cost)),
-    [convertCost, cost, donationCost, isDonation, marblesAuc],
+    () => (isDonation && !marblesAuc ? donationCost : formatMarblesCost(cost)),
+    [formatMarblesCost, cost, donationCost, isDonation, marblesAuc],
   );
   const bidTitle = useMemo(
     () =>
@@ -110,12 +110,12 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({ isDragging, showB
   );
 
   const handleAddNewSlot = useCallback(() => {
-    dispatch(createSlotFromPurchase({ ...purchase, cost: convertCost(purchase.cost, true) }));
+    dispatch(createSlotFromPurchase({ ...purchase, cost: getMarblesAmount(purchase.cost, true) }));
     dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
     dispatch(updateExistBids);
-  }, [convertCost, dispatch, id, purchase]);
+  }, [getMarblesAmount, dispatch, id, purchase]);
 
   const handleAddToBestMatch = useCallback(() => {
     if (bestMatch) {

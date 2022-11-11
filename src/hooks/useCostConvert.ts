@@ -1,8 +1,13 @@
 import { useSelector } from 'react-redux';
-import { useCallback } from 'react';
+import { ReactText, useCallback } from 'react';
 import { RootState } from '../reducers';
 
-export const useCostConvert = (): ((cost: number, newSlot?: boolean) => number) => {
+interface UseCostConvertResult {
+  getMarblesAmount: (cost: number, newSlot?: boolean) => number;
+  formatMarblesCost: (cost: number) => ReactText;
+}
+
+export const useCostConvert = (): UseCostConvertResult => {
   const {
     settings: { marblesAuc, marbleCategory = 1, marbleRate = 1 },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -21,8 +26,23 @@ export const useCostConvert = (): ((cost: number, newSlot?: boolean) => number) 
     [marbleCategory, marbleRate],
   );
 
-  return useCallback((cost: number, newSlot = false): number => (marblesAuc ? convertToMarble(cost, newSlot) : cost), [
-    convertToMarble,
-    marblesAuc,
-  ]);
+  const getMarblesAmount = useCallback(
+    (cost: number, newSlot = false): number => (marblesAuc ? convertToMarble(cost, newSlot) : cost),
+    [convertToMarble, marblesAuc],
+  );
+
+  const formatMarblesCost = useCallback(
+    (cost: number): ReactText => {
+      const newSlotCost = convertToMarble(cost, true);
+      const addToSlotCost = convertToMarble(cost, false);
+
+      return newSlotCost === addToSlotCost ? newSlotCost : `${newSlotCost}|${addToSlotCost}`;
+    },
+    [convertToMarble],
+  );
+
+  return {
+    getMarblesAmount,
+    formatMarblesCost,
+  };
 };
