@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FilledInputProps } from '@material-ui/core/FilledInput';
 import { useTranslation } from 'react-i18next';
 import { Slot } from '../../../models/slot.model';
-import { addExtra, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
+import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
 import { animateValue } from '../../../utils/common.utils';
 import { RootState } from '../../../reducers';
 import { percentsRefMap } from '../../../services/PercentsRefMap';
@@ -53,12 +53,21 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
     dispatch(setSlotAmount({ id, amount: Number(amountInput.current?.value) }));
   }, [dispatch, id]);
 
-  const handleKeyPress = (e: any): void => {
+  const addExtraAmountOnEnter = (e: any): void => {
     if (e.key === 'Enter') {
       dispatch(setSlotExtra({ id, extra: Number(currentExtra) }));
       setCurrentExtra(null);
       handleAddExtra();
       e.preventDefault();
+    }
+  };
+
+  const createNewSlotOnEnter = (e: any): void => {
+    const inputAmount = Number(amountInput.current?.value) || null;
+    const isAmountChanged = amount !== inputAmount;
+
+    if (e.key === 'Enter' && !isAmountChanged) {
+      dispatch(addSlot({}));
     }
   };
 
@@ -95,6 +104,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
         placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
+        onKeyPress={createNewSlotOnEnter}
         value={currentName}
       />
       {showChances && <span className="slot-chance" ref={percentsRef} />}
@@ -102,6 +112,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
         className="slot-money slot-input"
         placeholder={t('common.currencySign')}
         inputRef={amountInput}
+        onKeyPress={createNewSlotOnEnter}
         type="number"
       />
       <IconButton className="slot-add-extra" onClick={handleAddExtra} title="Прибавить стоимость">
@@ -115,7 +126,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
         onChange={handleExtraChange}
         value={currentExtra || ''}
         type="number"
-        onKeyPress={handleKeyPress}
+        onKeyPress={addExtraAmountOnEnter}
       />
     </>
   );
