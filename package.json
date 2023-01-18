@@ -51,7 +51,7 @@
     "youtube-player": "^5.5.2"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-app-rewired --openssl-legacy-provider start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "lint": "eslint src/**/*.{ts,tsx}",

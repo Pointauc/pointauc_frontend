@@ -24,7 +24,13 @@
       "lotSearch": "Search among lots...",
       "newLotName": "Name of the new lot",
       "lotName": "Name",
-      "integrations": "Integrations"
+      "integrations": "Integrations",
+      "casino": {
+        "selectLot": "Choose price",
+        "description": "Если выбранный лот выпадет в колесе, то ставка умножится на заданное число, если выпадет другой лот, то ставка обнулится. Если выпадет лот \"x1\", ставка не изменится.",
+        "yourLot": "Ваш лот:",
+        "yourBid": "Ваша ставка в аукционе:"
+      }
     },
     "settings": {
       "settings": "Settings",
@@ -58,7 +64,9 @@
         "selectFromList": "Select from list",
         "sortBids": "Sort purchases by points",
         "dateSort": "Date",
-        "costSort": "Cost"
+        "costSort": "Cost",
+        "luckyWheel": "Колесо удачи",
+        "luckyWheelDesc": "Прокрутите колесо, чтобы либо умножить ставку, либо обнулить"
       },
       "marbles": {
         "marbles": "balls",

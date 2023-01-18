@@ -1,0 +1,47 @@
+.roulette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .roulette-wheel-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 8px 0;
+
+    .purchase {
+      border-radius: 12px;
+    }
+  }
+
+  .roulette-preset-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
+
+    .roulette-preset {
+      flex-grow: 1;
+    }
+  }
+
+  &-wheel {
+    position: relative;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+
+    .wheel-controls {
+      flex-direction: column;
+
+      .settings {
+        align-self: center;
+      }
+    }
+
+    &>* {
+      overflow: hidden;
+      margin-right: 0 !important;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@import "../../../../styles/colors";
+
+.roulette-preset-select {
+  max-width: 650px;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+
+  &-warning {
+    color: $red-5;
+    margin-bottom: 12px !important;
+  }
+}

@@ -56,10 +56,17 @@ const purchasesSlice = createSlice({
     setDraggedRedemption(state, action: PayloadAction<Purchase | null>): void {
       state.draggedRedemption = action.payload;
     },
+    updateBid(state, action: PayloadAction<Purchase>): void {
+      const index = state.purchases.findIndex(({ id }) => id === action.payload?.id);
+
+      if (index !== -1) {
+        state.purchases[index] = action.payload;
+      }
+    },
   },
 });
 
-export const { addPurchase, removePurchase, addPurchaseLog, resetPurchases, setDraggedRedemption } =
+export const { addPurchase, removePurchase, addPurchaseLog, resetPurchases, setDraggedRedemption, updateBid } =
   purchasesSlice.actions;
 
 export const logPurchase =

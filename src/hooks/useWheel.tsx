@@ -29,6 +29,7 @@ interface WheelConfig {
   dropoutRate?: number;
   randomPaceConfig?: RandomPaceConfig;
   deleteItem?: (id: Key) => void;
+  isShuffle?: boolean;
 }
 
 window.gsap = gsap;
@@ -63,6 +64,7 @@ const useWheel = ({
   deleteItem,
   spinTime = 20,
   dropoutRate = 1,
+  isShuffle = true,
 }: WheelConfig): WheelResult => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -70,7 +72,7 @@ const useWheel = ({
   const wheelSelector = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
-  const shuffledItems = useMemo(() => shuffle(rawItems), [rawItems]);
+  const shuffledItems = useMemo(() => (isShuffle ? shuffle(rawItems) : rawItems), [isShuffle, rawItems]);
   const items = useMemo<WheelItem[]>(
     () => shuffledItems.map(({ amount, ...rest }) => ({ ...rest, amount: (amount || 1) ** dropoutRate })),
     [dropoutRate, shuffledItems],

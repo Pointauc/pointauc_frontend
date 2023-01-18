@@ -6,6 +6,11 @@
   border: 3px solid transparent;
   padding-bottom: 0;
 
+  &.disabled {
+    pointer-events: none;
+    cursor: initial;
+  }
+
   .purchase-content {
     padding-bottom: 10px !important;
   }

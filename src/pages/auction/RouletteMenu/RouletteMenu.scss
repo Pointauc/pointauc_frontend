@@ -1,0 +1,12 @@
+.roulette-menu {
+  &-presets {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .MuiButton-label {
+      text-transform: none !important;
+      letter-spacing: .05em;
+    }
+  }
+}
