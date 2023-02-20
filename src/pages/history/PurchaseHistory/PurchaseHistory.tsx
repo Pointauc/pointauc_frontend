@@ -105,7 +105,7 @@ const PurchaseHistory: React.FC = () => {
         columns={columns}
         autoHeight
         pagination
-        pageSize={5}
+        pageSize={10}
         rowsPerPageOptions={[5, 10, 20, 50]}
         disableSelectionOnClick
       />

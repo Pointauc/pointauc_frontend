@@ -7,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   IconButton,
-  Modal,
   Typography,
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
@@ -135,7 +134,6 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 
   const handleAddNewSlot = useCallback(() => {
     dispatch(createSlotFromPurchase({ ...purchase, cost: getMarblesAmount(purchase.cost, true) }));
-    dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Processed, target: id.toString() }));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
     dispatch(updateExistBids);

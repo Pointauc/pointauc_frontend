@@ -33,8 +33,8 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
   const [userEmotes, setUserEmotes] = useState<(Emote[] | null)[]>();
 
   const updateEmotes = useCallback(async () => {
-    const defaultEmotes = sevenTVApi.fetchUserEmotes('kozjar').then((emotes) => emotes.map(createSevenTVEmote));
-    let loadedEmotes = [];
+    const defaultEmotes = sevenTVApi.fetchUserEmotes('minodos_99').then((emotes) => emotes.map(createSevenTVEmote));
+    let loadedEmotes;
 
     if (userId) {
       loadedEmotes = await Promise.all(
