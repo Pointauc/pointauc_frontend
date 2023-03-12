@@ -21,7 +21,7 @@ const createSevenTVEmote = ({ id, width }: SevenTVEmote): Emote => ({
   min: 1,
   max: width.length,
   id,
-  toLink: (size: number): string => `https://cdn.7tv.app/emote/${id}/${size}x`,
+  toLink: (size: number): string => `https://cdn.7tv.app/emote/${id}/${size}x.webp`,
 });
 
 const flattenCollection = (collection: Collection<string, Emote>): Emote[] => Array.from<Emote>(collection.values());
