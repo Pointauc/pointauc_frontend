@@ -1,9 +1,15 @@
 @import "../../../styles/colors";
 
 .dropout-wheel-proof {
-  color: $grey-4;
+  color: $grey-2;
+  display: flex;
+  flex-direction: column;
   line-height: 20px;
   font-family: 'Helvetica Neue', Helvetica, "Roboto Light", sans-serif;
+
+  .important {
+    font-size: 1.2em;
+  }
 
   .dropout_formula {
     width: 90%;
@@ -25,7 +31,7 @@
   }
 
   p {
-    margin-bottom: 15px;
+    //margin-bottom: 15px;
 
     &.warning {
       color: $red-5;
@@ -56,6 +62,16 @@
     div {
       font-weight: 400;
       color: $grey-3;
+    }
+  }
+
+  &-pdf-button {
+    align-self: center;
+    margin-bottom: 24px !important;
+
+    a {
+      color: white;
+      text-decoration: none;
     }
   }
 }

@@ -1,14 +1,24 @@
 import React, { ChangeEvent, FC, Key, useCallback, useState } from 'react';
 import './DropoutWheelProof.scss';
 import { useSelector } from 'react-redux';
-import { Button, Checkbox, FormControlLabel, TextField } from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { ColDef, XGrid } from '@material-ui/x-grid';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RadioButtonGroup, { Option } from '../../RadioButtonGroup/RadioButtonGroup';
 import PredictionService, { SlotChanceDifference } from '../../../services/PredictionService';
 import { RootState } from '../../../reducers';
 import { createRandomSlots } from '../../../reducers/Slots/Slots';
 import { percentsFormatter } from '../../../utils/common.utils';
-import DropoutFormula from '../../../assets/img/dropout_formula.png';
+import DropoutProof from '../../../assets/pdf/dropout_proof.pdf';
 
 enum SlotsPresetType {
   Random,
@@ -91,73 +101,77 @@ const DropoutWheelProof: FC = () => {
 
   return (
     <div className="dropout-wheel-proof">
-      <h2>Кратко</h2>
-      <p>
-        Конечный шанс на победу у лота ТАКОЙ ЖЕ как если бы вы крутили обычное колесо. Но есть неочевидный нюанс, чем
-        больше лотов в колесе, тем более равные шансы на выбывание будет у лотов, и чем меньше лотов осталось, тем
-        меньше шансов выбыть у дорогих лотов. Это бывает очень не очевидно для зрителей, но именно с такой инверссией
-        это колесо полностью честное (все равно как крутить обычное колесо по шансам).
+      <h2>Шансы на победу</h2>
+      <p className="warning important">
+        Данное колесо ПОЛНОСТЬЮ соответствует обычному классическому колесу. Чем больше сумма лота, тем меньше шанса
+        вылететь и тем больше шансов победить. Шансы на победу в этом колесе РАВНЫ шансам на победу в обычном.
       </p>
       <p>
-        Используйте по своему усмотрению, потому что зрители, которые не в курсе, могут возмутиться таким форматом, но
-        такой же правильной инверсии с другим форматом я не знаю.
+        МАТЕМАТИЧЕСКОЕ доказательство, что здесь нет никакого наеба, приведенно ниже (спасибо чаттерсу Dyaka за помощь в
+        доказательстве):
       </p>
-      <h2>Доказательство</h2>
-      <h3>Как вычисляются размеры в колесе</h3>
-      <div>Формула для расчета инвертированного размера (написано от руки):</div>
-      <img src={DropoutFormula} alt="DropoutFormula" className="dropout_formula" />
-      <p>
-        Математическое доказательство этой формулы я не делал, потому что в этом кейсе это довольно сложно. С подбором
-        формулы мне помогал чатерс dzyaka, который здорово разбирается в теории вероятностей и математике. Я тестировал
-        эту формулу симуляцией прокрутов и она идеально соответствует шансам в обычном колесе.
-      </p>
-      <h3>Доказательство скриптом</h3>
-      <p>
-        Данный скрипт симулирует прокруты колеса на выбывание до последнего победителя и выводит разницу с обычным
-        колесом. Вы можете рассчитать шансы и убедиться, что разница стремится к нулю при увеличении итераций.
-      </p>
-      <p className="warning">
-        ВНИМАНИЕ! При нажатии на "Рассчитать шансы" сайт может зависнуть на несколько секунд (зависит от количества
-        лотов, количества итераций и вашего пк), просто подождите. Но лучше сохраните лоты на всякий, если у вас 50+
-        позиций)
-      </p>
-      <p className="warning">Максимальное количество итераций при включенных подробных логах - 30.</p>
-      <div className="row">
-        <RadioButtonGroup
-          options={SLOT_PRESETS_OPTIONS}
-          activeKey={slotsPresetType}
-          onChangeActive={setSlotsPresetType}
-        />
-        <TextField
-          className="iteration-input"
-          variant="outlined"
-          margin="dense"
-          label="кол-во итераций"
-          onChange={handleIterationsChange}
-          value={iterations}
-        />
-        <Button variant="contained" color="primary" onClick={predictChances}>
-          рассчитать шансы
-        </Button>
-      </div>
-      <FormControlLabel
-        control={<Checkbox checked={preserveLogs} onChange={handlePreserveLogsChange} color="primary" />}
-        label="Подробные логи итераций"
-        className="wheel-controls-checkbox"
-      />
-      {!!chanceDifference.length && preserveLogs && <p>Чтобы посмотреть логи нажмите F12 -&gt; вкладка "console"</p>}
-      <div style={{ height: '50vh' }} className="history-table">
-        <XGrid
-          rows={chanceDifference}
-          columns={columns}
-          pagination
-          rowHeight={35}
-          pageSize={30}
-          rowsPerPageOptions={[5, 10, 20, 50, 100]}
-          disableSelectionOnClick
-          disableColumnMenu
-        />
-      </div>
+      <Button size="large" variant="outlined" className="dropout-wheel-proof-pdf-button">
+        <a target="_blank" href={DropoutProof} rel="noreferrer">
+          Открыть математическое доказательство
+        </a>
+      </Button>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="body1">Симуляция колеса на большом числе прокрутов</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div>
+            <p>
+              Данный скрипт симулирует прокруты колеса на выбывание до последнего победителя и выводит разницу с обычным
+              колесом. Вы можете рассчитать шансы и убедиться, что разница стремится к нулю при увеличении итераций.
+            </p>
+            <p className="warning">
+              ВНИМАНИЕ! При нажатии на "Рассчитать шансы" сайт может зависнуть на несколько секунд (зависит от
+              количества лотов, количества итераций и вашего пк), просто подождите. Но лучше сохраните лоты на всякий,
+              если у вас 50+ позиций)
+            </p>
+            <p className="warning">Максимальное количество итераций при включенных подробных логах - 30.</p>
+            <div className="row">
+              <RadioButtonGroup
+                options={SLOT_PRESETS_OPTIONS}
+                activeKey={slotsPresetType}
+                onChangeActive={setSlotsPresetType}
+              />
+              <TextField
+                className="iteration-input"
+                variant="outlined"
+                margin="dense"
+                label="кол-во итераций"
+                onChange={handleIterationsChange}
+                value={iterations}
+              />
+              <Button variant="contained" color="primary" onClick={predictChances}>
+                рассчитать шансы
+              </Button>
+            </div>
+            <FormControlLabel
+              control={<Checkbox checked={preserveLogs} onChange={handlePreserveLogsChange} color="primary" />}
+              label="Подробные логи итераций"
+              className="wheel-controls-checkbox"
+            />
+            {!!chanceDifference.length && preserveLogs && (
+              <p>Чтобы посмотреть логи нажмите F12 -&gt; вкладка "console"</p>
+            )}
+            <div style={{ height: '50vh' }} className="history-table">
+              <XGrid
+                rows={chanceDifference}
+                columns={columns}
+                pagination
+                rowHeight={35}
+                pageSize={30}
+                rowsPerPageOptions={[5, 10, 20, 50, 100]}
+                disableSelectionOnClick
+                disableColumnMenu
+              />
+            </div>
+          </div>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 };

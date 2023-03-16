@@ -113,7 +113,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     setDepthRestrict(undefined);
     setWheelFormat(format);
 
-    if (format === WheelFormat.Dropout && !getCookie('seenDropoutProof')) {
+    if (format === WheelFormat.Dropout && !getCookie('seenDropoutProof2')) {
       setIsDropoutProofOpen(true);
     }
   }, []);
@@ -293,7 +293,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
   const toggleDropoutProof = useCallback(() => {
     setIsDropoutProofOpen((prev) => !prev);
-    document.cookie = 'seenDropoutProof=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+    document.cookie = 'seenDropoutProof2=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
   }, []);
 
   const getRandomEmote = useCallback((emotes: Emote[]): string => {
