@@ -7,27 +7,36 @@ import { Purchase } from '../../../reducers/Purchases/Purchases';
 
 const roulettePresets: RoulettePreset[] = [
   {
-    multiplier: 2,
-    amount: 18,
+    multiplier: 0.25,
+    amount: 20,
+    size: 4,
     color: '#4682B4',
   },
   {
-    multiplier: 4,
-    amount: 9,
-    color: '#bcc95b',
+    multiplier: 0.5,
+    amount: 18,
+    color: '#75adad',
+    size: 3,
   },
   {
-    multiplier: 6,
-    amount: 6,
+    multiplier: 1.5,
+    amount: 7,
+    size: 1,
+    color: '#99be60',
+  },
+  {
+    multiplier: 2,
+    amount: 3,
+    size: 1,
+    color: '#ecb365',
+  },
+  {
+    multiplier: 5,
+    amount: 2,
     color: '#FF7F50',
   },
   {
-    multiplier: 18,
-    amount: 2,
-    color: '#75adad',
-  },
-  {
-    multiplier: 36,
+    multiplier: 10,
     amount: 1,
     color: '#5b5b5b',
   },
@@ -46,12 +55,13 @@ const RouletteMenu: FC<RouletteMenuProps> = ({ onRoll, bid }) => {
   const [selectedPreset, setSelectedPreset] = useState<RoulettePreset>();
   const handleSpin = (multi: number): void => {
     const winner = getPreset(multi);
+    onRoll(winner!.multiplier);
 
-    if (winner?.safe || winner?.multiplier === selectedPreset?.multiplier) {
-      onRoll(winner!.multiplier);
-    } else {
-      onRoll(0);
-    }
+    // if (winner?.safe || winner?.multiplier === selectedPreset?.multiplier) {
+    //   onRoll(winner!.multiplier);
+    // } else {
+    //   onRoll(0);
+    // }
   };
 
   return (
