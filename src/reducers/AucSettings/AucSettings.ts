@@ -23,6 +23,7 @@ export interface SettingFields {
   isNewSlotIncrement?: boolean;
   isTotalVisible?: boolean;
   luckyWheel?: boolean;
+  luckyWheelMulti: number;
 }
 
 export interface ViewSettings {
@@ -80,7 +81,8 @@ export const initialState: AucSettingsState = {
     newSlotIncrement: 60,
     isNewSlotIncrement: false,
     isTotalVisible: true,
-    luckyWheel: false,
+    luckyWheel: true,
+    luckyWheelMulti: 1,
   },
   integration: {
     twitch: {

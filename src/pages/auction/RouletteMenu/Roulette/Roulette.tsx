@@ -1,6 +1,7 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { RoulettePreset } from '../PresetSelect/PresetSelect';
 import { WheelItem } from '../../../../models/wheel.model';
 
@@ -9,6 +10,7 @@ import RandomWheel, { SettingElements } from '../../../../components/RandomWheel
 import { Purchase } from '../../../../reducers/Purchases/Purchases';
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
 import { getRandomIntInclusive } from '../../../../utils/common.utils';
+import { RootState } from '../../../../reducers';
 
 interface RouletteProps {
   presets: RoulettePreset[];
@@ -133,14 +135,6 @@ const insertItems = (source: RoulettePreset[], subArray: RoulettePreset[]): Roul
   return subArrayClone.length === 0 ? processedSource : insertEvenly(processedSource, subArrayClone);
 };
 
-const convertToWheelItem = ({ multiplier, color, size }: RoulettePreset): PresetWheelItem => ({
-  id: Math.random(),
-  name: `x${multiplier}`,
-  amount: size || 1,
-  color,
-  multiplier,
-});
-
 const wheelElements: SettingElements = {
   mode: false,
   split: false,
@@ -159,11 +153,24 @@ const wheelElements: SettingElements = {
 
 const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid }) => {
   const { t } = useTranslation();
+  const { settings } = useSelector((root: RootState) => root.aucSettings);
+
+  const convertToWheelItem = useCallback(
+    ({ multiplier, color, size }: RoulettePreset): PresetWheelItem => ({
+      id: Math.random(),
+      name: `x${multiplier * settings.luckyWheelMulti}`,
+      amount: size || 1,
+      color,
+      multiplier,
+    }),
+    [settings.luckyWheelMulti],
+  );
+
   const rawItems = useMemo(() => {
     const items = presets.map((preset) => Array(preset.amount / (preset.size || 1)).fill(preset));
 
     return items.reduce((accum, arr) => insertItems(accum, arr)).map(convertToWheelItem);
-  }, [presets]);
+  }, [convertToWheelItem, presets]);
   const handleWin = (winner: PresetWheelItem): void => {
     onRoll(winner.multiplier);
   };
