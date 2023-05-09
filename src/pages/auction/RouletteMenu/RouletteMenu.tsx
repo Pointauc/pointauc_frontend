@@ -9,27 +9,27 @@ import { RootState } from '../../../reducers';
 
 const roulettePresets: RoulettePreset[] = [
   {
-    multiplier: 0.25,
-    amount: 10,
+    multiplier: 2,
+    amount: 18,
     color: '#4682B4',
   },
   {
-    multiplier: 0.5,
-    amount: 14,
-    color: '#75adad',
+    multiplier: 4,
+    amount: 9,
+    color: '#bcc95b',
   },
   {
-    multiplier: 1.5,
-    amount: 7,
-    color: '#99be60',
-  },
-  {
-    multiplier: 2,
-    amount: 4,
+    multiplier: 6,
+    amount: 6,
     color: '#FF7F50',
   },
   {
-    multiplier: 8,
+    multiplier: 18,
+    amount: 2,
+    color: '#75adad',
+  },
+  {
+    multiplier: 36,
     amount: 1,
     color: '#5b5b5b',
   },
@@ -49,18 +49,16 @@ const RouletteMenu: FC<RouletteMenuProps> = ({ onRoll, bid }) => {
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const handleSpin = (multi: number): void => {
     const winner = getPreset(multi);
-    onRoll(winner!.multiplier * settings.luckyWheelMulti);
-
-    // if (winner?.safe || winner?.multiplier === selectedPreset?.multiplier) {
-    //   onRoll(winner!.multiplier);
-    // } else {
-    //   onRoll(0);
-    // }
+    if (!settings.luckyWheelSelectBet || winner?.multiplier === selectedPreset?.multiplier) {
+      onRoll(winner!.multiplier);
+    } else {
+      onRoll(0);
+    }
   };
 
   return (
     <div className="roulette-menu">
-      {selectedPreset ? (
+      {selectedPreset || !settings.luckyWheelSelectBet ? (
         <Roulette presets={roulettePresets} onRoll={handleSpin} bid={bid} selectedPreset={selectedPreset} />
       ) : (
         <PresetSelect presets={selectablePresets} onSelect={setSelectedPreset} />

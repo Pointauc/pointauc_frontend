@@ -11,10 +11,11 @@ import { Purchase } from '../../../../reducers/Purchases/Purchases';
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
 import { getRandomIntInclusive } from '../../../../utils/common.utils';
 import { RootState } from '../../../../reducers';
+import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
 
 interface RouletteProps {
   presets: RoulettePreset[];
-  selectedPreset: RoulettePreset;
+  selectedPreset?: RoulettePreset;
   onRoll: (multiplayer: number) => void;
   bid: Purchase;
 }
@@ -151,19 +152,19 @@ const wheelElements: SettingElements = {
 //   }, {});
 // };
 
-const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid }) => {
+const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) => {
   const { t } = useTranslation();
   const { settings } = useSelector((root: RootState) => root.aucSettings);
 
   const convertToWheelItem = useCallback(
     ({ multiplier, color, size }: RoulettePreset): PresetWheelItem => ({
       id: Math.random(),
-      name: `x${multiplier * settings.luckyWheelMulti}`,
+      name: `x${multiplier}`,
       amount: size || 1,
       color,
       multiplier,
     }),
-    [settings.luckyWheelMulti],
+    [],
   );
 
   const rawItems = useMemo(() => {
@@ -186,6 +187,12 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid }) => {
           initialSpinTime={5}
           hideDeleteItem
         >
+          {settings.luckyWheelSelectBet && selectedPreset && (
+            <div className="roulette-preset-wrapper">
+              <Typography>{t('auc.casino.yourLot')}</Typography>
+              <RoulettePresetView preset={selectedPreset} />
+            </div>
+          )}
           <div className="roulette-wheel-extra">
             <div>
               <Typography>{t('auc.casino.yourBid')}</Typography>

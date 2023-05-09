@@ -117,7 +117,7 @@ export const processRedemption =
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
       aucSettings: {
-        settings: { marbleRate = 1, marblesAuc, marbleCategory },
+        settings: { marbleRate = 1, marblesAuc, marbleCategory, luckyWheel },
         integration: {
           twitch: { alwaysAddNew },
         },
@@ -138,7 +138,7 @@ export const processRedemption =
     const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
     const cost = convertCost(normalizedBid.cost);
 
-    if (similarSlotId) {
+    if (similarSlotId && !luckyWheel) {
       dispatch(fastAddBid(normalizedBid, similarSlotId));
     } else if (alwaysAddNew) {
       dispatch(createSlotFromPurchase({ ...normalizedBid, cost }));
@@ -150,12 +150,15 @@ export const processRedemption =
 export const updateExistBids = (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
   const {
     purchases: { purchases },
+    aucSettings: {
+      settings: { luckyWheel },
+    },
   } = getState();
 
   purchases.forEach((bid) => {
     const similarSlotId = slotNamesMap.get(bid.message);
 
-    if (similarSlotId) {
+    if (similarSlotId && !luckyWheel) {
       dispatch(fastAddBid(bid, similarSlotId));
       dispatch(removePurchase(bid.id));
     }

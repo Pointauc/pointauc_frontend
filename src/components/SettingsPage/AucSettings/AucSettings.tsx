@@ -97,19 +97,7 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
             </MenuItem>
           </Controller>
         </FormGroup>
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="luckyWheel" control={control} label={t('settings.auc.luckyWheel')} />
-        </FormGroup>
-        <div className="hint">{t('settings.auc.luckyWheelDesc')}</div>
-        <FormGroup row className="auc-settings-row">
-          <FormInput
-            name="luckyWheelMulti"
-            control={control}
-            label="Множитель выигрышей"
-            type="number"
-            className="field md"
-          />
-        </FormGroup>
+
         <SettingsGroupTitle title={t('settings.marbles.marbles')} />
         <FormGroup row className="auc-settings-row">
           <FormSwitch name="marblesAuc" control={control} label={t('settings.marbles.marbleAuc')} />
@@ -135,6 +123,15 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
           />
         </FormGroup>
         <div className="hint">{t('settings.marbles.newPositionCostDesc')}</div>
+
+        <SettingsGroupTitle title={t('settings.luckyWheel.groupTitle')} />
+        <FormGroup row className="auc-settings-row">
+          <FormSwitch name="luckyWheel" control={control} label={t('settings.luckyWheel.luckyWheel')} />
+        </FormGroup>
+        <div className="hint">{t('settings.luckyWheel.desc')}</div>
+        <FormGroup row className="auc-settings-row">
+          <FormSwitch name="luckyWheelSelectBet" control={control} label={t('settings.luckyWheel.selectBet')} />
+        </FormGroup>
       </FormGroup>
     </>
   );
