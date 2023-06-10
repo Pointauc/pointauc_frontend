@@ -25,6 +25,8 @@
       "newLotName": "Name of the new lot",
       "lotName": "Name",
       "integrations": "Integrations",
+      "addToRandomSlot": "Add to random slot",
+      "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
       "casino": {
         "selectLot": "Choose price",
         "description": "Если выбранный лот выпадет в колесе, то ставка умножится на заданное число, если выпадет другой лот, то ставка обнулится. Если выпадет лот \"x1\", ставка не изменится.",
