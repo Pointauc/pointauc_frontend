@@ -305,7 +305,9 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
   const handleEmotesLoad = useCallback(
     (emotes: Emote[]) => {
-      setActiveEmote((emote) => emote || getRandomEmote(emotes));
+      if (emotes.length) {
+        setActiveEmote((emote) => emote || getRandomEmote(emotes));
+      }
     },
     [getRandomEmote],
   );

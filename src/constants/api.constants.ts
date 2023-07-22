@@ -24,6 +24,9 @@ const ENDPOINTS = {
     USER: '/api/audioRoom/user',
     PRESETS: '/api/audioRoom/presets',
   },
+  EMOTES: {
+    SEVEN_TV: 'https://7tv.io/v3/users/twitch',
+  },
 };
 
 export default ENDPOINTS;
