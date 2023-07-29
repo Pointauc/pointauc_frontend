@@ -25,6 +25,8 @@
       "newLotName": "Name of the new lot",
       "lotName": "Name",
       "integrations": "Integrations",
+      "addToRandomSlot": "Add to random slot",
+      "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
       "casino": {
         "selectLot": "Колесо удачи",
         "description": "Вам предстоит прокрутить обычное колесо, если выбранный вами лот победит, то ставка умножится не заданное число, иначе обнулится.",

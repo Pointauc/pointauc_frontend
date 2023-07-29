@@ -6,8 +6,8 @@
   flex-direction: column;
   background-color: $grey-11;
   border: 1px solid $grey-5;
-  top: 20vh;
-  left: 30vw;
+  top: calc(50vh - 325px);
+  left: calc(50vw - 500px);
   user-select: none;
 
   &-close {
