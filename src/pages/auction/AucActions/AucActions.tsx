@@ -82,9 +82,9 @@ const AucActions: React.FC = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="da-link gitlab"
-          href="https://gitlab.com/Ankirig/woodsauc-renewal"
+          href="https://github.com/Pointauc/pointauc_frontend"
         >
-          GitLab
+          GitHub
         </Link>
         <Link
           target="_blank"
