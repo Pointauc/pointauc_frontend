@@ -5,6 +5,9 @@ const ENDPOINTS = {
   DA_AUTH: '/api/da/auth',
   TWITCH_CHANNEL_POINTS: '/api/twitch/channelPoints',
   CAMILLE_BOT: '/api/requests/camilleBot',
+  DONATE_PAY: {
+    AUTH: '/api/donatePay/auth',
+  },
   USER: {
     USERNAME: '/api/username',
     AUC_SETTINGS: '/api/aucSettings',

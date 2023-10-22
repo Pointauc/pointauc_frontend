@@ -2,8 +2,9 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import mergewith from 'lodash.mergewith';
 import { getUserData } from '../../api/userApi';
-import { setHasDAAuth, setHasTwitchAuth, setUserId, updateUsername } from '../User/User';
+import { setHasDAAuth, setHasDonatPayAuth, setHasTwitchAuth, setUserId, updateUsername } from '../User/User';
 import { GetUserDto } from '../../models/user.model';
+import { RootState } from '../index';
 
 export interface SettingFields {
   startTime?: number;
@@ -124,18 +125,19 @@ const aucSettingsSlice = createSlice({
 
 export const { setAucSettings, setIntegration, setCompact, setShowChances } = aucSettingsSlice.actions;
 
-export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<GetUserDto> => {
+export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action>): Promise<GetUserDto> => {
   const user = await getUserData();
-  const { twitchAuth, twitchSettings, aucSettings, daSettings, daAuth } = user;
+  const { twitchAuth, twitchSettings, aucSettings, daSettings, daAuth, donatePayAuth } = user;
 
   if (aucSettings) {
     dispatch(setAucSettings(aucSettings));
   }
   dispatch(setIntegration({ twitch: twitchSettings, da: daSettings }));
-  dispatch(updateUsername(twitchAuth?.username || daAuth?.username || ''));
-  dispatch(setUserId(twitchAuth?.id as any));
+  dispatch(updateUsername(twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? ''));
+  dispatch(setUserId(twitchAuth?.id));
   dispatch(setHasDAAuth(!!daAuth?.isValid));
   dispatch(setHasTwitchAuth(!!twitchAuth?.isValid));
+  dispatch(setHasDonatPayAuth(!!donatePayAuth?.isValid));
 
   return user;
 };

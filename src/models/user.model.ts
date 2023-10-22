@@ -31,4 +31,5 @@ export interface GetUserDto {
   twitchAuth?: IntegrationDataDto;
   daSettings: DaIntegration;
   daAuth?: IntegrationDataDto;
+  donatePayAuth?: IntegrationDataDto;
 }

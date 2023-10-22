@@ -13,6 +13,7 @@ import { updateIntegration } from '../../api/userApi';
 import DaIntegration from './DAIntegration/DAIntegration';
 import { getDirtyValues } from '../../utils/common.utils';
 import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
+import './IntegrationPage.tsx.scss';
 
 const IntegrationPage: FC = () => {
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ const IntegrationPage: FC = () => {
   );
 
   return (
-    <PageContainer title={t('settings.integrations')}>
+    <PageContainer title={t('settings.integrations')} className="integration-page">
       <form className="settings" onSubmit={handleSubmit(onSubmit)}>
         <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
         <TwitchIntegration control={control} />

@@ -8,6 +8,7 @@ interface SocketIoState {
   client?: Socket | null;
   twitchSocket?: Socket | null;
   daSocket?: Socket | null;
+  donatePaySocket?: Socket | null;
 }
 
 const initialState: SocketIoState = {
@@ -29,8 +30,9 @@ export const { setSocket } = socketIoSlice.actions;
 export const connectToSocketIo = (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
   const twitchSocket = io(`${getSocketIOUrl()}/twitch`, { query: { cookie: document.cookie } });
   const daSocket = io(`${getSocketIOUrl()}/da`, { query: { cookie: document.cookie } });
+  const donatePaySocket = io(`${getSocketIOUrl()}/donatePay`, { query: { cookie: document.cookie } });
 
-  dispatch(setSocket({ twitchSocket, daSocket }));
+  dispatch(setSocket({ twitchSocket, daSocket, donatePaySocket }));
 };
 
 export default socketIoSlice.reducer;

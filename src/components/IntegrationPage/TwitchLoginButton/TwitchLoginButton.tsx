@@ -24,7 +24,7 @@ const TwitchLoginButton: FC = () => {
 
   return (
     <Button
-      className="twitch-login-button"
+      className="login-button twitch"
       variant="contained"
       size="large"
       startIcon={<TwitchSvg className="base-icon" />}

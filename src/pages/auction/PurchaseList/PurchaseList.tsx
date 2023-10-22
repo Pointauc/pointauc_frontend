@@ -11,7 +11,7 @@ import DragBidContext from '../DragBidContext/DragBidContext';
 const PurchaseList: React.FC = () => {
   const dispatch = useDispatch();
   const { purchases } = useSelector((root: RootState) => root.purchases);
-  const { twitchSocket, daSocket } = useSelector((root: RootState) => root.socketIo);
+  const { twitchSocket, daSocket, donatePaySocket } = useSelector((root: RootState) => root.socketIo);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -40,7 +40,8 @@ const PurchaseList: React.FC = () => {
   useEffect(() => {
     twitchSocket?.on('Bid', handleRedemption);
     daSocket?.on('Bid', handleRedemption);
-  }, [daSocket, handleRedemption, twitchSocket]);
+    donatePaySocket?.on('Bid', handleRedemption);
+  }, [daSocket, handleRedemption, twitchSocket, donatePaySocket]);
 
   return (
     <div className="purchase-container">
