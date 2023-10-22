@@ -159,10 +159,15 @@ const RandomWheel = <TWheelItem extends WheelItem>({
   const maxSize = useMemo(() => Math.max(...currentItems.map<number>(({ amount }) => Number(amount))), [currentItems]);
   const [maxValidValue, setMaxValidValue] = useState<number>(maxSize);
 
+  const normalizedMaxValue = useMemo(
+    () => (wheelFormat === WheelFormat.Dropout ? maxSize : maxValidValue),
+    [maxSize, maxValidValue, wheelFormat],
+  );
+
   const splittedItems = useMemo(
     () =>
       currentItems.reduce<WheelItem[]>((acc, { amount, ...item }) => {
-        const part = Number(amount) / maxValidValue;
+        const part = Number(amount) / normalizedMaxValue;
 
         if (part > 1) {
           return [
@@ -173,7 +178,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
         return [...acc, { ...item, amount }];
       }, []),
-    [maxValidValue, currentItems],
+    [normalizedMaxValue, currentItems],
   );
 
   const finalItems = useMemo(() => {
@@ -416,7 +421,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
             )}
             {elements.split && (
               <>
-                {!!totalSize && (
+                {!!totalSize && wheelFormat !== WheelFormat.Dropout && (
                   <div className="wheel-controls-row">
                     <Typography className="wheel-controls-tip md">{t('wheel.dividing')}</Typography>
                     <Slider
@@ -425,7 +430,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                       max={maxSize}
                       valueLabelDisplay="auto"
                       onChange={handleMaxValueChange}
-                      value={maxValidValue}
+                      value={normalizedMaxValue}
                       marks={[
                         { value: maxSize / 10, label: `${t('common.max')} / 10` },
                         { value: maxSize, label: t('common.max') },
