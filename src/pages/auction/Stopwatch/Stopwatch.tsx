@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { RootState } from '../../../reducers';
 import { Slot } from '../../../models/slot.model';
-import { MESSAGE_TYPES } from '../../../constants/webSocket.constants';
 import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
 
 export const STOPWATCH = {
@@ -21,7 +20,7 @@ export const STOPWATCH = {
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const { daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
     twitch: { actual: actualTwitchSub, loading: loadingTwitchSub },
   } = useSelector((root: RootState) => root.subscription);
@@ -103,21 +102,17 @@ const Stopwatch: React.FC = () => {
     [isMaxTimeActive, maxTime, updateStopwatch],
   );
 
-  const handleDonation = useCallback(
-    ({ data }: MessageEvent) => {
-      const { type, purchase } = JSON.parse(data);
-      const { isIncrementActive, incrementTime } = daSettings.current;
+  const handleDonation = useCallback(() => {
+    const { isIncrementActive, incrementTime } = daSettings.current;
 
-      if (isIncrementActive && type === MESSAGE_TYPES.PURCHASE && purchase.isDonation) {
-        autoUpdateTimer(incrementTime * 1000);
-      }
-    },
-    [autoUpdateTimer],
-  );
+    if (isIncrementActive) {
+      autoUpdateTimer(incrementTime * 1000);
+    }
+  }, [autoUpdateTimer]);
 
   useEffect(() => {
-    webSocket?.addEventListener('message', handleDonation);
-  }, [handleDonation, webSocket]);
+    daSocket?.on('Bid', handleDonation);
+  }, [daSocket, handleDonation]);
 
   useEffect(() => updateStopwatch(), [updateStopwatch]);
 
