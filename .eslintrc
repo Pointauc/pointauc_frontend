@@ -38,6 +38,7 @@
     ] }],
     "@typescript-eslint/array-type": "error",
     "@typescript-eslint/camelcase": [0],
+    "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }],
     "react/jsx-props-no-spreading": [0],
     "no-unused-expressions": [0],
     "no-case-declarations": [0],

@@ -52,7 +52,7 @@ const DaIntegration: FC<DaIntegration> = ({ control }) => {
         <FormGroup>
           <FormGroup row className="auc-settings-row">
             <FormInput
-              name="da.pointsRate"
+              name="pointsRate"
               control={control}
               label={t('settings.donations.pointsRate')}
               type="number"
@@ -60,12 +60,8 @@ const DaIntegration: FC<DaIntegration> = ({ control }) => {
             />
           </FormGroup>
           <FormGroup row className="auc-settings-row">
-            <FormSwitch
-              name="da.isIncrementActive"
-              control={control}
-              label={t('settings.donations.addTimeOnDonation')}
-            />
-            <FormInput name="da.incrementTime" className="field sm" control={control} type="number" />
+            <FormSwitch name="isIncrementActive" control={control} label={t('settings.donations.addTimeOnDonation')} />
+            <FormInput name="incrementTime" className="field sm" control={control} type="number" />
             <Typography variant="body1">{t('common.sec')}</Typography>
           </FormGroup>
         </FormGroup>

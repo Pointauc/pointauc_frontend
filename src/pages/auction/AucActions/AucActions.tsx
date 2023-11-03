@@ -34,6 +34,7 @@ const AucActions: React.FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const { compact } = useSelector((root: RootState) => root.aucSettings.view);
+  const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 
   const handleResetSlots = (): void => {
@@ -63,9 +64,9 @@ const AucActions: React.FC = () => {
   const handleSetShowChances = useCallback(
     (e, checked: boolean) => {
       dispatch(setShowChances(checked));
-      updateSettings({ showChances: checked });
+      updateSettings({ settings: { showChances: checked }, id: activeSettingsPresetId });
     },
-    [dispatch],
+    [activeSettingsPresetId, dispatch],
   );
 
   return (

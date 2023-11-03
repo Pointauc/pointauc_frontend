@@ -5,7 +5,6 @@ import { authenticateDonatePay } from '../../../api/donatePayApi';
 import { loadUserData } from '../../../reducers/AucSettings/AucSettings';
 import withLoading from '../../../decorators/withLoading';
 import LoadingButton from '../../LoadingButton/LoadingButton';
-import { updateIntegration } from '../../../api/userApi';
 
 interface DonatePayLoginModalProps {
   opened: boolean;
@@ -19,10 +18,7 @@ const DonatePayLoginModal: FC<DonatePayLoginModalProps> = ({ opened, onClose }) 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const authorize = async (): Promise<void> => {
     await withLoading(setIsLoading, async () => {
-      const { isNew } = await authenticateDonatePay(token);
-      if (isNew) {
-        await updateIntegration({ da: { pointsRate: 1 } });
-      }
+      await authenticateDonatePay(token);
       await loadUserData(dispatch);
       onClose();
     })();

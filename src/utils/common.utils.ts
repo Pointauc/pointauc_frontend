@@ -64,14 +64,13 @@ export const getDirtyValues = <T extends FieldValues>(
   values: T,
   dirtyFields: FieldNamesMarkedBoolean<T> = {},
   defaultValues: T,
+  touched: FieldNamesMarkedBoolean<T>,
 ): Partial<T> =>
-  Object.keys(dirtyFields).reduce(
-    (accum, key) => ({
-      ...accum,
-      [key]: values[key] === undefined ? defaultValues[key] : values[key],
-    }),
-    {},
-  );
+  Object.keys(dirtyFields).reduce((accum, key) => {
+    const getValue = () => (values[key] === undefined ? defaultValues[key] : values[key]);
+
+    return touched[key] ? { ...accum, [key]: getValue() } : accum;
+  }, {});
 
 export const shuffle = <T>(a: T[]): T[] => {
   for (let i = a.length - 1; i > 0; i -= 1) {

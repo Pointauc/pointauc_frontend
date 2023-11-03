@@ -9,6 +9,7 @@ import PageContainer from '../../components/PageContainer/PageContainer';
 import { updatePercents } from '../../services/PercentsRefMap';
 import TrailersContainer from '../../components/TrailersContainer/TrailersContainer';
 import AucActions from './AucActions/AucActions';
+import ChangelogModal from '../../components/Changelog/ChangelogModal/ChangelogModal';
 
 const AucPage: React.FC = () => {
   const { background } = useSelector((root: RootState) => root.aucSettings.settings);
@@ -30,6 +31,7 @@ const AucPage: React.FC = () => {
 
   return (
     <PageContainer className="auc-container" style={backgroundStyles} maxWidth={false}>
+      <ChangelogModal />
       <div className="auc-container-column">
         <div className="auc-container-row">
           <SlotsColumn />

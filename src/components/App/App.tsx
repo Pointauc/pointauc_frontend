@@ -3,19 +3,7 @@ import './App.scss';
 import { createStyles, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import { Link, Route, Switch, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
+import { Divider, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import classNames from 'classnames';
 import ROUTES from '../../constants/routes.constants';
 import AucPage from '../../pages/auction/AucPage';
@@ -23,8 +11,6 @@ import { MenuItem } from '../../models/common.model';
 import MENU_ITEMS from '../../constants/menuItems.constants';
 import SettingsPage from '../SettingsPage/SettingsPage';
 import { loadUserData } from '../../reducers/AucSettings/AucSettings';
-import withLoading from '../../decorators/withLoading';
-import LoadingPage from '../LoadingPage/LoadingPage';
 import IntegrationPage from '../IntegrationPage/IntegrationPage';
 import { theme } from '../../constants/theme.constants';
 import AlertsContainer from '../AlertsContainer/AlertsContainer';
@@ -37,10 +23,9 @@ import RequestsPage from '../RequestsPage/RequestsPage';
 import { RootState } from '../../reducers';
 import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
 import { getCookie } from '../../utils/common.utils';
-import { setCanBeRestored } from '../../reducers/User/User';
-import { postRestoreSettings, validateIntegrations } from '../../api/userApi';
-import { addAlert } from '../../reducers/notifications/notifications';
-import { AlertTypeEnum } from '../../models/alert.model';
+import { getIntegrationsValidity } from '../../api/userApi';
+import { AlertType, AlertTypeEnum } from '../../models/alert.model';
+import { addAlert, deleteAlert } from '../../reducers/notifications/notifications';
 
 const drawerWidth = 240;
 
@@ -96,8 +81,7 @@ const App: React.FC = () => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(hasToken);
-  const { username, canBeRestored, authId } = useSelector((root: RootState) => root.user);
+  const { username } = useSelector((root: RootState) => root.user);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
 
   const showDrawer = useCallback(() => {
@@ -118,7 +102,7 @@ const App: React.FC = () => {
     let interval: any;
     if (hasToken && username) {
       interval = setInterval(() => {
-        validateIntegrations();
+        getIntegrationsValidity();
       }, 1000 * 60 * 60 * 3);
     }
 
@@ -152,58 +136,28 @@ const App: React.FC = () => {
   );
 
   useEffect(() => {
+    const loadUser = async () => {
+      const loadingAlert: AlertType = {
+        message: 'Загрузка аккаунта...',
+        type: AlertTypeEnum.Info,
+        id: Math.random(),
+      };
+
+      dispatch(addAlert(loadingAlert));
+      try {
+        await loadUserData(dispatch);
+      } finally {
+        dispatch(deleteAlert(loadingAlert.id));
+      }
+    };
+
     if (hasToken) {
-      dispatch(withLoading(setIsLoading, loadUserData));
+      loadUser();
     }
   }, [dispatch]);
 
-  const restoreSettings = useCallback(async () => {
-    try {
-      await postRestoreSettings(authId || '');
-      await loadUserData(dispatch);
-
-      dispatch(addAlert({ type: AlertTypeEnum.Success, message: 'Настройки были успешно перенесены' }));
-    } catch (e) {
-      dispatch(addAlert({ type: AlertTypeEnum.Error, message: 'Ошибка. Настройки не были перенесены.' }));
-    }
-  }, [authId, dispatch]);
-
-  const handleClose = useCallback(() => dispatch(setCanBeRestored(false)), [dispatch]);
-  const handleConfirm = useCallback(() => {
-    restoreSettings();
-    handleClose();
-  }, [handleClose, restoreSettings]);
-
-  if (isLoading) {
-    return <LoadingPage helpText="Загрузка аккаунта..." />;
-  }
-
   return (
     <MuiThemeProvider theme={theme}>
-      <Dialog open={!!canBeRestored} maxWidth="md" fullWidth>
-        <DialogTitle>Восстановление настроек</DialogTitle>
-        <DialogContent dividers className="description-dialog-content">
-          <p>
-            Недавно у сайта были большие изменения в серверной части, значительно повысилась стабильность работы, а так
-            же был переход на более мощный сервер.
-          </p>
-          <p>
-            Но в связи с новым форматом хранения данных все аккаунты не могут быть перенесены автоматически. Но мы можем
-            перенести ваши прошлые настройки на этот аккаунт (кроме подключенных интеграций).
-          </p>
-          <p style={{ color: '#e5c938' }}>
-            Хотите восстановить ваши прошлые настройки или продолжить с чистым аккаунтом?
-          </p>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleClose} color="default">
-            Продолжить как есть
-          </Button>
-          <Button variant="contained" onClick={handleConfirm} color="primary">
-            Восстановить
-          </Button>
-        </DialogActions>
-      </Dialog>
       <div className={classes.root}>
         <Drawer
           variant="permanent"

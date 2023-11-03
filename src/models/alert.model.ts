@@ -1,6 +1,7 @@
 export enum AlertTypeEnum {
   Success = 'success',
   Error = 'error',
+  Info = 'info',
 }
 
 export interface AlertProps {

@@ -52,7 +52,8 @@
         "rewardsList": "Список наград:",
         "cost": "Стоимость",
         "color": "Цвет",
-        "addReward": "Добавить награду"
+        "addReward": "Добавить награду",
+        "saveRewards": "Сохранить"
       },
       "luckyWheel": {
         "groupTitle": "Колесо удачи",

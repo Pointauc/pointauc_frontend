@@ -21,7 +21,7 @@ export const splitByUrls = (text: string): string[] => {
 export const getWebsocketUrl = (): string =>
   `wss://woods-service.herokuapp.com?userSession=${getCookie('userSession')}`;
 
-export const getSocketIOUrl = (): string => document.location.origin;
+export const getSocketIOUrl = (): string => (isProduction() ? document.location.origin : 'http://localhost:8000');
 
 export const getCloudifyUrl = (imageId: string): string =>
   `https://res.cloudinary.com/dn4ue0pj9/image/upload/${imageId}`;

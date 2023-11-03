@@ -148,9 +148,7 @@ export const createSlotFromPurchase =
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
       aucSettings: {
-        integration: {
-          da: { pointsRate },
-        },
+        settings: { pointsRate },
       },
       slots: { slots },
     } = getState();
@@ -171,10 +169,7 @@ export const addBid =
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
       aucSettings: {
-        settings: { marbleRate = 1, marblesAuc },
-        integration: {
-          da: { pointsRate },
-        },
+        settings: { marbleRate = 1, marblesAuc, pointsRate },
       },
       slots: { slots },
     } = getState();

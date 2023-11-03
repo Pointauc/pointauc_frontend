@@ -13,6 +13,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import classNames from 'classnames';
 import { findBestMatch } from 'string-similarity';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { useTranslation } from 'react-i18next';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import {
   logPurchase,
   Purchase,
@@ -23,7 +27,6 @@ import {
 } from '../../../reducers/Purchases/Purchases';
 import './PurchaseComponent.scss';
 import { RootState } from '../../../reducers';
-import { useTranslation } from 'react-i18next';
 import donationBackground from '../../../assets/img/donationBackground.jpg';
 import { addBid, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
 import { useCostConvert } from '../../../hooks/useCostConvert';
@@ -34,16 +37,13 @@ import { updateRedemption } from '../../../api/twitchApi';
 import { RedemptionStatus } from '../../../models/redemption.model';
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import { addAlert } from "../../../reducers/notifications/notifications";
-import { AlertTypeEnum } from "../../../models/alert.model";
+import { addAlert } from '../../../reducers/notifications/notifications';
+import { AlertTypeEnum } from '../../../models/alert.model';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -61,11 +61,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 }) => {
   const dispatch = useDispatch();
   const {
-    integration: {
-      twitch: { isRefundAvailable },
-      da: { pointsRate },
-    },
-    settings: { marblesAuc, luckyWheel },
+    settings: { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate },
   } = useSelector((root: RootState) => root.aucSettings);
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
@@ -93,17 +89,18 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   }, []);
 
   const addToRandomSlot = () => {
-    const slots = store.getState().slots.slots;
+    const { slots } = store.getState().slots;
     const rnd = Math.floor(Math.random() * (slots.length - 1));
     dispatch(addBid(slots[rnd].id, purchase));
-    const alertMessage = t("auc.addedToRandomSlot", {
-      cost: cost,
-      username: username,
+    const alertMessage = t('auc.addedToRandomSlot', {
+      cost,
+      username,
       slotName: slots[rnd].name,
-      message: message});
+      message,
+    });
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
     dispatch(updateExistBids);
-  }
+  };
 
   const refundRedemption = useCallback(
     () =>
@@ -182,10 +179,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     dispatch(updateBid({ ...purchase, cost: purchase.cost * multi }));
   };
 
-  const handleMenuItemClick = (
-      event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-      index: number,
-  ) => {
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
     setSplitButtonMenuOpen(false);
 
     /* Currently, only one item in the dropdown menu, no need to check
@@ -210,43 +204,49 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
         {!hideActions && (
           <>
             <ButtonGroup size="small" className="purchase-new-split-button" ref={anchorRef}>
-              <Button variant="outlined" size="small" className="purchase-new-split-button-left" onClick={handleAddNewSlot}>
+              <Button
+                variant="outlined"
+                size="small"
+                className="purchase-new-split-button-left"
+                onClick={handleAddNewSlot}
+              >
                 Новый
               </Button>
               <Button
-                  variant="outlined"
-                  size="small"
-                  className="purchase-new-split-button-right"
-                  onClick={handleToggle}
+                variant="outlined"
+                size="small"
+                className="purchase-new-split-button-right"
+                onClick={handleToggle}
               >
-                <ArrowDropDownIcon/>
+                <ArrowDropDownIcon />
               </Button>
             </ButtonGroup>
-            <Popper open={splitButtonMenuOpen} anchorEl={anchorRef.current} role={undefined} transition disablePortal
-                    className="purchase-new-split-button-popper">
-              {({TransitionProps}) => (
-                  <Grow
-                      {...TransitionProps}
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={() => setSplitButtonMenuOpen(false)}>
-                        <MenuList>
-                          {menuOptions.map((option, index) => (
-                              <MenuItem
-                                  key={option}
-                                  onClick={(event) => handleMenuItemClick(event, index)}
-                              >
-                                {option}
-                              </MenuItem>
-                          ))}
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
+            <Popper
+              open={splitButtonMenuOpen}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              transition
+              disablePortal
+              className="purchase-new-split-button-popper"
+            >
+              {({ TransitionProps }) => (
+                <Grow {...TransitionProps}>
+                  <Paper>
+                    <ClickAwayListener onClickAway={() => setSplitButtonMenuOpen(false)}>
+                      <MenuList>
+                        {menuOptions.map((option, index) => (
+                          <MenuItem key={option} onClick={(event) => handleMenuItemClick(event, index)}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
               )}
             </Popper>
 
-            {luckyWheel && (
+            {luckyWheelEnabled && (
               <Button variant="outlined" size="small" className="purchase-new-button" onClick={openCasino}>
                 Испытать удачу
               </Button>

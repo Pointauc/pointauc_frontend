@@ -4,6 +4,8 @@ import { Socket } from 'socket.io-client';
 import { RootState } from '../index';
 import { addAlert } from '../notifications/notifications';
 import { AlertTypeEnum } from '../../models/alert.model';
+import { getIntegrationsValidity } from '../../api/userApi';
+import { setUserState } from '../User/User';
 
 export interface SubscribeState {
   actual: boolean;
@@ -40,16 +42,37 @@ const subscriptionSlice = createSlice({
     setDonatePaySubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.donatePay = { ...state.donatePay, ...action.payload };
     },
+    setSubscribeStateAll(state, action: PayloadAction<Partial<SubscribeState>>): void {
+      state.twitch = { ...state.twitch, ...action.payload };
+      state.da = { ...state.da, ...action.payload };
+      state.donatePay = { ...state.donatePay, ...action.payload };
+    },
   },
 });
 
-const { setDaSubscribeState, setTwitchSubscribeState, setDonatePaySubscribeState } = subscriptionSlice.actions;
+const { setSubscribeStateAll, setDaSubscribeState, setTwitchSubscribeState, setDonatePaySubscribeState } =
+  subscriptionSlice.actions;
+
+export const validateIntegrations = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
+  dispatch(setSubscribeStateAll({ loading: true }));
+
+  const validity = await getIntegrationsValidity();
+  dispatch(
+    setUserState({
+      hasDAAuth: validity.daAuth,
+      hasDonatPayAuth: validity.donatePayAuth,
+      hasTwitchAuth: validity.twitchAuth,
+    }),
+  );
+
+  dispatch(setSubscribeStateAll({ loading: false }));
+};
 
 const sendSubscribeState = (
   socket: Socket,
   isSubscribed: boolean,
   dispatch: ThunkDispatch<{}, {}, Action>,
-  getStateAction: ActionCreatorWithPayload<Partial<SubscribeState>>,
+  stateChangeActionCreator: ActionCreatorWithPayload<Partial<SubscribeState>>,
 ): void => {
   const event = isSubscribed ? 'bidsSubscribe' : 'bidsUnsubscribe';
 
@@ -58,8 +81,7 @@ const sendSubscribeState = (
   }
 
   socket.once('bidsStateChange', ({ state, error }) => {
-    console.log('state changed', state);
-    dispatch(getStateAction({ actual: state, loading: false }));
+    dispatch(stateChangeActionCreator({ actual: state, loading: false }));
 
     if (error) {
       dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
@@ -67,7 +89,7 @@ const sendSubscribeState = (
   });
   socket.emit(event);
 
-  dispatch(getStateAction({ loading: true }));
+  dispatch(stateChangeActionCreator({ loading: true }));
 };
 
 export const sendCpSubscribedState =

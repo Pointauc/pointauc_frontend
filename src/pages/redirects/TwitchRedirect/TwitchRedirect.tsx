@@ -8,8 +8,10 @@ import { QUERIES } from '../../../constants/common.constants';
 import LoadingPage from '../../../components/LoadingPage/LoadingPage';
 import withLoading from '../../../decorators/withLoading';
 import { loadUserData } from '../../../reducers/AucSettings/AucSettings';
-import { setAuthId, setCanBeRestored, setHasTwitchAuth } from '../../../reducers/User/User';
-import { getIsCanRestoreSettings, updateIntegration } from '../../../api/userApi';
+import { setHasTwitchAuth } from '../../../reducers/User/User';
+import { getCookie } from '../../../utils/common.utils';
+
+const hasToken = !!getCookie('userSession');
 
 const TwitchRedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -20,24 +22,15 @@ const TwitchRedirect: React.FC = () => {
   useEffect(() => {
     const code = getQueryValue(location.search, QUERIES.CODE);
     if (code) {
-      authenticateTwitch(code).then(({ isNew }) => {
+      authenticateTwitch(code).then(() => {
         setLoadingMessage('Загрузка аккаунта...');
         dispatch(setHasTwitchAuth(true));
 
-        return withLoading(setIsLoading, async () => {
-          if (isNew) {
-            await updateIntegration({ da: { pointsRate: 1 } });
-          }
-          const user: any = await loadUserData(dispatch);
-
-          if (isNew) {
-            const { id } = user.twitchAuth;
-            const canRestoreSettings = await getIsCanRestoreSettings(id);
-
-            dispatch(setCanBeRestored(canRestoreSettings));
-            dispatch(setAuthId(id));
-          }
-        })();
+        if (!hasToken) {
+          withLoading(setIsLoading, async () => loadUserData(dispatch))();
+        } else {
+          setIsLoading(false);
+        }
       });
     }
   }, [dispatch, location]);

@@ -1,18 +1,4 @@
-import {
-  DaIntegration,
-  IntegrationFields,
-  SettingFields,
-  TwitchIntegration,
-} from '../reducers/AucSettings/AucSettings';
-
-export interface UserData {
-  username: string;
-  userId: string;
-  hasDAAuth: boolean;
-  hasTwitchAuth: boolean;
-  settings?: SettingFields;
-  integration?: IntegrationFields;
-}
+import { AucSettingsDto } from './settings.model';
 
 export interface IntegrationDataDto {
   username: string;
@@ -25,11 +11,23 @@ export interface TwitchRewardPresetDto {
   color: string;
 }
 
-export interface GetUserDto {
-  aucSettings: SettingFields;
-  twitchSettings: TwitchIntegration;
-  twitchAuth?: IntegrationDataDto;
-  daSettings: DaIntegration;
-  daAuth?: IntegrationDataDto;
-  donatePayAuth?: IntegrationDataDto;
+export interface IntegrationData {
+  twitchAuth: IntegrationDataDto;
+  daAuth: IntegrationDataDto;
+  donatePayAuth: IntegrationDataDto;
+}
+
+export interface GetUserDto extends IntegrationData {
+  activeSettings: AucSettingsDto;
+  activeSettingsPresetId: string;
+}
+
+export type IntegrationValidity = {
+  [key in keyof IntegrationData]: boolean;
+};
+
+export interface TwitchRewardPresetsRequest {
+  presets: TwitchRewardPresetDto[];
+  prefix: string;
+  settingsId: string;
 }

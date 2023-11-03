@@ -1,8 +1,6 @@
 import React, { ChangeEvent, FC, useCallback, useMemo } from 'react';
 import { FormControlLabel, OutlinedInput, OutlinedInputProps, Typography } from '@material-ui/core';
-import { UseFormMethods } from 'react-hook-form/dist/types/form';
-import { Controller, ControllerRenderProps } from 'react-hook-form';
-import { RegisterOptions } from 'react-hook-form/dist/types/validator';
+import { Controller, ControllerRenderProps, FormState, RegisterOptions, UseFormMethods } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
 interface FormInputProps extends OutlinedInputProps {
@@ -13,7 +11,7 @@ interface FormInputProps extends OutlinedInputProps {
   type?: string;
   hint?: string;
   rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
-  errors?: UseFormMethods['errors'];
+  errors?: FormState<any>['errors'];
 }
 
 const FormInput: FC<FormInputProps> = ({
@@ -28,7 +26,7 @@ const FormInput: FC<FormInputProps> = ({
   ...restProps
 }) => {
   const isNumber = useMemo(() => type === 'number', [type]);
-  const normalizeNumber = useCallback((value) => value && Number(value), []);
+  const normalizeNumber = useCallback((value) => Number(value) || undefined, []);
   const renderInput = useCallback(
     ({ onBlur, onChange, value: formValue }: ControllerRenderProps) => {
       const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>): void =>
@@ -36,7 +34,7 @@ const FormInput: FC<FormInputProps> = ({
 
       return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <OutlinedInput onChange={handleChange} value={formValue} type={type} onBlur={onBlur} {...restProps} />
+          <OutlinedInput onChange={handleChange} value={formValue ?? ''} type={type} onBlur={onBlur} {...restProps} />
           <ErrorMessage as={<Typography className="error-hint" />} errors={errors} name={name} />
         </div>
       );

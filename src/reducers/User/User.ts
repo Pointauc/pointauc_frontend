@@ -13,8 +13,7 @@ interface UserState extends UserInfo {
   hasDAAuth: boolean;
   hasTwitchAuth: boolean;
   hasDonatPayAuth: boolean;
-  canBeRestored?: boolean;
-  authId?: string;
+  activeSettingsPresetId: string;
 }
 
 const initialState: UserState = {
@@ -23,13 +22,19 @@ const initialState: UserState = {
   hasDAAuth: false,
   hasTwitchAuth: false,
   hasDonatPayAuth: false,
-  canBeRestored: false,
+  activeSettingsPresetId: '',
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUserState(state, action: PayloadAction<Partial<UserState>>): void {
+      Object.assign(state, action.payload);
+    },
+    setActiveSettingsPresetId(state, action: PayloadAction<string>): void {
+      state.activeSettingsPresetId = action.payload;
+    },
     setUsername(state, action: PayloadAction<string | null | undefined>): void {
       state.username = action.payload;
     },
@@ -45,22 +50,16 @@ const userSlice = createSlice({
     setHasTwitchAuth(state, action: PayloadAction<boolean>): void {
       state.hasTwitchAuth = action.payload;
     },
-    setCanBeRestored(state, action: PayloadAction<boolean>): void {
-      state.canBeRestored = action.payload;
-    },
-    setAuthId(state, action: PayloadAction<string>): void {
-      state.authId = action.payload;
-    },
   },
 });
 
 export const {
+  setUserState,
+  setActiveSettingsPresetId,
   setUsername,
   setHasDAAuth,
   setUserId,
   setHasTwitchAuth,
-  setCanBeRestored,
-  setAuthId,
   setHasDonatPayAuth,
 } = userSlice.actions;
 
