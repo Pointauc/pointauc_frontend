@@ -35,7 +35,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
         fetcher.fetchFFZEmotes(Number(userId)).then(flattenCollection),
       );
     }
-    loadedEmotes = await Promise.all(emotesPromises);
+    loadedEmotes = await Promise.all(emotesPromises.map((promise) => promise.catch(() => null)));
     loadedEmotes = loadedEmotes.filter((value) => value != null);
 
     setUserEmotes(loadedEmotes);
