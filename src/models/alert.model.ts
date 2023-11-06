@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 export enum AlertTypeEnum {
   Success = 'success',
   Error = 'error',
+  Info = 'info',
 }
 
 export interface AlertProps {

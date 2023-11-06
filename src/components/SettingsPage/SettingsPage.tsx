@@ -1,75 +1,63 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Button } from '@material-ui/core';
+import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
 import PageContainer from '../PageContainer/PageContainer';
 import StopwatchSettings from './StopwatchSettings/StopwatchSettings';
 import { RootState } from '../../reducers';
-import { initialState, setAucSettings, SettingFields } from '../../reducers/AucSettings/AucSettings';
+import { initialState, saveSettings } from '../../reducers/AucSettings/AucSettings';
 import AucSettings from './AucSettings/AucSettings';
 import './SettingsPage.scss';
-import LoadingButton from '../LoadingButton/LoadingButton';
-import withLoading from '../../decorators/withLoading';
-import { updateSettings } from '../../api/userApi';
 import { getDirtyValues } from '../../utils/common.utils';
-import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
+import { SettingsForm } from '../../models/settings.model';
 
 const SettingsPage: FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { settings } = useSelector((root: RootState) => root.aucSettings);
-  const { username } = useSelector((root: RootState) => root.user);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formMethods = useForm<SettingFields>({ defaultValues: settings });
+  const { username } = useSelector((root: RootState) => root.user);
+  const { settings } = useSelector((root: RootState) => root.aucSettings);
+  const formMethods = useForm<SettingsForm>({ defaultValues: settings, mode: 'onBlur' });
+
   const {
-    handleSubmit,
-    formState: { isDirty, dirtyFields },
-    reset,
     control,
+    handleSubmit,
+    reset,
+    getValues,
     register,
     setValue,
+    formState: { dirtyFields, touched },
   } = formMethods;
+
+  const onSubmit = useCallback(
+    async (data: SettingsForm, dirty: Partial<SettingsForm>) => {
+      dispatch(saveSettings(dirty));
+      reset({ ...data, ...dirty });
+    },
+    [dispatch, reset],
+  );
 
   useEffect(() => {
     reset(settings);
-  }, [reset, settings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
 
-  const handleReset = useCallback(() => reset(), [reset]);
-  const onSubmit = useCallback(
-    (data) =>
-      withLoading(setIsSubmitting, async () => {
-        dispatch(setAucSettings(data));
+  useEffect(() => {
+    const normalizedTouched: FieldNamesMarkedBoolean<SettingsForm> = { ...touched, background: true };
+    const dirtyValues = getDirtyValues(getValues(), dirtyFields, initialState.settings, normalizedTouched);
 
-        if (username) {
-          await updateSettings(getDirtyValues(data, dirtyFields, initialState.settings));
-        }
-      })(),
-    [dirtyFields, dispatch, username],
-  );
+    if (Object.keys(dirtyValues).length > 0) {
+      handleSubmit((data) => onSubmit(data, dirtyValues))();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(dirtyFields), JSON.stringify(touched), handleSubmit, onSubmit]);
 
   return (
     <PageContainer title={t('settings.settings')} classes={{ root: 'settings' }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
+      <form>
         <StopwatchSettings control={control} />
         <AucSettings control={control} register={register} setValue={setValue} />
-        <div style={{ marginTop: 40 }}>
-          <LoadingButton
-            isLoading={isSubmitting}
-            type="submit"
-            variant="contained"
-            color="primary"
-            style={{ marginRight: 20 }}
-            disabled={!isDirty || isSubmitting}
-          >
-            {t('common.apply')}
-          </LoadingButton>
-          <Button onClick={handleReset} variant="outlined" disabled={!isDirty}>
-            {t('common.cancel')}
-          </Button>
-        </div>
       </form>
     </PageContainer>
   );

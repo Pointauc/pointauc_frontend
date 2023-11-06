@@ -26,7 +26,7 @@ const TwitchLoginButton: FC = () => {
   return (
     <>
       <Button
-        className="da-login-button"
+        className="login-button da"
         variant="contained"
         size="large"
         startIcon={<DASvg className="base-icon da" />}

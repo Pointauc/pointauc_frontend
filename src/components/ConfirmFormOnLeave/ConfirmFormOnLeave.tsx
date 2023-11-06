@@ -1,14 +1,15 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
 import history from '../../constants/history';
 import './ConfirmFormOnLeave.scss';
 
 interface ConfirmFormOnLeaveProps {
   isDirtyForm: boolean;
-  onSubmit: () => void;
+  onSubmit?: () => void;
+  content?: (onClose: () => void, onConfirm: () => void) => ReactNode;
 }
 
-const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm }) => {
+const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm, content }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [nextLocation, setNextLocation] = useState<string>('');
 
@@ -28,9 +29,11 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
 
   const handleClose = useCallback(() => history.push(nextLocation, { forcePush: true }), [nextLocation]);
   const handleConfirm = useCallback(() => {
-    onSubmit();
+    onSubmit?.();
     handleClose();
   }, [handleClose, onSubmit]);
+
+  if (content && isOpen) return <>{content(handleClose, handleConfirm)}</>;
 
   return (
     <Dialog open={isOpen} className="form-confirm-dialog">

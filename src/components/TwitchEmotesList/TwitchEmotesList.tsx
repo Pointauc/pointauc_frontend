@@ -24,21 +24,18 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
   const [userEmotes, setUserEmotes] = useState<(Emote[] | null)[]>();
 
   const updateEmotes = useCallback(async () => {
-    // const defaultEmotes = sevenTVApi.fetchUserEmotes('minodos_99').then((emotes) => emotes.map(createSevenTVEmote));
     let loadedEmotes: Emote[];
+    const emotesPromises = [getSevenTVEmotes('883803697')];
 
     if (userId) {
-      loadedEmotes = await Promise.all(
-        [
-          getSevenTVEmotes(userId),
-          fetcher.fetchTwitchEmotes(Number(userId)).then(flattenCollection),
-          fetcher.fetchBTTVEmotes(Number(userId)).then(flattenCollection),
-          fetcher.fetchFFZEmotes(Number(userId)).then(flattenCollection),
-        ].map((request) => request.catch(() => null)),
+      emotesPromises.push(
+        getSevenTVEmotes(userId),
+        fetcher.fetchTwitchEmotes(Number(userId)).then(flattenCollection),
+        fetcher.fetchBTTVEmotes(Number(userId)).then(flattenCollection),
+        fetcher.fetchFFZEmotes(Number(userId)).then(flattenCollection),
       );
-    } else {
-      loadedEmotes = [];
     }
+    loadedEmotes = await Promise.all(emotesPromises.map((promise) => promise.catch(() => null)));
     loadedEmotes = loadedEmotes.filter((value) => value != null);
 
     setUserEmotes(loadedEmotes);

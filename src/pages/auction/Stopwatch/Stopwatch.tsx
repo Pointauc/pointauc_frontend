@@ -34,10 +34,8 @@ const Stopwatch: React.FC = () => {
       isMaxTimeActive,
       isNewSlotIncrement,
       newSlotIncrement,
-    },
-    integration: {
-      twitch: { dynamicRewards },
-      da,
+      dynamicRewards,
+      ...restSettings
     },
   } = useSelector((root: RootState) => root.aucSettings);
   const defaultTime = Number(startTime) * 60 * 1000;
@@ -52,11 +50,11 @@ const Stopwatch: React.FC = () => {
   const prevTimestamp = useRef<number>();
   const stopwatchElement = useRef<HTMLDivElement>(null);
   const winnerRef = useRef<Slot>();
-  const daSettings = useRef(da);
+  const daSettings = useRef(restSettings);
 
   useEffect(() => {
-    daSettings.current = da;
-  }, [da]);
+    daSettings.current = restSettings;
+  }, [restSettings]);
 
   useEffect(() => {
     if (!dynamicRewards || loadingTwitchSub || !isStopwatchChanged || isStopped !== actualTwitchSub) {

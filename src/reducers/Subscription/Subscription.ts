@@ -1,10 +1,13 @@
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { ActionCreatorWithPayload, createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
+import { Socket } from 'socket.io-client';
 import { RootState } from '../index';
 import { addAlert } from '../notifications/notifications';
 import { AlertTypeEnum } from '../../models/alert.model';
+import { getIntegrationsValidity } from '../../api/userApi';
+import { setUserState } from '../User/User';
 
-interface SubscribeState {
+export interface SubscribeState {
   actual: boolean;
   loading: boolean;
 }
@@ -12,17 +15,18 @@ interface SubscribeState {
 interface SubscriptionStoreState {
   twitch: SubscribeState;
   da: SubscribeState;
+  donatePay: SubscribeState;
 }
 
+const initialSubscribeState = {
+  actual: false,
+  loading: false,
+};
+
 export const initialState: SubscriptionStoreState = {
-  twitch: {
-    actual: false,
-    loading: false,
-  },
-  da: {
-    actual: false,
-    loading: false,
-  },
+  twitch: initialSubscribeState,
+  da: initialSubscribeState,
+  donatePay: initialSubscribeState,
 };
 
 const subscriptionSlice = createSlice({
@@ -35,55 +39,87 @@ const subscriptionSlice = createSlice({
     setDaSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.da = { ...state.da, ...action.payload };
     },
+    setDonatePaySubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
+      state.donatePay = { ...state.donatePay, ...action.payload };
+    },
+    setSubscribeStateAll(state, action: PayloadAction<Partial<SubscribeState>>): void {
+      state.twitch = { ...state.twitch, ...action.payload };
+      state.da = { ...state.da, ...action.payload };
+      state.donatePay = { ...state.donatePay, ...action.payload };
+    },
   },
 });
 
-const { setDaSubscribeState, setTwitchSubscribeState } = subscriptionSlice.actions;
+const { setSubscribeStateAll, setDaSubscribeState, setTwitchSubscribeState, setDonatePaySubscribeState } =
+  subscriptionSlice.actions;
+
+export const validateIntegrations = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
+  dispatch(setSubscribeStateAll({ loading: true }));
+
+  const validity = await getIntegrationsValidity();
+  dispatch(
+    setUserState({
+      hasDAAuth: validity.daAuth,
+      hasDonatPayAuth: validity.donatePayAuth,
+      hasTwitchAuth: validity.twitchAuth,
+    }),
+  );
+
+  dispatch(setSubscribeStateAll({ loading: false }));
+};
+
+const sendSubscribeState = (
+  socket: Socket,
+  isSubscribed: boolean,
+  dispatch: ThunkDispatch<{}, {}, Action>,
+  stateChangeActionCreator: ActionCreatorWithPayload<Partial<SubscribeState>>,
+): void => {
+  const event = isSubscribed ? 'bidsSubscribe' : 'bidsUnsubscribe';
+
+  if (!socket) {
+    return;
+  }
+
+  socket.once('bidsStateChange', ({ state, error }) => {
+    dispatch(stateChangeActionCreator({ actual: state, loading: false }));
+
+    if (error) {
+      dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
+    }
+  });
+  socket.emit(event);
+
+  dispatch(stateChangeActionCreator({ loading: true }));
+};
 
 export const sendCpSubscribedState =
-  (isSubscribed: boolean, setState?: (actual: boolean) => void) =>
+  (isSubscribed: boolean) =>
   (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState): void => {
     const { twitchSocket } = getState().socketIo;
-    const event = isSubscribed ? 'bidsSubscribe' : 'bidsUnsubscribe';
 
-    if (!twitchSocket) {
-      return;
+    if (twitchSocket) {
+      sendSubscribeState(twitchSocket, isSubscribed, dispatch, setTwitchSubscribeState);
     }
-
-    twitchSocket.once('bidsStateChange', ({ state, error }) => {
-      dispatch(setTwitchSubscribeState({ actual: state, loading: false }));
-      setState && setState(state);
-
-      if (error) {
-        dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
-      }
-    });
-    twitchSocket.emit(event);
-
-    dispatch(setTwitchSubscribeState({ loading: true }));
   };
 
 export const sendDaSubscribedState =
   (isSubscribed: boolean) =>
   (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState): void => {
     const { daSocket } = getState().socketIo;
-    const event = isSubscribed ? 'bidsSubscribe' : 'bidsUnsubscribe';
 
-    if (!daSocket) {
-      return;
+    if (daSocket) {
+      sendSubscribeState(daSocket, isSubscribed, dispatch, setDaSubscribeState);
     }
+  };
 
-    daSocket.once('bidsStateChange', ({ state, error }) => {
-      dispatch(setDaSubscribeState({ actual: state, loading: false }));
+export const sendDonatePaySubscribedState =
+  (isSubscribed: boolean) =>
+  (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState): void => {
+    const { donatePaySocket } = getState().socketIo;
 
-      if (error) {
-        dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
-      }
-    });
-
-    daSocket.emit(event);
-
-    dispatch(setDaSubscribeState({ loading: true }));
+    if (donatePaySocket) {
+      sendSubscribeState(donatePaySocket, isSubscribed, dispatch, setDonatePaySubscribeState);
+    }
   };
 
 export default subscriptionSlice.reducer;

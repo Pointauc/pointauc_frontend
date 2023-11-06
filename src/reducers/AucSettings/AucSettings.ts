@@ -1,63 +1,20 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import mergewith from 'lodash.mergewith';
-import { getUserData } from '../../api/userApi';
-import { setHasDAAuth, setHasTwitchAuth, setUserId, updateUsername } from '../User/User';
+import { getUserData, updateSettings } from '../../api/userApi';
+import { setUserState } from '../User/User';
 import { GetUserDto } from '../../models/user.model';
-
-export interface SettingFields {
-  startTime?: number;
-  timeStep?: number;
-  isAutoincrementActive?: boolean;
-  autoincrementTime?: number;
-  isBuyoutVisible?: boolean;
-  background: string | null;
-  purchaseSort?: number;
-  marblesAuc?: boolean;
-  marbleRate?: number;
-  marbleCategory?: number;
-  isMaxTimeActive?: boolean;
-  maxTime?: number;
-  showChances?: boolean;
-  newSlotIncrement?: number;
-  isNewSlotIncrement?: boolean;
-  isTotalVisible?: boolean;
-  luckyWheel?: boolean;
-  luckyWheelSelectBet?: boolean;
-}
+import { RootState } from '../index';
+import { AucSettingsDto, SettingsForm } from '../../models/settings.model';
+import { validateIntegrations } from '../Subscription/Subscription';
 
 export interface ViewSettings {
   compact: boolean;
 }
 
-export interface RewardSetting {
-  cost?: number;
-  color?: string;
-}
-
-export interface TwitchIntegration {
-  isRefundAvailable: boolean;
-  dynamicRewards: boolean;
-  alwaysAddNew: boolean;
-  rewardsPrefix: string;
-  rewardPresets: RewardSetting[];
-}
-
-export interface DaIntegration {
-  pointsRate: number;
-  isIncrementActive: boolean;
-  incrementTime: number;
-}
-
-export interface IntegrationFields {
-  twitch: TwitchIntegration;
-  da: DaIntegration;
-}
-
 interface AucSettingsState {
   view: ViewSettings;
-  settings: SettingFields;
-  integration: IntegrationFields;
+  settings: AucSettingsDto;
 }
 
 export const initialState: AucSettingsState = {
@@ -80,23 +37,18 @@ export const initialState: AucSettingsState = {
     isMaxTimeActive: false,
     newSlotIncrement: 60,
     isNewSlotIncrement: false,
-    isTotalVisible: true,
-    luckyWheel: false,
+    isTotalVisible: false,
+    luckyWheelEnabled: false,
     luckyWheelSelectBet: true,
-  },
-  integration: {
-    twitch: {
-      isRefundAvailable: false,
-      dynamicRewards: false,
-      alwaysAddNew: false,
-      rewardsPrefix: 'ставка',
-      rewardPresets: [],
-    },
-    da: {
-      pointsRate: 1,
-      isIncrementActive: false,
-      incrementTime: 30,
-    },
+    isRefundAvailable: false,
+    dynamicRewards: false,
+    alwaysAddNew: false,
+    rewardsPrefix: 'ставка',
+    pointsRate: 1,
+    isIncrementActive: false,
+    incrementTime: 30,
+    rewardPresets: [],
+    showUpdates: true,
   },
 };
 
@@ -106,12 +58,8 @@ const aucSettingsSlice = createSlice({
   name: 'aucSettings',
   initialState,
   reducers: {
-    setAucSettings(state, action: PayloadAction<Partial<SettingFields>>): void {
+    setAucSettings(state, action: PayloadAction<Partial<AucSettingsDto>>): void {
       state.settings = mergewith(state.settings, action.payload, mergeCheck);
-    },
-    setIntegration(state, action: PayloadAction<IntegrationFields>): void {
-      state.integration.da = mergewith(state.integration.da, action.payload.da, mergeCheck);
-      state.integration.twitch = mergewith(state.integration.twitch, action.payload.twitch, mergeCheck);
     },
     setCompact(state, action: PayloadAction<boolean>): void {
       state.view.compact = action.payload;
@@ -122,20 +70,39 @@ const aucSettingsSlice = createSlice({
   },
 });
 
-export const { setAucSettings, setIntegration, setCompact, setShowChances } = aucSettingsSlice.actions;
+export const { setAucSettings, setCompact, setShowChances } = aucSettingsSlice.actions;
 
-export const loadUserData = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<GetUserDto> => {
+export const saveSettings =
+  (settings: SettingsForm) =>
+  async (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): Promise<void> => {
+    dispatch(setAucSettings(settings));
+    const {
+      user: { activeSettingsPresetId, username },
+    } = getState();
+
+    if (username) {
+      await updateSettings({ settings, id: activeSettingsPresetId });
+    }
+  };
+
+export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action>): Promise<GetUserDto> => {
   const user = await getUserData();
-  const { twitchAuth, twitchSettings, aucSettings, daSettings, daAuth } = user;
+  const { twitchAuth, activeSettings, daAuth, donatePayAuth, activeSettingsPresetId } = user;
 
-  if (aucSettings) {
-    dispatch(setAucSettings(aucSettings));
+  if (activeSettings) {
+    dispatch(setAucSettings(activeSettings));
   }
-  dispatch(setIntegration({ twitch: twitchSettings, da: daSettings }));
-  dispatch(updateUsername(twitchAuth?.username || daAuth?.username || ''));
-  dispatch(setUserId(twitchAuth?.id as any));
-  dispatch(setHasDAAuth(!!daAuth?.isValid));
-  dispatch(setHasTwitchAuth(!!twitchAuth?.isValid));
+  dispatch(
+    setUserState({
+      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? '',
+      userId: twitchAuth?.id,
+      hasDAAuth: !!daAuth?.isValid,
+      hasTwitchAuth: !!twitchAuth?.isValid,
+      hasDonatPayAuth: !!donatePayAuth?.isValid,
+      activeSettingsPresetId,
+    }),
+  );
+  validateIntegrations(dispatch);
 
   return user;
 };

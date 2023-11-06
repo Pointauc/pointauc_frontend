@@ -2,13 +2,17 @@ const ENDPOINTS = {
   TWITCH_AUTH: '/api/twitch/auth',
   TWITCH_REWARDS: '/api/twitch/rewards',
   TWITCH_REDEMPTIONS: '/api/twitch/redemptions',
+  TWITCH_REWARD_PRESETS: '/api/twitch/settings/presets',
   DA_AUTH: '/api/da/auth',
   TWITCH_CHANNEL_POINTS: '/api/twitch/channelPoints',
   CAMILLE_BOT: '/api/requests/camilleBot',
+  DONATE_PAY: {
+    AUTH: '/api/donatePay/auth',
+  },
   USER: {
     USERNAME: '/api/username',
     AUC_SETTINGS: '/api/aucSettings',
-    SETTINGS: '/api/user/settings/auc',
+    SETTINGS: '/api/user/settings',
     DATA: '/api/user',
     INTEGRATION: '/api/user/settings/integration',
     VALIDATE_INTEGRATIONS: '/api/user/integration/validate',

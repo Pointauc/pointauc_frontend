@@ -15,7 +15,7 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep';
 import { useTranslation } from 'react-i18next';
 import { LINE_BREAK } from '../../../constants/common.constants';
 import { resetPurchases } from '../../../reducers/Purchases/Purchases';
-import { isProduction, loadFile } from '../../../utils/common.utils';
+import { loadFile } from '../../../utils/common.utils';
 import { RootState } from '../../../reducers';
 import { Slot } from '../../../models/slot.model';
 import { setCompact, setShowChances } from '../../../reducers/AucSettings/AucSettings';
@@ -23,8 +23,6 @@ import SaveLoad from '../SaveLoad/SaveLoad';
 import { resetSlots } from '../../../reducers/Slots/Slots';
 import { updateSettings } from '../../../api/userApi';
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
-
-const isProd = isProduction();
 
 const getSlotNamesByCount = ({ name, amount }: Slot): string =>
   new Array<string>(Number(amount)).fill(name || '').join(LINE_BREAK);
@@ -36,6 +34,7 @@ const AucActions: React.FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const { compact } = useSelector((root: RootState) => root.aucSettings.view);
+  const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 
   const handleResetSlots = (): void => {
@@ -65,9 +64,9 @@ const AucActions: React.FC = () => {
   const handleSetShowChances = useCallback(
     (e, checked: boolean) => {
       dispatch(setShowChances(checked));
-      updateSettings({ showChances: checked });
+      updateSettings({ settings: { showChances: checked }, id: activeSettingsPresetId });
     },
-    [dispatch],
+    [activeSettingsPresetId, dispatch],
   );
 
   return (

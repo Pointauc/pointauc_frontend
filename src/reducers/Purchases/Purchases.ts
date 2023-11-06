@@ -72,7 +72,7 @@ export const { addPurchase, removePurchase, addPurchaseLog, resetPurchases, setD
 export const logPurchase =
   (bid: PurchaseLog) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const { pointsRate } = getState().aucSettings.integration.da;
+    const { pointsRate } = getState().aucSettings.settings;
     const { cost, isDonation } = bid;
 
     dispatch(
@@ -86,10 +86,7 @@ export const fastAddBid =
     const {
       slots: { slots },
       aucSettings: {
-        settings: { marbleRate = 1, marblesAuc },
-        integration: {
-          da: { pointsRate },
-        },
+        settings: { marbleRate = 1, marblesAuc, pointsRate },
       },
     } = getState();
 
@@ -117,10 +114,7 @@ export const processRedemption =
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
       aucSettings: {
-        settings: { marbleRate = 1, marblesAuc, marbleCategory, luckyWheel },
-        integration: {
-          twitch: { alwaysAddNew },
-        },
+        settings: { marbleRate = 1, marblesAuc, marbleCategory, luckyWheelEnabled, alwaysAddNew },
       },
     } = getState();
     const normalizedBid = normalizePurchase(redemption);
@@ -138,7 +132,7 @@ export const processRedemption =
     const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
     const cost = convertCost(normalizedBid.cost);
 
-    if (similarSlotId && !luckyWheel) {
+    if (similarSlotId && !luckyWheelEnabled) {
       dispatch(fastAddBid(normalizedBid, similarSlotId));
     } else if (alwaysAddNew) {
       dispatch(createSlotFromPurchase({ ...normalizedBid, cost }));
@@ -151,14 +145,14 @@ export const updateExistBids = (dispatch: ThunkDispatch<RootState, {}, Action>, 
   const {
     purchases: { purchases },
     aucSettings: {
-      settings: { luckyWheel },
+      settings: { luckyWheelEnabled },
     },
   } = getState();
 
   purchases.forEach((bid) => {
     const similarSlotId = slotNamesMap.get(bid.message);
 
-    if (similarSlotId && !luckyWheel) {
+    if (similarSlotId && !luckyWheelEnabled) {
       dispatch(fastAddBid(bid, similarSlotId));
       dispatch(removePurchase(bid.id));
     }

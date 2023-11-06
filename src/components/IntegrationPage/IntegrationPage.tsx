@@ -1,81 +1,61 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { DeepPartial, useForm } from 'react-hook-form';
-import { Button } from '@material-ui/core';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
 import PageContainer from '../PageContainer/PageContainer';
 import TwitchIntegration from './TwitchIntegration/TwitchIntegration';
 import { RootState } from '../../reducers';
-import { initialState, IntegrationFields, setIntegration } from '../../reducers/AucSettings/AucSettings';
-import LoadingButton from '../LoadingButton/LoadingButton';
-import withLoading from '../../decorators/withLoading';
-import { updateIntegration } from '../../api/userApi';
+import { initialState, saveSettings } from '../../reducers/AucSettings/AucSettings';
 import DaIntegration from './DAIntegration/DAIntegration';
 import { getDirtyValues } from '../../utils/common.utils';
-import ConfirmFormOnLeave from '../ConfirmFormOnLeave/ConfirmFormOnLeave';
+import './IntegrationPage.tsx.scss';
+import { SettingsForm } from '../../models/settings.model';
 
 const IntegrationPage: FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { integration } = useSelector((root: RootState) => root.aucSettings);
+
   const { username } = useSelector((root: RootState) => root.user);
-  const formMethods = useForm<IntegrationFields>({ defaultValues: integration });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { settings } = useSelector((root: RootState) => root.aucSettings);
+  const formMethods = useForm<SettingsForm>({ defaultValues: settings, mode: 'onBlur' });
 
   const {
     control,
     handleSubmit,
-    formState: { isDirty, dirtyFields },
     reset,
+    getValues,
+    formState: { dirtyFields, touched },
   } = formMethods;
-  const { twitch: twitchDirty, da: daDirty } = dirtyFields;
+
+  const onSubmit = useCallback(
+    (data: SettingsForm, dirty: Partial<SettingsForm>) => {
+      dispatch(saveSettings(dirty));
+      reset({ ...data, ...dirty });
+    },
+    [dispatch, reset],
+  );
 
   useEffect(() => {
-    reset(integration);
-  }, [reset, integration]);
+    reset(settings);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
 
-  const getDirtyIntegration = useCallback(
-    ({ twitch, da }: IntegrationFields): DeepPartial<IntegrationFields> => ({
-      twitch: getDirtyValues(twitch, twitchDirty, initialState.integration.twitch),
-      da: getDirtyValues(da, daDirty, initialState.integration.da),
-    }),
-    [daDirty, twitchDirty],
-  );
+  useEffect(() => {
+    const normalizedTouched: FieldNamesMarkedBoolean<SettingsForm> = { ...touched, background: true };
+    const dirtyValues = getDirtyValues(getValues(), dirtyFields, initialState.settings, normalizedTouched);
 
-  const handleReset = useCallback(() => reset(), [reset]);
-  const onSubmit = useCallback(
-    (data) =>
-      withLoading(setIsSubmitting, async () => {
-        dispatch(setIntegration(data));
-
-        if (username) {
-          await updateIntegration(getDirtyIntegration(data));
-        }
-      })(),
-    [dispatch, getDirtyIntegration, username],
-  );
+    if (Object.keys(dirtyValues).length > 0) {
+      handleSubmit((data) => onSubmit(data, dirtyValues))();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(dirtyFields), JSON.stringify(touched), handleSubmit, onSubmit]);
 
   return (
-    <PageContainer title={t('settings.integrations')}>
-      <form className="settings" onSubmit={handleSubmit(onSubmit)}>
-        <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(onSubmit)} />
+    <PageContainer title={t('settings.integrations')} className="integration-page">
+      <form className="settings">
         <TwitchIntegration control={control} />
         <DaIntegration control={control} />
-        <div style={{ marginTop: 40 }}>
-          <LoadingButton
-            isLoading={isSubmitting}
-            type="submit"
-            variant="contained"
-            color="primary"
-            style={{ marginRight: 20 }}
-            disabled={!isDirty || isSubmitting}
-          >
-            {t('common.apply')}
-          </LoadingButton>
-          <Button onClick={handleReset} variant="outlined" disabled={!isDirty || isSubmitting}>
-            {t('common.cancel')}
-          </Button>
-        </div>
       </form>
     </PageContainer>
   );

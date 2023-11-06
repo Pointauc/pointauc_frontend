@@ -11,7 +11,7 @@ const LoadingPage: React.FC<LoadingPageProps> = ({ helpText, style }) => {
   return (
     <div className="loading-page" style={style}>
       <CircularProgress className="loading-page-spinner" />
-      {!!helpText && <div>{helpText}</div>}
+      {!!helpText && <div style={{ color: '#fff' }}>{helpText}</div>}
     </div>
   );
 };

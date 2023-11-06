@@ -3,13 +3,15 @@ import { Redirect, useLocation } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { getQueryValue } from '../../../utils/url.utils';
 import ROUTES from '../../../constants/routes.constants';
-import { authenticateDA } from '../../../api/twitchApi';
 import { QUERIES } from '../../../constants/common.constants';
 import LoadingPage from '../../../components/LoadingPage/LoadingPage';
-import { setAuthId, setCanBeRestored, setHasDAAuth } from '../../../reducers/User/User';
+import { setHasDAAuth } from '../../../reducers/User/User';
 import withLoading from '../../../decorators/withLoading';
 import { loadUserData } from '../../../reducers/AucSettings/AucSettings';
-import { getIsCanRestoreSettings, updateIntegration } from '../../../api/userApi';
+import { authenticateDA } from '../../../api/daApi';
+import { getCookie } from '../../../utils/common.utils';
+
+const hasToken = !!getCookie('userSession');
 
 const DARedirect: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,25 +23,15 @@ const DARedirect: React.FC = () => {
     const code = getQueryValue(location.search, QUERIES.CODE);
 
     if (code) {
-      authenticateDA(code).then(({ isNew }) => {
+      authenticateDA(code).then(() => {
         setLoadingMessage('Загрузка аккаунта...');
         dispatch(setHasDAAuth(true));
 
-        return withLoading(setIsLoading, async () => {
-          if (isNew) {
-            await updateIntegration({ da: { pointsRate: 1 } });
-          }
-
-          const user: any = await loadUserData(dispatch);
-
-          if (isNew) {
-            const { id } = user.daAuth;
-            const canRestoreSettings = await getIsCanRestoreSettings(`da${id}`);
-
-            dispatch(setCanBeRestored(canRestoreSettings));
-            dispatch(setAuthId(`da${id}`));
-          }
-        })();
+        if (!hasToken) {
+          withLoading(setIsLoading, async () => loadUserData(dispatch))();
+        } else {
+          setIsLoading(false);
+        }
       });
     }
   }, [dispatch, location]);

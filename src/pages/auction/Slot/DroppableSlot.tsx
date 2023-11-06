@@ -28,10 +28,7 @@ interface DroppableSlotProps extends Slot {
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, ...slotProps }) => {
   const dispatch = useDispatch();
-  const { background } = useSelector((root: RootState) => root.aucSettings.settings);
-  const {
-    da: { pointsRate },
-  } = useSelector((root: RootState) => root.aucSettings.integration);
+  const { pointsRate, background } = useSelector((root: RootState) => root.aucSettings.settings);
   const [isExtraOpen, setIsExtraOpen] = useState<boolean>(false);
   const extraIcon = useRef<HTMLButtonElement>(null);
   const { id, amount, name } = slotProps;

@@ -1,8 +1,9 @@
 {
   "translation": {
     "common": {
-      "connectTwitch": "Подключить twitch",
-      "connectDA": "Подключить Donation Alerts",
+      "connectTwitch": "Twitch",
+      "connectDA": "Donation Alerts",
+      "connectDonatePay": "Donate Pay",
       "apply": "Применить",
       "cancel": "Отменить",
       "sec": "с.",
@@ -51,7 +52,8 @@
         "rewardsList": "Список наград:",
         "cost": "Стоимость",
         "color": "Цвет",
-        "addReward": "Добавить награду"
+        "addReward": "Добавить награду",
+        "saveRewards": "Сохранить"
       },
       "luckyWheel": {
         "groupTitle": "Колесо удачи",

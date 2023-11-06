@@ -1,5 +1,9 @@
 @import "../../../styles/colors";
 
+.login-button {
+  height: 40px;
+}
+
 .fast-access {
   width: 100%;
   margin-bottom: 10px !important;
@@ -18,25 +22,23 @@
     flex-direction: column;
     font-size: 16px;
     font-weight: 400;
+    gap: 8px;
 
     .base-icon {
       width: 22px;
       height: 22px;
       margin-right: 5px;
-    }
 
-    .row {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-
-      &:last-child {
-        margin-bottom: 0;
+      &.donate-pay {
+        width: 28px;
+        height: 28px;
       }
     }
 
-    .twitch-login-button {
-      margin-bottom: 15px;
+    .row {
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
     }
 
     .da-login-button {

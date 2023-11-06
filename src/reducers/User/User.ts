@@ -1,18 +1,19 @@
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import { RootState } from '../index';
 import { initChatClient } from '../Requests/Requests';
 
 export interface UserInfo {
-  username: string | null;
-  userId: string | null;
+  username?: string | null;
+  userId?: string | null;
 }
 
 interface UserState extends UserInfo {
   hasDAAuth: boolean;
   hasTwitchAuth: boolean;
-  canBeRestored?: boolean;
-  authId?: string;
+  hasDonatPayAuth: boolean;
+  activeSettingsPresetId: string;
 }
 
 const initialState: UserState = {
@@ -20,40 +21,51 @@ const initialState: UserState = {
   userId: null,
   hasDAAuth: false,
   hasTwitchAuth: false,
-  canBeRestored: false,
+  hasDonatPayAuth: false,
+  activeSettingsPresetId: '',
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUsername(state, action: PayloadAction<string | null>): void {
+    setUserState(state, action: PayloadAction<Partial<UserState>>): void {
+      Object.assign(state, action.payload);
+    },
+    setActiveSettingsPresetId(state, action: PayloadAction<string>): void {
+      state.activeSettingsPresetId = action.payload;
+    },
+    setUsername(state, action: PayloadAction<string | null | undefined>): void {
       state.username = action.payload;
     },
-    setUserId(state, action: PayloadAction<string | null>): void {
+    setUserId(state, action: PayloadAction<string | null | undefined>): void {
       state.userId = action.payload;
     },
     setHasDAAuth(state, action: PayloadAction<boolean>): void {
       state.hasDAAuth = action.payload;
     },
+    setHasDonatPayAuth(state, action: PayloadAction<boolean>): void {
+      state.hasDonatPayAuth = action.payload;
+    },
     setHasTwitchAuth(state, action: PayloadAction<boolean>): void {
       state.hasTwitchAuth = action.payload;
-    },
-    setCanBeRestored(state, action: PayloadAction<boolean>): void {
-      state.canBeRestored = action.payload;
-    },
-    setAuthId(state, action: PayloadAction<string>): void {
-      state.authId = action.payload;
     },
   },
 });
 
-export const { setUsername, setHasDAAuth, setUserId, setHasTwitchAuth, setCanBeRestored, setAuthId } =
-  userSlice.actions;
+export const {
+  setUserState,
+  setActiveSettingsPresetId,
+  setUsername,
+  setHasDAAuth,
+  setUserId,
+  setHasTwitchAuth,
+  setHasDonatPayAuth,
+} = userSlice.actions;
 
 export const updateUsername =
-  (username: string) =>
-  (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
+  (username: string): ThunkAction<void, RootState, {}, Action> =>
+  (dispatch): void => {
     dispatch(setUsername(username));
     dispatch(initChatClient(username));
   };

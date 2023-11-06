@@ -126,7 +126,7 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
 
         <SettingsGroupTitle title={t('settings.luckyWheel.groupTitle')} />
         <FormGroup row className="auc-settings-row">
-          <FormSwitch name="luckyWheel" control={control} label={t('settings.luckyWheel.luckyWheel')} />
+          <FormSwitch name="luckyWheelEnabled" control={control} label={t('settings.luckyWheel.luckyWheel')} />
         </FormGroup>
         <div className="hint">{t('settings.luckyWheel.desc')}</div>
         <FormGroup row className="auc-settings-row">

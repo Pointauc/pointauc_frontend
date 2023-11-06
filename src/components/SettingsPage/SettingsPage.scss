@@ -1,5 +1,4 @@
 .auc-settings {
-
   &-list {
     margin-bottom: 15px;
 
@@ -36,6 +35,8 @@
 }
 
 .settings {
+  padding-bottom: 32px !important;
+
   .MuiFormControlLabel-labelPlacementStart {
     margin: 0;
     align-items: center !important;

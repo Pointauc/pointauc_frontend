@@ -111,7 +111,7 @@ const DropoutWheelProof: FC = () => {
         доказательстве):
       </p>
       <Button size="large" variant="outlined" className="dropout-wheel-proof-pdf-button">
-        <a target="_blank" href={DropoutProof} rel="noreferrer">
+        <a target="_blank" href={DropoutProof} rel="noopener noreferrer">
           Открыть математическое доказательство
         </a>
       </Button>
