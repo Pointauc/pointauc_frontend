@@ -191,7 +191,7 @@ const useWheel = ({
       return;
     }
 
-    spinTarget.current.innerHTML = fitText(winner.name, maxWinnerLength);
+    spinTarget.current.innerHTML = winner.name;
   };
 
   const handleWin = (previousRotate: number, nextRotate: number): void => {
@@ -200,7 +200,7 @@ const useWheel = ({
     if (winner && spinTarget.current) {
       onWin(winner);
       setWinnerItem(winner);
-      spinTarget.current.innerHTML = fitText(winner.name, maxWinnerLength);
+      spinTarget.current.innerHTML = winner.name;
     }
   };
 

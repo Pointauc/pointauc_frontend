@@ -103,6 +103,10 @@
   font-weight: 400;
   color: $grey-2;
   margin-bottom: 20px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .chart {
