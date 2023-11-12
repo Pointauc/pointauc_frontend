@@ -17,9 +17,6 @@ const ThemeWrapper: FC<Props> = ({ children }) => {
   const updatedTheme = useMemo(() => {
     const paperTone = lighten(backgroundTone, 0.05);
     const { paper, default: background } = theme.palette.background;
-    // const colorInstance = tinycolor.m();
-
-    console.log(tinycolor.mix(background, backgroundTone, 7).toHex());
 
     return createTheme(theme, {
       palette: {

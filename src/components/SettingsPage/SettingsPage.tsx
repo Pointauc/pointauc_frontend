@@ -1,6 +1,6 @@
 import { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import PageContainer from '@components/PageContainer/PageContainer';
@@ -60,11 +60,13 @@ const SettingsPage: FC = () => {
 
   return (
     <PageContainer title={t('settings.settings')} classes={{ root: 'settings' }}>
-      <form>
-        <StopwatchSettings control={control} />
-        <AucSettings control={control} register={register} setValue={setValue} />
-        <AppearanceSettings control={control} />
-      </form>
+      <FormProvider {...formMethods}>
+        <form>
+          <StopwatchSettings control={control} />
+          <AucSettings control={control} register={register} setValue={setValue} />
+          <AppearanceSettings />
+        </form>
+      </FormProvider>
     </PageContainer>
   );
 };

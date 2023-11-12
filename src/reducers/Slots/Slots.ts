@@ -5,6 +5,8 @@ import { Action } from 'redux';
 import { Slot } from '@models/slot.model.ts';
 import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
+import SaveLoadService from '@services/SaveLoadService.ts';
+import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
 
 import { logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
@@ -54,7 +56,8 @@ const initialState: SlotsState = {
   // ...createRandomSlots(100, 300, 100),
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
-  slots: [...new Array(10).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
+  // slots: [...new Array(10).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
+  slots: SaveLoadService.getSlots(AUTOSAVE_NAME),
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);
@@ -120,8 +123,8 @@ const slotsSlice = createSlice({
       slotNamesMap.set(`#${maxFastId}`, newSlot.id);
     },
     resetSlots(state): void {
-      state.slots = initialState.slots;
       slotNamesMap.clear();
+      state.slots = [createSlot({ fastId: 1 })];
     },
     setSlots(state, action: PayloadAction<Slot[]>): void {
       state.slots = action.payload;

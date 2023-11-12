@@ -5,6 +5,10 @@ export const COLORS = {
     [PurchaseStatusEnum.Deleted]: '#F08080',
     [PurchaseStatusEnum.Processed]: '#AED581',
   },
+  THEME: {
+    PRIMARY: '#a6d4fa',
+    BACKGROUND_TONE: '#242424',
+  },
   WHEEL: [
     '#00b6ac',
     '#4a91ae',

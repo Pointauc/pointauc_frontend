@@ -17,10 +17,10 @@
       "addPosition": "Добавить лот",
       "saveLoad": "Сохранение/загрузка",
       "downloadMarbles": "Скачать шары",
-      "compactView": "Компактный режим",
       "supportCreator": "поддержать автора",
-      "showWinningChances": "Показать шансы на победу",
       "language": "Language: {{lng}}",
+      "showChances": "Показать шансы на победу",
+      "compactView": "Компактный режим",
 
       "lotSearch": "Поиск среди лотов...",
       "newLotName": "Название нового лота",

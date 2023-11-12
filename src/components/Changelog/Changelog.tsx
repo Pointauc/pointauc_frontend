@@ -40,9 +40,9 @@ const Changelog: FC<ChangelogProps> = ({ updates }) => {
             <Divider className='changelog-date-divider' />
           </Grid>
           <Grid item>
-            <FeaturesList title='Новый функкционал' data={newFeatures} color='success' />
-            <FeaturesList title='Улучшения' data={improvements} color='info' />
-            <FeaturesList title='Исправлено' data={fixes} color='error' />
+            {newFeatures && <FeaturesList title='Новый функкционал' data={newFeatures} color='success' />}
+            {improvements && <FeaturesList title='Улучшения' data={improvements} color='info' />}
+            {fixes && <FeaturesList title='Исправлено' data={fixes} color='error' />}
           </Grid>
         </Grid>
       ))}

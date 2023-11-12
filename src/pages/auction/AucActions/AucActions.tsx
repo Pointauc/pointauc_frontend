@@ -45,11 +45,6 @@ const getSlotNamesByCount = ({ name, amount }: Slot): string =>
   new Array<string>(Number(amount)).fill(name || '').join(LINE_BREAK);
 const createMarbleConfig = (slots: Slot[]): string => slots.map(getSlotNamesByCount).join(LINE_BREAK);
 
-const availableOptions: Option<string>[] = [
-  { key: 'showChances', label: <PercentIcon /> },
-  { key: 'compact', label: <CompressIcon /> },
-];
-
 const AucActions: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
@@ -64,6 +59,28 @@ const AucActions: React.FC = () => {
 
     return Object.entries(map).reduce<string[]>((acc, [key, enabled]) => (enabled ? [...acc, key] : acc), []);
   }, [compact, showChances]);
+
+  const availableOptions: Option<string>[] = useMemo(
+    () => [
+      {
+        key: 'showChances',
+        label: (
+          <Tooltip title={t('auc.showChances')}>
+            <PercentIcon />
+          </Tooltip>
+        ),
+      },
+      {
+        key: 'compact',
+        label: (
+          <Tooltip title={t('auc.compactView')}>
+            <CompressIcon />
+          </Tooltip>
+        ),
+      },
+    ],
+    [t],
+  );
 
   const selectOptions = useCallback(
     (options: string[]) => {

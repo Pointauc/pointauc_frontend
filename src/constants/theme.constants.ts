@@ -24,6 +24,17 @@ const baseTheme = createTheme({
     fontFamily: ['Helvetica Neue', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'].join(','),
   },
   components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          lineHeight: '1.1876em',
+        },
+        input: {
+          padding: '11px 12px',
+          height: '1.1876em',
+        },
+      },
+    },
     MuiDialog: {
       defaultProps: {
         PaperProps: {
@@ -45,13 +56,6 @@ const baseTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.default,
-        }),
-      },
-    },
-    MuiSwitch: {
-      styleOverrides: {
-        thumb: ({ color, theme }) => ({
-          // backgroundColor: theme.palette.primary.main,
         }),
       },
     },

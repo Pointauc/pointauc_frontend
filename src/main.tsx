@@ -15,12 +15,12 @@ import { setSlots } from '@reducers/Slots/Slots.ts';
 import SaveLoadService from '@services/SaveLoadService.ts';
 import { sortSlots } from '@utils/common.utils.ts';
 import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
+import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
 
 import App from './App.tsx';
-
+import ThemeWrapper from './ThemeWrapper.tsx';
 import '@styles/index.scss';
 import '@assets/i18n/index.ts';
-import ThemeWrapper from './ThemeWrapper.tsx';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -59,7 +59,7 @@ window.onbeforeunload = (): undefined => {
   const { slots } = store.getState().slots;
 
   if (slots.length > 1) {
-    SaveLoadService.rewrite(slots, 'Автосохранение');
+    SaveLoadService.rewrite(slots, AUTOSAVE_NAME);
   }
 
   return undefined;

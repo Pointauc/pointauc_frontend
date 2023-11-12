@@ -5,6 +5,7 @@ import mergewith from 'lodash.mergewith';
 import { getUserData, updateSettings } from '@api/userApi.ts';
 import { GetUserDto } from '@models/user.model.ts';
 import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
+import { COLORS } from '@constants/color.constants.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -51,8 +52,8 @@ export const initialState: AucSettingsState = {
     incrementTime: 30,
     rewardPresets: [],
     showUpdates: true,
-    primaryColor: '#a6d4fa',
-    backgroundTone: '#242424',
+    primaryColor: COLORS.THEME.PRIMARY,
+    backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   },
 };
 
