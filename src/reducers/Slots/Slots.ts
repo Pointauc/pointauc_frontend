@@ -46,6 +46,8 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
       }),
   );
 
+const savedSlots = SaveLoadService.getSlots(AUTOSAVE_NAME);
+
 const initialState: SlotsState = {
   // slots: [createSlot()],
   searchTerm: '',
@@ -57,7 +59,7 @@ const initialState: SlotsState = {
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
   // slots: [...new Array(10).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
-  slots: SaveLoadService.getSlots(AUTOSAVE_NAME),
+  slots: savedSlots.length > 0 ? savedSlots : [createSlot()],
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);

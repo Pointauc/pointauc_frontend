@@ -20,6 +20,8 @@ class SaveLoadService {
     const config = SaveLoadService.getSavesConfig();
     const configIndex = config.findIndex(({ name: infoName }) => infoName === name);
 
+    if (configIndex === -1) return [];
+
     const slots = localStorage.getItem(config[configIndex].slotsLocation);
 
     return slots ? JSON.parse(slots) : [];
