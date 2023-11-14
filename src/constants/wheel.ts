@@ -1,5 +1,5 @@
-import { RandomPaceConfig } from '../services/SpinPaceService';
-import { Option } from '../components/RadioButtonGroup/RadioButtonGroup';
+import { RandomPaceConfig } from '@services/SpinPaceService';
+import { Option } from '@components/RadioButtonGroup/RadioButtonGroup';
 
 export enum WheelCommand {
   OpenReg = 'openReg',
@@ -36,13 +36,13 @@ export enum GroupStage {
 }
 
 export const WHEEL_OPTIONS: Option<WheelFormat>[] = [
-  { key: WheelFormat.Default, value: 'Обычное' },
-  { key: WheelFormat.Dropout, value: 'Выбывание' },
-  { key: WheelFormat.BattleRoyal, value: 'Батл рояль' },
+  { key: WheelFormat.Default, label: 'Обычное' },
+  { key: WheelFormat.Dropout, label: 'Выбывание' },
+  { key: WheelFormat.BattleRoyal, label: 'Батл рояль' },
 ];
 
 export const GROUP_STAGES: Option<GroupStage>[] = [
-  { key: GroupStage.FFA, value: 'FFA' },
-  { key: GroupStage.Teams, value: 'Команды' },
-  { key: GroupStage.Dropout, value: 'Выбывание' },
+  { key: GroupStage.FFA, label: 'FFA' },
+  { key: GroupStage.Teams, label: 'Команды' },
+  { key: GroupStage.Dropout, label: 'Выбывание' },
 ];

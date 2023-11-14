@@ -1,11 +1,14 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
-import PageContainer from '../PageContainer/PageContainer';
-import { PurchaseLog } from '../../reducers/Purchases/Purchases';
-import { store } from '../../index';
+import { FC, useCallback, useMemo, useState } from 'react';
+
+import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { Score } from '@models/statistic.ts';
+import { createMapByKey } from '@utils/common.utils.ts';
+import PageContainer from '@components/PageContainer/PageContainer';
+
+import { store } from '../../main.tsx';
+
 import Scoreboard from './Scoreboard/Scoreboard';
-import { Score } from '../../models/statistic';
 import UsersChart from './UsersChart/UsersChart';
-import { createMapByKey } from '../../utils/common.utils';
 import SlotsChart from './SlotsChart/SlotsChart';
 
 const COST_SELECTOR = {
@@ -54,7 +57,7 @@ const Statistic: FC = () => {
 
   return (
     <div>
-      <PageContainer title="Статистика">
+      <PageContainer title='Статистика'>
         <div style={{ display: 'flex', paddingBottom: 30 }}>
           <Scoreboard scoreboard={userScoreboard} />
           <UsersChart scoreboard={userScoreboard} />

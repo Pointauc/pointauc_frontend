@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Trailer } from '../../models/extraWindows';
+
+import { Trailer } from '@models/extraWindows.ts';
 
 interface ExtraWindowsState {
   trailers: Trailer[];

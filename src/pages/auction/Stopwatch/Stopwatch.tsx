@@ -1,24 +1,27 @@
-import React, { ReactText, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import './Stopwatch.scss';
-import { IconButton } from '@material-ui/core';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import ReplayIcon from '@material-ui/icons/Replay';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import KeyboardCapslockIcon from '@material-ui/icons/KeyboardCapslock';
-import PauseIcon from '@material-ui/icons/Pause';
+import { ReactText, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { IconButton, Typography } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ReplayIcon from '@mui/icons-material/Replay';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import KeyboardCapslockIcon from '@mui/icons-material/KeyboardCapslock';
+import PauseIcon from '@mui/icons-material/Pause';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { RootState } from '../../../reducers';
-import { Slot } from '../../../models/slot.model';
-import { sendCpSubscribedState } from '../../../reducers/Subscription/Subscription';
+import { ThunkDispatch } from 'redux-thunk';
+
+import { RootState } from '@reducers';
+import { Slot } from '@models/slot.model.ts';
+import { sendCpSubscribedState } from '@reducers/Subscription/Subscription.ts';
+
+import './Stopwatch.scss';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
 };
 
 const Stopwatch: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
@@ -172,29 +175,29 @@ const Stopwatch: React.FC = () => {
   }, [autoUpdateTimer, isAutoincrementActive, stopwatchAutoincrement, updateStopwatch, winnerSlot]);
 
   return (
-    <div className="stopwatch-wrapper">
-      <div className="stopwatch" ref={stopwatchElement} />
-      <div className="stopwatch-controls">
+    <div className='stopwatch-wrapper'>
+      <Typography className='stopwatch' ref={stopwatchElement} />
+      <div className='stopwatch-controls'>
         {isStopped ? (
-          <IconButton onClick={handleStart} title="Продолжить">
-            <PlayArrowIcon fontSize="large" />
+          <IconButton onClick={handleStart} title='Продолжить' size='large'>
+            <PlayArrowIcon fontSize='large' />
           </IconButton>
         ) : (
-          <IconButton onClick={handleStop} title="Пауза">
-            <PauseIcon fontSize="large" />
+          <IconButton onClick={handleStop} title='Пауза' size='large'>
+            <PauseIcon fontSize='large' />
           </IconButton>
         )}
-        <IconButton onClick={handleReset} title="Обнулить">
-          <ReplayIcon fontSize="large" />
+        <IconButton onClick={handleReset} title='Обнулить' size='large'>
+          <ReplayIcon fontSize='large' />
         </IconButton>
-        <IconButton onClick={handleAdd} title="Добавить время">
-          <ExpandLessIcon fontSize="large" />
+        <IconButton onClick={handleAdd} title='Добавить время' size='large'>
+          <ExpandLessIcon fontSize='large' />
         </IconButton>
-        <IconButton onClick={handleSubtract} title="Уменьшить время">
-          <ExpandMoreIcon fontSize="large" />
+        <IconButton onClick={handleSubtract} title='Уменьшить время' size='large'>
+          <ExpandMoreIcon fontSize='large' />
         </IconButton>
-        <IconButton onClick={handleAddDouble} title="Добавить время Х2">
-          <KeyboardCapslockIcon fontSize="large" />
+        <IconButton onClick={handleAddDouble} title='Добавить время Х2' size='large'>
+          <KeyboardCapslockIcon fontSize='large' />
         </IconButton>
       </div>
     </div>

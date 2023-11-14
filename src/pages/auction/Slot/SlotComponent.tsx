@@ -1,21 +1,27 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { IconButton, OutlinedInput } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { FilledInputProps, IconButton, OutlinedInput, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import './Slot.scss';
 import './SlotCompact.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { FilledInputProps } from '@material-ui/core/FilledInput';
 import { useTranslation } from 'react-i18next';
-import { Slot } from '../../../models/slot.model';
-import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '../../../reducers/Slots/Slots';
-import { animateValue } from '../../../utils/common.utils';
-import { RootState } from '../../../reducers';
-import { percentsRefMap } from '../../../services/PercentsRefMap';
 
-const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
+import { Slot } from '@models/slot.model.ts';
+import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '@reducers/Slots/Slots.ts';
+import { animateValue } from '@utils/common.utils.ts';
+import { percentsRefMap } from '@services/PercentsRefMap.ts';
+import { RootState } from '@reducers';
+
+interface SlotComponentProps {
+  slot: Slot;
+}
+
+const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
+  const marblesAuc = useSelector((root: RootState) => root.aucSettings.settings.marblesAuc);
+  const showChances = useSelector((root: RootState) => root.aucSettings.settings.showChances);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { marblesAuc, showChances } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { id, extra, amount, name } = slot;
   const [currentName, setCurrentName] = useState(name);
   const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
@@ -53,7 +59,7 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
     dispatch(setSlotAmount({ id, amount: Number(amountInput.current?.value) }));
   }, [dispatch, id]);
 
-  const addExtraAmountOnEnter = (e: any): void => {
+  const addExtraAmountOnEnter = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === 'Enter') {
       dispatch(setSlotExtra({ id, extra: Number(currentExtra) }));
       setCurrentExtra(null);
@@ -91,8 +97,10 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
       }
     }
   }, [amount, marblesAuc]);
-  useEffect(() => setCurrentName(name), [name]);
-  useEffect(() => setCurrentExtra(extra), [extra]);
+  useEffect(() => {
+    if (name !== currentName) setCurrentName(name);
+    if (extra !== currentExtra) setCurrentExtra(extra);
+  }, [name, extra]);
 
   const extraLength = Number(currentExtra?.toString().length);
   const extraFieldWidth = `${extraLength > 3 ? 5 + extraLength : 8}ch`;
@@ -100,36 +108,38 @@ const SlotComponent: React.FC<Slot> = ({ id, extra, amount, name }) => {
   return (
     <>
       <OutlinedInput
-        className="slot-name slot-input"
+        className='slot-name slot-input'
         placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
         onKeyPress={createNewSlotOnEnter}
         value={currentName}
       />
-      {showChances && <span className="slot-chance" ref={percentsRef} />}
+      {showChances && <Typography className='slot-chance' ref={percentsRef} />}
       <OutlinedInput
-        className="slot-money slot-input"
+        className='slot-money slot-input'
         placeholder={t('common.currencySign')}
         inputRef={amountInput}
         onKeyPress={createNewSlotOnEnter}
-        type="number"
+        type='number'
       />
-      <IconButton className="slot-add-extra" onClick={handleAddExtra} title="Прибавить стоимость">
+      <IconButton className='slot-add-extra' onClick={handleAddExtra} title='Прибавить стоимость' size='large'>
         <AddIcon />
       </IconButton>
       <OutlinedInput
-        className="slot-money slot-input"
+        className='slot-money slot-input'
         style={{ width: extraFieldWidth }}
         placeholder={t('common.currencySign')}
         onBlur={handleExtraBlur}
         onChange={handleExtraChange}
         value={currentExtra || ''}
-        type="number"
+        type='number'
         onKeyPress={addExtraAmountOnEnter}
       />
     </>
   );
 };
 
-export default memo(SlotComponent);
+const MemorizedSlotComponent = memo(SlotComponent);
+
+export default MemorizedSlotComponent;

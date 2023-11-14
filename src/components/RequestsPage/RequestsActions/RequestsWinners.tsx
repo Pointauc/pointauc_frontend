@@ -1,14 +1,16 @@
-import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, TextField } from '@material-ui/core';
-import { RootState } from '../../../reducers';
+import { Button, TextField } from '@mui/material';
+
+import { RootState } from '@reducers';
+import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
+import { getRandomIntInclusive } from '@utils/common.utils.ts';
+import { UserRequest } from '@models/requests.model.ts';
+import { addRequestWinner, deleteRequestWinner, getList, setWinnersData } from '@reducers/Requests/Requests.ts';
+import { addAlert } from '@reducers/notifications/notifications.ts';
+import { AlertTypeEnum } from '@models/alert.model.ts';
+
 import RequestsTable from '../RequestsTable/RequestsTable';
-import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
-import { getRandomIntInclusive } from '../../../utils/common.utils';
-import { UserRequest } from '../../../models/requests.model';
-import { addRequestWinner, deleteRequestWinner, getList, setWinnersData } from '../../../reducers/Requests/Requests';
-import { addAlert } from '../../../reducers/notifications/notifications';
-import { AlertTypeEnum } from '../../../models/alert.model';
 
 interface RequestsWinnersProps {
   openWheel: (data: UserRequest[]) => void;
@@ -64,29 +66,29 @@ const RequestsWinners: FC<RequestsWinnersProps> = ({ openWheel }) => {
 
   return (
     <div style={{ marginBottom: 10 }}>
-      <SettingsGroupTitle title="Победители" />
-      <div className="row">
-        <div className="col">
-          <Button variant="contained" color="primary" onClick={addRandomWinners}>
+      <SettingsGroupTitle title='Победители' />
+      <div className='row'>
+        <div className='col'>
+          <Button variant='contained' color='primary' onClick={addRandomWinners}>
             Выбрать случайно
           </Button>
           <TextField
             style={{ width: 50, margin: 0 }}
-            variant="outlined"
-            margin="dense"
+            variant='outlined'
+            margin='dense'
             InputProps={{ type: 'number' }}
             onChange={handleRandomCountChange}
             value={randomCount || ''}
           />
-          <Button variant="outlined" color="primary" onClick={handleWheelClick}>
+          <Button variant='outlined' color='primary' onClick={handleWheelClick}>
             крутить колесо
           </Button>
-          <Button variant="outlined" onClick={clearWinnersList}>
+          <Button variant='outlined' onClick={clearWinnersList}>
             Очистить
           </Button>
         </div>
-        <div className="col">
-          <Button variant="outlined" onClick={copyTableData}>
+        <div className='col'>
+          <Button variant='outlined' onClick={copyTableData}>
             Копировать
           </Button>
         </div>

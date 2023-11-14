@@ -17,10 +17,10 @@
       "addPosition": "Добавить лот",
       "saveLoad": "Сохранение/загрузка",
       "downloadMarbles": "Скачать шары",
-      "compactView": "Компактный режим",
       "supportCreator": "поддержать автора",
-      "showWinningChances": "Показать шансы на победу",
       "language": "Language: {{lng}}",
+      "showChances": "Показать шансы на победу",
+      "compactView": "Компактный режим",
 
       "lotSearch": "Поиск среди лотов...",
       "newLotName": "Название нового лота",
@@ -40,6 +40,11 @@
       "settings": "Настройки",
       "integrations": "Интеграции",
       "addNewBids": "Сразу добавлять все новые награды",
+      "appearance": {
+        "appearance": "Внешний вид",
+        "primaryColor": "Основной цвет",
+        "backgroundTone": "Тон фона"
+      },
       "twitch": {
         "openRewards": "Включить награды",
         "closeRewards": "Скрыть награды",

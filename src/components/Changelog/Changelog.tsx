@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
-import { Divider, Grid, Typography } from '@material-ui/core';
+import { FC } from 'react';
 import classNames from 'classnames';
+import { Divider, Grid, Typography } from '@mui/material';
+
+import { UpdateData } from '@utils/changelog.ts';
+
 import './Changelog.scss';
-import { UpdateData } from '../../utils/changelog';
 
 interface ChangelogProps {
   updates: UpdateData[];
@@ -19,7 +21,7 @@ const FeaturesList: FC<FeaturesListProps> = ({ title, data, color }) => (
     <div>
       <span className={classNames('feature-title', color)}>{title}</span>
     </div>
-    <ul className="changelog-features">
+    <ul className='changelog-features'>
       {data.map((text) => (
         <li key={text}>{text}</li>
       ))}
@@ -29,18 +31,18 @@ const FeaturesList: FC<FeaturesListProps> = ({ title, data, color }) => (
 
 const Changelog: FC<ChangelogProps> = ({ updates }) => {
   return (
-    <Grid className="changelog">
+    <Grid className='changelog'>
       {updates.map(({ date, newFeatures, improvements, fixes }) => (
         <Grid container spacing={2} key={date}>
-          <Grid className="changelog-date" container item justify="center" alignItems="center">
-            <Divider className="changelog-date-divider" />
-            <Typography className="changelog-date-text">{date}</Typography>
-            <Divider className="changelog-date-divider" />
+          <Grid className='changelog-date' container item justifyContent='center' alignItems='center'>
+            <Divider className='changelog-date-divider' />
+            <Typography className='changelog-date-text'>{date}</Typography>
+            <Divider className='changelog-date-divider' />
           </Grid>
           <Grid item>
-            <FeaturesList title="Новый функкционал" data={newFeatures} color="success" />
-            <FeaturesList title="Улучшения" data={improvements} color="info" />
-            <FeaturesList title="Исправлено" data={fixes} color="error" />
+            {newFeatures && <FeaturesList title='Новый функкционал' data={newFeatures} color='success' />}
+            {improvements && <FeaturesList title='Улучшения' data={improvements} color='info' />}
+            {fixes && <FeaturesList title='Исправлено' data={fixes} color='error' />}
           </Grid>
         </Grid>
       ))}

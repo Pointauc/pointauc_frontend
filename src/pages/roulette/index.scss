@@ -1,0 +1,121 @@
+@import "../../styles/colors";
+
+$p: 20px;
+$vP: $p;
+$hP: 0;
+
+$divider-pointer-offset: 8px;
+
+.line-roulette {
+  //width: 100%;
+  --roulette-size: 120px;
+  --roulette-gap: 12px;
+  height: var(--roulette-size);
+  padding: $vP $hP;
+  padding-top: $vP * 2;
+  position: relative;
+  cursor: grab;
+
+  &::after,&::before {
+    content: ' ';
+    position: absolute;
+    //width: calc(var(--roulette-size) + 40px);
+    top: 0;
+    bottom: 0;
+  }
+
+  &::after {
+    right: 0;
+    left: 0;
+    background: rgb(42,42,42);
+    background: linear-gradient(90deg, #2e2e2e 1%, rgba(2,0,36,0) 15%, rgba(2,0,36,0) 85%, #2e2e2e 99%);
+  }
+
+  &::before {
+    //left: 0;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  * {
+    pointer-events: none !important;
+    user-select: none !important;
+  }
+
+  &>div>div {
+    overflow: hidden !important;
+  }
+
+  &-item {
+    display: flex;
+    position: relative;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, "Roboto Light", sans-serif;
+
+    &-chance {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 4px 8px;
+      border: 2px solid #590fc4;
+      background-color: #190d36;
+      border-bottom-left-radius: 8px;
+      border-top-right-radius: 8px;
+      border-top: 0;
+      border-right: 0;
+    }
+
+    &-content {
+      position: relative;
+      box-sizing: border-box;
+      //border: 1px solid $grey-5;
+      height: var(--roulette-size);
+      flex: 1;
+      border: 2px solid #8242e3;
+      border-radius: 8px;
+      background-color: #13072C;
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        background: radial-gradient(circle at bottom, #643db4, transparent);
+      }
+    }
+
+    &-divider {
+      width: var(--roulette-gap);
+      height: 100%;
+      position: relative;
+
+      &::after {
+        content: ' ';
+        position: absolute;
+        z-index: 200;
+        top: 0;
+        height: calc(var(--roulette-gap) + $divider-pointer-offset);
+        width: calc(var(--roulette-gap) + $divider-pointer-offset);
+        background-color: #2f6b7d;
+        border: 3px solid #57afc9;
+        border-radius: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  &-indicator {
+    z-index: 100;
+    position: absolute;
+    height: 100%;
+    width: 4px;
+    background-color: salmon;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+}

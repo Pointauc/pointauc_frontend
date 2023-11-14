@@ -1,10 +1,11 @@
-import React, { FC, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, OutlinedInput, Typography, Link } from '@material-ui/core';
+import { FC, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, OutlinedInput, Typography, Link } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { authenticateDonatePay } from '../../../api/donatePayApi';
-import { loadUserData } from '../../../reducers/AucSettings/AucSettings';
-import withLoading from '../../../decorators/withLoading';
-import LoadingButton from '../../LoadingButton/LoadingButton';
+
+import { authenticateDonatePay } from '@api/donatePayApi.ts';
+import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
+import withLoading from '@decorators/withLoading';
+import LoadingButton from '@components/LoadingButton/LoadingButton';
 
 interface DonatePayLoginModalProps {
   opened: boolean;
@@ -28,19 +29,19 @@ const DonatePayLoginModal: FC<DonatePayLoginModalProps> = ({ opened, onClose }) 
     <>
       <Dialog open={redirectConfirmationOpened} onClose={() => setRedirectConfirmationOpened(false)}>
         <DialogContent>
-          <Typography variant="h4">Перед переходом на следующую страницу скройте экран на стриме</Typography>
+          <Typography variant='h4'>Перед переходом на следующую страницу скройте экран на стриме</Typography>
         </DialogContent>
         <DialogActions>
-          <a href="https://donatepay.ru/page/api" target="_blank" rel="noopener noreferrer">
-            <Button color="primary" variant="outlined" onClick={() => setRedirectConfirmationOpened(false)}>
+          <a href='https://donatepay.ru/page/api' target='_blank' rel='noopener noreferrer'>
+            <Button color='primary' variant='outlined' onClick={() => setRedirectConfirmationOpened(false)}>
               Я скрыл экран
             </Button>
           </a>
         </DialogActions>
       </Dialog>
-      <Dialog open={opened} onClose={onClose} maxWidth="md" fullWidth>
+      <Dialog open={opened} onClose={onClose} maxWidth='md' fullWidth>
         <DialogContent>
-          <Typography variant="h4" align="center">
+          <Typography variant='h4' align='center'>
             Интеграция с DonatePay
           </Typography>
           <Typography>
@@ -53,34 +54,33 @@ const DonatePayLoginModal: FC<DonatePayLoginModalProps> = ({ opened, onClose }) 
             стримера как например имеил, данные карт, баланс и т.д. Вся статистика, которую можно найти на сайте,
             хранится в браузере на компьютере юзера и удаляется при закрытии вкладки.
           </Typography>
-          <Typography variant="h4" align="center">
+          <Typography variant='h4' align='center'>
             Получение API-key
           </Typography>
-          <Typography color="error">НЕ ПОКАЗЫВАЙТЕ КЛЮЧ API И СТРАНИЦУ DONATEPAY НА СТРИМЕ!</Typography>
+          <Typography color='error'>НЕ ПОКАЗЫВАЙТЕ КЛЮЧ API И СТРАНИЦУ DONATEPAY НА СТРИМЕ!</Typography>
           <Typography paragraph>
-            <Typography component="span">Перейдите на страницу </Typography>
-            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-            <Link className="da-link donate-pay" onClick={() => setRedirectConfirmationOpened(true)}>
+            <Typography component='span'>Перейдите на страницу </Typography>
+            <Link className='da-link donate-pay' onClick={() => setRedirectConfirmationOpened(true)}>
               https://donatepay.ru/page/api
             </Link>
-            <Typography component="span">
+            <Typography component='span'>
               {' '}
               затем скопируйте значение поля &quot;Ваш API ключ&quot; и вставьте его в поле ниже на сайте аукциона.
             </Typography>
           </Typography>
           <OutlinedInput
-            autoComplete="off"
+            autoComplete='off'
             fullWidth
             onChange={(e) => setToken(e.target.value)}
             value={token}
-            type="password"
+            type='password'
           />
         </DialogContent>
         <DialogActions>
           <LoadingButton
             disabled={token.length === 0}
-            color="primary"
-            variant="outlined"
+            color='primary'
+            variant='outlined'
             onClick={authorize}
             isLoading={isLoading}
           >

@@ -1,13 +1,17 @@
 .stopwatch-wrapper {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  align-items: center;
 
   .stopwatch {
     font-size: 80px;
+    line-height: 1;
+    width: 320px;
   }
 
   .stopwatch-controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 }

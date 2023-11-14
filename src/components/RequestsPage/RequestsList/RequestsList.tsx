@@ -1,12 +1,13 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, MuiThemeProvider } from '@material-ui/core';
-import { RootState } from '../../../reducers';
+import { Button, Theme, StyledEngineProvider } from '@mui/material';
+
+import { RootState } from '@reducers';
+import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
+import { UserRequest } from '@models/requests.model.ts';
+import { deleteRequest, getList, setAllData, setSyncState, syncWithAuc } from '@reducers/Requests/Requests.ts';
+
 import RequestsTable from '../RequestsTable/RequestsTable';
-import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
-import { UserRequest } from '../../../models/requests.model';
-import { deleteRequest, getList, setAllData, setSyncState, syncWithAuc } from '../../../reducers/Requests/Requests';
-import { successTheme } from '../../../constants/theme.constants';
 
 interface RequestsListProps {
   openWheel: (data: UserRequest[]) => void;
@@ -42,26 +43,26 @@ const RequestsList: FC<RequestsListProps> = ({ openWheel }) => {
 
   return (
     <div>
-      <SettingsGroupTitle title="Все заказы" />
-      <div className="row">
-        <div className="col">
-          <Button variant="outlined" color="primary" onClick={handleWheelClick}>
+      <SettingsGroupTitle title='Все заказы' />
+      <div className='row'>
+        <div className='col'>
+          <Button variant='outlined' color='primary' onClick={handleWheelClick}>
             крутить колесо
           </Button>
-          <Button variant="outlined" onClick={clearWinnersList}>
+          <Button variant='outlined' onClick={clearWinnersList}>
             Очистить
           </Button>
-          <MuiThemeProvider theme={successTheme}>
+          <StyledEngineProvider injectFirst>
             {isSyncWithAuc ? (
-              <Button variant="outlined" onClick={handleDeSync}>
+              <Button variant='outlined' onClick={handleDeSync}>
                 отменить синхронизацию
               </Button>
             ) : (
-              <Button variant="outlined" color="primary" onClick={handleSync}>
+              <Button variant='outlined' color='success' onClick={handleSync}>
                 синхронизировать с аукционом
               </Button>
             )}
-          </MuiThemeProvider>
+          </StyledEngineProvider>
         </div>
       </div>
       <RequestsTable requests={allData} loading={isLoading} onDelete={handleDelete} />

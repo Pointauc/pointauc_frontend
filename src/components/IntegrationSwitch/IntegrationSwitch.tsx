@@ -1,8 +1,9 @@
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { Switch, Typography } from '@mui/material';
+
+import { SubscribeState } from '@reducers/Subscription/Subscription.ts';
 
 import './IntegrationSwitch.scss';
-import { Switch } from '@material-ui/core';
-import { SubscribeState } from '../../reducers/Subscription/Subscription';
 
 interface IntegrationSwitchProps {
   state: SubscribeState;
@@ -12,11 +13,14 @@ interface IntegrationSwitchProps {
 }
 
 const IntegrationSwitch: FC<IntegrationSwitchProps> = ({ state, icon, onChange, title }) => {
-  const [enabled, setEnabled] = useState<boolean>(state.actual);
+  const { actual, loading } = state;
+  const [enabled, setEnabled] = useState<boolean>(actual);
 
   useEffect(() => {
-    setEnabled(state.actual);
-  }, [state.actual]);
+    if (!loading) {
+      setEnabled(actual);
+    }
+  }, [actual, loading]);
 
   const handleSwitchChange = useCallback(
     (e: any, checked: boolean): void => {
@@ -27,12 +31,12 @@ const IntegrationSwitch: FC<IntegrationSwitchProps> = ({ state, icon, onChange, 
   );
 
   return (
-    <div className="row integration-switch">
-      <div className="col">
+    <div className='row integration-switch'>
+      <div className='col'>
         {icon}
-        <span className="label">{title}</span>
+        <Typography className='label'>{title}</Typography>
       </div>
-      <Switch onChange={handleSwitchChange} disabled={state.loading} checked={enabled} />
+      <Switch onChange={handleSwitchChange} disabled={loading} checked={enabled} />
     </div>
   );
 };

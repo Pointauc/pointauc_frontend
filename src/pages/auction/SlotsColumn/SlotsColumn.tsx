@@ -1,17 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, Typography } from '@material-ui/core';
+import { IconButton, Typography } from '@mui/material';
 import classNames from 'classnames';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import { RootState } from '../../../reducers';
-import SlotsList from './SlotsList';
-import { saveSettings } from '../../../reducers/AucSettings/AucSettings';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ThunkDispatch } from 'redux-thunk';
+
+import { RootState } from '@reducers';
+import { saveSettings } from '@reducers/AucSettings/AucSettings.ts';
+
 import SlotsHeader from '../SlotsHeader/SlotsHeader';
 
+import SlotsList from './SlotsList';
+
 const SlotsColumn: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const buyoutInput = useRef<HTMLInputElement>(null);
   const { slots, searchTerm } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
@@ -44,31 +48,17 @@ const SlotsColumn: React.FC = () => {
     [draggedRedemption],
   );
 
-  const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
-
-  const toggleTotalSumVisability = useCallback(() => {
-    dispatch(saveSettings({ isTotalVisible: !isTotalVisible }));
-  }, [dispatch, isTotalVisible]);
-
   const filteredSlots = useMemo(
     () => (searchTerm ? slots.filter(({ name }) => name?.toLowerCase().includes(searchTerm.toLowerCase())) : slots),
     [searchTerm, slots],
   );
 
   return (
-    <div className="slots">
+    <div className='slots'>
       <SlotsHeader />
-      <div className="slots-wrapper">
+      <div className='slots-wrapper'>
         <div className={slotsColumnClasses}>
           <SlotsList slots={filteredSlots} />
-          <div className="slots-footer">
-            <div className="total-sum-container">
-              {isTotalVisible && <Typography className="total-sum">{`Всего: ${totalSum} ₽`}</Typography>}
-              <IconButton onClick={toggleTotalSumVisability} className="hide-sum">
-                {isTotalVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
-              </IconButton>
-            </div>
-          </div>
         </div>
       </div>
     </div>

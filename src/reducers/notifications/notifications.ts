@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AlertProps, AlertType } from '../../models/alert.model';
-import { MAX_ALERTS } from '../../constants/common.constants';
+
+import { AlertProps, AlertType } from '@models/alert.model.ts';
+import { MAX_ALERTS } from '@constants/common.constants.ts';
 
 interface NotificationsState {
   message: string | null;

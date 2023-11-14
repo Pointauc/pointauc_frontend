@@ -1,10 +1,12 @@
 import { ActionCreatorWithPayload, createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import { Socket } from 'socket.io-client';
+
+import { AlertTypeEnum } from '@models/alert.model.ts';
+import { getIntegrationsValidity } from '@api/userApi.ts';
+
 import { RootState } from '../index';
 import { addAlert } from '../notifications/notifications';
-import { AlertTypeEnum } from '../../models/alert.model';
-import { getIntegrationsValidity } from '../../api/userApi';
 import { setUserState } from '../User/User';
 
 export interface SubscribeState {
@@ -81,6 +83,7 @@ const sendSubscribeState = (
   }
 
   socket.once('bidsStateChange', ({ state, error }) => {
+    console.log('handle bidsStateChange', state);
     dispatch(stateChangeActionCreator({ actual: state, loading: false }));
 
     if (error) {

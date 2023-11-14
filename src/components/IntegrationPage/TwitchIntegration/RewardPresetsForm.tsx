@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import {
   Button,
   FormGroup,
@@ -8,57 +8,46 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCellProps,
   TableContainer,
   TableHead,
   TableRow,
-  Theme,
   Typography,
-  withStyles,
-} from '@material-ui/core';
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useFieldArray, useForm } from 'react-hook-form';
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { createStyles } from '@material-ui/core/styles';
-import FormColorPicker from '../../Form/FormColorPicker/FormColorPicker';
-import { SettingsForm } from '../../../models/settings.model';
-import FormInput from '../../Form/FormInput/FormInput';
-import { RootState } from '../../../reducers';
-import { updateRewardPresets } from '../../../api/twitchApi';
-import { setAucSettings } from '../../../reducers/AucSettings/AucSettings';
-import LoadingButton from '../../LoadingButton/LoadingButton';
-import withLoading from '../../../decorators/withLoading';
+
+import FormColorPicker from '@components/Form/FormColorPicker/FormColorPicker';
+import { SettingsForm } from '@models/settings.model.ts';
+import FormInput from '@components/Form/FormInput/FormInput';
+import { updateRewardPresets } from '@api/twitchApi.ts';
+import { setAucSettings } from '@reducers/AucSettings/AucSettings.ts';
+import LoadingButton from '@components/LoadingButton/LoadingButton';
+import withLoading from '@decorators/withLoading';
+import ConfirmFormOnLeave from '@components/ConfirmFormOnLeave/ConfirmFormOnLeave';
+import { RootState } from '@reducers';
+
 import RewardPresetsConfirmation from './RewardPresetsConfirmation';
-import ConfirmFormOnLeave from '../../ConfirmFormOnLeave/ConfirmFormOnLeave';
 
 type PresetsForm = Pick<SettingsForm, 'rewardPresets' | 'rewardsPrefix'>;
 
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: '#505754',
-      color: theme.palette.common.white,
-      fontSize: 15,
-    },
-    body: {
-      paddingTop: 7,
-      paddingBottom: 7,
-      fontSize: 14,
-    },
-  }),
-)(TableCell);
+const StyledTableCell = styled(TableCell)<TableCellProps>({
+  '&.MuiTableCell-head': {
+    backgroundColor: '#505754',
+    color: '#fff',
+    fontSize: 15,
+  },
+  '&.MuiTableCell-body': {
+    paddingTop: 7,
+    paddingBottom: 7,
+    fontSize: 14,
+  },
+}) as any;
 
-const StyledTableRow = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
-      },
-    },
-  }),
-)(TableRow);
-
-const RewardPresetsForm: FC = () => {
+const RewardPresetsForm: React.FunctionComponent = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +75,7 @@ const RewardPresetsForm: FC = () => {
       const handleDeleteReward = (): void => remove(index);
 
       return (
-        <IconButton onClick={handleDeleteReward}>
+        <IconButton onClick={handleDeleteReward} size='large'>
           <DeleteIcon />
         </IconButton>
       );
@@ -100,9 +89,9 @@ const RewardPresetsForm: FC = () => {
         <FormInput
           name={`rewardPresets[${index}].cost`}
           control={control}
-          type="number"
+          type='number'
           defaultValue={cost}
-          className="field lg"
+          className='field lg'
         />
       );
     },
@@ -147,49 +136,49 @@ const RewardPresetsForm: FC = () => {
         onCLose={() => setConfirmOpened(false)}
         onConfirm={handleSubmit(savePresets)}
       />
-      <FormGroup row className="auc-settings-row">
+      <FormGroup row className='auc-settings-row'>
         <FormInput
-          name="rewardsPrefix"
+          name='rewardsPrefix'
           control={control}
           label={t('settings.twitch.commonRewardsName')}
-          className="field lg"
+          className='field lg'
+          hint={t('settings.twitch.commonRewardsNameDesc')}
         />
       </FormGroup>
-      <div className="hint">{t('settings.twitch.commonRewardsNameDesc')}</div>
-      <Typography variant="body1" className="MuiFormControlLabel-label">
+      <Typography variant='body1' className='MuiFormControlLabel-label'>
         {t('settings.twitch.rewardsList')}
       </Typography>
       <TableContainer component={Paper} style={{ width: 490, marginTop: 15 }}>
         <Table>
           <TableHead>
-            <StyledTableRow>
+            <TableRow>
               <StyledTableCell>{t('settings.twitch.cost')}</StyledTableCell>
-              <StyledTableCell align="center">{t('settings.twitch.color')}</StyledTableCell>
+              <StyledTableCell align='center'>{t('settings.twitch.color')}</StyledTableCell>
               <StyledTableCell />
-            </StyledTableRow>
+            </TableRow>
           </TableHead>
           <TableBody>
             {fields.map(({ cost, color, id }, index) => {
               return (
-                <StyledTableRow key={id}>
+                <TableRow key={id}>
                   <StyledTableCell>{renderCostColumn(cost, index)}</StyledTableCell>
-                  <StyledTableCell align="center">{renderColorColumn(color, index)}</StyledTableCell>
-                  <StyledTableCell align="right">{renderActionColumn(index)}</StyledTableCell>
-                </StyledTableRow>
+                  <StyledTableCell align='center'>{renderColorColumn(color, index)}</StyledTableCell>
+                  <StyledTableCell align='right'>{renderActionColumn(index)}</StyledTableCell>
+                </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </TableContainer>
-      <Grid container justify="space-between" style={{ marginTop: 15, width: 490 }}>
-        <Button onClick={handleAppendReward} color="primary" variant="outlined">
+      <Grid container justifyContent='space-between' style={{ marginTop: 15, width: 490 }}>
+        <Button onClick={handleAppendReward} color='primary' variant='outlined'>
           {t('settings.twitch.addReward')}
         </Button>
         <LoadingButton
           isLoading={isLoading}
           onClick={() => setConfirmOpened(true)}
-          color="primary"
-          variant="contained"
+          color='primary'
+          variant='contained'
           disabled={!isDirty}
         >
           {t('settings.twitch.saveRewards')}

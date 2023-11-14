@@ -1,12 +1,14 @@
-import React, { FC, useEffect, useMemo, useRef } from 'react';
+import { FC, useEffect, useMemo, useRef } from 'react';
 import { Chart, ChartDataset, registerables, TooltipItem } from 'chart.js';
 import dayjs from 'dayjs';
-import { PurchaseLog } from '../../../reducers/Purchases/Purchases';
-import { TimeScore } from '../../../models/statistic';
-import { getRandomIntInclusive } from '../../../utils/common.utils';
-import { FORMAT } from '../../../constants/format.constants';
-import { COLORS } from '../../../constants/color.constants';
-import { store } from '../../../index';
+
+import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { TimeScore } from '@models/statistic.ts';
+import { getRandomIntInclusive } from '@utils/common.utils.ts';
+import { FORMAT } from '@constants/format.constants.ts';
+import { COLORS } from '@constants/color.constants.ts';
+
+import { store } from '../../../main.tsx';
 
 Chart.register(...registerables);
 
@@ -98,7 +100,7 @@ const SlotsChart: FC<SlotsChartProps> = ({ slotsMap }) => {
   }, [datasets]);
 
   return (
-    <div className="chart">
+    <div className='chart'>
       <canvas ref={chartRef} />
     </div>
   );

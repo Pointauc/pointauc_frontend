@@ -1,15 +1,15 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, MenuItem, MuiThemeProvider, Select, Tooltip } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import SettingsIcon from '@material-ui/icons/Settings';
+import { Button, MenuItem, ThemeProvider, Theme, StyledEngineProvider, Select, Tooltip } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useForm } from 'react-hook-form';
 import { v4 } from 'uuid';
 import { ChatUserstate } from 'tmi.js';
-import { RootState } from '../../../reducers';
-import './RequestsDataPanel.scss';
-import { successTheme } from '../../../constants/theme.constants';
-import { CamilleList, RequestsListInfo } from '../../../models/requests.model';
+import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
+
+import { RootState } from '@reducers';
+import { CamilleList, RequestsListInfo } from '@models/requests.model.ts';
 import {
   addRequest,
   addRequestsList,
@@ -17,8 +17,18 @@ import {
   setCurrentList,
   updateFromCamilleBot,
   updateRequestsList,
-} from '../../../reducers/Requests/Requests';
+} from '@reducers/Requests/Requests.ts';
+
 import ListSettingsDialog from './ListSettings/ListSettingsDialog';
+
+import type { ThunkDispatch } from 'redux-thunk';
+
+import './RequestsDataPanel.scss';
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 const newListTemplate: RequestsListInfo = {
   uuid: v4(),
@@ -30,7 +40,7 @@ const newListTemplate: RequestsListInfo = {
 };
 
 const RequestsDataPanel: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { lists, currentList, chatClient } = useSelector((root: RootState) => root.requests);
   const { username: channelName } = useSelector((root: RootState) => root.user);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -82,7 +92,7 @@ const RequestsDataPanel: FC = () => {
   );
 
   const handleListChange = useCallback(
-    (event: ChangeEvent<any>) => dispatch(setCurrentList(event.target.value)),
+    (event: SelectChangeEvent) => dispatch(setCurrentList(event.target.value)),
     [dispatch],
   );
 
@@ -112,13 +122,13 @@ const RequestsDataPanel: FC = () => {
   }, [chatClient, listInfo.command]);
 
   return (
-    <div className="requests-list-panel">
+    <div className='requests-list-panel'>
       <ListSettingsDialog
         form={settingsForm}
         onSubmit={updateSettings}
         open={isSettingsOpen}
         toggleOpen={toggleSettingsOpen}
-        title="Настройки списка заказов"
+        title='Настройки списка заказов'
         disabled
       />
       <ListSettingsDialog
@@ -126,10 +136,10 @@ const RequestsDataPanel: FC = () => {
         onSubmit={createList}
         open={isCreationOpen}
         toggleOpen={toggleCreationOpen}
-        title="Создать новый список заказов"
+        title='Создать новый список заказов'
       />
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div className="label">Текущий список:</div>
+        <div className='label'>Текущий список:</div>
         <Select value={currentList} onChange={handleListChange}>
           {lists.map(({ name, uuid }) => (
             <MenuItem value={uuid} key={uuid}>
@@ -138,27 +148,27 @@ const RequestsDataPanel: FC = () => {
           ))}
         </Select>
       </div>
-      <Button variant="outlined" color="primary" startIcon={<AddIcon />} onClick={toggleCreationOpen}>
+      <Button variant='outlined' color='primary' startIcon={<AddIcon />} onClick={toggleCreationOpen}>
         Новый список
       </Button>
-      <Tooltip title="Изменение настроек пока что недоступно">
+      <Tooltip title='Изменение настроек пока что недоступно'>
         <span>
-          <Button variant="outlined" startIcon={<SettingsIcon />} onClick={toggleSettingsOpen} disabled>
+          <Button variant='outlined' startIcon={<SettingsIcon />} onClick={toggleSettingsOpen} disabled>
             Настройки
           </Button>
         </span>
       </Tooltip>
-      <MuiThemeProvider theme={successTheme}>
+      <StyledEngineProvider injectFirst>
         {isConnected ? (
-          <Button variant="outlined" onClick={handleDisconnect}>
+          <Button variant='outlined' onClick={handleDisconnect}>
             Закрыть голосование
           </Button>
         ) : (
-          <Button variant="outlined" color="primary" disabled={!listInfo.command} onClick={handleConnect}>
+          <Button variant='outlined' color='success' disabled={!listInfo.command} onClick={handleConnect}>
             Открыть голосование
           </Button>
         )}
-      </MuiThemeProvider>
+      </StyledEngineProvider>
     </div>
   );
 };

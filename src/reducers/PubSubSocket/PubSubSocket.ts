@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import axios from 'axios';
-import WebSocketService from '../../services/WebSocketService';
-import { Purchase } from '../Purchases/Purchases';
-import { MESSAGE_TYPES } from '../../constants/webSocket.constants';
-import { getWebsocketUrl } from '../../utils/url.utils';
+
+import { MESSAGE_TYPES } from '@constants/webSocket.constants.ts';
+import { getWebsocketUrl } from '@utils/url.utils.ts';
+import { AlertTypeEnum } from '@models/alert.model.ts';
+
 import { addAlert } from '../notifications/notifications';
-import { AlertTypeEnum } from '../../models/alert.model';
+import WebSocketService from '../../services/WebSocketService';
 import { RootState } from '../index';
 import { sendCpSubscribedState, sendDaSubscribedState } from '../Subscription/Subscription';
 
@@ -33,7 +34,7 @@ export const { setWebSocket } = puSubSocketSlice.actions;
 export const connectToServer =
   (showSuccessMessage?: boolean) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
     const {
       twitch: { actual: twitchSub },
       da: { actual: daSub },
@@ -42,13 +43,16 @@ export const connectToServer =
     const onOpen = (ws: WebSocket): void => {
       ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT }));
 
-      interval = setInterval(() => {
-        if (ws) {
-          ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT }));
-        }
+      interval = setInterval(
+        () => {
+          if (ws) {
+            ws.send(JSON.stringify({ type: MESSAGE_TYPES.IDENTIFY_CLIENT }));
+          }
 
-        axios.get('api/isAlive');
-      }, 1000 * 60 * 30);
+          axios.get('api/isAlive');
+        },
+        1000 * 60 * 30,
+      );
 
       dispatch(setWebSocket(ws));
       if (showSuccessMessage) {
@@ -82,7 +86,7 @@ export const connectToServer =
       clearInterval(interval);
     };
 
-    const webSocketService = new WebSocketService<Purchase>(onClose, onOpen);
+    const webSocketService = new WebSocketService(onClose, onOpen);
     webSocketService.connect(getWebsocketUrl());
   };
 

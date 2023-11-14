@@ -1,6 +1,5 @@
-import React from 'react';
-import PageContainer from '../PageContainer/PageContainer';
-import Stopwatch from '../../pages/auction/Stopwatch/Stopwatch';
+import PageContainer from '@components/PageContainer/PageContainer';
+import Stopwatch from '@pages/auction/Stopwatch/Stopwatch';
 
 const StopwatchPage = () => {
   return (

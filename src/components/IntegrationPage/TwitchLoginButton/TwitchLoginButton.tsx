@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
-import { Button } from '@material-ui/core';
+import { FC } from 'react';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as TwitchSvg } from '../../../assets/icons/twitch.svg';
+
+import TwitchSvg from '@assets/icons/twitch.svg?react';
 
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
@@ -24,10 +25,10 @@ const TwitchLoginButton: FC = () => {
 
   return (
     <Button
-      className="login-button twitch"
-      variant="contained"
-      size="large"
-      startIcon={<TwitchSvg className="base-icon" />}
+      className='login-button twitch'
+      variant='contained'
+      size='large'
+      startIcon={<TwitchSvg className='base-icon' />}
       onClick={handleAuth}
     >
       {t('common.connectTwitch')}

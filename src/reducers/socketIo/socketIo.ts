@@ -1,8 +1,10 @@
 import { io, Socket } from 'socket.io-client';
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
+
+import { getSocketIOUrl } from '@utils/url.utils.ts';
+
 import { RootState } from '../index';
-import { getSocketIOUrl } from '../../utils/url.utils';
 
 interface SocketIoState {
   client?: Socket | null;

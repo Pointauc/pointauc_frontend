@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
-import { normalizePurchase } from '../../utils/slots.utils';
+
+import { normalizePurchase } from '@utils/slots.utils.ts';
+import { AlertTypeEnum } from '@models/alert.model.ts';
+import { PurchaseStatusEnum } from '@models/purchase.ts';
+
 import { RootState } from '../index';
 import { createSlotFromPurchase, setSlotAmount } from '../Slots/Slots';
 import { addAlert } from '../notifications/notifications';
-import { AlertTypeEnum } from '../../models/alert.model';
 import slotNamesMap from '../../services/SlotNamesMap';
-import { PurchaseStatusEnum } from '../../models/purchase';
 
 export interface Purchase {
   timestamp: string;

@@ -1,11 +1,28 @@
 @import "../../../styles/colors";
 
 .compact-view {
-  display: flex;
-  flex-wrap: wrap;
+  //display: flex;
+  //flex-wrap: wrap;
+  gap: 0;
 
-  .MuiGrid-item:last-child .slot-wrapper{
-    border-bottom: 1px solid rgba(255, 255, 255, 0.23);
+  .slot-input {
+    height: 40px;
+  }
+
+  .MuiGrid2-root:last-child .slot-wrapper{
+    //border-bottom: 1px solid rgba(255, 255, 255, 0.23);
+  }
+
+  .slot-grid-wrapper {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.23);
+
+    border-top-width: 0;
+
+    &:first-child {
+      border-top-width: 1px;
+    }
   }
 
   .slot-wrapper {
@@ -13,10 +30,8 @@
     align-self: stretch;
     align-items: center;
     margin-bottom: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.23);
-    border-right: 1px solid rgba(255, 255, 255, 0.23);
-    border-left: 1px solid rgba(255, 255, 255, 0.23);
-    height: 40px;
+    border: 0;
+    //height: 40px;
 
     &:last-child {
       margin-bottom: 0;
@@ -26,7 +41,8 @@
       display: flex;
       flex-grow: 1;
       padding: 0;
-      border: 1px solid transparent;
+      border: 0;
+      //border: 1px solid transparent;
       border-radius: 0;
       align-items: center;
 

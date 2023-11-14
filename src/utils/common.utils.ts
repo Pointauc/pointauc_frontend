@@ -1,13 +1,14 @@
 import { DragEvent } from 'react';
-import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
-import { FieldValues } from 'react-hook-form/dist/types/fields';
-import { CellValue, ValueGetterParams } from '@material-ui/x-grid';
+import { GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid';
+
 import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
 import { WheelItem } from '../models/wheel.model';
 import { ATTRIBUTES, TAGS } from '../constants/common.constants';
 
-export const isProduction = (): boolean => process.env.NODE_ENV === 'production';
+import type { FieldValues, FieldNamesMarkedBoolean } from 'react-hook-form';
+
+export const isProduction = (): boolean => import.meta.env.MODE === 'production';
 
 export const animateValue = (ref: HTMLInputElement, start: number, end: number, duration = 500): void => {
   let startTimestamp = 0;
@@ -62,7 +63,7 @@ export const formatSeconds = (value: number): string => `${value}c.`;
 
 export const getDirtyValues = <T extends FieldValues>(
   values: T,
-  dirtyFields: FieldNamesMarkedBoolean<T> = {},
+  dirtyFields: FieldNamesMarkedBoolean<T> = {} as FieldNamesMarkedBoolean<T>,
   defaultValues: T,
   touched: FieldNamesMarkedBoolean<T>,
 ): Partial<T> =>
@@ -125,7 +126,7 @@ export const createMapByKey = <TKey, TData>(
   return map;
 };
 
-export const percentsFormatter = (params: ValueGetterParams): CellValue => `${params.value}%`;
+export const percentsFormatter = (params: GridValueFormatterParams): string => `${String(params.value)}%`;
 
 export const getUniqItems = <T>(items: T[], count: number): T[] => {
   if (items.length <= count) {

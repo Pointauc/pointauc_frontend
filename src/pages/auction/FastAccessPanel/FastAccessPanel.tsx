@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
+
 import IntegrationSubscription from '../IntegrationSubscription/IntegrationSubscription';
 
 const FastAccessPanel: FC = () => {

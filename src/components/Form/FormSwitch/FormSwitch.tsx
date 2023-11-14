@@ -1,10 +1,12 @@
-import React, { ChangeEvent, FC, useCallback } from 'react';
-import { FormControlLabel, Switch } from '@material-ui/core';
-import { Controller, ControllerRenderProps, UseFormMethods } from 'react-hook-form';
+import { ChangeEvent, FC, useCallback } from 'react';
+import { FormControlLabel, Switch } from '@mui/material';
+import { Control, Controller, ControllerRenderProps } from 'react-hook-form';
+
+import FieldLabel from '@components/Form/FieldLabel';
 
 interface FormSwitchProps {
   name: string;
-  control: UseFormMethods['control'];
+  control: Control<any>;
   label: string;
   hint?: string;
 }
@@ -15,20 +17,23 @@ const FormSwitch: FC<FormSwitchProps> = ({ label, control, name, hint }) => {
       onChange(checked);
       onBlur();
     };
-    return <Switch onChange={handleChange} checked={value} inputRef={ref} />;
+    return <Switch color='secondary' onChange={handleChange} checked={value} inputRef={ref} />;
   }, []);
 
   const renderField = useCallback(
-    (props: ControllerRenderProps) => (
-      <FormControlLabel control={renderSwitch(props)} label={label} labelPlacement="start" />
+    ({ field }: any) => (
+      <FormControlLabel
+        control={renderSwitch(field)}
+        label={<FieldLabel label={label} hint={hint} />}
+        labelPlacement='start'
+      />
     ),
-    [label, renderSwitch],
+    [hint, label, renderSwitch],
   );
 
   return (
     <div>
       <Controller control={control} name={name} render={renderField} />
-      {!!hint && <div className="hint">{hint}</div>}
     </div>
   );
 };

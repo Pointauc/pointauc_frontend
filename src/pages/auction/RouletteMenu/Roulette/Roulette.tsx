@@ -1,17 +1,18 @@
-import React, { FC, useCallback, useMemo } from 'react';
-import { Typography } from '@material-ui/core';
+import { FC, useCallback, useMemo } from 'react';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { RoulettePreset } from '../PresetSelect/PresetSelect';
-import { WheelItem } from '../../../../models/wheel.model';
 
-import './Roulette.scss';
-import RandomWheel, { SettingElements } from '../../../../components/RandomWheel/RandomWheel';
-import { Purchase } from '../../../../reducers/Purchases/Purchases';
+import { WheelItem } from '@models/wheel.model.ts';
+import { Purchase } from '@reducers/Purchases/Purchases.ts';
+import { getRandomIntInclusive } from '@utils/common.utils.ts';
+import { RootState } from '@reducers';
+import RandomWheel, { SettingElements } from '@components/RandomWheel/RandomWheel';
+
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
-import { getRandomIntInclusive } from '../../../../utils/common.utils';
-import { RootState } from '../../../../reducers';
+import { RoulettePreset } from '../PresetSelect/PresetSelect';
 import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
+import './Roulette.scss';
 
 interface RouletteProps {
   presets: RoulettePreset[];
@@ -177,8 +178,8 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
   };
 
   return (
-    <div className="roulette">
-      <div className="roulette-wheel">
+    <div className='roulette'>
+      <div className='roulette-wheel'>
         <RandomWheel
           items={rawItems}
           isShuffle={false}
@@ -188,12 +189,12 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
           hideDeleteItem
         >
           {settings.luckyWheelSelectBet && selectedPreset && (
-            <div className="roulette-preset-wrapper">
+            <div className='roulette-preset-wrapper'>
               <Typography>{t('auc.casino.yourLot')}</Typography>
               <RoulettePresetView preset={selectedPreset} />
             </div>
           )}
-          <div className="roulette-wheel-extra">
+          <div className='roulette-wheel-extra'>
             <div>
               <Typography>{t('auc.casino.yourBid')}</Typography>
               <PurchaseComponent {...bid} hideActions disabled />

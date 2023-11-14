@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState, useRef } from 'react';
 import {
   Button,
   Card,
@@ -8,15 +8,21 @@ import {
   DialogContent,
   IconButton,
   Typography,
-} from '@material-ui/core';
+  ButtonGroup,
+  Popper,
+  Grow,
+  Paper,
+  ClickAwayListener,
+  MenuList,
+  MenuItem,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import { findBestMatch } from 'string-similarity';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { useTranslation } from 'react-i18next';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 import {
   logPurchase,
   Purchase,
@@ -24,26 +30,24 @@ import {
   setDraggedRedemption,
   updateBid,
   updateExistBids,
-} from '../../../reducers/Purchases/Purchases';
-import './PurchaseComponent.scss';
-import { RootState } from '../../../reducers';
-import donationBackground from '../../../assets/img/donationBackground.jpg';
-import { addBid, createSlotFromPurchase } from '../../../reducers/Slots/Slots';
-import { useCostConvert } from '../../../hooks/useCostConvert';
-import Marble from '../../../assets/img/Marble.png';
-import { store } from '../../../index';
-import { PurchaseStatusEnum } from '../../../models/purchase';
-import { updateRedemption } from '../../../api/twitchApi';
-import { RedemptionStatus } from '../../../models/redemption.model';
-import RouletteMenu from '../RouletteMenu/RouletteMenu';
+} from '@reducers/Purchases/Purchases.ts';
+import { RootState } from '@reducers';
+import donationBackground from '@assets/img/donationBackground.jpg';
+import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
+import { useCostConvert } from '@hooks/useCostConvert.ts';
+import Marble from '@assets/img/Marble.png';
+import { PurchaseStatusEnum } from '@models/purchase.ts';
+import { updateRedemption } from '@api/twitchApi.ts';
+import { RedemptionStatus } from '@models/redemption.model.ts';
+import { addAlert } from '@reducers/notifications/notifications.ts';
+import { AlertTypeEnum } from '@models/alert.model.ts';
 
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import { addAlert } from '../../../reducers/notifications/notifications';
-import { AlertTypeEnum } from '../../../models/alert.model';
+import RouletteMenu from '../RouletteMenu/RouletteMenu';
+import { store } from '../../../main.tsx';
+
+import type { ThunkDispatch } from 'redux-thunk';
+
+import './PurchaseComponent.scss';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -59,7 +63,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   disabled,
   ...purchase
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const {
     settings: { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -68,8 +72,8 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   const [casinoModalOpened, setCasinoModalOpened] = useState(false);
   const { t } = useTranslation();
 
-  const [splitButtonMenuOpen, setSplitButtonMenuOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
+  const [splitButtonMenuOpen, setSplitButtonMenuOpen] = useState(false);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const menuOptions = [t('auc.addToRandomSlot')];
 
   const bestMatch = useMemo(() => {
@@ -150,7 +154,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
       marblesAuc ? (
         <>
           <span>{costString}</span>
-          <img src={Marble} alt="шар" width={15} height={15} style={{ marginLeft: 5, marginRight: 5 }} />
+          <img src={Marble} alt='шар' width={15} height={15} style={{ marginLeft: 5, marginRight: 5 }} />
           <span>{username}</span>
         </>
       ) : (
@@ -179,7 +183,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     dispatch(updateBid({ ...purchase, cost: purchase.cost * multi }));
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, index: number) => {
+  const handleMenuItemClick = () => {
     setSplitButtonMenuOpen(false);
 
     /* Currently, only one item in the dropdown menu, no need to check
@@ -193,29 +197,34 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 
   return (
     <Card className={purchaseClasses} style={isDragging ? undefined : cardStyles}>
-      <CardContent className="purchase-content">
-        <div className="purchase-header">
-          <Typography variant="h6">{bidTitle}</Typography>
-          <IconButton onClick={handleRemove} className="purchase-header-remove-button" title="Удалить слот">
+      <CardContent className='purchase-content'>
+        <div className='purchase-header'>
+          <Typography variant='h6'>{bidTitle}</Typography>
+          <IconButton
+            onClick={handleRemove}
+            className='purchase-header-remove-button'
+            title='Удалить слот'
+            size='large'
+          >
             <CloseIcon />
           </IconButton>
         </div>
         <Typography>{message}</Typography>
         {!hideActions && (
           <>
-            <ButtonGroup size="small" className="purchase-new-split-button" ref={anchorRef}>
+            <ButtonGroup size='small' className='purchase-new-split-button' ref={anchorRef}>
               <Button
-                variant="outlined"
-                size="small"
-                className="purchase-new-split-button-left"
+                variant='outlined'
+                size='small'
+                className='purchase-new-split-button-left'
                 onClick={handleAddNewSlot}
               >
                 Новый
               </Button>
               <Button
-                variant="outlined"
-                size="small"
-                className="purchase-new-split-button-right"
+                variant='outlined'
+                size='small'
+                className='purchase-new-split-button-right'
                 onClick={handleToggle}
               >
                 <ArrowDropDownIcon />
@@ -227,15 +236,15 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
               role={undefined}
               transition
               disablePortal
-              className="purchase-new-split-button-popper"
+              className='purchase-new-split-button-popper'
             >
               {({ TransitionProps }) => (
                 <Grow {...TransitionProps}>
                   <Paper>
                     <ClickAwayListener onClickAway={() => setSplitButtonMenuOpen(false)}>
                       <MenuList>
-                        {menuOptions.map((option, index) => (
-                          <MenuItem key={option} onClick={(event) => handleMenuItemClick(event, index)}>
+                        {menuOptions.map((option) => (
+                          <MenuItem key={option} onClick={handleMenuItemClick}>
                             {option}
                           </MenuItem>
                         ))}
@@ -247,12 +256,12 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
             </Popper>
 
             {luckyWheelEnabled && (
-              <Button variant="outlined" size="small" className="purchase-new-button" onClick={openCasino}>
+              <Button variant='outlined' size='small' className='purchase-new-button' onClick={openCasino}>
                 Испытать удачу
               </Button>
             )}
             {bestMatch && (
-              <Button variant="outlined" size="small" className="purchase-new-button" onClick={handleAddToBestMatch}>
+              <Button variant='outlined' size='small' className='purchase-new-button' onClick={handleAddToBestMatch}>
                 {`К ${bestMatch.name}`}
               </Button>
             )}
@@ -260,12 +269,12 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
         )}
       </CardContent>
       {casinoModalOpened && (
-        <Dialog open={casinoModalOpened} onClose={(): void => setCasinoModalOpened(false)} maxWidth="lg">
+        <Dialog open={casinoModalOpened} onClose={(): void => setCasinoModalOpened(false)} maxWidth='lg'>
           <DialogContent>
             <RouletteMenu onRoll={multiplySlot} bid={purchase} />
           </DialogContent>
           <DialogActions>
-            <Button color="primary" variant="outlined" onClick={(): void => setCasinoModalOpened(false)}>
+            <Button color='primary' variant='outlined' onClick={(): void => setCasinoModalOpened(false)}>
               Закрыть
             </Button>
           </DialogActions>

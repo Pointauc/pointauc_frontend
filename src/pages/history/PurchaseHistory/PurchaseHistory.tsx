@@ -1,21 +1,17 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  CellClassRules,
-  CellValue,
-  ColDef,
-  SelectionChangeParams,
-  ValueGetterParams,
-  XGrid,
-} from '@material-ui/x-grid';
 import dayjs from 'dayjs';
-import { Button } from '@material-ui/core';
-import { RootState } from '../../../reducers';
+import { Button } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
+import classNames from 'classnames';
+
+import { RootState } from '@reducers';
+import { FORMAT } from '@constants/format.constants.ts';
+import { PurchaseStatusEnum } from '@models/purchase.ts';
+import { updateRedemption } from '@api/twitchApi.ts';
+import { RedemptionStatus } from '@models/redemption.model.ts';
 import './PurchaseHistory.scss';
-import { FORMAT } from '../../../constants/format.constants';
-import { PurchaseStatusEnum } from '../../../models/purchase';
-import { updateRedemption } from '../../../api/twitchApi';
-import { RedemptionStatus } from '../../../models/redemption.model';
 
 interface SlotsMap {
   [key: string]: string | null;
@@ -24,25 +20,25 @@ interface SlotsMap {
 const PurchaseHistory: React.FC = () => {
   const { history } = useSelector((root: RootState) => root.purchases);
   const { slots } = useSelector((root: RootState) => root.slots);
-  const [selection, setSelection] = useState<SelectionChangeParams>();
+  const [selection, setSelection] = useState<any>();
 
   const slotsMap = useMemo(
     () => slots.reduce<SlotsMap>((acc, { id, name }) => ({ ...acc, [id.toString()]: name }), {}),
     [slots],
   );
 
-  const getTime = (params: ValueGetterParams): CellValue => dayjs(params.value?.toString()).format(FORMAT.DATE.time);
+  const getTime = (params: any): any => dayjs(params.value?.toString()).format(FORMAT.DATE.time);
 
-  const statusCellClassRules: CellClassRules = {
-    status: true,
-    deleted: ({ value }: ValueGetterParams) => value === PurchaseStatusEnum.Deleted,
-    processed: ({ value }: ValueGetterParams) => value === PurchaseStatusEnum.Processed,
-  };
+  const statusCellClassRules = ({ value }: any) =>
+    classNames({
+      status: true,
+      deleted: value === PurchaseStatusEnum.Deleted,
+      processed: value === PurchaseStatusEnum.Processed,
+    });
 
-  const getTargetName = (params: ValueGetterParams): CellValue =>
-    params.value && (slotsMap[params.value.toString()] || '');
+  const getTargetName = (params: any): any => params.value && (slotsMap[String(params.value)] || '');
 
-  const columns: ColDef[] = [
+  const columns: GridColDef[] = [
     {
       headerName: 'Время',
       field: 'timestamp',
@@ -78,7 +74,7 @@ const PurchaseHistory: React.FC = () => {
       valueGetter: getTargetName,
       flex: 1,
     },
-    { headerName: 'Статус', field: 'status', cellClassRules: statusCellClassRules, width: 110 },
+    { headerName: 'Статус', field: 'status', cellClassName: statusCellClassRules, width: 110 },
   ];
 
   const handleRefund = useCallback(() => {
@@ -94,20 +90,20 @@ const PurchaseHistory: React.FC = () => {
   }, [history, selection]);
 
   return (
-    <div className="history-table">
-      <Button variant="outlined" color="primary" onClick={handleRefund}>
+    <div className='history-table'>
+      <Button variant='outlined' color='primary' onClick={handleRefund}>
         Вернуть выбранные награды
       </Button>
-      <XGrid
+      <DataGrid
         checkboxSelection
-        onSelectionChange={setSelection}
+        onRowSelectionModelChange={setSelection}
         rows={history}
         columns={columns}
         autoHeight
         pagination
-        pageSize={10}
-        rowsPerPageOptions={[5, 10, 20, 50]}
-        disableSelectionOnClick
+        pageSizeOptions={[5, 10, 20, 50]}
+        initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
+        disableRowSelectionOnClick
       />
     </div>
   );

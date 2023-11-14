@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
-import { getCurrentLanguage, SupportedLanguages } from '../../../constants/language.constants';
-import { Language } from '../../../enums/language.enum';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
+
+import { getCurrentLanguage, SupportedLanguages } from '@constants/language.constants.ts';
+import { Language } from '@enums/language.enum.ts';
 import './LanguageDropdown.scss';
 
 const LanguageDropdown = () => {
@@ -27,16 +28,17 @@ const LanguageDropdown = () => {
   return (
     <>
       <Button
-        className="language-dropdown-button"
-        aria-controls="language-menu"
+        className='language-dropdown-button'
+        aria-controls='language-menu'
         onClick={handleClick}
-        variant="outlined"
+        color='blank'
+        variant='outlined'
         startIcon={<UnfoldMoreIcon />}
       >
         {t('auc.language', { replace: { lng: currentLanguage.name } })}
       </Button>
       <Menu
-        id="language-menu"
+        id='language-menu'
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}

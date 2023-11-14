@@ -1,32 +1,32 @@
-import React, { FC, useEffect } from 'react';
-import { FormGroup, IconButton, MenuItem, Select, Typography } from '@material-ui/core';
-import ReplayIcon from '@material-ui/icons/Replay';
-import { Controller, UseFormMethods } from 'react-hook-form';
-import ArrowUpwardOutlinedIcon from '@material-ui/icons/ArrowUpwardOutlined';
-import ArrowDownwardOutlinedIcon from '@material-ui/icons/ArrowDownwardOutlined';
+import { FC, useEffect } from 'react';
+import { FormGroup, IconButton, MenuItem, Select, Typography, Grid, FormControl } from '@mui/material';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { Control, Controller, UseFormReturn } from 'react-hook-form';
+import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
+import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import ImageLinkInput from '../../Form/ImageLinkInput/ImageLinkInput';
-import SettingsGroupTitle from '../../SettingsGroupTitle/SettingsGroupTitle';
-import { RootState } from '../../../reducers';
-import FormSwitch from '../../Form/FormSwitch/FormSwitch';
-import FormInput from '../../Form/FormInput/FormInput';
-import ImagePresetsInput from '../../Form/ImagePresetsInput/ImagePresetsInput';
-import { BACKGROUND_PRESETS } from '../../../constants/common.constants';
+
+import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
+import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
+import { RootState } from '@reducers';
+import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
+import FormInput from '@components/Form/FormInput/FormInput';
+import ImagePresetsInput from '@components/Form/ImagePresetsInput/ImagePresetsInput';
+import { BACKGROUND_PRESETS } from '@constants/common.constants.ts';
+import BidsSortSelect from '@components/SettingsPage/AucSettings/BidsSortSelect.tsx';
 
 interface AucSettingsProps {
-  control: UseFormMethods['control'];
-  register: UseFormMethods['register'];
-  setValue: UseFormMethods['setValue'];
+  control: Control;
+  register: UseFormReturn['register'];
+  setValue: UseFormReturn['setValue'];
 }
 
 const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
   const { t } = useTranslation();
-  const { settings } = useSelector((root: RootState) => root.aucSettings);
-  const { purchaseSort } = settings;
 
   useEffect(() => {
-    register()({ name: 'background', type: 'custom' });
+    register('background');
   }, [register]);
 
   const handleImageChange = (image: string): void => {
@@ -40,23 +40,20 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
   return (
     <>
       <SettingsGroupTitle title={t('settings.auc.auc')} />
-      <FormGroup className="auc-settings-list">
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="isBuyoutVisible" control={control} label={t('settings.auc.showBuyout')} />
+      <FormGroup className='auc-settings-list'>
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='isTotalVisible' control={control} label={t('settings.auc.showTotal')} />
         </FormGroup>
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="isTotalVisible" control={control} label={t('settings.auc.showTotal')} />
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='showChances' control={control} label={t('settings.auc.showWinningChances')} />
         </FormGroup>
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="showChances" control={control} label={t('settings.auc.showWinningChances')} />
-        </FormGroup>
-        <FormGroup row className="auc-settings-row">
-          <Typography variant="body1" className="MuiFormControlLabel-label">
+        <FormGroup row className='auc-settings-row'>
+          <Typography variant='body1' className='MuiFormControlLabel-label'>
             {t('settings.auc.background')}
           </Typography>
           <ImageLinkInput
             buttonTitle={t('settings.auc.uploadBackground')}
-            buttonClass="upload-background"
+            buttonClass='upload-background'
             onChange={handleImageChange}
           />
           <ImagePresetsInput
@@ -64,73 +61,58 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
             buttonTitle={t('settings.auc.selectFromList')}
             onChange={handleImageChange}
           />
-          <IconButton className="auc-settings-reset-background" onClick={resetBackground}>
+          <IconButton className='auc-settings-reset-background' onClick={resetBackground} size='large'>
             <ReplayIcon />
           </IconButton>
         </FormGroup>
-        <FormGroup row className="auc-settings-row">
-          <Typography variant="body1" className="MuiFormControlLabel-label">
+        <FormGroup row className='auc-settings-row'>
+          <Typography variant='body1' className='MuiFormControlLabel-label'>
             {t('settings.auc.sortBids')}
           </Typography>
-          <Controller
-            control={control}
-            as={Select}
-            name="purchaseSort"
-            className="auc-settings-option"
-            defaultValue={purchaseSort}
-          >
-            <MenuItem value={0}>
-              <Typography>{t('settings.auc.dateSort')}</Typography>
-              <ArrowUpwardOutlinedIcon fontSize="small" />
-            </MenuItem>
-            <MenuItem value={1}>
-              <Typography>{t('settings.auc.dateSort')}</Typography>
-              <ArrowDownwardOutlinedIcon fontSize="small" />
-            </MenuItem>
-            <MenuItem value={2}>
-              <Typography>{t('settings.auc.costSort')}</Typography>
-              <ArrowUpwardOutlinedIcon fontSize="small" />
-            </MenuItem>
-            <MenuItem value={3}>
-              <Typography>{t('settings.auc.costSort')}</Typography>
-              <ArrowDownwardOutlinedIcon fontSize="small" />
-            </MenuItem>
-          </Controller>
+          <BidsSortSelect control={control} />
         </FormGroup>
 
         <SettingsGroupTitle title={t('settings.marbles.marbles')} />
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="marblesAuc" control={control} label={t('settings.marbles.marbleAuc')} />
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch
+            name='marblesAuc'
+            control={control}
+            label={t('settings.marbles.marbleAuc')}
+            hint={t('settings.marbles.marblesAucDesc')}
+          />
         </FormGroup>
-        <div className="hint">{t('settings.marbles.marblesAucDesc')}</div>
-        <FormGroup row className="auc-settings-row">
+        <FormGroup row className='auc-settings-row'>
           <FormInput
-            name="marbleRate"
+            name='marbleRate'
             control={control}
             label={t('settings.marbles.marbleCost')}
-            type="number"
-            className="field md"
+            type='number'
+            className='field md'
+            hint={t('settings.marbles.marbleCostDesc')}
           />
         </FormGroup>
-        <div className="hint">{t('settings.marbles.marbleCostDesc')}</div>
-        <FormGroup row className="auc-settings-row">
+        <FormGroup row className='auc-settings-row'>
           <FormInput
-            name="marbleCategory"
+            name='marbleCategory'
             control={control}
             label={t('settings.marbles.newPositionCost')}
-            type="number"
-            className="field md"
+            type='number'
+            className='field md'
+            hint={t('settings.marbles.newPositionCostDesc')}
           />
         </FormGroup>
-        <div className="hint">{t('settings.marbles.newPositionCostDesc')}</div>
 
         <SettingsGroupTitle title={t('settings.luckyWheel.groupTitle')} />
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="luckyWheelEnabled" control={control} label={t('settings.luckyWheel.luckyWheel')} />
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch
+            name='luckyWheelEnabled'
+            control={control}
+            label={t('settings.luckyWheel.luckyWheel')}
+            hint={t('settings.luckyWheel.desc')}
+          />
         </FormGroup>
-        <div className="hint">{t('settings.luckyWheel.desc')}</div>
-        <FormGroup row className="auc-settings-row">
-          <FormSwitch name="luckyWheelSelectBet" control={control} label={t('settings.luckyWheel.selectBet')} />
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='luckyWheelSelectBet' control={control} label={t('settings.luckyWheel.selectBet')} />
         </FormGroup>
       </FormGroup>
     </>

@@ -1,7 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Emote, Emote as BaseEmote } from '@kozjar/twitch-emoticons';
 import axios from 'axios';
+
 import ENDPOINTS from '../constants/api.constants';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace

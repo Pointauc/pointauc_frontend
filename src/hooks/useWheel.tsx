@@ -1,18 +1,19 @@
-import React, { CSSProperties, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, Key, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
-// eslint-disable-next-line import/no-named-as-default
-import { Button, Dialog, DialogActions, DialogContent, Link, Typography } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, Link, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import CustomEase from '../utils/CustomEase';
-import { WheelItem, WheelItemWithAngle } from '../models/wheel.model';
-import pradenW from '../assets/img/pradenW.png';
-import { fitText, shuffle } from '../utils/common.utils';
-import SpinPaceService, { RandomPaceConfig } from '../services/SpinPaceService';
-import { SPIN_PATH } from '../constants/wheel';
-import PredictionService from '../services/PredictionService';
-import { addAlert } from '../reducers/notifications/notifications';
-import { AlertTypeEnum } from '../models/alert.model';
+
+// @ts-ignore
+import CustomEase from '@utils/CustomEase.js';
+import { WheelItem, WheelItemWithAngle } from '@models/wheel.model';
+import pradenW from '@assets/img/pradenW.png';
+import { fitText, shuffle } from '@utils/common.utils';
+import SpinPaceService, { RandomPaceConfig } from '@services/SpinPaceService';
+import { SPIN_PATH } from '@constants/wheel';
+import PredictionService from '@services/PredictionService';
+import { addAlert } from '@reducers/notifications/notifications';
+import { AlertTypeEnum } from '@models/alert.model';
 
 interface WheelResult {
   wheelComponent: ReactNode;
@@ -190,7 +191,7 @@ const useWheel = ({
       return;
     }
 
-    spinTarget.current.innerHTML = fitText(winner.name, maxWinnerLength);
+    spinTarget.current.innerHTML = winner.name;
   };
 
   const handleWin = (previousRotate: number, nextRotate: number): void => {
@@ -199,7 +200,7 @@ const useWheel = ({
     if (winner && spinTarget.current) {
       onWin(winner);
       setWinnerItem(winner);
-      spinTarget.current.innerHTML = fitText(winner.name, maxWinnerLength);
+      spinTarget.current.innerHTML = winner.name;
     }
   };
 
@@ -314,28 +315,28 @@ const useWheel = ({
           <Typography>Это действие удалит лот не только из колеса, но и из самого аукциона.</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={deleteWinner} variant="outlined" color="secondary">
+          <Button onClick={deleteWinner} variant='outlined' color='secondary'>
             {t('wheel.delete')}
           </Button>
         </DialogActions>
       </Dialog>
-      <div style={{ width: offset }} className="wheel-target" ref={spinTarget}>
+      <div style={{ width: offset }} className='wheel-target' ref={spinTarget}>
         {t('wheel.winner')}
       </div>
       <canvas style={{ position: 'absolute', zIndex: 1 }} ref={wheelSelector} />
       <canvas ref={canvas} />
       <div style={circleStyles} />
       {!!winnerItem && (
-        <div style={{ width: offset, height: offset, pointerEvents: 'all' }} className="wheel-winner">
+        <div style={{ width: offset, height: offset, pointerEvents: 'all' }} className='wheel-winner'>
           {winnerItem.name.startsWith('https://') ? (
-            <Link href={winnerItem.name} target="_blank">
+            <Link href={winnerItem.name} target='_blank'>
               {winnerItem.name}
             </Link>
           ) : (
             <>{winnerItem.name}</>
           )}
           {deleteItem && !dropout && (
-            <Button onClick={toggleDialog} variant="outlined" color="secondary">
+            <Button onClick={toggleDialog} variant='outlined' color='secondary'>
               {t('wheel.deleteLot')}
             </Button>
           )}

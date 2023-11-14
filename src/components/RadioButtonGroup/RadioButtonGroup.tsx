@@ -1,9 +1,9 @@
-import React, { Key, useCallback } from 'react';
-import { Button, ButtonGroup, ButtonGroupProps } from '@material-ui/core';
+import { Key, ReactNode, useCallback } from 'react';
+import { Button, ButtonGroup, ButtonGroupProps } from '@mui/material';
 
 export interface Option<KeyType = Key> {
   key: KeyType;
-  value: string;
+  label: ReactNode;
 }
 
 interface RadioButtonGroupProps<T = Key> extends ButtonGroupProps {
@@ -19,12 +19,12 @@ const RadioButtonGroup = <T extends Key = Key>({
   ...props
 }: RadioButtonGroupProps<T>): JSX.Element => {
   const createButton = useCallback(
-    ({ key, value }: Option<T>) => {
+    ({ key, label }: Option<T>) => {
       const handleClick = (): void => onChangeActive(key);
 
       return (
         <Button key={key} variant={activeKey === key ? 'contained' : 'outlined'} onClick={handleClick}>
-          {value}
+          {label}
         </Button>
       );
     },
@@ -32,7 +32,7 @@ const RadioButtonGroup = <T extends Key = Key>({
   );
 
   return (
-    <ButtonGroup color="primary" {...props}>
+    <ButtonGroup color='primary' {...props}>
       {options.map(createButton)}
     </ButtonGroup>
   );

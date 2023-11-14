@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import ENDPOINTS from '../constants/api.constants';
 import { GetUserDto, IntegrationValidity } from '../models/user.model';
 import { UserInfo } from '../reducers/User/User';

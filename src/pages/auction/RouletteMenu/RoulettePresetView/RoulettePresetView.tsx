@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
-import { Button } from '@material-ui/core';
+import { FC } from 'react';
+import { Button } from '@mui/material';
+
 import { RoulettePreset } from '../PresetSelect/PresetSelect';
 
 interface RoulettePresetProps {
@@ -14,7 +15,7 @@ const RoulettePresetView: FC<RoulettePresetProps> = ({ preset, onSelect }) => {
   const onClick = (): void => onSelect?.(preset);
 
   return (
-    <Button style={{ backgroundColor: color }} className="roulette-preset" onClick={onClick}>
+    <Button style={{ backgroundColor: color }} className='roulette-preset' onClick={onClick}>
       <>
         <span>{`x${multiplier}`}</span>
         <span style={{ fontWeight: 400, marginLeft: 8 }}>{`(${getPresetChance(multiplier)}%)`}</span>

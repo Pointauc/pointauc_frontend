@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
-import { Button } from '@material-ui/core';
+import { FC } from 'react';
+import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as DASvg } from '../../../assets/icons/DAAlert.svg';
+
+import DASvg from '@assets/icons/DAAlert.svg?react';
 import './DALoginButton.scss';
 
 const authParams = {
@@ -26,10 +27,10 @@ const TwitchLoginButton: FC = () => {
   return (
     <>
       <Button
-        className="login-button da"
-        variant="contained"
-        size="large"
-        startIcon={<DASvg className="base-icon da" />}
+        className='login-button da'
+        variant='contained'
+        size='large'
+        startIcon={<DASvg className='base-icon da' />}
         onClick={handleAuth}
       >
         {t('common.connectDA')}

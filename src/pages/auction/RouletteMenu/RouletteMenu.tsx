@@ -1,11 +1,12 @@
-import React, { FC, useState } from 'react';
-
-import './RouletteMenu.scss';
+import { FC, useState } from 'react';
 import { useSelector } from 'react-redux';
+
+import { Purchase } from '@reducers/Purchases/Purchases.ts';
+import { RootState } from '@reducers';
+
 import PresetSelect, { RoulettePreset } from './PresetSelect/PresetSelect';
 import Roulette from './Roulette/Roulette';
-import { Purchase } from '../../../reducers/Purchases/Purchases';
-import { RootState } from '../../../reducers';
+import './RouletteMenu.scss';
 
 const roulettePresets: RoulettePreset[] = [
   {
@@ -57,7 +58,7 @@ const RouletteMenu: FC<RouletteMenuProps> = ({ onRoll, bid }) => {
   };
 
   return (
-    <div className="roulette-menu">
+    <div className='roulette-menu'>
       {selectedPreset || !settings.luckyWheelSelectBet ? (
         <Roulette presets={roulettePresets} onRoll={handleSpin} bid={bid} selectedPreset={selectedPreset} />
       ) : (

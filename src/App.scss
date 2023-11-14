@@ -1,0 +1,34 @@
+.app {
+  display: flex;
+  min-height: 100vh;
+  max-width: 100vw;
+  //color: #fff;
+
+  &-drawer {
+    &.open {
+      width: 240px;
+    }
+
+    &.close {
+      width: 60px;
+    }
+  }
+
+  &-content {
+    flex-grow: 1;
+    width: 100%;
+    max-width: unset;
+    padding: 0;
+  }
+
+  .nav {
+    &-icon {
+
+      svg {
+        width: 26px !important;
+        height: 26px !important;
+        fill: #fff;
+      }
+    }
+  }
+}

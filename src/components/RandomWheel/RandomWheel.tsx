@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Key, ReactElement, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, Key, ReactElement, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import {
   Button,
@@ -11,33 +11,35 @@ import {
   Switch,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useDispatch } from 'react-redux';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Emote } from '@kozjar/twitch-emoticons';
 import { useTranslation } from 'react-i18next';
-import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '../../constants/wheel';
-import { RandomPaceConfig } from '../../services/SpinPaceService';
-import { Game } from '../Bracket/components/model';
-import { WheelItem } from '../../models/wheel.model';
-import { getCookie, getRandomIntInclusive, getTotalSize, getWheelColor } from '../../utils/common.utils';
-import useWheel from '../../hooks/useWheel';
-import withLoading from '../../decorators/withLoading';
-import { getRandomNumber } from '../../api/randomApi';
-import LoadingButton from '../LoadingButton/LoadingButton';
-import RadioButtonGroup from '../RadioButtonGroup/RadioButtonGroup';
+
+import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '@constants/wheel.ts';
+import { RandomPaceConfig } from '@services/SpinPaceService.ts';
+import { WheelItem } from '@models/wheel.model.ts';
+import { getCookie, getRandomIntInclusive, getTotalSize, getWheelColor } from '@utils/common.utils.ts';
+import { getRandomNumber } from '@api/randomApi.ts';
+import { slotToWheel } from '@utils/slots.utils.ts';
+import { Slot } from '@models/slot.model.ts';
+import { setSlots } from '@reducers/Slots/Slots.ts';
+import { Game } from '@components/Bracket/components/model';
+import useWheel from '@hooks/useWheel';
+import withLoading from '@decorators/withLoading';
+import LoadingButton from '@components/LoadingButton/LoadingButton';
+import RadioButtonGroup from '@components/RadioButtonGroup/RadioButtonGroup';
+import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput';
+import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
+import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
+
 import DropoutWheelProof from './DropoutWheelProof/DropoutWheelProof';
 import PaceSettings from './PaceSettings/PaceSettings';
-import SlotsPresetInput from '../Form/SlotsPresetInput/SlotsPresetInput';
-import TwitchEmotesList from '../TwitchEmotesList/TwitchEmotesList';
 import ResizableBracket from './ResizableBracket/ResizableBracket';
 import DuelWheelProof from './DuelWheelProof/DuelWheelProof';
+
 import './RandomWheel.scss';
-import ImageLinkInput from '../Form/ImageLinkInput/ImageLinkInput';
-import { slotToWheel } from '../../utils/slots.utils';
-import { Slot } from '../../models/slot.model';
-import { setSlots } from '../../reducers/Slots/Slots';
 
 export interface SettingElements {
   mode: boolean;
@@ -83,7 +85,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
   const [rawItems, setRawItems] = useState<WheelItem[]>(items);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
-  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(elements.randomOrg);
+  const [useRandomOrg, setUseRandomOrg] = useState<boolean>(false);
   const [isRandomPace, setIsRandomPace] = useState<boolean>(false);
   const [wheelFormat, setWheelFormat] = useState<Key>(WheelFormat.Default);
   const [paceConfig, setPaceConfig] = useState<RandomPaceConfig>(PACE_PRESETS.suddenFinal);
@@ -264,11 +266,11 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     setSpinTime(Number(e.target.value));
   }, []);
 
-  const handleDepthRestrictChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
+  const handleDepthRestrictChange = useCallback((e: any, value: number | number[]) => {
     setDepthRestrict(Number(value));
   }, []);
 
-  const handleMaxValueChange = useCallback((e: ChangeEvent<{}>, value: number | number[]) => {
+  const handleMaxValueChange = useCallback((e: any, value: number | number[]) => {
     setMaxValidValue(Number(value));
   }, []);
 
@@ -288,7 +290,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     </>
   );
 
-  const handleUseRandomOrg = useCallback((e, checked: boolean) => {
+  const handleUseRandomOrg = useCallback((e: any, checked: boolean) => {
     setUseRandomOrg(checked);
   }, []);
 
@@ -324,37 +326,37 @@ const RandomWheel = <TWheelItem extends WheelItem>({
   }, [gamesOrder, wheelFormat]);
 
   return (
-    <div className="wheel-content">
+    <div className='wheel-content'>
       {wheelComponent}
-      <div className="wheel-info-wrapper">
+      <div className='wheel-info-wrapper'>
         <div className={classNames('wheel-controls', { shrink: wheelFormat === WheelFormat.BattleRoyal })}>
-          <div className="settings">
-            <div className="wheel-controls-row">
+          <div className='settings'>
+            <div className='wheel-controls-row'>
               {wheelFormat === WheelFormat.BattleRoyal && nextWinner ? (
-                <Button className="wheel-controls-button" variant="contained" color="primary" onClick={nextTurn}>
+                <Button className='wheel-controls-button' variant='contained' color='primary' onClick={nextTurn}>
                   {t('wheel.nextDuel')}
                 </Button>
               ) : (
                 <LoadingButton
                   isLoading={isLoadingSeed}
                   disabled={isSpinning || isLoadingSeed}
-                  className="wheel-controls-button"
-                  variant="contained"
-                  color="primary"
+                  className='wheel-controls-button'
+                  variant='contained'
+                  color='primary'
                   onClick={handleSpin}
                 >
                   {isSpinning ? t('wheel.spinning') : t('wheel.spin')}
                 </LoadingButton>
               )}
               <TextField
-                className="wheel-controls-input"
-                variant="outlined"
-                margin="dense"
+                className='wheel-controls-input'
+                variant='outlined'
+                margin='dense'
                 label={t('wheel.duration')}
                 onChange={handleSpinTimeChange}
                 value={spinTime || ''}
               />
-              <Typography className="wheel-controls-tip">с.</Typography>
+              <Typography className='wheel-controls-tip'>с.</Typography>
             </div>
             {elements.mode && (
               <RadioButtonGroup
@@ -369,25 +371,25 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                 <Dialog
                   open={isDuelHelpOpen}
                   onClose={toggleHelp}
-                  className="description-dialog"
-                  maxWidth="sm"
+                  className='description-dialog'
+                  maxWidth='sm'
                   fullWidth
                 >
                   <DialogTitle>Описание дуэльного режима</DialogTitle>
-                  <DialogContent dividers className="description-dialog-content">
+                  <DialogContent dividers className='description-dialog-content'>
                     <DuelWheelProof />
                   </DialogContent>
                 </Dialog>
-                <button onClick={toggleHelp} type="button" className="description-link">
+                <button onClick={toggleHelp} type='button' className='description-link'>
                   {t('wheel.howItWorks')}
                 </button>
-                <div className="wheel-controls-row">
-                  <Typography className="wheel-controls-tip md">{t('wheel.nesting')}</Typography>
+                <div className='wheel-controls-row'>
+                  <Typography className='wheel-controls-tip md'>{t('wheel.nesting')}</Typography>
                   <Slider
                     step={1}
                     min={1}
                     max={maxDepth}
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay='auto'
                     onChange={handleDepthRestrictChange}
                     value={depthRestrict || 1}
                     marks={[
@@ -396,23 +398,23 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                     ]}
                   />
                 </div>
-                <Typography className="wheel-controls-tip hint">{t('wheel.nestingDesc')}</Typography>
+                <Typography className='wheel-controls-tip hint'>{t('wheel.nestingDesc')}</Typography>
               </>
             )}
             <Dialog
               open={isDropoutProofOpen}
               onClose={toggleDropoutProof}
-              className="description-dialog dropout"
-              maxWidth="md"
+              className='description-dialog dropout'
+              maxWidth='md'
               fullWidth
             >
               <DialogTitle>{t('wheel.dropoutProof')}</DialogTitle>
-              <DialogContent dividers className="description-content-dropout">
+              <DialogContent dividers className='description-content-dropout'>
                 <DropoutWheelProof />
               </DialogContent>
             </Dialog>
             {wheelFormat === WheelFormat.Dropout && (
-              <button onClick={toggleDropoutProof} type="button" className="description-link">
+              <button onClick={toggleDropoutProof} type='button' className='description-link'>
                 {t('wheel.readBeforeUsage')}
               </button>
             )}
@@ -422,13 +424,13 @@ const RandomWheel = <TWheelItem extends WheelItem>({
             {elements.split && (
               <>
                 {!!totalSize && wheelFormat !== WheelFormat.Dropout && (
-                  <div className="wheel-controls-row">
-                    <Typography className="wheel-controls-tip md">{t('wheel.dividing')}</Typography>
+                  <div className='wheel-controls-row'>
+                    <Typography className='wheel-controls-tip md'>{t('wheel.dividing')}</Typography>
                     <Slider
                       step={1}
                       min={maxSize / 10}
                       max={maxSize}
-                      valueLabelDisplay="auto"
+                      valueLabelDisplay='auto'
                       onChange={handleMaxValueChange}
                       value={normalizedMaxValue}
                       marks={[
@@ -438,12 +440,12 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                     />
                   </div>
                 )}
-                <Typography className="wheel-controls-tip hint">{t('wheel.dividingDesc')}</Typography>
+                <Typography className='wheel-controls-tip hint'>{t('wheel.dividingDesc')}</Typography>
               </>
             )}
             {elements.randomPace && (
               <>
-                <div className="wheel-controls-row">
+                <div className='wheel-controls-row'>
                   <Typography>Финал с перчинкой</Typography>
                   <Switch onChange={handleIsRandomPaceChange} />
                 </div>
@@ -454,13 +456,13 @@ const RandomWheel = <TWheelItem extends WheelItem>({
             )}
             {elements.randomOrg && (
               <FormControlLabel
-                control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color="primary" />}
+                control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color='primary' />}
                 label={t('wheel.useRandomOrg')}
-                className="wheel-controls-checkbox"
+                className='wheel-controls-checkbox'
               />
             )}
             {elements.import && (
-              <div className="wheel-controls-row" style={{ marginTop: 10 }}>
+              <div className='wheel-controls-row' style={{ marginTop: 10 }}>
                 <SlotsPresetInput
                   buttonTitle={t('wheel.importToWheel')}
                   onChange={handleCustomWheel}
@@ -470,11 +472,11 @@ const RandomWheel = <TWheelItem extends WheelItem>({
             )}
             <div>{children}</div>
           </div>
-          <div className="settings" style={{ width: 325 }}>
+          <div className='settings' style={{ width: 325 }}>
             <TwitchEmotesList setActiveEmote={handleEmoteChange} onEmotesLoad={handleEmotesLoad} />
             <ImageLinkInput
               buttonTitle={t('wheel.loadCustomMessage')}
-              buttonClass="upload-wheel-image"
+              buttonClass='upload-wheel-image'
               onChange={handleEmoteChange}
             />
           </div>

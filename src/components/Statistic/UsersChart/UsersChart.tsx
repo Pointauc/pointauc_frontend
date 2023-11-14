@@ -1,6 +1,7 @@
-import React, { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Chart, registerables } from 'chart.js';
-import { Score } from '../../../models/statistic';
+
+import { Score } from '@models/statistic.ts';
 
 Chart.register(...registerables);
 
@@ -72,7 +73,7 @@ const UsersChart: FC<UsersChartProps> = ({ scoreboard }) => {
   }, [scoreboard]);
 
   return (
-    <div className="chart">
+    <div className='chart'>
       <canvas ref={chartRef} />
     </div>
   );

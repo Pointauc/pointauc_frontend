@@ -1,17 +1,19 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useSelector } from 'react-redux';
-import PageContainer from '../PageContainer/PageContainer';
-import RequestsDataPanel from './RequestsDataPanel/RequestsDataPanel';
-import RequestsWinners from './RequestsActions/RequestsWinners';
-import RequestsList from './RequestsList/RequestsList';
-import { WheelItem } from '../../models/wheel.model';
-import { UserRequest } from '../../models/requests.model';
-import { getCookie, getWheelColor } from '../../utils/common.utils';
-import RandomWheel from '../RandomWheel/RandomWheel';
+
+import PageContainer from '@components/PageContainer/PageContainer';
+import { WheelItem } from '@models/wheel.model.ts';
+import { UserRequest } from '@models/requests.model.ts';
+import { getCookie, getWheelColor } from '@utils/common.utils.ts';
+import RandomWheel from '@components/RandomWheel/RandomWheel';
+import { RootState } from '@reducers';
+import TwitchLoginButton from '@components/IntegrationPage/TwitchLoginButton/TwitchLoginButton';
+
 import StepWrapper from './StepWrapper/StepWrapper';
-import { RootState } from '../../reducers';
-import TwitchLoginButton from '../IntegrationPage/TwitchLoginButton/TwitchLoginButton';
+import RequestsList from './RequestsList/RequestsList';
+import RequestsWinners from './RequestsActions/RequestsWinners';
+import RequestsDataPanel from './RequestsDataPanel/RequestsDataPanel';
 
 const RequestsPage: FC = () => {
   const { hasTwitchAuth } = useSelector((root: RootState) => root.user);
@@ -50,10 +52,10 @@ const RequestsPage: FC = () => {
   }
 
   return (
-    <PageContainer title="Заказы зрителей">
-      <Dialog open={warningOpen} className="description-dialog" maxWidth="md">
+    <PageContainer title='Заказы зрителей'>
+      <Dialog open={warningOpen} className='description-dialog' maxWidth='md'>
         <DialogTitle>Внимание!</DialogTitle>
-        <DialogContent className="description-dialog-content">
+        <DialogContent className='description-dialog-content'>
           <div>Это только начальная версию. На данный момент использовать эту страницу можно двумя способами:</div>
           <ol>
             <li>
@@ -78,13 +80,13 @@ const RequestsPage: FC = () => {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={closeWarning}>
+          <Button variant='outlined' onClick={closeWarning}>
             Понятно
           </Button>
         </DialogActions>
       </Dialog>
       {wheelItems && (
-        <StepWrapper className="wheel-wrapper" backSteepTitle="Вернуться к списку" onBackStep={moveToUsersRequests}>
+        <StepWrapper className='wheel-wrapper' backSteepTitle='Вернуться к списку' onBackStep={moveToUsersRequests}>
           <RandomWheel items={wheelItems} />
         </StepWrapper>
       )}

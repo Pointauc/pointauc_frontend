@@ -1,6 +1,7 @@
-import React, { FC, useCallback } from 'react';
-import { Button } from '@material-ui/core';
-import { VideoSnippet } from '../../../models/youtube';
+import { FC, useCallback } from 'react';
+import { Button } from '@mui/material';
+
+import { VideoSnippet } from '@models/youtube.ts';
 import './VideoPreview.scss';
 
 interface VideoPreviewProps extends VideoSnippet {
@@ -13,8 +14,8 @@ const VideoPreview: FC<VideoPreviewProps> = ({ onSelect, id: { videoId }, snippe
   }, [onSelect, videoId]);
 
   return (
-    <div className="video-preview">
-      <Button onClick={handleSelect} className="video-preview-button">
+    <div className='video-preview'>
+      <Button onClick={handleSelect} className='video-preview-button'>
         {title}
       </Button>
     </div>

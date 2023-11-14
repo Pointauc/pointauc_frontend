@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
-import { Typography } from '@material-ui/core';
+import { FC } from 'react';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import './PresetSelect.scss';
 import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
+import './PresetSelect.scss';
 
 export interface RoulettePreset {
   amount: number;
@@ -23,11 +23,11 @@ const PresetSelect: FC<PresetSelectProps> = ({ presets, onSelect }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="roulette-preset-select">
-      <Typography variant="h2">{t('auc.casino.selectLot')}</Typography>
-      <Typography className="roulette-preset-select-desc">{t('auc.casino.description')}</Typography>
-      <Typography className="roulette-preset-select-warning">{t('auc.casino.warning')}</Typography>
-      <div className="roulette-menu-presets">
+    <div className='roulette-preset-select'>
+      <Typography variant='h2'>{t('auc.casino.selectLot')}</Typography>
+      <Typography className='roulette-preset-select-desc'>{t('auc.casino.description')}</Typography>
+      <Typography className='roulette-preset-select-warning'>{t('auc.casino.warning')}</Typography>
+      <div className='roulette-menu-presets'>
         {presets.map((preset) => (
           <RoulettePresetView key={preset.multiplier} preset={preset} onSelect={onSelect} />
         ))}

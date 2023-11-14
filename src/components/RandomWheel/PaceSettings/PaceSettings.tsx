@@ -1,7 +1,8 @@
-import React, { Dispatch, FC, SetStateAction, useCallback, useMemo } from 'react';
-import { Checkbox, FormControlLabel, Slider, Typography } from '@material-ui/core';
-import { RandomPaceConfig } from '../../../services/SpinPaceService';
-import { formatDegree, formatPercents, formatSeconds } from '../../../utils/common.utils';
+import { Dispatch, FC, SetStateAction, useCallback, useMemo } from 'react';
+import { Checkbox, FormControlLabel, Slider, Typography } from '@mui/material';
+
+import { RandomPaceConfig } from '@services/SpinPaceService.ts';
+import { formatDegree, formatPercents, formatSeconds } from '@utils/common.utils.ts';
 
 interface PaceSettingsProps {
   paceConfig: RandomPaceConfig;
@@ -14,7 +15,7 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
 
   const maxOffset = useMemo(() => Math.round(Math.min(5, spinTime * 0.3)), [spinTime]);
   const handleBackStepChange = useCallback(
-    (e, checked: boolean) => {
+    (e: any, checked: boolean) => {
       setPaceConfig((config) => ({ ...config, allowBackStep: checked }));
     },
     [setPaceConfig],
@@ -26,19 +27,19 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
   //   [setPaceConfig],
   // );
   const handleValueRandomZoneChange = useCallback(
-    (e, value: number | number[]) => {
+    (e: any, value: number | number[]) => {
       setPaceConfig((config) => ({ ...config, valueRandomZone: Number(value) }));
     },
     [setPaceConfig],
   );
   const handleRandomOffsetChange = useCallback(
-    (e, value: number | number[]) => {
+    (e: any, value: number | number[]) => {
       setPaceConfig((config) => ({ ...config, randomOffset: Number(value) }));
     },
     [setPaceConfig],
   );
   const handleDisabledZoneChange = useCallback(
-    (e, value: number | number[]) => {
+    (e: any, value: number | number[]) => {
       setPaceConfig((config) => ({ ...config, valueDisabledZone: Number(value) }));
     },
     [setPaceConfig],
@@ -47,9 +48,9 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
   return (
     <>
       <FormControlLabel
-        control={<Checkbox checked={allowBackStep} onChange={handleBackStepChange} color="primary" />}
-        label="Вращать в обратную сторону"
-        className="wheel-controls-checkbox"
+        control={<Checkbox checked={allowBackStep} onChange={handleBackStepChange} color='primary' />}
+        label='Вращать в обратную сторону'
+        className='wheel-controls-checkbox'
       />
       {/* <div className="wheel-controls-row"> */}
       {/*  <Typography className="wheel-controls-tip">Количество точек</Typography> */}
@@ -61,14 +62,14 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
       {/*    value={points} */}
       {/*  /> */}
       {/* </div> */}
-      <div className="wheel-controls-row">
-        <Typography className="wheel-controls-tip lg">Зона начала рандома</Typography>
+      <div className='wheel-controls-row'>
+        <Typography className='wheel-controls-tip lg'>Зона начала рандома</Typography>
         <Slider
           value={randomOffset}
           step={0.5}
           min={0.5}
           max={maxOffset}
-          valueLabelDisplay="auto"
+          valueLabelDisplay='auto'
           valueLabelFormat={formatSeconds}
           onChange={handleRandomOffsetChange}
           marks={[
@@ -77,15 +78,15 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
           ]}
         />
       </div>
-      <Typography className="wheel-controls-tip hint">Время с конца, когда начнется докрут</Typography>
-      <div className="wheel-controls-row">
-        <Typography className="wheel-controls-tip lg">Макс. дистанция</Typography>
+      <Typography className='wheel-controls-tip hint'>Время с конца, когда начнется докрут</Typography>
+      <div className='wheel-controls-row'>
+        <Typography className='wheel-controls-tip lg'>Макс. дистанция</Typography>
         <Slider
           value={valueRandomZone}
           step={30}
           min={90}
           max={900}
-          valueLabelDisplay="auto"
+          valueLabelDisplay='auto'
           valueLabelFormat={formatDegree}
           onChange={handleValueRandomZoneChange}
           marks={[
@@ -94,13 +95,13 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
           ]}
         />
       </div>
-      <Typography className="wheel-controls-tip lg">Заблокированная зона рандома</Typography>
+      <Typography className='wheel-controls-tip lg'>Заблокированная зона рандома</Typography>
       <Slider
         value={valueDisabledZone}
         step={0.01}
         min={0}
         max={0.7}
-        valueLabelDisplay="auto"
+        valueLabelDisplay='auto'
         valueLabelFormat={formatPercents}
         onChange={handleDisabledZoneChange}
         marks={[
@@ -108,7 +109,7 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
           { value: 0.7, label: '70%' },
         ]}
       />
-      <Typography className="wheel-controls-tip hint">
+      <Typography className='wheel-controls-tip hint'>
         Чем больше значение, тем ближе к макс дистанции будет рандомится докрут.
       </Typography>
     </>

@@ -1,6 +1,6 @@
 const PING_INTERVAL = 1000 * 5; // ms between PING's
 
-class WebSocketService<T> {
+class WebSocketService {
   private ws?: WebSocket;
   private readonly closeHandler?: () => void;
   private readonly openHandler?: (ws: WebSocket) => void;

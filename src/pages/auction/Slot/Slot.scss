@@ -6,6 +6,13 @@
   align-items: center;
   margin-bottom: 10px;
 
+  .slot-chance {
+    text-align: right;
+    position: relative;
+    width: 55px;
+    left: -5px;
+  }
+
   &:last-child {
     margin-bottom: 0;
   }

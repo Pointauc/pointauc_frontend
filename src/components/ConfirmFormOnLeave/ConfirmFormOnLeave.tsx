@@ -1,6 +1,7 @@
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core';
-import history from '../../constants/history';
+import { FC, ReactNode, useCallback, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { unstable_useBlocker as useBlocker, useNavigate } from 'react-router-dom';
+
 import './ConfirmFormOnLeave.scss';
 
 interface ConfirmFormOnLeaveProps {
@@ -12,22 +13,21 @@ interface ConfirmFormOnLeaveProps {
 const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm, content }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [nextLocation, setNextLocation] = useState<string>('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    // eslint-disable-next-line consistent-return
-    const unBlock = history.block(({ pathname, state }) => {
-      if (isDirtyForm && !state?.forcePush) {
-        setIsOpen(true);
-        setNextLocation(pathname);
+  useBlocker(({ nextLocation }) => {
+    const { state, pathname } = nextLocation;
+    if (isDirtyForm && !state?.forcePush) {
+      setIsOpen(true);
+      setNextLocation(pathname);
 
-        return false;
-      }
-    });
+      return true;
+    }
 
-    return (): void => unBlock();
-  }, [isDirtyForm]);
+    return false;
+  });
 
-  const handleClose = useCallback(() => history.push(nextLocation, { forcePush: true }), [nextLocation]);
+  const handleClose = useCallback(() => navigate(nextLocation, { state: { forcePush: true } }), [nextLocation]);
   const handleConfirm = useCallback(() => {
     onSubmit?.();
     handleClose();
@@ -36,13 +36,11 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
   if (content && isOpen) return <>{content(handleClose, handleConfirm)}</>;
 
   return (
-    <Dialog open={isOpen} className="form-confirm-dialog">
+    <Dialog open={isOpen} className='form-confirm-dialog'>
       <DialogTitle>Применить несохраненные изменения?</DialogTitle>
       <DialogActions>
-        <Button onClick={handleClose} color="default">
-          Отменить
-        </Button>
-        <Button onClick={handleConfirm} color="primary" autoFocus>
+        <Button onClick={handleClose}>Отменить</Button>
+        <Button onClick={handleConfirm} color='primary' autoFocus>
           Применить
         </Button>
       </DialogActions>
