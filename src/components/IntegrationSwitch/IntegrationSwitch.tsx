@@ -13,11 +13,14 @@ interface IntegrationSwitchProps {
 }
 
 const IntegrationSwitch: FC<IntegrationSwitchProps> = ({ state, icon, onChange, title }) => {
-  const [enabled, setEnabled] = useState<boolean>(state.actual);
+  const { actual, loading } = state;
+  const [enabled, setEnabled] = useState<boolean>(actual);
 
   useEffect(() => {
-    setEnabled(state.actual);
-  }, [state.actual]);
+    if (!loading) {
+      setEnabled(actual);
+    }
+  }, [actual, loading]);
 
   const handleSwitchChange = useCallback(
     (e: any, checked: boolean): void => {
@@ -33,7 +36,7 @@ const IntegrationSwitch: FC<IntegrationSwitchProps> = ({ state, icon, onChange, 
         {icon}
         <Typography className='label'>{title}</Typography>
       </div>
-      <Switch onChange={handleSwitchChange} disabled={state.loading} checked={enabled} />
+      <Switch onChange={handleSwitchChange} disabled={loading} checked={enabled} />
     </div>
   );
 };
