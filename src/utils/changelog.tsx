@@ -1,15 +1,29 @@
 import dayjs from 'dayjs';
+import { ReactNode } from 'react';
+import { Link } from '@mui/material';
 
 import { getCookie } from './common.utils';
 
 export interface UpdateData {
   date: string;
-  newFeatures?: string[];
+  newFeatures?: ReactNode[];
   improvements?: string[];
   fixes?: string[];
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2023-11-18',
+    newFeatures: [
+      <div>
+        Добавлено публичное АПИ аукциона, с ним вы можете программно отправлять ставки на сайт через сторонних ботов.
+        Документацию можно найти по этой{' '}
+        <Link href='https://app.theneo.io/bf08f5b1-1025-4a83-8518-14458df03592/pointauc/api-reference' target='_blank'>
+          ссылке
+        </Link>
+      </div>,
+    ],
+  },
   {
     date: '2023-11-12',
     newFeatures: [

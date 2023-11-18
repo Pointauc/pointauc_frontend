@@ -9,12 +9,14 @@ import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts
 import { getDirtyValues } from '@utils/common.utils.ts';
 import { SettingsForm } from '@models/settings.model.ts';
 import AppearanceSettings from '@components/SettingsPage/AppearanceSettings';
+import TokenSettings from '@components/SettingsPage/TokenSettings/TokenSettings.tsx';
 
 import AucSettings from './AucSettings/AucSettings';
 import StopwatchSettings from './StopwatchSettings/StopwatchSettings';
 
 import type { FieldNamesMarkedBoolean } from 'react-hook-form';
 import type { ThunkDispatch } from 'redux-thunk';
+
 import './SettingsPage.scss';
 
 const SettingsPage: FC = () => {
@@ -65,6 +67,7 @@ const SettingsPage: FC = () => {
           <StopwatchSettings control={control} />
           <AucSettings control={control} register={register} setValue={setValue} />
           <AppearanceSettings />
+          {username != null && <TokenSettings />}
         </form>
       </FormProvider>
     </PageContainer>

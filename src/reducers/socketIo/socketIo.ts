@@ -11,6 +11,7 @@ interface SocketIoState {
   twitchSocket?: Socket | null;
   daSocket?: Socket | null;
   donatePaySocket?: Socket | null;
+  globalSocket?: Socket | null;
 }
 
 const initialState: SocketIoState = {
@@ -30,11 +31,12 @@ const socketIoSlice = createSlice({
 export const { setSocket } = socketIoSlice.actions;
 
 export const connectToSocketIo = (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
+  const globalSocket = io(`${getSocketIOUrl()}`, { query: { cookie: document.cookie } });
   const twitchSocket = io(`${getSocketIOUrl()}/twitch`, { query: { cookie: document.cookie } });
   const daSocket = io(`${getSocketIOUrl()}/da`, { query: { cookie: document.cookie } });
   const donatePaySocket = io(`${getSocketIOUrl()}/donatePay`, { query: { cookie: document.cookie } });
 
-  dispatch(setSocket({ twitchSocket, daSocket, donatePaySocket }));
+  dispatch(setSocket({ twitchSocket, daSocket, donatePaySocket, globalSocket }));
 };
 
 export default socketIoSlice.reducer;

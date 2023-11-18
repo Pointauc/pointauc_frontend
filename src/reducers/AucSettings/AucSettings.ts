@@ -99,7 +99,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
   }
   dispatch(
     setUserState({
-      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? '',
+      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
       hasDAAuth: !!daAuth?.isValid,
       hasTwitchAuth: !!twitchAuth?.isValid,

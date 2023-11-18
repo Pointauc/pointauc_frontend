@@ -2,7 +2,7 @@ import { FC } from 'react';
 import classNames from 'classnames';
 import { Divider, Grid, Typography } from '@mui/material';
 
-import { UpdateData } from '@utils/changelog.ts';
+import { UpdateData } from '@utils/changelog.tsx';
 
 import './Changelog.scss';
 

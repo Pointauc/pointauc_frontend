@@ -31,6 +31,9 @@ const ENDPOINTS = {
   EMOTES: {
     SEVEN_TV: 'https://7tv.io/v3/users/twitch',
   },
+  PUBLIC_API: {
+    TOKEN: '/api/oshino/token',
+  },
 };
 
 export default ENDPOINTS;

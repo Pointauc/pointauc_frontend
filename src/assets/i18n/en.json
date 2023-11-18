@@ -40,6 +40,10 @@
       "settings": "Settings",
       "integrations": "Integrations",
       "addNewBids": "Add all new rewards at once",
+      "token": {
+        "token": "Личный токен",
+        "show": "Показать"
+      },
       "twitch": {
         "openRewards": "Enable Rewards",
         "closeRewards": "Hide Rewards",

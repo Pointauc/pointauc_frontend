@@ -214,6 +214,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
           <>
             <ButtonGroup size='small' className='purchase-new-split-button' ref={anchorRef}>
               <Button
+                color='blank'
                 variant='outlined'
                 size='small'
                 className='purchase-new-split-button-left'
@@ -222,6 +223,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 Новый
               </Button>
               <Button
+                color='blank'
                 variant='outlined'
                 size='small'
                 className='purchase-new-split-button-right'
@@ -256,12 +258,24 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
             </Popper>
 
             {luckyWheelEnabled && (
-              <Button variant='outlined' size='small' className='purchase-new-button' onClick={openCasino}>
+              <Button
+                color='blank'
+                variant='outlined'
+                size='small'
+                className='purchase-new-button'
+                onClick={openCasino}
+              >
                 Испытать удачу
               </Button>
             )}
             {bestMatch && (
-              <Button variant='outlined' size='small' className='purchase-new-button' onClick={handleAddToBestMatch}>
+              <Button
+                color='blank'
+                variant='outlined'
+                size='small'
+                className='purchase-new-button'
+                onClick={handleAddToBestMatch}
+              >
                 {`К ${bestMatch.name}`}
               </Button>
             )}

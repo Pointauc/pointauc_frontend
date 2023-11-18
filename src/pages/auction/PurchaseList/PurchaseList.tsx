@@ -15,7 +15,7 @@ import './PurchaseList.scss';
 const PurchaseList: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { purchases } = useSelector((root: RootState) => root.purchases);
-  const { twitchSocket, daSocket, donatePaySocket } = useSelector((root: RootState) => root.socketIo);
+  const { globalSocket, twitchSocket, daSocket, donatePaySocket } = useSelector((root: RootState) => root.socketIo);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -42,10 +42,11 @@ const PurchaseList: React.FC = () => {
   }, [purchaseSort, purchases]);
 
   useEffect(() => {
+    globalSocket?.on('Bid', handleRedemption);
     twitchSocket?.on('Bid', handleRedemption);
     daSocket?.on('Bid', handleRedemption);
     donatePaySocket?.on('Bid', handleRedemption);
-  }, [daSocket, handleRedemption, twitchSocket, donatePaySocket]);
+  }, [daSocket, handleRedemption, twitchSocket, donatePaySocket, globalSocket]);
 
   return (
     <div className='purchase-container'>
