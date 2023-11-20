@@ -7,7 +7,7 @@ import { SaveInfo } from '@models/save.model.ts';
 import { FORMAT } from '@constants/format.constants.ts';
 import SaveLoadService from '@services/SaveLoadService';
 import { RootState } from '@reducers';
-import { setSlots } from '@reducers/Slots/Slots.ts';
+import { setSlots, updateFastIdCounter } from '@reducers/Slots/Slots.ts';
 import { loadFile } from '@utils/common.utils.ts';
 import './SaveRecord.scss';
 
@@ -28,7 +28,9 @@ const SaveRecord: FC<SaveRecordProps> = ({ timestamp, name, length, onConfigChan
   }, [name, onConfigChange, slots]);
 
   const handleLoad = useCallback(() => {
-    dispatch(setSlots(SaveLoadService.getSlots(name)));
+    const slots = SaveLoadService.getSlots(name);
+    dispatch(setSlots(slots));
+    updateFastIdCounter(slots);
   }, [dispatch, name]);
 
   const handleRename = useCallback(

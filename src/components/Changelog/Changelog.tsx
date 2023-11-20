@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import classNames from 'classnames';
 import { Divider, Grid, Typography } from '@mui/material';
 
@@ -12,7 +12,7 @@ interface ChangelogProps {
 
 interface FeaturesListProps {
   title: string;
-  data: string[];
+  data: ReactNode[];
   color: 'success' | 'info' | 'error';
 }
 
@@ -22,8 +22,8 @@ const FeaturesList: FC<FeaturesListProps> = ({ title, data, color }) => (
       <span className={classNames('feature-title', color)}>{title}</span>
     </div>
     <ul className='changelog-features'>
-      {data.map((text) => (
-        <li key={text}>{text}</li>
+      {data.map((text, index) => (
+        <li key={index}>{text}</li>
       ))}
     </ul>
   </Grid>

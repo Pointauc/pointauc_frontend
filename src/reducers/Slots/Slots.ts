@@ -46,7 +46,13 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
       }),
   );
 
+export const updateFastIdCounter = (slots: Slot[]): void => {
+  maxFastId = Math.max(...slots.map(({ fastId }) => fastId));
+};
+
 const savedSlots = SaveLoadService.getSlots(AUTOSAVE_NAME);
+const slots = savedSlots.length > 0 ? savedSlots : [createSlot()];
+updateFastIdCounter(slots);
 
 const initialState: SlotsState = {
   // slots: [createSlot()],
@@ -59,7 +65,7 @@ const initialState: SlotsState = {
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
   // slots: [...new Array(10).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
-  slots: savedSlots.length > 0 ? savedSlots : [createSlot()],
+  slots,
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);
@@ -127,6 +133,7 @@ const slotsSlice = createSlice({
     resetSlots(state): void {
       slotNamesMap.clear();
       state.slots = [createSlot({ fastId: 1 })];
+      updateFastIdCounter(state.slots);
     },
     setSlots(state, action: PayloadAction<Slot[]>): void {
       state.slots = action.payload;
