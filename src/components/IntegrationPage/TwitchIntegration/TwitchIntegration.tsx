@@ -42,7 +42,7 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
 
   return (
     <div style={{ marginBottom: 20 }}>
-      <SettingsGroupTitle title='Twitch'>
+      <SettingsGroupTitle title={t('settings.points.title')}>
         {hasTwitchAuth && <span className='username'>{username}</span>}
       </SettingsGroupTitle>
       {username && hasTwitchAuth ? (

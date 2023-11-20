@@ -1,12 +1,12 @@
 import { DragEvent, memo, useCallback, useRef, useState } from 'react';
 import './Slot.scss';
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { ThunkDispatch } from 'redux-thunk';
+import { useTranslation } from 'react-i18next';
 
 import { deleteSlot, setSlotAmount, setSlotName } from '@reducers/Slots/Slots.ts';
 import { Slot } from '@models/slot.model.ts';
@@ -32,6 +32,7 @@ interface DroppableSlotProps {
 }
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
+  const { t } = useTranslation();
   const pointsRate = useSelector((root: RootState) => root.aucSettings.settings.pointsRate);
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -134,13 +135,13 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
         <Typography className='slot-fast-index'>{`#${slot.fastId}`}</Typography>
         <SlotComponent slot={slot} />
       </div>
-      <IconButton onClick={handleDelete} className='delete-button' title='Удалить слот' size='large'>
+      <IconButton onClick={handleDelete} className='delete-button' title={t('lot.delete')} size='large'>
         <DeleteIcon />
       </IconButton>
       <IconButton
         onClick={openExtra}
         className='delete-button'
-        title='Дополнительно'
+        title={t('lot.extra')}
         aria-controls='extra'
         ref={extraIcon}
         size='large'
@@ -155,7 +156,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
         PaperProps={{ style: { width: '20ch' } }}
         TransitionProps={{ timeout: 100 }}
       >
-        <MenuItem onClick={handleOpenTrailer}>Трейлер</MenuItem>
+        <MenuItem onClick={handleOpenTrailer}>{t('lot.trailer')}</MenuItem>
       </Menu>
     </div>
   );

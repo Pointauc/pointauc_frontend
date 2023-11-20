@@ -154,7 +154,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
       marblesAuc ? (
         <>
           <span>{costString}</span>
-          <img src={Marble} alt='шар' width={15} height={15} style={{ marginLeft: 5, marginRight: 5 }} />
+          <img src={Marble} alt='marble' width={15} height={15} style={{ marginLeft: 5, marginRight: 5 }} />
           <span>{username}</span>
         </>
       ) : (
@@ -203,7 +203,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
           <IconButton
             onClick={handleRemove}
             className='purchase-header-remove-button'
-            title='Удалить слот'
+            title={t('bid.delete')}
             size='large'
           >
             <CloseIcon />
@@ -220,7 +220,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 className='purchase-new-split-button-left'
                 onClick={handleAddNewSlot}
               >
-                Новый
+                {t('bid.new')}
               </Button>
               <Button
                 color='blank'
@@ -265,7 +265,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 className='purchase-new-button'
                 onClick={openCasino}
               >
-                Испытать удачу
+                {t('bid.luckyWheel')}
               </Button>
             )}
             {bestMatch && (
@@ -276,7 +276,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 className='purchase-new-button'
                 onClick={handleAddToBestMatch}
               >
-                {`К ${bestMatch.name}`}
+                {t('bid.toLot', { name: bestMatch.name })}
               </Button>
             )}
           </>
@@ -289,7 +289,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
           </DialogContent>
           <DialogActions>
             <Button color='primary' variant='outlined' onClick={(): void => setCasinoModalOpened(false)}>
-              Закрыть
+              {t('bid.close')}
             </Button>
           </DialogActions>
         </Dialog>

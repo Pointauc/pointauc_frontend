@@ -11,7 +11,12 @@
       "max": "макс",
       "left": "Осталось",
       "delete": "Удалить",
-      "currencySign": "₽"
+      "currencySign": "₽",
+      "moveFileOrClick": "Перетащите сюда файл или нажмите",
+      "insertImageLink": "Вставьте ссылку на изображение...",
+      "incorrectLink": "Неверная ссылка",
+      "authProgress": "Авторизация...",
+      "accountProgress": "Загрузка аккаунта..."
     },
     "auc": {
       "addPosition": "Добавить лот",
@@ -21,13 +26,15 @@
       "language": "Language: {{lng}}",
       "showChances": "Показать шансы на победу",
       "compactView": "Компактный режим",
-
+      "clearAll": "Очистить все",
+      "saves": "Ваши сохранения",
       "lotSearch": "Поиск среди лотов...",
       "newLotName": "Название нового лота",
       "lotName": "Название",
       "integrations": "Интеграции",
       "addToRandomSlot": "Добавить к случайному слоту",
       "addedToRandomSlot": "Случайно добавлено {{cost}} от {{username}} к \"{{slotName}}\" (\"{{message}}\")!",
+      "total": "Всего: {{totalSum}} ₽",
       "casino": {
         "selectLot": "Колесо удачи",
         "description": "Вам предстоит прокрутить обычное колесо, если выбранный вами лот победит, то ставка умножится не заданное число, иначе обнулится.",
@@ -77,8 +84,12 @@
         "selectBet": "Зритель выбирает лот"
       },
       "donations": {
+        "title": "Донаты",
         "pointsRate": "Курс рубля к поинтам",
         "addTimeOnDonation": "Добавлять время при донате"
+      },
+      "points": {
+        "title": "Twitch"
       },
       "auc": {
         "auc": "Аукцион",
@@ -129,7 +140,66 @@
       "loadCustomMessage": "загрузить свое изображение",
       "importToWheel": "Импорт в колесо",
       "deleteLot": "Удалить лот",
-      "winner": "Победитель"
+      "winner": "Победитель",
+      "lotWasDeleted": "лот был удален",
+      "lotDeleteWarning": "Это действие удалит лот не только из колеса, но и из самого аукциона.",
+      "spicyFinal": "Финал с перчинкой",
+      "connectTwitchForMoreEmotes": "Подключите Twitch, чтобы выбрать больше изображений в колесе",
+      "addLotsToAuc": "Сохранить лоты в аук",
+      "format": {
+        "normal": "Обычное",
+        "dropout": "Выбывание",
+        "battleRoyal": "Батл рояль"
+      },
+      "pace": {
+        "spinInReverse": "Вращать в обратную сторону",
+        "randomZoneStart": "Зона начала рандома",
+        "respinMark": "Время с конца, когда начнется докрут",
+        "maxDistance": "Макс. дистанция",
+        "blockedZone": "Заблокированная зона рандома",
+        "blockedZoneDescription": "Чем больше значение, тем ближе к макс дистанции будет рандомится докрут."
+      }
+    },
+    "save": {
+      "fileImport": "Импорт из файла",
+      "newSave": "Новое сохранение",
+      "load": "Загрузить",
+      "save": "Сохранить",
+      "downloadFile": "Скачать в файл",
+      "delete": "Удалить",
+      "lotsAmount": "{{length}} лотов"
+    },
+    "lot": {
+      "addAmount": "Прибавить стоимость",
+      "delete": "Удалить слот",
+      "extra": "Дополнительно",
+      "trailer": "Трейлер"
+    },
+    "bid": {
+      "totalBids": "Всего заказов:",
+      "delete": "Удалить слот",
+      "luckyWheel": "Испытать удачу",
+      "toLot": "К {{name}}",
+      "close": "Закрыть",
+      "new": "Новый"
+    },
+    "stopwatch": {
+      "continue": "Продолжить",
+      "pause": "Пауза",
+      "reset": "Обнулить",
+      "addTime": "Добавить время",
+      "reduceTime": "Уменьшить время",
+      "addTimex2": "Добавить время Х2"
+    },
+    "history": {
+      "title": "История выполненных заказов",
+      "time": "Время",
+      "user": "Пользователь",
+      "message": "Сообщение",
+      "cost": "Стоимость",
+      "addedTo": "Добавлен к",
+      "status": "Статус",
+      "returnRedemptions": "Вернуть выбранные награды"
     }
   }
 }

@@ -2,6 +2,7 @@ import { ReactText, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { ThunkDispatch } from 'redux-thunk';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
@@ -13,6 +14,7 @@ import DragBidContext from '../DragBidContext/DragBidContext';
 import './PurchaseList.scss';
 
 const PurchaseList: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { purchases } = useSelector((root: RootState) => root.purchases);
   const { globalSocket, twitchSocket, daSocket, donatePaySocket } = useSelector((root: RootState) => root.socketIo);
@@ -58,7 +60,7 @@ const PurchaseList: React.FC = () => {
       </div>
       {!!purchases.length && (
         <Typography className='total-purchases'>
-          Всего заказов:
+          <span>{t('bid.totalBids')}</span>
           <span>{purchases.length}</span>
         </Typography>
       )}

@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 import { FORMAT } from '@constants/format.constants.ts';
@@ -18,6 +19,7 @@ interface SlotsMap {
 }
 
 const PurchaseHistory: React.FC = () => {
+  const { t } = useTranslation();
   const { history } = useSelector((root: RootState) => root.purchases);
   const { slots } = useSelector((root: RootState) => root.slots);
   const [selection, setSelection] = useState<any>();
@@ -40,41 +42,41 @@ const PurchaseHistory: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      headerName: 'Время',
+      headerName: t('history.time'),
       field: 'timestamp',
       sortable: true,
       valueGetter: getTime,
       width: 110,
     },
     {
-      headerName: 'Пользователь',
+      headerName: t('history.user'),
       field: 'username',
       sortable: true,
       filterable: true,
       flex: 0.6,
     },
     {
-      headerName: 'Сообщение',
+      headerName: t('history.message'),
       field: 'message',
       filterable: true,
       flex: 1,
     },
     {
-      headerName: 'Стоимость',
+      headerName: t('history.cost'),
       field: 'cost',
       sortable: true,
       filterable: true,
       width: 140,
     },
     {
-      headerName: 'Добавлен к',
+      headerName: t('history.addedTo'),
       field: 'target',
       sortable: true,
       filterable: true,
       valueGetter: getTargetName,
       flex: 1,
     },
-    { headerName: 'Статус', field: 'status', cellClassName: statusCellClassRules, width: 110 },
+    { headerName: t('history.status'), field: 'status', cellClassName: statusCellClassRules, width: 110 },
   ];
 
   const handleRefund = useCallback(() => {
@@ -92,7 +94,7 @@ const PurchaseHistory: React.FC = () => {
   return (
     <div className='history-table'>
       <Button variant='outlined' color='primary' onClick={handleRefund}>
-        Вернуть выбранные награды
+        {t('history.returnRedemptions')}
       </Button>
       <DataGrid
         checkboxSelection

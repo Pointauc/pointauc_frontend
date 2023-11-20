@@ -9,6 +9,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { ThunkDispatch } from 'redux-thunk';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
@@ -22,6 +23,7 @@ export const STOPWATCH = {
 
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
@@ -82,8 +84,6 @@ const Stopwatch: React.FC = () => {
         time.current = 0;
         setIsStopped(true);
         setIsStopwatchChanged(true);
-        // const { name } = winnerRef.current || {};
-        // dispatch(setNotification(`${name || DEFAULT_SLOT_NAME} победил!`));
       }
       stopwatchElement.current.innerHTML = dayjs(time.current).format(STOPWATCH.FORMAT).slice(0, -1);
     }
@@ -179,24 +179,24 @@ const Stopwatch: React.FC = () => {
       <Typography className='stopwatch' ref={stopwatchElement} />
       <div className='stopwatch-controls'>
         {isStopped ? (
-          <IconButton onClick={handleStart} title='Продолжить' size='large'>
+          <IconButton onClick={handleStart} title={t('stopwatch.continue')} size='large'>
             <PlayArrowIcon fontSize='large' />
           </IconButton>
         ) : (
-          <IconButton onClick={handleStop} title='Пауза' size='large'>
+          <IconButton onClick={handleStop} title={t('stopwatch.pause')} size='large'>
             <PauseIcon fontSize='large' />
           </IconButton>
         )}
-        <IconButton onClick={handleReset} title='Обнулить' size='large'>
+        <IconButton onClick={handleReset} title={t('stopwatch.reset')} size='large'>
           <ReplayIcon fontSize='large' />
         </IconButton>
-        <IconButton onClick={handleAdd} title='Добавить время' size='large'>
+        <IconButton onClick={handleAdd} title={t('stopwatch.addTime')} size='large'>
           <ExpandLessIcon fontSize='large' />
         </IconButton>
-        <IconButton onClick={handleSubtract} title='Уменьшить время' size='large'>
+        <IconButton onClick={handleSubtract} title={t('stopwatch.reduceTime')} size='large'>
           <ExpandMoreIcon fontSize='large' />
         </IconButton>
-        <IconButton onClick={handleAddDouble} title='Добавить время Х2' size='large'>
+        <IconButton onClick={handleAddDouble} title={t('stopwatch.addTimex2')} size='large'>
           <KeyboardCapslockIcon fontSize='large' />
         </IconButton>
       </div>

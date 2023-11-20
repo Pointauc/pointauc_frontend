@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import { DropzoneArea } from 'react-mui-dropzone';
+import { useTranslation } from 'react-i18next';
 import './ImageLinkInput.scss';
 
 interface ImageLinkInputProps {
@@ -11,6 +12,7 @@ interface ImageLinkInputProps {
 }
 
 const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitle, buttonClass, onChange }) => {
+  const { t } = useTranslation();
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
   const [isCorrectUrl, setIsCorrectUrl] = useState(true);
   const toggleDialog = (): void => {
@@ -57,7 +59,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
         <DialogContent className='image-input-wrapper'>
           <DropzoneArea
             dropzoneClass='drop-zone'
-            dropzoneText='Перетащите сюда файл или нажмите'
+            dropzoneText={t('common.moveFileOrClick')}
             onDrop={handleFileUpload}
             filesLimit={1}
             maxFileSize={1000 * 1000 * 50}
@@ -65,10 +67,10 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
           <Typography className='divider'>ИЛИ</Typography>
           <TextField
             onPaste={handleLinkPaste}
-            placeholder='Вставьте ссылку на изображение...'
+            placeholder={t('common.insertImageLink')}
             className='link-input'
             error={!isCorrectUrl}
-            helperText={!isCorrectUrl ? 'Неверная ссылка' : undefined}
+            helperText={!isCorrectUrl ? t('common.incorrectLink') : undefined}
             variant='outlined'
           />
         </DialogContent>

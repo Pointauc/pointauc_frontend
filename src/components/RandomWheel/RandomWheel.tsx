@@ -17,7 +17,7 @@ import { useDispatch } from 'react-redux';
 import { Emote } from '@kozjar/twitch-emoticons';
 import { useTranslation } from 'react-i18next';
 
-import { PACE_PRESETS, WHEEL_OPTIONS, WheelFormat } from '@constants/wheel.ts';
+import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
 import { RandomPaceConfig } from '@services/SpinPaceService.ts';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getCookie, getRandomIntInclusive, getTotalSize, getWheelColor } from '@utils/common.utils.ts';
@@ -29,7 +29,7 @@ import { Game } from '@components/Bracket/components/model';
 import useWheel from '@hooks/useWheel';
 import withLoading from '@decorators/withLoading';
 import LoadingButton from '@components/LoadingButton/LoadingButton';
-import RadioButtonGroup from '@components/RadioButtonGroup/RadioButtonGroup';
+import RadioButtonGroup, { Option } from '@components/RadioButtonGroup/RadioButtonGroup';
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput';
 import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
@@ -325,6 +325,15 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     }
   }, [gamesOrder, wheelFormat]);
 
+  const wheelOptions: Option<WheelFormat>[] = useMemo(
+    () => [
+      { key: WheelFormat.Default, label: t('wheel.format.normal') },
+      { key: WheelFormat.Dropout, label: t('wheel.format.dropout') },
+      { key: WheelFormat.BattleRoyal, label: t('wheel.format.battleRoyal') },
+    ],
+    [t],
+  );
+
   return (
     <div className='wheel-content'>
       {wheelComponent}
@@ -361,7 +370,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
             {elements.mode && (
               <RadioButtonGroup
                 style={{ marginTop: 10 }}
-                options={WHEEL_OPTIONS}
+                options={wheelOptions}
                 activeKey={wheelFormat}
                 onChangeActive={handleWheelFormatChange}
               />
@@ -446,7 +455,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
             {elements.randomPace && (
               <>
                 <div className='wheel-controls-row'>
-                  <Typography>Финал с перчинкой</Typography>
+                  <Typography>{t('wheel.spicyFinal')}</Typography>
                   <Switch onChange={handleIsRandomPaceChange} />
                 </div>
                 {isRandomPace && (

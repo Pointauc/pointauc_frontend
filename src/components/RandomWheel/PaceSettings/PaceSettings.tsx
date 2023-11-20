@@ -1,5 +1,6 @@
 import { Dispatch, FC, SetStateAction, useCallback, useMemo } from 'react';
 import { Checkbox, FormControlLabel, Slider, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { RandomPaceConfig } from '@services/SpinPaceService.ts';
 import { formatDegree, formatPercents, formatSeconds } from '@utils/common.utils.ts';
@@ -11,6 +12,7 @@ interface PaceSettingsProps {
 }
 
 const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTime }) => {
+  const { t } = useTranslation();
   const { allowBackStep, valueDisabledZone, valueRandomZone, randomOffset } = paceConfig;
 
   const maxOffset = useMemo(() => Math.round(Math.min(5, spinTime * 0.3)), [spinTime]);
@@ -49,7 +51,7 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
     <>
       <FormControlLabel
         control={<Checkbox checked={allowBackStep} onChange={handleBackStepChange} color='primary' />}
-        label='Вращать в обратную сторону'
+        label={t('wheel.pace.spinInReverse')}
         className='wheel-controls-checkbox'
       />
       {/* <div className="wheel-controls-row"> */}
@@ -63,7 +65,7 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
       {/*  /> */}
       {/* </div> */}
       <div className='wheel-controls-row'>
-        <Typography className='wheel-controls-tip lg'>Зона начала рандома</Typography>
+        <Typography className='wheel-controls-tip lg'>{t('wheel.pace.randomZoneStart')}</Typography>
         <Slider
           value={randomOffset}
           step={0.5}
@@ -78,9 +80,9 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
           ]}
         />
       </div>
-      <Typography className='wheel-controls-tip hint'>Время с конца, когда начнется докрут</Typography>
+      <Typography className='wheel-controls-tip hint'>{t('wheel.pace.respinMark')}</Typography>
       <div className='wheel-controls-row'>
-        <Typography className='wheel-controls-tip lg'>Макс. дистанция</Typography>
+        <Typography className='wheel-controls-tip lg'>{t('wheel.pace.maxDistance')}</Typography>
         <Slider
           value={valueRandomZone}
           step={30}
@@ -95,7 +97,7 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
           ]}
         />
       </div>
-      <Typography className='wheel-controls-tip lg'>Заблокированная зона рандома</Typography>
+      <Typography className='wheel-controls-tip lg'>{t('wheel.pace.blockedZone')}</Typography>
       <Slider
         value={valueDisabledZone}
         step={0.01}
@@ -109,9 +111,7 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
           { value: 0.7, label: '70%' },
         ]}
       />
-      <Typography className='wheel-controls-tip hint'>
-        Чем больше значение, тем ближе к макс дистанции будет рандомится докрут.
-      </Typography>
+      <Typography className='wheel-controls-tip hint'>{t('wheel.pace.blockedZoneDescription')}</Typography>
     </>
   );
 };

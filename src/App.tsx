@@ -4,6 +4,7 @@ import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import { Container, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, styled } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 
@@ -39,6 +40,7 @@ const StyledDrawer = styled(Drawer)(({ theme }: any) => ({
 })) as any;
 
 const App: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { pathname } = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -99,7 +101,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const loadUser = async () => {
       const loadingAlert: AlertType = {
-        message: 'Загрузка аккаунта...',
+        message: t('common.accountProgress'),
         type: AlertTypeEnum.Info,
         id: Math.random(),
       };
@@ -115,7 +117,7 @@ const App: React.FC = () => {
     if (hasToken) {
       loadUser();
     }
-  }, [dispatch]);
+  }, [dispatch, t]);
 
   return (
     <div className='app'>

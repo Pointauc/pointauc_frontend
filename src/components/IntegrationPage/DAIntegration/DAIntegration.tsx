@@ -2,8 +2,6 @@ import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormGroup, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-
-import './DAIntegration.scss';
 import { ThunkDispatch } from 'redux-thunk';
 import { Control } from 'react-hook-form';
 
@@ -18,6 +16,7 @@ import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitl
 import DALoginButton from '../DALoginButton/DALoginButton';
 import DonatePayLoginButton from '../DonatePayLoginButton/DonatePayLoginButton';
 import { RootState } from '../../../reducers';
+import './DAIntegration.scss';
 
 interface DaIntegration {
   control: Control;
@@ -31,7 +30,7 @@ const DaIntegration: FC<DaIntegration> = ({ control }) => {
 
   return (
     <>
-      <SettingsGroupTitle title='Донаты' />
+      <SettingsGroupTitle title={t('settings.donations.title')} />
       {hasDAAuth ? (
         <IntegrationSwitch
           state={da}

@@ -301,7 +301,7 @@ const useWheel = ({
     if (deleteItem && winnerItem) {
       deleteItem(winnerItem.id);
       toggleDialog();
-      dispatch(addAlert({ type: AlertTypeEnum.Success, message: 'лот был удален' }));
+      dispatch(addAlert({ type: AlertTypeEnum.Success, message: t('wheel.lotWasDeleted') }));
     }
   };
 
@@ -312,7 +312,7 @@ const useWheel = ({
     >
       <Dialog open={dialogOpen} onClose={toggleDialog}>
         <DialogContent>
-          <Typography>Это действие удалит лот не только из колеса, но и из самого аукциона.</Typography>
+          <Typography>{t('wheel.lotDeleteWarning')}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={deleteWinner} variant='outlined' color='secondary'>

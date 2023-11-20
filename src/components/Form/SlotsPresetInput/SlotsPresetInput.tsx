@@ -1,9 +1,11 @@
 import { FC, ReactNode, useState } from 'react';
 import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel } from '@mui/material';
 import { DropzoneArea } from 'react-mui-dropzone';
+import { useTranslation } from 'react-i18next';
 
 import { parseSlotsPreset } from '@utils/slots.utils.ts';
 import { Slot } from '@models/slot.model.ts';
+
 import './SlotsPresetInput.scss';
 
 interface SlotsPresetInput {
@@ -15,6 +17,7 @@ interface SlotsPresetInput {
 }
 
 const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonClass, dialogTitle, hint }) => {
+  const { t } = useTranslation();
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
   const [saveSlots, setSaveSlots] = useState<boolean>(false);
   const toggleDialog = (): void => {
@@ -44,14 +47,14 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
         <DialogContent className='image-input-wrapper'>
           <DropzoneArea
             dropzoneClass='drop-zone'
-            dropzoneText='Перетащите сюда файл или нажмите'
+            dropzoneText={t('common.moveFileOrClick')}
             onDrop={handleFileUpload}
             filesLimit={1}
           />
           <FormControlLabel
             className='save-slots-checkbox'
             control={<Checkbox checked={saveSlots} onChange={handleSaveSlotsChange} color='primary' />}
-            label='Сохранить лоты в аук'
+            label={t('wheel.addLotsToAuc')}
           />
           {hint && <div className='slots-preset-input-hint'>{hint}</div>}
         </DialogContent>

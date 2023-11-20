@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import { getQueryValue } from '@utils/url.utils.ts';
 import ROUTES from '@constants/routes.constants';
@@ -15,16 +16,17 @@ import { getCookie } from '@utils/common.utils.ts';
 const hasToken = !!getCookie('userSession');
 
 const TwitchRedirect: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [loadingMessage, setLoadingMessage] = useState<string>('Авторизация...');
+  const [loadingMessage, setLoadingMessage] = useState<string>(t('common.authProgress'));
 
   useEffect(() => {
     const code = getQueryValue(location.search, QUERIES.CODE);
     if (code) {
       authenticateTwitch(code).then(() => {
-        setLoadingMessage('Загрузка аккаунта...');
+        setLoadingMessage(t('common.accountProgress'));
         dispatch(setHasTwitchAuth(true));
 
         if (!hasToken) {
@@ -34,7 +36,7 @@ const TwitchRedirect: React.FC = () => {
         }
       });
     }
-  }, [dispatch, location]);
+  }, [dispatch, location, t]);
 
   return isLoading ? <LoadingPage helpText={loadingMessage} /> : <Navigate to={ROUTES.INTEGRATION} />;
 };

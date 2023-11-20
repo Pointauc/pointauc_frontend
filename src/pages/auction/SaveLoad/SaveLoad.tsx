@@ -3,6 +3,7 @@ import { Button, Dialog, DialogContent } from '@mui/material';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { DropzoneArea } from 'react-mui-dropzone';
+import { useTranslation } from 'react-i18next';
 
 import SaveLoadService from '@services/SaveLoadService';
 import { SaveInfo } from '@models/save.model.ts';
@@ -13,6 +14,7 @@ import './SaveLoad.scss';
 
 const SaveLoad: FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
+  const { t } = useTranslation();
   const initialSaves = useMemo(
     () =>
       SaveLoadService.getSavesConfig().sort(
@@ -49,17 +51,17 @@ const SaveLoad: FC = () => {
       </div>
       <div className='controls'>
         <Button style={{ marginRight: 10 }} onClick={toggleDialog} variant='outlined'>
-          Импорт из файла
+          {t('save.fileImport')}
         </Button>
         <Button onClick={handleNewSave} variant='outlined'>
-          Новое сохранение
+          {t('save.newSave')}
         </Button>
       </div>
       <Dialog open={isImportOpen} onClose={toggleDialog} maxWidth={false}>
         <DialogContent className='image-input-wrapper'>
           <DropzoneArea
             dropzoneClass='drop-zone'
-            dropzoneText='Перетащите сюда файл или нажмите'
+            dropzoneText={t('common.moveFileOrClick')}
             onDrop={handleImportSave}
             filesLimit={1}
           />

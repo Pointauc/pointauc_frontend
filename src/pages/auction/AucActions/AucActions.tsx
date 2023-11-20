@@ -139,7 +139,7 @@ const AucActions: React.FC = () => {
               <Tooltip title={t('auc.saveLoad')}>
                 <Button onClick={handleRestoreOpen} startIcon={<SaveIcon />} />
               </Tooltip>
-              <Tooltip title='Очистить все'>
+              <Tooltip title={t('auc.clearAll')}>
                 <Button onClick={handleResetSlots} startIcon={<DeleteSweepIcon />} />
               </Tooltip>
             </ButtonGroup>
@@ -162,7 +162,7 @@ const AucActions: React.FC = () => {
         maxWidth='sm'
         fullWidth
       >
-        <DialogTitle>Ваши сохранения</DialogTitle>
+        <DialogTitle>{t('auc.saves')}</DialogTitle>
         <DialogContent dividers className='auc-action-dialog-content'>
           <SaveLoad />
         </DialogContent>
@@ -173,7 +173,7 @@ const AucActions: React.FC = () => {
       </div>
 
       <div className='total-sum-wrapper'>
-        {isTotalVisible && <Typography className='total-sum'>{`Всего: ${totalSum} ₽`}</Typography>}
+        {isTotalVisible && <Typography className='total-sum'>{t('auc.total', { totalSum })}</Typography>}
         <IconButton onClick={toggleTotalSumVisability} className='hide-sum' size='large'>
           {isTotalVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
         </IconButton>

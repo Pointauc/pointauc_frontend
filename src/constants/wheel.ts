@@ -35,12 +35,6 @@ export enum GroupStage {
   Dropout,
 }
 
-export const WHEEL_OPTIONS: Option<WheelFormat>[] = [
-  { key: WheelFormat.Default, label: 'Обычное' },
-  { key: WheelFormat.Dropout, label: 'Выбывание' },
-  { key: WheelFormat.BattleRoyal, label: 'Батл рояль' },
-];
-
 export const GROUP_STAGES: Option<GroupStage>[] = [
   { key: GroupStage.FFA, label: 'FFA' },
   { key: GroupStage.Teams, label: 'Команды' },

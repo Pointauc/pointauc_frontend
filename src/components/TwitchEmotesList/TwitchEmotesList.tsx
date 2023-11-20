@@ -3,6 +3,7 @@ import { CircularProgress, IconButton } from '@mui/material';
 import { useSelector } from 'react-redux';
 // @ts-ignore
 import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 import { getSevenTVEmotes } from '@api/emotesApi.ts';
@@ -22,6 +23,7 @@ const flattenCollection = (collection: Collection<string, Emote>): Emote[] => Ar
 const emoteLists = ['default', 'twitch', '7tv', 'bttv', 'ffz'];
 
 const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesLoad }) => {
+  const { t } = useTranslation();
   const { userId } = useSelector((root: RootState) => root.user);
   const [userEmotes, setUserEmotes] = useState<(Emote[] | null)[]>();
 
@@ -83,7 +85,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
       ) : (
         <CircularProgress className='emotes-loading' />
       )}
-      {!userId && <div className='emote-hint'>Подключите Twitch, чтобы выбрать больше изображений в колесе</div>}
+      {!userId && <div className='emote-hint'>{t('wheel.connectTwitchForMoreEmotes')}</div>}
     </div>
   );
 };

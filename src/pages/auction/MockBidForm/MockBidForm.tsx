@@ -25,19 +25,19 @@ const MockBidForm: FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='mock-bid-form settings'>
       <FormGroup row className='auc-settings-row'>
-        <FormInput name='cost' label='Стоимость' control={control} type='number' className='field md' />
+        <FormInput name='cost' label='Cost' control={control} type='number' className='field md' />
       </FormGroup>
       <FormGroup row className='auc-settings-row'>
         <FormInput name='username' label='Username' control={control} className='field lg' />
       </FormGroup>
       <FormGroup row className='auc-settings-row'>
-        <FormInput name='message' label='Сообщение' control={control} className='field lg' />
+        <FormInput name='message' label='Message' control={control} className='field lg' />
       </FormGroup>
       <FormGroup row className='auc-settings-row'>
-        <FormSwitch name='isDonation' label='Донат' control={control} />
+        <FormSwitch name='isDonation' label='Is donation' control={control} />
       </FormGroup>
       <Button type='submit' variant='contained' color='primary'>
-        Отправить тестовую ставку
+        Send test bid
       </Button>
     </form>
   );
