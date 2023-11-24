@@ -1,119 +1,203 @@
 {
-  "translation":{
-    "common":{
-      "connectTwitch":"Падключыць twitch",
-      "connectDA":"Падключыць Donation Alerts",
-      "apply":"Прымяніць",
-      "cancel":"Адмяніць",
-      "sec":"с.",
-      "min":"мін.",
-      "max":"макс",
-      "left":"Засталося",
-      "delete":"Выдаліць",
-      "currencySign":"₽"
+  "translation": {
+    "common": {
+      "connectTwitch": "twitch",
+      "connectDA": "Donation Alerts",
+      "apply": "Прымяніць",
+      "cancel": "Адмяніць",
+      "sec": "с.",
+      "min": "мін.",
+      "max": "макс",
+      "left": "Засталося",
+      "delete": "Выдаліць",
+      "currencySign": "₽",
+      "moveFileOrClick": "Перацягніце сюды файл ці націсьніце",
+      "insertImageLink": "Устаўце спасылку на выяву...",
+      "incorrectLink": "Памылковая спасылка",
+      "authProgress": "Аўтарызацыя...",
+      "accountProgress": "Загрузка акаўнта..."
     },
-    "auc":{
-      "addPosition":"Дадаць лот",
-      "saveLoad":"Захаваньне/Спампоўка",
-      "downloadMarbles":"Спампаваць шары",
-      "compactView":"Кампактны рэжым",
-      "supportCreator":"Падтрымаць аўтара",
-      "showWinningChances":"Паказаць шанец на перамогу",
-      "language":"Language: {{lng}}",
-      "lotSearch":"Пошук сярод латоў...",
-      "newLotName":"Назва новага лота",
-      "lotName":"Назва",
-      "integrations":"Інтэграцыя",
+    "auc": {
+      "addPosition": "Дадаць лот",
+      "saveLoad": "Захаваньне/Спампоўка",
+      "downloadMarbles": "Спампаваць шары",
+      "clearAll": "Ачысціць усё",
+      "compactView": "Кампактны рэжым",
+      "supportCreator": "Падтрымаць аўтара",
+      "showChances": "Шанец перамогі",
+      "language": "Language: {{lng}}",
+      "lotSearch": "Пошук сярод латоў.",
+      "newLotName": "Назва новага лота",
+      "lotName": "Назва",
+      "integrations": "Інтэграцыя",
+      "addToRandomSlot": "Дадаць да выпадковага слата",
+      "addedToRandomSlot": "Выпадкова дададзена {{cost}} ад {{username}} да \"{{slotName}}\" (\"{{message}}\")!",
+      "total": "Усяго: {{totalSum}} ₽",
       "casino": {
-        "selectLot": "Колесо удачи",
-        "description": "Вам предстоит прокрутить обычное колесо, если выбранный вами лот победит, то ставка умножится не заданное число, иначе обнулится.",
-        "warning": "Эта функция не дает выгоду или убыток для донатера!",
+        "selectLot": "Кола шанцаваньня",
+        "description": "Трэба пракруціць звычайнае кола, калі абраны лот пераможа - стаўка памножыцца на зададзены лік, інакш абнуліцца.",
+        "warning": "Гэтая функцыя не дае выгаду або страту для данацера!",
         "yourLot": "Ваш лот:",
-        "yourBid": "Ваша ставка в аукционе:"
+        "yourBid": "Вашая стаўка:"
       }
     },
-    "settings":{
-      "settings":"Налады",
-      "integrations":"\"Інтэграцыі\"",
-      "addNewBids":"Адразу дадаваць усе новыя ўзнагароды",
-      "twitch":{
-        "openRewards":"Уключыць узнагароды",
-        "closeRewards":"Схаваць узнагароды",
-        "deleteRewards":"Выдаліць узнагароды",
-        "bindRewardsToTimer":"Прывязаць уключэньне ўзнагарод да таймера",
-        "bindRewardsToTimerDesc":"Узнагароды будуць аўтаматычна ўключацца пры аднаўленьні таймера й адключацца пры паўзе або заканчэньні.",
-        "returnCanceledBids":"Вяртаць адмененыя ўзнагароды",
-        "commonRewardsName":"Агульная назва для ўзнагарод",
-        "commonRewardsNameDesc":"Пры ўключэньні інтэграцыі, на канале аўтаматычна ствараюцца ўзнагароды ў фармаце \"Назва + Кошт\".",
-        "rewardsList":"Сьпіс узнагарод:",
-        "cost":"Кошт",
-        "color":"Колер",
-        "addReward":"Дадаць узнагароду"
+    "settings": {
+      "settings": "Налады",
+      "integrations": "\"Інтэграцыі\"",
+      "addNewBids": "Адразу дадаваць усе новыя ўзнагароды",
+      "token": {
+        "token": "Асабісты токен",
+        "show": "Паказаць токен",
+        "openDocs": "Дакументацыя",
+        "copy": "Капіяваць",
+        "update": "Генерыраваць новы",
+        "dontShareToken": "Не паказвайце гэты токен сумнеўным асобам.",
+        "tokenUpdated": "Токен аднаўлён",
+        "copied": "Скапіявана"
+      },
+      "appearance": {
+        "appearance": "Вонкавы выгляд",
+        "primaryColor": "Асноўны  колер",
+        "backgroundTone": "Тон асноведзі"
+      },
+      "twitch": {
+        "openRewards": "Уключыць узнагароды",
+        "closeRewards": "Схаваць узнагароды",
+        "deleteRewards": "Выдаліць узнагароды",
+        "bindRewardsToTimer": "Зьнітаваць уключэньне ўзнагарод да таймеру",
+        "bindRewardsToTimerDesc": "Узнагароды будуць аўтаматычна ўключацца пры аднаўленьні таймеру і адключацца пры паўзе ці сканчэньні.",
+        "returnCanceledBids": "Вяртаць адмененыя ўзнагароды",
+        "commonRewardsName": "Агульная назва ўзнагарод",
+        "commonRewardsNameDesc": "Пры ўключэньні інтэграцыі, на канале аўтаматычна ствараюцца ўзнагароды ў фармаце \"Назва + Кошт\".",
+        "rewardsList": "Сьпіс узнагарод:",
+        "cost": "Кошт",
+        "color": "Колер",
+        "addReward": "Дадаць узнагароду",
+        "saveRewards": "Захаваць"
       },
       "luckyWheel": {
-        "groupTitle": "Колесо удачи",
-        "luckyWheel": "Включить",
-        "desc": "Прокрутите колесо и получите возможность умножить ставку",
-        "selectBet": "Зритель выбирает лот"
+        "groupTitle": "Кола шанцаваньня",
+        "luckyWheel": "Уключыць",
+        "desc": "Пракруціце кола і атрымайце магчымасьць памножыць стаўку",
+        "selectBet": "Глядач абірае лот"
       },
-      "donations":{
-        "pointsRate":"Курс рубля да пойнтаў",
-        "addTimeOnDonation":"Дадаваць час пры данаце"
+      "donations": {
+        "title": "Данаты",
+        "pointsRate": "Курс рубля да пойнтаў",
+        "addTimeOnDonation": "Дадаць час пры данаце"
       },
-      "auc":{
-        "auc":"Аўкцыён",
-        "showBuyout":"Показаць выкуп",
-        "showTotal":"Показаць выніковую суму",
-        "showWinningChances":"Показаць шанец перамогі",
-        "background":"Фон аўкцыёна",
-        "uploadBackground":"Спампаваць фон",
-        "selectFromList":"Выбраць са сьпіса",
-        "sortBids":"Сартаваць пакупкі за пойнты",
-        "dateSort":"Дата",
-        "costSort":"Кошт",
-        "casino": {
-          "selectLot": "Колесо удачи",
-          "description": "Вам предстоит прокрутить обычное колесо, если выбранный вами лот победит, то ставка умножится не заданное число, иначе обнулится.",
-          "warning": "Эта функция не дает выгоду или убыток для донатера!",
-          "yourLot": "Ваш лот:",
-          "yourBid": "Ваша ставка в аукционе:"
-        }
+      "points": {
+        "title": "Twitch"
       },
-      "marbles":{
-        "marbles":"Шары",
-        "marbleAuc":"Шаравы аўкцыён",
-        "marbleCost":"Кошт шара",
-        "newPositionCost":"Кошт новай катэгорыі"
+      "auc": {
+        "auc": "Аўкцыён",
+        "showBuyout": "Паказаць выкуп",
+        "showTotal": "Выніковая сума",
+        "showWinningChances": "Шанец перамогі",
+        "background": "Асноведзь аўкцыёна",
+        "uploadBackground": "Абраць асноведзь",
+        "selectFromList": "Абраць са сьпісу",
+        "sortBids": "Сартаваць набытае за пойнты",
+        "dateSort": "Дата",
+        "costSort": "Кошты"
       },
-      "stopwatch":{
-        "stopwatch":"Таймер",
-        "startTime":"Пачатковы час",
-        "startTimeDesc":"Час на які вяртаецца таймер пры ськідзе.",
-        "additionalTime":"Час прыбаўленьня таймера",
-        "additionalTimeDesc":"Час на які зьменіцца таймер пры націсканьні на +/-.",
-        "addTimeOnLeaderChange":"Дадаць час пры зьмене лідэра",
-        "addTimeOnNewPosition":"Дадаваць час за новую пазіцыю",
-        "maxAdditionalTime":"Макс. час аўтаматычнага дадаваньня"
+      "marbles": {
+        "marbles": "Шары",
+        "marbleAuc": "Шаравы аўкцыён",
+        "marblesAucDesc": "Усе новыя стаўкі будуць аўтаматычна пералічвацца ў шары",
+        "marbleCost": "Кошт шара",
+        "marbleCostDesc": "Кошт аднаго шара пры дадаваньні да існуючага лота",
+        "newPositionCost": "Кошт новай катыгорыі",
+        "newPositionCostDesc": "Пасьля дадаваньня новага лоту, кошт ПЕРШАГА шара, будзе вылічвацца па гэтаму значэньню"
+      },
+      "stopwatch": {
+        "stopwatch": "Таймер",
+        "startTime": "Пачатковы час",
+        "startTimeDesc": "Час на які вяртаецца таймер пры ськідзе.",
+        "additionalTime": "Час прыбаўленьня таймера.",
+        "additionalTimeDesc": "Час на які зьменіцца таймер пры націсканьні на +/-.",
+        "addTimeOnLeaderChange": "Дадаваць час, калі адбываецца зьмена лідара.",
+        "addTimeOnNewPosition": "Дадаваць час за новую пазіцыю.",
+        "maxAdditionalTime": "Макс. час аўтаматычнага дадаваньня."
       }
     },
-    "wheel":{
-      "wheel":"Кола",
-      "spin":"Круціць",
-      "nextDuel":"наступная дуэль",
-      "spinning":"Круцімся...",
-      "duration":"Працягласьць",
-      "howItWorks":"Як гэта работае?",
-      "nesting":"Укладзенасьць",
-      "nestingDesc":"групуе танныя лоты, каб паменшыць колькасьць пракрутаў",
-      "dropoutProof":"ДОКАЗ, што выбываньне не адрозьніваецца ад звычайнага кола!",
-      "readBeforeUsage":"ПРАЧЫТАЙЦЕ ПЕРАД ВЫКАРЫСТАНЬНЕМ!",
-      "dividing":"Падзел",
-      "dividingDesc":"дзеліць дарагія лоты на некалькі пазіцый.",
-      "useRandomOrg":"Выкарыстоўваць сэрвіс random.org",
-      "loadCustomMessage":"спампаваць свой малюнак",
-      "importToWheel":"Імпарт у кола",
-      "deleteLot":"Выдаліць лот",
-      "winner":"Пераможца"
+    "wheel": {
+      "wheel": "Кола",
+      "spin": "Круціць",
+      "nextDuel": "Наступная дуэль",
+      "spinning": "Круцімся.",
+      "duration": "Працягласьць",
+      "howItWorks": "Як гэта працуе?",
+      "nesting": "Укладзенасьць",
+      "nestingDesc": "Групуе танныя латы, каб паменшыць колькасьць пракрутаў",
+      "dropoutProof": "ДОКАЗ, што выбываньне не адрозьніваецца ад звычайнага кола!",
+      "readBeforeUsage": "ЧЫТВО ПЕРАД ВЫКАРЫСТАНЬНЕМ!",
+      "dividing": "Падзел",
+      "dividingDesc": "Падзяляць дарагія латы на некалькі пазіцый.",
+      "useRandomOrg": "Выкарыстоўваць сэрвіс random.org",
+      "loadCustomMessage": "Дадаць уласную выяву",
+      "importToWheel": "Імпарт у кола",
+      "deleteLot": "Выдаліць лот",
+      "winner": "Пераможца",
+      "lotWasDeleted": "Лот быў выдален",
+      "lotDeleteWarning": "Гэтае дзеяньне выдаліць лот ня толькі з кола, але і з аўкцыёна.",
+      "spicyFinal": "Чырвоны фінал (маю наўвазе перац, ніякіх зорак)",
+      "connectTwitchForMoreEmotes": "Падключыце Twitch, каб абраць больш выяваў у коле.",
+      "addLotsToAuc": "Захаваць латы ў аўк",
+      "format": {
+        "normal": "Звычайнае",
+        "dropout": "Выбываньне",
+        "battleRoyal": "Батл рояль"
+      },
+      "pace": {
+        "spinInReverse": "Кручэньне ў адваротны бок",
+        "randomZoneStart": "Зона пачатку рандома",
+        "respinMark": "Час з канца, калі пачнецца дакрут",
+        "maxDistance": "Макс. дыстанцыя",
+        "blockedZone": "Заблакаваная зона рандому",
+        "blockedZoneDescription": "Чым больш значэньне, тым бліжэй да макс. дыстанцыі будзе рандоміцца дакрут."
+      }
+    },
+    "save": {
+      "fileImport": "Імпарт з файла",
+      "newSave": "Новае захаваньне",
+      "load": "Загрузіць",
+      "save": "Захаваць",
+      "downloadFile": "Спампаваць ў нататнік",
+      "delete": "Выдаліць",
+      "lotsAmount": "{{length}} латоў"
+    },
+    "lot": {
+      "addAmount": "Павялічыць кошт",
+      "delete": "Выдаліць слот",
+      "extra": "Дадаткова",
+      "trailer": "Трэйлер"
+    },
+    "bid": {
+      "totalBids": "Усяго замоваў:",
+      "delete": "Выдаліць лот",
+      "luckyWheel": "Выпрабаваць шанцаваньне",
+      "toLot": "К {{name}}",
+      "close": "Зачыніць",
+      "new": "Новы"
+    },
+    "stopwatch": {
+      "continue": "Працягнуць",
+      "pause": "Паўза",
+      "reset": "Абнуліць",
+      "addTime": "Дадаць час",
+      "reduceTime": "Зьменьшыць час",
+      "addTimex2": "Дадаць час Х2"
+    },
+    "history": {
+      "title": "Гісторыя выкананьня замоваў",
+      "time": "Час",
+      "user": "Карыстальнік",
+      "message": "Паведамленьне",
+      "cost": "Кошт",
+      "addedTo": "Дададзены да",
+      "status": "Статус",
+      "returnRedemptions": "Павяртаць абраныя ўзнагароды"
     }
   }
 }

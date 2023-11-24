@@ -4,11 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   ButtonGroup,
-  Checkbox,
   Dialog,
   DialogContent,
   DialogTitle,
-  FormControlLabel,
   IconButton,
   Link,
   Grid,
@@ -25,6 +23,7 @@ import PercentIcon from '@mui/icons-material/Percent';
 import CompressIcon from '@mui/icons-material/Compress';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import PestControlIcon from '@mui/icons-material/PestControl';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 
 import { LINE_BREAK } from '@constants/common.constants.ts';
@@ -131,6 +130,15 @@ const AucActions: React.FC = () => {
               <Tooltip title={t('auc.supportCreator')}>
                 <Link target='_blank' rel='noopener noreferrer' href='https://www.donationalerts.com/r/kozjar'>
                   <Button startIcon={<AttachMoneyIcon />} />
+                </Link>
+              </Tooltip>
+              <Tooltip title={t('auc.sendBugReport')}>
+                <Link
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='https://docs.google.com/forms/d/e/1FAIpQLSe9b82ColWOLyomlrqCGXXjFBWhwL7opZycPYz5v1ovwVdbjA/viewform?usp=sf_link'
+                >
+                  <Button startIcon={<PestControlIcon />} />
                 </Link>
               </Tooltip>
               <Tooltip title={t('auc.downloadMarbles')}>

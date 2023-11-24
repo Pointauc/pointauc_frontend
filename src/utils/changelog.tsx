@@ -13,6 +13,30 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2023-11-24',
+    newFeatures: [
+      'Добавлена форма для отправки ошибок на нижней панели главной страницы. Отправляем ошибочки, не стесняемся)',
+      <div>
+        <b>API: </b>
+        <Link href='https://github.com/Pointauc/Pointauc.Api' target='_blank'>
+          библиотека для c#
+        </Link>{' '}
+        by NowaruAlone
+      </div>,
+      <div>
+        <b>API: </b>
+        <Link href='https://github.com/sofrin/auc-discordbot' target='_blank'>
+          discord-бот для заказов сабов
+        </Link>{' '}
+        by Sofrin
+      </div>,
+    ],
+    improvements: ['Улучшен перевод на беларуский и английский языки.'],
+    fixes: [
+      'При загрузке прошлых лотов могли дублироваться их id, из-за чего нельзя было указывать короткий номер лота в донате.',
+    ],
+  },
+  {
     date: '2023-11-18',
     newFeatures: [
       <div>
