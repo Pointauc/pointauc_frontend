@@ -20,6 +20,7 @@ export interface Purchase {
   id: string;
   rewardId?: string;
   isDonation?: boolean;
+  userId?: string;
 }
 
 export interface PurchaseLog extends Purchase {

@@ -27,6 +27,7 @@ const createSlot = (props: Partial<Slot> = {}): Slot => {
     extra: null,
     amount: null,
     name: '',
+    investors: [],
     ...props,
   };
 
@@ -81,6 +82,11 @@ const updateSlotAmount = (slots: Slot[], updatedId: ReactText, transform: (slot:
 
   slots[updatedIndex] = transform(slots[updatedIndex]);
   updateSlotPosition(slots, updatedIndex);
+};
+
+const slotsQueryComparator = {
+  id: (lot: Slot, id: string) => lot.id === id,
+  investorId: (lot: Slot, investorId: string) => lot.investors.includes(investorId),
 };
 
 const slotsSlice = createSlice({
@@ -141,6 +147,15 @@ const slotsSlice = createSlice({
     setSearchTerm(state, action: PayloadAction<string>): void {
       state.searchTerm = action.payload;
     },
+    mergeLot(state, action: PayloadAction<PublicApi.LotUpdateRequest>): void {
+      const { query, lot: requestLot } = action.payload;
+      let compare: (lot: Slot) => boolean = () => false;
+
+      if (query.id) compare = (lot) => slotsQueryComparator.id(lot, query.id!);
+      if (query.investorId) compare = (lot) => slotsQueryComparator.investorId(lot, query.investorId!);
+
+      state.slots = state.slots.map((lot) => (compare(lot) ? { ...lot, ...requestLot } : lot));
+    },
   },
 });
 
@@ -155,6 +170,7 @@ export const {
   setSlots,
   addSlotAmount,
   setSearchTerm,
+  mergeLot,
 } = slotsSlice.actions;
 
 export const createSlotFromPurchase =
@@ -167,8 +183,16 @@ export const createSlotFromPurchase =
       slots: { slots },
     } = getState();
     const { id, message: name, cost, isDonation } = bid;
+    const investor = bid.userId ?? name;
     // eslint-disable-next-line no-plusplus
-    const newSlot: Slot = { id, name, amount: isDonation ? cost * pointsRate : cost, extra: null, fastId: ++maxFastId };
+    const newSlot: Slot = {
+      id: Math.random().toString(),
+      name,
+      amount: isDonation ? cost * pointsRate : cost,
+      extra: null,
+      fastId: ++maxFastId,
+      investors: investor ? [investor] : [],
+    };
     const updatedSlots = [...slots, newSlot];
     slotNamesMap.set(name, id);
     slotNamesMap.set(`#${maxFastId}`, id);
