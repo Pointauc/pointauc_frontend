@@ -1,8 +1,10 @@
 import { Key } from 'react';
+
 import { Slot } from '../models/slot.model';
 import { Purchase } from '../reducers/Purchases/Purchases';
 import { Game, Side, SideInfo } from '../components/Bracket/components/model';
 import { WheelItem } from '../models/wheel.model';
+
 import { getWheelColor } from './common.utils';
 
 type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: Key) => SideInfo;
@@ -26,7 +28,7 @@ export const parseSlotsPreset = (text: string): Slot[] => {
   return items.map<Slot>((item, fastId) => {
     const [name, amount = 1] = item.split(',');
 
-    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null };
+    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, investors: [] };
   });
 };
 

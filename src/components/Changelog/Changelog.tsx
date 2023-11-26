@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Divider, Grid, Typography } from '@mui/material';
 
@@ -36,7 +37,7 @@ const Changelog: FC<ChangelogProps> = ({ updates }) => {
         <Grid container spacing={2} key={date}>
           <Grid className='changelog-date' container item justifyContent='center' alignItems='center'>
             <Divider className='changelog-date-divider' />
-            <Typography className='changelog-date-text'>{date}</Typography>
+            <Typography className='changelog-date-text'>{dayjs(date).format('YYYY-MM-DD HH:mm')}</Typography>
             <Divider className='changelog-date-divider' />
           </Grid>
           <Grid item>

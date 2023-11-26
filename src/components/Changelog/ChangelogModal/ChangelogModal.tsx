@@ -11,7 +11,7 @@ const ChangelogModal: FC = () => {
   const [open, setOpen] = useState(updates.length !== 0);
 
   useEffect(() => {
-    const date = dayjs().format('YYYY-MM-DD');
+    const date = new Date().toISOString();
 
     document.cookie = `lastVisit=${date}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
   }, []);

@@ -54,6 +54,7 @@ export const updateFastIdCounter = (slots: Slot[]): void => {
 const savedSlots = SaveLoadService.getSlots(AUTOSAVE_NAME);
 const slots = savedSlots.length > 0 ? savedSlots : [createSlot()];
 updateFastIdCounter(slots);
+slotNamesMap.setFromList(slots);
 
 const initialState: SlotsState = {
   // slots: [createSlot()],
@@ -96,8 +97,8 @@ const slotsSlice = createSlice({
     setSlotName(state, action: PayloadAction<{ id: string; name: string }>): void {
       const { id, name } = action.payload;
       state.slots = state.slots.map((slot) => {
-        if (slot.id === id) {
-          slotNamesMap.updateName(slot.name || '', name, slot.id);
+        if (slot.id === id && slot.name != null) {
+          slotNamesMap.updateName(slot.name, name, slot.id);
 
           return { ...slot, name };
         }
@@ -194,8 +195,8 @@ export const createSlotFromPurchase =
       investors: investor ? [investor] : [],
     };
     const updatedSlots = [...slots, newSlot];
-    slotNamesMap.set(name, id);
-    slotNamesMap.set(`#${maxFastId}`, id);
+    slotNamesMap.set(name, newSlot.id);
+    slotNamesMap.set(`#${maxFastId}`, newSlot.id);
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
     dispatch(setSlots(sortSlots(updatedSlots)));

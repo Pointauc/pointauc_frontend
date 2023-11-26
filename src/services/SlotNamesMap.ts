@@ -1,3 +1,5 @@
+import { Slot } from '@models/slot.model.ts';
+
 class SlotNamesMap extends Map<string, string> {
   deleteBySlotId = (id: string): void => {
     this.forEach((value, key) => {
@@ -14,6 +16,16 @@ class SlotNamesMap extends Map<string, string> {
 
   set = (key: string, value: string): this => super.set(key.toLowerCase(), value);
   get = (key: string): string | undefined => super.get(key.toLowerCase());
+
+  setFromList(slots: Slot[]): void {
+    slots.forEach(({ id, name, fastId }) => {
+      if (name) {
+        this.set(name, id);
+      }
+
+      this.set(`#${fastId}`, id);
+    });
+  }
 }
 
 const slotNamesMap = new SlotNamesMap();
