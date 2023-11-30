@@ -53,12 +53,14 @@ const SlotsColumn: React.FC = () => {
     [searchTerm, slots],
   );
 
+  const optimize = useMemo(() => slots.length > 100, [slots.length]);
+
   return (
     <div className='slots'>
       <SlotsHeader />
       <div className='slots-wrapper'>
         <div className={slotsColumnClasses}>
-          <SlotsList slots={filteredSlots} />
+          <SlotsList slots={filteredSlots} optimize={optimize} />
         </div>
       </div>
     </div>

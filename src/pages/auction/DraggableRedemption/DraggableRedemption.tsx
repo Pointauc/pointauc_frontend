@@ -52,9 +52,7 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
   }, [dispatch]);
 
   const handleDrag = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-
+    (e: MouseEvent) => {
       if (draggedBid.ref) {
         draggedBid.ref.style.left = `${e.pageX - mouseOffset.left}px`;
         draggedBid.ref.style.top = `${e.pageY - mouseOffset.top}px`;
@@ -66,10 +64,11 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     let isFrameRequested = false;
-    const handleDragOver = (e: DragEvent): void => {
+    const handleDragOver = (e: MouseEvent): void => {
+      e.preventDefault();
       if (!isFrameRequested) {
         requestAnimationFrame(() => {
-          handleDrag(e as any);
+          handleDrag(e);
 
           isFrameRequested = false;
         });

@@ -6,6 +6,12 @@
   align-items: center;
   margin-bottom: 10px;
 
+  color: rgb(243, 243, 243);
+  font-family: "Helvetica Neue", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  font-size: 0.9em;
+
   .slot-chance {
     text-align: right;
     position: relative;
@@ -20,15 +26,81 @@
   .slot {
     display: flex;
     flex-grow: 1;
-    height: 40px;
-    padding: 10px;
-    border: 1px solid transparent;
+    height: 44px;
+    padding: 8px 10px;
+    //border: 1px solid transparent;
     border-radius: 10px;
     align-items: center;
 
     input {
       font-size: 19px;
       padding: 11px 12px;
+    }
+
+    &-input {
+      border: 1px solid rgba(255, 255, 255, 0.23);
+      outline: none;
+
+      font-size: 19px;
+      padding: 11px 12px;
+      background: none;
+      height: 100%;
+      box-sizing: border-box;
+
+      position: relative;
+      border-radius: 4px;
+      line-height: 1.1876em;
+      font-weight: 400;
+      color: rgb(243, 243, 243);
+      cursor: text;
+      display: inline-flex;
+      align-items: center;
+
+      &:hover {
+        border-color: rgb(243, 243, 243);
+      }
+
+      &:focus {
+        border-color: rgb(252, 222, 50);
+        border-width: 2px;
+        padding: 11px 11px;
+      }
+    }
+
+    &-icon-button {
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      outline: 0;
+      border: 0;
+      margin: 0;
+      cursor: pointer;
+      user-select: none;
+      vertical-align: middle;
+      appearance: none;
+      text-decoration: none;
+
+      background-color: transparent;
+      text-align: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      overflow: visible;
+      color: rgb(255, 255, 255);
+      transition: background-color 120ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      padding: 12px;
+      font-size: 1.75rem;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
+
+      &:active {
+        background-color: rgba(255, 255, 255, 0.20);
+      }
     }
 
     &-chance {

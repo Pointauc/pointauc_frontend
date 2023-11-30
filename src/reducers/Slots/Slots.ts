@@ -56,8 +56,8 @@ export const updateFastIdCounter = (slots: Slot[]): void => {
 
 const savedSlots = SaveLoadService.getSlots(AUTOSAVE_NAME);
 const slots = savedSlots.length > 0 ? savedSlots : [createSlot()];
-updateFastIdCounter(slots);
-slotNamesMap.setFromList(slots);
+// updateFastIdCounter(slots);
+// slotNamesMap.setFromList(slots);
 
 const initialState: SlotsState = {
   // slots: [createSlot()],
@@ -69,8 +69,8 @@ const initialState: SlotsState = {
   // ...createRandomSlots(100, 300, 100),
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
-  // slots: [...new Array(10).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
-  slots,
+  slots: [...new Array(5000).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
+  // slots,
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);

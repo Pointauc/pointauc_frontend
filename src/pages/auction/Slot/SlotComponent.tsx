@@ -88,12 +88,13 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       if (amount === null) {
         amountInput.current.value = '';
       } else {
-        animateValue(
-          amountInput.current,
-          Number(amountInput.current.value),
-          Number(amount),
-          marblesAuc ? 0 : undefined,
-        );
+        amountInput.current.value = amount.toString();
+        // animateValue(
+        //   amountInput.current,
+        //   Number(amountInput.current.value),
+        //   Number(amount),
+        //   marblesAuc ? 0 : undefined,
+        // );
       }
     }
   }, [amount, marblesAuc]);
@@ -107,26 +108,26 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
 
   return (
     <>
-      <OutlinedInput
+      <input
         className='slot-name slot-input'
         placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
         onKeyPress={createNewSlotOnEnter}
-        value={currentName}
+        value={currentName ?? ''}
       />
-      {showChances && <Typography className='slot-chance' ref={percentsRef} />}
-      <OutlinedInput
+      {showChances && <span className='slot-chance' ref={percentsRef} />}
+      <input
         className='slot-money slot-input'
         placeholder={t('common.currencySign')}
-        inputRef={amountInput}
+        ref={amountInput}
         onKeyPress={createNewSlotOnEnter}
         type='number'
       />
-      <IconButton className='slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')} size='large'>
+      <button className='slot-icon-button slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')}>
         <AddIcon />
-      </IconButton>
-      <OutlinedInput
+      </button>
+      <input
         className='slot-money slot-input'
         style={{ width: extraFieldWidth }}
         placeholder={t('common.currencySign')}

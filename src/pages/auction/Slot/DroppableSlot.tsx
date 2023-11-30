@@ -131,23 +131,22 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
       onDragLeave={handleDragLeave}
     >
       <div className='slot' ref={slotElement}>
-        <Typography className='slot-index'>{`${index}.`}</Typography>
-        <Typography className='slot-fast-index'>{`#${slot.fastId}`}</Typography>
+        <div className='slot-index'>{`${index}.`}</div>
+        <div className='slot-fast-index'>{`#${slot.fastId}`}</div>
         <SlotComponent slot={slot} />
       </div>
-      <IconButton onClick={handleDelete} className='delete-button' title={t('lot.delete')} size='large'>
+      <button onClick={handleDelete} className=' slot-icon-button delete-button' title={t('lot.delete')}>
         <DeleteIcon />
-      </IconButton>
-      <IconButton
+      </button>
+      <button
         onClick={openExtra}
-        className='delete-button'
+        className='slot-icon-button delete-button'
         title={t('lot.extra')}
         aria-controls='extra'
         ref={extraIcon}
-        size='large'
       >
         <MoreHorizIcon />
-      </IconButton>
+      </button>
       <Menu
         id='extra'
         open={isExtraOpen}
