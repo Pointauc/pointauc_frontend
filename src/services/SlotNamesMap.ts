@@ -1,6 +1,6 @@
 import { Slot } from '@models/slot.model.ts';
 
-class SlotNamesMap extends Map<string, string> {
+export class SlotNamesMap extends Map<string, string> {
   deleteBySlotId = (id: string): void => {
     this.forEach((value, key) => {
       if (id === value) {

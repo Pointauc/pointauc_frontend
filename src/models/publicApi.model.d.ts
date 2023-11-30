@@ -10,10 +10,15 @@ namespace PublicApi {
   interface LotQuery {
     id?: string;
     investorId?: string;
+    bidId?: string;
+  }
+
+  interface LotUpdateData extends Partial<Lot> {
+    amountChange?: number;
   }
 
   interface LotUpdateRequest {
     query: LotQuery;
-    lot: Partial<Lot>;
+    lot: LotUpdateData;
   }
 }

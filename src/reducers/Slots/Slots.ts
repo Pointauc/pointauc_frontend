@@ -7,10 +7,13 @@ import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import SaveLoadService from '@services/SaveLoadService.ts';
 import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
+import bidUtils from '@utils/bid.utils.ts';
 
-import { logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
+import { addedBidsMap, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 import slotNamesMap from '../../services/SlotNamesMap';
+
+import LotQuery = PublicApi.LotQuery;
 
 interface SlotsState {
   slots: Slot[];
@@ -85,9 +88,12 @@ const updateSlotAmount = (slots: Slot[], updatedId: ReactText, transform: (slot:
   updateSlotPosition(slots, updatedIndex);
 };
 
+type TestLot = (lot: Slot) => boolean;
+
 const slotsQueryComparator = {
   id: (lot: Slot, id: string) => lot.id === id,
-  investorId: (lot: Slot, investorId: string) => lot.investors.includes(investorId),
+  investorId: (lot: Slot, investorId: string) => !!lot.investors?.includes(investorId),
+  bidId: (lot: Slot, bidId: string) => lot.id === addedBidsMap.get(bidId),
 };
 
 const slotsSlice = createSlice({
@@ -133,12 +139,13 @@ const slotsSlice = createSlice({
       }
     },
     addSlot(state, action: PayloadAction<Partial<Slot>>): void {
-      const newSlot = { ...createSlot(), ...action?.payload };
+      const newSlot = createSlot(action?.payload);
       state.slots = [...state.slots, newSlot];
       slotNamesMap.set(`#${maxFastId}`, newSlot.id);
     },
     resetSlots(state): void {
       slotNamesMap.clear();
+      addedBidsMap.clear();
       state.slots = [createSlot({ fastId: 1 })];
       updateFastIdCounter(state.slots);
     },
@@ -150,12 +157,24 @@ const slotsSlice = createSlice({
     },
     mergeLot(state, action: PayloadAction<PublicApi.LotUpdateRequest>): void {
       const { query, lot: requestLot } = action.payload;
-      let compare: (lot: Slot) => boolean = () => false;
+      const compare: TestLot = Object.entries(query).reduce<TestLot>(
+        (compare, [key, value]) => {
+          if (compare) return compare;
 
-      if (query.id) compare = (lot) => slotsQueryComparator.id(lot, query.id!);
-      if (query.investorId) compare = (lot) => slotsQueryComparator.investorId(lot, query.investorId!);
+          return value != null ? (lot: Slot) => slotsQueryComparator[key as keyof LotQuery](lot, value) : compare;
+        },
+        () => false,
+      );
+      const updateLot = (lot: Slot): Slot => ({
+        ...lot,
+        ...requestLot,
+        amount:
+          requestLot.amountChange != null && lot.amount
+            ? lot.amount + requestLot.amountChange
+            : lot.amount ?? requestLot.amount ?? null,
+      });
 
-      state.slots = state.slots.map((lot) => (compare(lot) ? { ...lot, ...requestLot } : lot));
+      state.slots = state.slots.map((lot) => (compare(lot) ? updateLot(lot) : lot));
     },
   },
 });
@@ -178,18 +197,16 @@ export const createSlotFromPurchase =
   (bid: Purchase) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
-      aucSettings: {
-        settings: { pointsRate },
-      },
+      aucSettings: { settings },
       slots: { slots },
     } = getState();
     const { id, message: name, cost, isDonation } = bid;
-    const investor = bid.userId ?? name;
+    const investor = bid.investorId ?? name;
     // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),
       name,
-      amount: isDonation ? cost * pointsRate : cost,
+      amount: bidUtils.parseCost(bid, settings, true),
       extra: null,
       fastId: ++maxFastId,
       investors: investor ? [investor] : [],
@@ -200,16 +217,20 @@ export const createSlotFromPurchase =
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
     dispatch(setSlots(sortSlots(updatedSlots)));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }, true));
   };
 
+interface BidHandleOptions {
+  removeBid?: boolean;
+  callback?: (amount: number) => void;
+}
+
 export const addBid =
-  (slotId: string, bid: Purchase) =>
+  (slotId: string, bid: Purchase, options: BidHandleOptions = {}) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+    const { removeBid = true, callback } = options;
     const {
-      aucSettings: {
-        settings: { marbleRate = 1, marblesAuc, pointsRate },
-      },
+      aucSettings: { settings },
       slots: { slots },
     } = getState();
 
@@ -217,15 +238,14 @@ export const addBid =
       return;
     }
 
-    const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
-    const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
-    const { message, cost, isDonation, id } = bid;
-    const addedCost = isDonation ? cost * pointsRate : cost;
+    const { message, id } = bid;
+    const amount = bidUtils.parseCost(bid, settings, false);
 
     slotNamesMap.set(message, slotId);
-    dispatch(addSlotAmount({ id: slotId, amount: convertCost(addedCost) }));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }));
-    dispatch(removePurchase(id));
+    dispatch(addSlotAmount({ id: slotId, amount }));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }, false));
+    removeBid && dispatch(removePurchase(id));
+    callback?.(amount);
   };
 
 export default slotsSlice.reducer;

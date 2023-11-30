@@ -12,12 +12,6 @@ type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: Key) => SideI
 export const getWinnerSlot = (slots: Slot[]): Slot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
 
-export const normalizePurchase = ({ message, cost, ...restPurchase }: Purchase): Purchase => ({
-  message,
-  cost,
-  ...restPurchase,
-});
-
 export const parseWheelPreset = (text: string): WheelItem[] => {
   return text.split('\n').map<WheelItem>((value, id) => ({ id: id.toString(), name: value, color: getWheelColor() }));
 };

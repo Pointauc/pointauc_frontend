@@ -145,10 +145,13 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     () => (pointsRate === 1 ? `${cost}₽` : `${cost * pointsRate} (${cost} ₽)`),
     [cost, pointsRate],
   );
-  const costString = useMemo(
-    () => (isDonation && !marblesAuc ? donationCost : formatMarblesCost(cost)),
-    [formatMarblesCost, cost, donationCost, isDonation, marblesAuc],
-  );
+  const costString = useMemo(() => {
+    if (isDonation) {
+      return marblesAuc ? formatMarblesCost(cost * pointsRate) : donationCost;
+    }
+
+    return formatMarblesCost(cost);
+  }, [formatMarblesCost, cost, donationCost, isDonation, marblesAuc, pointsRate]);
   const bidTitle = useMemo(
     () =>
       marblesAuc ? (
@@ -164,7 +167,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   );
 
   const handleAddNewSlot = useCallback(() => {
-    dispatch(createSlotFromPurchase({ ...purchase, cost: getMarblesAmount(purchase.cost, true) }));
+    dispatch(createSlotFromPurchase(purchase));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
     dispatch(updateExistBids);

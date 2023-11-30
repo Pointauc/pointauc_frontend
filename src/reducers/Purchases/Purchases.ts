@@ -2,14 +2,14 @@ import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
 
-import { normalizePurchase } from '@utils/slots.utils.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
+import bidUtils from '@utils/bid.utils.ts';
+import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
 
 import { RootState } from '../index';
-import { createSlotFromPurchase, setSlotAmount } from '../Slots/Slots';
+import { addBid, createSlotFromPurchase } from '../Slots/Slots';
 import { addAlert } from '../notifications/notifications';
-import slotNamesMap from '../../services/SlotNamesMap';
 
 export interface Purchase {
   timestamp: string;
@@ -20,7 +20,7 @@ export interface Purchase {
   id: string;
   rewardId?: string;
   isDonation?: boolean;
-  userId?: string;
+  investorId?: string;
 }
 
 export interface PurchaseLog extends Purchase {
@@ -39,6 +39,8 @@ const initialState: PurchasesState = {
   history: [],
   draggedRedemption: null,
 };
+
+export const addedBidsMap = new SlotNamesMap();
 
 const purchasesSlice = createSlice({
   name: 'purchases',
@@ -73,43 +75,26 @@ export const { addPurchase, removePurchase, addPurchaseLog, resetPurchases, setD
   purchasesSlice.actions;
 
 export const logPurchase =
-  (bid: PurchaseLog) =>
+  (bidLog: PurchaseLog, newLot: boolean = false) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const { pointsRate } = getState().aucSettings.settings;
-    const { cost, isDonation } = bid;
+    const cost = bidUtils.parseCost(bidLog, getState().aucSettings.settings, newLot);
 
-    dispatch(
-      addPurchaseLog({ ...bid, timestamp: new Date().toISOString(), cost: isDonation ? cost * pointsRate : cost }),
-    );
+    dispatch(addPurchaseLog({ ...bidLog, timestamp: new Date().toISOString(), cost }));
+    if (bidLog.target) {
+      addedBidsMap.set(bidLog.id, bidLog.target);
+    }
   };
 
 export const fastAddBid =
   (bid: Purchase, slotId: string) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const {
-      slots: { slots },
-      aucSettings: {
-        settings: { marbleRate = 1, marblesAuc, pointsRate },
-      },
-    } = getState();
-
-    const convertToMarble = (cost: number): number => Math.floor(cost / marbleRate);
-
-    const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
-
-    const { cost: rawCost, username, message } = bid;
-    const similarSlot = slots.find(({ id }) => id === slotId);
-
-    if (similarSlot) {
-      const { id, amount, name } = similarSlot;
-      const addedCost = bid.isDonation ? rawCost * pointsRate : rawCost;
-      const cost = convertCost(addedCost);
+    const showAlert = (cost: number): void => {
+      const { username, message } = bid;
       const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
-
-      dispatch(setSlotAmount({ id, amount: Number(amount) + cost }));
-      dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }));
       dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
-    }
+    };
+
+    dispatch(addBid(slotId, bid, { removeBid: false, callback: showAlert }));
   };
 
 export const processRedemption =
@@ -117,30 +102,17 @@ export const processRedemption =
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
       aucSettings: {
-        settings: { marbleRate = 1, marblesAuc, marbleCategory, luckyWheelEnabled, alwaysAddNew },
+        settings: { luckyWheelEnabled, alwaysAddNew },
       },
     } = getState();
-    const normalizedBid = normalizePurchase(redemption);
-    const similarSlotId = slotNamesMap.get(normalizedBid.message);
-    const convertToMarble = (cost: number): number => {
-      const minValue = marbleCategory || 0;
-
-      if (cost < minValue) {
-        return 0;
-      }
-      const total = cost - minValue;
-
-      return Math.floor(total / marbleRate) + 1;
-    };
-    const convertCost = (cost: number): number => (marblesAuc ? convertToMarble(cost) : cost);
-    const cost = convertCost(normalizedBid.cost);
+    const similarSlotId = slotNamesMap.get(redemption.message);
 
     if (similarSlotId && !luckyWheelEnabled) {
-      dispatch(fastAddBid(normalizedBid, similarSlotId));
+      dispatch(fastAddBid(redemption, similarSlotId));
     } else if (alwaysAddNew) {
-      dispatch(createSlotFromPurchase({ ...normalizedBid, cost }));
+      dispatch(createSlotFromPurchase(redemption));
     } else {
-      dispatch(addPurchase(normalizedBid));
+      dispatch(addPurchase(redemption));
     }
   };
 
