@@ -36,6 +36,7 @@
       "addToRandomSlot": "Add to Random Slot",
       "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
       "total": "Total: {{totalSum}} ₽",
+      "optimizationEnabled": "Lot animations are disabled to improve performance (lots > 100)",
       "casino": {
         "selectLot": "Lucky Wheel",
         "description": "You need to spin the normal wheel; if your selected lot wins, the bid will multiply by a specified number, otherwise, it will be reset.",
@@ -121,7 +122,8 @@
         "additionalTimeDesc": "Time by which the timer will change when pressing +/-.",
         "addTimeOnLeaderChange": "Add Time on Leader Change",
         "addTimeOnNewPosition": "Add Time for New Position",
-        "maxAdditionalTime": "Max. Time for Automatic Addition"
+        "maxAdditionalTime": "Max. Time for Automatic Addition",
+        "minTimeRequired": "Do not add time if the timer has more than"
       }
     },
     "wheel": {

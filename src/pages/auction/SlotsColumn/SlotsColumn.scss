@@ -35,11 +35,15 @@
 
     &-list {
       display: flex;
+      flex-direction: column;
       width: 100%;
       gap: 4px;
-      //overflow-y: auto;
       position: relative;
-      flex: 1 1 auto;
+
+      &.optimize,&.compact-view {
+        flex-direction: row;
+        flex: 1 1 auto;
+      }
 
       &>div:last-of-type {
         flex-grow: 0;

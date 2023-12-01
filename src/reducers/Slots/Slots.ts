@@ -69,7 +69,7 @@ const initialState: SlotsState = {
   // ...createRandomSlots(100, 300, 100),
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
-  slots: [...new Array(5000).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
+  slots: [...new Array(100).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
   // slots,
 };
 
@@ -201,7 +201,6 @@ export const createSlotFromPurchase =
       slots: { slots },
     } = getState();
     const { id, message: name, cost, isDonation } = bid;
-    const investor = bid.investorId ?? name;
     // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),
@@ -209,7 +208,7 @@ export const createSlotFromPurchase =
       amount: bidUtils.parseCost(bid, settings, true),
       extra: null,
       fastId: ++maxFastId,
-      investors: investor ? [investor] : [],
+      investors: bid.investorId ? [bid.investorId] : [],
     };
     const updatedSlots = [...slots, newSlot];
     slotNamesMap.set(name, newSlot.id);

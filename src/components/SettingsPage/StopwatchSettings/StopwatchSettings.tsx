@@ -63,6 +63,11 @@ const StopwatchSettings: FC<StopwatchSettingsProps> = ({ control }) => {
           <FormInput name='maxTime' className='field sm' control={control} type='number' />
           <Typography variant='body1'>{t('common.min')}</Typography>
         </FormGroup>
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='isMinTimeActive' control={control} label={t('settings.stopwatch.minTimeRequired')} />
+          <FormInput name='minTime' className='field sm' control={control} type='number' />
+          <Typography variant='body1'>{t('common.min')}</Typography>
+        </FormGroup>
       </FormGroup>
     </>
   );

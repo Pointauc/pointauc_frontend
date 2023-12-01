@@ -26,6 +26,8 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   marbleCategory: number;
   isMaxTimeActive: boolean;
   maxTime: number;
+  isMinTimeActive: boolean;
+  minTime: number;
   showChances: boolean;
   newSlotIncrement: number;
   isNewSlotIncrement: boolean;

@@ -53,22 +53,24 @@
       font-weight: 400;
       color: rgb(243, 243, 243);
       cursor: text;
-      display: inline-flex;
-      align-items: center;
 
       &:hover {
         border-color: rgb(243, 243, 243);
       }
 
       &:focus {
-        border-color: rgb(252, 222, 50);
+        border-color: var(--color-primary);
         border-width: 2px;
         padding: 11px 11px;
+      }
+
+      &::placeholder {
+        color: currentColor;
+        opacity: 0.5;
       }
     }
 
     &-icon-button {
-
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -167,12 +169,12 @@
 
   &.custom-background {
     .slot {
-      .MuiOutlinedInput-notchedOutline {
-        border-color: $grey-5;
-      }
-
       &-input {
         background-color: rgba(0, 0, 0, 0.2);
+
+        &:not(&:hover,&:focus) {
+          border-color: $grey-5;
+        }
       }
     }
   }

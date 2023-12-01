@@ -37,6 +37,8 @@ const Stopwatch: React.FC = () => {
       autoincrementTime,
       maxTime = 15,
       isMaxTimeActive,
+      minTime,
+      isMinTimeActive,
       isNewSlotIncrement,
       newSlotIncrement,
       dynamicRewards,
@@ -92,15 +94,20 @@ const Stopwatch: React.FC = () => {
   const autoUpdateTimer = useCallback(
     (timeChange: number) => {
       const maxMilliseconds = maxTime * 60 * 1000;
+
+      if (isMinTimeActive && time.current > minTime * 60 * 1000) return;
+
       if (isMaxTimeActive) {
         if (time.current < maxMilliseconds) {
           updateStopwatch(time.current + timeChange > maxMilliseconds ? maxMilliseconds - time.current : timeChange);
         }
-      } else {
-        updateStopwatch(timeChange);
+
+        return;
       }
+
+      updateStopwatch(timeChange);
     },
-    [isMaxTimeActive, maxTime, updateStopwatch],
+    [isMaxTimeActive, isMinTimeActive, maxTime, minTime, updateStopwatch],
   );
 
   const handleDonation = useCallback(() => {

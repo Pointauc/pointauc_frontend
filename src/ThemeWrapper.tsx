@@ -18,6 +18,8 @@ const ThemeWrapper: FC<Props> = ({ children }) => {
     const paperTone = lighten(backgroundTone, 0.05);
     const { paper, default: background } = theme.palette.background;
 
+    document.documentElement.style.setProperty('--color-primary', primaryColor);
+
     return createTheme(theme, {
       palette: {
         primary: theme.palette.augmentColor({

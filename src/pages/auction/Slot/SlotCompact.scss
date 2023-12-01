@@ -1,19 +1,14 @@
 @import "../../../styles/colors";
 
 .compact-view {
-  //display: flex;
-  //flex-wrap: wrap;
   gap: 0;
 
   .slot-input {
     height: 40px;
   }
 
-  .MuiGrid2-root:last-child .slot-wrapper{
-    //border-bottom: 1px solid rgba(255, 255, 255, 0.23);
-  }
-
   .slot-grid-wrapper {
+    box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
     border-color: rgba(255, 255, 255, 0.23);
@@ -31,7 +26,7 @@
     align-items: center;
     margin-bottom: 10px;
     border: 0;
-    //height: 40px;
+    height: 100%;
 
     &:last-child {
       margin-bottom: 0;
@@ -42,24 +37,17 @@
       flex-grow: 1;
       padding: 0;
       border: 0;
-      //border: 1px solid transparent;
       border-radius: 0;
       align-items: center;
+      height: 100%;
 
       &-input {
         border: none;
-        border-left: 1px solid rgba(255, 255, 255, 0.23);
+        border-left: 1px solid rgba(255, 255, 255, 0.23) !important;
         border-radius: 0;
-      }
-
-      .MuiOutlinedInput-notchedOutline {
-        border: none;
-      }
-
-      input {
+        background-color: transparent;
         font-size: 15px;
         padding: 11px 12px;
-        border: none;
       }
 
       &-chance {
@@ -109,7 +97,7 @@
 
       &-money {
         width: 110px;
-        padding-left: 5px;
+        padding-left: 16px;
 
         .PrivateNotchedOutline-root-8 {
           border-right: 1px solid rgba(255, 255, 255, 0.23);

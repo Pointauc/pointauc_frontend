@@ -1,14 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, Typography } from '@mui/material';
 import classNames from 'classnames';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { RootState } from '@reducers';
-import { saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 
 import SlotsHeader from '../SlotsHeader/SlotsHeader';
 
@@ -23,6 +19,7 @@ const SlotsColumn: React.FC = () => {
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [, setBuyout] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleBuyoutChange = (): void => {
     if (buyoutInput.current) {
@@ -59,8 +56,8 @@ const SlotsColumn: React.FC = () => {
     <div className='slots'>
       <SlotsHeader />
       <div className='slots-wrapper'>
-        <div className={slotsColumnClasses}>
-          <SlotsList slots={filteredSlots} optimize={optimize} />
+        <div className={slotsColumnClasses} ref={containerRef}>
+          <SlotsList containerRef={containerRef} slots={filteredSlots} optimize={optimize} />
         </div>
       </div>
     </div>

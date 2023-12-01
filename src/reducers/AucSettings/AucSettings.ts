@@ -20,6 +20,9 @@ interface AucSettingsState {
   settings: AucSettingsDto;
 }
 
+const isMinTimeActive = localStorage.getItem('isMinTimeActive') === 'true';
+const minTime = localStorage.getItem('minTime');
+
 export const initialState: AucSettingsState = {
   view: {
     compact: false,
@@ -37,6 +40,8 @@ export const initialState: AucSettingsState = {
     marbleCategory: 100,
     showChances: false,
     maxTime: 15,
+    minTime: minTime ? Number(minTime) : 2,
+    isMinTimeActive,
     isMaxTimeActive: false,
     newSlotIncrement: 60,
     isNewSlotIncrement: false,
@@ -64,6 +69,9 @@ const aucSettingsSlice = createSlice({
   initialState,
   reducers: {
     setAucSettings(state, action: PayloadAction<Partial<AucSettingsDto>>): void {
+      if (action.payload.isMinTimeActive != null)
+        localStorage.setItem('isMinTimeActive', String(action.payload.isMinTimeActive));
+      if (action.payload.minTime != null) localStorage.setItem('minTime', String(action.payload.minTime));
       state.settings = mergewith(state.settings, action.payload, mergeCheck);
     },
     setCompact(state, action: PayloadAction<boolean>): void {

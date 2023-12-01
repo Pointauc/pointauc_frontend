@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Slot } from '@models/slot.model.ts';
 import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '@reducers/Slots/Slots.ts';
 import { animateValue } from '@utils/common.utils.ts';
-import { percentsRefMap } from '@services/PercentsRefMap.ts';
+import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { RootState } from '@reducers';
 
 interface SlotComponentProps {
@@ -26,10 +26,12 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
   const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
   const percentsRef = useRef<HTMLSpanElement>(null);
+  const isAmountInitialized = useRef(false);
 
   useEffect(() => {
     if (percentsRef.current) {
       percentsRefMap.set(id, percentsRef.current);
+      updatePercents([slot], percentsRefMap, true);
     }
 
     return (): void => {
@@ -88,14 +90,14 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       if (amount === null) {
         amountInput.current.value = '';
       } else {
-        amountInput.current.value = amount.toString();
-        // animateValue(
-        //   amountInput.current,
-        //   Number(amountInput.current.value),
-        //   Number(amount),
-        //   marblesAuc ? 0 : undefined,
-        // );
+        animateValue(
+          amountInput.current,
+          Number(amountInput.current.value),
+          Number(amount),
+          marblesAuc || !isAmountInitialized.current ? 0 : undefined,
+        );
       }
+      isAmountInitialized.current = true;
     }
   }, [amount, marblesAuc]);
   useEffect(() => {
