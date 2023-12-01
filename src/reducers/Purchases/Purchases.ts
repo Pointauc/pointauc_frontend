@@ -36,14 +36,14 @@ interface PurchasesState {
 
 const initialState: PurchasesState = {
   purchases: [
-    {
-      username: 'name',
-      message: 'message 1',
-      timestamp: new Date().toISOString(),
-      cost: 100,
-      color: '#469291',
-      id: '1234',
-    },
+    // {
+    //   username: 'name',
+    //   message: 'message 1',
+    //   timestamp: new Date().toISOString(),
+    //   cost: 100,
+    //   color: '#469291',
+    //   id: '1234',
+    // },
   ],
   history: [],
   draggedRedemption: null,
