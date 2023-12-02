@@ -50,6 +50,11 @@ const StopwatchSettings: FC<StopwatchSettingsProps> = ({ control }) => {
           <Typography variant='body1'>{t('common.sec')}</Typography>
         </FormGroup>
         <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='isIncrementActive' control={control} label={t('settings.donations.addTimeOnDonation')} />
+          <FormInput name='incrementTime' className='field sm' control={control} type='number' />
+          <Typography variant='body1'>{t('common.sec')}</Typography>
+        </FormGroup>
+        <FormGroup row className='auc-settings-row'>
           <FormSwitch
             name='isNewSlotIncrement'
             control={control}

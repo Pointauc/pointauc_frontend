@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
-import { ThemeProvider, Theme, StyledEngineProvider } from '@mui/material';
+import { Theme } from '@mui/material';
 
 import ROUTES from '@constants/routes.constants.ts';
 import DARedirect from '@pages/redirects/DARedirect/DARedirect.tsx';
@@ -16,9 +16,12 @@ import SaveLoadService from '@services/SaveLoadService.ts';
 import { sortSlots } from '@utils/common.utils.ts';
 import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
 import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
+import { timedFunction } from '@utils/dataType/function.utils.ts';
+import { Slot } from '@models/slot.model.ts';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
+
 import '@styles/index.scss';
 import '@assets/i18n/index.ts';
 
@@ -35,6 +38,7 @@ const SORTABLE_SLOT_EVENTS = [
   'slots/deleteSlot',
   'slots/addSlot',
   'slots/addSlotAmount',
+  'slots/mergeLot',
 ];
 
 const sortSlotsMiddleware: Middleware<{}, RootState> =
@@ -50,9 +54,26 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
     return result;
   };
 
+const saveSlotsWithCooldown = timedFunction((slots: Slot[]) => {
+  SaveLoadService.rewrite(slots, AUTOSAVE_NAME);
+}, 2000);
+
+const saveSlotsMiddleware: Middleware<{}, RootState> =
+  (store) =>
+  (next) =>
+  (action): AnyAction => {
+    const result = next(action);
+    if (action.type.startsWith('slots')) {
+      const { slots } = store.getState().slots;
+
+      saveSlotsWithCooldown(slots);
+    }
+    return result;
+  };
+
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk, sortSlotsMiddleware],
+  middleware: [thunk, sortSlotsMiddleware, saveSlotsMiddleware],
 });
 
 window.onbeforeunload = (): undefined => {
