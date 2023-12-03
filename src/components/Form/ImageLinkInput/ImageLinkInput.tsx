@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
+import { useState } from 'react';
+import { Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
+import { DropzoneArea } from 'react-mui-dropzone';
 import './ImageLinkInput.scss';
 
 interface ImageLinkInputProps {
@@ -54,25 +54,26 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
     <>
       <Dialog open={isInputOpened} onClose={toggleDialog} maxWidth={false}>
         {!!dialogTitle && <DialogTitle>{dialogTitle}</DialogTitle>}
-        <DialogContent className="image-input-wrapper">
+        <DialogContent className='image-input-wrapper'>
           <DropzoneArea
-            dropzoneClass="drop-zone"
-            dropzoneText="Перетащите сюда файл или нажмите"
+            dropzoneClass='drop-zone'
+            dropzoneText='Перетащите сюда файл или нажмите'
             onDrop={handleFileUpload}
             filesLimit={1}
+            maxFileSize={1000 * 1000 * 50}
           />
-          <Typography className="divider">ИЛИ</Typography>
+          <Typography className='divider'>ИЛИ</Typography>
           <TextField
             onPaste={handleLinkPaste}
-            placeholder="Вставьте ссылку на изображение..."
-            className="link-input"
+            placeholder='Вставьте ссылку на изображение...'
+            className='link-input'
             error={!isCorrectUrl}
             helperText={!isCorrectUrl ? 'Неверная ссылка' : undefined}
-            variant="outlined"
+            variant='outlined'
           />
         </DialogContent>
       </Dialog>
-      <Button variant="outlined" color="primary" onClick={toggleDialog} className={buttonClass}>
+      <Button variant='outlined' color='primary' onClick={toggleDialog} className={buttonClass}>
         {buttonTitle}
       </Button>
     </>

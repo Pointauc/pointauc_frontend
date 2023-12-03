@@ -1,54 +1,41 @@
 @import "../../../styles/colors";
 
 .options-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  position: relative;
+  //display: flex;
+  //justify-content: center;
+  //align-items: center;
 
-.da-link {
-  cursor: pointer;
-  text-decoration: underline;
-  font-family: Arial;
-}
-
-.options {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-
-  a {
-    text-decoration: none;
+  .MuiGrid-item {
+    //padding-top: 0;
   }
 
-  .da-link {
-    color: #aaa;
-    letter-spacing: 1.5px;
-    text-decoration: underline;
-    font-size: 1.1rem;
-    font-family: Arial;
-
-    &.gitlab {
-      width: 61px;
-    }
-
-    &:hover {
-      color: white;
-    }
-  }
-
-  &-menu {
+  .options {
     position: absolute;
-    right: 35px;
-    bottom: 90px;
-    padding: 20px;
+    right: 0;
+    bottom: 0;
   }
 
-  .button {
-    border-color: rgba(#fff, 0.4) !important;
+  .total-sum-wrapper {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
 
-    &.restore {
-      margin-right: 12px;
+    .hide-sum {
+      padding: 7px !important;
+
+      svg {
+        font-size: 22px;
+        color: $grey-6;
+      }
+
+      &:hover {
+        svg {
+          color: $grey-2;
+        }
+      }
     }
   }
 }
@@ -83,5 +70,17 @@
 
   .MuiFormControlLabel-label {
     font-size: 1.1rem;
+  }
+}
+
+.actions-group {
+  .MuiButton-startIcon {
+    margin: 0;
+  }
+}
+
+.auc-action-dialog-content {
+  &.MuiDialogContent-dividers {
+    border-bottom: 0;
   }
 }

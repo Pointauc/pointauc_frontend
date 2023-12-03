@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100vh;
   padding: 1.5em 2em 0.5em 2em !important;
+  overflow: hidden !important;
 
   &.centralize {
     align-items: center;

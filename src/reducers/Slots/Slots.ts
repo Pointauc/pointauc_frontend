@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { ReactText } from 'react';
 import { Action } from 'redux';
-import { Slot } from '../../models/slot.model';
+
+import { Slot } from '@models/slot.model.ts';
+import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
+import { PurchaseStatusEnum } from '@models/purchase.ts';
+
 import { logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
-import { getRandomIntInclusive, sortSlots } from '../../utils/common.utils';
 import slotNamesMap from '../../services/SlotNamesMap';
-import { PurchaseStatusEnum } from '../../models/purchase';
 
 interface SlotsState {
   slots: Slot[];
@@ -43,7 +45,7 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
   );
 
 const initialState: SlotsState = {
-  slots: [createSlot()],
+  // slots: [createSlot()],
   searchTerm: '',
   // slots: [
   // ...createRandomSlots(2, 20000, 10000),
@@ -52,7 +54,7 @@ const initialState: SlotsState = {
   // ...createRandomSlots(100, 300, 100),
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
-  // slots: [...new Array(6).fill(null).map(() => createSlot({ amount: 100, name: '100' }))],
+  slots: [...new Array(10).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);
@@ -112,7 +114,7 @@ const slotsSlice = createSlice({
         state.slots = state.slots.filter(({ id }) => deletedId !== id);
       }
     },
-    addSlot(state, action?: PayloadAction<Partial<Slot>>): void {
+    addSlot(state, action: PayloadAction<Partial<Slot>>): void {
       const newSlot = { ...createSlot(), ...action?.payload };
       state.slots = [...state.slots, newSlot];
       slotNamesMap.set(`#${maxFastId}`, newSlot.id);

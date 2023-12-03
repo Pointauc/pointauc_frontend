@@ -1,14 +1,15 @@
-import React, { FC } from 'react';
+import { FC, ReactNode } from 'react';
+import { Typography } from '@mui/material';
 import './SettingsGroupTitle.scss';
-import { Typography } from '@material-ui/core';
 
 interface SettingsGroupTitleProps {
   title: string;
+  children?: ReactNode;
 }
 
 const SettingsGroupTitle: FC<SettingsGroupTitleProps> = ({ title, children }) => {
   return (
-    <Typography variant="h5" className="setting-group-title">
+    <Typography variant='h5' className='setting-group-title'>
       {title}
       {children}
     </Typography>

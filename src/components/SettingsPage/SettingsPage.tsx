@@ -1,19 +1,24 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { FieldNamesMarkedBoolean } from 'react-hook-form/dist/types/form';
-import PageContainer from '../PageContainer/PageContainer';
-import StopwatchSettings from './StopwatchSettings/StopwatchSettings';
-import { RootState } from '../../reducers';
-import { initialState, saveSettings } from '../../reducers/AucSettings/AucSettings';
+
+import PageContainer from '@components/PageContainer/PageContainer';
+import { RootState } from '@reducers';
+import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
+import { getDirtyValues } from '@utils/common.utils.ts';
+import { SettingsForm } from '@models/settings.model.ts';
+import AppearanceSettings from '@components/SettingsPage/AppearanceSettings';
+
 import AucSettings from './AucSettings/AucSettings';
+import StopwatchSettings from './StopwatchSettings/StopwatchSettings';
+
+import type { FieldNamesMarkedBoolean } from 'react-hook-form';
+import type { ThunkDispatch } from 'redux-thunk';
 import './SettingsPage.scss';
-import { getDirtyValues } from '../../utils/common.utils';
-import { SettingsForm } from '../../models/settings.model';
 
 const SettingsPage: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
 
   const { username } = useSelector((root: RootState) => root.user);
@@ -27,11 +32,11 @@ const SettingsPage: FC = () => {
     getValues,
     register,
     setValue,
-    formState: { dirtyFields, touched },
+    formState: { dirtyFields, touchedFields },
   } = formMethods;
 
   const onSubmit = useCallback(
-    async (data: SettingsForm, dirty: Partial<SettingsForm>) => {
+    (data: SettingsForm, dirty: Partial<SettingsForm>) => {
       dispatch(saveSettings(dirty));
       reset({ ...data, ...dirty });
     },
@@ -44,20 +49,21 @@ const SettingsPage: FC = () => {
   }, [username]);
 
   useEffect(() => {
-    const normalizedTouched: FieldNamesMarkedBoolean<SettingsForm> = { ...touched, background: true };
+    const normalizedTouched: FieldNamesMarkedBoolean<SettingsForm> = { ...touchedFields, background: true };
     const dirtyValues = getDirtyValues(getValues(), dirtyFields, initialState.settings, normalizedTouched);
 
     if (Object.keys(dirtyValues).length > 0) {
       handleSubmit((data) => onSubmit(data, dirtyValues))();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(dirtyFields), JSON.stringify(touched), handleSubmit, onSubmit]);
+  }, [JSON.stringify(dirtyFields), JSON.stringify(touchedFields), handleSubmit, onSubmit]);
 
   return (
     <PageContainer title={t('settings.settings')} classes={{ root: 'settings' }}>
       <form>
         <StopwatchSettings control={control} />
         <AucSettings control={control} register={register} setValue={setValue} />
+        <AppearanceSettings control={control} />
       </form>
     </PageContainer>
   );

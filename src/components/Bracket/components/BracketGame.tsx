@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Key } from 'react';
+
 import { RectClipped } from './Clipped';
 import { Game, Side, SideInfo } from './model';
 
@@ -92,22 +93,22 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
       return (
         <g fontWeight={400} onClick={() => onHover(side ? side.id : null)} style={{ cursor: 'pointer' }}>
           <rect
-            x="0"
+            x='0'
             y={offset}
-            width="200"
-            height="22.5"
+            width='200'
+            height='22.5'
             fill={hovered ? hoverBackgroundColor : backgroundColor}
-            rx="3"
-            ry="3"
+            rx='3'
+            ry='3'
           />
           <rect
-            x="160"
+            x='160'
             y={offset}
-            width="40"
-            height="22.5"
+            width='40'
+            height='22.5'
             fill={winner ? winningScoreBackground : scoreBackground}
-            rx="3"
-            ry="3"
+            rx='3'
+            ry='3'
           />
           {/* trigger mouse events on the entire block */}
           <rect x={x} y={y} height={22.5} width={200} fillOpacity={0}>
@@ -120,12 +121,12 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
             </text>
           </RectClipped>
 
-          <text x={x + 175} y={y + 16} style={teamScoreStyle} textAnchor="middle">
+          <text x={x + 175} y={y + 16} style={teamScoreStyle} textAnchor='middle'>
             {side.amount || null}
           </text>
 
           {side.side !== sides.length && (
-            <line x1="0" y1={lineOffset} x2="200" y2={lineOffset} style={teamSeparatorStyle} />
+            <line x1='0' y1={lineOffset} x2='200' y2={lineOffset} style={teamSeparatorStyle} />
           )}
         </g>
       );
@@ -133,7 +134,7 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
 
     return (
       <svg
-        width="200"
+        width='200'
         {...rest}
         y={rest.y + 29}
         height={34.5 * sides.length}

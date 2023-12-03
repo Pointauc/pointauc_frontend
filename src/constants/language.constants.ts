@@ -1,5 +1,6 @@
 import { i18n } from 'i18next';
-import { Language } from '../enums/language.enum';
+
+import { Language } from '@enums/language.enum';
 
 export interface LanguageData {
   key: Language;

@@ -1,4 +1,5 @@
 import { ChatUserstate, Client } from 'tmi.js';
+
 import { chatBotToken } from '../constants/ignoredTokens';
 
 type CommandCallback = (user: ChatUserstate, payload?: string) => void;
@@ -11,7 +12,7 @@ export class KeyListenersClient extends Client {
     super({
       identity: {
         username: 'skipsome_bot',
-        password: process.env.chatBotToken || chatBotToken,
+        password: chatBotToken,
       },
       channels: [channel],
     });

@@ -1,12 +1,14 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
-import { Button, Dialog, DialogContent } from '@material-ui/core';
+import { FC, useCallback, useMemo, useState } from 'react';
+import { Button, Dialog, DialogContent } from '@mui/material';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { DropzoneArea } from 'material-ui-dropzone';
-import SaveLoadService from '../../../services/SaveLoadService';
-import { SaveInfo } from '../../../models/save.model';
+import { DropzoneArea } from 'react-mui-dropzone';
+
+import SaveLoadService from '@services/SaveLoadService';
+import { SaveInfo } from '@models/save.model.ts';
+import { RootState } from '@reducers';
+
 import SaveRecord from './SaveRecord/SaveRecord';
-import { RootState } from '../../../reducers';
 import './SaveLoad.scss';
 
 const SaveLoad: FC = () => {
@@ -39,25 +41,25 @@ const SaveLoad: FC = () => {
   }, []);
 
   return (
-    <div className="save-load-wrapper">
-      <div className="saves-container">
+    <div className='save-load-wrapper'>
+      <div className='saves-container'>
         {saveConfig.map((info) => (
           <SaveRecord key={info.timestamp} {...info} onConfigChange={setSaveConfig} />
         ))}
       </div>
-      <div className="controls">
-        <Button style={{ marginRight: 10 }} onClick={toggleDialog} variant="outlined">
+      <div className='controls'>
+        <Button style={{ marginRight: 10 }} onClick={toggleDialog} variant='outlined'>
           Импорт из файла
         </Button>
-        <Button onClick={handleNewSave} variant="outlined">
+        <Button onClick={handleNewSave} variant='outlined'>
           Новое сохранение
         </Button>
       </div>
       <Dialog open={isImportOpen} onClose={toggleDialog} maxWidth={false}>
-        <DialogContent className="image-input-wrapper">
+        <DialogContent className='image-input-wrapper'>
           <DropzoneArea
-            dropzoneClass="drop-zone"
-            dropzoneText="Перетащите сюда файл или нажмите"
+            dropzoneClass='drop-zone'
+            dropzoneText='Перетащите сюда файл или нажмите'
             onDrop={handleImportSave}
             filesLimit={1}
           />

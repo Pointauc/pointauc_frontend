@@ -1,10 +1,11 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import tmi, { Badges, ChatUserstate } from 'tmi.js';
 import { useParams } from 'react-router';
-import { CHAT_WHEEL_PREFIX, WheelCommand } from '../../constants/wheel';
-import { WheelItem } from '../../models/wheel.model';
-import useWheel from '../../hooks/useWheel';
-import { getWheelColor } from '../../utils/common.utils';
+
+import { CHAT_WHEEL_PREFIX, WheelCommand } from '@constants/wheel.ts';
+import { WheelItem } from '@models/wheel.model.ts';
+import { getWheelColor } from '@utils/common.utils.ts';
+import useWheel from '@hooks/useWheel';
 
 const getOpts = (channel: string) => ({
   identity: {
@@ -41,8 +42,6 @@ const ChatWheelPage: FC = () => {
   const isRegOpened = useRef<boolean>(true);
   const [winners, setWinners] = useState<WheelItem[]>([]);
   const isSpinning = useRef<boolean>(false);
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
   const { channel } = useParams();
 
   const existUsers = useRef<WheelItem[]>([]);
@@ -81,7 +80,7 @@ const ChatWheelPage: FC = () => {
     }
   };
 
-  const handleMessage = useCallback((channelName: string, userState: ChatUserstate, message: string) => {
+  const handleMessage = useCallback((_channelName: string, userState: ChatUserstate, message: string) => {
     const { 'display-name': name = '', badges, 'user-id': userId = Math.random().toString() } = userState;
 
     switch (message) {
@@ -120,10 +119,11 @@ const ChatWheelPage: FC = () => {
       default:
         break;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
+    if (!channel) return;
+
     // eslint-disable-next-line new-cap
     const client = new tmi.client(getOpts(channel));
 

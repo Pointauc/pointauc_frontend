@@ -1,12 +1,12 @@
-import React, { ChangeEvent, FC, useCallback } from 'react';
-import { UseFormMethods } from 'react-hook-form/dist/types/form';
-import { Controller, ControllerRenderProps } from 'react-hook-form';
-import { FormControlLabel, Slider, SliderProps } from '@material-ui/core';
+import { FC, useCallback } from 'react';
+import { Control, Controller, ControllerRenderProps } from 'react-hook-form';
+import { FormControlLabel, Slider, SliderProps } from '@mui/material';
+
 import './FormSlider.scss';
 
 interface FormSliderProps extends SliderProps {
   name: string;
-  control: UseFormMethods['control'];
+  control: Control;
   label?: string;
   hint?: string;
 }
@@ -14,7 +14,7 @@ interface FormSliderProps extends SliderProps {
 const FormSlider: FC<FormSliderProps> = ({ name, control, hint, label, ...sliderProps }) => {
   const renderSlider = useCallback(
     ({ onBlur, onChange, value: formValue }: ControllerRenderProps) => {
-      const handleChange = (e: ChangeEvent<{}>, value: number | number[]): void => {
+      const handleChange = (e: any, value: number | number[]): void => {
         onChange(value);
       };
 
@@ -24,20 +24,20 @@ const FormSlider: FC<FormSliderProps> = ({ name, control, hint, label, ...slider
   );
 
   const renderField = useCallback(
-    (data: ControllerRenderProps) =>
+    ({ field }: any) =>
       label ? (
-        <FormControlLabel control={renderSlider(data)} label={label} labelPlacement="start" />
+        <FormControlLabel control={renderSlider(field)} label={label} labelPlacement='start' />
       ) : (
-        renderSlider(data)
+        renderSlider(field)
       ),
     [label, renderSlider],
   );
 
   return (
-    <div className="form-slider-wrapper">
+    <div className='form-slider-wrapper'>
       <Controller name={name} control={control} render={renderField} />
       {!!hint && (
-        <div className="hint">
+        <div className='hint'>
           {hint.split('\\n').map((value) => (
             <div key={value}>{value}</div>
           ))}

@@ -1,19 +1,28 @@
-import React, { FC, MouseEvent, useCallback, useState } from 'react';
-import { ButtonBase, Popover } from '@material-ui/core';
+import { FC, MouseEvent, useCallback, useState } from 'react';
+import { ButtonBase, Popover } from '@mui/material';
 import { ColorResult, SketchPicker } from 'react-color';
 
 interface ColorPickerProps {
   value: string;
   onChange: (color: string) => void;
+  onBlur?: () => void;
 }
 
-const ColorPicker: FC<ColorPickerProps> = ({ value, onChange }) => {
+const ColorPicker: FC<ColorPickerProps> = ({ value, onChange, onBlur }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleColorChange = useCallback(({ hex }: ColorResult) => onChange(hex), [onChange]);
+  const handleColorChange = useCallback(
+    ({ hex }: ColorResult) => {
+      onChange(hex);
+    },
+    [onChange],
+  );
 
   const handleOpen = useCallback((e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget), []);
-  const handleClose = useCallback(() => setAnchorEl(null), []);
+  const handleClose = useCallback(() => {
+    onBlur?.();
+    setAnchorEl(null);
+  }, [onBlur]);
 
   return (
     <>

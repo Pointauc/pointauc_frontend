@@ -1,4 +1,4 @@
-import { PurchaseSortOption } from '../models/purchase';
+import { PurchaseSortOption } from '@models/purchase';
 
 export const PURCHASE_SORT_OPTIONS: PurchaseSortOption[] = [
   { key: 'timestamp', order: 'ascend' },

@@ -1,11 +1,11 @@
 import { Game } from '../components/model';
 
 export default function winningPathLength(game: Game, visited: { [id: string]: true } = {}): number {
-  if (visited[game.id]) {
+  if (visited[String(game.id)]) {
     return 0;
   }
 
-  visited[game.id] = true;
+  visited[String(game.id)] = true;
 
   return (
     1 +

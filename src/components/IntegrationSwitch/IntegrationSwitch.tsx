@@ -1,8 +1,9 @@
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { Switch, Typography } from '@mui/material';
+
+import { SubscribeState } from '@reducers/Subscription/Subscription.ts';
 
 import './IntegrationSwitch.scss';
-import { Switch } from '@material-ui/core';
-import { SubscribeState } from '../../reducers/Subscription/Subscription';
 
 interface IntegrationSwitchProps {
   state: SubscribeState;
@@ -27,10 +28,10 @@ const IntegrationSwitch: FC<IntegrationSwitchProps> = ({ state, icon, onChange, 
   );
 
   return (
-    <div className="row integration-switch">
-      <div className="col">
+    <div className='row integration-switch'>
+      <div className='col'>
         {icon}
-        <span className="label">{title}</span>
+        <Typography className='label'>{title}</Typography>
       </div>
       <Switch onChange={handleSwitchChange} disabled={state.loading} checked={enabled} />
     </div>

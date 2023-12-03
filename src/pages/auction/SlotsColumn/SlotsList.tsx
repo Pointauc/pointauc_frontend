@@ -1,33 +1,35 @@
-import React, { FC, memo } from 'react';
-import { Grid } from '@material-ui/core';
+import { FC, memo } from 'react';
+import Grid from '@mui/material/Unstable_Grid2';
 import FlipMove from 'react-flip-move';
 import { useSelector } from 'react-redux';
+import classNames from 'classnames';
+
+import { Slot } from '@models/slot.model.ts';
+import { RootState } from '@reducers';
+
 import DroppableSlot from '../Slot/DroppableSlot';
-import { Slot } from '../../../models/slot.model';
-import { RootState } from '../../../reducers';
 
 interface SlotsListProps {
   slots: Slot[];
 }
 
 const SlotsList: FC<SlotsListProps> = ({ slots }) => {
-  const { compact } = useSelector((root: RootState) => root.aucSettings.view);
+  const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
+
   return (
-    <Grid container className="slots-column-list" spacing={1}>
+    <Grid container className={classNames('slots-column-list', { 'compact-view': compact })}>
       {compact ? (
-        <div className="compact-view">
-          {slots.map((slot, index) => (
-            <Grid key={slot.id} item xs={12}>
-              <DroppableSlot index={index + 1} {...slot} />
-            </Grid>
-          ))}
-        </div>
+        slots.map((slot, index) => (
+          <div className='slot-grid-wrapper' key={slot.id}>
+            <DroppableSlot index={index + 1} slot={slot} />
+          </div>
+        ))
       ) : (
-        <FlipMove typeName={null} enterAnimation="fade" leaveAnimation="fade" maintainContainerHeight>
+        <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
           {slots.map((slot, index) => (
-            <Grid className="slot-grid-wrapper" key={slot.id} item xs={12}>
-              <DroppableSlot index={index + 1} {...slot} />
-            </Grid>
+            <div className='slot-grid-wrapper' key={slot.id}>
+              <DroppableSlot index={index + 1} slot={slot} />
+            </div>
           ))}
         </FlipMove>
       )}

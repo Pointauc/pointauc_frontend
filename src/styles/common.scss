@@ -4,8 +4,8 @@
   display: flex !important;
   flex-direction: column;
   height: 100vh;
-  padding: 50px 100px;
-  padding-bottom: 0 !important;
+  padding: 36px 16px;
+  overflow-y: auto;
 
   &-content {
     display: flex;
@@ -152,4 +152,8 @@
       }
     }
   }
+}
+
+.MuiDropzoneArea-root {
+  background-color: transparent !important;
 }

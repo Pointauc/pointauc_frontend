@@ -1,14 +1,15 @@
-import React, { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, OutlinedInput } from '@material-ui/core';
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { Button, OutlinedInput, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { RootState } from '../../../../reducers';
+
+import { RootState } from '@reducers';
+import { addSlot } from '@reducers/Slots/Slots.ts';
+import { Slot } from '@models/slot.model.ts';
+import { updatePercents } from '@services/PercentsRefMap.ts';
 import './NewSlotForm.scss';
-import { addSlot } from '../../../../reducers/Slots/Slots';
-import { Slot } from '../../../../models/slot.model';
-import { updatePercents } from '../../../../services/PercentsRefMap';
 
 const NewSlotForm = () => {
   const dispatch = useDispatch();
@@ -27,12 +28,13 @@ const NewSlotForm = () => {
 
   const percentsRef = useRef<HTMLSpanElement>(null);
 
-  const getNewSlot = useCallback((): Partial<Slot> => {
-    return {
+  const getNewSlot = useCallback(
+    (): Partial<Slot> => ({
       amount: Number(amountInput.current?.value) || null,
       name: nameInput.current?.value,
-    };
-  }, []);
+    }),
+    [],
+  );
 
   const updateNewSlotChance = useCallback(() => {
     if (showChances && percentsRef.current) {
@@ -76,22 +78,22 @@ const NewSlotForm = () => {
   return (
     <div className={wrapperClasses}>
       <OutlinedInput
-        className="slot-name slot-input"
+        className='slot-name slot-input'
         placeholder={t('auc.newLotName')}
-        type="text"
+        type='text'
         inputRef={nameInput}
         onKeyPress={createSlotOnEnter}
         onFocus={showEnterIcon}
         onBlur={hideEnterIcon}
       />
 
-      {showChances && <span className="slot-chance" ref={percentsRef} />}
+      {showChances && <Typography className='slot-chance' ref={percentsRef} />}
 
-      <OutlinedInput type="number" style={{ display: 'none' }} />
+      <OutlinedInput type='number' style={{ display: 'none' }} />
       <OutlinedInput
-        className="slot-money slot-input"
+        className='slot-money slot-input'
         placeholder={t('common.currencySign')}
-        type="number"
+        type='number'
         inputRef={amountInput}
         onKeyPress={createSlotOnEnter}
         onFocus={showEnterIcon}
@@ -100,9 +102,9 @@ const NewSlotForm = () => {
       />
 
       <Button
-        className="add-slot-button"
-        variant="contained"
-        color="primary"
+        className='add-slot-button'
+        variant='contained'
+        color='primary'
         startIcon={<AddIcon />}
         onClick={createNewSlot}
       >

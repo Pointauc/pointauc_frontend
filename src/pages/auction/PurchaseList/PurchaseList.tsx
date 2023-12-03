@@ -1,15 +1,19 @@
-import React, { ReactText, useCallback, useEffect, useMemo } from 'react';
+import { ReactText, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography } from '@material-ui/core';
-import { RootState } from '../../../reducers';
-import './PurchaseList.scss';
-import { processRedemption, Purchase } from '../../../reducers/Purchases/Purchases';
-import { PURCHASE_SORT_OPTIONS } from '../../../constants/purchase.constants';
+import { Typography } from '@mui/material';
+import { ThunkDispatch } from 'redux-thunk';
+
+import { RootState } from '@reducers';
+import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
+import { PURCHASE_SORT_OPTIONS } from '@constants/purchase.constants.ts';
+
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 import DragBidContext from '../DragBidContext/DragBidContext';
 
+import './PurchaseList.scss';
+
 const PurchaseList: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { purchases } = useSelector((root: RootState) => root.purchases);
   const { twitchSocket, daSocket, donatePaySocket } = useSelector((root: RootState) => root.socketIo);
   const {
@@ -44,15 +48,15 @@ const PurchaseList: React.FC = () => {
   }, [daSocket, handleRedemption, twitchSocket, donatePaySocket]);
 
   return (
-    <div className="purchase-container">
+    <div className='purchase-container'>
       <DragBidContext />
-      <div className="purchase-list">
+      <div className='purchase-list'>
         {sortedPurchases.map((purchase) => (
           <DraggableRedemption {...purchase} key={purchase.id} />
         ))}
       </div>
       {!!purchases.length && (
-        <Typography className="total-purchases">
+        <Typography className='total-purchases'>
           Всего заказов:
           <span>{purchases.length}</span>
         </Typography>

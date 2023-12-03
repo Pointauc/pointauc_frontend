@@ -1,12 +1,12 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { MapInteractionCSS } from 'react-map-interaction';
-import { Button, Typography } from '@material-ui/core';
-import SlotsBracket, { SlotsBracketProps } from '../../SlotsBracket/SlotsBracket';
-import { Point } from '../../../services/SpinPaceService';
-import { Game } from '../../Bracket/components/model';
+import { Button, Typography } from '@mui/material';
+
+import SlotsBracket, { SlotsBracketProps } from '@components/SlotsBracket/SlotsBracket';
+import { Point } from '@services/SpinPaceService.ts';
+import { Game } from '@components/Bracket/components/model';
 
 interface ResizableBracket extends Omit<SlotsBracketProps, 'currentGame'> {
   currentGame?: Game | null;
@@ -37,34 +37,34 @@ const ResizableBracket: FC<ResizableBracket> = ({ currentGame, ...props }) => {
     setIsFullscreenBracket((prev) => !prev);
   }, []);
 
-  const handleMapChange = useCallback(({ scale: nextScale, translation: nextTranslation }) => {
+  const handleMapChange = useCallback(({ scale: nextScale, translation: nextTranslation }: any) => {
     setScale(nextScale);
     setTranslation(nextTranslation);
   }, []);
 
   return (
-    <div className="bracket-wrapper">
+    <div className='bracket-wrapper'>
       <div className={classNames('bracket-sub-wrapper', { fullscreen: isFullscreenBracket })} ref={bracketWrapper}>
-        <div className="bracket-controls">
+        <div className='bracket-controls'>
           <Button
-            size="small"
-            color="primary"
-            variant="outlined"
+            size='small'
+            color='primary'
+            variant='outlined'
             onClick={handleChangeFullscreen}
-            className="fullscreen-button"
+            className='fullscreen-button'
           >
             {isFullscreenBracket ? 'Свернуть' : 'На весь экран'}
           </Button>
           <Button
-            size="small"
-            color="primary"
-            variant="outlined"
+            size='small'
+            color='primary'
+            variant='outlined'
             onClick={scrollToCurrentGame}
-            className="current-game-button"
+            className='current-game-button'
           >
             Перейти к текущей игре
           </Button>
-          <Typography className="hint">можно перемещать и масштабировать</Typography>
+          <Typography className='hint'>можно перемещать и масштабировать</Typography>
         </div>
         <MapInteractionCSS value={{ scale, translation }} onChange={handleMapChange}>
           <SlotsBracket {...props} currentGame={currentGame?.id || ''} />

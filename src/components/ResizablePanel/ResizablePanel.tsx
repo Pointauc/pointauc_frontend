@@ -1,16 +1,19 @@
-import React, { FC, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import './ResizablePanel.scss';
-import { IconButton, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
+
+import { DragPosition, Size } from '@models/common.model.ts';
+
 import Resizer from './Resizer/Resizer';
-import { DragPosition, Size } from '../../models/common.model';
 
 interface ResizablePanelProps {
   initialSize: Size;
   title: string;
   onResize: (size: Size) => void;
   onClose: () => void;
+  children: ReactNode;
 }
 
 const ResizablePanel: FC<ResizablePanelProps> = ({ children, initialSize, title, onClose, onResize }) => {
@@ -77,13 +80,13 @@ const ResizablePanel: FC<ResizablePanelProps> = ({ children, initialSize, title,
 
   return (
     <div className={classNames('resizable-panel', { interaction: !!mouseOffset })} ref={container}>
-      <Typography role="button" className="resizable-panel-header" onMouseDown={handleMouseDown} variant="h5">
+      <Typography role='button' className='resizable-panel-header' onMouseDown={handleMouseDown} variant='h5'>
         {`Трейлер: ${title}`}
-        <IconButton onClick={onClose} className="resizable-panel-close" title="Закрыть">
+        <IconButton onClick={onClose} className='resizable-panel-close' title='Закрыть' size='large'>
           <CloseIcon />
         </IconButton>
       </Typography>
-      <div className="resizable-panel-content">{children}</div>
+      <div className='resizable-panel-content'>{children}</div>
       <Resizer container={container} onResize={handleResize} />
     </div>
   );

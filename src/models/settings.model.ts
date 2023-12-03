@@ -33,6 +33,10 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   luckyWheelEnabled: boolean;
   luckyWheelSelectBet: boolean;
   showUpdates: boolean;
+
+  // Appearance
+  primaryColor: string;
+  backgroundTone: string;
 }
 
 export interface SettingsUpdateRequest {

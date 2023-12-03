@@ -1,9 +1,10 @@
-import React, { FC, useCallback, useEffect } from 'react';
-import { Alert } from '@material-ui/lab';
+import { FC, useCallback, useEffect } from 'react';
+import { Alert } from '@mui/lab';
 import { useDispatch } from 'react-redux';
-import { AlertType } from '../../../models/alert.model';
-import { deleteAlert } from '../../../reducers/notifications/notifications';
-import { ALERT_LIFETIME } from '../../../constants/common.constants';
+
+import { AlertType } from '@models/alert.model.ts';
+import { deleteAlert } from '@reducers/notifications/notifications.ts';
+import { ALERT_LIFETIME } from '@constants/common.constants.ts';
 
 const BaseAlert: FC<AlertType> = ({ id, type, message, duration, closable }) => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const BaseAlert: FC<AlertType> = ({ id, type, message, duration, closable }) => 
   }, [closeAlert, dispatch, duration, id]);
 
   return (
-    <Alert severity={type} variant="filled" onClose={closable ? closeAlert : undefined}>
+    <Alert severity={type} variant='filled' onClose={closable ? closeAlert : undefined}>
       {message}
     </Alert>
   );

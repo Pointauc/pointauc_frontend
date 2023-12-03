@@ -1,13 +1,14 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { CircularProgress, IconButton } from '@material-ui/core';
+import { FC, useCallback, useEffect, useState, memo } from 'react';
+import { CircularProgress, IconButton } from '@mui/material';
 import { useSelector } from 'react-redux';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
-import { RootState } from '../../reducers';
-import './TwitchEmotesList..scss';
-import { getSevenTVEmotes } from '../../api/emotesApi';
 
+import { RootState } from '@reducers';
+import { getSevenTVEmotes } from '@api/emotesApi.ts';
+import './TwitchEmotesList..scss';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const fetcher = new EmoteFetcher();
 
 interface TwitchEmotesListProps {
@@ -15,6 +16,7 @@ interface TwitchEmotesListProps {
   onEmotesLoad?: (emotes: Emote[]) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const flattenCollection = (collection: Collection<string, Emote>): Emote[] => Array.from<Emote>(collection.values());
 
 const emoteLists = ['default', 'twitch', '7tv', 'bttv', 'ffz'];
@@ -57,14 +59,14 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
       }
 
       return (
-        <div className="emotes-group" key={id}>
-          {emotes.map((emote) => {
+        <div className='emotes-group' key={id}>
+          {emotes.map((emote: Emote) => {
             const { min = 0, max = 2 } = emote as any;
             const handleClick = (): void => setActiveEmote(emote.toLink(max));
 
             return (
-              <IconButton key={emote.id} className="emote-button" onClick={handleClick}>
-                <img alt="emote" src={emote.toLink(min)} />
+              <IconButton key={emote.id} className='emote-button' onClick={handleClick} size='large'>
+                <img alt='emote' src={emote.toLink(min)} />
               </IconButton>
             );
           })}
@@ -75,15 +77,15 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
   );
 
   return (
-    <div className="emotes-container">
+    <div className='emotes-container'>
       {userEmotes ? (
         <>{userEmotes.map((emotes, index) => crateEmoteList(emotes, emoteLists[index]))}</>
       ) : (
-        <CircularProgress className="emotes-loading" />
+        <CircularProgress className='emotes-loading' />
       )}
-      {!userId && <div className="emote-hint">Подключите Twitch, чтобы выбрать больше изображений в колесе</div>}
+      {!userId && <div className='emote-hint'>Подключите Twitch, чтобы выбрать больше изображений в колесе</div>}
     </div>
   );
 };
 
-export default React.memo(TwitchEmotesList);
+export default memo(TwitchEmotesList);

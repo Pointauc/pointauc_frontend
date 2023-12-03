@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import mergewith from 'lodash.mergewith';
-import { getUserData, updateSettings } from '../../api/userApi';
+
+import { getUserData, updateSettings } from '@api/userApi.ts';
+import { GetUserDto } from '@models/user.model.ts';
+import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
+
 import { setUserState } from '../User/User';
-import { GetUserDto } from '../../models/user.model';
 import { RootState } from '../index';
-import { AucSettingsDto, SettingsForm } from '../../models/settings.model';
 import { validateIntegrations } from '../Subscription/Subscription';
 
 export interface ViewSettings {
@@ -49,6 +51,8 @@ export const initialState: AucSettingsState = {
     incrementTime: 30,
     rewardPresets: [],
     showUpdates: true,
+    primaryColor: '#a6d4fa',
+    backgroundTone: '#242424',
   },
 };
 

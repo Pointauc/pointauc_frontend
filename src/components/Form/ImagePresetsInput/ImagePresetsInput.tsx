@@ -1,10 +1,10 @@
-import React, { FC, ReactElement, useCallback, useRef, useState } from 'react';
-import { Button, Fade, Paper, Popper } from '@material-ui/core';
+import { FC, ReactElement, useCallback, useRef, useState } from 'react';
+import { Button, Fade, Paper, Popper } from '@mui/material';
 import './ImagePresetsInput.scss';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { CloudinaryContext, Image, Transformation } from 'cloudinary-react';
-import { getCloudifyUrl } from '../../../utils/url.utils';
+
+import { getCloudifyUrl } from '@utils/url.utils.ts';
 
 interface ImagePresetsInputProps {
   images: string[];
@@ -31,27 +31,16 @@ const ImagePresetsInput: FC<ImagePresetsInputProps> = ({ buttonTitle, images, on
 
   return (
     <div>
-      <Popper
-        open={open}
-        anchorEl={anchorEl.current}
-        placement="top"
-        transition
-        modifiers={{
-          offset: {
-            enabled: true,
-            offset: '0 10',
-          },
-        }}
-      >
+      <Popper open={open} anchorEl={anchorEl.current} placement='top' transition>
         {({ TransitionProps }): ReactElement => (
           <Fade {...TransitionProps} timeout={350}>
             <Paper>
-              <CloudinaryContext cloudName="dn4ue0pj9" className="image-container">
+              <CloudinaryContext cloudName='dn4ue0pj9' className='image-container'>
                 {images.map((image) => (
-                  <Button key={image} className="image-item" onClick={createImageSelectHandler(image)}>
-                    <div className="image-item-shadow" />
-                    <Image publicId={image} secure="true">
-                      <Transformation width="200" crop="scale" />
+                  <Button key={image} className='image-item' onClick={createImageSelectHandler(image)}>
+                    <div className='image-item-shadow' />
+                    <Image publicId={image} secure='true'>
+                      <Transformation width='200' crop='scale' />
                     </Image>
                   </Button>
                 ))}
@@ -60,7 +49,7 @@ const ImagePresetsInput: FC<ImagePresetsInputProps> = ({ buttonTitle, images, on
           </Fade>
         )}
       </Popper>
-      <Button variant="outlined" color="primary" onClick={togglePopper} ref={anchorEl}>
+      <Button variant='outlined' color='primary' onClick={togglePopper} ref={anchorEl}>
         {buttonTitle}
       </Button>
     </div>

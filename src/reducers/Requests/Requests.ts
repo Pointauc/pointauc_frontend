@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
-import { CamilleList, RequestsListInfo, UserRequest } from '../../models/requests.model';
-import { RootState } from '../index';
-import { getCamilleBotData } from '../../api/requestsApi';
-import { addAlert } from '../notifications/notifications';
-import { AlertTypeEnum } from '../../models/alert.model';
-import { KeyListenersClient } from '../../services/ChatService';
+
+import { CamilleList, RequestsListInfo, UserRequest } from '@models/requests.model.ts';
+import { getCamilleBotData } from '@api/requestsApi.ts';
+import { AlertTypeEnum } from '@models/alert.model.ts';
+import { KeyListenersClient } from '@services/ChatService.ts';
+import { getSlot } from '@utils/slots.utils.ts';
+
 import { addSlot, deleteSlot, setSlotName } from '../Slots/Slots';
-import { getSlot } from '../../utils/slots.utils';
+import { addAlert } from '../notifications/notifications';
+import { RootState } from '../index';
 
 interface RequestsState {
   lists: RequestsListInfo[];

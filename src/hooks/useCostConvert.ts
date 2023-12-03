@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { ReactText, useCallback } from 'react';
-import { RootState } from '../reducers';
+
+import { RootState } from '@reducers';
 
 interface UseCostConvertResult {
   getMarblesAmount: (cost: number, newSlot?: boolean) => number;
@@ -8,9 +9,9 @@ interface UseCostConvertResult {
 }
 
 export const useCostConvert = (): UseCostConvertResult => {
-  const {
-    settings: { marblesAuc, marbleCategory = 1, marbleRate = 1 },
-  } = useSelector((root: RootState) => root.aucSettings);
+  const marblesAuc = useSelector((root: RootState) => root.aucSettings.settings.marblesAuc);
+  const marbleCategory = useSelector((root: RootState) => root.aucSettings.settings.marbleCategory);
+  const marbleRate = useSelector((root: RootState) => root.aucSettings.settings.marbleRate);
 
   const convertToMarble = useCallback(
     (cost: number, newSlot: boolean): number => {

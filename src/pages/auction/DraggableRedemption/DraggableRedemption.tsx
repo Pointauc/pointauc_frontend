@@ -1,9 +1,11 @@
-import React, { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Purchase, setDraggedRedemption } from '../../../reducers/Purchases/Purchases';
+
+import { Purchase, setDraggedRedemption } from '@reducers/Purchases/Purchases.ts';
+import { DragPosition } from '@models/common.model.ts';
+
 import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
 import { draggedBid } from '../DragBidContext/DragBidContext';
-import { DragPosition } from '../../../models/common.model';
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 

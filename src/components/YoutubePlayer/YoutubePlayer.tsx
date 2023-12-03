@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import PlayerFactory from 'youtube-player';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 

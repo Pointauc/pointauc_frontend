@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
-import { Score } from '../../../models/statistic';
+import { FC } from 'react';
+
+import { Score } from '@models/statistic.ts';
 import './Scoreboard.scss';
 
 interface UsersTopProps {
@@ -8,7 +9,7 @@ interface UsersTopProps {
 
 const Scoreboard: FC<UsersTopProps> = ({ scoreboard }) => {
   return (
-    <div className="scoreboard">
+    <div className='scoreboard'>
       {scoreboard.map(({ title, score }) => (
         <div key={title}>{`${title} - ${score}`}</div>
       ))}

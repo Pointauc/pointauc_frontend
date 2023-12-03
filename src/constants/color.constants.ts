@@ -1,4 +1,4 @@
-import { PurchaseStatusEnum } from '../models/purchase';
+import { PurchaseStatusEnum } from '@models/purchase';
 
 export const COLORS = {
   PURCHASE_STATUS: {

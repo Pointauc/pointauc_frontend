@@ -1,8 +1,11 @@
-import React, { FC, ReactElement, useMemo } from 'react';
-import { ColDef, XGrid } from '@material-ui/x-grid';
-import { Button } from '@material-ui/core';
+import { FC, ReactElement, useMemo } from 'react';
+import { Button } from '@mui/material';
 import classNames from 'classnames';
-import { UserRequest } from '../../../models/requests.model';
+import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
+
+import { UserRequest } from '@models/requests.model.ts';
+
 import './RequestsTable.scss';
 
 interface RequestsTableProps {
@@ -12,7 +15,7 @@ interface RequestsTableProps {
 }
 
 const RequestsTable: FC<RequestsTableProps> = ({ requests, loading, onDelete }) => {
-  const columns: ColDef[] = useMemo(
+  const columns: GridColDef[] = useMemo(
     () => [
       {
         headerName: 'Никнейм',
@@ -31,15 +34,14 @@ const RequestsTable: FC<RequestsTableProps> = ({ requests, loading, onDelete }) 
       {
         width: 150,
         field: 'id',
-        // eslint-disable-next-line react/display-name
-        renderCell: ({ value }): ReactElement => {
-          const onClick = (): void => onDelete(value as string);
+        renderCell: ({ value }: GridRenderCellParams): ReactElement => {
+          const onClick = (): void => onDelete(value);
 
           return (
             <Button
               onClick={onClick}
-              variant="outlined"
-              color="secondary"
+              variant='outlined'
+              color='secondary'
               style={{ fontSize: 12, padding: '2px 10px' }}
             >
               удалить
@@ -53,14 +55,13 @@ const RequestsTable: FC<RequestsTableProps> = ({ requests, loading, onDelete }) 
 
   return (
     <div className={classNames('history-table', { empty: !requests.length && !loading })}>
-      <XGrid
+      <DataGrid
         columns={columns}
         rows={requests}
         autoHeight
         pagination
-        pageSize={25}
-        rowsPerPageOptions={[25]}
-        disableSelectionOnClick
+        pageSizeOptions={[25]}
+        disableRowSelectionOnClick
         rowHeight={38}
         loading={loading}
       />

@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { FC, Key, useEffect, useRef, useState } from 'react';
+
+import { Size } from '@models/common.model.ts';
+
 import winningPathLength from '../util/winningPathLength';
+
 import BracketGame from './BracketGame';
 import { Game, Side } from './model';
-import { Size } from '../../../models/common.model';
 
 export interface LineInfo {
   yOffset: number;
@@ -53,7 +56,6 @@ const toBracketGames = ({
   const data = game.sides
     .map((sideInfo, index) => ({ ...sideInfo, index }))
     .filter(({ sourceGame }) => sourceGame)
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     .map(({ sourceGame, index }) => {
       const offset = index === Side.HOME ? -Number(sourceGame?.offset?.bot) - 1 : Number(sourceGame?.offset?.top) + 1;
@@ -71,10 +73,9 @@ const toBracketGames = ({
       ];
 
       return [
-        <path key={`${game.id}-${index}-${y}-path`} d={pathInfo.join(' ')} fill="transparent" stroke="black" />,
+        <path key={`${game.id}-${index}-${y}-path`} d={pathInfo.join(' ')} fill='transparent' stroke='black' />,
       ].concat(
         toBracketGames({
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           game: sourceGame,
           fromSide: index,

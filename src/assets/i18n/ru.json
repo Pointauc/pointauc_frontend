@@ -40,6 +40,11 @@
       "settings": "Настройки",
       "integrations": "Интеграции",
       "addNewBids": "Сразу добавлять все новые награды",
+      "appearance": {
+        "appearance": "Внешний вид",
+        "primaryColor": "Основной цвет",
+        "backgroundTone": "Тон фона"
+      },
       "twitch": {
         "openRewards": "Включить награды",
         "closeRewards": "Скрыть награды",

@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import ENDPOINTS from '../constants/api.constants';
 
 export const authenticateDA = async (code: string): Promise<{ isNew: boolean }> => {

@@ -1,9 +1,10 @@
-import React, { FC, ReactNode, useState } from 'react';
-import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel } from '@material-ui/core';
-import { DropzoneArea } from 'material-ui-dropzone';
-import { parseSlotsPreset } from '../../../utils/slots.utils';
+import { FC, ReactNode, useState } from 'react';
+import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel } from '@mui/material';
+import { DropzoneArea } from 'react-mui-dropzone';
+
+import { parseSlotsPreset } from '@utils/slots.utils.ts';
+import { Slot } from '@models/slot.model.ts';
 import './SlotsPresetInput.scss';
-import { Slot } from '../../../models/slot.model';
 
 interface SlotsPresetInput {
   buttonTitle: string;
@@ -37,25 +38,25 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
   };
 
   return (
-    <div className="slots-preset-input">
+    <div className='slots-preset-input'>
       <Dialog open={isInputOpened} onClose={toggleDialog} maxWidth={false}>
         {!!dialogTitle && <DialogTitle>{dialogTitle}</DialogTitle>}
-        <DialogContent className="image-input-wrapper">
+        <DialogContent className='image-input-wrapper'>
           <DropzoneArea
-            dropzoneClass="drop-zone"
-            dropzoneText="Перетащите сюда файл или нажмите"
+            dropzoneClass='drop-zone'
+            dropzoneText='Перетащите сюда файл или нажмите'
             onDrop={handleFileUpload}
             filesLimit={1}
           />
           <FormControlLabel
-            className="save-slots-checkbox"
-            control={<Checkbox checked={saveSlots} onChange={handleSaveSlotsChange} color="primary" />}
-            label="Сохранить лоты в аук"
+            className='save-slots-checkbox'
+            control={<Checkbox checked={saveSlots} onChange={handleSaveSlotsChange} color='primary' />}
+            label='Сохранить лоты в аук'
           />
-          {hint && <div className="slots-preset-input-hint">{hint}</div>}
+          {hint && <div className='slots-preset-input-hint'>{hint}</div>}
         </DialogContent>
       </Dialog>
-      <Button variant="outlined" color="primary" onClick={toggleDialog} className={buttonClass}>
+      <Button variant='outlined' color='primary' onClick={toggleDialog} className={buttonClass}>
         {buttonTitle}
       </Button>
     </div>

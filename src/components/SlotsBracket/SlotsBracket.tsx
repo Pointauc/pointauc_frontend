@@ -1,8 +1,9 @@
-import React, { FC, Key, useEffect, useRef, useState } from 'react';
-import Bracket from '../Bracket/components/Bracket';
-import { Game } from '../Bracket/components/model';
-import { createGame, setOffsets } from '../../utils/slots.utils';
-import { WheelItem } from '../../models/wheel.model';
+import { FC, Key, useEffect, useRef, useState, memo } from 'react';
+
+import Bracket from '@components/Bracket/components/Bracket';
+import { Game } from '@components/Bracket/components/model';
+import { createGame, setOffsets } from '@utils/slots.utils.ts';
+import { WheelItem } from '@models/wheel.model.ts';
 
 export interface SlotsBracketProps {
   value?: number;
@@ -46,4 +47,6 @@ const SlotsBracket: FC<SlotsBracketProps> = ({ onGamesOrder, currentGame, items,
   return <Bracket game={game} currentGame={currentGame} />;
 };
 
-export default React.memo(SlotsBracket);
+const SlotsBracketMemorized = memo(SlotsBracket);
+
+export default SlotsBracketMemorized;

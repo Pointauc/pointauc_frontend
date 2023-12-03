@@ -1,10 +1,11 @@
 import React from 'react';
-import { IconButton, InputBase, InputBaseProps, Paper } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import { IconButton, InputBase, InputBaseProps, Paper } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import './SlotSearch.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
+
 import { setSearchTerm } from '../../../../reducers/Slots/Slots';
 import { RootState } from '../../../../reducers';
 
@@ -22,17 +23,17 @@ const SlotSearch = () => {
   };
 
   return (
-    <Paper className="slot-search">
+    <Paper className='slot-search'>
       <SearchIcon />
       <InputBase
-        className="search-input"
+        className='search-input'
         placeholder={t('auc.lotSearch')}
         value={searchTerm}
         onChange={onSearchTermChange}
       />
-      <div className="close-button-wrapper">
+      <div className='close-button-wrapper'>
         {searchTerm && (
-          <IconButton className="close-button" onClick={clearSearch}>
+          <IconButton className='close-button' onClick={clearSearch} size='large'>
             <CloseIcon />
           </IconButton>
         )}
