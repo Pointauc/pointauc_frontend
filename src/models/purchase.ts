@@ -6,6 +6,6 @@ export interface PurchaseSortOption {
 }
 
 export enum PurchaseStatusEnum {
-  Processed = 'Processed',
-  Deleted = 'Deleted',
+  Processed = 'processed',
+  Deleted = 'deleted',
 }

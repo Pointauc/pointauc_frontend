@@ -1,12 +1,13 @@
 import { FC, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils.ts';
 import { SettingsForm } from '@models/settings.model.ts';
 import { RootState } from '@reducers';
+import IntegrationCommon from '@components/IntegrationPage/IntegrationCommon';
 
 import PageContainer from '../PageContainer/PageContainer';
 
@@ -58,10 +59,13 @@ const IntegrationPage: FC = () => {
 
   return (
     <PageContainer title={t('settings.integrations')} className='integration-page'>
-      <form className='settings'>
-        <TwitchIntegration control={control} />
-        <DaIntegration control={control} />
-      </form>
+      <FormProvider {...formMethods}>
+        <form className='settings'>
+          <IntegrationCommon />
+          <TwitchIntegration control={control} />
+          <DaIntegration control={control} />
+        </form>
+      </FormProvider>
     </PageContainer>
   );
 };

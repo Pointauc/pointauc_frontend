@@ -161,3 +161,12 @@
 .MuiDropzoneArea-root {
   background-color: transparent !important;
 }
+
+.spoiler {
+  background-color: $grey-10;
+  color: $grey-10;
+
+  &:hover {
+    color: currentColor;
+  }
+}

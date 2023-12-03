@@ -90,7 +90,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
 
       slotNamesMap.set(message, id);
       dispatch(setSlotAmount({ id, amount: Number(amount) + getMarblesAmount(addedCost, !amount) }));
-      dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id.toString() }));
+      dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id }));
       dispatch(removePurchase(redemptionId));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);

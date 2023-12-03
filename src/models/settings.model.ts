@@ -1,3 +1,5 @@
+import { InsertStrategy } from '@enums/settings.enum.ts';
+
 import { TwitchRewardPresetDto } from './user.model';
 
 export interface TwitchIntegration {
@@ -35,6 +37,7 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   luckyWheelEnabled: boolean;
   luckyWheelSelectBet: boolean;
   showUpdates: boolean;
+  insertStrategy: InsertStrategy;
 
   // Appearance
   primaryColor: string;

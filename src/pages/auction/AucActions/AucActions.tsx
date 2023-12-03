@@ -132,6 +132,17 @@ const AucActions: React.FC = () => {
                   <Button startIcon={<AttachMoneyIcon />} />
                 </Link>
               </Tooltip>
+            </ButtonGroup>
+          </Grid>
+
+          <Grid item>
+            <ButtonGroup size='large' className='actions-group'>
+              <Tooltip title={t('auc.downloadMarbles')}>
+                <Button onClick={downloadMarbles} startIcon={<DownloadIcon />} />
+              </Tooltip>
+              <Tooltip title={t('auc.saveLoad')}>
+                <Button onClick={handleRestoreOpen} startIcon={<SaveIcon />} />
+              </Tooltip>
               <Tooltip title={t('auc.sendBugReport')}>
                 <Link
                   target='_blank'
@@ -140,12 +151,6 @@ const AucActions: React.FC = () => {
                 >
                   <Button startIcon={<PestControlIcon />} />
                 </Link>
-              </Tooltip>
-              <Tooltip title={t('auc.downloadMarbles')}>
-                <Button onClick={downloadMarbles} startIcon={<DownloadIcon />} />
-              </Tooltip>
-              <Tooltip title={t('auc.saveLoad')}>
-                <Button onClick={handleRestoreOpen} startIcon={<SaveIcon />} />
               </Tooltip>
               <Tooltip title={t('auc.clearAll')}>
                 <Button onClick={handleResetSlots} startIcon={<DeleteSweepIcon />} />

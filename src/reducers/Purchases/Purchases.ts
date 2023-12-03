@@ -6,6 +6,7 @@ import { AlertTypeEnum } from '@models/alert.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
+import { InsertStrategy } from '@enums/settings.enum.ts';
 
 import { RootState } from '../index';
 import { addBid, createSlotFromPurchase } from '../Slots/Slots';
@@ -21,6 +22,7 @@ export interface Purchase {
   rewardId?: string;
   isDonation?: boolean;
   investorId?: string;
+  insertStrategy?: InsertStrategy;
 }
 
 export interface PurchaseLog extends Purchase {
@@ -107,22 +109,31 @@ export const fastAddBid =
   };
 
 export const processRedemption =
-  (redemption: Purchase) =>
+  (bid: Purchase) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const {
-      aucSettings: {
-        settings: { luckyWheelEnabled, alwaysAddNew },
-      },
+      aucSettings: { settings },
     } = getState();
-    const similarSlotId = slotNamesMap.get(redemption.message);
+    const insertStrategy =
+      !bid.insertStrategy || bid.insertStrategy === InsertStrategy.Auto ? settings.insertStrategy : bid.insertStrategy;
 
-    if (similarSlotId && !luckyWheelEnabled) {
-      dispatch(fastAddBid(redemption, similarSlotId));
-    } else if (alwaysAddNew) {
-      dispatch(createSlotFromPurchase(redemption));
-    } else {
-      dispatch(addPurchase(redemption));
+    if (insertStrategy === InsertStrategy.None || settings.luckyWheelEnabled) {
+      dispatch(addPurchase(bid));
+      return;
     }
+
+    const similarSlotId = slotNamesMap.get(bid.message);
+    if (similarSlotId) {
+      dispatch(fastAddBid(bid, similarSlotId));
+      return;
+    }
+
+    if (insertStrategy === InsertStrategy.Match) {
+      dispatch(addPurchase(bid));
+      return;
+    }
+
+    dispatch(createSlotFromPurchase(bid));
   };
 
 export const updateExistBids = (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {

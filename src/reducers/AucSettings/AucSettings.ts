@@ -6,6 +6,7 @@ import { getUserData, updateSettings } from '@api/userApi.ts';
 import { GetUserDto } from '@models/user.model.ts';
 import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import { COLORS } from '@constants/color.constants.ts';
+import { InsertStrategy } from '@enums/settings.enum.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -57,6 +58,7 @@ export const initialState: AucSettingsState = {
     incrementTime: 30,
     rewardPresets: [],
     showUpdates: true,
+    insertStrategy: InsertStrategy.Match,
     primaryColor: COLORS.THEME.PRIMARY,
     backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   },
@@ -69,9 +71,6 @@ const aucSettingsSlice = createSlice({
   initialState,
   reducers: {
     setAucSettings(state, action: PayloadAction<Partial<AucSettingsDto>>): void {
-      if (action.payload.isMinTimeActive != null)
-        localStorage.setItem('isMinTimeActive', String(action.payload.isMinTimeActive));
-      if (action.payload.minTime != null) localStorage.setItem('minTime', String(action.payload.minTime));
       state.settings = mergewith(state.settings, action.payload, mergeCheck);
     },
     setCompact(state, action: PayloadAction<boolean>): void {
@@ -115,6 +114,11 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
       activeSettingsPresetId,
     }),
   );
+  if (localStorage.getItem('isMinTimeActive') || localStorage.getItem('minTime')) {
+    dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime, isMinTimeActive }));
+    localStorage.removeItem('isMinTimeActive');
+    localStorage.removeItem('minTime');
+  }
   validateIntegrations(dispatch);
 
   return user;

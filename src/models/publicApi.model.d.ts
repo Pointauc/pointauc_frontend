@@ -21,4 +21,11 @@ namespace PublicApi {
     query: LotQuery;
     lot: LotUpdateData;
   }
+
+  interface BidStatus {
+    status: 'pending' | 'processed' | 'rejected' | 'notFound';
+    lot?: {
+      id: string;
+    };
+  }
 }

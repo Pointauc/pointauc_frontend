@@ -7,11 +7,29 @@ import { getCookie } from './common.utils';
 export interface UpdateData {
   date: string;
   newFeatures?: ReactNode[];
-  improvements?: string[];
-  fixes?: string[];
+  improvements?: ReactNode[];
+  fixes?: ReactNode[];
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2023-12-03T09:34:21.786Z',
+    newFeatures: ['На странице интеграций можно отключить автоматическое добавление ставок.'],
+    improvements: [
+      <>
+        <span>API: </span>
+        <span className='spoiler'>/lot/getAll изменен на /lots</span>
+      </>,
+      <>
+        <span>API: </span>
+        <span className='spoiler'>добавлен новый эндпоинт /bid/status</span>
+      </>,
+      <>
+        <span>API: </span>
+        <span className='spoiler'>новые параметры: POST /bid - insertStrategy, PUT /lot - amountChange</span>
+      </>,
+    ],
+  },
   {
     date: '2023-12-01T09:42:45.373Z',
     newFeatures: [

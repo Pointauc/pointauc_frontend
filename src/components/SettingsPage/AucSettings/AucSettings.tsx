@@ -1,15 +1,11 @@
 import { FC, useEffect } from 'react';
-import { FormGroup, IconButton, MenuItem, Select, Typography, Grid, FormControl } from '@mui/material';
+import { FormGroup, IconButton, Typography } from '@mui/material';
 import ReplayIcon from '@mui/icons-material/Replay';
-import { Control, Controller, UseFormReturn } from 'react-hook-form';
-import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
-import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
-import { useSelector } from 'react-redux';
+import { Control, UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
 import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
-import { RootState } from '@reducers';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
 import FormInput from '@components/Form/FormInput/FormInput';
 import ImagePresetsInput from '@components/Form/ImagePresetsInput/ImagePresetsInput';

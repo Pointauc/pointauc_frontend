@@ -168,7 +168,7 @@ const slotsSlice = createSlice({
         amount:
           requestLot.amountChange != null && lot.amount
             ? lot.amount + requestLot.amountChange
-            : lot.amount ?? requestLot.amount ?? null,
+            : requestLot.amount ?? lot.amount ?? null,
       });
 
       state.slots = state.slots.map((lot) => (compare(lot) ? updateLot(lot) : lot));
@@ -197,7 +197,7 @@ export const createSlotFromPurchase =
       aucSettings: { settings },
       slots: { slots },
     } = getState();
-    const { id, message: name, cost, isDonation } = bid;
+    const { message: name, cost, isDonation } = bid;
     // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),
@@ -213,7 +213,7 @@ export const createSlotFromPurchase =
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
     dispatch(setSlots(sortSlots(updatedSlots)));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: id.toString(), cost }, true));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: newSlot.id, cost }, true));
   };
 
 interface BidHandleOptions {

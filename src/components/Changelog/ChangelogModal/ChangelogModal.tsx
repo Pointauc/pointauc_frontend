@@ -1,6 +1,5 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import dayjs from 'dayjs';
 
 import { getUpdates } from '@utils/changelog.tsx';
 

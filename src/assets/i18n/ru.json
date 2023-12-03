@@ -64,6 +64,15 @@
         "primaryColor": "Основной цвет",
         "backgroundTone": "Тон фона"
       },
+      "integrationCommon": {
+        "title": "Общее",
+        "insertStrategyLabel": "Автодобавление ставок",
+        "insertStrategy": {
+          "force": "Всегда",
+          "match": "При полном совпадении имени",
+          "none": "Никогда"
+        }
+      },
       "twitch": {
         "openRewards": "Включить награды",
         "closeRewards": "Скрыть награды",

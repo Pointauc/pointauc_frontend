@@ -22,9 +22,16 @@ const BidsSortSelect: FC<BidsSortSelectProps> = ({ control }) => {
       control={control}
       name='purchaseSort'
       defaultValue={purchaseSort}
-      render={({ field: { onChange, value } }) => (
+      render={({ field: { onChange, onBlur, value } }) => (
         <FormControl size='small'>
-          <Select className='auc-settings-option' value={value} onChange={(e) => onChange(e.target.value)}>
+          <Select
+            className='auc-settings-option'
+            value={value}
+            onChange={(e) => {
+              onChange(e.target.value);
+              onBlur();
+            }}
+          >
             <MenuItem value={0}>
               <Grid container>
                 <Typography>{t('settings.auc.dateSort')}</Typography>
