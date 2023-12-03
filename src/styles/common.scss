@@ -88,12 +88,9 @@
   //background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(0,0,0,1) 50%, rgba(255,255,255,0) 100%);
   //background-color: rgba(#000, 0.6);
 
-  display: flex;
-  align-items: center;
   justify-content: center;
   color: white;
   font-size: 40px;
-  font-family: Arial;
   background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.3) 68%, rgba(0,0,0,0) 72%);
 }
 
@@ -169,4 +166,8 @@
   &:hover {
     color: currentColor;
   }
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, "Roboto Light", sans-serif;
 }

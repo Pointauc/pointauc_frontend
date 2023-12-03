@@ -1,6 +1,6 @@
 import { DragEvent, memo, useCallback, useRef, useState } from 'react';
 import './Slot.scss';
-import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Menu, MenuItem } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useDispatch, useSelector } from 'react-redux';

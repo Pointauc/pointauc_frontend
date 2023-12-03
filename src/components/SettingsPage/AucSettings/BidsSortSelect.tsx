@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { FormControl, Grid, MenuItem, Select, SelectProps, Typography } from '@mui/material';
+import { FormControl, Grid, MenuItem, Select, Typography } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
 import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';

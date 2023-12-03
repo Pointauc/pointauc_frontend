@@ -197,7 +197,7 @@ export const createSlotFromPurchase =
       aucSettings: { settings },
       slots: { slots },
     } = getState();
-    const { message: name, cost, isDonation } = bid;
+    const { message: name, cost } = bid;
     // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),

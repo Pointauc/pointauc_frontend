@@ -98,7 +98,7 @@ export const logPurchase =
 
 export const fastAddBid =
   (bid: Purchase, slotId: string) =>
-  (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+  (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
     const showAlert = (cost: number): void => {
       const { username, message } = bid;
       const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
