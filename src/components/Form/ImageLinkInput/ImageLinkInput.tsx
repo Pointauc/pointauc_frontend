@@ -64,7 +64,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
             filesLimit={1}
             maxFileSize={1000 * 1000 * 50}
           />
-          <Typography className='divider'>ИЛИ</Typography>
+          <Typography className='divider'>{t('common.or')}</Typography>
           <TextField
             onPaste={handleLinkPaste}
             placeholder={t('common.insertImageLink')}
