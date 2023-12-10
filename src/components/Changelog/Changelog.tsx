@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Divider, Grid, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { UpdateData } from '@utils/changelog.tsx';
 
@@ -31,6 +32,8 @@ const FeaturesList: FC<FeaturesListProps> = ({ title, data, color }) => (
 );
 
 const Changelog: FC<ChangelogProps> = ({ updates }) => {
+  const { t } = useTranslation();
+
   return (
     <Grid className='changelog'>
       {updates.map(({ date, newFeatures, improvements, fixes }) => (
@@ -41,9 +44,13 @@ const Changelog: FC<ChangelogProps> = ({ updates }) => {
             <Divider className='changelog-date-divider' />
           </Grid>
           <Grid item>
-            {newFeatures && <FeaturesList title='Новый функкционал' data={newFeatures} color='success' />}
-            {improvements && <FeaturesList title='Улучшения' data={improvements} color='info' />}
-            {fixes && <FeaturesList title='Исправлено' data={fixes} color='error' />}
+            {newFeatures && (
+              <FeaturesList title={t('changelog.types.functionality')} data={newFeatures} color='success' />
+            )}
+            {improvements && (
+              <FeaturesList title={t('changelog.types.improvements')} data={improvements} color='info' />
+            )}
+            {fixes && <FeaturesList title={t('changelog.types.fixes')} data={fixes} color='error' />}
           </Grid>
         </Grid>
       ))}

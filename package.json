@@ -30,6 +30,7 @@
     "gsap": "3",
     "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",
+    "i18next-resources-to-backend": "^1.2.1",
     "js-cookie": "^3.0.5",
     "lodash.merge": "^4.6.2",
     "lodash.mergewith": "^4.6.2",

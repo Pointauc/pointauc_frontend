@@ -87,15 +87,15 @@ const App: React.FC = () => {
     ({ IconComponent, title, path, disabled, divide }: MenuItem) => (
       <Fragment key={path}>
         {divide && <Divider style={{ margin: '10px 0' }} />}
-        <ListItem disabled={disabled} button key={title} selected={path === pathname} component={Link} to={path}>
+        <ListItem disabled={disabled} button key={t(title)} selected={path === pathname} component={Link} to={path}>
           <ListItemIcon className='nav-icon'>
             <IconComponent />
           </ListItemIcon>
-          <ListItemText primary={title} />
+          <ListItemText primary={t(title)} />
         </ListItem>
       </Fragment>
     ),
-    [pathname],
+    [pathname, t],
   );
 
   useEffect(() => {
@@ -117,7 +117,9 @@ const App: React.FC = () => {
     if (hasToken) {
       loadUser();
     }
-  }, [dispatch, t]);
+    // do not add t function to the deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <div className='app'>

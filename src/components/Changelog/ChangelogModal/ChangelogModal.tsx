@@ -1,5 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { getUpdates } from '@utils/changelog.tsx';
 
@@ -8,6 +9,7 @@ import Changelog from '../Changelog';
 const ChangelogModal: FC = () => {
   const updates = useMemo(() => getUpdates(), []);
   const [open, setOpen] = useState(updates.length !== 0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const date = new Date().toISOString();
@@ -17,13 +19,13 @@ const ChangelogModal: FC = () => {
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} maxWidth='sm' fullWidth>
-      <DialogTitle>Что нового?</DialogTitle>
+      <DialogTitle>{t('changelog.modal.title')}</DialogTitle>
       <DialogContent>
         <Changelog updates={updates} />
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' onClick={() => setOpen(false)}>
-          Закрыть
+          {t('bid.close')}
         </Button>
       </DialogActions>
     </Dialog>

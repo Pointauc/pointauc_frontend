@@ -1,0 +1,258 @@
+{
+  "auc": {
+    "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
+    "addPosition": "Add Lot",
+    "addToRandomSlot": "Add to Random Slot",
+    "casino": {
+      "description": "You need to spin the normal wheel; if your selected lot wins, the bid will multiply by a specified number, otherwise, it will be reset.",
+      "selectLot": "Lucky Wheel",
+      "warning": "This function does not provide gain or loss for the donor!",
+      "yourBid": "Your bid in the auction:",
+      "yourLot": "Your Lot:"
+    },
+    "clearAll": "Clear All",
+    "compactView": "Compact View",
+    "downloadMarbles": "Download Marbles",
+    "integrations": "Integrations",
+    "language": "Language: {{lng}}",
+    "lotName": "Name",
+    "lotSearch": "Search among lots...",
+    "newLotName": "New Lot Name",
+    "optimizationEnabled": "Lot animations are disabled to improve performance (lots > 100)",
+    "saveLoad": "Save/Load",
+    "saves": "Your Saves",
+    "sendBugReport": "Send bug report",
+    "showChances": "Show Winning Chances",
+    "supportCreator": "Support Creator",
+    "total": "Total: {{totalSum}} ₽"
+  },
+  "bid": {
+    "close": "Close",
+    "delete": "Delete Slot",
+    "luckyWheel": "Try Your Luck",
+    "new": "New",
+    "toLot": "To {{name}}",
+    "totalBids": "Total Bids:"
+  },
+  "changelog": {
+    "modal": {
+      "title": "What's new?"
+    },
+    "types": {
+      "fixes": "Fixes",
+      "functionality": "New functionality",
+      "improvements": "Improvements"
+    }
+  },
+  "common": {
+    "accountProgress": "Account loading...",
+    "apply": "Apply",
+    "authProgress": "Authorization...",
+    "cancel": "Cancel",
+    "connectDA": "Donation Alerts",
+    "connectDonatePay": "Donate Pay",
+    "connectTwitch": "Twitch",
+    "currencySign": "$",
+    "delete": "Delete",
+    "incorrectLink": "Incorrect link",
+    "insertImageLink": "Insert image link...",
+    "left": "Left",
+    "max": "max",
+    "min": "min",
+    "moveFileOrClick": "Drag the file here or click",
+    "or": "or",
+    "sec": "sec",
+    "unsavedChanges": "Apply unsaved changes?"
+  },
+  "history": {
+    "addedTo": "Added to",
+    "cost": "Cost",
+    "message": "Message",
+    "returnRedemptions": "Return Selected Rewards",
+    "status": "Status",
+    "time": "Time",
+    "title": "History of Completed Orders",
+    "user": "User"
+  },
+  "lot": {
+    "addAmount": "Add Cost",
+    "delete": "Delete Slot",
+    "extra": "Extra",
+    "trailer": "Trailer"
+  },
+  "menu": {
+    "items": {
+      "auction": {
+        "title": "Auction"
+      },
+      "guides": {
+        "title": "Guides"
+      },
+      "history": {
+        "title": "History"
+      },
+      "integration": {
+        "title": "Integration"
+      },
+      "settings": {
+        "title": "Settings"
+      },
+      "statistics": {
+        "title": "Statistics"
+      },
+      "viewer_orders": {
+        "title": "Viewer orders"
+      },
+      "wheel": {
+        "title": "Wheel of Random"
+      }
+    }
+  },
+  "save": {
+    "costColumnIndex": "Cost column index",
+    "nameColumnIndex": "Name column index",
+    "delete": "Delete",
+    "downloadFile": "Download to File",
+    "fileImport": "Import from File",
+    "load": "Load",
+    "lotsAmount": "{{length}} lots",
+    "newSave": "New Save",
+    "save": "Save"
+  },
+  "settings": {
+    "addNewBids": "Automatically Add All New Rewards",
+    "appearance": {
+      "appearance": "Appearance",
+      "backgroundTone": "Background Tone",
+      "primaryColor": "Primary Color"
+    },
+    "integrationCommon": {
+      "title": "Common",
+      "insertStrategyLabel": "Auto-adding bids",
+      "insertStrategy": {
+        "force": "Always",
+        "match": "When the name fully matches",
+        "none": "Never"
+      }
+    },
+    "auc": {
+      "hideAmounts": "Hide values of lots and bids",
+      "auc": "Auction",
+      "background": "Auction Background",
+      "costSort": "Cost",
+      "dateSort": "Date",
+      "selectFromList": "Select from List",
+      "showBuyout": "Show Buyout",
+      "showTotal": "Show Total Amount",
+      "showWinningChances": "Show Winning Chances",
+      "sortBids": "Sort Purchases for Points",
+      "uploadBackground": "Upload Background"
+    },
+    "donations": {
+      "addTimeOnDonation": "Add Time on Donation",
+      "pointsRate": "Exchange Rate from Ruble to Points",
+      "title": "Donations"
+    },
+    "integrations": "Integrations",
+    "luckyWheel": {
+      "desc": "Spin the wheel and get a chance to multiply the bid",
+      "groupTitle": "Lucky Wheel",
+      "luckyWheel": "Enable",
+      "selectBet": "Viewer selects a lot"
+    },
+    "marbles": {
+      "marbleAuc": "Marble Auction",
+      "marbleCost": "Cost per Marble",
+      "marbleCostDesc": "Cost of one marble when added to an existing lot",
+      "marbles": "Marbles",
+      "marblesAucDesc": "All new bids will automatically be converted to marbles",
+      "newPositionCost": "Cost of New Category",
+      "newPositionCostDesc": "When adding a new lot, the cost of the FIRST marble will be calculated based on this value"
+    },
+    "points": {
+      "title": "Twitch"
+    },
+    "settings": "Settings",
+    "stopwatch": {
+      "additionalTime": "Timer Addition Time",
+      "additionalTimeDesc": "Time by which the timer will change when pressing +/-.",
+      "addTimeOnLeaderChange": "Add Time on Leader Change",
+      "addTimeOnNewPosition": "Add Time for New Position",
+      "maxAdditionalTime": "Max. Time for Automatic Addition",
+      "minTimeRequired": "Do not add time if the timer has more than",
+      "startTime": "Initial Time",
+      "startTimeDesc": "Time to which the timer returns when reset.",
+      "stopwatch": "Timer"
+    },
+    "token": {
+      "copied": "Copied",
+      "copy": "Copy",
+      "dontShareToken": "Do not share this token with untrusted sources.",
+      "openDocs": "Documentation",
+      "show": "Show Token",
+      "token": "Personal Token",
+      "tokenUpdated": "Token Updated",
+      "update": "Generate New"
+    },
+    "twitch": {
+      "addReward": "Add Reward",
+      "bindRewardsToTimer": "Bind Reward Activation to Timer",
+      "bindRewardsToTimerDesc": "Rewards will automatically activate when the timer resumes and deactivate when paused or completed.",
+      "closeRewards": "Hide Rewards",
+      "color": "Color",
+      "commonRewardsName": "Common Name for Rewards",
+      "commonRewardsNameDesc": "When integration is enabled, rewards in the format \"Name + Cost\" are automatically created on the channel.",
+      "cost": "Cost",
+      "deleteRewards": "Delete Rewards",
+      "openRewards": "Enable Rewards",
+      "returnCanceledBids": "Return Canceled Rewards",
+      "rewardsList": "Rewards List:",
+      "saveRewards": "Save"
+    }
+  },
+  "stopwatch": {
+    "addTime": "Add Time",
+    "addTimex2": "Add Time X2",
+    "continue": "Continue",
+    "pause": "Pause",
+    "reduceTime": "Reduce Time",
+    "reset": "Reset"
+  },
+  "wheel": {
+    "addLotsToAuc": "Save lots in auction",
+    "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
+    "deleteLot": "Delete Lot",
+    "dividing": "Dividing",
+    "dividingDesc": "Divides expensive lots into several positions.",
+    "dropoutProof": "PROOF that dropout is no different from a regular wheel!",
+    "duration": "Duration",
+    "format": {
+      "battleRoyal": "Battle Royale",
+      "dropout": "Dropout",
+      "normal": "Normal"
+    },
+    "howItWorks": "How It Works?",
+    "importToWheel": "Import to Wheel",
+    "loadCustomMessage": "Load your image",
+    "lotDeleteWarning": "This action will delete the lot not only from the wheel but also from the auction itself.",
+    "lotWasDeleted": "lot was deleted",
+    "nesting": "Nesting",
+    "nestingDesc": "Groups cheap lots to reduce the number of spins",
+    "nextDuel": "next duel",
+    "pace": {
+      "blockedZone": "Blocked Random Zone",
+      "blockedZoneDescription": "The higher the value, the closer to the max distance the re-spin will occur.",
+      "maxDistance": "Max. Distance",
+      "randomZoneStart": "Random Zone Start",
+      "respinMark": "Time from the end when the re-spin will start",
+      "spinInReverse": "Spin in Reverse"
+    },
+    "readBeforeUsage": "READ BEFORE USE!",
+    "spicyFinal": "Spicy Final",
+    "spin": "Spin",
+    "spinning": "Spinning...",
+    "useRandomOrg": "Use random.org service",
+    "wheel": "Wheel",
+    "winner": "Winner"
+  }
+}

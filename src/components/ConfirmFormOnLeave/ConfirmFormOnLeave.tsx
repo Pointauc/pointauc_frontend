@@ -1,7 +1,7 @@
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { unstable_useBlocker as useBlocker, useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 import './ConfirmFormOnLeave.scss';
 
 interface ConfirmFormOnLeaveProps {
@@ -14,6 +14,7 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [nextLocation, setNextLocation] = useState<string>('');
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useBlocker(({ nextLocation }) => {
     const { state, pathname } = nextLocation;
@@ -27,7 +28,10 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
     return false;
   });
 
-  const handleClose = useCallback(() => navigate(nextLocation, { state: { forcePush: true } }), [nextLocation]);
+  const handleClose = useCallback(
+    () => navigate(nextLocation, { state: { forcePush: true } }),
+    [navigate, nextLocation],
+  );
   const handleConfirm = useCallback(() => {
     onSubmit?.();
     handleClose();
@@ -37,11 +41,11 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
 
   return (
     <Dialog open={isOpen} className='form-confirm-dialog'>
-      <DialogTitle>Применить несохраненные изменения?</DialogTitle>
+      <DialogTitle>{t('common.unsavedChanges')}</DialogTitle>
       <DialogActions>
-        <Button onClick={handleClose}>Отменить</Button>
+        <Button onClick={handleClose}>{t('common.cancel')}</Button>
         <Button onClick={handleConfirm} color='primary' autoFocus>
-          Применить
+          {t('common.apply')}
         </Button>
       </DialogActions>
     </Dialog>
