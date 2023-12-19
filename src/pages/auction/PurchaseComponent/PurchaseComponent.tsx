@@ -82,14 +82,15 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     }
 
     const { slots } = store.getState().slots;
-    const { search } = new Fuse(slots, {
+    const fuse = new Fuse(slots, {
       includeScore: true,
-      shouldSort: true,
+      threshold: 0.8,
+      ignoreLocation: true,
       keys: ['name'],
     });
-    const match = search(message)[0];
 
-    return match.score && match.score > 0.4 ? { ...match.item, index: match.refIndex } : null;
+    const match = fuse.search(message)[0];
+    return (match && { ...match.item, index: match.refIndex }) ?? null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
