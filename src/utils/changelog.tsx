@@ -13,6 +13,10 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2023-12-22T09:24:10.217Z',
+    newFeatures: ['Добавлена настройка для скрытия стоимоти лотов и ставок.'],
+  },
+  {
     date: '2023-12-03T09:34:21.786Z',
     newFeatures: ['На странице интеграций можно отключить автоматическое добавление ставок.'],
     improvements: [

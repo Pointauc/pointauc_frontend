@@ -61,6 +61,7 @@ export const initialState: AucSettingsState = {
     insertStrategy: InsertStrategy.Match,
     primaryColor: COLORS.THEME.PRIMARY,
     backgroundTone: COLORS.THEME.BACKGROUND_TONE,
+    hideAmounts: false,
   },
 };
 

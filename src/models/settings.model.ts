@@ -38,6 +38,7 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   luckyWheelSelectBet: boolean;
   showUpdates: boolean;
   insertStrategy: InsertStrategy;
+  hideAmounts: boolean;
 
   // Appearance
   primaryColor: string;

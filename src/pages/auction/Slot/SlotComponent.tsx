@@ -19,6 +19,7 @@ interface SlotComponentProps {
 const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
   const marblesAuc = useSelector((root: RootState) => root.aucSettings.settings.marblesAuc);
   const showChances = useSelector((root: RootState) => root.aucSettings.settings.showChances);
+  const hideAmounts = useSelector((root: RootState) => root.aucSettings.settings.hideAmounts);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { id, extra, amount, name } = slot;
@@ -120,6 +121,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       />
       {showChances && <span className='slot-chance' ref={percentsRef} />}
       <input
+        hidden={hideAmounts}
         className='slot-money slot-input'
         placeholder={t('common.currencySign')}
         ref={amountInput}

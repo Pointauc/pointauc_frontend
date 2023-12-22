@@ -1,6 +1,8 @@
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { Settings } from '@models/settings.model.ts';
 
+import { store } from '../main.tsx';
+
 type CostSettings = Pick<Settings, 'marblesAuc' | 'marbleRate' | 'pointsRate' | 'marbleCategory'>;
 
 const parseCost = (bid: Purchase, settings: CostSettings, newLot: boolean): number => {
@@ -20,6 +22,13 @@ const parseCost = (bid: Purchase, settings: CostSettings, newLot: boolean): numb
   return convertCost(bid.isDonation ? bid.cost * pointsRate : bid.cost);
 };
 
+const getDisplayCost = (cost: number): number | string => {
+  const hideAmounts = store.getState().aucSettings.settings.hideAmounts;
+
+  return hideAmounts ? '**' : cost;
+};
+
 export default {
   parseCost,
+  getDisplayCost,
 };

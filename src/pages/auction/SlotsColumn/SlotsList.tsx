@@ -45,7 +45,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact }) => (
     itemCount={slots.length}
     itemSize={compact ? 41 : 64}
     overscanCount={20}
-    itemKey={(index) => slots[index].id}
+    itemKey={(index: any) => slots[index].id}
   >
     {Row}
   </FixedSizeList>

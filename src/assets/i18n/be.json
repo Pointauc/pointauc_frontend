@@ -99,7 +99,8 @@
         "selectFromList": "Абраць са сьпісу",
         "sortBids": "Сартаваць набытае за пойнты",
         "dateSort": "Дата",
-        "costSort": "Кошты"
+        "costSort": "Кошты",
+        "hideAmounts": "Hide values of lots and bids"
       },
       "marbles": {
         "marbles": "Шары",

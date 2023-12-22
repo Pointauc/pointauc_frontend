@@ -44,6 +44,9 @@ const AucSettings: FC<AucSettingsProps> = ({ register, control, setValue }) => {
           <FormSwitch name='showChances' control={control} label={t('settings.auc.showWinningChances')} />
         </FormGroup>
         <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='hideAmounts' control={control} label={t('settings.auc.hideAmounts')} />
+        </FormGroup>
+        <FormGroup row className='auc-settings-row'>
           <Typography variant='body1' className='MuiFormControlLabel-label'>
             {t('settings.auc.background')}
           </Typography>

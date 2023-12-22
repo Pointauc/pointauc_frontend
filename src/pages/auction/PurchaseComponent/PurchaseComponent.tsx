@@ -41,6 +41,7 @@ import { updateRedemption } from '@api/twitchApi.ts';
 import { RedemptionStatus } from '@models/redemption.model.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
+import bidUtils from '@utils/bid.utils.ts';
 
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 import { store } from '../../../main.tsx';
@@ -65,7 +66,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const {
-    settings: { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate },
+    settings: { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts },
   } = useSelector((root: RootState) => root.aucSettings);
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
@@ -97,7 +98,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     const rnd = Math.floor(Math.random() * (slots.length - 1));
     dispatch(addBid(slots[rnd].id, purchase));
     const alertMessage = t('auc.addedToRandomSlot', {
-      cost,
+      cost: bidUtils.getDisplayCost(cost),
       username,
       slotName: slots[rnd].name,
       message,
@@ -146,6 +147,10 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     [cost, pointsRate],
   );
   const costString = useMemo(() => {
+    if (hideAmounts) {
+      return bidUtils.getDisplayCost(0);
+    }
+
     if (isDonation) {
       return marblesAuc ? formatMarblesCost(cost * pointsRate) : donationCost;
     }
@@ -163,7 +168,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
       ) : (
         `${costString} ${username}`
       ),
-    [costString, marblesAuc, username],
+    [costString, marblesAuc, username, hideAmounts],
   );
 
   const handleAddNewSlot = useCallback(() => {

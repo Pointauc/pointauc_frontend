@@ -103,7 +103,8 @@
         "selectFromList": "Select from List",
         "sortBids": "Sort Purchases for Points",
         "dateSort": "Date",
-        "costSort": "Cost"
+        "costSort": "Cost",
+        "hideAmounts": "Hide values of lots and bids"
       },
       "marbles": {
         "marbles": "Marbles",

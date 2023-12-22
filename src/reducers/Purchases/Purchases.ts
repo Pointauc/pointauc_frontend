@@ -101,7 +101,7 @@ export const fastAddBid =
   (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
     const showAlert = (cost: number): void => {
       const { username, message } = bid;
-      const alertMessage = `${username} добавил ${cost} к "${name}" ("${message}")!`;
+      const alertMessage = `${username} добавил ${bidUtils.getDisplayCost(cost)} к "${name}" ("${message}")!`;
       dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
     };
 

@@ -112,7 +112,8 @@
         "selectFromList": "Выбрать из списка",
         "sortBids": "Сортировать покупки за поинты",
         "dateSort": "Дата",
-        "costSort": "Стоимость"
+        "costSort": "Стоимость",
+        "hideAmounts": "Скрыть стоимости лотов и ставок"
       },
       "marbles": {
         "marbles": "Шары",
