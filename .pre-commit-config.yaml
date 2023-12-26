@@ -24,6 +24,7 @@ repos:
     hooks:
       - id: eslint
         files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
+        args: [--report-unused-disable-directives, --max-warnings, '0']
         types: [file]
         additional_dependencies:
           - eslint-config-prettier@9.0.0

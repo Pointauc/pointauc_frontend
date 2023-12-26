@@ -26,7 +26,6 @@ import '@styles/index.scss';
 import '@assets/i18n/index.ts';
 
 declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
 

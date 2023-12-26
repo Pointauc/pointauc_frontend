@@ -27,6 +27,7 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
     return false;
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleClose = useCallback(() => navigate(nextLocation, { state: { forcePush: true } }), [nextLocation]);
   const handleConfirm = useCallback(() => {
     onSubmit?.();

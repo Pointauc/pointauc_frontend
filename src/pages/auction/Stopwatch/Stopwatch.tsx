@@ -17,6 +17,7 @@ import { sendCpSubscribedState } from '@reducers/Subscription/Subscription.ts';
 
 import './Stopwatch.scss';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
 };

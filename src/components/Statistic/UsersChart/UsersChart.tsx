@@ -21,7 +21,6 @@ const UsersChart: FC<UsersChartProps> = ({ scoreboard }) => {
         size: 14,
       };
 
-      // eslint-disable-next-line no-new
       new Chart<'bar', Score[]>(chartRef.current, {
         type: 'bar',
         data: {

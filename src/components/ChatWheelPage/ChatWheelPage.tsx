@@ -124,7 +124,6 @@ const ChatWheelPage: FC = () => {
   useEffect(() => {
     if (!channel) return;
 
-    // eslint-disable-next-line new-cap
     const client = new tmi.client(getOpts(channel));
 
     client.on('connected', handleConnection);

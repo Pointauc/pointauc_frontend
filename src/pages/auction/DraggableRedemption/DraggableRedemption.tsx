@@ -9,6 +9,7 @@ import { draggedBid } from '../DragBidContext/DragBidContext';
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 const DraggableRedemption: FC<Purchase> = (purchase) => {
   const dispatch = useDispatch();
   const { cost } = purchase;
@@ -61,7 +62,6 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
     [mouseOffset.left, mouseOffset.top],
   );
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
     let isFrameRequested = false;
     const handleDragOver = (e: MouseEvent): void => {
@@ -91,4 +91,5 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default memo(DraggableRedemption);

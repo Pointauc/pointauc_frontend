@@ -37,6 +37,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
     return (): void => {
       percentsRefMap.delete(id);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, showChances]);
 
   const handleNameBlur: FilledInputProps['onBlur'] = (e): void => {
@@ -103,6 +104,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
   useEffect(() => {
     if (name !== currentName) setCurrentName(name);
     if (extra !== currentExtra) setCurrentExtra(extra);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name, extra]);
 
   const extraLength = Number(currentExtra?.toString().length);
