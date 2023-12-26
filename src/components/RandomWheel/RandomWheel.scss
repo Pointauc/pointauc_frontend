@@ -1,4 +1,4 @@
-@import "../../styles/colors";
+@import '../../styles/colors';
 
 .wheel-wrapper {
   display: flex !important;
@@ -68,7 +68,7 @@
 
     .bracket-controls {
       position: absolute;
-      top:5px;
+      top: 5px;
       left: 5px;
       display: flex;
       align-items: flex-end;
@@ -110,7 +110,7 @@
 
     &.shrink {
       height: 40%;
-      max-height: 40%
+      max-height: 40%;
     }
 
     .settings {

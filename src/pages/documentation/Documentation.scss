@@ -1,4 +1,4 @@
-@import "../../styles/colors";
+@import '../../styles/colors';
 
 .documentation {
   font-size: 16px;
@@ -49,9 +49,9 @@
     }
   }
 
-  ul>li {
-      list-style-type: disc;
-    }
+  ul > li {
+    list-style-type: disc;
+  }
 
   h2 {
     //font-weight: 300;

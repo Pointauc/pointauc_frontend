@@ -1,4 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit';
+
 import slots from './Slots/Slots';
 import user from './User/User';
 import purchases from './Purchases/Purchases';

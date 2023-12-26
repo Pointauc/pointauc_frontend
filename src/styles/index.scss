@@ -1,39 +1,49 @@
-@import "./colors";
-@import "./common";
+@import './colors';
+@import './common';
 
 @font-face {
   font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 400;
-  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Roman.woff) format('woff');
+  src:
+    local('Helvetica Neue'),
+    url(../assets/fonts/HelveticaNeueCyr-Roman.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 300;
-  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Thin.woff) format('woff');
+  src:
+    local('Helvetica Neue'),
+    url(../assets/fonts/HelveticaNeueCyr-Thin.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 200;
-  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Light.woff) format('woff');
+  src:
+    local('Helvetica Neue'),
+    url(../assets/fonts/HelveticaNeueCyr-Light.woff) format('woff');
 }
 
 @font-face {
   font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 500;
-  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeue-Medium.otf) format('woff');
+  src:
+    local('Helvetica Neue'),
+    url(../assets/fonts/HelveticaNeue-Medium.otf) format('woff');
 }
 
 @font-face {
   font-family: 'Helvetica Neue';
   font-style: normal;
   font-weight: 600;
-  src: local('Helvetica Neue'), url(../assets/fonts/HelveticaNeueCyr-Bold.woff) format('woff');
+  src:
+    local('Helvetica Neue'),
+    url(../assets/fonts/HelveticaNeueCyr-Bold.woff) format('woff');
 }
 
 body {
@@ -44,14 +54,14 @@ body {
   background-color: transparent;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type=number] {
-  -moz-appearance:textfield;
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 ::-webkit-scrollbar {
