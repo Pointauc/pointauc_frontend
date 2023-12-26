@@ -1,11 +1,11 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .dropout-wheel-proof {
   color: $grey-2;
   display: flex;
   flex-direction: column;
   line-height: 20px;
-  font-family: 'Helvetica Neue', Helvetica, "Roboto Light", sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'Roboto Light', sans-serif;
 
   .important {
     font-size: 1.2em;

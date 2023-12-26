@@ -8,18 +8,18 @@
   }
 
   .MuiDataGrid-mainGridContainer {
-    &>div:first-of-type {
+    & > div:first-of-type {
       display: none !important;
     }
   }
 
   .status {
     &.deleted {
-      color: #F08080;
+      color: #f08080;
     }
 
     &.processed {
-      color: #AED581;
+      color: #aed581;
     }
   }
 }

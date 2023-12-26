@@ -1,4 +1,4 @@
-@import "../../../../styles/colors";
+@import '../../../../styles/colors';
 
 .save-record {
   display: flex;
@@ -30,7 +30,7 @@
     &.actions {
       margin-top: 15px;
 
-      .save-actions>* {
+      .save-actions > * {
         margin-right: 10px;
       }
     }
