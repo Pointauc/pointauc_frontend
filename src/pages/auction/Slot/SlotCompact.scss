@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .compact-view {
   gap: 0;
@@ -87,7 +87,7 @@
         height: 70%;
         border: 2px solid $blue-gray-2;
         border-radius: 10px;
-        background-color: rgba($blue-gray-5, .3);
+        background-color: rgba($blue-gray-5, 0.3);
       }
 
       &-name {
@@ -166,7 +166,7 @@
           }
 
           &.remove-cost {
-            background-color: rgba($red-1, .7);
+            background-color: rgba($red-1, 0.7);
             border-color: $red-2;
           }
         }

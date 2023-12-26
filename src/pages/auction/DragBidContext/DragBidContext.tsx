@@ -9,6 +9,7 @@ interface DraggedBid {
   ref: HTMLDivElement | null;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const draggedBid: DraggedBid = {
   ref: null,
 };

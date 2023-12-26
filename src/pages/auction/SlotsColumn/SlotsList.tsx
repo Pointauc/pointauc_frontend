@@ -25,6 +25,7 @@ interface RowProps {
   style: CSSProperties;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const Row: FC<RowProps> = ({ index, style, data }) => (
   <div className='slot-grid-wrapper' style={style}>
     <DroppableSlot index={index + 1} slot={data[index]} />
@@ -37,6 +38,7 @@ interface VirtualListProps {
   compact: boolean;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact }) => (
   <FixedSizeList
     width='100%'
@@ -51,6 +53,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact }) => (
   </FixedSizeList>
 );
 
+// eslint-disable-next-line react-refresh/only-export-components
 const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -97,4 +100,5 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default memo(SlotsList);

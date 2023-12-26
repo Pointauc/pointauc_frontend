@@ -9,7 +9,6 @@ import { RootState } from '@reducers';
 import { getSevenTVEmotes } from '@api/emotesApi.ts';
 import './TwitchEmotesList..scss';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const fetcher = new EmoteFetcher();
 
 interface TwitchEmotesListProps {
@@ -17,11 +16,11 @@ interface TwitchEmotesListProps {
   onEmotesLoad?: (emotes: Emote[]) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const flattenCollection = (collection: Collection<string, Emote>): Emote[] => Array.from<Emote>(collection.values());
 
 const emoteLists = ['default', 'twitch', '7tv', 'bttv', 'ffz'];
 
+// eslint-disable-next-line react-refresh/only-export-components
 const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesLoad }) => {
   const { t } = useTranslation();
   const { userId } = useSelector((root: RootState) => root.user);
@@ -90,4 +89,5 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default memo(TwitchEmotesList);

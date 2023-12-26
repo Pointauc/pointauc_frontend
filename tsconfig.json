@@ -34,7 +34,7 @@
       "@reducers": ["./src/reducers/index.ts"],
       "@services/*": ["./src/services/*"],
       "@styles/*": ["./src/styles/*"],
-      "@utils/*": ["./src/utils/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": ["src"],

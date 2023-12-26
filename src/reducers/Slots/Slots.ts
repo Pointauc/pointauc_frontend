@@ -24,7 +24,6 @@ let maxFastId = 0;
 
 const createSlot = (props: Partial<Slot> = {}): Slot => {
   const slot = {
-    // eslint-disable-next-line no-plusplus
     fastId: ++maxFastId,
     id: Math.random().toString(),
     extra: null,
@@ -198,7 +197,6 @@ export const createSlotFromPurchase =
       slots: { slots },
     } = getState();
     const { message: name, cost } = bid;
-    // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),
       name,

@@ -261,7 +261,6 @@ const useWheel = ({
     resizeCanvas(canvas.current);
     resizeCanvas(wheelSelector.current);
     // window.addEventListener('resize', updateWheel);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

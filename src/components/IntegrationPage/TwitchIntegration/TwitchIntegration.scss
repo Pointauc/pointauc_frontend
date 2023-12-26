@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .username {
   margin-left: 10px;
@@ -21,14 +21,15 @@
 }
 
 .rewards {
-  .ag-center-cols-container, .ag-center-cols-clipper {
+  .ag-center-cols-container,
+  .ag-center-cols-clipper {
     min-height: 50px !important;
   }
 }
 
 .login-button.twitch {
   background-color: #7c43d0 !important;
-  color: #F1F1F1 !important;
+  color: #f1f1f1 !important;
 
   &:hover {
     background-color: #6c38b8 !important;

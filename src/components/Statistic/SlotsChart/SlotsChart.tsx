@@ -61,7 +61,6 @@ const SlotsChart: FC<SlotsChartProps> = ({ slotsMap }) => {
         size: 14,
       };
 
-      // eslint-disable-next-line no-new
       new Chart<'scatter', TimeScore[]>(chartRef.current, {
         type: 'scatter',
         data: {

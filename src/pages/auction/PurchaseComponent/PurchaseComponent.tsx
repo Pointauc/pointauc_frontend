@@ -171,6 +171,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
     dispatch(updateExistBids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getMarblesAmount, dispatch, id, purchase]);
 
   const handleAddToBestMatch = useCallback(() => {

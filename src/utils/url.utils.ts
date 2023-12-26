@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 import { getCookie, isProduction } from './common.utils';
 
 export const getQueryValue = (url: string, queryName: string): string | null => {

@@ -57,6 +57,7 @@ const TrailerWindow: FC<Trailer> = ({ id, title: windowTitle }) => {
 
   useEffect(() => {
     onSubmit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

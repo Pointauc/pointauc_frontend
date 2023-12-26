@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .history-table {
   min-height: 50px;
@@ -13,7 +13,7 @@
     font-size: 1.05em;
   }
 
-  &>div {
+  & > div {
     height: initial !important;
   }
 

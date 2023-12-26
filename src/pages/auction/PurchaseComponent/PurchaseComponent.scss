@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .purchase {
   margin-bottom: 10px;
@@ -17,29 +17,29 @@
 
   &-new-button {
     width: 100%;
-    background-color: rgba(#fff, .1) !important;
-    border-color: rgba(#fff, .4) !important;
+    background-color: rgba(#fff, 0.1) !important;
+    border-color: rgba(#fff, 0.4) !important;
     margin-top: 10px !important;
     font-size: 12px !important;
 
     &:hover {
-      background-color: rgba(#fff, .2) !important;
+      background-color: rgba(#fff, 0.2) !important;
     }
   }
 
   &-new-split-button {
     width: 100%;
     margin-top: 10px !important;
-    background-color: rgba(#fff, .1) !important;
+    background-color: rgba(#fff, 0.1) !important;
 
     &-left {
       width: inherit;
       font-size: 12px !important;
-      border-color: rgba(#fff, .4) !important;
+      border-color: rgba(#fff, 0.4) !important;
     }
     &-right {
       padding: 0 !important;
-      border-color: rgba(#fff, .4) !important;
+      border-color: rgba(#fff, 0.4) !important;
       border-left: 0 !important;
     }
     &-popper {
