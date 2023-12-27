@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .slots {
   flex-grow: 1;
@@ -40,12 +40,13 @@
       gap: 4px;
       position: relative;
 
-      &.optimize,&.compact-view {
+      &.optimize,
+      &.compact-view {
         flex-direction: row;
         flex: 1 1 auto;
       }
 
-      &>div:last-of-type {
+      & > div:last-of-type {
         flex-grow: 0;
         max-width: 100%;
         flex-basis: 100%;

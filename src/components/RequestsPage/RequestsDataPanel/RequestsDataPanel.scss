@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .requests-list-panel {
   display: flex;
@@ -10,7 +10,8 @@
     color: $grey-3;
   }
 
-  &>button,div {
+  & > button,
+  div {
     margin-right: 15px;
   }
 }

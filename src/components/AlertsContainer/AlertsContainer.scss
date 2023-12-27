@@ -19,7 +19,9 @@
 .example-enter-active {
   opacity: 1;
   height: 36px;
-  transition: opacity 250ms ease-in, height 150ms linear !important;
+  transition:
+    opacity 250ms ease-in,
+    height 150ms linear !important;
 }
 
 .example-exit {

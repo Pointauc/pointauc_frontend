@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .slot-wrapper {
   display: flex;
@@ -7,7 +7,7 @@
   margin-bottom: 10px;
 
   color: rgb(243, 243, 243);
-  font-family: "Helvetica Neue", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Helvetica Neue', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   line-height: 1.5;
   font-size: 0.9em;
@@ -101,7 +101,7 @@
       }
 
       &:active {
-        background-color: rgba(255, 255, 255, 0.20);
+        background-color: rgba(255, 255, 255, 0.2);
       }
     }
 
@@ -141,7 +141,7 @@
       height: 80%;
       border: 2px solid $blue-gray-2;
       border-radius: 10px;
-      background-color: rgba($blue-gray-5, .3);
+      background-color: rgba($blue-gray-5, 0.3);
     }
 
     &-name {
@@ -172,7 +172,7 @@
       &-input {
         background-color: rgba(0, 0, 0, 0.2);
 
-        &:not(&:hover,&:focus) {
+        &:not(&:hover, &:focus) {
           border-color: $grey-5;
         }
       }
@@ -215,7 +215,7 @@
           }
 
           &.remove-cost {
-            background-color: rgba($red-1, .7);
+            background-color: rgba($red-1, 0.7);
             border-color: $red-2;
           }
         }

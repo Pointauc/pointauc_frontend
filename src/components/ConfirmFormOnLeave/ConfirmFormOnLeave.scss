@@ -1,4 +1,4 @@
-@import "../../styles/colors";
+@import '../../styles/colors';
 
 .form-confirm-dialog {
   .MuiDialog-container {
@@ -8,7 +8,7 @@
       margin-top: 10%;
 
       .MuiDialogTitle-root {
-        border-bottom: 1px  solid $grey-9;
+        border-bottom: 1px solid $grey-9;
         padding-bottom: 16px;
       }
 
