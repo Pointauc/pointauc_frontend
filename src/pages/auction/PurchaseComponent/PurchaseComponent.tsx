@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
-import { findBestMatch } from 'string-similarity';
+import Fuse from 'fuse.js';
 import { useTranslation } from 'react-i18next';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -82,13 +82,15 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     }
 
     const { slots } = store.getState().slots;
-    const slotNames = slots.map(({ name }) => name || '');
-    const {
-      bestMatch: { rating },
-      bestMatchIndex,
-    } = findBestMatch(message, slotNames);
+    const fuse = new Fuse(slots, {
+      includeScore: true,
+      threshold: 0.8,
+      ignoreLocation: true,
+      keys: ['name'],
+    });
 
-    return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
+    const match = fuse.search(message)[0];
+    return (match && { ...match.item, index: match.refIndex }) ?? null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

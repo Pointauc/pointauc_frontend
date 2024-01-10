@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AnyAction, Middleware } from 'redux';
-import thunk from 'redux-thunk';
+import { Middleware } from 'redux';
+import { thunk } from 'redux-thunk';
 import { Theme } from '@mui/material';
 
 import ROUTES from '@constants/routes.constants.ts';
@@ -23,14 +23,14 @@ import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
 
 import '@styles/index.scss';
-import '@assets/i18n/index.ts';
+import i18n from '@assets/i18n/index.ts';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
 
-dayjs.locale('ru');
+i18n.on('languageChanged', (language) => dayjs.locale(language));
 
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotAmount',
@@ -41,39 +41,34 @@ const SORTABLE_SLOT_EVENTS = [
   'slots/mergeLot',
 ];
 
-const sortSlotsMiddleware: Middleware<{}, RootState> =
-  (store) =>
-  (next) =>
-  (action): AnyAction => {
-    const result = next(action);
-    if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
-      const sortedSlots = sortSlots(store.getState().slots.slots);
+const sortSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => async (action: any) => {
+  const result = next(action);
+  if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
+    const sortedSlots = sortSlots(store.getState().slots.slots);
 
-      return next(setSlots(sortedSlots));
-    }
-    return result;
-  };
+    return next(setSlots(sortedSlots));
+  }
+  return result;
+};
 
 const saveSlotsWithCooldown = timedFunction((slots: Slot[]) => {
   SaveLoadService.rewrite(slots, AUTOSAVE_NAME);
 }, 2000);
 
-const saveSlotsMiddleware: Middleware<{}, RootState> =
-  (store) =>
-  (next) =>
-  (action): AnyAction => {
-    const result = next(action);
-    if (action.type.startsWith('slots')) {
-      const { slots } = store.getState().slots;
+const saveSlotsMiddleware: Middleware<{}, RootState> = (store) => (next) => async (action: any) => {
+  const result = next(action);
+  if (action.type.startsWith('slots')) {
+    const { slots } = store.getState().slots;
 
-      saveSlotsWithCooldown(slots);
-    }
-    return result;
-  };
+    saveSlotsWithCooldown(slots);
+  }
+  return result;
+};
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk, sortSlotsMiddleware, saveSlotsMiddleware],
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([sortSlotsMiddleware, saveSlotsMiddleware, thunk]),
 });
 
 window.onbeforeunload = (): undefined => {
