@@ -11,6 +11,7 @@ export const SupportedLanguages: LanguageData[] = [
   { key: Language.EN, name: 'English' },
   { key: Language.RU, name: 'Русский' },
   { key: Language.BE, name: 'Беларуская' },
+  { key: Language.UA, name: 'Українська' },
 ];
 
 export const getCurrentLanguage = (i18next: i18n): LanguageData =>

@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, OutlinedInput, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
@@ -20,8 +20,8 @@ const SaveLoad: FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const { t } = useTranslation();
   const [currentSheet, setCurrentSheet] = useState<File>();
-  const [nameColumnIndex, setNameColumnIndex] = useState<number>(1);
-  const [costColumnIndex, setCostColumnIndex] = useState<number>(2);
+  const [nameColumnIndex, setNameColumnIndex] = useState<number>(Number(localStorage.getItem('nameColumnIndex')) || 1);
+  const [costColumnIndex, setCostColumnIndex] = useState<number>(Number(localStorage.getItem('costColumnIndex')) || 2);
   const initialSaves = useMemo(
     () =>
       SaveLoadService.getSavesConfig().sort(
@@ -32,6 +32,12 @@ const SaveLoad: FC = () => {
   const [saveConfig, setSaveConfig] = useState<SaveInfo[]>(initialSaves);
   const [isImportOpen, setIsImportOpen] = useState<boolean>(false);
   const handleNewSave = useCallback(() => setSaveConfig(SaveLoadService.newSave(slots)), [slots]);
+
+  useEffect(() => {
+    localStorage.setItem('nameColumnIndex', String(nameColumnIndex));
+    localStorage.setItem('costColumnIndex', String(costColumnIndex));
+  }, [nameColumnIndex, costColumnIndex]);
+
   const toggleDialog = (): void => {
     setIsImportOpen((prevOpened) => !prevOpened);
   };
@@ -111,7 +117,7 @@ const SaveLoad: FC = () => {
           />
         </DialogContent>
       </Dialog>
-      <Dialog open={currentSheet != null}>
+      <Dialog open={currentSheet != null} onClose={() => setCurrentSheet(undefined)}>
         <DialogContent>
           <div>
             <Typography>{t('save.nameColumnIndex')}</Typography>

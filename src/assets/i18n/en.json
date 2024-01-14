@@ -11,7 +11,7 @@
       "max": "max",
       "left": "Left",
       "delete": "Delete",
-      "currencySign": "₽",
+      "currencySign": "$",
       "moveFileOrClick": "Drag the file here or click",
       "insertImageLink": "Insert image link...",
       "incorrectLink": "Incorrect link",
@@ -63,6 +63,15 @@
         "appearance": "Appearance",
         "primaryColor": "Primary Color",
         "backgroundTone": "Background Tone"
+      },
+      "integrationCommon": {
+        "title": "Common",
+        "insertStrategyLabel": "Auto-adding bids",
+        "insertStrategy": {
+          "force": "Always",
+          "match": "When the name fully matches",
+          "none": "Never"
+        }
       },
       "twitch": {
         "openRewards": "Enable Rewards",

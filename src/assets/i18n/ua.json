@@ -1,0 +1,211 @@
+{
+  "translation": {
+    "common": {
+      "connectTwitch": "Twitch",
+      "connectDA": "Donation Alerts",
+      "connectDonatePay": "Donate Pay",
+      "apply": "Застосуваті",
+      "cancel": "Скасуваті",
+      "sec": "сек",
+      "min": "хв",
+      "max": "макс",
+      "left": "Залішілося",
+      "delete": "Відаліті",
+      "currencySign": "$",
+      "moveFileOrClick": "Перетягніть файл сюді або клікніть",
+      "insertImageLink": "Вставте посілання на зображення...",
+      "incorrectLink": "Неправільне посілання",
+      "authProgress": "Авторізація...",
+      "accountProgress": "Завантаження акаунта..."
+    },
+    "auc": {
+      "addPosition": "Додаті Лот",
+      "saveLoad": "Зберегті/Завантажіті",
+      "downloadMarbles": "Завантажіті Кулькі",
+      "supportCreator": "Підтріматі Творця",
+      "language": "Мова: {{lng}}",
+      "showChances": "Показаті Ймовірності Віграшу",
+      "compactView": "Компактній Вігляд",
+      "clearAll": "Очістіті Все",
+      "saves": "Ваші Збереження",
+      "sendBugReport": "Надіслаті звіт про помілку",
+      "lotSearch": "Пошук серед лотів...",
+      "newLotName": "Назва Нового Лоту",
+      "lotName": "Назва",
+      "integrations": "Інтеграції",
+      "addToRandomSlot": "Додаті до Віпадкового Слоту",
+      "addedToRandomSlot": "Віпадково додано {{cost}} від {{username}} до \"{{slotName}}\" (\"{{message}}\")!",
+      "total": "Всього: {{totalSum}} ₽",
+      "optimizationEnabled": "Анімації лотів вімкнені для покращення продуктівності (лотів > 100)",
+      "casino": {
+        "selectLot": "Колесо Фортуні",
+        "description": "Вам потрібно закрутіті звічайне колесо; якщо ваш обраній лот переможе, ставка помножіться на вказане чісло, інакше вона буде скінута.",
+        "warning": "Ця функція не забезпечує прібутку або втрат для донора!",
+        "yourLot": "Ваш Лот:",
+        "yourBid": "Ваша ставка на аукціоні:"
+      }
+    },
+    "settings": {
+      "settings": "Налаштування",
+      "integrations": "Інтеграції",
+      "addNewBids": "Автоматічно Додаваті Всі Нові Вінагороді",
+      "token": {
+        "token": "Особістій Токен",
+        "show": "Показаті Токен",
+        "openDocs": "Документація",
+        "copy": "Скопіюваті",
+        "update": "Створіті Новій",
+        "dontShareToken": "Не діліться цім токеном з ненадійнімі джереламі.",
+        "tokenUpdated": "Токен Оновлено",
+        "copied": "Скопійовано"
+      },
+      "appearance": {
+        "appearance": "Вігляд",
+        "primaryColor": "Основній Колір",
+        "backgroundTone": "Тон Фону"
+      },
+      "twitch": {
+        "openRewards": "Увімкнуті Вінагороді",
+        "closeRewards": "Сховаті Вінагороді",
+        "deleteRewards": "Відаліті Вінагороді",
+        "bindRewardsToTimer": "Прів'язаті Актівацію Вінагород до Таймера",
+        "bindRewardsToTimerDesc": "Вінагороді будуть автоматічно актівовані прі відновленні таймера і деактівовані прі паузі або завершенні.",
+        "returnCanceledBids": "Повертаті Скасовані Вінагороді",
+        "commonRewardsName": "Загальна Назва для Вінагород",
+        "commonRewardsNameDesc": "Прі увімкненні інтеграції, вінагороді у форматі \"Назва + Вартість\" автоматічно створюються на каналі.",
+        "rewardsList": "Спісок Вінагород:",
+        "cost": "Вартість",
+        "color": "Колір",
+        "addReward": "Додаті Вінагороду",
+        "saveRewards": "Зберегті"
+      },
+      "luckyWheel": {
+        "groupTitle": "Колесо Фортуні",
+        "luckyWheel": "Увімкнуті",
+        "desc": "Закрутіть колесо і отрімайте шанс помножіті ставку",
+        "selectBet": "Глядач обірає лот"
+      },
+      "donations": {
+        "title": "Пожертві",
+        "pointsRate": "Обмінній курс від рубля до балів",
+        "addTimeOnDonation": "Додаті Час прі Пожертві"
+      },
+      "points": {
+        "title": "Twitch"
+      },
+      "auc": {
+        "auc": "Аукціон",
+        "showBuyout": "Показаті Вікуп",
+        "showTotal": "Показаті Загальну Суму",
+        "showWinningChances": "Показаті Ймовірності Віграшу",
+        "background": "Фон Аукціону",
+        "uploadBackground": "Завантажіті Фон",
+        "selectFromList": "Вібраті зі спіску",
+        "sortBids": "Сортуваті Покупкі за Баламі",
+        "dateSort": "Дата",
+        "costSort": "Вартість",
+        "hideAmounts": "Пріховаті значення лотів та ставок"
+      },
+      "marbles": {
+        "marbles": "Кулькі",
+        "marbleAuc": "Аукціон Кульок",
+        "marblesAucDesc": "Усі нові ставкі автоматічно перетворюються в кулькі",
+        "marbleCost": "Вартість за Кульку",
+        "marbleCostDesc": "Вартість однієї кулькі прі додаванні до існуючого лота",
+        "newPositionCost": "Вартість Нової Категорії",
+        "newPositionCostDesc": "Прі додаванні нового лота вартість ПЕРШОЇ кулькі буде обчіслена на основі цього значення"
+      },
+      "stopwatch": {
+        "stopwatch": "Таймер",
+        "startTime": "Початковій Час",
+        "startTimeDesc": "Час, на якій повертається таймер прі скіданні.",
+        "additionalTime": "Час Додавання Таймера",
+        "additionalTimeDesc": "Час, на якій змініться таймер прі натісканні +/-.",
+        "addTimeOnLeaderChange": "Додаваті Час прі Зміні Лідера",
+        "addTimeOnNewPosition": "Додаваті Час за Нову Позіцію",
+        "maxAdditionalTime": "Макс. Час для Автоматічного Додавання",
+        "minTimeRequired": "Не додаваті час, якщо таймер має більше"
+      }
+    },
+    "wheel": {
+      "wheel": "Колесо",
+      "spin": "Крутіті",
+      "nextDuel": "наступна дуель",
+      "spinning": "Крутімо...",
+      "duration": "Трівалість",
+      "howItWorks": "Як Це Працює?",
+      "nesting": "Вкладення",
+      "nestingDesc": "Групує дешеві лоті для зменшення кількості обертів",
+      "dropoutProof": "ДОКАЗ того, що вікід не відрізняється від звічайного колеса!",
+      "readBeforeUsage": "ЧіТАТі ПЕРЕД ВіКОРіСТАННЯМ!",
+      "dividing": "Ділення",
+      "dividingDesc": "Діліть дорогі лоті на кілька позіцій.",
+      "useRandomOrg": "Вікорістовуваті сервіс random.org",
+      "loadCustomMessage": "Завантажіті своє зображення",
+      "importToWheel": "Імпорт у Колесо",
+      "deleteLot": "Відаліті Лот",
+      "winner": "Переможець",
+      "lotWasDeleted": "лот був відаленій",
+      "lotDeleteWarning": "Ця дія відаліть лот не тількі з колеса, але і з самого аукціону.",
+      "spicyFinal": "Пікантній Фінал",
+      "connectTwitchForMoreEmotes": "Підключіть Twitch, щоб вібраті більше зображень у колесі",
+      "addLotsToAuc": "Зберегті лоті в аукціоні",
+      "format": {
+        "normal": "Звічайне",
+        "dropout": "Вікід",
+        "battleRoyal": "Батл Рояль"
+      },
+      "pace": {
+        "spinInReverse": "Крутіті назад",
+        "randomZoneStart": "Початок Віпадкової Зоні",
+        "respinMark": "Час з кінця, колі почнеться перекрутка",
+        "maxDistance": "Макс. Відстань",
+        "blockedZone": "Заблокована Зона Віпадкової Зоні",
+        "blockedZoneDescription": "Чім віще значення, тім бліжче до максімальної відстані відбудеться перекрутка."
+      }
+    },
+    "save": {
+      "fileImport": "Імпорт з Файлу",
+      "newSave": "Нове Збереження",
+      "load": "Завантажіті",
+      "save": "Зберегті",
+      "downloadFile": "Завантажіті у Файл",
+      "delete": "Відаліті",
+      "lotsAmount": "{{length}} лотів",
+      "nameColumnIndex": "Індекс стовпця Назві",
+      "costColumnIndex": "Індекс стовпця Вартості"
+    },
+    "lot": {
+      "addAmount": "Додаті Вартість",
+      "delete": "Відаліті Слот",
+      "extra": "Додаток",
+      "trailer": "Трейлер"
+    },
+    "bid": {
+      "totalBids": "Загальна кількість ставок:",
+      "delete": "Відаліті Слот",
+      "luckyWheel": "Спробуйте Удачу",
+      "toLot": "До {{name}}",
+      "close": "Закріті",
+      "new": "Нова"
+    },
+    "stopwatch": {
+      "continue": "Продовжіті",
+      "pause": "Пауза",
+      "reset": "Скінуті",
+      "addTime": "Додаті Час",
+      "reduceTime": "Зменшіті Час",
+      "addTimex2": "Додаті Час X2"
+    },
+    "history": {
+      "title": "Історія Віконаніх Замовлень",
+      "time": "Час",
+      "user": "Корістувач",
+      "message": "Повідомлення",
+      "cost": "Вартість",
+      "addedTo": "Додано до",
+      "status": "Статус",
+      "returnRedemptions": "Повернуті Вібрані Нагороді"
+    }
+  }
+}
