@@ -1,13 +1,17 @@
 import { FC, useCallback, useMemo, useState } from 'react';
-import { Button, Dialog, DialogContent } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, OutlinedInput, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { DropzoneArea } from 'react-mui-dropzone';
 import { useTranslation } from 'react-i18next';
+import readXlsxFile from 'read-excel-file';
 
 import SaveLoadService from '@services/SaveLoadService';
 import { SaveInfo } from '@models/save.model.ts';
 import { RootState } from '@reducers';
+import { createSlot } from '@reducers/Slots/Slots.ts';
+import { Slot } from '@models/slot.model.ts';
+import { sortSlots } from '@utils/common.utils.ts';
 
 import SaveRecord from './SaveRecord/SaveRecord';
 import './SaveLoad.scss';
@@ -15,6 +19,9 @@ import './SaveLoad.scss';
 const SaveLoad: FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
   const { t } = useTranslation();
+  const [currentSheet, setCurrentSheet] = useState<File>();
+  const [nameColumnIndex, setNameColumnIndex] = useState<number>(1);
+  const [costColumnIndex, setCostColumnIndex] = useState<number>(2);
   const initialSaves = useMemo(
     () =>
       SaveLoadService.getSavesConfig().sort(
@@ -28,8 +35,14 @@ const SaveLoad: FC = () => {
   const toggleDialog = (): void => {
     setIsImportOpen((prevOpened) => !prevOpened);
   };
-  const handleImportSave = useCallback(([file]: File[]) => {
+  const handleImportSave = useCallback(async ([file]: File[]) => {
     const reader = new FileReader();
+    const extension = /\.([^.]*)$/.exec(file.name);
+
+    if (extension?.[1] === 'xlsx') {
+      setCurrentSheet(file);
+      return;
+    }
 
     reader.onloadend = (): void => {
       if (typeof reader.result === 'string') {
@@ -41,6 +54,37 @@ const SaveLoad: FC = () => {
 
     reader.readAsText(file);
   }, []);
+
+  const importSheet = async () => {
+    if (!currentSheet) {
+      return;
+    }
+
+    const rows = await readXlsxFile(currentSheet);
+    const uniqueRows = new Map<string, number>();
+    rows.forEach((row) => {
+      const key = String(row[nameColumnIndex - 1]);
+      const cost = Number(row[costColumnIndex - 1]);
+      const existedCost = uniqueRows.get(key);
+
+      if (existedCost) {
+        uniqueRows.set(key, existedCost + cost);
+        return;
+      }
+
+      uniqueRows.set(key, cost);
+    });
+
+    const slots: Slot[] = [];
+    for (const [key, value] of uniqueRows) {
+      slots.push(createSlot({ name: key, amount: value }));
+    }
+    const sorted = sortSlots(slots);
+
+    setSaveConfig(SaveLoadService.newSave(sorted, currentSheet.name));
+    setCurrentSheet(undefined);
+    toggleDialog();
+  };
 
   return (
     <div className='save-load-wrapper'>
@@ -66,6 +110,29 @@ const SaveLoad: FC = () => {
             filesLimit={1}
           />
         </DialogContent>
+      </Dialog>
+      <Dialog open={currentSheet != null}>
+        <DialogContent>
+          <div>
+            <Typography>{t('save.nameColumnIndex')}</Typography>
+            <OutlinedInput
+              value={nameColumnIndex}
+              onChange={(e) => setNameColumnIndex(Number(e.target.value))}
+              type='number'
+            />
+          </div>
+          <div>
+            <Typography>{t('save.costColumnIndex')}</Typography>
+            <OutlinedInput
+              value={costColumnIndex}
+              onChange={(e) => setCostColumnIndex(Number(e.target.value))}
+              type='number'
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={importSheet}>{t('common.apply')}</Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

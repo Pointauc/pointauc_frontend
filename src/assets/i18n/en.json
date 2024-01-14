@@ -171,7 +171,9 @@
       "save": "Save",
       "downloadFile": "Download to File",
       "delete": "Delete",
-      "lotsAmount": "{{length}} lots"
+      "lotsAmount": "{{length}} lots",
+      "nameColumnIndex": "Name column index",
+      "costColumnIndex": "Cost column index"
     },
     "lot": {
       "addAmount": "Add Cost",

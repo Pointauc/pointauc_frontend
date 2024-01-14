@@ -180,7 +180,9 @@
       "save": "Сохранить",
       "downloadFile": "Скачать в файл",
       "delete": "Удалить",
-      "lotsAmount": "{{length}} лотов"
+      "lotsAmount": "{{length}} лотов",
+      "nameColumnIndex": "Номер колонки с именем",
+      "costColumnIndex": "Номер колонки со стоимостью"
     },
     "lot": {
       "addAmount": "Прибавить стоимость",
