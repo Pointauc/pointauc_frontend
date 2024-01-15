@@ -157,6 +157,7 @@
     "spicyFinal": "Финал с перчинкой",
     "connectTwitchForMoreEmotes": "Подключите Twitch, чтобы выбрать больше изображений в колесе",
     "addLotsToAuc": "Сохранить лоты в аук",
+    "lotsWithoutCosts": "Лоты без стоимости",
     "format": {
       "normal": "Обычное",
       "dropout": "Выбывание",

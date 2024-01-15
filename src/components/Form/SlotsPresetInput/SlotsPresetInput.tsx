@@ -1,5 +1,5 @@
 import { FC, ReactNode, useState } from 'react';
-import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel } from '@mui/material';
+import { Button, Checkbox, Dialog, DialogContent, DialogTitle, FormControlLabel, FormGroup } from '@mui/material';
 import { DropzoneArea } from 'react-mui-dropzone';
 import { useTranslation } from 'react-i18next';
 
@@ -20,6 +20,7 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
   const { t } = useTranslation();
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
   const [saveSlots, setSaveSlots] = useState<boolean>(false);
+  const [noCosts, setNoCosts] = useState<boolean>(false);
   const toggleDialog = (): void => {
     setIsInputOpened((prevOpened) => !prevOpened);
   };
@@ -29,7 +30,7 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
 
     reader.onloadend = (): void => {
       if (typeof reader.result === 'string') {
-        onChange(parseSlotsPreset(reader.result), saveSlots);
+        onChange(parseSlotsPreset(reader.result, noCosts), saveSlots);
         setIsInputOpened(false);
       }
     };
@@ -38,6 +39,10 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
 
   const handleSaveSlotsChange = (event: any): void => {
     setSaveSlots(event.target.checked);
+  };
+
+  const handleNoCostsChange = (event: any): void => {
+    setNoCosts(event.target.checked);
   };
 
   return (
@@ -51,11 +56,18 @@ const SlotsPresetInput: FC<SlotsPresetInput> = ({ onChange, buttonTitle, buttonC
             onDrop={handleFileUpload}
             filesLimit={1}
           />
-          <FormControlLabel
-            className='save-slots-checkbox'
-            control={<Checkbox checked={saveSlots} onChange={handleSaveSlotsChange} color='primary' />}
-            label={t('wheel.addLotsToAuc')}
-          />
+          <FormGroup row={true}>
+            <FormControlLabel
+              className='save-slots-checkbox'
+              control={<Checkbox checked={saveSlots} onChange={handleSaveSlotsChange} color='primary' />}
+              label={t('wheel.addLotsToAuc')}
+            />
+            <FormControlLabel
+              className='save-slots-checkbox'
+              control={<Checkbox checked={noCosts} onChange={handleNoCostsChange} color='primary' />}
+              label={t('wheel.lotsWithoutCosts')}
+            />
+          </FormGroup>
           {hint && <div className='slots-preset-input-hint'>{hint}</div>}
         </DialogContent>
       </Dialog>

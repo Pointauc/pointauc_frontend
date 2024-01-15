@@ -150,6 +150,7 @@
     "spicyFinal": "Spicy Final",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
     "addLotsToAuc": "Save lots in auction",
+    "lotsWithoutCosts": "Lots without costs",
     "format": {
       "normal": "Normal",
       "dropout": "Dropout",
