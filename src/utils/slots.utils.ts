@@ -16,14 +16,17 @@ export const parseWheelPreset = (text: string): WheelItem[] => {
   return text.split('\n').map<WheelItem>((value, id) => ({ id: id.toString(), name: value, color: getWheelColor() }));
 };
 
-export const parseSlotsPreset = (text: string): Slot[] => {
+export const parseSlotsPreset = (text: string, noAmounts: boolean): Slot[] => {
   const items = text.split('\n');
 
-  return items.map<Slot>((item, fastId) => {
-    const [name, amount = 1] = item.split(',');
+  return noAmounts
+    ? items.map<Slot>((name, fastId) =>
+      ({ name, amount: 1, id: Math.random().toString(), fastId, extra: null, investors: [] }))
+    : items.map<Slot>((item, fastId) => {
+      const [name, amount = 1] = item.split(',');
 
-    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, investors: [] };
-  });
+      return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, investors: [] };
+    });
 };
 
 export const slotToWheel = ({ id, name, amount }: Slot): WheelItem => ({
