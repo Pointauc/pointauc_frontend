@@ -1,4 +1,7 @@
 {
+  "serverNotifications": {
+    "deployIncoming": "Обновление сервера начнется {{remainingEstimation}} ({{remainingTime}}). После этого донаты и награды перестанут приходить на 1-5 мин."
+  },
   "common": {
     "connectTwitch": "Twitch",
     "connectDA": "Donation Alerts",

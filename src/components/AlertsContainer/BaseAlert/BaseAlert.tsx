@@ -14,8 +14,9 @@ const BaseAlert: FC<AlertType> = ({ id, type, message, duration, closable }) => 
   }, [dispatch, id]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => closeAlert(), duration || ALERT_LIFETIME);
+    if (duration === false) return;
 
+    const timeout = setTimeout(() => closeAlert(), duration || ALERT_LIFETIME);
     return (): void => clearTimeout(timeout);
   }, [closeAlert, dispatch, duration, id]);
 

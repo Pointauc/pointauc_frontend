@@ -23,8 +23,20 @@ const notificationsSlice = createSlice({
     addAlert(state, action: PayloadAction<AlertProps>): void {
       const updatedAlerts = [...state.alerts, { id: Math.random(), ...action.payload }];
 
-      if (updatedAlerts.length > MAX_ALERTS) {
-        updatedAlerts.splice(0, 1);
+      if (action.payload.duration == null) {
+        state.alerts = updatedAlerts;
+        return;
+      }
+
+      let temporaryAlertsAmount = 0;
+      for (let i = updatedAlerts.length - 1; i >= 0; i--) {
+        temporaryAlertsAmount += updatedAlerts[i].duration !== false ? 1 : 0;
+
+        if (temporaryAlertsAmount > MAX_ALERTS) {
+          updatedAlerts.splice(i, 1);
+
+          break;
+        }
       }
 
       state.alerts = updatedAlerts;

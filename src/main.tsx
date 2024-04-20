@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Theme } from '@mui/material';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import ROUTES from '@constants/routes.constants.ts';
 import DARedirect from '@pages/redirects/DARedirect/DARedirect.tsx';
@@ -18,6 +19,7 @@ import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
 import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import { Slot } from '@models/slot.model.ts';
+import i18n from '@assets/i18n/index.ts';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
@@ -30,7 +32,8 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
-dayjs.locale('ru');
+i18n.on('languageChanged', (language) => dayjs.locale(language));
+dayjs.extend(relativeTime);
 
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotAmount',

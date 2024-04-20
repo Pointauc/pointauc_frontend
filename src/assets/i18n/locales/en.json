@@ -1,4 +1,7 @@
 {
+  "serverNotifications": {
+    "deployIncoming": "Server update will start {{remainingEstimation}} ({{remainingTime}}). After that donations and rewards will stop coming for 1-5 min."
+  },
   "auc": {
     "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
     "addPosition": "Add Lot",
