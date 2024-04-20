@@ -17,10 +17,8 @@ const IntegrationSwitch: FC<IntegrationSwitchProps> = ({ state, icon, onChange, 
   const [enabled, setEnabled] = useState<boolean>(actual);
 
   useEffect(() => {
-    if (!loading) {
-      setEnabled(actual);
-    }
-  }, [actual, loading]);
+    setEnabled(actual);
+  }, [actual]);
 
   const handleSwitchChange = useCallback(
     (e: any, checked: boolean): void => {

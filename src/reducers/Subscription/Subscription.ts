@@ -52,7 +52,7 @@ const subscriptionSlice = createSlice({
   },
 });
 
-const { setSubscribeStateAll, setDaSubscribeState, setTwitchSubscribeState, setDonatePaySubscribeState } =
+export const { setSubscribeStateAll, setDaSubscribeState, setTwitchSubscribeState, setDonatePaySubscribeState } =
   subscriptionSlice.actions;
 
 export const validateIntegrations = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
