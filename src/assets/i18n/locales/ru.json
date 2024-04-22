@@ -2,6 +2,34 @@
   "serverNotifications": {
     "deployIncoming": "Обновление сервера начнется {{remainingEstimation}} ({{remainingTime}}). После этого донаты и награды перестанут приходить на 1-5 мин."
   },
+  "menu": {
+    "items": {
+      "auction": {
+        "title": "Аукцион"
+      },
+      "guides": {
+        "title": "Гайд"
+      },
+      "history": {
+        "title": "История"
+      },
+      "integration": {
+        "title": "Интеграции"
+      },
+      "settings": {
+        "title": "Настройки"
+      },
+      "statistics": {
+        "title": "Статистика"
+      },
+      "viewer_orders": {
+        "title": "Заказы зрителей"
+      },
+      "wheel": {
+        "title": "Колесо рандома"
+      }
+    }
+  },
   "common": {
     "connectTwitch": "Twitch",
     "connectDA": "Donation Alerts",
@@ -21,6 +49,7 @@
     "accountProgress": "Загрузка аккаунта..."
   },
   "auc": {
+    "showRules": "Показать правила аукциона",
     "addPosition": "Добавить лот",
     "saveLoad": "Сохранение/загрузка",
     "downloadMarbles": "Скачать шары",

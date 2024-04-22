@@ -25,13 +25,14 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import PestControlIcon from '@mui/icons-material/PestControl';
 import { ThunkDispatch } from '@reduxjs/toolkit';
+import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 
 import { LINE_BREAK } from '@constants/common.constants.ts';
 import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
 import { loadFile } from '@utils/common.utils.ts';
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
-import { saveSettings, setCompact, setShowChances } from '@reducers/AucSettings/AucSettings.ts';
+import { saveSettings, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings.ts';
 import { resetSlots } from '@reducers/Slots/Slots.ts';
 import { updateSettings } from '@api/userApi.ts';
 import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
@@ -49,18 +50,26 @@ const AucActions: React.FC = () => {
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances, isTotalVisible } = useSelector((root: RootState) => root.aucSettings.settings);
-  const { compact } = useSelector((root: RootState) => root.aucSettings.view);
+  const { compact, showRules } = useSelector((root: RootState) => root.aucSettings.view);
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 
   const selectedOptions = useMemo(() => {
-    const map = { showChances, compact };
+    const map = { showChances, compact, showRules };
 
     return Object.entries(map).reduce<string[]>((acc, [key, enabled]) => (enabled ? [...acc, key] : acc), []);
-  }, [compact, showChances]);
+  }, [compact, showChances, showRules]);
 
   const availableOptions: Option<string>[] = useMemo(
     () => [
+      {
+        key: 'showRules',
+        label: (
+          <Tooltip title={t('auc.showRules')}>
+            <VerticalSplitIcon />
+          </Tooltip>
+        ),
+      },
       {
         key: 'showChances',
         label: (
@@ -85,9 +94,11 @@ const AucActions: React.FC = () => {
     (options: string[]) => {
       const showChancesEnabled = options.includes('showChances');
       const compactEnabled = options.includes('compact');
+      const rulesEnabled = options.includes('showRules');
 
       dispatch(setShowChances(showChancesEnabled));
       dispatch(setCompact(compactEnabled));
+      dispatch(setShowRules(rulesEnabled));
       updateSettings({ settings: { showChances: showChancesEnabled }, id: activeSettingsPresetId });
     },
     [activeSettingsPresetId, dispatch],

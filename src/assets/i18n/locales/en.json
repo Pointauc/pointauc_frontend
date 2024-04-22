@@ -1,4 +1,13 @@
 {
+  "textEditor": {
+    "formatting": {
+      "paragraph": "Normal",
+      "header1": "Header 1",
+      "header2": "Header 2",
+      "bulletList": "Bullet list",
+      "orderedList": "Number list"
+    }
+  },
   "serverNotifications": {
     "deployIncoming": "Server update will start {{remainingEstimation}} ({{remainingTime}}). After that donations and rewards will stop coming for 1-5 min."
   },
@@ -6,6 +15,7 @@
     "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
     "addPosition": "Add Lot",
     "addToRandomSlot": "Add to Random Slot",
+    "showRules": "Show rules",
     "casino": {
       "description": "You need to spin the normal wheel; if your selected lot wins, the bid will multiply by a specified number, otherwise, it will be reset.",
       "selectLot": "Lucky Wheel",

@@ -14,6 +14,7 @@ import { validateIntegrations } from '../Subscription/Subscription';
 
 export interface ViewSettings {
   compact: boolean;
+  showRules: boolean;
 }
 
 interface AucSettingsState {
@@ -23,10 +24,12 @@ interface AucSettingsState {
 
 const isMinTimeActive = localStorage.getItem('isMinTimeActive') === 'true';
 const minTime = localStorage.getItem('minTime');
+const showRules = localStorage.getItem('showRules');
 
 export const initialState: AucSettingsState = {
   view: {
     compact: false,
+    showRules: showRules === 'true',
   },
   settings: {
     startTime: 10,
@@ -80,10 +83,14 @@ const aucSettingsSlice = createSlice({
     setShowChances(state, action: PayloadAction<boolean>): void {
       state.settings.showChances = action.payload;
     },
+    setShowRules(state, action: PayloadAction<boolean>): void {
+      state.view.showRules = action.payload;
+      localStorage.setItem('showRules', String(action.payload));
+    },
   },
 });
 
-export const { setAucSettings, setCompact, setShowChances } = aucSettingsSlice.actions;
+export const { setAucSettings, setCompact, setShowRules, setShowChances } = aucSettingsSlice.actions;
 
 export const saveSettings =
   (settings: SettingsForm) =>

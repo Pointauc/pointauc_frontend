@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { ReactNode } from 'react';
 import { Link } from '@mui/material';
+import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 
 import { getCookie } from './common.utils';
 
@@ -12,6 +13,22 @@ export interface UpdateData {
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2024-04-22T12:45:21.046Z',
+    newFeatures: [
+      <>
+        <div>
+          <span>Добавлен редактор правил аукциона. Вы можете открыть его нажав на кнопку </span>
+          <VerticalSplitIcon style={{ position: 'relative', top: 6 }} />
+          <span> в нижней панеле.</span>
+        </div>
+        <p style={{ lineHeight: 1.5 }}>
+          У вас может быть несколько правил, между которыми вы можете переключаться. Правила сохраняются в браузере во
+          время редактирования.
+        </p>
+      </>,
+    ],
+  },
   {
     date: '2024-04-21T05:10:00.098Z',
     fixes: [
