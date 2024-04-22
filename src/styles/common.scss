@@ -100,10 +100,14 @@
   font-weight: 400;
   color: $grey-2;
   margin-bottom: 20px;
+  line-height: 38px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  height: 38px;
+  max-height: 38px;
 }
 
 .chart {
