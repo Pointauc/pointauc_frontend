@@ -66,7 +66,10 @@ const AucActions: React.FC = () => {
         key: 'showRules',
         label: (
           <Tooltip title={t('auc.showRules')}>
-            <VerticalSplitIcon />
+            <Grid container gap={1} alignItems='center' flexWrap='nowrap'>
+              <VerticalSplitIcon />
+              <b>{t('auc.rules')}</b>
+            </Grid>
           </Tooltip>
         ),
       },

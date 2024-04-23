@@ -1,13 +1,13 @@
-import React, { memo, useCallback, useEffect, useMemo } from 'react';
+import React, { memo, useCallback, useContext, useEffect, useMemo } from 'react';
 import { IconButton, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { JSONContent } from '@tiptap/react';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 
-import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
-
+import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
+import { RulesSettingsContext, RulesSettingsProvider } from '@pages/auction/Rules/RulesSettingsContext.tsx';
 import './Rules.scss';
 
 interface RulesPreset {
@@ -50,6 +50,9 @@ const RulesComponent = () => {
   const getRule = useCallback((id: string) => rules.find((rule) => rule.id === id), [rules]);
   const currentRule = useMemo(() => getRule(selectedRuleId), [getRule, selectedRuleId]);
   const [active, setActive] = React.useState(false);
+  const {
+    data: { size, background },
+  } = useContext(RulesSettingsContext);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -155,7 +158,12 @@ const RulesComponent = () => {
   }, [active, handleMouseMove]);
 
   return (
-    <div className={classNames('auc-rules', { active })} ref={containerRef} onMouseEnter={() => setActive(true)}>
+    <div
+      className={classNames('auc-rules', { active })}
+      style={{ width: size }}
+      ref={containerRef}
+      onMouseEnter={() => setActive(true)}
+    >
       <div className='title-container' ref={onRender}>
         <OutlinedInput
           value={currentRule?.name}
@@ -170,7 +178,7 @@ const RulesComponent = () => {
             anchorEl: container,
             anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
             transformOrigin: { vertical: 'top', horizontal: 'left' },
-            PaperProps: { sx: { width: container?.clientWidth ?? 0 } },
+            PaperProps: { sx: { width: () => container?.clientWidth ?? 0 } },
           }}
           renderValue={() => null}
           onChange={(e) => onRuleSelect(e.target.value as string)}
@@ -197,6 +205,12 @@ const RulesComponent = () => {
   );
 };
 
-const Rules = memo(RulesComponent);
+const RulesContent = memo(RulesComponent);
+
+const Rules = () => (
+  <RulesSettingsProvider>
+    <RulesContent />
+  </RulesSettingsProvider>
+);
 
 export default Rules;

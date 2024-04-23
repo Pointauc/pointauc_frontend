@@ -22,7 +22,8 @@
 
       input {
         padding: 11px 12px 11px 62px;
-        font-size: 36px;
+        font-size: 28px;
+        font-weight: bold;
         text-align: center;
       }
     }
@@ -85,6 +86,14 @@
 
     .editor-menu {
       display: none;
+    }
+
+    .title-container {
+      display: none;
+    }
+
+    .rules-description {
+      flex-grow: 0;
     }
   }
 }

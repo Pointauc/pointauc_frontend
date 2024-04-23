@@ -8,6 +8,10 @@
       "orderedList": "Number list"
     }
   },
+  "rules": {
+    "background": "Background",
+    "size": "Size"
+  },
   "serverNotifications": {
     "deployIncoming": "Server update will start {{remainingEstimation}} ({{remainingTime}}). After that donations and rewards will stop coming for 1-5 min."
   },
@@ -37,7 +41,8 @@
     "sendBugReport": "Send bug report",
     "showChances": "Show Winning Chances",
     "supportCreator": "Support Creator",
-    "total": "Total: {{totalSum}} ₽"
+    "total": "Total: {{totalSum}} ₽",
+    "rules": "Rules"
   },
   "bid": {
     "close": "Close",
@@ -62,6 +67,7 @@
     "apply": "Apply",
     "authProgress": "Authorization...",
     "cancel": "Cancel",
+    "reset": "Reset",
     "connectDA": "Donation Alerts",
     "connectDonatePay": "Donate Pay",
     "connectTwitch": "Twitch",

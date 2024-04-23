@@ -13,6 +13,18 @@
   border: 1px solid rgba(255, 255, 255, 0.23);
   border-radius: 4px;
 
+  position: relative;
+  z-index: 10;
+
+  &-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
   h1 {
     font-size: 32px;
   }
@@ -21,12 +33,16 @@
     font-size: 26px;
   }
 
+  p {
+    margin: 6px 0;
+  }
+
   .highlight {
     background-color: transparent;
     color: currentColor;
   }
 
-  &>div:nth-child(2) {
+  &>div:nth-child(3) {
     flex-grow: 1;
     padding: 8px;
     display: flex;

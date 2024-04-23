@@ -1,5 +1,6 @@
 import { DragEvent } from 'react';
-import { GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid';
+import { GridValueFormatterParams } from '@mui/x-data-grid';
+import { DeepPartial } from 'redux';
 
 import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
@@ -159,3 +160,29 @@ export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): 
     return restAmount <= 0;
   });
 };
+
+function isObject(item: any) {
+  return item && typeof item === 'object' && !Array.isArray(item);
+}
+
+export function deepMerge<T>(target: T, source: DeepPartial<T>): T {
+  if (!isObject(target) || !isObject(source)) {
+    return source as T;
+  }
+
+  return Object.keys(source).reduce<T>(
+    (acc, _key) => {
+      const key = _key as keyof T;
+      const sourceValue = source[key];
+
+      if (isObject(sourceValue)) {
+        acc[key] = deepMerge(acc[key], sourceValue as any);
+      } else {
+        acc[key] = sourceValue as any;
+      }
+
+      return acc;
+    },
+    { ...target },
+  );
+}

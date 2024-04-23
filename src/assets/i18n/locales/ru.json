@@ -46,7 +46,22 @@
     "insertImageLink": "Вставьте ссылку на изображение...",
     "incorrectLink": "Неверная ссылка",
     "authProgress": "Авторизация...",
-    "accountProgress": "Загрузка аккаунта..."
+    "accountProgress": "Загрузка аккаунта...",
+    "reset": "Сбросить"
+  },
+  "rules": {
+    "background": "Фон",
+    "size": "Размер"
+  },
+  "changelog": {
+    "modal": {
+      "title": "Что нового?"
+    },
+    "types": {
+      "fixes": "Исправления",
+      "functionality": "Новый функционал",
+      "improvements": "Улучшения"
+    }
   },
   "auc": {
     "showRules": "Показать правила аукциона",
@@ -74,7 +89,8 @@
       "warning": "Эта функция не дает выгоду или убыток для донатера!",
       "yourLot": "Ваш лот:",
       "yourBid": "Ваша ставка в аукционе:"
-    }
+    },
+    "rules": "Правила"
   },
   "settings": {
     "settings": "Настройки",

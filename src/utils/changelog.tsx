@@ -14,6 +14,10 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2024-04-23T09:30:34.826Z',
+    improvements: ['Добавлена возможность изменения фона и размера правил'],
+  },
+  {
     date: '2024-04-22T12:45:21.046Z',
     newFeatures: [
       <>
