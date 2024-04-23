@@ -76,6 +76,10 @@
   &:not(&.active) {
     gap: 0;
 
+    .rules-description {
+      cursor: pointer;
+    }
+
     * {
       border-color: transparent !important;
     }
