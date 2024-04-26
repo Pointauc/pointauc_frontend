@@ -184,6 +184,13 @@
     }
   },
   "wheel": {
+    "newDropout": {
+      "description": "КАК ЭТО РАБОТАЕТ?"
+    },
+    "dropoutVariant": {
+      "new": "Новое",
+      "classic": "Классическое"
+    },
     "wheel": "Колесо",
     "spin": "Крутить",
     "nextDuel": "следующая дуэль",

@@ -18,6 +18,20 @@ export interface SlotChanceDifference {
   winsCount?: number;
 }
 
+interface SlotLike {
+  amount?: number | null;
+}
+
+export const getSlotFromDistance = (slots: SlotLike[], distance: number): number => {
+  let restAmount = distance * getTotalSize(slots);
+
+  return slots.findIndex(({ amount }) => {
+    restAmount -= Number(amount);
+
+    return restAmount <= 0;
+  });
+};
+
 class PredictionService {
   initialSlots: Slot[];
   slots: Slot[];
@@ -45,8 +59,10 @@ class PredictionService {
     });
   };
 
-  static getReverseSize = (size: number, totalSize: number, length: number): number =>
-    (1 - size / totalSize) / (length - 1);
+  static getReverseSize = (size: number, totalSize: number, length: number): number => {
+    const safeLength = Math.max(length, 2);
+    return (1 - size / totalSize) / (safeLength - 1) || 1;
+  };
 
   private getWinner = (slots: Slot[]): number => {
     const seed = Math.random();

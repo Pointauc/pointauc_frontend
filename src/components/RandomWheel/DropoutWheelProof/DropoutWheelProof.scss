@@ -36,6 +36,11 @@
     &.warning {
       color: $red-5;
     }
+
+    &.info {
+      color: $yellow;
+      font-size: 1em;
+    }
   }
 
   .row {

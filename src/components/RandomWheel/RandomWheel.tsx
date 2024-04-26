@@ -1,4 +1,4 @@
-import { ChangeEvent, Key, ReactElement, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, Key, ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import {
   Button,
@@ -8,7 +8,6 @@ import {
   DialogTitle,
   FormControlLabel,
   Slider,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -26,16 +25,17 @@ import { slotToWheel } from '@utils/slots.utils.ts';
 import { Slot } from '@models/slot.model.ts';
 import { setSlots } from '@reducers/Slots/Slots.ts';
 import { Game } from '@components/Bracket/components/model';
-import useWheel from '@hooks/useWheel';
 import withLoading from '@decorators/withLoading';
 import LoadingButton from '@components/LoadingButton/LoadingButton';
 import RadioButtonGroup, { Option } from '@components/RadioButtonGroup/RadioButtonGroup';
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput';
 import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
+import PredictionService, { getSlotFromDistance } from '@services/PredictionService.ts';
+import BaseWheel, { DropoutVariant, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
+import NewDropoutDescription from '@components/RandomWheel/NewDropoutDescription/NewDropoutDescription.tsx';
 
 import DropoutWheelProof from './DropoutWheelProof/DropoutWheelProof';
-import PaceSettings from './PaceSettings/PaceSettings';
 import ResizableBracket from './ResizableBracket/ResizableBracket';
 import DuelWheelProof from './DuelWheelProof/DuelWheelProof';
 
@@ -57,7 +57,7 @@ const initialAvailableSettings: SettingElements = {
   import: true,
 };
 
-interface RandomWheelProps<TWheelItem extends WheelItem> {
+interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   items: TWheelItem[];
   deleteItem?: (id: Key) => void;
   initialSpinTime?: number;
@@ -68,7 +68,8 @@ interface RandomWheelProps<TWheelItem extends WheelItem> {
   hideDeleteItem?: boolean;
 }
 
-const RandomWheel = <TWheelItem extends WheelItem>({
+// ToDo: refactor
+const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   items,
   deleteItem,
   onWin,
@@ -82,7 +83,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
   const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(initialSpinTime);
-  const [rawItems, setRawItems] = useState<WheelItem[]>(items);
+  const [rawItems, setRawItems] = useState<TWheelItem[]>(items);
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const [useRandomOrg, setUseRandomOrg] = useState<boolean>(false);
@@ -96,8 +97,20 @@ const RandomWheel = <TWheelItem extends WheelItem>({
   const [isDropoutProofOpen, setIsDropoutProofOpen] = useState<boolean>(false);
   const [maxDepth, setMaxDepth] = useState<number>();
   const [depthRestrict, setDepthRestrict] = useState<number>();
+  const [dropoutVariant, setDropoutVariant] = useState<DropoutVariant>(DropoutVariant.New);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const wheelController = useRef<WheelController | null>(null);
+
+  const isNewDropout = useMemo(
+    () => wheelFormat === WheelFormat.Dropout && dropoutVariant === DropoutVariant.New,
+    [wheelFormat, dropoutVariant],
+  );
+
+  const isClassicDropout = useMemo(
+    () => wheelFormat === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic,
+    [wheelFormat, dropoutVariant],
+  );
 
   const initBattleRoyale = useCallback((games: Game[]) => {
     setGamesOrder((prevGames) => {
@@ -109,16 +122,25 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     });
   }, []);
 
-  const handleWheelFormatChange = useCallback((format: WheelFormat) => {
-    setGamesOrder([]);
-    setMaxDepth(undefined);
-    setDepthRestrict(undefined);
-    setWheelFormat(format);
+  const resetWheel = useCallback(() => {
+    setRawItems(items);
+    wheelController.current?.clearWinner();
+  }, [items]);
 
-    if (format === WheelFormat.Dropout && !getCookie('seenDropoutProof2')) {
-      setIsDropoutProofOpen(true);
-    }
-  }, []);
+  const handleWheelFormatChange = useCallback(
+    (format: WheelFormat) => {
+      resetWheel();
+      setGamesOrder([]);
+      setMaxDepth(undefined);
+      setDepthRestrict(undefined);
+      setWheelFormat(format);
+
+      if (format === WheelFormat.Dropout && !getCookie('seenDropoutProof2')) {
+        setIsDropoutProofOpen(true);
+      }
+    },
+    [resetWheel],
+  );
 
   const onDelete = (id: Key): void => {
     if (deleteItem) {
@@ -135,7 +157,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
   }, [gamesOrder]);
 
   const duelItems = useMemo(
-    () => currentDuel.map<WheelItem>(({ name, amount, id }) => ({ name, amount, id, color: getWheelColor() })),
+    () => currentDuel.map<TWheelItem>(({ name, amount, id }) => ({ name, amount, id, color: getWheelColor() }) as any),
     [currentDuel],
   );
 
@@ -168,13 +190,14 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
   const splittedItems = useMemo(
     () =>
-      currentItems.reduce<WheelItem[]>((acc, { amount, ...item }) => {
+      currentItems.reduce<TWheelItem[]>((acc, item) => {
+        const { amount } = item;
         const part = Number(amount) / normalizedMaxValue;
 
         if (part > 1) {
           return [
             ...acc,
-            ...new Array<WheelItem>(Math.ceil(part)).fill({ ...item, amount: Number(amount) / Math.ceil(part) }),
+            ...new Array<TWheelItem>(Math.ceil(part)).fill({ ...item, amount: Number(amount) / Math.ceil(part) }),
           ];
         }
 
@@ -184,17 +207,39 @@ const RandomWheel = <TWheelItem extends WheelItem>({
   );
 
   const finalItems = useMemo(() => {
+    const invertClassic = (items: TWheelItem[]): TWheelItem[] => {
+      const total = items.reduce((acc, { amount }) => acc + amount, 0);
+
+      return items.map((item) => ({
+        ...item,
+        amount: PredictionService.getReverseSize(item.amount, total, items.length),
+      }));
+    };
+
+    const invertNew = (items: TWheelItem[]): TWheelItem[] => {
+      const total = 1 / items.reduce((acc, { amount }) => acc + 1 / amount, 0);
+
+      return items.map((item) => ({ ...item, amount: total / item.amount }));
+    };
+
+    if (wheelFormat === WheelFormat.Dropout) {
+      return dropoutVariant === DropoutVariant.New ? invertNew(splittedItems) : invertClassic(splittedItems);
+    }
+
     return splittedItems;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [splittedItems.length, currentItems]);
+  }, [splittedItems.length, currentItems, wheelFormat, dropoutVariant]);
 
   const handleWin = useCallback(
     (winner: TWheelItem) => {
       setIsSpinning(false);
       setNextWinner(winner);
+      setSelectedGame(null);
 
       if (wheelFormat === WheelFormat.Dropout) {
-        setRawItems((prevItems) => prevItems.filter(({ id }) => id !== winner.id));
+        setRawItems((prevItems) => {
+          return prevItems.filter(({ id }) => id !== winner.id);
+        });
       }
 
       if (wheelFormat === WheelFormat.BattleRoyal) {
@@ -209,7 +254,6 @@ const RandomWheel = <TWheelItem extends WheelItem>({
         if (parentTitle) {
           parentTitle.innerHTML = winner.name;
         }
-        setSelectedGame(null);
       }
 
       onWin?.(winner);
@@ -219,7 +263,7 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
   const handleCustomWheel = useCallback(
     (customItems: Slot[], saveSlots: boolean) => {
-      setRawItems(customItems.map(slotToWheel));
+      setRawItems(customItems.map(slotToWheel) as any);
 
       if (saveSlots) {
         dispatch(setSlots(customItems));
@@ -228,22 +272,31 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     [dispatch],
   );
 
-  const { wheelComponent, spin, clearWinner } = useWheel({
-    rawItems: finalItems,
-    onWin: handleWin as any,
-    background: activeEmote || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x',
-    spinTime,
-    dropout: wheelFormat === WheelFormat.Dropout,
-    deleteItem: hideDeleteItem ? undefined : onDelete,
-    isShuffle,
-  });
-
   const nextTurn = useCallback(() => {
-    clearWinner();
+    wheelController.current?.clearWinner();
+    wheelController.current?.reset();
     setNextWinner(null);
     setGamesOrder((prev) => prev.slice(1));
     setSelectedGame(gamesOrder && gamesOrder[0]);
-  }, [clearWinner, gamesOrder]);
+  }, [gamesOrder]);
+
+  const dropoutQueueRef = useRef<Key[]>([]);
+  useEffect(() => {
+    if (isNewDropout) {
+      const remainingSlots = getTotalSize(items)
+        ? items.filter(({ amount }) => amount)
+        : items.map((item) => ({ ...item, amount: 1 }));
+      const dropoutQueue = [];
+
+      while (remainingSlots.length > 0) {
+        const winnerIndex = getSlotFromDistance(remainingSlots, Math.random());
+        dropoutQueue.push(remainingSlots[winnerIndex].id);
+        remainingSlots.splice(winnerIndex, 1);
+      }
+
+      dropoutQueueRef.current = dropoutQueue.reverse();
+    }
+  }, [isNewDropout, items]);
 
   const handleSpin = useCallback(async () => {
     let seed: number | undefined;
@@ -259,11 +312,14 @@ const RandomWheel = <TWheelItem extends WheelItem>({
 
     setIsSpinning(true);
 
-    spin(seed && seed / size, isRandomPace ? paceConfig : undefined);
-  }, [isRandomPace, paceConfig, spin, totalSize, useRandomOrg]);
+    seed = seed && seed / size;
+    const winner = isNewDropout ? (dropoutQueueRef.current.shift() as string) : undefined;
+
+    wheelController.current?.spin({ winner, seed, paceConfig: isRandomPace ? paceConfig : undefined });
+  }, [isNewDropout, isRandomPace, paceConfig, totalSize, useRandomOrg]);
 
   const handleSpinTimeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setSpinTime(Number(e.target.value));
+    setSpinTime(e.target.value.length ? Number(e.target.value) : NaN);
   }, []);
 
   const handleDepthRestrictChange = useCallback((e: any, value: number | number[]) => {
@@ -334,9 +390,26 @@ const RandomWheel = <TWheelItem extends WheelItem>({
     [t],
   );
 
+  const dropoutVariantOptions: Option<DropoutVariant>[] = useMemo(
+    () => [
+      { key: DropoutVariant.New, label: t('wheel.dropoutVariant.new') },
+      { key: DropoutVariant.Classic, label: t('wheel.dropoutVariant.classic') },
+    ],
+    [t],
+  );
+
   return (
     <div className='wheel-content'>
-      {wheelComponent}
+      <BaseWheel
+        controller={wheelController}
+        onWin={handleWin}
+        background={activeEmote || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x'}
+        spinTime={Number.isNaN(spinTime) ? 0 : spinTime}
+        deleteItem={hideDeleteItem ? undefined : onDelete}
+        isShuffle={isShuffle}
+        items={finalItems}
+        resetWheel={wheelFormat === WheelFormat.Dropout && dropoutVariant === DropoutVariant.New}
+      />
       <div className='wheel-info-wrapper'>
         <div className={classNames('wheel-controls', { shrink: wheelFormat === WheelFormat.BattleRoyal })}>
           <div className='settings'>
@@ -363,16 +436,28 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                 margin='dense'
                 label={t('wheel.duration')}
                 onChange={handleSpinTimeChange}
-                value={spinTime || ''}
+                value={Number.isNaN(spinTime) ? '' : spinTime}
               />
               <Typography className='wheel-controls-tip'>с.</Typography>
             </div>
             {elements.mode && (
               <RadioButtonGroup
                 style={{ marginTop: 10 }}
+                fullWidth
                 options={wheelOptions}
                 activeKey={wheelFormat}
                 onChangeActive={handleWheelFormatChange}
+                disabled={isSpinning}
+              />
+            )}
+            {wheelFormat === WheelFormat.Dropout && (
+              <RadioButtonGroup
+                style={{ marginTop: 10 }}
+                fullWidth
+                options={dropoutVariantOptions}
+                activeKey={dropoutVariant}
+                onChangeActive={setDropoutVariant}
+                disabled={isSpinning}
               />
             )}
             {wheelFormat === WheelFormat.BattleRoyal && (
@@ -410,22 +495,26 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                 <Typography className='wheel-controls-tip hint'>{t('wheel.nestingDesc')}</Typography>
               </>
             )}
-            <Dialog
-              open={isDropoutProofOpen}
-              onClose={toggleDropoutProof}
-              className='description-dialog dropout'
-              maxWidth='md'
-              fullWidth
-            >
-              <DialogTitle>{t('wheel.dropoutProof')}</DialogTitle>
-              <DialogContent dividers className='description-content-dropout'>
-                <DropoutWheelProof />
-              </DialogContent>
-            </Dialog>
-            {wheelFormat === WheelFormat.Dropout && (
-              <button onClick={toggleDropoutProof} type='button' className='description-link'>
-                {t('wheel.readBeforeUsage')}
-              </button>
+            {isNewDropout && <NewDropoutDescription />}
+            {isClassicDropout && (
+              <>
+                <Dialog
+                  open={isDropoutProofOpen}
+                  onClose={toggleDropoutProof}
+                  className='description-dialog dropout'
+                  maxWidth='md'
+                  fullWidth
+                >
+                  <DialogTitle>{t('wheel.dropoutProof')}</DialogTitle>
+                  <DialogContent dividers className='description-content-dropout'>
+                    <DropoutWheelProof />
+                  </DialogContent>
+                </Dialog>
+
+                <button onClick={toggleDropoutProof} type='button' className='description-link'>
+                  {t('wheel.readBeforeUsage')}
+                </button>
+              </>
             )}
             {wheelFormat === WheelFormat.Dropout && (
               <Typography style={{ marginTop: 10 }}>{`${t('common.left')}: ${filteredItems.length}`}</Typography>
@@ -452,17 +541,17 @@ const RandomWheel = <TWheelItem extends WheelItem>({
                 <Typography className='wheel-controls-tip hint'>{t('wheel.dividingDesc')}</Typography>
               </>
             )}
-            {elements.randomPace && (
-              <>
-                <div className='wheel-controls-row'>
-                  <Typography>{t('wheel.spicyFinal')}</Typography>
-                  <Switch onChange={handleIsRandomPaceChange} />
-                </div>
-                {isRandomPace && (
-                  <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />
-                )}
-              </>
-            )}
+            {/*{elements.randomPace && (*/}
+            {/*  <>*/}
+            {/*    <div className='wheel-controls-row'>*/}
+            {/*      <Typography>{t('wheel.spicyFinal')}</Typography>*/}
+            {/*      <Switch onChange={handleIsRandomPaceChange} />*/}
+            {/*    </div>*/}
+            {/*    {isRandomPace && (*/}
+            {/*      <PaceSettings paceConfig={paceConfig} setPaceConfig={setPaceConfig} spinTime={spinTime} />*/}
+            {/*    )}*/}
+            {/*  </>*/}
+            {/*)}*/}
             {elements.randomOrg && (
               <FormControlLabel
                 control={<Checkbox checked={useRandomOrg} onChange={handleUseRandomOrg} color='primary' />}

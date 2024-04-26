@@ -238,6 +238,13 @@
     "reset": "Reset"
   },
   "wheel": {
+    "newDropout": {
+      "description": "HOW DOES IT WORK?"
+    },
+    "dropoutVariant": {
+      "new": "New",
+      "classic": "Classic"
+    },
     "addLotsToAuc": "Save lots in auction",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
     "deleteLot": "Delete Lot",

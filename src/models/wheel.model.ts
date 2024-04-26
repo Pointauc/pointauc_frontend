@@ -4,7 +4,7 @@ export interface WheelItem {
   name: string;
   id: Key;
   color: string;
-  amount?: number;
+  amount: number;
 }
 
 export interface WheelItemWithAngle extends WheelItem {

@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { CHAT_WHEEL_PREFIX, WheelCommand } from '@constants/wheel.ts';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getWheelColor } from '@utils/common.utils.ts';
-import useWheel from '@hooks/useWheel';
+import BaseWheel, { WheelController } from '@components/BaseWheel/BaseWheel.tsx';
 
 const getOpts = (channel: string) => ({
   identity: {
@@ -43,6 +43,7 @@ const ChatWheelPage: FC = () => {
   const [winners, setWinners] = useState<WheelItem[]>([]);
   const isSpinning = useRef<boolean>(false);
   const { channel } = useParams();
+  const wheelController = useRef<WheelController | null>(null);
 
   const existUsers = useRef<WheelItem[]>([]);
   useEffect(() => {
@@ -60,13 +61,6 @@ const ChatWheelPage: FC = () => {
     isSpinning.current = false;
   };
 
-  const { spin, wheelComponent } = useWheel({ rawItems: participants, onWin: handleWinner, spinTime: 6000 });
-
-  const spinRef = useRef(spin);
-  useEffect(() => {
-    spinRef.current = spin;
-  }, [spin]);
-
   const handleConnection = useCallback(() => {
     console.log(`Connected`);
     // setTimeout(() => spinRef.current(), 1000);
@@ -74,7 +68,7 @@ const ChatWheelPage: FC = () => {
 
   const handleJoin = (userId: string, name: string, badges: Badges): void => {
     if (checkBadges(badges, USER_BADGES) && !existUsers.current.find(({ id }) => id === userId)) {
-      const newParticipant: WheelItem = { id: userId, color: getWheelColor(), name };
+      const newParticipant: WheelItem = { id: userId, color: getWheelColor(), name, amount: 1 };
 
       setParticipants((prevState) => [...prevState, newParticipant]);
     }
@@ -97,7 +91,7 @@ const ChatWheelPage: FC = () => {
           }
 
           if (!isSpinning.current) {
-            spinRef.current();
+            wheelController.current?.spin();
             isSpinning.current = true;
           }
         }
@@ -137,7 +131,11 @@ const ChatWheelPage: FC = () => {
     };
   }, [channel, handleConnection, handleMessage]);
 
-  return <div style={{ width: '100vw', height: '100vh' }}>{wheelComponent}</div>;
+  return (
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <BaseWheel items={participants} controller={wheelController} onWin={handleWinner} spinTime={6000} />
+    </div>
+  );
 };
 
 export default ChatWheelPage;

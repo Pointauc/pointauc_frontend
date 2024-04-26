@@ -34,6 +34,7 @@ const RequestsPage: FC = () => {
         name: request ? `${username}: ${request}` : username,
         id,
         color: getWheelColor(),
+        amount: 1,
       })),
     [currentData],
   );
