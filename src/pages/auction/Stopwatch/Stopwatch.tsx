@@ -19,7 +19,9 @@ import './Stopwatch.scss';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
+  HOUR_FORMAT: 'mm:ss',
 };
+const HOUR = 60 * 60 * 1000;
 
 const Stopwatch: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -87,13 +89,18 @@ const Stopwatch: React.FC = () => {
         setIsStopped(true);
         setIsStopwatchChanged(true);
       }
-      stopwatchElement.current.innerHTML = dayjs(time.current).format(STOPWATCH.FORMAT).slice(0, -1);
+      const date = dayjs(time.current);
+      const hours = Math.floor(time.current / HOUR);
+      const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
+      stopwatchElement.current.innerHTML = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
     }
   }, []);
 
   const autoUpdateTimer = useCallback(
     (timeChange: number) => {
       const maxMilliseconds = maxTime * 60 * 1000;
+
+      console.log(time.current);
 
       if (isMinTimeActive && time.current > minTime * 60 * 1000) return;
 
