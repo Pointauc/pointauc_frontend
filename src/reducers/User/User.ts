@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
+import { IntegrationDataDto } from '@models/user.model.ts';
+
 import { RootState } from '../index';
 import { initChatClient } from '../Requests/Requests';
 
@@ -10,11 +12,14 @@ export interface UserInfo {
   userId?: string | null;
 }
 
-interface UserState extends UserInfo {
+export interface UserState extends UserInfo {
   hasDAAuth: boolean;
   hasTwitchAuth: boolean;
   hasDonatPayAuth: boolean;
   activeSettingsPresetId: string;
+  authData: {
+    donatePay?: IntegrationDataDto;
+  };
 }
 
 const initialState: UserState = {
@@ -24,6 +29,7 @@ const initialState: UserState = {
   hasTwitchAuth: false,
   hasDonatPayAuth: false,
   activeSettingsPresetId: '',
+  authData: {},
 };
 
 const userSlice = createSlice({

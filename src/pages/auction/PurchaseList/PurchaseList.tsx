@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from '@reducers';
 import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { PURCHASE_SORT_OPTIONS } from '@constants/purchase.constants.ts';
+import donatePay from '@components/Integration/DonatePay';
 
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 import DragBidContext from '../DragBidContext/DragBidContext';
@@ -17,7 +18,7 @@ const PurchaseList: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { purchases } = useSelector((root: RootState) => root.purchases);
-  const { globalSocket, twitchSocket, daSocket, donatePaySocket } = useSelector((root: RootState) => root.socketIo);
+  const { globalSocket, twitchSocket, daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -47,8 +48,12 @@ const PurchaseList: React.FC = () => {
     globalSocket?.on('Bid', handleRedemption);
     twitchSocket?.on('Bid', handleRedemption);
     daSocket?.on('Bid', handleRedemption);
-    donatePaySocket?.on('Bid', handleRedemption);
-  }, [daSocket, handleRedemption, twitchSocket, donatePaySocket, globalSocket]);
+    const donatePayUnsub = donatePay.pubsubFlow.events.on('bid', handleRedemption);
+
+    return () => {
+      donatePayUnsub();
+    };
+  }, [daSocket, handleRedemption, twitchSocket, globalSocket]);
 
   return (
     <div className='purchase-container'>

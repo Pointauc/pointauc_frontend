@@ -8,6 +8,7 @@ const ENDPOINTS = {
   CAMILLE_BOT: '/api/requests/camilleBot',
   DONATE_PAY: {
     AUTH: '/api/donatePay/auth',
+    TOKEN: 'https://donatepay.ru/api/v2/socket/token',
   },
   USER: {
     USERNAME: '/api/username',

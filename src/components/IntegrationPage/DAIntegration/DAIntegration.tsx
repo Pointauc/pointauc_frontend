@@ -5,28 +5,33 @@ import { useTranslation } from 'react-i18next';
 import { ThunkDispatch } from 'redux-thunk';
 import { Control } from 'react-hook-form';
 
-import { sendDaSubscribedState, sendDonatePaySubscribedState } from '@reducers/Subscription/Subscription.ts';
+import { sendDaSubscribedState } from '@reducers/Subscription/Subscription.ts';
 import DASvg from '@assets/icons/DAAlert.svg?react';
-import DonatePaySvg from '@assets/icons/donatePay.svg?react';
 import IntegrationSwitch from '@components/IntegrationSwitch/IntegrationSwitch';
 import FormInput from '@components/Form/FormInput/FormInput';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
 import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
+import { RootState } from '@reducers';
+import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
+import donatePayIntegration from '@components/Integration/DonatePay/index.ts';
 
 import DALoginButton from '../DALoginButton/DALoginButton';
-import DonatePayLoginButton from '../DonatePayLoginButton/DonatePayLoginButton';
-import { RootState } from '../../../reducers';
 import './DAIntegration.scss';
 
 interface DaIntegration {
   control: Control;
 }
 
+// const {donate, points} = integrationUtils.groupBy.type(INTEGRATIONS)
+
 const DaIntegration: FC<DaIntegration> = ({ control }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { hasDAAuth, hasDonatPayAuth } = useSelector((root: RootState) => root.user);
+  const user = useSelector((root: RootState) => root.user);
   const { da, donatePay } = useSelector((root: RootState) => root.subscription);
+
+  // const { available, unavailable } = useMemo(() => integrationUtils.groupBy.availability(donate, user), [user]);
 
   return (
     <>
@@ -42,14 +47,9 @@ const DaIntegration: FC<DaIntegration> = ({ control }) => {
         <DALoginButton />
       )}
       {hasDonatPayAuth ? (
-        <IntegrationSwitch
-          state={donatePay}
-          onChange={(checked) => dispatch(sendDonatePaySubscribedState(checked))}
-          icon={<DonatePaySvg className='base-icon donate-pay' />}
-          title='DonatePay'
-        />
+        <PubsubSwitch integration={donatePayIntegration} />
       ) : (
-        <DonatePayLoginButton />
+        <donatePayIntegration.authFlow.loginComponent integration={donatePayIntegration} />
       )}
       {(hasDAAuth || hasDonatPayAuth) && (
         <FormGroup>

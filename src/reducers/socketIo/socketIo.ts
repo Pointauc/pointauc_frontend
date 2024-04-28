@@ -11,7 +11,6 @@ import { PurchaseStatusEnum } from '@models/purchase.ts';
 import {
   sendCpSubscribedState,
   sendDaSubscribedState,
-  sendDonatePaySubscribedState,
   setSubscribeStateAll,
 } from '@reducers/Subscription/Subscription.ts';
 
@@ -21,7 +20,6 @@ interface SocketIoState {
   client?: Socket | null;
   twitchSocket?: Socket | null;
   daSocket?: Socket | null;
-  donatePaySocket?: Socket | null;
   globalSocket?: Socket | null;
 }
 
@@ -85,7 +83,6 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
 
   const twitchSocket = io(`${getSocketIOUrl()}/twitch`, { query: { cookie: document.cookie } });
   const daSocket = io(`${getSocketIOUrl()}/da`, { query: { cookie: document.cookie } });
-  const donatePaySocket = io(`${getSocketIOUrl()}/donatePay`, { query: { cookie: document.cookie } });
 
   globalSocket.on('disconnect', () => {
     const { subscription, user } = getState();
@@ -95,11 +92,10 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
     globalSocket.once('connect', () => {
       user.hasTwitchAuth && dispatch(sendCpSubscribedState(subscription.twitch.actual));
       user.hasDAAuth && dispatch(sendDaSubscribedState(subscription.da.actual));
-      user.hasDonatPayAuth && dispatch(sendDonatePaySubscribedState(subscription.donatePay.actual));
     });
   });
 
-  dispatch(setSocket({ twitchSocket, daSocket, donatePaySocket, globalSocket }));
+  dispatch(setSocket({ twitchSocket, daSocket, globalSocket }));
 };
 
 export default socketIoSlice.reducer;

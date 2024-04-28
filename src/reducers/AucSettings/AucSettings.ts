@@ -120,6 +120,9 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
       hasTwitchAuth: !!twitchAuth?.isValid,
       hasDonatPayAuth: !!donatePayAuth?.isValid,
       activeSettingsPresetId,
+      authData: {
+        donatePay: donatePayAuth,
+      },
     }),
   );
   if (localStorage.getItem('isMinTimeActive') || localStorage.getItem('minTime')) {

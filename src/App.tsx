@@ -7,6 +7,8 @@ import { Container, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText,
 import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
+import donatePay from '@components/Integration/DonatePay';
+import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 
 import ROUTES from './constants/routes.constants';
 import AucPage from './pages/auction/AucPage';
@@ -119,6 +121,20 @@ const App: React.FC = () => {
     }
     // do not add t function to the deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
+  useEffect(() => {
+    const unsub = donatePay.pubsubFlow.events.on('subscribed', () =>
+      dispatch(setDonatePaySubscribeState({ actual: true })),
+    );
+    const unsub2 = donatePay.pubsubFlow.events.on('unsubscribed', () =>
+      dispatch(setDonatePaySubscribeState({ actual: false })),
+    );
+
+    return () => {
+      unsub();
+      unsub2();
+    };
   }, [dispatch]);
 
   return (

@@ -7,3 +7,16 @@ export const authenticateDonatePay = async (accessToken: string): Promise<{ isNe
 
   return data;
 };
+
+export const pubsubToken = async (accessToken: string): Promise<string> => {
+  const { data } = await axios.post(ENDPOINTS.DONATE_PAY.TOKEN, { access_token: accessToken });
+
+  return data.token;
+};
+
+const donatePayApi = {
+  pubsubToken,
+  authenticate: authenticateDonatePay,
+};
+
+export default donatePayApi;

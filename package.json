@@ -32,6 +32,7 @@
     "@tiptap/react": "^2.3.0",
     "@tiptap/starter-kit": "^2.3.0",
     "axios": "^1.6.0",
+    "centrifuge2": "npm:centrifuge@2",
     "chart.js": "^4.4.0",
     "classnames": "^2.3.2",
     "cloudinary-react": "^1.8.1",

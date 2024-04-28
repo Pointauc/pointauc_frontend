@@ -1,4 +1,9 @@
 {
+  "integration": {
+    "donatePay": {
+      "name": "Donate Pay"
+    }
+  },
   "textEditor": {
     "formatting": {
       "paragraph": "Normal",

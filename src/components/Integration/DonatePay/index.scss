@@ -1,0 +1,25 @@
+.login-button.donatePay {
+  background-color: #44AB4F !important;
+  color: #F1F1F1 !important;
+
+  &:hover {
+    background-color: #3e8648 !important;
+  }
+
+  &:disabled {
+    background-color: #746d67 !important;
+
+    .base-icon path {
+      fill: #c4bbb4;
+    }
+  }
+
+  .base-icon {
+    width: 28px;
+    height: 28px;
+
+    path {
+      fill: #8ddc96;
+    }
+  }
+}

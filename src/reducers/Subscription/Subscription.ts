@@ -4,6 +4,7 @@ import { Socket } from 'socket.io-client';
 
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { getIntegrationsValidity } from '@api/userApi.ts';
+import donatePay from '@components/Integration/DonatePay';
 
 import { RootState } from '../index';
 import { addAlert } from '../notifications/notifications';
@@ -62,7 +63,7 @@ export const validateIntegrations = async (dispatch: ThunkDispatch<{}, {}, Actio
   dispatch(
     setUserState({
       hasDAAuth: validity.daAuth,
-      hasDonatPayAuth: validity.donatePayAuth,
+      hasDonatPayAuth: validity.donatePayAuth && donatePay.authFlow.validate(),
       hasTwitchAuth: validity.twitchAuth,
     }),
   );
@@ -111,16 +112,6 @@ export const sendDaSubscribedState =
 
     if (daSocket) {
       sendSubscribeState(daSocket, isSubscribed, dispatch, setDaSubscribeState);
-    }
-  };
-
-export const sendDonatePaySubscribedState =
-  (isSubscribed: boolean) =>
-  (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState): void => {
-    const { donatePaySocket } = getState().socketIo;
-
-    if (donatePaySocket) {
-      sendSubscribeState(donatePaySocket, isSubscribed, dispatch, setDonatePaySubscribeState);
     }
   };
 
