@@ -14,14 +14,27 @@ const adapterMap: Record<CentrifugeFlow.Version, typeof CentrifugeFlow.Adapter> 
   2: CentrifugeV2,
 };
 
+interface SessionToken {
+  token: string;
+  timestamp: number;
+}
+
 const getPubsubToken = async (): Promise<string | null> => {
-  const sessionKey = integrationUtils.session.get('donatePay', 'pubsubToken');
+  const sessionKey = integrationUtils.session.get('donatePay', 'pubsubToken2');
   const accessToken = integrationUtils.storage.get('donatePay', 'authToken');
 
-  if (sessionKey) return sessionKey;
+  if (sessionKey) {
+    const { token, timestamp } = JSON.parse(sessionKey) as SessionToken;
+    if (Date.now() - timestamp < 1000 * 60 * 60 * 2) {
+      return token;
+    }
+  }
 
   const token = accessToken && (await donatePayApi.pubsubToken(accessToken));
-  if (token) integrationUtils.session.set('donatePay', 'pubsubToken', token);
+  if (token) {
+    const tokenData = JSON.stringify({ token, timestamp: Date.now() });
+    integrationUtils.session.set('donatePay', 'pubsubToken2', tokenData);
+  }
 
   return token;
 };

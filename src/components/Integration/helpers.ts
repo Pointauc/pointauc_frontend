@@ -1,6 +1,6 @@
 import { UserState } from '@reducers/User/User.ts';
 
-type StorageKey = 'authToken' | 'pubsubToken';
+type StorageKey = 'authToken' | 'pubsubToken2';
 
 export const getStorageKey = (id: Integration.Config['id'], key: StorageKey): string => `${id}_${key}`;
 
