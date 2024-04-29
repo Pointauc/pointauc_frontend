@@ -39,7 +39,6 @@ const parseMessage = ({ data: { notification } }: DonatePayBidMessage): Purchase
 const id = 'donatePay';
 
 const authFlow = buildTokenAuthFlow({
-  type: 'token',
   authenticate: donatePayApi.authenticate,
   id,
 });

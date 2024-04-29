@@ -32,6 +32,11 @@ export const initialState: SubscriptionStoreState = {
   donatePay: initialSubscribeState,
 };
 
+interface SetSubscribeProps {
+  id: Integration.ID;
+  state: Partial<SubscribeState>;
+}
+
 const subscriptionSlice = createSlice({
   name: 'subscription',
   initialState,
@@ -45,6 +50,9 @@ const subscriptionSlice = createSlice({
     setDonatePaySubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.donatePay = { ...state.donatePay, ...action.payload };
     },
+    setSubscribeState(state, action: PayloadAction<SetSubscribeProps>): void {
+      state[action.payload.id] = { ...state[action.payload.id], ...action.payload.state };
+    },
     setSubscribeStateAll(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.twitch = { ...state.twitch, ...action.payload };
       state.da = { ...state.da, ...action.payload };
@@ -53,8 +61,13 @@ const subscriptionSlice = createSlice({
   },
 });
 
-export const { setSubscribeStateAll, setDaSubscribeState, setTwitchSubscribeState, setDonatePaySubscribeState } =
-  subscriptionSlice.actions;
+export const {
+  setSubscribeStateAll,
+  setDaSubscribeState,
+  setSubscribeState,
+  setTwitchSubscribeState,
+  setDonatePaySubscribeState,
+} = subscriptionSlice.actions;
 
 export const validateIntegrations = async (dispatch: ThunkDispatch<{}, {}, Action>): Promise<void> => {
   dispatch(setSubscribeStateAll({ loading: true }));

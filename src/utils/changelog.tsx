@@ -14,7 +14,7 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
-    date: '2024-04-28T14:30:00.092Z',
+    date: '2024-04-29T04:15:00.882Z',
     fixes: [
       <div>
         <p>Исправлена интеграция с DONATE PAY, теперь она должна работать у всех.</p>

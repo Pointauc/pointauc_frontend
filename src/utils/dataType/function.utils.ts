@@ -12,7 +12,7 @@ export const timedFunction = <T extends (...args: any) => any>(
   callback: T,
   duration: number,
 ): ((...args: Parameters<T>) => void) => {
-  let timeout: number | null = null;
+  let timeout: any;
   const postponedArgs: { current: any | null } = { current: null };
 
   const callable = (...args: any): void => {

@@ -34,7 +34,7 @@ export const { setWebSocket } = puSubSocketSlice.actions;
 export const connectToServer =
   (showSuccessMessage?: boolean) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    let interval: number;
+    let interval: any;
     const {
       twitch: { actual: twitchSub },
       da: { actual: daSub },

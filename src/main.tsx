@@ -26,6 +26,9 @@ import ThemeWrapper from './ThemeWrapper.tsx';
 
 import '@styles/index.scss';
 import '@assets/i18n/index.ts';
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import INTEGRATIONS from '@components/Integration/integrations.ts';
+import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -89,11 +92,19 @@ window.onbeforeunload = (): undefined => {
   return undefined;
 };
 
+const redirectRoutes = integrationUtils.filterBy
+  .authFlow<Integration.RedirectFlow>(INTEGRATIONS, 'redirect')
+  .map((integration) => ({
+    path: `/${integration.id}/redirect`,
+    element: <RedirectPage integration={integration} />,
+  }));
+
 const router = createBrowserRouter([
   { path: ROUTES.TWITCH_REDIRECT, element: <TwitchRedirect /> },
   { path: ROUTES.DA_REDIRECT, element: <DARedirect /> },
   { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
+  ...redirectRoutes,
 ]);
 
 const container = document.getElementById('root');

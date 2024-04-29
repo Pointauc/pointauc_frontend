@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 import withLoading from '@decorators/withLoading.ts';
-import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
+import { setSubscribeState } from '@reducers/Subscription/Subscription.ts';
 
 import './PubsubSwitch.scss';
+import classNames from 'classnames';
 
 const PubsubSwitch: FC<Integration.PubsubComponentProps> = ({ integration }) => {
   const { id, pubsubFlow } = integration;
@@ -27,26 +28,32 @@ const PubsubSwitch: FC<Integration.PubsubComponentProps> = ({ integration }) => 
       setEnabled(checked);
       const userId = user.authData[id]?.id;
 
-      if (!userId) return;
+      if (!userId) {
+        setEnabled(actual);
+        return;
+      }
 
-      withLoading(
-        (loading) => dispatch(setDonatePaySubscribeState({ loading })),
-        async () => {
-          if (checked) {
-            await pubsubFlow.connect(userId);
-          } else {
-            await pubsubFlow.disconnect();
-          }
-        },
-      )().catch(() => setEnabled(actual));
+      const onLoadingChanged = (loading: boolean) => {
+        if (!loading && !pubsubFlow.async) return;
+
+        return dispatch(setSubscribeState({ state: { loading }, id }));
+      };
+
+      withLoading(onLoadingChanged, async () => {
+        if (checked) {
+          await pubsubFlow.connect(userId);
+        } else {
+          await pubsubFlow.disconnect();
+        }
+      })().catch(() => setEnabled(actual));
     },
     [actual, dispatch, id, pubsubFlow, user.authData],
   );
 
   return (
-    <div className='row integration-switch'>
+    <div className={classNames('row integration-switch', id)}>
       <div className='col'>
-        <Icon />
+        <Icon className='base-icon' />
         <Typography className='label'>{t(`integration.${id}.name`)}</Typography>
       </div>
       <Switch onChange={handleSwitchChange} disabled={loading} checked={enabled} />

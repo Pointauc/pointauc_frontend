@@ -17,6 +17,12 @@
     }
   }
 
+  .base-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 5px;
+  }
+
   .content {
     display: flex;
     flex-direction: column;
@@ -24,26 +30,10 @@
     font-weight: 400;
     gap: 8px;
 
-    .base-icon {
-      width: 22px;
-      height: 22px;
-      margin-right: 5px;
-
-      &.donate-pay {
-        width: 28px;
-        height: 28px;
-      }
-    }
-
     .row {
       margin-bottom: 0;
       display: flex;
       align-items: center;
-    }
-
-    .da-login-button {
-      font-size: 13px;
-      padding: 8px 5px;
     }
   }
 }

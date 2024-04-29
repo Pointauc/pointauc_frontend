@@ -52,6 +52,7 @@ const PurchaseList: React.FC = () => {
 
     return () => {
       donatePayUnsub();
+      daSocket?.off('Bid', handleRedemption);
     };
   }, [daSocket, handleRedemption, twitchSocket, globalSocket]);
 

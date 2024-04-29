@@ -11,7 +11,9 @@ import { PurchaseStatusEnum } from '@models/purchase.ts';
 import {
   sendCpSubscribedState,
   sendDaSubscribedState,
+  setDaSubscribeState,
   setSubscribeStateAll,
+  setTwitchSubscribeState,
 } from '@reducers/Subscription/Subscription.ts';
 
 import { RootState } from '../index';
@@ -87,7 +89,8 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
   globalSocket.on('disconnect', () => {
     const { subscription, user } = getState();
 
-    dispatch(setSubscribeStateAll({ loading: true, actual: false }));
+    dispatch(setTwitchSubscribeState({ loading: true, actual: false }));
+    dispatch(setDaSubscribeState({ loading: true, actual: false }));
 
     globalSocket.once('connect', () => {
       user.hasTwitchAuth && dispatch(sendCpSubscribedState(subscription.twitch.actual));

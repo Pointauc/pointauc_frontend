@@ -35,7 +35,7 @@ import type { ThunkDispatch } from 'redux-thunk';
 const hasToken = !!getCookie('userSession');
 const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
 
-let openDriverTimeout: number;
+let openDriverTimeout: any;
 
 const StyledDrawer = styled(Drawer)(({ theme }: any) => ({
   transition: theme.transitions.create('width', { duration: theme.transitions.duration.shorter }),

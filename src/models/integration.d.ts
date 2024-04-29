@@ -3,7 +3,7 @@ namespace Integration {
 
   import EventEmitter from '@utils/EventEmitter.ts';
 
-  type ID = 'donatePay';
+  type ID = 'donatePay' | 'da' | 'twitch';
   type BidType = 'donate' | 'points';
 
   interface LoginButtonProps<Flow extends AuthFlow = AuthFlow> {
@@ -11,29 +11,31 @@ namespace Integration {
   }
 
   interface PubsubComponentProps {
-    integration: Config<AuthFlow>;
+    integration: Config;
   }
 
   interface Branding {
-    // color: string;
     icon: Component;
   }
 
-  interface RedirectFlow {
-    type: 'redirect';
-    url: string;
-    params: Record<string, string | number>;
+  interface AuthFlowCommon {
+    validate: () => boolean;
+    loginComponent: FunctionComponent<LoginButtonProps<TokenFlow>>;
   }
 
-  interface TokenFlow {
+  interface RedirectFlow extends AuthFlowCommon {
+    type: 'redirect';
+    authenticate: (code: string) => Promise<unknown>;
+    url: string;
+  }
+
+  interface TokenFlow extends AuthFlowCommon {
     type: 'token';
     authenticate: (accessToken: string) => Promise<unknown>;
-    loginComponent: FunctionComponent<LoginButtonProps<TokenFlow>>;
-    validate: () => boolean;
     getAccessToken: () => string;
   }
 
-  type AuthFlow = TokenFlow;
+  type AuthFlow = TokenFlow | RedirectFlow;
 
   type PubsubEvents = 'subscribed' | 'unsubscribed' | 'bid';
 
@@ -41,6 +43,7 @@ namespace Integration {
     events: EventEmitter<PubsubEvents>;
     connect: (userId: string) => Promise<void>;
     disconnect: () => Promise<void>;
+    async: boolean;
   }
 
   interface Config<TAuth extends AuthFlow = AuthFlow> {

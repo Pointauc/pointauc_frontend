@@ -19,6 +19,8 @@ export interface UserState extends UserInfo {
   activeSettingsPresetId: string;
   authData: {
     donatePay?: IntegrationDataDto;
+    da?: IntegrationDataDto;
+    twitch?: IntegrationDataDto;
   };
 }
 

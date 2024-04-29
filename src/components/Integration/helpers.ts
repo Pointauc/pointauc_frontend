@@ -16,6 +16,12 @@ const isAvailable = (integration: Integration.Config, user: UserState): boolean 
   switch (integration.id) {
     case 'donatePay':
       return user.hasDonatPayAuth;
+    case 'da':
+      return user.hasDAAuth;
+    case 'twitch':
+      return user.hasTwitchAuth;
+    default:
+      return false;
   }
 };
 
@@ -36,10 +42,11 @@ export const integrationUtils = {
       sessionStorage.setItem(getStorageKey(id, key), value),
   },
   filterBy: {
-    available: (integrations: Integration.Config[], user: UserState) =>
-      integrations.filter((item) => isAvailable(item, user)),
-    unavailable: (integrations: Integration.Config[], user: UserState) =>
-      integrations.filter((item) => !isAvailable(item, user)),
+    authFlow: <T extends Integration.AuthFlow>(
+      integrations: Integration.Config[],
+      type: Integration.AuthFlow['type'],
+    ): Integration.Config<T>[] =>
+      integrations.filter((integration) => integration.authFlow.type === type) as Integration.Config<T>[],
   },
   groupBy: {
     availability: (integrations: Integration.Config[], user: UserState) =>

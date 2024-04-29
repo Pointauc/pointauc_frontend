@@ -2,6 +2,12 @@
   "integration": {
     "donatePay": {
       "name": "Donate Pay"
+    },
+    "da": {
+      "name": "Donation Alerts"
+    },
+    "twitch": {
+      "name": "Twitch"
     }
   },
   "textEditor": {

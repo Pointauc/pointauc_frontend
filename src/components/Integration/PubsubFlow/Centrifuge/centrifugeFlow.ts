@@ -48,5 +48,5 @@ export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
     return centrifuge?.disconnect();
   };
 
-  return { events, connect, disconnect };
+  return { events, connect, disconnect, async: true };
 };

@@ -5,21 +5,18 @@
   &:hover {
     background-color: #3e8648 !important;
   }
+}
 
-  &:disabled {
-    background-color: #746d67 !important;
+.integration-switch,
+.login-button {
+  &.donatePay {
+    .base-icon {
+      width: 30px;
+      height: 30px;
 
-    .base-icon path {
-      fill: #c4bbb4;
-    }
-  }
-
-  .base-icon {
-    width: 28px;
-    height: 28px;
-
-    path {
-      fill: #8ddc96;
+      path {
+        fill: #8ddc96;
+      }
     }
   }
 }

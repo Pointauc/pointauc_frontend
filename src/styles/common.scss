@@ -29,19 +29,6 @@
   &.twitch, path, rect {
     fill: $twitch;
   }
-
-  &.da path {
-    fill: $da;
-  }
-
-  &.donate-pay {
-    width: 30px;
-    height: 30px;
-
-    & path {
-      fill: #8ddc96;
-    }
-  }
 }
 
 .hint {

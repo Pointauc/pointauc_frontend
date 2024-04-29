@@ -122,6 +122,8 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
       activeSettingsPresetId,
       authData: {
         donatePay: donatePayAuth,
+        da: daAuth,
+        twitch: twitchAuth,
       },
     }),
   );
