@@ -1,4 +1,8 @@
 {
+  "author": {
+    "contacts": "Contacts",
+    "support": "Support the website"
+  },
   "integration": {
     "groups": {
       "donations": "Donations"

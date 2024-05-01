@@ -5,8 +5,32 @@
   //color: #fff;
 
   &-drawer {
+    .author-contacts {
+      display: none;
+    }
+
     &.open {
       width: 240px;
+
+      .author-contacts {
+        display: flex;
+
+        @keyframes show-with-delay {
+          0% {
+            display: none;
+          }
+
+          99% {
+            display: none;
+          }
+
+          100% {
+            display: flex;
+          }
+        }
+
+        animation: show-with-delay 0.2s;
+      }
     }
 
     &.close {

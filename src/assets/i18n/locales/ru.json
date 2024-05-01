@@ -1,4 +1,8 @@
 {
+  "author": {
+    "contacts": "Контакты",
+    "support": "Поддержать сайт"
+  },
   "integration": {
     "groups": {
       "donations": "Донаты"

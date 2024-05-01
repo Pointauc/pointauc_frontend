@@ -120,7 +120,19 @@
   }
 }
 
+.r {
+  display: flex;
+}
 
+.c {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.grow {
+  flex-grow: 1;
+}
 
 .description-dialog {
   &.dropout {

@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { RootState } from '@reducers';
 import donatePay from '@components/Integration/DonatePay';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
+import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
 
 import ROUTES from './constants/routes.constants';
 import AucPage from './pages/auction/AucPage';
@@ -153,7 +154,12 @@ const App: React.FC = () => {
         onMouseEnter={showDrawer}
         onMouseLeave={hideDrawer}
       >
-        <List>{MENU_ITEMS.map(createMenuItem)}</List>
+        <div className='c'>
+          <div className='grow'>
+            <List>{MENU_ITEMS.map(createMenuItem)}</List>
+          </div>
+          <AuthorContacts />
+        </div>
       </StyledDrawer>
       <Container className='app-content'>
         <div hidden={!isHomePage}>

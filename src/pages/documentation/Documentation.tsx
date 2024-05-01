@@ -95,7 +95,7 @@ const Documentation: FC = () => {
       <h2 id='contacts'>Мои контакты</h2>
       <ul>
         <li>Discord — kozjar#4193</li>
-        <li>Telegram — @Cougho</li>
+        <li>Telegram — @kozjarych</li>
         <li>Twitch — kozjar</li>
       </ul>
     </div>
