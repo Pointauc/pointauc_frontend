@@ -21,6 +21,7 @@ namespace Integration {
   interface AuthFlowCommon {
     validate: () => boolean;
     loginComponent: FunctionComponent<LoginButtonProps<TokenFlow>>;
+    revoke: () => Promise<void> | void;
   }
 
   interface RedirectFlow extends AuthFlowCommon {

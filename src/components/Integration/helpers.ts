@@ -1,4 +1,7 @@
 import { UserState } from '@reducers/User/User.ts';
+import { setSubscribeState } from '@reducers/Subscription/Subscription.ts';
+
+import { store } from '../../main.tsx';
 
 type StorageKey = 'authToken' | 'pubsubToken2';
 
@@ -13,16 +16,7 @@ const setStorageValue = (id: Integration.Config['id'], key: StorageKey, value: s
 };
 
 const isAvailable = (integration: Integration.Config, user: UserState): boolean => {
-  switch (integration.id) {
-    case 'donatePay':
-      return user.hasDonatPayAuth;
-    case 'da':
-      return user.hasDAAuth;
-    case 'twitch':
-      return user.hasTwitchAuth;
-    default:
-      return false;
-  }
+  return !!user.authData[integration.id]?.isValid && integration.authFlow.validate();
 };
 
 interface AvailabilityMap {
@@ -30,10 +24,17 @@ interface AvailabilityMap {
   unavailable: Integration.Config[];
 }
 
+export class InvalidTokenError extends Error {
+  constructor() {
+    super('Invalid token');
+  }
+}
+
 export const integrationUtils = {
   storage: {
     get: getStorageValue,
     set: setStorageValue,
+    remove: (id: Integration.Config['id'], key: StorageKey) => localStorage.removeItem(getStorageKey(id, key)),
   },
   session: {
     get: (id: Integration.Config['id'], key: StorageKey): string | null =>
@@ -69,5 +70,26 @@ export const integrationUtils = {
         },
         { donate: [], points: [] },
       ),
+  },
+  setSubscribeState: async ({ id, pubsubFlow }: Integration.Config, state: boolean, ignoreLoading?: boolean) => {
+    const { subscription, user } = store.getState();
+    const previous = subscription[id];
+    if (previous.actual === state || (!ignoreLoading && previous.loading)) return;
+
+    try {
+      store.dispatch(setSubscribeState({ state: { actual: state, loading: true }, id }));
+      if (state) {
+        const userId = user.authData[id]?.id;
+        if (!userId) throw new Error('User not found');
+
+        await pubsubFlow.connect(userId);
+      } else {
+        await pubsubFlow.disconnect();
+      }
+
+      store.dispatch(setSubscribeState({ state: { loading: false }, id }));
+    } catch (e) {
+      store.dispatch(setSubscribeState({ state: previous, id }));
+    }
   },
 };

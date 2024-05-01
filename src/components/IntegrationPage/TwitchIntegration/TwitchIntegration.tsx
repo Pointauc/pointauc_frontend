@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { Button, FormGroup } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -9,11 +9,11 @@ import { Control } from 'react-hook-form';
 import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
 import { RootState } from '@reducers';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
-import { sendCpSubscribedState } from '@reducers/Subscription/Subscription.ts';
 import LoadingButton from '@components/LoadingButton/LoadingButton';
 import { closeTwitchRewards } from '@api/twitchApi.ts';
-
-import TwitchLoginButton from '../TwitchLoginButton/TwitchLoginButton';
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import { integrations } from '@components/Integration/integrations.ts';
+import twitch from '@components/Integration/Twitch';
 
 import RewardPresetsForm from './RewardPresetsForm';
 
@@ -26,26 +26,26 @@ interface TwitchIntegrationProps {
 const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
-  const { username, hasTwitchAuth } = useSelector((root: RootState) => root.user);
+  const user = useSelector((root: RootState) => root.user);
   const {
     twitch: { actual, loading },
   } = useSelector((root: RootState) => root.subscription);
-  const [, setIsSubscribed] = useState<boolean>(actual);
 
   const toggleSubscribe = useCallback((): void => {
-    setIsSubscribed((checked) => {
-      dispatch(sendCpSubscribedState(!checked));
-
-      return !checked;
-    });
-  }, [dispatch]);
+    integrationUtils.setSubscribeState(twitch, !actual);
+  }, [actual]);
+  const { available, unavailable } = useMemo(
+    () => integrationUtils.groupBy.availability(integrations.points, user),
+    [user],
+  );
 
   return (
     <div style={{ marginBottom: 20 }}>
-      <SettingsGroupTitle title={t('settings.points.title')}>
-        {hasTwitchAuth && <span className='username'>{username}</span>}
-      </SettingsGroupTitle>
-      {username && hasTwitchAuth ? (
+      <SettingsGroupTitle title={t('settings.points.title')} />
+      {unavailable.map((integration) => (
+        <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+      ))}
+      {available.length > 0 && (
         <FormGroup className='auc-settings-list'>
           <div style={{ display: 'flex', marginBottom: 10 }}>
             <LoadingButton
@@ -87,8 +87,6 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
           </FormGroup>
           <RewardPresetsForm />
         </FormGroup>
-      ) : (
-        <TwitchLoginButton />
       )}
     </div>
   );

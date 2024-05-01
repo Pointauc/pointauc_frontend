@@ -1,9 +1,7 @@
 import TwitchSvg from '@assets/icons/twitch.svg?react';
 import { buildRedirectAuthFlow } from '@components/Integration/AuthFlow/Redirect/redirect.ts';
-import { authenticateDA } from '@api/daApi.ts';
-import { setHasDAAuth, setHasTwitchAuth } from '@reducers/User/User.ts';
 import { buildBackendFlow } from '@components/Integration/PubsubFlow/Backend/backendFlow.ts';
-import { sendCpSubscribedState, sendDaSubscribedState } from '@reducers/Subscription/Subscription.ts';
+import { sendCpSubscribedState } from '@reducers/Subscription/Subscription.ts';
 import { authenticateTwitch } from '@api/twitchApi.ts';
 
 import { store } from '../../../main.tsx';
@@ -23,10 +21,9 @@ const authUrl = 'https://id.twitch.tv/oauth2/authorize';
 
 const authenticate = async (code: string) => {
   await authenticateTwitch(code);
-  store.dispatch(setHasTwitchAuth(true));
 };
 
-const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate });
+const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
 
 const twitch: Integration.Config = {
   id,

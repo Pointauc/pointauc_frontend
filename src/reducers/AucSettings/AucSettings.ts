@@ -116,9 +116,6 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     setUserState({
       username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
-      hasDAAuth: !!daAuth?.isValid,
-      hasTwitchAuth: !!twitchAuth?.isValid,
-      hasDonatPayAuth: !!donatePayAuth?.isValid,
       activeSettingsPresetId,
       authData: {
         donatePay: donatePayAuth,
@@ -132,7 +129,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     localStorage.removeItem('isMinTimeActive');
     localStorage.removeItem('minTime');
   }
-  validateIntegrations(dispatch);
+  dispatch(validateIntegrations);
 
   return user;
 };

@@ -9,8 +9,6 @@ import { Theme } from '@mui/material';
 import relativeTime from 'dayjs/plugin/relativeTime';
 
 import ROUTES from '@constants/routes.constants.ts';
-import DARedirect from '@pages/redirects/DARedirect/DARedirect.tsx';
-import TwitchRedirect from '@pages/redirects/TwitchRedirect/TwitchRedirect.tsx';
 import rootReducer, { RootState } from '@reducers/index.ts';
 import { setSlots } from '@reducers/Slots/Slots.ts';
 import SaveLoadService from '@services/SaveLoadService.ts';
@@ -20,15 +18,15 @@ import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import { Slot } from '@models/slot.model.ts';
 import i18n from '@assets/i18n/index.ts';
+import '@assets/i18n/index.ts';
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import INTEGRATIONS from '@components/Integration/integrations.ts';
+import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
 
 import '@styles/index.scss';
-import '@assets/i18n/index.ts';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import INTEGRATIONS from '@components/Integration/integrations.ts';
-import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -100,8 +98,6 @@ const redirectRoutes = integrationUtils.filterBy
   }));
 
 const router = createBrowserRouter([
-  { path: ROUTES.TWITCH_REDIRECT, element: <TwitchRedirect /> },
-  { path: ROUTES.DA_REDIRECT, element: <DARedirect /> },
   { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
   ...redirectRoutes,

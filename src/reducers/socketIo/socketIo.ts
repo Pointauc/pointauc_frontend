@@ -8,13 +8,10 @@ import { Slot, SlotResponse } from '@models/slot.model.ts';
 import { mergeLot } from '@reducers/Slots/Slots.ts';
 import { addedBidsMap, Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
-import {
-  sendCpSubscribedState,
-  sendDaSubscribedState,
-  setDaSubscribeState,
-  setSubscribeStateAll,
-  setTwitchSubscribeState,
-} from '@reducers/Subscription/Subscription.ts';
+import { setDaSubscribeState, setTwitchSubscribeState } from '@reducers/Subscription/Subscription.ts';
+import da from '@components/Integration/DA';
+import twitch from '@components/Integration/Twitch';
+import { integrationUtils } from '@components/Integration/helpers.ts';
 
 import { RootState } from '../index';
 
@@ -88,14 +85,18 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
 
   globalSocket.on('disconnect', () => {
     const { subscription, user } = getState();
+    const {
+      twitch: { actual: twitchPrevious },
+      da: { actual: daPrevious },
+    } = subscription;
+
+    globalSocket.once('connect', () => {
+      user.authData.twitch && integrationUtils.setSubscribeState(twitch, twitchPrevious, true);
+      user.authData.da && integrationUtils.setSubscribeState(da, daPrevious, true);
+    });
 
     dispatch(setTwitchSubscribeState({ loading: true, actual: false }));
     dispatch(setDaSubscribeState({ loading: true, actual: false }));
-
-    globalSocket.once('connect', () => {
-      user.hasTwitchAuth && dispatch(sendCpSubscribedState(subscription.twitch.actual));
-      user.hasDAAuth && dispatch(sendDaSubscribedState(subscription.da.actual));
-    });
   });
 
   dispatch(setSocket({ twitchSocket, daSocket, globalSocket }));

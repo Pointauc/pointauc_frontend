@@ -1,10 +1,21 @@
 @import "../../../styles/colors";
 
-.integration-switch,
 .login-button {
   &.da {
     .base-icon path {
       fill: $da;
     }
+  }
+}
+
+.integration-switch {
+  &.da {
+    .base-icon path {
+      fill: $da;
+    }
+  }
+
+  .base-icon.da path {
+    fill: $da;
   }
 }

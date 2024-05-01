@@ -19,12 +19,12 @@ const MENU_ITEMS: MenuItem[] = [
   { title: 'menu.items.statistics.title', IconComponent: EqualizerIcon, path: ROUTES.STATISTIC },
   { title: 'menu.items.history.title', IconComponent: AssignmentIcon, path: ROUTES.HISTORY },
   { title: 'menu.items.guides.title', IconComponent: HelpIcon, path: ROUTES.HELP },
-  {
-    title: 'menu.items.viewer_orders.title',
-    IconComponent: HowToVoteIcon,
-    path: ROUTES.REQUESTS,
-    divide: true,
-  },
+  // {
+  //   title: 'menu.items.viewer_orders.title',
+  //   IconComponent: HowToVoteIcon,
+  //   path: ROUTES.REQUESTS,
+  //   divide: true,
+  // },
 ];
 
 export default MENU_ITEMS;

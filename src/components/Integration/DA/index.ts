@@ -1,7 +1,6 @@
 import DASvg from '@assets/icons/DAAlert.svg?react';
 import { buildRedirectAuthFlow } from '@components/Integration/AuthFlow/Redirect/redirect.ts';
 import { authenticateDA } from '@api/daApi.ts';
-import { setHasDAAuth } from '@reducers/User/User.ts';
 import { buildBackendFlow } from '@components/Integration/PubsubFlow/Backend/backendFlow.ts';
 import { sendDaSubscribedState } from '@reducers/Subscription/Subscription.ts';
 
@@ -22,10 +21,9 @@ const authUrl = 'https://www.donationalerts.com/oauth/authorize';
 
 const authenticate = async (code: string) => {
   await authenticateDA(code);
-  store.dispatch(setHasDAAuth(true));
 };
 
-const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate });
+const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
 
 const da: Integration.Config = {
   id,

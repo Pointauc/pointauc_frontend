@@ -28,11 +28,7 @@ const RedirectPage = ({ integration }: Integration.LoginButtonProps<Integration.
       authFlow.authenticate(code).then(() => {
         setLoadingMessage(t('common.accountProgress'));
 
-        if (!hasToken) {
-          withLoading(setIsLoading, async () => loadUserData(dispatch))();
-        } else {
-          setIsLoading(false);
-        }
+        withLoading(setIsLoading, async () => loadUserData(dispatch))();
       });
     }
   }, [authFlow, dispatch, location, t]);

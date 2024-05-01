@@ -1,4 +1,18 @@
 {
+  "integration": {
+    "groups": {
+      "donations": "Донаты"
+    },
+    "donatePay": {
+      "name": "Donate Pay"
+    },
+    "da": {
+      "name": "Donation Alerts"
+    },
+    "twitch": {
+      "name": "Twitch"
+    }
+  },
   "serverNotifications": {
     "deployIncoming": "Обновление сервера начнется {{remainingEstimation}} ({{remainingTime}}). После этого донаты и награды перестанут приходить на 1-5 мин."
   },

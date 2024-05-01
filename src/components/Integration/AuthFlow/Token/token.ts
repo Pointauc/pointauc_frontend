@@ -1,5 +1,8 @@
 import TokenLoginButton from '@components/Integration/AuthFlow/Token/TokenLoginButton/TokenLoginButton.tsx';
-import { getStorageKey, integrationUtils } from '@components/Integration/helpers.ts';
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import { mergeAuthData } from '@reducers/User/User.ts';
+
+import { store } from '../../../../main.tsx';
 
 interface Params {
   authenticate: Integration.TokenFlow['authenticate'];
@@ -16,4 +19,8 @@ export const buildTokenAuthFlow = ({ id, authenticate }: Params): Integration.To
   validate: () => validate(id),
   loginComponent: TokenLoginButton,
   getAccessToken: () => integrationUtils.storage.get(id, 'authToken') ?? '',
+  revoke: () => {
+    integrationUtils.storage.remove(id, 'authToken');
+    store.dispatch(mergeAuthData({ [id]: undefined }));
+  },
 });

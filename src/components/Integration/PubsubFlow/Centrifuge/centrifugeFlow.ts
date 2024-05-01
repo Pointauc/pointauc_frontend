@@ -1,6 +1,5 @@
 import EventEmitter from '@utils/EventEmitter.ts';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import donatePayApi from '@api/donatePayApi.ts';
+import { integrationUtils, InvalidTokenError } from '@components/Integration/helpers.ts';
 import CentrifugeV2 from '@components/Integration/PubsubFlow/Centrifuge/adapters/v2.ts';
 
 interface Params {
@@ -8,6 +7,9 @@ interface Params {
   version: CentrifugeFlow.Version;
   url: string;
   parseMessage: CentrifugeFlow.AdapterParams['parseMessage'];
+  id: Integration.ID;
+  authFlow: Integration.AuthFlow;
+  getToken: () => Promise<string>;
 }
 
 const adapterMap: Record<CentrifugeFlow.Version, typeof CentrifugeFlow.Adapter> = {
@@ -19,9 +21,8 @@ interface SessionToken {
   timestamp: number;
 }
 
-const getPubsubToken = async (): Promise<string | null> => {
-  const sessionKey = integrationUtils.session.get('donatePay', 'pubsubToken2');
-  const accessToken = integrationUtils.storage.get('donatePay', 'authToken');
+const getPubsubToken = async ({ id, getToken }: Params): Promise<string> => {
+  const sessionKey = integrationUtils.session.get(id, 'pubsubToken2');
 
   if (sessionKey) {
     const { token, timestamp } = JSON.parse(sessionKey) as SessionToken;
@@ -30,17 +31,16 @@ const getPubsubToken = async (): Promise<string | null> => {
     }
   }
 
-  const token = accessToken && (await donatePayApi.pubsubToken(accessToken));
-  if (token) {
-    const tokenData = JSON.stringify({ token, timestamp: Date.now() });
-    integrationUtils.session.set('donatePay', 'pubsubToken2', tokenData);
-  }
+  const token = await getToken();
+
+  const tokenData = JSON.stringify({ token, timestamp: Date.now() });
+  integrationUtils.session.set(id, 'pubsubToken2', tokenData);
 
   return token;
 };
 
 export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
-  const { url, version, parseMessage } = params;
+  const { url, version, parseMessage, authFlow } = params;
   const events = new EventEmitter<Integration.PubsubEvents>();
   let centrifuge: CentrifugeFlow.Adapter;
 
@@ -51,10 +51,17 @@ export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
       centrifuge = new adapterMap[version](adapterParams);
     }
 
-    const token = await getPubsubToken();
-    if (!token) return;
+    try {
+      const token = await getPubsubToken(params);
 
-    return centrifuge.connect(token);
+      return centrifuge.connect(token);
+    } catch (e) {
+      if (e instanceof InvalidTokenError) {
+        void authFlow.revoke();
+      }
+
+      return Promise.reject(e);
+    }
   };
 
   const disconnect = async (): Promise<void> => {

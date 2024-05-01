@@ -1,17 +1,17 @@
 import EventEmitter from '@utils/EventEmitter.ts';
 
 interface Params {
-  sendSubscribeState: (isSubscribed: boolean) => void;
+  sendSubscribeState: (isSubscribed: boolean) => Promise<void>;
 }
 
 export const buildBackendFlow = (params: Params): Integration.PubsubFlow => {
   return {
     events: new EventEmitter<Integration.PubsubEvents>(),
     connect: async () => {
-      params.sendSubscribeState(true);
+      await params.sendSubscribeState(true);
     },
     disconnect: async () => {
-      params.sendSubscribeState(false);
+      await params.sendSubscribeState(false);
     },
     async: false,
   };

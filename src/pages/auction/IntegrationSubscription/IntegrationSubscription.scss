@@ -30,10 +30,32 @@
     font-weight: 400;
     gap: 8px;
 
+    .available-integrations {
+      gap: 4px;
+      display: flex;
+      flex-direction: row;
+
+      .integration-switch {
+          width: auto;
+      }
+    }
+
     .row {
       margin-bottom: 0;
       display: flex;
       align-items: center;
     }
+  }
+}
+
+.integration-switch {
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+
+  &.compose {
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
   }
 }

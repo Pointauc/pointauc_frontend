@@ -1,5 +1,8 @@
 {
   "integration": {
+    "groups": {
+      "donations": "Donations"
+    },
     "donatePay": {
       "name": "Donate Pay"
     },

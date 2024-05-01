@@ -7,6 +7,8 @@ import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
 import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 
+import './TokenLoginModal.scss';
+
 interface TokenLoginModalProps {
   opened: boolean;
   onClose: () => void;
@@ -22,8 +24,8 @@ const TokenLoginModal = ({ opened, onClose, authenticate, id }: TokenLoginModalP
 
   const authorize = async (): Promise<void> => {
     await withLoading(setIsLoading, async () => {
-      integrationUtils.storage.set(id, 'authToken', token);
       await authenticate(token);
+      integrationUtils.storage.set(id, 'authToken', token);
       await loadUserData(dispatch);
       onClose();
     })();
@@ -43,7 +45,7 @@ const TokenLoginModal = ({ opened, onClose, authenticate, id }: TokenLoginModalP
           </a>
         </DialogActions>
       </Dialog>
-      <Dialog open={opened} onClose={onClose} maxWidth='md' fullWidth>
+      <Dialog open={opened} onClose={onClose} maxWidth='md' fullWidth className='token-login-modal'>
         <DialogContent>
           <Typography variant='h4' align='center'>
             Интеграция с DonatePay
@@ -73,11 +75,12 @@ const TokenLoginModal = ({ opened, onClose, authenticate, id }: TokenLoginModalP
             </Typography>
           </Typography>
           <OutlinedInput
+            inputProps={{ className: 'token-input' }}
             autoComplete='off'
             fullWidth
             onChange={(e) => setToken(e.target.value)}
             value={token}
-            type='password'
+            type='text'
           />
         </DialogContent>
         <DialogActions>

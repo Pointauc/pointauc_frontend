@@ -1,0 +1,17 @@
+@import "../../../styles/colors";
+
+.login-button {
+  &.twitch {
+    .base-icon path {
+      fill: $twitch;
+    }
+  }
+}
+
+.integration-switch {
+  &.twitch {
+    .base-icon path {
+      fill: $twitch;
+    }
+  }
+}

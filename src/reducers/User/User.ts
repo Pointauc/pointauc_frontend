@@ -1,11 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Action } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 
 import { IntegrationDataDto } from '@models/user.model.ts';
-
-import { RootState } from '../index';
-import { initChatClient } from '../Requests/Requests';
 
 export interface UserInfo {
   username?: string | null;
@@ -13,9 +8,6 @@ export interface UserInfo {
 }
 
 export interface UserState extends UserInfo {
-  hasDAAuth: boolean;
-  hasTwitchAuth: boolean;
-  hasDonatPayAuth: boolean;
   activeSettingsPresetId: string;
   authData: {
     donatePay?: IntegrationDataDto;
@@ -27,9 +19,6 @@ export interface UserState extends UserInfo {
 const initialState: UserState = {
   username: null,
   userId: null,
-  hasDAAuth: false,
-  hasTwitchAuth: false,
-  hasDonatPayAuth: false,
   activeSettingsPresetId: '',
   authData: {},
 };
@@ -50,33 +39,12 @@ const userSlice = createSlice({
     setUserId(state, action: PayloadAction<string | null | undefined>): void {
       state.userId = action.payload;
     },
-    setHasDAAuth(state, action: PayloadAction<boolean>): void {
-      state.hasDAAuth = action.payload;
-    },
-    setHasDonatPayAuth(state, action: PayloadAction<boolean>): void {
-      state.hasDonatPayAuth = action.payload;
-    },
-    setHasTwitchAuth(state, action: PayloadAction<boolean>): void {
-      state.hasTwitchAuth = action.payload;
+    mergeAuthData(state, action: PayloadAction<UserState['authData']>): void {
+      state.authData = { ...state.authData, ...action.payload };
     },
   },
 });
 
-export const {
-  setUserState,
-  setActiveSettingsPresetId,
-  setUsername,
-  setHasDAAuth,
-  setUserId,
-  setHasTwitchAuth,
-  setHasDonatPayAuth,
-} = userSlice.actions;
-
-export const updateUsername =
-  (username: string): ThunkAction<void, RootState, {}, Action> =>
-  (dispatch): void => {
-    dispatch(setUsername(username));
-    dispatch(initChatClient(username));
-  };
+export const { setUserState, mergeAuthData, setActiveSettingsPresetId, setUsername, setUserId } = userSlice.actions;
 
 export default userSlice.reducer;

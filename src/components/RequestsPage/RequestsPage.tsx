@@ -7,8 +7,6 @@ import { WheelItem } from '@models/wheel.model.ts';
 import { UserRequest } from '@models/requests.model.ts';
 import { getCookie, getWheelColor } from '@utils/common.utils.ts';
 import RandomWheel from '@components/RandomWheel/RandomWheel';
-import { RootState } from '@reducers';
-import TwitchLoginButton from '@components/IntegrationPage/TwitchLoginButton/TwitchLoginButton';
 
 import StepWrapper from './StepWrapper/StepWrapper';
 import RequestsList from './RequestsList/RequestsList';
@@ -16,7 +14,6 @@ import RequestsWinners from './RequestsActions/RequestsWinners';
 import RequestsDataPanel from './RequestsDataPanel/RequestsDataPanel';
 
 const RequestsPage: FC = () => {
-  const { hasTwitchAuth } = useSelector((root: RootState) => root.user);
   const [currentData, setCurrentData] = useState<UserRequest[]>();
   const [warningOpen, setWarningOpen] = useState<boolean>(false);
   const closeWarning = (): void => {
@@ -43,10 +40,10 @@ const RequestsPage: FC = () => {
     setCurrentData(undefined);
   }, []);
 
-  if (!hasTwitchAuth) {
+  if (true as any) {
     return (
       <div>
-        <TwitchLoginButton />
+        {/*<TwitchLoginButton />*/}
         <div>Авторизируйтесь, чтобы продолжить</div>
       </div>
     );
