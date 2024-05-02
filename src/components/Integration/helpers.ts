@@ -89,6 +89,7 @@ export const integrationUtils = {
 
       store.dispatch(setSubscribeState({ state: { loading: false }, id }));
     } catch (e) {
+      console.log(e);
       store.dispatch(setSubscribeState({ state: previous, id }));
     }
   },

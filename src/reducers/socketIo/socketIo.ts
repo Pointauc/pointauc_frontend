@@ -83,6 +83,25 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
   const twitchSocket = io(`${getSocketIOUrl()}/twitch`, { query: { cookie: document.cookie } });
   const daSocket = io(`${getSocketIOUrl()}/da`, { query: { cookie: document.cookie } });
 
+  let statesBeforeDisconnect = { twitch: false, da: false };
+
+  globalSocket.on('connect', () => {
+    const { user } = getState();
+    const { twitch: twitchPrevious, da: daPrevious } = statesBeforeDisconnect;
+
+    if (user.authData.twitch && twitchPrevious) {
+      integrationUtils.setSubscribeState(twitch, twitchPrevious, true);
+    } else {
+      dispatch(setTwitchSubscribeState({ loading: false }));
+    }
+
+    if (user.authData.da && daPrevious) {
+      integrationUtils.setSubscribeState(da, daPrevious, true);
+    } else {
+      dispatch(setDaSubscribeState({ loading: false }));
+    }
+  });
+
   globalSocket.on('disconnect', () => {
     const { subscription, user } = getState();
     const {
@@ -90,10 +109,7 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
       da: { actual: daPrevious },
     } = subscription;
 
-    globalSocket.once('connect', () => {
-      user.authData.twitch && integrationUtils.setSubscribeState(twitch, twitchPrevious, true);
-      user.authData.da && integrationUtils.setSubscribeState(da, daPrevious, true);
-    });
+    statesBeforeDisconnect = { twitch: twitchPrevious, da: daPrevious };
 
     dispatch(setTwitchSubscribeState({ loading: true, actual: false }));
     dispatch(setDaSubscribeState({ loading: true, actual: false }));
