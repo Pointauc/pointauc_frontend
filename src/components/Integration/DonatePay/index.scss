@@ -29,3 +29,23 @@
     }
   }
 }
+
+.base-icon.donatePay {
+  width: 30px;
+  height: 30px;
+
+  path {
+    fill: #8ddc96;
+  }
+}
+
+.MuiButton-containedPrimary {
+  .base-icon.donatePay {
+    width: 30px;
+    height: 30px;
+
+    path {
+      fill: #349b40;
+    }
+  }
+}

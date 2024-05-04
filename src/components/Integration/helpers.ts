@@ -15,8 +15,8 @@ const setStorageValue = (id: Integration.Config['id'], key: StorageKey, value: s
   localStorage.setItem(getStorageKey(id, key), value);
 };
 
-const isAvailable = (integration: Integration.Config, user: UserState): boolean => {
-  return !!user.authData[integration.id]?.isValid && integration.authFlow.validate();
+const isAvailable = (integration: Integration.Config, authData: UserState['authData']): boolean => {
+  return !!authData[integration.id]?.isValid && integration.authFlow.validate();
 };
 
 interface AvailabilityMap {
@@ -50,10 +50,10 @@ export const integrationUtils = {
       integrations.filter((integration) => integration.authFlow.type === type) as Integration.Config<T>[],
   },
   groupBy: {
-    availability: (integrations: Integration.Config[], user: UserState) =>
+    availability: (integrations: Integration.Config[], authData: UserState['authData']) =>
       integrations.reduce<AvailabilityMap>(
         (acc, item) => {
-          if (isAvailable(item, user)) {
+          if (isAvailable(item, authData)) {
             acc.available.push(item);
           } else {
             acc.unavailable.push(item);

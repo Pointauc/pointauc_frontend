@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useCallback } from 'react';
+import { ChangeEvent, FC, ReactNode, useCallback } from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import { Control, Controller, ControllerRenderProps } from 'react-hook-form';
 
@@ -7,7 +7,7 @@ import FieldLabel from '@components/Form/FieldLabel';
 interface FormSwitchProps {
   name: string;
   control: Control<any>;
-  label: string;
+  label: ReactNode;
   hint?: string;
 }
 

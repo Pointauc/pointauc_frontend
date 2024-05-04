@@ -15,3 +15,12 @@
     }
   }
 }
+
+.login-button.twitch {
+  background-color: #7c43d0 !important;
+  color: #F1F1F1 !important;
+
+  &:hover {
+    background-color: #6c38b8 !important;
+  }
+}

@@ -111,13 +111,19 @@
     "rules": "Правила"
   },
   "settings": {
+    "pageTitle": "Настройки",
+    "groups": {
+      "auc": "Аукцион",
+      "integrations": "Интеграции"
+    },
+
     "settings": "Настройки",
     "integrations": "Интеграции",
     "addNewBids": "Сразу добавлять все новые награды",
     "token": {
       "token": "Личный токен",
       "show": "Показать токен",
-      "openDocs": "Документация",
+      "openDocs": "Документация Pointauc API",
       "copy": "Копировать",
       "update": "Сгенерировать новый",
       "dontShareToken": "Не показывайте этот токен недоверенным ресурсам.",
@@ -130,6 +136,8 @@
       "backgroundTone": "Тон фона"
     },
     "integrationCommon": {
+      "integrationCommon": "Общее",
+      "sortBids": "Сортировать очередь ставок",
       "title": "Общее",
       "insertStrategyLabel": "Автодобавление ставок",
       "insertStrategy": {
@@ -155,20 +163,22 @@
     },
     "luckyWheel": {
       "groupTitle": "Колесо удачи",
-      "luckyWheel": "Включить",
+      "luckyWheel": "Колесо удачи",
       "desc": "Прокрутите колесо и получите возможность умножить ставку",
       "selectBet": "Зритель выбирает лот"
     },
     "donations": {
+      "donations": "Донаты",
       "title": "Донаты",
       "pointsRate": "Курс рубля к поинтам",
       "addTimeOnDonation": "Добавлять время при донате"
     },
     "points": {
+      "points": "Баллы канала",
       "title": "Twitch"
     },
     "auc": {
-      "auc": "Аукцион",
+      "auc": "Таблица",
       "showBuyout": "Показать выкуп",
       "showTotal": "Показать итоговую сумму",
       "showWinningChances": "Показать шансы выигрыша",
@@ -181,7 +191,7 @@
       "hideAmounts": "Скрыть стоимости лотов и ставок"
     },
     "marbles": {
-      "marbles": "Шары",
+      "marbles": "Шаровой аукцион",
       "marbleAuc": "Шаровой аукцион",
       "marblesAucDesc": "Все новые ставки будут автоматически пересчитываться в шары",
       "marbleCost": "Стоимость шара",
@@ -195,10 +205,14 @@
       "startTimeDesc": "Время на которое возвращается таймер при сбросе.",
       "additionalTime": "Время прибавления таймера",
       "additionalTimeDesc": "Время на которое изменится таймер при нажатии на +/-.",
-      "addTimeOnLeaderChange": "Добавлять время при смене лидера",
-      "addTimeOnNewPosition": "Добавлять время за новую позицию",
-      "maxAdditionalTime": "Макс. время автоматического добавления",
-      "minTimeRequired": "Не добавлять время если на таймере больше чем"
+      "addTimeOnLeaderChange": "Смена лидера",
+      "addTimeOnNewPosition": "Новая позиция",
+      "maxAdditionalTime": "Время таймера больше чем",
+      "minTimeRequired": "Не добавлять время если на таймере больше чем",
+      "addTimeOnDonation": "Новый донат",
+
+      "addOnCondition": "Добавлять время при условии",
+      "notOnCondition": "НЕ добавлять время при условии"
     }
   },
   "wheel": {

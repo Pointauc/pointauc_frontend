@@ -13,7 +13,6 @@ import ROUTES from './routes.constants';
 
 const MENU_ITEMS: MenuItem[] = [
   { title: 'menu.items.auction.title', IconComponent: AuctionSvg as any, path: ROUTES.HOME },
-  { title: 'menu.items.integration.title', IconComponent: AccountCircleIcon, path: ROUTES.INTEGRATION },
   { title: 'menu.items.settings.title', IconComponent: SettingsIcon, path: ROUTES.SETTINGS },
   { title: 'menu.items.wheel.title', IconComponent: WheelSvg as any, path: ROUTES.WHEEL },
   { title: 'menu.items.statistics.title', IconComponent: EqualizerIcon, path: ROUTES.STATISTIC },

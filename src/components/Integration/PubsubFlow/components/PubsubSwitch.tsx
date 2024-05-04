@@ -32,7 +32,7 @@ const PubsubSwitch: FC<Props> = ({ integration, hideTitle }) => {
       labelPlacement='start'
       control={<Switch onChange={handleSwitchChange} disabled={loading} checked={actual} />}
       label={
-        <Grid container alignItems='center'>
+        <Grid container alignItems='center' gap={1}>
           <Icon className='base-icon' />
           {!hideTitle && <Typography className='label'>{t(`integration.${id}.name`)}</Typography>}
         </Grid>

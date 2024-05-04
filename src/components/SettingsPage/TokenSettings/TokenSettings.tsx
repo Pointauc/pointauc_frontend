@@ -42,7 +42,6 @@ const TokenSettings = () => {
 
   return (
     <div className='token-settings'>
-      <SettingsGroupTitle title={t('settings.token.token')} />
       <Typography variant='h6'>
         <Link href='https://app.theneo.io/bf08f5b1-1025-4a83-8518-14458df03592/pointauc/api-reference' target='_blank'>
           {t('settings.token.openDocs')}

@@ -1,32 +1,26 @@
-import { FC, useCallback, useMemo } from 'react';
-import { Button, FormGroup } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames';
+import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ThunkDispatch } from 'redux-thunk';
-import { Control } from 'react-hook-form';
+import { Button, FormGroup } from '@mui/material';
+import classNames from 'classnames';
+import { useSelector } from 'react-redux';
+import { useFormContext } from 'react-hook-form';
 
-import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle';
-import { RootState } from '@reducers';
-import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
-import LoadingButton from '@components/LoadingButton/LoadingButton';
+import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
+import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import { closeTwitchRewards } from '@api/twitchApi.ts';
+import FormSwitch from '@components/Form/FormSwitch/FormSwitch.tsx';
+import RewardPresetsForm from '@components/IntegrationPage/TwitchIntegration/RewardPresetsForm.tsx';
+import { RootState } from '@reducers';
 import { integrationUtils } from '@components/Integration/helpers.ts';
-import { integrations } from '@components/Integration/integrations.ts';
 import twitch from '@components/Integration/Twitch';
+import { integrations } from '@components/Integration/integrations.ts';
 
-import RewardPresetsForm from './RewardPresetsForm';
+import '@pages/settings/IntegrationsSettings/Points/PointsSettings.scss';
 
-import './TwitchIntegration.scss';
-
-interface TwitchIntegrationProps {
-  control: Control;
-}
-
-const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+const PointsSettings = () => {
   const { t } = useTranslation();
-  const user = useSelector((root: RootState) => root.user);
+  const { control } = useFormContext();
+  const authData = useSelector((root: RootState) => root.user.authData);
   const {
     twitch: { actual, loading },
   } = useSelector((root: RootState) => root.subscription);
@@ -35,13 +29,12 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
     integrationUtils.setSubscribeState(twitch, !actual);
   }, [actual]);
   const { available, unavailable } = useMemo(
-    () => integrationUtils.groupBy.availability(integrations.points, user),
-    [user],
+    () => integrationUtils.groupBy.availability(integrations.points, authData),
+    [authData],
   );
 
   return (
-    <div style={{ marginBottom: 20 }}>
-      <SettingsGroupTitle title={t('settings.points.title')} />
+    <SettingsGroup className='points-settings' title={t('settings.points.points')}>
       {unavailable.map((integration) => (
         <integration.authFlow.loginComponent key={integration.id} integration={integration} />
       ))}
@@ -67,14 +60,6 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
             </Button>
           </div>
           <FormGroup row className='auc-settings-row'>
-            <FormSwitch
-              name='alwaysAddNew'
-              control={control}
-              label={t('settings.addNewBids')}
-              hint='Не рекомендуется для обычных аукционов!'
-            />
-          </FormGroup>
-          <FormGroup row className='auc-settings-row'>
             <FormSwitch name='isRefundAvailable' control={control} label={t('settings.twitch.returnCanceledBids')} />
           </FormGroup>
           <FormGroup row className='auc-settings-row'>
@@ -88,8 +73,8 @@ const TwitchIntegration: FC<TwitchIntegrationProps> = ({ control }) => {
           <RewardPresetsForm />
         </FormGroup>
       )}
-    </div>
+    </SettingsGroup>
   );
 };
 
-export default TwitchIntegration;
+export default PointsSettings;

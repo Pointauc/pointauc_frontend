@@ -1,12 +1,15 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller, useFormContext } from 'react-hook-form';
-import { FormControl, MenuItem, Select, Typography, FormGroup } from '@mui/material';
+import { FormControl, MenuItem, Select, Typography, FormGroup, Grid } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle.tsx';
 import { InsertStrategy } from '@enums/settings.enum.ts';
 import { RootState } from '@reducers';
+import BidsSortSelect from '@components/SettingsPage/AucSettings/BidsSortSelect.tsx';
+
+import '@pages/settings/IntegrationsSettings/Common/CommonIntegrationsSettings.scss';
 
 const IntegrationCommon = () => {
   const { username } = useSelector((root: RootState) => root.user);
@@ -14,14 +17,9 @@ const IntegrationCommon = () => {
   const { control } = useFormContext();
 
   return (
-    <>
-      <SettingsGroupTitle title={t('title')}>
-        {username && <span className='username'>{username}</span>}
-      </SettingsGroupTitle>
+    <Grid container>
       <FormGroup row className='auc-settings-row'>
-        <Typography variant='body1' className='MuiFormControlLabel-label'>
-          {t('insertStrategyLabel')}
-        </Typography>
+        <Typography className='label'>{t('insertStrategyLabel')}</Typography>
         <Controller
           name='insertStrategy'
           control={control}
@@ -48,7 +46,11 @@ const IntegrationCommon = () => {
           )}
         />
       </FormGroup>
-    </>
+      <FormGroup row className='auc-settings-row'>
+        <Typography className='label'>{t('sortBids')}</Typography>
+        <BidsSortSelect control={control} />
+      </FormGroup>
+    </Grid>
   );
 };
 

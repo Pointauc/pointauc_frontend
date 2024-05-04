@@ -1,3 +1,11 @@
+.new-search-page {
+  h6 {
+    font-size: 18px;
+    //line-height: 20px;
+    //font-weight: unset;
+  }
+}
+
 .auc-settings {
   &-list {
     margin-bottom: 15px;
@@ -8,8 +16,6 @@
   }
 
   &-option {
-    margin-left: 15px;
-
     .MuiSelect-selectMenu {
       display: flex;
     }
@@ -20,8 +26,10 @@
   }
 
   &-row {
+    display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    gap: 4px;
 
     &:last-of-type {
       margin-bottom: 0;
@@ -30,8 +38,7 @@
 }
 
 .upload-background {
-  margin-right: 15px !important;
-  margin-left: 10px !important;
+  margin-right: 10px !important;
 }
 
 .settings {
@@ -43,7 +50,7 @@
   }
 
   .MuiFormControlLabel-label {
-    width: 380px;
+    min-width: 200px;
   }
 
   .field {

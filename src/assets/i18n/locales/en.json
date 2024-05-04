@@ -157,6 +157,12 @@
     "save": "Save"
   },
   "settings": {
+    "pageTitle": "Settings",
+    "groups": {
+      "auc": "Auction",
+      "integrations": "Integrations"
+    },
+
     "addNewBids": "Automatically Add All New Rewards",
     "appearance": {
       "appearance": "Appearance",
@@ -164,6 +170,8 @@
       "primaryColor": "Primary Color"
     },
     "integrationCommon": {
+      "integrationCommon": "Common",
+      "sortBids": "Sort Purchases for Points",
       "title": "Common",
       "insertStrategyLabel": "Auto-adding bids",
       "insertStrategy": {
@@ -182,10 +190,11 @@
       "showBuyout": "Show Buyout",
       "showTotal": "Show Total Amount",
       "showWinningChances": "Show Winning Chances",
-      "sortBids": "Sort Purchases for Points",
+      "sortBids": "Sort Bids queue",
       "uploadBackground": "Upload Background"
     },
     "donations": {
+      "donations": "Donations",
       "addTimeOnDonation": "Add Time on Donation",
       "pointsRate": "Exchange Rate from Ruble to Points",
       "title": "Donations"
@@ -194,7 +203,7 @@
     "luckyWheel": {
       "desc": "Spin the wheel and get a chance to multiply the bid",
       "groupTitle": "Lucky Wheel",
-      "luckyWheel": "Enable",
+      "luckyWheel": "Wheel for bids",
       "selectBet": "Viewer selects a lot"
     },
     "marbles": {
@@ -207,25 +216,30 @@
       "newPositionCostDesc": "When adding a new lot, the cost of the FIRST marble will be calculated based on this value"
     },
     "points": {
+      "points": "Channel points",
       "title": "Twitch"
     },
     "settings": "Settings",
     "stopwatch": {
       "additionalTime": "Timer Addition Time",
       "additionalTimeDesc": "Time by which the timer will change when pressing +/-.",
-      "addTimeOnLeaderChange": "Add Time on Leader Change",
-      "addTimeOnNewPosition": "Add Time for New Position",
-      "maxAdditionalTime": "Max. Time for Automatic Addition",
+      "addTimeOnLeaderChange": "Leader Change",
+      "addTimeOnNewPosition": "New Position",
+      "maxAdditionalTime": "Time is more then",
       "minTimeRequired": "Do not add time if the timer has more than",
       "startTime": "Initial Time",
       "startTimeDesc": "Time to which the timer returns when reset.",
-      "stopwatch": "Timer"
+      "stopwatch": "Timer",
+      "addTimeOnDonation": "On Donation",
+
+      "addOnCondition": "Add time on conditions",
+      "notOnCondition": "DO NOT Add time on conditions"
     },
     "token": {
       "copied": "Copied",
       "copy": "Copy",
       "dontShareToken": "Do not share this token with untrusted sources.",
-      "openDocs": "Documentation",
+      "openDocs": "Pointauc API Documentation",
       "show": "Show Token",
       "token": "Personal Token",
       "tokenUpdated": "Token Updated",

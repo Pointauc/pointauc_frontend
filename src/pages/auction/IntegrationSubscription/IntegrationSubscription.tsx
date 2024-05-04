@@ -17,7 +17,10 @@ const IntegrationSubscription: FC = () => {
   const { t } = useTranslation();
   const user = useSelector((root: RootState) => root.user);
 
-  const { available, unavailable } = useMemo(() => integrationUtils.groupBy.availability(INTEGRATIONS, user), [user]);
+  const { available, unavailable } = useMemo(
+    () => integrationUtils.groupBy.availability(INTEGRATIONS, user.authData),
+    [user.authData],
+  );
   const { donate, points } = useMemo(() => integrationUtils.groupBy.type(available), [available]);
 
   return (

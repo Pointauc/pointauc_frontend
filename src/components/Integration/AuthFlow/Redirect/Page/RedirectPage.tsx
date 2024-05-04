@@ -33,7 +33,11 @@ const RedirectPage = ({ integration }: Integration.LoginButtonProps<Integration.
     }
   }, [authFlow, dispatch, location, t]);
 
-  return isLoading ? <LoadingPage helpText={loadingMessage} /> : <Navigate to={ROUTES.INTEGRATION} />;
+  return isLoading ? (
+    <LoadingPage helpText={loadingMessage} />
+  ) : (
+    <Navigate to={ROUTES.SETTINGS} state={{ subpage: 'integrations' }} />
+  );
 };
 
 export default RedirectPage;

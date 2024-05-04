@@ -122,12 +122,30 @@
 
 .r {
   display: flex;
+
+  .center {
+    align-items: center;
+  }
 }
 
 .c {
   display: flex;
   height: 100%;
   flex-direction: column;
+}
+
+.r,.c {
+  .gap-1 {
+    gap: 4px;
+  }
+
+  .gap-2 {
+    gap: 8px;
+  }
+
+  .gap-3 {
+    gap: 12px;
+  }
 }
 
 .grow {

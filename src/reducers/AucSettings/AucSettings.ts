@@ -44,8 +44,8 @@ export const initialState: AucSettingsState = {
     marbleCategory: 100,
     showChances: false,
     maxTime: 15,
-    minTime: minTime ? Number(minTime) : 2,
-    isMinTimeActive,
+    minTime: 2,
+    isMinTimeActive: false,
     isMaxTimeActive: false,
     newSlotIncrement: 60,
     isNewSlotIncrement: false,
@@ -110,7 +110,8 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
   const { twitchAuth, activeSettings, daAuth, donatePayAuth, activeSettingsPresetId } = user;
 
   if (activeSettings) {
-    dispatch(setAucSettings(activeSettings));
+    const { startTime, timeStep, ...settings } = activeSettings;
+    dispatch(setAucSettings(settings));
   }
   dispatch(
     setUserState({
@@ -124,11 +125,11 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
       },
     }),
   );
-  if (localStorage.getItem('isMinTimeActive') || localStorage.getItem('minTime')) {
-    dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime, isMinTimeActive }));
-    localStorage.removeItem('isMinTimeActive');
-    localStorage.removeItem('minTime');
-  }
+  // if (localStorage.getItem('minTime')) {
+  //   dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime }));
+  //   localStorage.removeItem('isMinTimeActive');
+  //   localStorage.removeItem('minTime');
+  // }
   dispatch(validateIntegrations);
 
   return user;

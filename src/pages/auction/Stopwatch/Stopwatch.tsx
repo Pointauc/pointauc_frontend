@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
-import { sendCpSubscribedState } from '@reducers/Subscription/Subscription.ts';
-
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import twitch from '@components/Integration/Twitch';
 import './Stopwatch.scss';
 
 export const STOPWATCH = {
@@ -71,7 +71,7 @@ const Stopwatch: React.FC = () => {
     }
 
     setIsStopwatchChanged(false);
-    dispatch(sendCpSubscribedState(!isStopped));
+    integrationUtils.setSubscribeState(twitch, !isStopped);
   }, [actualTwitchSub, dispatch, dynamicRewards, isStopped, isStopwatchChanged, loadingTwitchSub]);
 
   const winnerSlot = useMemo(() => {

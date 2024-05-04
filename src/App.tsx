@@ -10,14 +10,13 @@ import { RootState } from '@reducers';
 import donatePay from '@components/Integration/DonatePay';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
+import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
 
 import ROUTES from './constants/routes.constants';
 import AucPage from './pages/auction/AucPage';
 import { MenuItem } from './models/common.model';
 import MENU_ITEMS from './constants/menuItems.constants';
-import SettingsPage from './components/SettingsPage/SettingsPage';
 import { loadUserData } from './reducers/AucSettings/AucSettings';
-import IntegrationPage from './components/IntegrationPage/IntegrationPage';
 import AlertsContainer from './components/AlertsContainer/AlertsContainer';
 import HistoryPage from './pages/history/HistoryPage/HistoryPage';
 import WheelPage from './pages/wheel/WheelPage/WheelPage';
@@ -167,8 +166,7 @@ const App: React.FC = () => {
         </div>
         <AlertsContainer />
         <Routes>
-          <Route path={ROUTES.INTEGRATION} element={<IntegrationPage />} />
-          <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+          <Route path={ROUTES.SETTINGS} element={<NewSettingsPage />} />
           <Route path={ROUTES.WHEEL} element={<WheelPage />} />
           <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
           <Route path={ROUTES.HELP} element={<HelpPage />} />
