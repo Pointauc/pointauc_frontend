@@ -21,9 +21,6 @@ interface AucSettingsState {
   view: ViewSettings;
   settings: AucSettingsDto;
 }
-
-const isMinTimeActive = localStorage.getItem('isMinTimeActive') === 'true';
-const minTime = localStorage.getItem('minTime');
 const showRules = localStorage.getItem('showRules');
 
 export const initialState: AucSettingsState = {

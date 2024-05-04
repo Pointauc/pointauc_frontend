@@ -1,11 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormGroup, Typography } from '@mui/material';
+import { FormGroup } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
 import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch.tsx';
-import BidsSortSelect from '@components/SettingsPage/AucSettings/BidsSortSelect.tsx';
 
 import '@pages/settings/AuctionSettings/Auction/AuctionSettings.scss';
 

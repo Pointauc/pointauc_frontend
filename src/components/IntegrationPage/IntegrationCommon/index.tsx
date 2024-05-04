@@ -12,7 +12,6 @@ import BidsSortSelect from '@components/SettingsPage/AucSettings/BidsSortSelect.
 import '@pages/settings/IntegrationsSettings/Common/CommonIntegrationsSettings.scss';
 
 const IntegrationCommon = () => {
-  const { username } = useSelector((root: RootState) => root.user);
   const { t } = useTranslation(undefined, { keyPrefix: 'settings.integrationCommon' });
   const { control } = useFormContext();
 

@@ -14,7 +14,7 @@ interface Props extends Integration.PubsubComponentProps {
 }
 
 const PubsubSwitch: FC<Props> = ({ integration, hideTitle }) => {
-  const { id, pubsubFlow } = integration;
+  const { id } = integration;
   const { t } = useTranslation();
   const { actual, loading } = useSelector((root: RootState) => root.subscription[id]);
   const Icon = integration.branding.icon;

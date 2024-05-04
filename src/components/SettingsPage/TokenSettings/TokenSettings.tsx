@@ -5,7 +5,6 @@ import Grid2 from '@mui/material/Unstable_Grid2';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useDispatch } from 'react-redux';
 
-import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle.tsx';
 import { loadToken, updateToken } from '@api/tokenApi.ts';
 import withLoading from '@decorators/withLoading.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';

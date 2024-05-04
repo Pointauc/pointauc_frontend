@@ -1,8 +1,6 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import HelpIcon from '@mui/icons-material/Help';
-import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import AuctionSvg from '@assets/icons/auction.svg?react';

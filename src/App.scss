@@ -2,34 +2,35 @@
   display: flex;
   min-height: 100vh;
   max-width: 100vw;
-  //color: #fff;
 
   &-drawer {
     .author-contacts {
-      display: none;
+      h6, a {
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .icon {
+        position: relative;
+        left: -24px;
+        scale: 1.3;
+
+        transition: left 0.2s, scale 0.2s;
+      }
     }
 
     &.open {
       width: 240px;
 
       .author-contacts {
-        display: flex;
-
-        @keyframes show-with-delay {
-          0% {
-            display: none;
-          }
-
-          99% {
-            display: none;
-          }
-
-          100% {
-            display: flex;
-          }
+        h6, a {
+          opacity: 1;
         }
 
-        animation: show-with-delay 0.2s;
+        .icon {
+          left: 0;
+          scale: 1;
+        }
       }
     }
 

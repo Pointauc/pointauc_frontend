@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-
-import '@pages/settings/SettingsGroup/SettingsGroup.scss';
 import { Typography } from '@mui/material';
 import classNames from 'classnames';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch.tsx';
+
+import '@pages/settings/SettingsGroup/SettingsGroup.scss';
 
 interface SettingsGroupProps {
   title: string;

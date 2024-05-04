@@ -11,8 +11,6 @@ import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import { getCookie } from '@utils/common.utils.ts';
 
-const hasToken = !!getCookie('userSession');
-
 const RedirectPage = ({ integration }: Integration.LoginButtonProps<Integration.RedirectFlow>) => {
   const { t } = useTranslation();
   const { authFlow } = integration;

@@ -2,8 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FormGroup, Grid, Typography } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';

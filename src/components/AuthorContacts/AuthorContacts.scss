@@ -1,6 +1,9 @@
 .author-contacts {
   padding: 16px;
 
+  text-overflow: ellipsis;
+  flex-wrap: nowrap;
+
   h6 {
     font-size: 1.15em;
   }

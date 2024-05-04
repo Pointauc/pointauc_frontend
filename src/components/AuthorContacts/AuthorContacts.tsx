@@ -13,8 +13,8 @@ const AuthorContacts = () => {
     <Grid container direction='column' className='author-contacts' gap={3}>
       <Grid container item gap={1}>
         <Typography variant='h6'>{t('author.contacts')}</Typography>
-        <Grid container item gap={1} alignItems='center' className='contact'>
-          <TelegramIcon />
+        <Grid wrap='nowrap' container item gap={1} alignItems='center' className='contact'>
+          <TelegramIcon className='icon' />
           <a href='https://t.me/kozjarych' rel='noreferrer' target='_blank'>
             @kozjarych
           </a>
@@ -22,8 +22,8 @@ const AuthorContacts = () => {
       </Grid>
       <Grid container item gap={1}>
         <Typography variant='h6'>{t('author.support')}</Typography>
-        <Grid container item gap={1} alignItems='center' className='contact'>
-          <Boosty className='boosty-icon' />
+        <Grid container wrap='nowrap' item gap={1} alignItems='center' className='contact'>
+          <Boosty className='boosty-icon icon' />
           <a href='https://boosty.to/kozjar/donate' rel='noreferrer' target='_blank'>
             boosty/kozjar
           </a>
