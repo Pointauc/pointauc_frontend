@@ -70,7 +70,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
 
 // ToDo: refactor
 const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
-  items,
+  items: _items,
   deleteItem,
   onWin,
   initialSpinTime = 20,
@@ -80,6 +80,10 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   hideDeleteItem,
 }: RandomWheelProps<TWheelItem>): ReactElement => {
   const elements = useMemo(() => ({ ...initialAvailableSettings, ...elementsFromProps }), [elementsFromProps]);
+
+  const [items, setItems] = useState<TWheelItem[]>(() =>
+    getTotalSize(_items) ? _items.filter(({ amount }) => amount) : _items.map((item) => ({ ...item, amount: 1 })),
+  );
 
   const [activeEmote, setActiveEmote] = useState<string | undefined | null>(localStorage.getItem('wheelEmote'));
   const [spinTime, setSpinTime] = useState<number>(initialSpinTime);
@@ -161,13 +165,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
     [currentDuel],
   );
 
-  const filteredItems = useMemo(
-    () =>
-      getTotalSize(rawItems)
-        ? rawItems.filter(({ amount }) => amount)
-        : rawItems.map((item) => ({ ...item, amount: 1 })),
-    [rawItems],
-  );
+  const filteredItems = rawItems;
 
   const currentItems = useMemo(
     () => (wheelFormat === WheelFormat.BattleRoyal ? duelItems : filteredItems),
@@ -216,10 +214,12 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
       }));
     };
 
-    const invertNew = (items: TWheelItem[]): TWheelItem[] => {
-      const total = 1 / items.reduce((acc, { amount }) => acc + 1 / amount, 0);
+    const invertNew = (currentItems: TWheelItem[]): TWheelItem[] => {
+      const amountModifier = 0.5 + (currentItems.length / items.length) * 0.5;
+      const normItems = currentItems.map((item) => ({ ...item, amount: item.amount ** amountModifier }));
+      const total = 1 / normItems.reduce((acc, { amount }) => acc + 1 / amount, 0);
 
-      return items.map((item) => ({ ...item, amount: total / item.amount }));
+      return normItems.map((item) => ({ ...item, amount: total / item.amount }));
     };
 
     if (wheelFormat === WheelFormat.Dropout) {
@@ -264,6 +264,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const handleCustomWheel = useCallback(
     (customItems: Slot[], saveSlots: boolean) => {
       setRawItems(customItems.map(slotToWheel) as any);
+      setItems(customItems.map(slotToWheel) as any);
 
       if (saveSlots) {
         dispatch(setSlots(customItems));
