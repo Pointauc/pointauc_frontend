@@ -216,6 +216,8 @@
     }
   },
   "wheel": {
+    "hideInactive": "Скрыть выбывшие лоты",
+    "totalItems": "Участников в колесе: {{amount}}",
     "newDropout": {
       "description": "КАК ЭТО РАБОТАЕТ?"
     },

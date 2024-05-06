@@ -34,3 +34,32 @@ export const timedFunction = <T extends (...args: any) => any>(
 
   return callable;
 };
+
+export enum Ease {
+  Linear = 'linear',
+  Quad = 'quad',
+  Cubic = 'cubic',
+  Quart = 'quart',
+  Quint = 'quint',
+  Sine = 'sine',
+  Expo = 'expo',
+  Circ = 'circ',
+  Back = 'back',
+  Elastic = 'elastic',
+  Bounce = 'bounce',
+}
+
+const easeMap: Record<string, (progress: number) => number> = {
+  [Ease.Linear]: (progress) => progress,
+  [Ease.Quad]: (progress) => progress * progress,
+  [Ease.Cubic]: (progress) => progress * progress * progress,
+  [Ease.Quart]: (progress) => progress * progress * progress * progress,
+  [Ease.Quint]: (progress) => progress * progress * progress * progress * progress,
+  [Ease.Sine]: (progress) => 1 - Math.cos((progress * Math.PI) / 2),
+  [Ease.Expo]: (progress) => (progress === 0 ? 0 : Math.pow(2, 10 * (progress - 1))),
+  [Ease.Circ]: (progress) => 1 - Math.sqrt(1 - progress * progress),
+};
+
+export const interpolate = (start: number, end: number, progress: number, ease = Ease.Linear): number => {
+  return start + (end - start) * easeMap[ease](progress);
+};

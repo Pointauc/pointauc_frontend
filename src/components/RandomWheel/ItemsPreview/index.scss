@@ -1,0 +1,27 @@
+@import "src/styles/colors";
+
+.wheel-preview {
+
+}
+
+.wheel-preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  flex-grow: 15;
+  flex-basis: 0;
+  gap: 8px;
+  padding-bottom: 8px;
+
+  .wheel-controls-checkbox .MuiFormControlLabel-label {
+    font-size: 1.1rem;
+  }
+
+  &.collapsed {
+    flex-grow: 1;
+
+    .wheel-preview-collapse-button {
+      transform: scale(-1, 1);
+    }
+  }
+}

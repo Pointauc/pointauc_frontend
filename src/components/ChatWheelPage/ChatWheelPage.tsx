@@ -91,7 +91,7 @@ const ChatWheelPage: FC = () => {
           }
 
           if (!isSpinning.current) {
-            wheelController.current?.spin();
+            wheelController.current?.spin().then(handleWinner);
             isSpinning.current = true;
           }
         }
@@ -133,7 +133,7 @@ const ChatWheelPage: FC = () => {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <BaseWheel items={participants} controller={wheelController} onWin={handleWinner} spinTime={6000} />
+      <BaseWheel items={participants} controller={wheelController} spinTime={6000} />
     </div>
   );
 };

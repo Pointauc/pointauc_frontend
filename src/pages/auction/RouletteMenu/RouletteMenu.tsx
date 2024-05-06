@@ -11,26 +11,31 @@ import './RouletteMenu.scss';
 const roulettePresets: RoulettePreset[] = [
   {
     multiplier: 2,
+    id: 2,
     amount: 18,
     color: '#4682B4',
   },
   {
     multiplier: 4,
+    id: 4,
     amount: 9,
     color: '#bcc95b',
   },
   {
     multiplier: 6,
+    id: 6,
     amount: 6,
     color: '#FF7F50',
   },
   {
     multiplier: 18,
+    id: 18,
     amount: 2,
     color: '#75adad',
   },
   {
     multiplier: 36,
+    id: 36,
     amount: 1,
     color: '#5b5b5b',
   },

@@ -4,15 +4,16 @@ import classNames from 'classnames';
 import { MapInteractionCSS } from 'react-map-interaction';
 import { Button, Typography } from '@mui/material';
 
-import SlotsBracket, { SlotsBracketProps } from '@components/SlotsBracket/SlotsBracket';
 import { Point } from '@services/SpinPaceService.ts';
 import { Game } from '@components/Bracket/components/model';
+import Bracket from '@components/Bracket/components/Bracket.tsx';
 
-interface ResizableBracket extends Omit<SlotsBracketProps, 'currentGame'> {
+interface ResizableBracket {
   currentGame?: Game | null;
+  rootGame?: Game | null;
 }
 
-const ResizableBracket: FC<ResizableBracket> = ({ currentGame, ...props }) => {
+const ResizableBracket: FC<ResizableBracket> = ({ currentGame, rootGame }) => {
   const [isFullscreenBracket, setIsFullscreenBracket] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
   const [translation, setTranslation] = useState<Point>({ x: 0, y: 0 });
@@ -67,7 +68,7 @@ const ResizableBracket: FC<ResizableBracket> = ({ currentGame, ...props }) => {
           <Typography className='hint'>можно перемещать и масштабировать</Typography>
         </div>
         <MapInteractionCSS value={{ scale, translation }} onChange={handleMapChange}>
-          <SlotsBracket {...props} currentGame={currentGame?.id || ''} />
+          {rootGame && <Bracket rootGame={rootGame} currentGame={currentGame?.id || ''} />}
         </MapInteractionCSS>
       </div>
     </div>

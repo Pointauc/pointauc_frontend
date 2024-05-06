@@ -33,7 +33,8 @@ import { addAlert, deleteAlert } from './reducers/notifications/notifications';
 import type { ThunkDispatch } from 'redux-thunk';
 
 const hasToken = !!getCookie('userSession');
-const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH];
+const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH, ROUTES.WHEEL];
+const lockedDrawerRoutes = [ROUTES.WHEEL];
 
 let openDriverTimeout: any;
 
@@ -82,7 +83,10 @@ const App: React.FC = () => {
   }, [username]);
 
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
-  const isOpen = useMemo(() => !hiddenDrawerRoutes.includes(pathname) || isDrawerOpen, [isDrawerOpen, pathname]);
+  const isOpen = useMemo(
+    () => (!hiddenDrawerRoutes.includes(pathname) || isDrawerOpen) && !lockedDrawerRoutes.includes(pathname),
+    [isDrawerOpen, pathname],
+  );
   const drawerClasses = useMemo(() => classNames('app-drawer', { open: isOpen, close: !isOpen }), [isOpen]);
 
   const createMenuItem = useCallback(

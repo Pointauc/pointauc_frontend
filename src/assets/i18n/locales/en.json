@@ -270,6 +270,8 @@
     "reset": "Reset"
   },
   "wheel": {
+    "hideInactive": "Hide dropped lots",
+    "totalItems": "Participants in the wheel: {{amount}}",
     "newDropout": {
       "description": "HOW DOES IT WORK?"
     },

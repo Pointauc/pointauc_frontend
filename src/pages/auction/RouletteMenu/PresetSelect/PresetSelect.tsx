@@ -8,6 +8,7 @@ import './PresetSelect.scss';
 export interface RoulettePreset {
   amount: number;
   multiplier: number;
+  id: number;
   color: string;
   hidden?: boolean;
   safe?: boolean;
