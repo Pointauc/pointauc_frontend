@@ -7,10 +7,12 @@ import {
   DialogContent,
   DialogTitle,
   FormControlLabel,
+  IconButton,
   Slider,
   TextField,
   Typography,
 } from '@mui/material';
+import CasinoIcon from '@mui/icons-material/Casino';
 import { useDispatch } from 'react-redux';
 // @ts-ignore
 import { Emote } from '@kozjar/twitch-emoticons';
@@ -322,6 +324,10 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
     setSpinTime(e.target.value.length ? Number(e.target.value) : NaN);
   }, []);
 
+  const randomizeTimer = useCallback(() => {
+    setSpinTime(Math.round(Math.random() * 200)); // 200 - max possible number
+  }, []);
+
   const handleDepthRestrictChange = useCallback((e: any, value: number | number[]) => {
     setDepthRestrict(Number(value));
   }, []);
@@ -437,6 +443,10 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
                 label={t('wheel.duration')}
                 onChange={handleSpinTimeChange}
                 value={Number.isNaN(spinTime) ? '' : spinTime}
+                InputProps={{endAdornment: 
+                  <IconButton color="primary" aria-label="random timer" onClick={randomizeTimer}>
+                    <CasinoIcon />
+                  </IconButton>}}
               />
               <Typography className='wheel-controls-tip'>с.</Typography>
             </div>
