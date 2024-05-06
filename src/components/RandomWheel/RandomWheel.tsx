@@ -174,7 +174,9 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const totalSize = useMemo(() => getTotalSize(currentItems), [currentItems]);
 
   const handleEmoteChange = useCallback((emote: string) => {
-    localStorage.setItem('wheelEmote', emote);
+    if (emote.length < 2500000) {
+      localStorage.setItem('wheelEmote', emote);
+    }
     setActiveEmote(emote);
   }, []);
 
