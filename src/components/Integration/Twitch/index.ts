@@ -10,7 +10,7 @@ import './index.scss';
 
 const id = 'twitch';
 const authParams = {
-  client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
+  client_id: import.meta.env.VITE_TWITCH_CLIENT_ID,
   redirect_uri: `${window.location.origin}/twitch/redirect`,
   response_type: 'code',
   scope: 'channel:read:redemptions channel:manage:redemptions',

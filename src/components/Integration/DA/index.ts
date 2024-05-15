@@ -10,7 +10,7 @@ import './index.scss';
 
 const id = 'da';
 const authParams = {
-  client_id: '6727',
+  client_id: import.meta.env.VITE_DA_CLIENT_ID,
   redirect_uri: `${window.location.origin}/da/redirect`,
   response_type: 'code',
   scope: 'oauth-donation-subscribe oauth-user-show',
