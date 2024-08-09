@@ -56,6 +56,7 @@
     "react-router": "^6.18.0",
     "react-router-dom": "^6.18.0",
     "react-transition-group": "^4.4.5",
+    "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.10",
     "read-excel-file": "^5.7.1",
     "redux": "^4.2.1",

@@ -48,7 +48,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
       const flatEmotes = loadedEmotes.reduce((accum, emotes) => (emotes ? [...accum, ...emotes] : accum), []);
       onEmotesLoad(flatEmotes);
     }
-  }, [onEmotesLoad, userId]);
+  }, [userId]);
 
   useEffect(() => {
     updateEmotes();

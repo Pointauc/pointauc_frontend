@@ -87,7 +87,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     const {
       bestMatch: { rating },
       bestMatchIndex,
-    } = findBestMatch(message, slotNames);
+    } = findBestMatch(message || '', slotNames);
 
     return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps

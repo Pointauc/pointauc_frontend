@@ -107,6 +107,7 @@ class BracketGame extends React.PureComponent<BracketGameProps> {
             width='40'
             height='22.5'
             fill={winner ? winningScoreBackground : scoreBackground}
+            id={`${game.id}${side.side}-bg`}
             rx='3'
             ry='3'
           />

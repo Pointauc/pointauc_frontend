@@ -2,6 +2,8 @@ import React, { FC, ReactNode } from 'react';
 import { Grid, Tooltip, Typography } from '@mui/material';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 
+import Hint from '@components/Hint';
+
 interface FieldLabelProps {
   label: ReactNode;
   hint?: string;
@@ -12,13 +14,7 @@ const FieldLabel: FC<FieldLabelProps> = ({ label, hint }) => {
   return (
     <Grid container alignItems='center' spacing={1}>
       <Grid item>{labelElement}</Grid>
-      {hint && (
-        <Grid item sx={{ display: 'flex' }}>
-          <Tooltip title={<Typography>{hint}</Typography>}>
-            <HelpOutlineOutlinedIcon color='primary' />
-          </Tooltip>
-        </Grid>
-      )}
+      {hint && <Hint text={hint} />}
     </Grid>
   );
 };

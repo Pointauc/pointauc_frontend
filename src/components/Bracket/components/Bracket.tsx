@@ -112,7 +112,7 @@ const toBracketGames = ({
 };
 
 export interface BracketProps {
-  game: Game;
+  rootGame: Game;
   GameComponent?: GameComponent;
   homeOnTop?: boolean;
   gameDimensions?: {
@@ -138,12 +138,12 @@ const Bracket: FC<BracketProps> = ({
     separation: 6,
     homeVisitorSpread: 22,
   },
-  game,
+  rootGame,
   ...rest
 }) => {
   const [hoveredTeamId, setHoveredTeamId] = useState<Key | null>(null);
   const content = useRef<SVGGElement>(null);
-  const numRounds = winningPathLength(game);
+  const numRounds = winningPathLength(rootGame);
   const [svgSize, setSvgSize] = useState<Size>(gameDimensions);
 
   const svgDimensions = {
@@ -166,7 +166,7 @@ const Bracket: FC<BracketProps> = ({
           gameDimensions,
           fromSide: Side.VISITOR,
           roundSeparatorWidth,
-          game,
+          game: rootGame,
           round: numRounds,
           lineInfo,
           currentGame,

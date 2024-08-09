@@ -10,8 +10,8 @@
   flex-grow: 1;
 
   &.padding {
-    padding-left: 50px !important;
-    padding-right: 0 !important;
+    padding-left: 40px !important;
+    padding-right: 20px !important;
   }
 }
 
@@ -21,6 +21,7 @@
   flex-grow: 1;
   overflow-y: hidden;
   width: 100%;
+  gap: 56px;
 
   .description-link {
     background-color: transparent;
@@ -43,23 +44,42 @@
   .wheel-info-wrapper {
     display: flex;
     flex-direction: column;
+    flex-grow: 12;
+    flex-basis: 0;
+    max-width: 550px;
+    height: 100%;
+
+    &.shrink {
+      max-width: 850px;
+
+      .wheel-controls {
+        height: 40%;
+        max-height: 40%;
+      }
+
+      .emotes-container {
+        max-height: 40vh;
+      }
+    }
+  }
+
+  .wheel-content-negative-space {
+    flex-grow: 1;
+    flex-basis: 0;
   }
 
   .bracket-wrapper {
     margin-top: 10px;
     width: 100%;
     flex-basis: 56%;
-    //height: 50%;
-    max-width: 800px;
     max-height: 56%;
     flex-grow: 1;
-    //overflow: hidden;
   }
 
   .bracket-sub-wrapper {
     position: relative;
     height: 100%;
-    max-width: 95%;
+    max-width: 100%;
     max-height: 100%;
     border-radius: 10px;
     border: 2px solid $grey-4;
@@ -107,36 +127,19 @@
     color: $grey-2;
     display: flex;
     align-items: stretch;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: visible;
+    height: 100%;
 
-    &.shrink {
-      height: 40%;
-      max-height: 40%
-    }
-
-    .settings {
-      display: flex;
-      width: 375px;
-      flex-direction: column;
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding: 0 15px;
-
-      .upload-wheel-image {
-        align-self: center;
-        margin-top: 15px;
-      }
-
-      &:last-of-type {
-        margin-right: 0;
-      }
-
-      &:first-of-type {
-        width: 390px;
-      }
+    .upload-wheel-image {
+      align-self: center;
+      margin-top: 15px;
     }
 
     &-button {
       height: 40px;
+      flex-shrink: 0;
     }
 
     &-row {
@@ -152,8 +155,10 @@
 
     &-tip {
       position: relative;
+      display: flex;
+      gap: 8px;
+      align-items: center;
       font-size: 1.1rem !important;
-      top: 8px;
 
       &.hint {
         width: 100%;
@@ -162,10 +167,10 @@
       }
 
       &.md {
-        width: 210px;
+        flex-shrink: 0;
+        min-width: 160px;
         font-size: 16px;
         align-self: start;
-        margin-bottom: 10px;
       }
 
       &.lg {
