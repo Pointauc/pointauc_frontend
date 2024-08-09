@@ -6,6 +6,21 @@ This service is designed to enhance the interaction between streamers and their 
 
 The service features seamless integration with **Twitch Channel Points** and **Donation Alerts**, allowing streamers to easily manage incoming donations and channel point redemptions. This saves valuable time and energy, enabling streamers to focus on what they do best—entertaining their audience!
 
+
+## Integrations
+
+The Pointauc supports the following integrations to enhance your streaming experience:
+
+- **Twitch Channel Points**:
+  
+  Allows viewers to use their channel points to participate in auctions, lotteries, and other activities directly through Twitch.
+
+- **Donation Alerts**:
+
+  Integrates with Donation Alerts to manage monetary donations, which can be used in place of or alongside channel points in auctions and contests.
+
+- **DonatePay** (another donation service)
+
 ## Features
 
 ### 1. **Game & Content Auctions**
@@ -19,12 +34,6 @@ The service features seamless integration with **Twitch Channel Points** and **D
      - **Wheel of Fortune**: Spin a wheel to randomly select a winner or outcome.
      - **Dropout Wheel**: Eliminate options gradually until only one remains.
      - **Battle Royale**: A competitive elimination-style game where participants are gradually removed until the final winner is determined.
-
-### 4. **Twitch Channel Points Integration**
-   - Fully integrated with Twitch Channel Points, allowing viewers to use their points to participate in auctions, lotteries, and other activities.
-
-### 5. **Donation Alerts Integration**
-   - Integrate with Donation Alerts to handle monetary donations, which can be used in place of or alongside channel points in auctions and contests.
 
 ### 6. **Real-Time Updates**
    - Real-time tracking and updates ensure that viewers and streamers are always in sync with the latest bids, entries, and decisions.
