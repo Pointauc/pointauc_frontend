@@ -35,11 +35,11 @@ The Pointauc supports the following integrations to enhance your streaming exper
      - **Dropout Wheel**: Eliminate options gradually until only one remains.
      - **Battle Royale**: A competitive elimination-style game where participants are gradually removed until the final winner is determined.
 
-### 6. **Real-Time Updates**
-   - Real-time tracking and updates ensure that viewers and streamers are always in sync with the latest bids, entries, and decisions.
+### 4. **Real-Time Updates**
+   - Real-time tracking and updates ensure that viewers and streamers are always in sync with the latest bids.
 
-### 7. **Customizable Settings**
-   - Streamers have full control over the settings, including bid increments, entry fees, time limits, and prize distribution.
+### 5. **Customizable Settings**
+   - Streamers can personalize the website's appearance, automate timer rules, and add custom enhancements like [Marbles on Stream Auction](https://store.steampowered.com/app/1170970/Marbles_on_Stream/) and more. Additionally, the service supports automatic bid creation using channel points, simplifying a work for the streamer.
 
 ## Suggestions and bugreports
 
