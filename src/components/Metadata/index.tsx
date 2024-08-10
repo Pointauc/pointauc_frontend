@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 import Essentials from '@components/Metadata/Essentials.tsx';
 import StructuredData from '@components/Metadata/StructuredData.tsx';
+import Localization from '@components/Metadata/Localization.tsx';
 
 const removeInitialMetadata = () => {
   const initialMeta = document.head.getElementsByClassName('initial-meta-to-be-removed');
@@ -19,6 +20,7 @@ const Metadata = () => {
   return createPortal(
     <>
       <Essentials />
+      <Localization />
       <StructuredData />
     </>,
     document.head,
