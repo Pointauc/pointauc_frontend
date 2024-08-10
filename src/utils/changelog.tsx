@@ -201,8 +201,6 @@ const getUpdatesFromDate = (from: string): UpdateData[] => {
   return unseenChangelogEnd > -1 ? updates.slice(0, unseenChangelogEnd) : updates;
 };
 
-export const getUpdates = (): UpdateData[] => {
-  const from = getCookie('lastVisit');
-
-  return from === '' ? updates : getUpdatesFromDate(from);
+export const getUpdates = (date: string): UpdateData[] => {
+  return date === '' ? [] : getUpdatesFromDate(date);
 };
