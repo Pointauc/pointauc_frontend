@@ -161,7 +161,7 @@ export const randomizeItem = <T>(items: T[], selectValue: (item: T) => number): 
   });
 };
 
-function isObject(item: any) {
+export function isObject(item: any) {
   return item && typeof item === 'object' && !Array.isArray(item);
 }
 

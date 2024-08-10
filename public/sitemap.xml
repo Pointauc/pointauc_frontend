@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Main Home Page -->
+    <url>
+        <loc>https://pointauc.com/</loc>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Settings Page -->
+    <url>
+        <loc>https://pointauc.com/settings</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Wheel of Random Page -->
+    <url>
+        <loc>https://pointauc.com/wheel</loc>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Statistics Page -->
+    <url>
+        <loc>https://pointauc.com/statistic</loc>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- History Page -->
+    <url>
+        <loc>https://pointauc.com/history</loc>
+        <priority>0.6</priority>
+    </url>
+</urlset>
