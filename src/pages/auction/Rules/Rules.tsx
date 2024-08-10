@@ -4,6 +4,7 @@ import { JSONContent } from '@tiptap/react';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
@@ -16,30 +17,31 @@ interface RulesPreset {
   content: JSONContent;
 }
 
-const initialContentString =
-  '{"type":"doc","content":[{"type":"heading","attrs":{"textAlign":"center","level":1},"content":[{"type":"text","text":"Образец"}]},{"type":"paragraph","attrs":{"textAlign":"center"},"content":[{"type":"text","marks":[{"type":"textStyle","attrs":{"color":"#ffc657"}}],"text":"Нажмите на данную область чтобы начать редактировать правила."}]},{"type":"heading","attrs":{"textAlign":"center","level":2},"content":[{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":"24"}}],"text":"Возможности редактора"}]},{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":"16"}}],"text":"У вас есть множество функций, чтобы сделать вид правил именно таким, как вы хотите:"}]},{"type":"bulletList","content":[{"type":"listItem","attrs":{"color":null},"content":[{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}},{"type":"bold"}],"text":"Различное"},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":" "},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}},{"type":"italic"}],"text":"форматирование"},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":" "},{"type":"text","marks":[{"type":"underline"},{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":"текста"}]}]},{"type":"listItem","attrs":{"color":null},"content":[{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":"Изменение "},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":"30"}}],"text":"размера"},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":" шрифта"}]}]},{"type":"listItem","attrs":{"color":null},"content":[{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":"Цвет "},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}},{"type":"textStyle","attrs":{"color":"#f8e71c"}}],"text":"текста"},{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":" и "},{"type":"text","marks":[{"type":"highlight","attrs":{"color":"#d14844","fontSize":null}}],"text":"его фон"}]}]},{"type":"listItem","attrs":{"color":null},"content":[{"type":"paragraph","attrs":{"textAlign":"right"},"content":[{"type":"text","text":"Направление текста"}]}]}]},{"type":"orderedList","attrs":{"start":1},"content":[{"type":"listItem","attrs":{"color":null},"content":[{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","marks":[{"type":"highlight","attrs":{"color":null,"fontSize":null}}],"text":"Разные виды списков и заголовков"}]}]}]}]}';
 const getNextName = (index: number) => `Правила${index > 0 ? ` #${index + 1}` : ''}`;
-const buildDefaultRule = (rules: RulesPreset[] = []): RulesPreset => {
-  const names = rules.map((rule) => rule.name);
-
-  let index = 0;
-  let name = getNextName(index);
-  while (names.includes(name)) {
-    index += 1;
-    name = getNextName(index);
-  }
-
-  return {
-    name,
-    id: Math.random().toString(),
-    content: JSON.parse(initialContentString),
-  };
-};
 
 const NEW_RULE_KEY = 'new-rule';
 const saveRules = (rules: RulesPreset[]) => localStorage.setItem('rules', JSON.stringify(rules));
 
 const RulesComponent = () => {
+  const { t } = useTranslation();
+
+  const buildDefaultRule = (rules: RulesPreset[] = []): RulesPreset => {
+    const names = rules.map((rule) => rule.name);
+
+    let index = 0;
+    let name = getNextName(index);
+    while (names.includes(name)) {
+      index += 1;
+      name = getNextName(index);
+    }
+
+    return {
+      name,
+      id: Math.random().toString(),
+      content: JSON.parse(t('auc.defaultRules')),
+    };
+  };
+
   const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
   const [rules, setRules] = React.useState<RulesPreset[]>(() => {
     const savedRules = localStorage.getItem('rules');
