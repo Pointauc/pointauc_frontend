@@ -1,6 +1,9 @@
 .history-table {
   width: 100%;
   min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 
   .MuiTypography-body2 {
     margin-bottom: 0;

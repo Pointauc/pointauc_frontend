@@ -132,8 +132,26 @@ const distributeEvenly = <T extends Item>(data: T[][]): T[] => {
   return data.reduce((accum, arr) => insertItems(accum, arr) as any);
 };
 
+const maxBy = <T>(arr: T[], fn: (item: T) => number) =>
+  arr.length ? arr.reduce((a, b) => (fn(a) > fn(b) ? a : b)) : null;
+
+const groupBy = <T>(arr: T[], fn: (item: T) => string) => {
+  const result: Record<string, T[]> = {};
+
+  arr.forEach((item) => {
+    const key = fn(item);
+    const arr = result[key] || (result[key] = []);
+
+    arr.push(item);
+  });
+
+  return result;
+};
+
 const array = {
   distributeEvenly,
+  maxBy,
+  groupBy,
 };
 
 export default array;

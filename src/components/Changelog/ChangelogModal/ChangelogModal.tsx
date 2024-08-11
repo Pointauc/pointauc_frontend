@@ -11,7 +11,8 @@ import Changelog from '../Changelog';
 const ChangelogModal: FC = () => {
   const { t } = useTranslation();
   const [lastVisit, setLastVisit] = useStorageState<string | null>('lastVisit', getCookie('lastVisit'));
-  const updates = useMemo(() => (lastVisit != null ? getUpdates(lastVisit) : []), [lastVisit]);
+  const [initialLastVisit] = useState<string | null>(lastVisit);
+  const updates = useMemo(() => (initialLastVisit != null ? getUpdates(initialLastVisit) : []), [initialLastVisit]);
   const [open, setOpen] = useState(!!updates.length);
 
   useEffect(() => {

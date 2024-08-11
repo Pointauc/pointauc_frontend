@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import ENDPOINTS from '../constants/api.constants';
-import { PatchRedemptionDto } from '../models/redemption.model';
+import { PatchRedemptionDto, PatchRedemptionsDto } from '../models/redemption.model';
 import { TwitchRewardPresetsRequest } from '../models/user.model';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -17,6 +17,10 @@ export const closeTwitchRewards = async (): Promise<void> => {
 
 export const updateRedemption = async (data: PatchRedemptionDto): Promise<void> => {
   await axios.patch(ENDPOINTS.TWITCH_REDEMPTIONS, data);
+};
+
+export const updateRedemptions = async (data: PatchRedemptionsDto): Promise<void> => {
+  await axios.patch(ENDPOINTS.TWITCH_REDEMPTIONS_BATCH, data);
 };
 
 export const updateRewardPresets = async (data: TwitchRewardPresetsRequest): Promise<void> => {

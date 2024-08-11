@@ -2,6 +2,7 @@ const ENDPOINTS = {
   TWITCH_AUTH: '/api/twitch/auth',
   TWITCH_REWARDS: '/api/twitch/rewards',
   TWITCH_REDEMPTIONS: '/api/twitch/redemptions',
+  TWITCH_REDEMPTIONS_BATCH: '/api/twitch/redemptions/batch',
   TWITCH_REWARD_PRESETS: '/api/twitch/settings/presets',
   DA_AUTH: '/api/da/auth',
   TWITCH_CHANNEL_POINTS: '/api/twitch/channelPoints',

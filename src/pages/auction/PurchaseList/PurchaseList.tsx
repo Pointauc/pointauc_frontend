@@ -45,14 +45,19 @@ const PurchaseList: React.FC = () => {
   }, [purchaseSort, purchases]);
 
   useEffect(() => {
-    globalSocket?.on('Bid', handleRedemption);
-    twitchSocket?.on('Bid', handleRedemption);
-    daSocket?.on('Bid', handleRedemption);
-    const donatePayUnsub = donatePay.pubsubFlow.events.on('bid', handleRedemption);
+    globalSocket?.on('Bid', (bid) => handleRedemption({ ...bid, source: 'API' }));
+    twitchSocket?.on('Bid', (bid) => handleRedemption({ ...bid, source: 'twitch' }));
+
+    const handleDaBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'da' });
+    daSocket?.on('Bid', handleDaBid);
+
+    const donatePayUnsub = donatePay.pubsubFlow.events.on('bid', (bid: Bid.Item) =>
+      handleRedemption({ ...bid, source: 'donatePay' }),
+    );
 
     return () => {
       donatePayUnsub();
-      daSocket?.off('Bid', handleRedemption);
+      daSocket?.off('Bid', handleDaBid);
     };
   }, [daSocket, handleRedemption, twitchSocket, globalSocket]);
 

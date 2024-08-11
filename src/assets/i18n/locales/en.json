@@ -1,4 +1,33 @@
 {
+  "bidsManagement": {
+    "action": {
+      "accept": "Accept",
+      "return": "Return"
+    },
+    "confirm": "Start actions",
+    "allActions": "These actions will be applied to channel points redemptions:",
+    "lotBids": "Points for the lot - \"{{name}}\"",
+    "restBids": "All other points",
+    "statistic": {
+      "bidsAmount": "Total bids: <b>{{amount}}</b>",
+      "totalCost": "Total cost: <b>{{amount}}</b>",
+      "largestInvestor": "Contributed the most: <b style=\"color: {{color}}\">{{name}}</b> with <b>{{amount}}</b> points",
+      "noBids": "No bids for this category"
+    },
+    "requestStatus": {
+      "success": "Action completed",
+      "error": "Error: bids were not processed or partially processed, please check manually."
+    },
+    "modalTitle": {
+      "returnAllExceptWinner": "Return everything except for the winner",
+      "returnAllExceptFirst": "Return everything except for the first place",
+      "returnAll": "Return all points",
+      "acceptAll": "Take all points"
+    },
+    "close": "Close",
+    "disclaimer": "This is a new feature, so it is recommended to double-check everything manually. If you encounter any errors, you can submit them via the <a target=\"_blank\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSe9b82ColWOLyomlrqCGXXjFBWhwL7opZycPYz5v1ovwVdbjA/viewform?usp=sf_link\">form</a> and I will fix them.",
+    "tooManyBids": "More then 9999 bids cannot be processed at the moment"
+  },
   "metadata": {
     "/": {
       "title": "Live Auction for Streamers | Engage Your Audience with Interactive Bidding",
@@ -132,7 +161,9 @@
     "status": "Status",
     "time": "Time",
     "title": "History of Completed Orders",
-    "user": "User"
+    "user": "User",
+    "previousBids": "Previous bids list",
+    "fastBidsActions": "Actions with the channel points:"
   },
   "lot": {
     "addAmount": "Add Cost",
@@ -309,6 +340,7 @@
     "addLotsToAuc": "Save lots in auction",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
     "deleteLot": "Delete Lot",
+    "returnPointsToTheRest": "Return points to the others",
     "dividing": "Dividing",
     "dividingDesc": "Divides expensive lots into several positions.",
     "dropoutProof": "PROOF that dropout is no different from a regular wheel!",

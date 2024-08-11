@@ -1,4 +1,33 @@
 {
+  "bidsManagement": {
+    "action": {
+      "accept": "Забрать",
+      "return": "Вернуть"
+    },
+    "confirm": "Начать обработку ставок",
+    "allActions": "Следующие действия будут применены к заказам за баллы канала:",
+    "lotBids": "Все баллы за лот - \"{{name}}\"",
+    "restBids": "Все остальные баллы",
+    "statistic": {
+      "bidsAmount": "Всего ставок: <b>{{amount}}</b>",
+      "totalCost": "Общая стоимость: <b>{{amount}}</b>",
+      "largestInvestor": "Внес больше всех: <b style=\"color: {{color}}\">{{name}}</b> с <b>{{amount}}</b> баллов",
+      "noBids": "Ставок в этой категории нет"
+    },
+    "requestStatus": {
+      "success": "Завершено успешно",
+      "error": "Error: bids were not processed or partially processed, please check manually."
+    },
+    "modalTitle": {
+      "returnAllExceptWinner": "Вернуть баллы всем кроме победителя колеса",
+      "returnAllExceptFirst": "Вернуть баллы всем кроме первого места",
+      "returnAll": "Вернуть все баллы",
+      "acceptAll": "Забрать все баллы"
+    },
+    "close": "Закрыть",
+    "disclaimer": "Это новый функционал, поэтому рекомендуется перепроверять все вручную. Если вы встретите какие-то ошибки, то можете отправить их через <a target=\"_blank\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSe9b82ColWOLyomlrqCGXXjFBWhwL7opZycPYz5v1ovwVdbjA/viewform?usp=sf_link\">форму</a>, и я их исправлю.",
+    "tooManyBids": "Нельзя обработать больше чем 9999 ставок в данный момент"
+  },
   "metadata": {
     "/": {
       "title": "Аукцион для стримеров | Увлекательные торги с участием зрителей",
@@ -268,6 +297,7 @@
     "loadCustomMessage": "загрузить свое изображение",
     "importToWheel": "Импорт в колесо",
     "deleteLot": "Удалить лот",
+    "returnPointsToTheRest": "Вернуть баллы остальным",
     "winner": "Победитель",
     "lotWasDeleted": "лот был удален",
     "lotDeleteWarning": "Это действие удалит лот не только из колеса, но и из самого аукциона.",
@@ -329,6 +359,8 @@
     "cost": "Стоимость",
     "addedTo": "Добавлен к",
     "status": "Статус",
-    "returnRedemptions": "Вернуть выбранные награды"
+    "returnRedemptions": "Вернуть выбранные награды",
+    "previousBids": "Список прошлых ставок",
+    "fastBidsActions": "Быстрые действия с баллами канала:"
   }
 }
