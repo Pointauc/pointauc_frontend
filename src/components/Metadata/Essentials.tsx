@@ -17,10 +17,11 @@ const Essentials = () => {
   if (!isObject(metadata)) {
     return (
       <>
+        <meta name='robots' content='noindex' />
         <title>Pointauc | Live Auction for Streamers</title>
         <meta
           name='description'
-          content='Host interactive auctions where your viewers can bid on games, videos, and more using Twitch channel points or donations. Enhance your stream with real-time engagement and viewer participation.'
+          content='Host interactive auctions where your viewers can bid on games, videos, and more using Twitch channel points or donations.'
         />
       </>
     );

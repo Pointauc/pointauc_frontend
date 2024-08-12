@@ -30,11 +30,11 @@
   },
   "metadata": {
     "/": {
-      "title": "Live Auction for Streamers | Engage Your Audience with Interactive Bidding",
-      "description": "Host interactive auctions where your viewers can bid on games, videos, and more using Twitch channel points or donations. Enhance your stream with real-time engagement and viewer participation."
+      "title": "Pointauc | Live Auction for Streamers",
+      "description": "Host interactive auctions where your viewers can bid on games, videos, and more using Twitch channel points or donations."
     },
     "/settings": {
-      "title": "Auction Settings & Integrations | Customize Your Experience",
+      "title": "Settings & Integrations | Customize Your Experience",
       "description": "Configure your auction settings and integrations with Twitch, Donation Alerts, and DonatePay. Personalize your auction with automated timers, custom appearance, alternative auction types and more."
     },
     "/wheel": {
@@ -42,7 +42,7 @@
       "description": "Use the Wheel of Random to decide auction winners with a fun and engaging spin. Choose from various types of wheels to add excitement and suspense to your live stream auctions."
     },
     "/statistic": {
-      "title": "Auction Statistics | Track Viewer Participation & Bidding Activity",
+      "title": "Statistics | Track Viewer Participation & Bidding Activity",
       "description": "Monitor real-time statistics for your current auction, including viewer participation and bids."
     },
     "/history": {
