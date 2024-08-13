@@ -3,6 +3,10 @@
   min-height: 100vh;
   max-width: 100vw;
 
+  a {
+    color: var(--color-primary);
+  }
+
   &-drawer {
     .author-contacts {
       h6, a {

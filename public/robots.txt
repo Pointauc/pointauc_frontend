@@ -1,5 +1,4 @@
 User-agent: *
-Disallow: /help
 Allow: /
 
 Sitemap: https://pointauc.com/sitemap.xml

@@ -29,4 +29,9 @@
         <loc>https://pointauc.com/history</loc>
         <priority>0.6</priority>
     </url>
+
+    <url>
+        <loc>https://pointauc.com/help</loc>
+        <priority>0.6</priority>
+    </url>
 </urlset>

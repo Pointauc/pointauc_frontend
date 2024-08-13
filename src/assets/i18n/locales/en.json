@@ -1,4 +1,7 @@
 {
+  "documentation": {
+    "content": "<h1>Auction Service for Streamers - <a href=\"https://pointauc.com\">pointauc.com</a></h1>\n\n<h2>Overview</h2>\n<p>\n    This service is designed to enhance the interaction between streamers and their audiences by providing a fun and engaging way to make decisions during live streams. Whether it's deciding which game a streamer should play next, which video or movie they should watch with their audience, or running a lottery or contest, this service offers a versatile set of tools to make your streams more interactive and entertaining.\n</p>\n<p>\n    The service features seamless integration with <strong>Twitch Channel Points</strong> and <strong>Donation Alerts</strong>, allowing streamers to easily manage incoming donations and channel point redemptions. This saves valuable time and energy, enabling streamers to focus on what they do best—entertaining their audience!\n</p>\n\n<h2>Integrations</h2>\n<p>The Pointauc supports the following integrations to enhance your streaming experience:</p>\n<ul>\n    <li><strong>Twitch Channel Points</strong>:\n        <p>Allows viewers to use their channel points to participate in auctions, lotteries, and other activities directly through Twitch.</p>\n    </li>\n    <li><strong>Donation Alerts</strong>:\n        <p>Integrates with Donation Alerts to manage monetary donations, which can be used in place of or alongside channel points in auctions and contests.</p>\n    </li>\n    <li><strong>DonatePay</strong> (another donation service)</li>\n</ul>\n\n<h2>Features</h2>\n\n<h3>1. <strong>Game &amp; Content Auctions</strong></h3>\n<ul>\n    <li>Streamers can create auctions where viewers bid using channel points or donations to decide which game should be played next or which content should be watched during the stream or any other activity.</li>\n</ul>\n\n<h3>2. <strong>Lotteries &amp; Contests</strong></h3>\n<ul>\n    <li>Run exciting lotteries or contests where viewers can participate using their channel points or donations. Multiple formats are available, including random draw, highest bid, or entry-based selection.</li>\n</ul>\n\n<h3>3. <strong>Decision-Making Tools</strong></h3>\n<ul>\n    <li>Choose from a variety of interactive decision-making tools to select winners or make choices:\n        <ul>\n            <li><strong>Wheel of Fortune</strong>: Spin a wheel to randomly select a winner or outcome.</li>\n            <li><strong>Dropout Wheel</strong>: Eliminate options gradually until only one remains.</li>\n            <li><strong>Battle Royale</strong>: A competitive elimination-style game where participants are gradually removed until the final winner is determined.</li>\n        </ul>\n    </li>\n</ul>\n\n<h3>4. <strong>Real-Time Updates</strong></h3>\n<ul>\n    <li>Real-time tracking and updates ensure that viewers and streamers are always in sync with the latest bids.</li>\n</ul>\n\n<h3>5. <strong>Customizable Settings</strong></h3>\n<ul>\n    <li>Streamers can personalize the website's appearance, automate timer rules, and add custom enhancements like <a href=\"https://store.steampowered.com/app/1170970/Marbles_on_Stream/\">Marbles on Stream Auction</a> and more. Additionally, the service supports automatic bid creation using channel points, simplifying a work for the streamer.</li>\n</ul>\n\n<h2>Suggestions and bug reports</h2>\n<p>You can create an <a href=\"https://github.com/Pointauc/pointauc_frontend/issues\">issue</a> if you want to suggest something or tell about a bug.</p>"
+  },
   "bidsManagement": {
     "action": {
       "accept": "Accept",
@@ -48,6 +51,10 @@
     "/history": {
       "title": "Auction History & Channel Points Management | Review Past Bids",
       "description": "Access a complete history of all previous bids. Easily manage channel points redemptions."
+    },
+    "/help": {
+      "title": "About the website Pointauc",
+      "description": "Discover how the Pointauc transforms your live streams by enabling interactive auctions, lotteries, and contests. Learn about our features, integrations, and customization options."
     }
   },
   "author": {
@@ -177,7 +184,7 @@
         "title": "Auction"
       },
       "guides": {
-        "title": "Guides"
+        "title": "About the website"
       },
       "history": {
         "title": "History"
