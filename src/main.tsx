@@ -60,7 +60,7 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
 
 const saveSlotsWithCooldown = timedFunction((slots: Slot[]) => {
   SaveLoadService.rewrite(slots, AUTOSAVE_NAME);
-}, 2000);
+}, 2000).callable;
 
 const saveSlotsMiddleware: Middleware<{}, RootState> =
   (store) =>

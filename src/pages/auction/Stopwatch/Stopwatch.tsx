@@ -16,6 +16,7 @@ import { Slot } from '@models/slot.model.ts';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
 import './Stopwatch.scss';
+import { timedFunction } from '@utils/dataType/function.utils.ts';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
@@ -91,7 +92,7 @@ const Stopwatch: React.FC = () => {
       }
       const date = dayjs(time.current);
       const hours = Math.floor(time.current / HOUR);
-      const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
+      const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -2) + '0';
       stopwatchElement.current.innerHTML = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
     }
   }, []);
@@ -137,10 +138,25 @@ const Stopwatch: React.FC = () => {
     previousSlotsLength.current = slots.length;
   }, [autoUpdateTimer, isNewSlotIncrement, newSlotIncrement, slots.length]);
 
+  const { cancel: cancelUpdate, callback: throttledUpdate } = useMemo(() => {
+    let time = 0;
+    const { callable, cancel } = timedFunction((diff: number) => {
+      time = 0;
+      updateStopwatch(diff);
+    }, 55);
+
+    const callback = (diff: number) => {
+      time += diff;
+      callable(time);
+    };
+
+    return { cancel, callback };
+  }, [updateStopwatch]);
+
   const updateTimeOnFrame = (timestamp: number): void => {
     if (prevTimestamp.current) {
       const timeDifference = prevTimestamp.current - timestamp;
-      updateStopwatch(timeDifference);
+      throttledUpdate(timeDifference);
     }
     prevTimestamp.current = timestamp;
     frameId.current = time.current ? requestAnimationFrame(updateTimeOnFrame) : undefined;
@@ -150,6 +166,7 @@ const Stopwatch: React.FC = () => {
       cancelAnimationFrame(frameId.current);
       frameId.current = undefined;
     }
+    cancelUpdate();
     setIsStopped(true);
     setIsStopwatchChanged(true);
   };
@@ -166,6 +183,20 @@ const Stopwatch: React.FC = () => {
       setIsStopwatchChanged(true);
       prevTimestamp.current = undefined;
       frameId.current = requestAnimationFrame(updateTimeOnFrame);
+      setInterval(() => {
+        if (stopwatchElement.current) {
+          if (time.current < 0) {
+            time.current = 0;
+            setIsStopped(true);
+            setIsStopwatchChanged(true);
+          }
+          const date = dayjs(time.current);
+          const hours = Math.floor(time.current / HOUR);
+          const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
+          const x = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
+          console.log('10 sec passed', x);
+        }
+      }, 10000);
     }
   };
 

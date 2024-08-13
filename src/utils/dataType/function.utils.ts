@@ -6,13 +6,37 @@
 //   }
 // };
 
+// const throttle = <T extends Function>(callback: T, duration: number) => {
+//   let timeout: number | NodeJS.Timeout | null = null;
+//
+//   return (...args: any) => {
+//     if (!timeout) {
+//       timeout = setTimeout(() => {
+//         timeout = null;
+//         callback(...args);
+//       }, duration);
+//     }
+//   }
+// }
+
 import { RefObject, RefAttributes } from 'react';
+
+export interface TimedFunctionResult<T extends (...args: any) => any> {
+  callable: (...args: Parameters<T>) => void;
+  cancel: () => void;
+}
 
 export const timedFunction = <T extends (...args: any) => any>(
   callback: T,
   duration: number,
-): ((...args: Parameters<T>) => void) => {
+): TimedFunctionResult<T> => {
   let timeout: any;
+  const cancel = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
   const postponedArgs: { current: any | null } = { current: null };
 
   const callable = (...args: any): void => {
@@ -32,7 +56,7 @@ export const timedFunction = <T extends (...args: any) => any>(
     }, duration);
   };
 
-  return callable;
+  return { callable, cancel };
 };
 
 export enum Ease {

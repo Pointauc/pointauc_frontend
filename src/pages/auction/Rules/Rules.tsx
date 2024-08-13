@@ -87,7 +87,7 @@ const RulesComponent = () => {
   }, []);
 
   const setRuleContent = useMemo(
-    () => timedFunction((content: JSONContent) => updateRule(selectedRuleId, { content }), 400),
+    () => timedFunction((content: JSONContent) => updateRule(selectedRuleId, { content }), 400).callable,
     [selectedRuleId, updateRule],
   );
 
