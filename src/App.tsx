@@ -11,6 +11,7 @@ import donatePay from '@components/Integration/DonatePay';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
 import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
+import Metadata from '@components/Metadata';
 
 import ROUTES from './constants/routes.constants';
 import AucPage from './pages/auction/AucPage';
@@ -143,6 +144,7 @@ const App: React.FC = () => {
 
   return (
     <div className='app'>
+      <Metadata />
       <StyledDrawer
         className={drawerClasses}
         variant='permanent'

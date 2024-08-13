@@ -19,6 +19,7 @@ export interface Purchase {
   message: string;
   color: string;
   id: string;
+  source: Bid.Source;
   rewardId?: string;
   isDonation?: boolean;
   investorId?: string;
@@ -60,6 +61,9 @@ const purchasesSlice = createSlice({
     addPurchaseLog(state, action: PayloadAction<PurchaseLog>): void {
       state.history = [...state.history, action.payload];
     },
+    setHistory(state, action: PayloadAction<PurchaseLog[]>): void {
+      state.history = action.payload;
+    },
     addPurchase(state, action: PayloadAction<Purchase>): void {
       state.purchases = [...state.purchases, action.payload];
     },
@@ -82,8 +86,15 @@ const purchasesSlice = createSlice({
   },
 });
 
-export const { addPurchase, removePurchase, addPurchaseLog, resetPurchases, setDraggedRedemption, updateBid } =
-  purchasesSlice.actions;
+export const {
+  addPurchase,
+  setHistory,
+  removePurchase,
+  addPurchaseLog,
+  resetPurchases,
+  setDraggedRedemption,
+  updateBid,
+} = purchasesSlice.actions;
 
 export const logPurchase =
   (bidLog: PurchaseLog, newLot: boolean = false) =>

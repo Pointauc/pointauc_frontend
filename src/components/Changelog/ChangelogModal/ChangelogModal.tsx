@@ -3,19 +3,23 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/
 import { useTranslation } from 'react-i18next';
 
 import { getUpdates } from '@utils/changelog.tsx';
+import useStorageState from '@hooks/useStorageState.ts';
+import { getCookie } from '@utils/common.utils.ts';
 
 import Changelog from '../Changelog';
 
 const ChangelogModal: FC = () => {
-  const updates = useMemo(() => getUpdates(), []);
-  const [open, setOpen] = useState(updates.length !== 0);
   const { t } = useTranslation();
+  const [lastVisit, setLastVisit] = useStorageState<string | null>('lastVisit', getCookie('lastVisit'));
+  const [initialLastVisit] = useState<string | null>(lastVisit);
+  const updates = useMemo(() => (initialLastVisit != null ? getUpdates(initialLastVisit) : []), [initialLastVisit]);
+  const [open, setOpen] = useState(!!updates.length);
 
   useEffect(() => {
     const date = new Date().toISOString();
 
-    document.cookie = `lastVisit=${date}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-  }, []);
+    setLastVisit(date);
+  }, [setLastVisit]);
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} maxWidth='sm' fullWidth>

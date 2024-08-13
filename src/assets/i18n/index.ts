@@ -12,6 +12,10 @@ i18n
     load: 'languageOnly',
     debug: !import.meta.env.NODE_ENV || import.meta.env.NODE_ENV === 'development',
 
+    detection: {
+      order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'subdomain', 'navigator', 'htmlTag', 'path'],
+    },
+
     interpolation: {
       escapeValue: false,
     },

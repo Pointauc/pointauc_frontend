@@ -100,8 +100,6 @@ const Stopwatch: React.FC = () => {
     (timeChange: number) => {
       const maxMilliseconds = maxTime * 60 * 1000;
 
-      console.log(time.current);
-
       if (isMinTimeActive && time.current > minTime * 60 * 1000) return;
 
       if (isMaxTimeActive) {

@@ -1,4 +1,55 @@
 {
+  "bidsManagement": {
+    "action": {
+      "accept": "Забрать",
+      "return": "Вернуть"
+    },
+    "confirm": "Начать обработку ставок",
+    "allActions": "Следующие действия будут применены к заказам за баллы канала:",
+    "lotBids": "Все баллы за лот - \"{{name}}\"",
+    "restBids": "Все остальные баллы",
+    "statistic": {
+      "bidsAmount": "Всего ставок: <b>{{amount}}</b>",
+      "totalCost": "Общая стоимость: <b>{{amount}}</b>",
+      "largestInvestor": "Внес больше всех: <b style=\"color: {{color}}\">{{name}}</b> с <b>{{amount}}</b> баллов",
+      "noBids": "Ставок в этой категории нет"
+    },
+    "requestStatus": {
+      "success": "Завершено успешно",
+      "error": "Error: bids were not processed or partially processed, please check manually."
+    },
+    "modalTitle": {
+      "returnAllExceptWinner": "Вернуть баллы всем кроме победителя колеса",
+      "returnAllExceptFirst": "Вернуть баллы всем кроме первого места",
+      "returnAll": "Вернуть все баллы",
+      "acceptAll": "Забрать все баллы"
+    },
+    "close": "Закрыть",
+    "disclaimer": "Это новый функционал, поэтому рекомендуется перепроверять все вручную. Если вы встретите какие-то ошибки, то можете отправить их через <a target=\"_blank\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSe9b82ColWOLyomlrqCGXXjFBWhwL7opZycPYz5v1ovwVdbjA/viewform?usp=sf_link\">форму</a>, и я их исправлю.",
+    "tooManyBids": "Нельзя обработать больше чем 9999 ставок в данный момент"
+  },
+  "metadata": {
+    "/": {
+      "title": "Pointauc | Аукцион для стримеров в реальном времени",
+      "description": "Проводите интерактивные аукционы, где зрители могут делать ставки на игры, видео и многое другое, используя баллы Twitch или донаты."
+    },
+    "/settings": {
+      "title": "Настройки и интеграции",
+      "description": "Настройте параметры аукциона и интеграции с Twitch, Donation Alerts и DonatePay. Персонализируйте аукцион с помощью автоматизации таймера, изменения внешнего вида и альтернативных типов аукциона."
+    },
+    "/wheel": {
+      "title": "Колесо удачи | Определите победителей с помощью вращения колеса",
+      "description": "Используйте колесо случайного выбора для определения победителей аукциона с помощью увлекательного вращения. Выбирайте из различных типов колес, чтобы добавить интриги и азарта в ваши живые аукционы."
+    },
+    "/statistic": {
+      "title": "Статистика аукциона | Отслеживайте активность зрителей и ставки",
+      "description": "Отслеживайте статистику текущего аукциона в реальном времени, включая участие зрителей и ставки"
+    },
+    "/history": {
+      "title": "История и управление баллами | Просмотр прошлых ставок",
+      "description": "Здесь вы можете просматривать историю всех предыдущих ставок а так же управлять возвратами баллов канала."
+    }
+  },
   "author": {
     "contacts": "Контакты",
     "support": "Поддержать сайт"
@@ -82,6 +133,7 @@
     }
   },
   "auc": {
+    "defaultRules": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"textAlign\":\"center\",\"level\":1},\"content\":[{\"type\":\"text\",\"text\":\"Образец\"}]},{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"center\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"textStyle\",\"attrs\":{\"color\":\"#ffc657\"}}],\"text\":\"Нажмите на данную область чтобы начать редактировать правила.\"}]},{\"type\":\"heading\",\"attrs\":{\"textAlign\":\"center\",\"level\":2},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"24\"}}],\"text\":\"Возможности редактора\"}]},{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"16\"}}],\"text\":\"У вас есть множество функций, чтобы сделать вид правил именно таким, как вы хотите:\"}]},{\"type\":\"bulletList\",\"content\":[{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"bold\"}],\"text\":\"Различное\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"italic\"}],\"text\":\"форматирование\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" \"},{\"type\":\"text\",\"marks\":[{\"type\":\"underline\"},{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"текста\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Изменение \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"30\"}}],\"text\":\"размера\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" шрифта\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Цвет \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"textStyle\",\"attrs\":{\"color\":\"#f8e71c\"}}],\"text\":\"текста\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" и \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":\"#d14844\",\"fontSize\":null}}],\"text\":\"его фон\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"right\"},\"content\":[{\"type\":\"text\",\"text\":\"Направление текста\"}]}]}]},{\"type\":\"orderedList\",\"attrs\":{\"start\":1},\"content\":[{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Разные виды списков и заголовков\"}]}]}]}]}",
     "showRules": "Показать правила аукциона",
     "addPosition": "Добавить лот",
     "saveLoad": "Сохранение/загрузка",
@@ -219,7 +271,11 @@
     "hideInactive": "Скрыть выбывшие лоты",
     "totalItems": "Участников в колесе: {{amount}}",
     "newDropout": {
-      "description": "КАК ЭТО РАБОТАЕТ?"
+      "explanation": {
+        "button": "КАК ЭТО РАБОТАЕТ?",
+        "title": "КАК ЭТО РАБОТАЕТ?",
+        "content": "<h2>Обязательно прочтите перед тем как крутить</h2>\n<p class='info'>Весь рандом и все вычисления происходят заранее перед первым прокрутом:</p>\n<ol>\n<li>Определяется финальный победитель согласно шансам обычного колеса</li>\n<li>Генерируется цепочка остальных выбывших, чтобы создать интригу</li>\n</ol>\n<h2>Что значат размеры секторов?</h2>\n<p class='info'>\nТо что вы видите в колесе не отражает шансы при прокруте, а сделано для красоты. Колесо подкручивает\nпобедителей согласно заранее опеределенной очереди.\n</p>"
+      }
     },
     "dropoutVariant": {
       "new": "Новое",
@@ -241,6 +297,7 @@
     "loadCustomMessage": "загрузить свое изображение",
     "importToWheel": "Импорт в колесо",
     "deleteLot": "Удалить лот",
+    "returnPointsToTheRest": "Вернуть баллы остальным",
     "winner": "Победитель",
     "lotWasDeleted": "лот был удален",
     "lotDeleteWarning": "Это действие удалит лот не только из колеса, но и из самого аукциона.",
@@ -302,6 +359,8 @@
     "cost": "Стоимость",
     "addedTo": "Добавлен к",
     "status": "Статус",
-    "returnRedemptions": "Вернуть выбранные награды"
+    "returnRedemptions": "Вернуть выбранные награды",
+    "previousBids": "Список прошлых ставок",
+    "fastBidsActions": "Быстрые действия с баллами канала:"
   }
 }

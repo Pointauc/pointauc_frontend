@@ -1,4 +1,55 @@
 {
+  "bidsManagement": {
+    "action": {
+      "accept": "Accept",
+      "return": "Return"
+    },
+    "confirm": "Start actions",
+    "allActions": "These actions will be applied to channel points redemptions:",
+    "lotBids": "Points for the lot - \"{{name}}\"",
+    "restBids": "All other points",
+    "statistic": {
+      "bidsAmount": "Total bids: <b>{{amount}}</b>",
+      "totalCost": "Total cost: <b>{{amount}}</b>",
+      "largestInvestor": "Contributed the most: <b style=\"color: {{color}}\">{{name}}</b> with <b>{{amount}}</b> points",
+      "noBids": "No bids for this category"
+    },
+    "requestStatus": {
+      "success": "Action completed",
+      "error": "Error: bids were not processed or partially processed, please check manually."
+    },
+    "modalTitle": {
+      "returnAllExceptWinner": "Return everything except for the winner",
+      "returnAllExceptFirst": "Return everything except for the first place",
+      "returnAll": "Return all points",
+      "acceptAll": "Take all points"
+    },
+    "close": "Close",
+    "disclaimer": "This is a new feature, so it is recommended to double-check everything manually. If you encounter any errors, you can submit them via the <a target=\"_blank\" href=\"https://docs.google.com/forms/d/e/1FAIpQLSe9b82ColWOLyomlrqCGXXjFBWhwL7opZycPYz5v1ovwVdbjA/viewform?usp=sf_link\">form</a> and I will fix them.",
+    "tooManyBids": "More then 9999 bids cannot be processed at the moment"
+  },
+  "metadata": {
+    "/": {
+      "title": "Pointauc | Live Auction for Streamers",
+      "description": "Host interactive auctions where your viewers can bid on games, videos, and more using Twitch channel points or donations."
+    },
+    "/settings": {
+      "title": "Settings & Integrations | Customize Your Experience",
+      "description": "Configure your auction settings and integrations with Twitch, Donation Alerts, and DonatePay. Personalize your auction with automated timers, custom appearance, alternative auction types and more."
+    },
+    "/wheel": {
+      "title": "Wheel of Random | Spin to Decide Auction Winners",
+      "description": "Use the Wheel of Random to decide auction winners with a fun and engaging spin. Choose from various types of wheels to add excitement and suspense to your live stream auctions."
+    },
+    "/statistic": {
+      "title": "Statistics | Track Viewer Participation & Bidding Activity",
+      "description": "Monitor real-time statistics for your current auction, including viewer participation and bids."
+    },
+    "/history": {
+      "title": "Auction History & Channel Points Management | Review Past Bids",
+      "description": "Access a complete history of all previous bids. Easily manage channel points redemptions."
+    }
+  },
   "author": {
     "contacts": "Contacts",
     "support": "Support the website"
@@ -34,6 +85,7 @@
     "deployIncoming": "Server update will start {{remainingEstimation}} ({{remainingTime}}). After that donations and rewards will stop coming for 1-5 min."
   },
   "auc": {
+    "defaultRules": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"textAlign\":\"center\",\"level\":1},\"content\":[{\"type\":\"text\",\"text\":\"Sample\"}]},{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"center\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"textStyle\",\"attrs\":{\"color\":\"#ffc657\"}}],\"text\":\"Click on this area to start editing the rules.\"}]},{\"type\":\"heading\",\"attrs\":{\"textAlign\":\"center\",\"level\":2},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"24\"}}],\"text\":\"Editor Features\"}]},{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"16\"}}],\"text\":\"You have many functions to make the rules look exactly how you want:\"}]},{\"type\":\"bulletList\",\"content\":[{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"bold\"}],\"text\":\"Various\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"italic\"}],\"text\":\"text formatting\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" \"},{\"type\":\"text\",\"marks\":[{\"type\":\"underline\"},{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"options\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Change \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"30\"}}],\"text\":\"font size\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Text \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"textStyle\",\"attrs\":{\"color\":\"#f8e71c\"}}],\"text\":\"color\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" and \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":\"#d14844\",\"fontSize\":null}}],\"text\":\"background\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"right\"},\"content\":[{\"type\":\"text\",\"text\":\"Text alignment\"}]}]}]},{\"type\":\"orderedList\",\"attrs\":{\"start\":1},\"content\":[{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Different types of lists and headings\"}]}]}]}]}\n",
     "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
     "addPosition": "Add Lot",
     "addToRandomSlot": "Add to Random Slot",
@@ -109,7 +161,9 @@
     "status": "Status",
     "time": "Time",
     "title": "History of Completed Orders",
-    "user": "User"
+    "user": "User",
+    "previousBids": "Previous bids list",
+    "fastBidsActions": "Actions with the channel points:"
   },
   "lot": {
     "addAmount": "Add Cost",
@@ -273,7 +327,11 @@
     "hideInactive": "Hide dropped lots",
     "totalItems": "Participants in the wheel: {{amount}}",
     "newDropout": {
-      "description": "HOW DOES IT WORK?"
+      "explanation": {
+        "button": "HOW DOES IT WORK?",
+        "title": "HOW DOES IT WORK?",
+        "content": "<h2>Be Sure to Read Before Spinning</h2>\n<p class='info'>All randomness and calculations occur beforehand, before the first spin:</p>\n<ol>\n<li>The final winner is determined according to the odds of the regular wheel</li>\n<li>A sequence of other eliminated participants is generated to create suspense</li>\n</ol>\n<h2>What Do the Sector Sizes Mean?</h2>\n<p class='info'>\nWhat you see on the wheel does not reflect the chances during the spin; it is designed for aesthetics. The wheel adjusts the winners according to a predetermined order.\n</p>\n"
+      }
     },
     "dropoutVariant": {
       "new": "New",
@@ -282,6 +340,7 @@
     "addLotsToAuc": "Save lots in auction",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
     "deleteLot": "Delete Lot",
+    "returnPointsToTheRest": "Return points to the others",
     "dividing": "Dividing",
     "dividingDesc": "Divides expensive lots into several positions.",
     "dropoutProof": "PROOF that dropout is no different from a regular wheel!",

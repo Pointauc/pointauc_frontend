@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { Button } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { GridColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import classNames from 'classnames';
@@ -13,6 +13,7 @@ import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { updateRedemption } from '@api/twitchApi.ts';
 import { RedemptionStatus } from '@models/redemption.model.ts';
 import './PurchaseHistory.scss';
+import BidsFastActions from '@pages/history/BidsFastActions';
 
 interface SlotsMap {
   [key: string]: string | null;
@@ -93,20 +94,21 @@ const PurchaseHistory: React.FC = () => {
 
   return (
     <div className='history-table'>
-      <Button variant='outlined' color='primary' onClick={handleRefund}>
-        {t('history.returnRedemptions')}
-      </Button>
-      <DataGrid
-        checkboxSelection
-        onRowSelectionModelChange={setSelection}
-        rows={history}
-        columns={columns}
-        autoHeight
-        pagination
-        pageSizeOptions={[5, 10, 20, 50]}
-        initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
-        disableRowSelectionOnClick
-      />
+      <BidsFastActions />
+      <Stack style={{ width: '75%' }} spacing={2}>
+        <Typography variant='h5'>{t('history.previousBids')}</Typography>
+        <DataGrid
+          checkboxSelection
+          onRowSelectionModelChange={setSelection}
+          rows={history}
+          columns={columns}
+          autoHeight
+          pagination
+          pageSizeOptions={[5, 10, 20, 50]}
+          initialState={{ pagination: { paginationModel: { pageSize: 20 } } }}
+          disableRowSelectionOnClick
+        />
+      </Stack>
     </div>
   );
 };

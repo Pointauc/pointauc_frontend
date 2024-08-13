@@ -34,6 +34,7 @@ const parseMessage = ({ data: { notification } }: DonatePayBidMessage): Purchase
   id: String(notification.id),
   isDonation: true,
   color: '#000000',
+  source: 'donatePay',
 });
 
 const id = 'donatePay';

@@ -4,6 +4,14 @@ export interface PatchRedemptionDto {
   status: string;
 }
 
+export interface PatchRedemptionsDto {
+  rewards: {
+    rewardId: string;
+    redemptions: string[];
+  }[];
+  status: string;
+}
+
 export enum RedemptionStatus {
   Canceled = 'CANCELED',
   Unfulfilled = 'UNFULFILLED',

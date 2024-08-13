@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form';
 
 import RadioButtonGroup, { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 import { WheelFormat } from '@constants/wheel.ts';
+import '@components/RandomWheel/WheelSettings/fields/WheelFormat.scss';
 
 const WheelFormatField = () => {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ const WheelFormatField = () => {
     <Controller
       render={({ field: { onChange, value }, formState: { isSubmitting } }) => (
         <RadioButtonGroup
+          className='wheel-format-field'
           fullWidth
           options={wheelOptions}
           activeKey={value}

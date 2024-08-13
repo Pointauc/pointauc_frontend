@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import { ReactNode } from 'react';
-import { Link } from '@mui/material';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
-
-import { getCookie } from './common.utils';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link } from '@mui/material';
 
 export interface UpdateData {
   date: string;
@@ -13,6 +12,23 @@ export interface UpdateData {
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2024-08-12T06:10:00.744Z',
+    newFeatures: [
+      <div>
+        <p>
+          Добавлена опция удобного возврата баллов, вы можете воспользоваться ей на странице{' '}
+          <RouterLink to='/history'>История</RouterLink> или после вращения колеса. Доступны следующие опции:
+        </p>
+        <ul>
+          <li>Вернуть баллы всем кроме победителя колеса</li>
+          <li>Вернуть всем кроме первого места</li>
+          <li>Вернуть всем</li>
+          <li>Забрать у всех</li>
+        </ul>
+      </div>,
+    ],
+  },
   {
     date: '2024-08-09T10:00:00.822Z',
     newFeatures: [
@@ -201,8 +217,6 @@ const getUpdatesFromDate = (from: string): UpdateData[] => {
   return unseenChangelogEnd > -1 ? updates.slice(0, unseenChangelogEnd) : updates;
 };
 
-export const getUpdates = (): UpdateData[] => {
-  const from = getCookie('lastVisit');
-
-  return from === '' ? updates : getUpdatesFromDate(from);
+export const getUpdates = (date: string): UpdateData[] => {
+  return date === '' ? [] : getUpdatesFromDate(date);
 };

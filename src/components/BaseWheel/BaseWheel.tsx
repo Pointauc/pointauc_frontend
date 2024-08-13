@@ -223,7 +223,11 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
         <canvas ref={wheelCanvas} />
         <div className='wheel-core' style={{ backgroundImage: coreBackground }} />
         {!!winnerItem && (
-          <WinnerBackdrop name={winnerItem.name} onDelete={deleteItem ? () => deleteItem(winnerItem.id) : undefined} />
+          <WinnerBackdrop
+            name={winnerItem.name}
+            id={winnerItem.id}
+            onDelete={deleteItem ? () => deleteItem(winnerItem.id) : undefined}
+          />
         )}
       </div>
     </div>

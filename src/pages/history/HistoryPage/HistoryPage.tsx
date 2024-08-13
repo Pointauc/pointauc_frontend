@@ -10,9 +10,7 @@ const HistoryPage: FC = () => {
 
   return (
     <PageContainer title={t('history.title')}>
-      <div style={{ width: '75%' }}>
-        <PurchaseHistory />
-      </div>
+      <PurchaseHistory />
     </PageContainer>
   );
 };

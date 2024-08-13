@@ -1,13 +1,17 @@
 @import "src/styles/colors";
 
 .changelog {
+  a {
+    color: var(--color-primary);
+  }
+
   &-features {
     display: flex;
     flex-direction: column;
     gap: 8px;
     padding: 0;
 
-    li {
+    &>li {
       display: block;
       background: #2f4f4f55;
       padding: 10px;
