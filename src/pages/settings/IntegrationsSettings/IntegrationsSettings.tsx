@@ -4,6 +4,7 @@ import { Grid } from '@mui/material';
 import CommonIntegrationsSettings from '@pages/settings/IntegrationsSettings/Common/CommonIntegrationsSettings.tsx';
 import PointsSettings from '@pages/settings/IntegrationsSettings/Points/PointsSettings.tsx';
 import DonationsSettings from '@pages/settings/IntegrationsSettings/Donations/DonationsSettings.tsx';
+import EventsSettings from '@pages/settings/IntegrationsSettings/Events/EventsSettings.tsx';
 
 const IntegrationsSettings = () => {
   return (
@@ -16,6 +17,7 @@ const IntegrationsSettings = () => {
       </Grid>
       <Grid item xs={6}>
         <DonationsSettings />
+        <EventsSettings />
       </Grid>
     </Grid>
   );

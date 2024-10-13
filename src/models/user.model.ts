@@ -1,9 +1,12 @@
 import { AucSettingsDto } from './settings.model';
 
-export interface IntegrationDataDto {
+export interface IntegrationAvailability {
+  isValid: boolean;
+}
+
+export interface IntegrationDataDto extends IntegrationAvailability {
   username: string;
   id: string;
-  isValid: number;
 }
 
 export interface TwitchRewardPresetDto {

@@ -9,7 +9,7 @@ import '@pages/settings/SettingsGroup/SettingsGroup.scss';
 
 interface SettingsGroupProps {
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   hint?: string;
   controlName?: string;

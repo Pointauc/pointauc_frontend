@@ -1,4 +1,4 @@
-import { FC, Key, useMemo } from 'react';
+import { FC, Key, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -8,11 +8,14 @@ import { WheelItem } from '@models/wheel.model';
 import RandomWheel from '@components/RandomWheel/RandomWheel';
 import { deleteSlot } from '@reducers/Slots/Slots';
 import { slotToWheel } from '@utils/slots.utils';
+import AukusBackdrop from '@components/RandomWheel/AukusBackdrop';
 
 const WheelPage: FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
+  const aukus = useSelector((rootReducer: RootState) => rootReducer.aucSettings.settings.events.aukus);
+  const [lastWinner, setLastWinner] = useState<WheelItem | null>();
 
   const wheelItems = useMemo(() => slots.map<WheelItem>(slotToWheel), [slots]);
 
@@ -22,7 +25,10 @@ const WheelPage: FC = () => {
 
   return (
     <PageContainer className='wheel-wrapper padding' title={t('wheel.wheel')}>
-      <RandomWheel items={wheelItems} deleteItem={deleteItem} />
+      {aukus.enabled && (
+        <AukusBackdrop winner={lastWinner?.name || ''} open={!!lastWinner} onClose={() => setLastWinner(null)} />
+      )}
+      <RandomWheel items={wheelItems} deleteItem={deleteItem} onWin={setLastWinner} />
     </PageContainer>
   );
 };

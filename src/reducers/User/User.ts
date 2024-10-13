@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { IntegrationDataDto } from '@models/user.model.ts';
+import { IntegrationAvailability, IntegrationDataDto } from '@models/user.model.ts';
 
 export interface UserInfo {
   username?: string | null;
@@ -14,6 +14,9 @@ export interface UserState extends UserInfo {
     da?: IntegrationDataDto;
     twitch?: IntegrationDataDto;
   };
+  events: {
+    aukus: IntegrationAvailability;
+  };
 }
 
 const initialState: UserState = {
@@ -21,12 +24,21 @@ const initialState: UserState = {
   userId: null,
   activeSettingsPresetId: '',
   authData: {},
+  events: { aukus: { isValid: false } },
 };
+
+interface EventStatePayload {
+  key: keyof UserState['events'];
+  value: Partial<IntegrationAvailability>;
+}
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setEventState(state, action: PayloadAction<EventStatePayload>): void {
+      state.events[action.payload.key] = { ...state.events[action.payload.key], ...action.payload.value };
+    },
     setUserState(state, action: PayloadAction<Partial<UserState>>): void {
       Object.assign(state, action.payload);
     },
@@ -45,6 +57,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUserState, mergeAuthData, setActiveSettingsPresetId, setUsername, setUserId } = userSlice.actions;
+export const { setUserState, setEventState, mergeAuthData, setActiveSettingsPresetId, setUsername, setUserId } =
+  userSlice.actions;
 
 export default userSlice.reducer;

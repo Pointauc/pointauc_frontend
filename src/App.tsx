@@ -12,6 +12,8 @@ import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
 import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
 import Metadata from '@components/Metadata';
+import { setEventState, setUserState } from '@reducers/User/User.ts';
+import { aukus } from '@components/Event/events.ts';
 
 import ROUTES from './constants/routes.constants';
 import AucPage from './pages/auction/AucPage';
@@ -82,6 +84,11 @@ const App: React.FC = () => {
       }
     };
   }, [username]);
+
+  // setup events
+  useEffect(() => {
+    dispatch(setEventState({ key: 'aukus', value: { isValid: aukus.isValid() } }));
+  }, [dispatch]);
 
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
   const isOpen = useMemo(

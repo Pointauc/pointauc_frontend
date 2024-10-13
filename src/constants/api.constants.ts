@@ -36,6 +36,9 @@ const ENDPOINTS = {
   PUBLIC_API: {
     TOKEN: '/api/oshino/token',
   },
+  AUKUS: {
+    RESULT: 'https://aukus.fun/api/point_auc/result',
+  },
 };
 
 export default ENDPOINTS;

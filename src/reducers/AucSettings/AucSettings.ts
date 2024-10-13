@@ -17,9 +17,13 @@ export interface ViewSettings {
   showRules: boolean;
 }
 
+interface EventsSettings {
+  aukus: { enabled: boolean };
+}
+
 interface AucSettingsState {
   view: ViewSettings;
-  settings: AucSettingsDto;
+  settings: AucSettingsDto & { events: EventsSettings };
 }
 const showRules = localStorage.getItem('showRules');
 
@@ -62,6 +66,11 @@ export const initialState: AucSettingsState = {
     primaryColor: COLORS.THEME.PRIMARY,
     backgroundTone: COLORS.THEME.BACKGROUND_TONE,
     hideAmounts: false,
+    events: {
+      aukus: {
+        enabled: true,
+      },
+    },
   },
 };
 

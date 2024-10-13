@@ -22,6 +22,7 @@ import '@assets/i18n/index.ts';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import INTEGRATIONS from '@components/Integration/integrations.ts';
 import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
+import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
@@ -100,6 +101,7 @@ const redirectRoutes = integrationUtils.filterBy
 const router = createBrowserRouter([
   { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
+  { path: ROUTES.AUKUS.REDIRECT, element: <AukusRedirectPage /> },
   ...redirectRoutes,
 ]);
 
