@@ -89,7 +89,7 @@ const TimerSettings = () => {
             <div className='c' style={{ marginLeft: 36 }}>
               <FormGroup row className='auc-settings-row'>
                 <FormSwitch
-                  name='isMaxTimeActive'
+                  name='isMinTimeActive'
                   control={control}
                   label={
                     <Grid container alignItems='center' gap={1}>
@@ -98,7 +98,7 @@ const TimerSettings = () => {
                     </Grid>
                   }
                 />
-                <FormInput name='maxTime' className='field sm' control={control} type='number' />
+                <FormInput name='minTime' className='field sm' control={control} type='number' />
                 <Typography variant='body1'>{t('common.min')}</Typography>
               </FormGroup>
             </div>

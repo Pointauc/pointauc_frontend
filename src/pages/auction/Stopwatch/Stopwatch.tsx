@@ -17,7 +17,7 @@ import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
-
+import donatePay from '@components/Integration/DonatePay';
 import './Stopwatch.scss';
 
 export const STOPWATCH = {
@@ -152,6 +152,7 @@ const Stopwatch: React.FC = () => {
   );
 
   const handleDonation = useCallback(() => {
+    console.log('on donation');
     const { isIncrementActive, incrementTime } = daSettings.current;
 
     if (isIncrementActive) {
@@ -161,6 +162,12 @@ const Stopwatch: React.FC = () => {
 
   useEffect(() => {
     daSocket?.on('Bid', handleDonation);
+    const unsub = donatePay.pubsubFlow.events.on('bid', handleDonation);
+
+    return () => {
+      daSocket?.off('Bid', handleDonation);
+      unsub();
+    };
   }, [daSocket, handleDonation]);
 
   useEffect(() => {
