@@ -7,6 +7,7 @@ import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Theme } from '@mui/material';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration';
 
 import ROUTES from '@constants/routes.constants.ts';
 import rootReducer, { RootState } from '@reducers/index.ts';
@@ -36,6 +37,7 @@ declare module '@mui/styles/defaultTheme' {
 
 i18n.on('languageChanged', (language) => dayjs.locale(language));
 dayjs.extend(relativeTime);
+dayjs.extend(duration);
 
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotAmount',

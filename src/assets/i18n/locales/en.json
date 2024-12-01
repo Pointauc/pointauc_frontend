@@ -292,6 +292,8 @@
       "startTimeDesc": "Time to which the timer returns when reset.",
       "stopwatch": "Timer",
       "addTimeOnDonation": "On Donation",
+      "totalTime": "Show total auction time",
+      "totalTimeHint": "Time is only counted when the timer is running. The total time does not grow while the timer is paused.",
 
       "addOnCondition": "Add time on conditions",
       "notOnCondition": "DO NOT Add time on conditions"

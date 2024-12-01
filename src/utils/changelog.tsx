@@ -13,6 +13,14 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2024-12-01T14:10:32.275Z',
+    newFeatures: [
+      <div>
+        Добавлена возможность отображать общее время аукциона: <RouterLink to='/settings'>Настройки</RouterLink>
+      </div>,
+    ],
+  },
+  {
     date: '2024-08-12T06:10:00.744Z',
     newFeatures: [
       <div>

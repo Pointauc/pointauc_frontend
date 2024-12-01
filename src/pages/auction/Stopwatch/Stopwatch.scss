@@ -1,17 +1,67 @@
+@import "../../../styles/colors";
+
 .stopwatch-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
   align-items: center;
+  position: relative;
 
-  .stopwatch {
+  .timer-primary {
+    order: -2;
     font-size: 80px;
     line-height: 1;
     width: 320px;
   }
 
+  .timer-secondary {
+    order: -1;
+    position: relative;
+    font-size: 22px;
+    top: -6px;
+    height: 12px;
+    letter-spacing: 2px;
+  }
+
+  .total-time {
+    //color: var(--color-primary);
+  }
+
   .stopwatch-controls {
     display: flex;
     justify-content: space-around;
+  }
+
+  .swap-timers {
+    position: absolute;
+    right: -10px;
+    top: 52px;
+
+    &:after, &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 50%;
+      border-right: 1px solid $grey-7;
+    }
+
+    &:after {
+      height: 12px;
+      bottom: 0;
+      transform: translateY(100%);
+      border-bottom: 1px solid $grey-7;
+    }
+
+    &:before {
+      height: 20px;
+      top: 0;
+      transform: translateY(-100%);
+      border-top: 1px solid $grey-7;
+    }
+
+    &-button {
+      border: 1px solid $grey-7;
+      padding: 1px;
+    }
   }
 }

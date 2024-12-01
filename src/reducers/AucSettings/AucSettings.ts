@@ -22,57 +22,64 @@ interface EventsSettings {
   aukus: { enabled: boolean };
 }
 
+interface SettingsMissingOnBackend {
+  showTotalTime: boolean;
+}
+
 interface AucSettingsState {
   view: ViewSettings;
-  settings: AucSettingsDto & { events: EventsSettings };
+  settings: AucSettingsDto & { events: EventsSettings } & SettingsMissingOnBackend;
 }
 const showRules = localStorage.getItem('showRules');
+
+const defaultSettings: AucSettingsState['settings'] = {
+  startTime: 10,
+  isBuyoutVisible: true,
+  timeStep: 60,
+  isAutoincrementActive: false,
+  autoincrementTime: 30,
+  purchaseSort: 0,
+  background: null,
+  marblesAuc: false,
+  marbleRate: 50,
+  marbleCategory: 100,
+  showChances: false,
+  maxTime: 15,
+  minTime: 2,
+  isMinTimeActive: false,
+  isMaxTimeActive: false,
+  newSlotIncrement: 60,
+  isNewSlotIncrement: false,
+  isTotalVisible: false,
+  luckyWheelEnabled: false,
+  luckyWheelSelectBet: true,
+  isRefundAvailable: false,
+  dynamicRewards: false,
+  alwaysAddNew: false,
+  rewardsPrefix: 'ставка',
+  pointsRate: 1,
+  isIncrementActive: false,
+  incrementTime: 30,
+  rewardPresets: [],
+  showUpdates: true,
+  insertStrategy: InsertStrategy.Match,
+  primaryColor: COLORS.THEME.PRIMARY,
+  backgroundTone: COLORS.THEME.BACKGROUND_TONE,
+  hideAmounts: false,
+  showTotalTime: false,
+  events: {
+    aukus: {
+      enabled: aukus.enabled.get(),
+    },
+  },
+};
 
 export const initialState: AucSettingsState = {
   view: {
     compact: false,
     showRules: showRules === 'true',
   },
-  settings: {
-    startTime: 10,
-    isBuyoutVisible: true,
-    timeStep: 60,
-    isAutoincrementActive: false,
-    autoincrementTime: 30,
-    purchaseSort: 0,
-    background: null,
-    marblesAuc: false,
-    marbleRate: 50,
-    marbleCategory: 100,
-    showChances: false,
-    maxTime: 15,
-    minTime: 2,
-    isMinTimeActive: false,
-    isMaxTimeActive: false,
-    newSlotIncrement: 60,
-    isNewSlotIncrement: false,
-    isTotalVisible: false,
-    luckyWheelEnabled: false,
-    luckyWheelSelectBet: true,
-    isRefundAvailable: false,
-    dynamicRewards: false,
-    alwaysAddNew: false,
-    rewardsPrefix: 'ставка',
-    pointsRate: 1,
-    isIncrementActive: false,
-    incrementTime: 30,
-    rewardPresets: [],
-    showUpdates: true,
-    insertStrategy: InsertStrategy.Match,
-    primaryColor: COLORS.THEME.PRIMARY,
-    backgroundTone: COLORS.THEME.BACKGROUND_TONE,
-    hideAmounts: false,
-    events: {
-      aukus: {
-        enabled: aukus.enabled.get(),
-      },
-    },
-  },
+  settings: localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings') as string) : defaultSettings,
 };
 
 const mergeCheck = <T>(obj: T, src: T): T => (src === undefined ? obj : src);
@@ -82,7 +89,9 @@ const aucSettingsSlice = createSlice({
   initialState,
   reducers: {
     setAucSettings(state, action: PayloadAction<Partial<AucSettingsDto>>): void {
-      state.settings = mergewith(state.settings, action.payload, mergeCheck);
+      const mergedSettings = mergewith(state.settings, action.payload, mergeCheck);
+      localStorage.setItem('settings', JSON.stringify(mergedSettings));
+      state.settings = mergedSettings;
     },
     setCompact(state, action: PayloadAction<boolean>): void {
       state.view.compact = action.payload;
