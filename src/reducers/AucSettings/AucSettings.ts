@@ -7,6 +7,7 @@ import { GetUserDto } from '@models/user.model.ts';
 import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/settings.enum.ts';
+import { aukus } from '@components/Event/events.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -68,7 +69,7 @@ export const initialState: AucSettingsState = {
     hideAmounts: false,
     events: {
       aukus: {
-        enabled: true,
+        enabled: aukus.enabled.get(),
       },
     },
   },

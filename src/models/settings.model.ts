@@ -43,6 +43,8 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   // Appearance
   primaryColor: string;
   backgroundTone: string;
+
+  events: { aukus: { enabled: boolean } };
 }
 
 export interface SettingsUpdateRequest {
