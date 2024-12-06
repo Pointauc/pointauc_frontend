@@ -1,4 +1,4 @@
-import { FC, Key, useMemo, useState } from 'react';
+import { FC, Key, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -7,19 +7,11 @@ import { RootState } from '@reducers';
 import { WheelItem } from '@models/wheel.model';
 import RandomWheel from '@components/RandomWheel/RandomWheel';
 import { deleteSlot } from '@reducers/Slots/Slots';
-import { slotToWheel } from '@utils/slots.utils';
-import AukusBackdrop from '@components/RandomWheel/AukusBackdrop';
-import withLoading from '@decorators/withLoading.ts';
+import { getTotalSize, slotToWheel } from '@utils/slots.utils';
 import aukusApi from '@api/events/aukusApi.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
-
-const useIsAukusActive = () => {
-  const { enabled } = useSelector((rootReducer: RootState) => rootReducer.aucSettings.settings.events.aukus);
-  const { isValid } = useSelector((rootReducer: RootState) => rootReducer.user.events.aukus);
-
-  return enabled && isValid;
-};
+import { useIsAukusActive } from '@hooks/aukus.ts';
 
 const WheelPage: FC = () => {
   const dispatch = useDispatch();
@@ -34,22 +26,23 @@ const WheelPage: FC = () => {
     dispatch(deleteSlot(id.toString()));
   };
 
-  const saveAukusResult = async (value: string) => {
-    // withLoading(setLoading, async () => {
+  const saveAukusResult = async ({ name, amount }: WheelItem) => {
     try {
-      await aukusApi.updateResult({ winner_title: value });
+      await aukusApi.updateResult({
+        winner_title: name,
+        auc_value: getTotalSize(slots),
+        winner_value: amount,
+        lots_count: slots.length,
+      });
       dispath(addAlert({ message: 'Результат сохранен в Аукус', type: AlertTypeEnum.Success }));
     } catch (e: any) {
       dispath(addAlert({ message: `Ошибка сохранения - ${e.message}`, type: AlertTypeEnum.Error }));
-    } finally {
-      // onClose();
     }
-    // })();
   };
 
   const handleSpinEnd = async (winner: WheelItem) => {
     if (isAukusActive) {
-      await saveAukusResult(winner.name);
+      await saveAukusResult(winner);
     }
   };
 

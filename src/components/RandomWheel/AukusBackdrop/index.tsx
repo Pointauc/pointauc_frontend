@@ -46,7 +46,7 @@ const AukusBackdrop = ({ onClose, open, winner }: AukusBackdropProps) => {
   const saveAukusResult = () => {
     withLoading(setLoading, async () => {
       try {
-        await aukusApi.updateResult({ winner_title: value });
+        // await aukusApi.updateResult({ winner_title: value });
         dispath(addAlert({ message: 'Результат сохранен в Аукус', type: AlertTypeEnum.Success }));
       } catch (e: any) {
         dispath(addAlert({ message: `Ошибка сохранения - ${e.message}`, type: AlertTypeEnum.Error }));
