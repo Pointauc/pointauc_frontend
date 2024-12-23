@@ -287,6 +287,18 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 {t('bid.toLot', { name: bestMatch.name })}
               </Button>
             )}
+            {[2, 3, 4, 5, 6].map((i) => (
+              <Button
+                key={i}
+                color='blank'
+                variant='outlined'
+                size='small'
+                className='purchase-new-button-x-coeff'
+                onClick={() => multiplySlot(i)}
+              >
+                {t('bid.coeff', { coeff: i })}
+              </Button>
+            ))}
           </>
         )}
       </CardContent>

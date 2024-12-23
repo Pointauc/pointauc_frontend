@@ -22,10 +22,18 @@
     margin-top: 10px !important;
     font-size: 12px !important;
 
+    &-x-coeff {
+      width: 10%;
+      text-transform: none !important;
+      padding: 0px !important;
+      margin-top: 10px !important;
+      margin-right: 10px !important;
+    }
+
     &:hover {
       background-color: rgba(#fff, .2) !important;
     }
-  }
+  }  
 
   &-new-split-button {
     width: 100%;

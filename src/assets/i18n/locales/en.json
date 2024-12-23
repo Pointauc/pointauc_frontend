@@ -120,6 +120,7 @@
     "luckyWheel": "Try Your Luck",
     "new": "New",
     "toLot": "To {{name}}",
+    "coeff": "x{{coeff}}",
     "totalBids": "Total Bids:"
   },
   "changelog": {

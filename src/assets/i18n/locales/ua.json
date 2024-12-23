@@ -187,6 +187,7 @@
     "delete": "Відаліті Слот",
     "luckyWheel": "Спробуйте Удачу",
     "toLot": "До {{name}}",
+    "coeff": "x{{coeff}}",
     "close": "Закріті",
     "new": "Нова"
   },
