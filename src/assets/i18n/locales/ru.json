@@ -340,6 +340,7 @@
     "delete": "Удалить слот",
     "luckyWheel": "Испытать удачу",
     "toLot": "К {{name}}",
+    "coeff": "x{{coeff}}",
     "close": "Закрыть",
     "new": "Новый"
   },
