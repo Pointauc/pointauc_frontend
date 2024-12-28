@@ -1,5 +1,5 @@
-import { CSSProperties, FC, memo, RefObject, useEffect, useRef, useState } from 'react';
-import Grid from '@mui/material/Unstable_Grid2';
+import { CSSProperties, FC, memo, RefObject, useEffect, useState } from 'react';
+import Grid from '@mui/material/Grid2';
 import FlipMove from 'react-flip-move';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';

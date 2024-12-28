@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import Grid2 from '@mui/material/Grid2';
 import { Backdrop, Button, Input } from '@mui/material';
 import confetti from 'canvas-confetti';
 import { useDispatch } from 'react-redux';
 
 import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import withLoading from '@decorators/withLoading.ts';
-import aukusApi from '@api/events/aukusApi.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import './index.scss';

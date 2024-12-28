@@ -3,7 +3,7 @@ import './App.scss';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { Container, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, styled } from '@mui/material';
+import { Container, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, styled } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
@@ -101,12 +101,12 @@ const App: React.FC = () => {
     ({ IconComponent, title, path, disabled, divide }: MenuItem) => (
       <Fragment key={path}>
         {divide && <Divider style={{ margin: '10px 0' }} />}
-        <ListItem disabled={disabled} button key={t(title)} selected={path === pathname} component={Link} to={path}>
+        <ListItemButton disabled={disabled} key={t(title)} selected={path === pathname} component={Link} to={path}>
           <ListItemIcon className='nav-icon'>
             <IconComponent />
           </ListItemIcon>
           <ListItemText primary={t(title)} />
-        </ListItem>
+        </ListItemButton>
       </Fragment>
     ),
     [pathname, t],

@@ -133,7 +133,7 @@ const ChatWheelPage: FC = () => {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <BaseWheel items={participants} controller={wheelController} spinTime={6000} />
+      {/*<BaseWheel items={participants} controller={wheelController} spinTime={6000} />*/}
     </div>
   );
 };

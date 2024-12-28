@@ -2,7 +2,7 @@ import React, { Key, useMemo, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';

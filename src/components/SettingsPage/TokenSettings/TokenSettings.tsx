@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dialog, DialogContent, Link, OutlinedInput, Typography } from '@mui/material';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import Grid2 from '@mui/material/Grid2';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useDispatch } from 'react-redux';
 
