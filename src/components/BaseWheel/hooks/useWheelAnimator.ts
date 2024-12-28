@@ -3,23 +3,34 @@ import gsap from 'gsap';
 
 // @ts-ignore
 import CustomEase from '@utils/CustomEase';
-import { SPIN_PATH } from '@constants/wheel.ts';
+import { random } from '@utils/common.utils.ts';
 
 window.gsap = gsap;
 
 interface Result {
-  animate: (rotation: number) => Promise<number>;
+  animate: (rotation: number, duration: number) => Promise<number>;
 }
 
 interface Props {
   wheelCanvas: RefObject<HTMLCanvasElement>;
-  spinTime: number;
   onSpin: (rotate: number) => void;
 }
 
-export const useWheelAnimator = ({ wheelCanvas, spinTime, onSpin }: Props): Result => {
+const buildSpinPaceCurve = (
+  endGuide: Vector2 = { x: 0.808, y: 1 },
+  middleGuide: Vector2 = { x: 0.344, y: 0.988 },
+): string =>
+  `'M0,0,C0.102,0.044,0.171,0.365,0.212,0.542,${middleGuide.x},${middleGuide.y},${endGuide.x},${endGuide.y},1,1'`;
+const buildRandomCurve = (): string => {
+  const endGuide = { x: random.getFloat(0.75, 0.9), y: random.getFloat(0.95, 1, 2, 'max') };
+  const middleGuide = { x: random.getFloat(0.3, 0.4, 2, 'min'), y: random.getFloat(0.8, 1) };
+
+  return buildSpinPaceCurve(endGuide, middleGuide);
+};
+
+export const useWheelAnimator = ({ wheelCanvas, onSpin }: Props): Result => {
   const animate = useCallback<Result['animate']>(
-    (rotation) => {
+    (rotation, duration) => {
       return new Promise<number>((resolve) => {
         if (wheelCanvas.current) {
           const rotationMatch = /rotate\((.*)deg\)/.exec(wheelCanvas.current.style.transform);
@@ -27,8 +38,8 @@ export const useWheelAnimator = ({ wheelCanvas, spinTime, onSpin }: Props): Resu
           const endPosition = rotation + startRotation;
 
           gsap.to(wheelCanvas.current, {
-            duration: spinTime,
-            ease: CustomEase.create('custom', SPIN_PATH, {
+            duration,
+            ease: CustomEase.create('custom', buildRandomCurve(), {
               onUpdate: (progress: number) => onSpin(startRotation + rotation * progress),
             }),
             onComplete: () => {
@@ -41,7 +52,7 @@ export const useWheelAnimator = ({ wheelCanvas, spinTime, onSpin }: Props): Resu
         }
       });
     },
-    [onSpin, spinTime, wheelCanvas],
+    [onSpin, wheelCanvas],
   );
 
   return { animate };

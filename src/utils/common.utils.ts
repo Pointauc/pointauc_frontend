@@ -103,8 +103,21 @@ export const getRandomIntInclusive = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const getRandomInclusive = (min: number, max: number): number => {
-  return Math.random() * (max - min) + min;
+export const getRandomInclusive = (
+  min: number,
+  max: number,
+  attemptsCount: number = 1,
+  attemptSide: 'max' | 'min' = 'max',
+): number => {
+  const random = () => Math.random() * (max - min) + min;
+  const attempts = new Array(attemptsCount).fill(0).map(random);
+
+  return attemptSide === 'max' ? Math.max(...attempts) : Math.min(...attempts);
+};
+
+export const random = {
+  getInt: getRandomIntInclusive,
+  getFloat: getRandomInclusive,
 };
 
 export const fitText = (text: string, maxLength: number): string =>

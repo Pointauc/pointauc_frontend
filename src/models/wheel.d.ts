@@ -9,6 +9,9 @@ namespace Wheel {
 
   interface Settings {
     spinTime: number | null;
+    randomSpinConfig: { min: number; max: number };
+    randomSpinEnabled: boolean;
+
     useRandomOrg: boolean;
     format: WheelFormat;
     paceConfig: RandomPaceConfig;

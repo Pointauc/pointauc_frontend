@@ -1,5 +1,5 @@
-import React, { ReactNode, useContext, useState } from 'react';
-import { Button, Checkbox, FormControlLabel, Grid, Typography } from '@mui/material';
+import React, { ReactNode } from 'react';
+import { Checkbox, FormControlLabel, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -8,15 +8,14 @@ import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import WheelFormatField from '@components/RandomWheel/WheelSettings/fields/WheelFormat.tsx';
 import DropoutFormatField from '@components/RandomWheel/WheelSettings/fields/DropoutFormat.tsx';
 import SpinTimeField from '@components/RandomWheel/WheelSettings/fields/SpinTime.tsx';
-import DuelDescription from '@components/RandomWheel/WheelSettings/fields/DuelDescription.tsx';
-import Nesting from '@components/RandomWheel/WheelSettings/fields/Nesting.tsx';
 import { DropoutVariant } from '@components/BaseWheel/BaseWheel.tsx';
 import ClassicDropoutDescription from '@components/RandomWheel/WheelSettings/fields/ClassicDropoutDescription.tsx';
 import NewDropoutDescription from '@components/RandomWheel/NewDropoutDescription/NewDropoutDescription.tsx';
 import ParticipantsImportField from '@components/RandomWheel/WheelSettings/fields/ParticipantsImport.tsx';
 import SplitField from '@components/RandomWheel/WheelSettings/fields/Split.tsx';
-import { WheelContext } from '@components/RandomWheel/WheelSettings/WheelContext.tsx';
 import CoreImageField from '@components/RandomWheel/WheelSettings/fields/CoreImage.tsx';
+import RandomSpinSwitch from '@components/RandomWheel/WheelSettings/fields/RandomSpinSwitch.tsx';
+import RandomSpinConfig from '@components/RandomWheel/WheelSettings/fields/RandomSpinConfig.tsx';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -35,6 +34,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
   } = useFormContext<Wheel.Settings>();
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
+  const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
 
   const submitButton = (
     <LoadingButton
@@ -54,7 +54,9 @@ const WheelSettings = (props: WheelSettingsProps) => {
       <Grid container style={{ gap: 8 }} item direction='column' xs={direction === 'row' ? 6 : undefined}>
         <div className='wheel-controls-row'>
           {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-          <SpinTimeField />
+          {!randomSpinEnabled && <SpinTimeField />}
+          {randomSpinEnabled && <RandomSpinConfig />}
+          <RandomSpinSwitch />
         </div>
         {controls.mode && <WheelFormatField />}
         {format === WheelFormat.Dropout && (

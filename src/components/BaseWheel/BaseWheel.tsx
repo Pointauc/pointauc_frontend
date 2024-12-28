@@ -19,6 +19,7 @@ export enum DropoutVariant {
 
 export interface SpinParams {
   seed?: number | null;
+  duration?: number;
   paceConfig?: RandomPaceConfig;
   winner?: Key;
 }
@@ -39,13 +40,14 @@ export interface BaseWheelProps<T extends WheelItem> {
   isShuffle?: boolean;
   controller: MutableRefObject<WheelController | null>;
   background?: string | null;
-  spinTime?: number;
   resetWheel?: boolean;
   delay?: number;
 }
 
+const calculateFixedAngle = (duration: number): number => duration * 270;
+
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
-  const { items, resetWheel, deleteItem, isShuffle, spinTime = 20, controller, background } = props;
+  const { items, resetWheel, deleteItem, isShuffle, controller, background } = props;
   const { t } = useTranslation();
   const { drawWheel, highlightItem, eatAnimation } = useWheelDrawer();
 
@@ -138,35 +140,33 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     return (1 - x) * 360 + 270;
   };
 
-  const fixedSpin = useMemo(() => 270 * spinTime, [spinTime]);
-
-  const { animate } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick, spinTime });
+  const { animate } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick });
   const spinToWinner = useCallback(
-    async (winner: Key) => {
+    async (winner: Key, duration: number) => {
       const localSpin = distanceTo(winner);
-      const spinDistance = Math.round(fixedSpin / 360) * 360 + localSpin;
-      await animate(spinDistance);
+      const spinDistance = Math.round(calculateFixedAngle(duration) / 360) * 360 + localSpin;
+      await animate(spinDistance, duration);
 
       return normalizedRef.current.find(({ id }) => id === winner);
     },
-    [animate, fixedSpin],
+    [animate],
   );
 
   const spinRandom = useCallback(
-    async (seed?: number | null) => {
-      const spinDistance = fixedSpin + (seed ? seed : Math.random()) * 360;
-      const end = await animate(spinDistance);
+    async (duration: number, seed?: number | null) => {
+      const spinDistance = calculateFixedAngle(duration) + (seed ? seed : Math.random()) * 360;
+      const end = await animate(spinDistance, duration);
 
       return getWinnerFromRotation(end);
     },
-    [animate, fixedSpin],
+    [animate],
   );
 
   const spin: WheelController['spin'] = useCallback(
     async (params = {}) => {
-      const { seed, winner } = params;
+      const { seed, winner, duration = 20 } = params;
       setWinnerItem(undefined);
-      const winnerItem = await (winner ? spinToWinner(winner) : spinRandom(seed));
+      const winnerItem = await (winner ? spinToWinner(winner, duration) : spinRandom(duration, seed));
       const finalized = await finalizeSpin(winnerItem);
 
       return finalized ? finalized : Promise.reject(new Error('No winner'));

@@ -11,14 +11,12 @@ interface Props extends Pick<BaseWheelProps<any>, 'controller'> {
 }
 
 const WheelComponent = ({ controller, shuffle, deleteItem, finalItems }: Props) => {
-  const spinTime = useWatch<Wheel.Settings>({ name: 'spinTime' });
   const coreImage = useWatch<Wheel.Settings>({ name: 'coreImage' });
 
   return (
     <BaseWheel
       controller={controller}
       background={coreImage || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x'}
-      spinTime={spinTime}
       deleteItem={deleteItem}
       isShuffle={shuffle}
       items={finalItems}

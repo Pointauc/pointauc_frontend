@@ -151,6 +151,15 @@
       margin-left: 15px !important;
       margin-right: 5px !important;
       width: 110px;
+
+      &.small {
+        width: 60px;
+      }
+    }
+
+    &-input-delimiter {
+      margin-left: 10px;
+      align-self: center;
     }
 
     &-tip {

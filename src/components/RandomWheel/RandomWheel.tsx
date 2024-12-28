@@ -4,7 +4,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 
 import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
 import { WheelItem } from '@models/wheel.model.ts';
-import { getTotalSize } from '@utils/common.utils.ts';
+import { getTotalSize, random } from '@utils/common.utils.ts';
 import { getRandomNumber } from '@api/randomApi.ts';
 import withLoading from '@decorators/withLoading';
 import { DropoutVariant, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
@@ -45,8 +45,11 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   children?: ReactNode;
 }
 
-const initialSettings: Wheel.Settings = {
+const defaultSettings: Wheel.Settings = {
   spinTime: 20,
+  randomSpinConfig: { min: 20, max: 100 },
+  randomSpinEnabled: false,
+
   useRandomOrg: false,
   format: WheelFormat.Default,
   paceConfig: PACE_PRESETS.suddenFinal,
@@ -58,6 +61,8 @@ const initialSettings: Wheel.Settings = {
 
   dropoutVariant: DropoutVariant.New,
 };
+const savedSettings = JSON.parse(localStorage.getItem('wheelSettings') ?? '{}');
+const initialSettings = { ...defaultSettings, ...savedSettings };
 
 const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   items: _itemsFromProps,
@@ -73,8 +78,15 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const wheelController = useRef<WheelController | null>(null);
   const { handleSubmit } = useFormContext<Wheel.Settings>();
 
+  const formValues = useWatch<Wheel.Settings>();
+  const { randomSpinEnabled, randomSpinConfig, spinTime } = formValues;
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
+
+  useEffect(() => {
+    const { split, ...settings } = formValues;
+    localStorage.setItem('wheelSettings', JSON.stringify(settings));
+  }, [formValues]);
 
   useEffect(() => {
     wheelController.current?.resetPosition();
@@ -110,14 +122,17 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const onSpinClick = useCallback(
     async ({ useRandomOrg }: Wheel.Settings) => {
       const spinConfig = onSpinStart?.();
+      const { min, max } = randomSpinConfig!;
+      const duration = randomSpinEnabled ? random.getInt(min!, max!) : spinTime;
       const winner = await wheelController.current?.spin({
         seed: useRandomOrg ? await getSeed() : undefined,
+        duration: duration,
         ...spinConfig,
       });
       await onSpinEnd?.(winner);
       winner && onWin?.(winner as TWheelItem);
     },
-    [getSeed, onSpinEnd, onSpinStart, onWin],
+    [getSeed, onSpinEnd, onSpinStart, onWin, randomSpinConfig, randomSpinEnabled, spinTime],
   );
 
   const split = useWatch<Wheel.Settings>({ name: 'split' });
