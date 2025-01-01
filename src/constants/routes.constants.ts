@@ -8,6 +8,7 @@ const ROUTES = {
   SKIP_WIDGET: '/skipWidget',
   LOGIN: '/login',
   SETTINGS: '/settings',
+  INTEGRATIONS: '/settings/integrations',
   WHEEL: '/wheel',
   HISTORY: '/history',
   HELP: '/help',

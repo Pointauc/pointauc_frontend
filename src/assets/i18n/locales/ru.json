@@ -171,6 +171,13 @@
   },
   "settings": {
     "pageTitle": "Настройки",
+    "presets": {
+      "nameFieldLabel": "Текущий шаблон настроек",
+      "defaultTitle": "Шаблон 1",
+      "newTitle": "Новый шаблон",
+      "create": "Создать шаблон",
+      "created": "Шаблон создан"
+    },
     "groups": {
       "auc": "Аукцион",
       "integrations": "Интеграции"

@@ -17,7 +17,7 @@ const IntegrationsSettings = () => {
       </Grid>
       <Grid item xs={6}>
         <DonationsSettings />
-        <EventsSettings />
+        {/*<EventsSettings />*/}
       </Grid>
     </Grid>
   );

@@ -19,8 +19,6 @@ import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
 import donatePay from '@components/Integration/DonatePay';
 import './Stopwatch.scss';
-import { useIsAukusActive } from '@hooks/aukus.ts';
-import aukusApi from '@api/events/aukusApi.ts';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
@@ -213,12 +211,7 @@ const Stopwatch: React.FC = () => {
     }
   }, [defaultTime, focusedTimer, updateStopwatch, updateTotalTime]);
 
-  const isAukusActive = useIsAukusActive();
   const startTimer = (): void => {
-    if (isAukusActive) {
-      aukusApi.startTimer();
-    }
-
     if (timeLeft.current) {
       setIsStopped(false);
       setIsStopwatchChanged(true);

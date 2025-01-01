@@ -18,7 +18,7 @@ const AukusRedirectPage = () => {
     dispatch(setEventState({ key: 'aukus', value: { isValid: true } }));
   }
 
-  return <Navigate to={ROUTES.SETTINGS} state={{ subpage: 'integrations' }} />;
+  return <Navigate to={ROUTES.INTEGRATIONS} />;
 };
 
 export default AukusRedirectPage;

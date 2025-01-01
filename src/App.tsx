@@ -85,11 +85,6 @@ const App: React.FC = () => {
     };
   }, [username]);
 
-  // setup events
-  useEffect(() => {
-    dispatch(setEventState({ key: 'aukus', value: { isValid: aukus.isValid() } }));
-  }, [dispatch]);
-
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
   const isOpen = useMemo(
     () => (!hiddenDrawerRoutes.includes(pathname) || isDrawerOpen) && !lockedDrawerRoutes.includes(pathname),
@@ -179,7 +174,7 @@ const App: React.FC = () => {
         </div>
         <AlertsContainer />
         <Routes>
-          <Route path={ROUTES.SETTINGS} element={<NewSettingsPage />} />
+          <Route path={`${ROUTES.SETTINGS}/*`} element={<NewSettingsPage />} />
           <Route path={ROUTES.WHEEL} element={<WheelPage />} />
           <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
           <Route path={ROUTES.HELP} element={<HelpPage />} />

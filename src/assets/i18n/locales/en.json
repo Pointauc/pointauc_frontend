@@ -219,6 +219,13 @@
   },
   "settings": {
     "pageTitle": "Settings",
+    "presets": {
+      "nameFieldLabel": "Active settings template",
+      "defaultTitle": "Template 1",
+      "newTitle": "New template",
+      "create": "Create template",
+      "created": "Template created"
+    },
     "groups": {
       "auc": "Auction",
       "integrations": "Integrations"

@@ -2,6 +2,15 @@ import { InsertStrategy } from '@enums/settings.enum.ts';
 
 import { TwitchRewardPresetDto } from './user.model';
 
+export interface SettingsPreset {
+  name: string;
+  id: string;
+}
+
+export interface SettingsPresetLocal extends SettingsPreset {
+  data: AucSettingsDto;
+}
+
 export interface TwitchIntegration {
   isRefundAvailable: boolean;
   dynamicRewards: boolean;
