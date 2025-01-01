@@ -18,6 +18,7 @@ const ROUTES = {
   CHAT_WHEEL: '/chatWheel/:channel',
   REQUESTS: '/requests',
   AUDIO_ROOM: '/audioRoom',
+  LOGOUT: '/logout',
   AUKUS: {
     REDIRECT: '/aukus/redirect',
   },

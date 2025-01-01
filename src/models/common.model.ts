@@ -1,9 +1,11 @@
+import { ReactNode } from 'react';
+
 export type SortOrder = 'ascend' | 'descend';
 
 export interface MenuItem {
   title: string;
   path: string;
-  IconComponent: any;
+  icon: ReactNode;
   disabled?: boolean;
   divide?: boolean;
 }

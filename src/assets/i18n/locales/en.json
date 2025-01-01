@@ -203,6 +203,9 @@
       },
       "wheel": {
         "title": "Wheel of Random"
+      },
+      "logout": {
+        "title": "Exit Account"
       }
     }
   },

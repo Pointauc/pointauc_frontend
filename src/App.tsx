@@ -12,13 +12,12 @@ import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
 import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
 import Metadata from '@components/Metadata';
-import { setEventState, setUserState } from '@reducers/User/User.ts';
-import { aukus } from '@components/Event/events.ts';
+import LogoutPage from '@pages/logout/LogoutPage.tsx';
 
 import ROUTES from './constants/routes.constants';
 import AucPage from './pages/auction/AucPage';
 import { MenuItem } from './models/common.model';
-import MENU_ITEMS from './constants/menuItems.constants';
+import { useMenuItems } from './constants/menuItems.constants';
 import { loadUserData } from './reducers/AucSettings/AucSettings';
 import AlertsContainer from './components/AlertsContainer/AlertsContainer';
 import HistoryPage from './pages/history/HistoryPage/HistoryPage';
@@ -52,6 +51,7 @@ const App: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { username } = useSelector((root: RootState) => root.user);
   const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  const menuItems = useMenuItems();
 
   const showDrawer = useCallback(() => {
     openDriverTimeout = setTimeout(() => setIsDrawerOpen(true), 70);
@@ -93,14 +93,12 @@ const App: React.FC = () => {
   const drawerClasses = useMemo(() => classNames('app-drawer', { open: isOpen, close: !isOpen }), [isOpen]);
 
   const createMenuItem = useCallback(
-    ({ IconComponent, title, path, disabled, divide }: MenuItem) => (
+    ({ icon, title, path, disabled, divide }: MenuItem) => (
       <Fragment key={path}>
         {divide && <Divider style={{ margin: '10px 0' }} />}
         <ListItemButton disabled={disabled} key={t(title)} selected={path === pathname} component={Link} to={path}>
-          <ListItemIcon className='nav-icon'>
-            <IconComponent />
-          </ListItemIcon>
-          <ListItemText primary={t(title)} />
+          <ListItemIcon className='nav-icon'>{icon}</ListItemIcon>
+          <ListItemText className='nav-text' primary={t(title)} />
         </ListItemButton>
       </Fragment>
     ),
@@ -163,7 +161,7 @@ const App: React.FC = () => {
       >
         <div className='c'>
           <div className='grow'>
-            <List>{MENU_ITEMS.map(createMenuItem)}</List>
+            <List>{menuItems.map(createMenuItem)}</List>
           </div>
           <AuthorContacts />
         </div>
@@ -181,6 +179,7 @@ const App: React.FC = () => {
           <Route path={ROUTES.STATISTIC} element={<Statistic />} />
           <Route path={ROUTES.STOPWATCH} element={<StopwatchPage />} />
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
+          <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         </Routes>
       </Container>
     </div>

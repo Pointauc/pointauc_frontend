@@ -26,6 +26,10 @@
     &.open {
       width: 240px;
 
+      .nav-text {
+        opacity: 1;
+      }
+
       .author-contacts {
         h6, a {
           opacity: 1;
@@ -52,12 +56,18 @@
 
   .nav {
     &-icon {
+      min-width: 42px;
 
       svg {
         width: 26px !important;
         height: 26px !important;
-        fill: #fff;
+        //fill: #fff;
       }
+    }
+
+    &-text {
+      opacity: 0;
+      transition: opacity 0.2s;
     }
   }
 }

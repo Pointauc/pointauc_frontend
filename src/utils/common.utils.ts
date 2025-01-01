@@ -38,6 +38,10 @@ export const getCookie = (name: string): string => {
   return (match && match[2]) || '';
 };
 
+export const removeCookie = (name: string): void => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+};
+
 export const sortSlots = (slots: Slot[]): Slot[] => {
   return [...slots].sort((a: Slot, b: Slot) => {
     if (a.amount === undefined) {
