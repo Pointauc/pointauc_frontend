@@ -15,7 +15,7 @@ const RandomSpinConfig = () => {
             className='wheel-controls-input small'
             variant='outlined'
             margin='dense'
-            label={t('wheel.from')}
+            label={t('common.from')}
             type='number'
             onChange={(e) => (e.target.value === '' ? onChange(null) : onChange(Number(e.target.value)))}
             value={Number.isNaN(value) || value == null ? '' : value}
@@ -30,7 +30,7 @@ const RandomSpinConfig = () => {
             className='wheel-controls-input small'
             variant='outlined'
             margin='dense'
-            label={t('wheel.to')}
+            label={t('common.to')}
             type='number'
             onChange={(e) => (e.target.value === '' ? onChange(null) : onChange(Number(e.target.value)))}
             value={Number.isNaN(value) || value == null ? '' : value}

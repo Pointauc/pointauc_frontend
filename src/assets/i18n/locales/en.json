@@ -158,7 +158,9 @@
     "moveFileOrClick": "Drag the file here or click",
     "or": "or",
     "sec": "sec",
-    "unsavedChanges": "Apply unsaved changes?"
+    "unsavedChanges": "Apply unsaved changes?",
+    "from": "from",
+    "to": "to"
   },
   "history": {
     "addedTo": "Added to",
@@ -391,6 +393,7 @@
     "spinning": "Spinning...",
     "useRandomOrg": "Use random.org service",
     "wheel": "Wheel",
-    "winner": "Winner"
+    "winner": "Winner",
+    "randomSpin": "Random spin time"
   }
 }
