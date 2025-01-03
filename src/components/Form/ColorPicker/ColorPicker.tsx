@@ -40,7 +40,7 @@ const ColorPicker: FC<ColorPickerProps> = ({ value, onChange, onBlur }) => {
         elevation={10}
         onClose={handleClose}
       >
-        <SketchPicker color={value} onChange={handleColorChange} />
+        <SketchPicker color={value} onChange={handleColorChange} disableAlpha />
       </Popover>
       <ButtonBase
         style={{

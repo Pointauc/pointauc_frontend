@@ -15,8 +15,9 @@ const ThemeWrapper: FC<Props> = ({ children }) => {
   const backgroundTone = useSelector((root: RootState) => root.aucSettings.settings.backgroundTone);
 
   const updatedTheme = useMemo(() => {
-    const paperTone = lighten(backgroundTone, 0.05);
-    const { paper, default: background } = theme.palette.background;
+    const { paper, default: backgroundDefault } = theme.palette.background;
+    const background = backgroundTone === 'transparent' ? backgroundDefault : backgroundTone;
+    const paperTone = lighten(background, 0.05);
 
     document.documentElement.style.setProperty('--color-primary', primaryColor);
 
@@ -28,7 +29,7 @@ const ThemeWrapper: FC<Props> = ({ children }) => {
         }),
         background: {
           paper: `#${tinycolor.mix(paper, paperTone, 7).toHex()}`,
-          default: `#${tinycolor.mix(background, backgroundTone, 7).toHex()}`,
+          default: `#${tinycolor.mix(backgroundDefault, background, 7).toHex()}`,
         },
       },
     });
