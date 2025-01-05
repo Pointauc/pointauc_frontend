@@ -6,12 +6,22 @@ import { Link } from '@mui/material';
 
 export interface UpdateData {
   date: string;
+  videoPreview?: string;
   newFeatures?: ReactNode[];
   improvements?: ReactNode[];
   fixes?: ReactNode[];
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2025-01-05T14:37:00.797Z',
+    videoPreview: 'https://youtu.be/zfkA4OPr3KI?feature=shared',
+    newFeatures: [
+      'Теперь можно отменить действие кнопки "Очистить все" после того как вы на нее нажали (к примеру по ошибке)',
+      'Новая функция конвертации баллов канала в рубли (раньше было только в обратную сторону). К примеру если курс рубля к баллам 1 к 200 и была выкуплена ставка за быллы в 2000, то в аукционе она будет отображаться со стоимостью 10.',
+    ],
+    fixes: ['Был возвращен предыдущий темп вращения. Колесо теперь останавливается не так резко.'],
+  },
   {
     date: '2025-01-02T09:00:37.026Z',
     newFeatures: [

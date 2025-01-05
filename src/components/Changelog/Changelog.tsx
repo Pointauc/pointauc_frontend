@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
-import { Divider, Grid, Typography } from '@mui/material';
+import { Divider, Grid, Link, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import { UpdateData } from '@utils/changelog.tsx';
@@ -36,13 +36,20 @@ const Changelog: FC<ChangelogProps> = ({ updates }) => {
 
   return (
     <Grid className='changelog'>
-      {updates.map(({ date, newFeatures, improvements, fixes }) => (
-        <Grid container spacing={2} key={date}>
+      {updates.map(({ date, newFeatures, improvements, fixes, videoPreview }) => (
+        <Grid container direction='column' spacing={2} key={date}>
           <Grid className='changelog-date' container item justifyContent='center' alignItems='center'>
             <Divider className='changelog-date-divider' />
             <Typography className='changelog-date-text'>{dayjs(date).format('YYYY-MM-DD HH:mm')}</Typography>
             <Divider className='changelog-date-divider' />
           </Grid>
+          {videoPreview && (
+            <Grid alignSelf='center' item>
+              <Link href={videoPreview} target='_blank'>
+                Video Preview
+              </Link>
+            </Grid>
+          )}
           <Grid item>
             {newFeatures && (
               <FeaturesList title={t('changelog.types.functionality')} data={newFeatures} color='success' />
