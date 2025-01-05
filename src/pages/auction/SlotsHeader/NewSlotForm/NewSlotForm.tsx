@@ -70,6 +70,7 @@ const NewSlotForm = () => {
     (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         createNewSlot();
+        nameInput.current?.focus();
       }
     },
     [createNewSlot],
