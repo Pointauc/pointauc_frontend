@@ -4,6 +4,7 @@ import gsap from 'gsap';
 // @ts-ignore
 import CustomEase from '@utils/CustomEase';
 import { random } from '@utils/common.utils.ts';
+import { SPIN_PATH } from '@constants/wheel.ts';
 
 window.gsap = gsap;
 
@@ -39,7 +40,7 @@ export const useWheelAnimator = ({ wheelCanvas, onSpin }: Props): Result => {
 
           gsap.to(wheelCanvas.current, {
             duration,
-            ease: CustomEase.create('custom', buildRandomCurve(), {
+            ease: CustomEase.create('custom', SPIN_PATH, {
               onUpdate: (progress: number) => onSpin(startRotation + rotation * progress),
             }),
             onComplete: () => {
