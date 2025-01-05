@@ -70,6 +70,9 @@ const purchasesSlice = createSlice({
     removePurchase(state, action: PayloadAction<ReactText>): void {
       state.purchases = state.purchases.filter(({ id }) => id !== action.payload);
     },
+    setPurchases(state, action: PayloadAction<Purchase[]>): void {
+      state.purchases = action.payload;
+    },
     resetPurchases(state): void {
       state.purchases = [];
     },
@@ -94,6 +97,7 @@ export const {
   resetPurchases,
   setDraggedRedemption,
   updateBid,
+  setPurchases,
 } = purchasesSlice.actions;
 
 export const logPurchase =

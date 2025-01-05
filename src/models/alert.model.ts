@@ -8,10 +8,14 @@ export enum AlertTypeEnum {
 }
 
 export interface AlertProps {
+  id?: number;
   message: ReactNode;
   type: AlertTypeEnum;
   duration?: number | false;
+  variant?: 'filled' | 'outlined' | 'standard';
   closable?: boolean;
+  showCountdown?: boolean;
+  static?: boolean;
 }
 
 export interface AlertType extends AlertProps {

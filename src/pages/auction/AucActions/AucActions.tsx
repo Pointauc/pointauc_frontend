@@ -7,13 +7,12 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Grid,
   IconButton,
   Link,
-  Grid,
   Tooltip,
   Typography,
 } from '@mui/material';
-import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { useTranslation } from 'react-i18next';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -28,15 +27,14 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 
 import { LINE_BREAK } from '@constants/common.constants.ts';
-import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
 import { loadFile } from '@utils/common.utils.ts';
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
 import { saveSettings, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings.ts';
-import { resetSlots } from '@reducers/Slots/Slots.ts';
 import { updateSettings } from '@api/userApi.ts';
 import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
+import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
 
 import SaveLoad from '../SaveLoad/SaveLoad';
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
@@ -107,11 +105,6 @@ const AucActions: React.FC = () => {
     [activeSettingsPresetId, dispatch],
   );
 
-  const handleResetSlots = (): void => {
-    dispatch(resetSlots());
-    dispatch(resetPurchases());
-  };
-
   const downloadMarbles = (): void => {
     loadFile('marbles.csv', createMarbleConfig(slots));
   };
@@ -166,9 +159,7 @@ const AucActions: React.FC = () => {
                   <Button startIcon={<PestControlIcon />} />
                 </Link>
               </Tooltip>
-              <Tooltip title={t('auc.clearAll')}>
-                <Button onClick={handleResetSlots} startIcon={<DeleteSweepIcon />} />
-              </Tooltip>
+              <DeleteAllLots />
             </ButtonGroup>
           </Grid>
 

@@ -30,7 +30,7 @@ const notificationsSlice = createSlice({
 
       let temporaryAlertsAmount = 0;
       for (let i = updatedAlerts.length - 1; i >= 0; i--) {
-        temporaryAlertsAmount += updatedAlerts[i].duration === false ? 0 : 1;
+        temporaryAlertsAmount += updatedAlerts[i].duration === false || updatedAlerts[i].static ? 0 : 1;
 
         if (temporaryAlertsAmount > MAX_ALERTS) {
           updatedAlerts.splice(i, 1);

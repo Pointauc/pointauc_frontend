@@ -119,7 +119,8 @@
     "showChances": "Show Winning Chances",
     "supportCreator": "Support Creator",
     "total": "Total: {{totalSum}} ₽",
-    "rules": "Rules"
+    "rules": "Rules",
+    "revertClearAll": "Click here to <b>cancel</b> the clearing of all lots (<b>{{count}}</b>)"
   },
   "bid": {
     "close": "Close",
