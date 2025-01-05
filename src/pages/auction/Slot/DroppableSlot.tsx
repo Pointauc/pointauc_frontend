@@ -8,21 +8,13 @@ import classNames from 'classnames';
 import { ThunkDispatch } from 'redux-thunk';
 import { useTranslation } from 'react-i18next';
 
-import { deleteSlot, setSlotAmount, setSlotName } from '@reducers/Slots/Slots.ts';
+import { addBid, deleteSlot, setSlotName } from '@reducers/Slots/Slots.ts';
 import { Slot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
-import {
-  logPurchase,
-  Purchase,
-  removePurchase,
-  setDraggedRedemption,
-  updateExistBids,
-} from '@reducers/Purchases/Purchases.ts';
+import { Purchase, setDraggedRedemption, updateExistBids } from '@reducers/Purchases/Purchases.ts';
 import slotNamesMap from '@services/SlotNamesMap';
-import { useCostConvert } from '@hooks/useCostConvert.ts';
 import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows.ts';
 import { handleDragOver } from '@utils/common.utils.ts';
-import { PurchaseStatusEnum } from '@models/purchase.ts';
 
 import SlotComponent from './SlotComponent';
 
@@ -33,7 +25,6 @@ interface DroppableSlotProps {
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
   const { t } = useTranslation();
-  const pointsRate = useSelector((root: RootState) => root.aucSettings.settings.pointsRate);
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [isExtraOpen, setIsExtraOpen] = useState<boolean>(false);
@@ -41,8 +32,6 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
   const { id, amount, name } = slot;
   const slotElement = useRef<HTMLDivElement>(null);
   const enterCounter = useRef<number>(0);
-
-  const { getMarblesAmount } = useCostConvert();
 
   const resetOverStyle = useCallback(() => {
     enterCounter.current = 0;
@@ -84,14 +73,11 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
 
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
-      const redemption: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
-      const { cost, message, isDonation, id: redemptionId } = redemption;
-      const addedCost = isDonation ? cost * pointsRate : cost;
+      const bid: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
+      const { message } = bid;
 
       slotNamesMap.set(message, id);
-      dispatch(setSlotAmount({ id, amount: Number(amount) + getMarblesAmount(addedCost, !amount) }));
-      dispatch(logPurchase({ ...redemption, status: PurchaseStatusEnum.Processed, target: id }));
-      dispatch(removePurchase(redemptionId));
+      dispatch(addBid(id, bid));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);
 
@@ -100,7 +86,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
       }
       resetOverStyle();
     },
-    [amount, getMarblesAmount, dispatch, id, name, pointsRate, resetOverStyle],
+    [dispatch, id, name, resetOverStyle],
   );
 
   const handleDragEnter = useCallback(

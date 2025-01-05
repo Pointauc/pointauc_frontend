@@ -20,6 +20,7 @@ export interface TwitchIntegration {
 
 export interface DonationSettings {
   pointsRate: number;
+  reversePointsRate: boolean;
   isIncrementActive: boolean;
   incrementTime: number;
 }

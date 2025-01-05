@@ -243,7 +243,9 @@
       "donations": "Донаты",
       "title": "Донаты",
       "pointsRate": "Курс рубля к поинтам",
-      "addTimeOnDonation": "Добавлять время при донате"
+      "addTimeOnDonation": "Добавлять время при донате",
+      "conversion": "Конвертация в баллы:",
+      "switchRates": "поменять местами"
     },
     "points": {
       "points": "Баллы канала",
@@ -364,7 +366,12 @@
     "luckyWheel": "Испытать удачу",
     "toLot": "К {{name}}",
     "close": "Закрыть",
-    "new": "Новый"
+    "new": "Новый",
+    "anonymous": "Аноним",
+    "convertedTitle": {
+      "donation": "{{actualCost}} ({{cost}} ₽) {{user}}",
+      "points": "{{actualCost}} ({{cost}} <icon />) {{user}}"
+    }
   },
   "stopwatch": {
     "continue": "Продолжить",

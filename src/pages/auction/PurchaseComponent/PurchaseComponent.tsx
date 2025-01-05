@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import { findBestMatch } from 'string-similarity';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import {
@@ -42,6 +42,8 @@ import { RedemptionStatus } from '@models/redemption.model.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import bidUtils from '@utils/bid.utils.ts';
+import PointsIcon from '@assets/icons/channelPoints.svg?react';
+import { numberUtils } from '@utils/common/number.ts';
 
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 import { store } from '../../../main.tsx';
@@ -65,9 +67,8 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   ...purchase
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const {
-    settings: { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts },
-  } = useSelector((root: RootState) => root.aucSettings);
+  const { settings } = useSelector((root: RootState) => root.aucSettings);
+  const { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts, reversePointsRate } = settings;
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
   const [casinoModalOpened, setCasinoModalOpened] = useState(false);
@@ -92,20 +93,6 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const addToRandomSlot = () => {
-    const { slots } = store.getState().slots;
-    const rnd = Math.floor(Math.random() * (slots.length - 1));
-    dispatch(addBid(slots[rnd].id, purchase));
-    const alertMessage = t('auc.addedToRandomSlot', {
-      cost: bidUtils.getDisplayCost(cost),
-      username,
-      slotName: slots[rnd].name,
-      message,
-    });
-    dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
-    dispatch(updateExistBids);
-  };
 
   const refundRedemption = useCallback(
     () =>
@@ -142,41 +129,63 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     'purchase',
     { 'drag-placeholder': isDragging, 'remove-cost': isRemovePurchase, disabled },
   ]);
-  const donationCost = useMemo(
-    () => (pointsRate === 1 ? `${cost}₽` : `${cost * pointsRate} (${cost} ₽)`),
-    [cost, pointsRate],
-  );
-  const costString = useMemo(() => {
-    if (hideAmounts) {
-      return bidUtils.getDisplayCost(0);
-    }
 
-    if (isDonation) {
-      return marblesAuc ? formatMarblesCost(cost * pointsRate) : donationCost;
-    }
+  const actualCost = useMemo(() => bidUtils.parseCost(purchase, settings, false), [purchase, settings]);
 
-    return formatMarblesCost(cost);
-  }, [formatMarblesCost, cost, donationCost, isDonation, marblesAuc, pointsRate]);
-  const bidTitle = useMemo(
-    () =>
-      marblesAuc ? (
+  const bidTitle = useMemo(() => {
+    const actualUsername = username ?? t('bid.anonymous');
+
+    if (hideAmounts) return bidUtils.getDisplayCost(actualCost);
+
+    if (marblesAuc) {
+      return (
         <>
-          <span>{costString}</span>
+          <span>{actualCost}</span>
           <img src={Marble} alt='marble' width={15} height={15} style={{ marginLeft: 5, marginRight: 5 }} />
-          <span>{username}</span>
+          <span>{actualUsername}</span>
         </>
-      ) : (
-        `${costString} ${username}`
-      ),
-    [costString, marblesAuc, username, hideAmounts],
-  );
+      );
+    }
+
+    if (isDonation && pointsRate > 1 && !reversePointsRate) {
+      return t('bid.convertedTitle.donation', { actualCost, cost, user: actualUsername });
+    }
+
+    if (!isDonation && pointsRate > 1 && reversePointsRate) {
+      return (
+        <Trans
+          i18nKey='bid.convertedTitle.points'
+          values={{ actualCost, cost, user: actualUsername }}
+          components={{
+            icon: <PointsIcon style={{ width: 14, height: 14, marginRight: 2, position: 'relative', top: -2 }} />,
+          }}
+        />
+      );
+    }
+
+    return `${actualCost} ${actualUsername}`;
+  }, [actualCost, cost, hideAmounts, isDonation, marblesAuc, pointsRate, reversePointsRate, t, username]);
+
+  const addToRandomSlot = () => {
+    const { slots } = store.getState().slots;
+    const rnd = Math.floor(Math.random() * (slots.length - 1));
+    dispatch(addBid(slots[rnd].id, purchase));
+    const alertMessage = t('auc.addedToRandomSlot', {
+      cost: bidUtils.getDisplayCost(actualCost),
+      username,
+      slotName: slots[rnd].name,
+      message,
+    });
+    dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
+    dispatch(updateExistBids);
+  };
 
   const handleAddNewSlot = useCallback(() => {
     dispatch(createSlotFromPurchase(purchase));
     dispatch(removePurchase(id));
     dispatch(setDraggedRedemption(null));
     dispatch(updateExistBids);
-  }, [getMarblesAmount, dispatch, id, purchase]);
+  }, [dispatch, id, purchase]);
 
   const handleAddToBestMatch = useCallback(() => {
     if (bestMatch) {

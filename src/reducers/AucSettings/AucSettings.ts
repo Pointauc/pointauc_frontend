@@ -58,6 +58,7 @@ const defaultSettings: AucSettingsState['settings'] = {
   alwaysAddNew: false,
   rewardsPrefix: 'ставка',
   pointsRate: 1,
+  reversePointsRate: false,
   isIncrementActive: false,
   incrementTime: 30,
   rewardPresets: [],

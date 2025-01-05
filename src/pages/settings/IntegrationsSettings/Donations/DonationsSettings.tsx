@@ -11,7 +11,7 @@ import { integrations } from '@components/Integration/integrations.ts';
 import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
 import FormInput from '@components/Form/FormInput/FormInput.tsx';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch.tsx';
-
+import ExchangeRate from '@pages/settings/IntegrationsSettings/Donations/ExchangeRate';
 import '@pages/settings/IntegrationsSettings/Donations/DonationsSettings.scss';
 
 const DonationsSettings = () => {
@@ -37,15 +37,9 @@ const DonationsSettings = () => {
         </Grid>
       )}
       {available.length > 0 && (
-        <FormGroup>
+        <FormGroup sx={{ mt: 2 }}>
           <FormGroup row className='auc-settings-row'>
-            <FormInput
-              name='pointsRate'
-              control={control}
-              label={t('settings.donations.pointsRate')}
-              type='number'
-              className='field md'
-            />
+            <ExchangeRate />
           </FormGroup>
           <FormGroup row className='auc-settings-row'>
             <FormSwitch name='isIncrementActive' control={control} label={t('settings.donations.addTimeOnDonation')} />

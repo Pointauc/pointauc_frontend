@@ -128,7 +128,12 @@
     "luckyWheel": "Try Your Luck",
     "new": "New",
     "toLot": "To {{name}}",
-    "totalBids": "Total Bids:"
+    "totalBids": "Total Bids:",
+    "anonymous": "Anonymous",
+    "convertedTitle": {
+      "donation": "{{actualCost}} ({{cost}} $) {{user}}",
+      "points": "{{actualCost}} ({{cost}} <icon />) {{user}}"
+    }
   },
   "changelog": {
     "modal": {
@@ -271,7 +276,9 @@
       "donations": "Donations",
       "addTimeOnDonation": "Add Time on Donation",
       "pointsRate": "Exchange Rate from Ruble to Points",
-      "title": "Donations"
+      "title": "Donations",
+      "conversion": "Conversion into points:",
+      "switchRates": "switch places"
     },
     "integrations": "Integrations",
     "luckyWheel": {

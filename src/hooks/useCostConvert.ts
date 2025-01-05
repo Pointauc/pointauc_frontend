@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { ReactText, useCallback } from 'react';
 
 import { RootState } from '@reducers';
+import bidUtils from '@utils/bid.utils.ts';
 
 interface UseCostConvertResult {
   getMarblesAmount: (cost: number, newSlot?: boolean) => number;
@@ -14,16 +15,8 @@ export const useCostConvert = (): UseCostConvertResult => {
   const marbleRate = useSelector((root: RootState) => root.aucSettings.settings.marbleRate);
 
   const convertToMarble = useCallback(
-    (cost: number, newSlot: boolean): number => {
-      const minValue = newSlot ? marbleCategory : marbleRate;
-
-      if (cost < minValue) {
-        return 0;
-      }
-      const total = cost - minValue;
-
-      return Math.floor(total / marbleRate) + 1;
-    },
+    (cost: number, newSlot: boolean): number =>
+      bidUtils.convertToMarble({ cost, newLot: newSlot, marbleCategory, marbleRate }),
     [marbleCategory, marbleRate],
   );
 
