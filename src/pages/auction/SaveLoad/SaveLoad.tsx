@@ -12,8 +12,10 @@ import { RootState } from '@reducers';
 import { createSlot } from '@reducers/Slots/Slots.ts';
 import { Slot } from '@models/slot.model.ts';
 import { sortSlots } from '@utils/common.utils.ts';
+import array from '@utils/dataType/array.ts';
 
 import SaveRecord from './SaveRecord/SaveRecord';
+
 import './SaveLoad.scss';
 
 const SaveLoad: FC = () => {
@@ -52,7 +54,17 @@ const SaveLoad: FC = () => {
 
     reader.onloadend = (): void => {
       if (typeof reader.result === 'string') {
-        setSaveConfig(SaveLoadService.newSave(JSON.parse(reader.result), file.name));
+        let data: Slot[] = [];
+
+        if (extension?.[1] === 'csv') {
+          const frequency = array.frequencyMap(reader.result.split('\n'));
+
+          data = Object.entries(frequency).map<Slot>(([name, amount]) => createSlot({ name, amount }));
+        } else {
+          data = JSON.parse(reader.result);
+        }
+
+        setSaveConfig(SaveLoadService.newSave(data, file.name));
       }
 
       toggleDialog();

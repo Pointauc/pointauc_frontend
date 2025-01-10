@@ -148,10 +148,25 @@ const groupBy = <T>(arr: T[], fn: (item: T) => string) => {
   return result;
 };
 
+const frequencyMap = (arr: string[]) => {
+  const result: Record<string, number> = {};
+
+  arr.forEach((item) => {
+    if (result[item]) {
+      result[item]++;
+    } else {
+      result[item] = 1;
+    }
+  });
+
+  return result;
+};
+
 const array = {
   distributeEvenly,
   maxBy,
   groupBy,
+  frequencyMap,
 };
 
 export default array;
