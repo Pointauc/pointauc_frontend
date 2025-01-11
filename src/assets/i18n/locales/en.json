@@ -253,6 +253,7 @@
       "sortBids": "Sort Purchases for Points",
       "title": "Common",
       "insertStrategyLabel": "Auto-adding bids",
+      "revoke": "disconnect",
       "insertStrategy": {
         "force": "Always",
         "match": "When the name fully matches",

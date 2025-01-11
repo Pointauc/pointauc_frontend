@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FormGroup } from '@mui/material';
+import { Button, FormGroup, Grid2 } from '@mui/material';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
@@ -14,7 +14,7 @@ import { RootState } from '@reducers';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
 import { integrations } from '@components/Integration/integrations.ts';
-
+import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
 import '@pages/settings/IntegrationsSettings/Points/PointsSettings.scss';
 
 const PointsSettings = () => {
@@ -40,25 +40,28 @@ const PointsSettings = () => {
       ))}
       {available.length > 0 && (
         <FormGroup className='auc-settings-list'>
-          <div style={{ display: 'flex', marginBottom: 10 }}>
-            <LoadingButton
-              isLoading={loading}
-              variant='outlined'
-              color='primary'
-              className={classNames('open-rewards-button', { close: actual })}
-              onClick={toggleSubscribe}
-            >
-              {actual ? t('settings.twitch.closeRewards') : t('settings.twitch.openRewards')}
-            </LoadingButton>
-            <Button
-              variant='outlined'
-              color='secondary'
-              style={{ width: 175, marginLeft: 20 }}
-              onClick={closeTwitchRewards}
-            >
-              {t('settings.twitch.deleteRewards')}
-            </Button>
-          </div>
+          <Grid2 style={{ marginBottom: 10 }} container justifyContent='space-between'>
+            <Grid2>
+              <LoadingButton
+                isLoading={loading}
+                variant='outlined'
+                color='primary'
+                className={classNames('open-rewards-button', { close: actual })}
+                onClick={toggleSubscribe}
+              >
+                {actual ? t('settings.twitch.closeRewards') : t('settings.twitch.openRewards')}
+              </LoadingButton>
+              <Button
+                variant='outlined'
+                color='secondary'
+                style={{ width: 175, marginLeft: 20 }}
+                onClick={closeTwitchRewards}
+              >
+                {t('settings.twitch.deleteRewards')}
+              </Button>
+            </Grid2>
+            <RevokeIntegrationButton revoke={available[0].authFlow.revoke} />
+          </Grid2>
           <FormGroup row className='auc-settings-row'>
             <FormSwitch name='isRefundAvailable' control={control} label={t('settings.twitch.returnCanceledBids')} />
           </FormGroup>
