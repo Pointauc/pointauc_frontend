@@ -15,6 +15,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
   const { t } = useTranslation();
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
   const [isCorrectUrl, setIsCorrectUrl] = useState(true);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const toggleDialog = (): void => {
     setIsCorrectUrl(true);
     setIsInputOpened((prevOpened) => !prevOpened);
@@ -31,12 +32,16 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
   const handleLinkPaste = (e: any): void => {
     const imageUrl = e.clipboardData.getData('text');
     setTimeout(() => {
+      setIsUploading(true);
       isImage(imageUrl)
         .then(() => {
           onChange(imageUrl);
           setIsInputOpened(false);
         })
-        .catch(() => setIsCorrectUrl(false));
+        .catch((e) => {
+          setIsCorrectUrl(false);
+        })
+        .finally(() => setIsUploading(false));
     }, 170);
   };
 
@@ -66,6 +71,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
           />
           <Typography className='divider'>{t('common.or')}</Typography>
           <TextField
+            disabled={isUploading}
             onPaste={handleLinkPaste}
             placeholder={t('common.insertImageLink')}
             className='link-input'

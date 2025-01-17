@@ -145,6 +145,13 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
     const newItems = wheelUtils.splitItems(items, split * maxSize);
     return newItems.length ? array.distributeEvenly(newItems) : [];
   }, [items, maxSize, split]);
+  const deleteWheelItem = (id: Key) => {
+    if (format === WheelFormat.Default) {
+      setItemsFromProps(itemsFromProps.filter((item) => item.id !== id));
+    }
+
+    deleteItem?.(id);
+  };
 
   return (
     <WheelContextProvider controller={wheelController} changeInitialItems={setItemsFromProps}>
@@ -154,7 +161,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
         <WheelComponent
           finalItems={splittedItems}
           shuffle={split != 1 ? false : isShuffle}
-          deleteItem={deleteItem}
+          deleteItem={deleteWheelItem}
           controller={wheelController}
         />
         <div className={classNames('wheel-info-wrapper', { shrink: content })}>

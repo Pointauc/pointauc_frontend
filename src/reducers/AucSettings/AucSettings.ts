@@ -128,7 +128,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
 
   if (activeSettings) {
     const { startTime, timeStep, ...settings } = activeSettings;
-    dispatch(setAucSettings(settings));
+    dispatch(setAucSettings({ ...settings }));
   }
   dispatch(
     setUserState({
