@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 
 import { WheelItem, WheelItemWithAngle } from '@models/wheel.model.ts';
-import { getRandomInclusive, shuffle } from '@utils/common.utils.ts';
+import { getRandomInclusive, random, shuffle } from '@utils/common.utils.ts';
 import { RandomPaceConfig } from '@services/SpinPaceService.ts';
 import wheelHelpers from '@components/BaseWheel/helpers.ts';
 import pradenW from '@assets/img/pradenW.png';
@@ -154,7 +154,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   const spinRandom = useCallback(
     async (duration: number, seed?: number | null) => {
-      const spinDistance = calculateFixedAngle(duration) + (seed ? seed : Math.random()) * 360;
+      const spinDistance = calculateFixedAngle(duration) + (seed ? seed : random.value()) * 360;
       const end = await animate(spinDistance, duration);
 
       return getWinnerFromRotation(end);

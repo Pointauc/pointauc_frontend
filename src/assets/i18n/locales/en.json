@@ -355,7 +355,7 @@
   },
   "wheel": {
     "hideInactive": "Hide dropped lots",
-    "totalItems": "Participants in the wheel: {{amount}}",
+    "totalItems": "Participants in the wheel - {{amount}}",
     "newDropout": {
       "explanation": {
         "button": "HOW DOES IT WORK?",

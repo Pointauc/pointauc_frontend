@@ -7,7 +7,7 @@ import { COLORS } from '../constants/color.constants';
 import { WheelItem } from '../models/wheel.model';
 import { ATTRIBUTES, TAGS } from '../constants/common.constants';
 
-import type { FieldValues, FieldNamesMarkedBoolean } from 'react-hook-form';
+import type { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 
 export const isProduction = (): boolean => import.meta.env.MODE === 'production';
 
@@ -103,6 +103,8 @@ export const loadFile = (filename: string, data: string): void => {
   document.body.removeChild(element);
 };
 
+const getRandomValue = (): number => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
+
 export const getRandomIntInclusive = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -122,6 +124,7 @@ export const getRandomInclusive = (
 export const random = {
   getInt: getRandomIntInclusive,
   getFloat: getRandomInclusive,
+  value: getRandomValue,
 };
 
 export const fitText = (text: string, maxLength: number): string =>
