@@ -73,6 +73,9 @@
     },
     "twitch": {
       "name": "Twitch"
+    },
+    "tourniquet": {
+      "name": "Tourniquet"
     }
   },
   "textEditor": {

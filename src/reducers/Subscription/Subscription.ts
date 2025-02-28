@@ -19,6 +19,7 @@ interface SubscriptionStoreState {
   twitch: SubscribeState;
   da: SubscribeState;
   donatePay: SubscribeState;
+  tourniquet: SubscribeState;
 }
 
 const initialSubscribeState = {
@@ -30,6 +31,7 @@ export const initialState: SubscriptionStoreState = {
   twitch: initialSubscribeState,
   da: initialSubscribeState,
   donatePay: initialSubscribeState,
+  tourniquet: initialSubscribeState,
 };
 
 interface SetSubscribeProps {
@@ -46,6 +48,9 @@ const subscriptionSlice = createSlice({
     },
     setDaSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.da = { ...state.da, ...action.payload };
+    },
+    setTourniquetSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
+      state.tourniquet = { ...state.tourniquet, ...action.payload };
     },
     setDonatePaySubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.donatePay = { ...state.donatePay, ...action.payload };
@@ -67,6 +72,7 @@ export const {
   setSubscribeState,
   setTwitchSubscribeState,
   setDonatePaySubscribeState,
+  setTourniquetSubscribeState,
 } = subscriptionSlice.actions;
 
 export const validateIntegrations = async (
@@ -138,6 +144,16 @@ export const sendDaSubscribedState =
 
     if (daSocket) {
       await sendSubscribeState(daSocket, isSubscribed, dispatch);
+    }
+  };
+
+export const sendTourniquetSubscribedState =
+  (isSubscribed: boolean) => async (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState) => {
+    const { tourniquetSocket } = getState().socketIo;
+    console.log(tourniquetSocket);
+
+    if (tourniquetSocket) {
+      await sendSubscribeState(tourniquetSocket, isSubscribed, dispatch);
     }
   };
 

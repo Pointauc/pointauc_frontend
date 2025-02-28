@@ -20,7 +20,7 @@ const RedirectPage = ({ integration }: Integration.LoginButtonProps<Integration.
   const [loadingMessage, setLoadingMessage] = useState<string>(t('common.authProgress'));
 
   useEffect(() => {
-    const code = getQueryValue(location.search, QUERIES.CODE);
+    const code = getQueryValue(location.search, authFlow.redirectCodeQueryKey ?? QUERIES.CODE);
 
     if (code) {
       authFlow.authenticate(code).then(() => {

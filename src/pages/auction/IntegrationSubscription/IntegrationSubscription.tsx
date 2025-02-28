@@ -21,6 +21,7 @@ const IntegrationSubscription: FC = () => {
     () => integrationUtils.groupBy.availability(INTEGRATIONS, user.authData),
     [user.authData],
   );
+  console.log(user.authData);
   const { donate, points } = useMemo(() => integrationUtils.groupBy.type(available), [available]);
 
   return (

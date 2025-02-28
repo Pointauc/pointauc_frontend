@@ -19,7 +19,7 @@ export const buildRedirectAuthFlow = ({ url, authenticate, id }: Params): Integr
   return {
     type: 'redirect',
     authenticate,
-    url: authUrl.toString(),
+    url: () => authUrl.toString(),
     validate: () => true,
     loginComponent: RedirectLoginButton,
     revoke: () => {

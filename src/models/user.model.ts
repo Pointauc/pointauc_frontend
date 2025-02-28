@@ -18,6 +18,7 @@ export interface IntegrationData {
   twitchAuth: IntegrationDataDto;
   daAuth: IntegrationDataDto;
   donatePayAuth: IntegrationDataDto;
+  tourniquetAuth: IntegrationDataDto;
 }
 
 export interface GetUserDto extends IntegrationData {

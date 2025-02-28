@@ -8,10 +8,15 @@ import { Slot, SlotResponse } from '@models/slot.model.ts';
 import { mergeLot } from '@reducers/Slots/Slots.ts';
 import { addedBidsMap, Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
-import { setDaSubscribeState, setTwitchSubscribeState } from '@reducers/Subscription/Subscription.ts';
+import {
+  setDaSubscribeState,
+  setTourniquetSubscribeState,
+  setTwitchSubscribeState,
+} from '@reducers/Subscription/Subscription.ts';
 import da from '@components/Integration/DA';
 import twitch from '@components/Integration/Twitch';
 import { integrationUtils } from '@components/Integration/helpers.ts';
+import tourniquet from '@components/Integration/Tourniquet';
 
 import { RootState } from '../index';
 
@@ -19,6 +24,7 @@ interface SocketIoState {
   client?: Socket | null;
   twitchSocket?: Socket | null;
   daSocket?: Socket | null;
+  tourniquetSocket?: Socket | null;
   globalSocket?: Socket | null;
 }
 
@@ -82,12 +88,13 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
 
   const twitchSocket = io(`${getSocketIOUrl()}/twitch`, { query: { cookie: document.cookie } });
   const daSocket = io(`${getSocketIOUrl()}/da`, { query: { cookie: document.cookie } });
+  const tourniquetSocket = io(`${getSocketIOUrl()}/tourniquet`, { query: { cookie: document.cookie } });
 
-  let statesBeforeDisconnect = { twitch: false, da: false };
+  let statesBeforeDisconnect = { twitch: false, da: false, tourniquet: false };
 
   globalSocket.on('connect', () => {
     const { user } = getState();
-    const { twitch: twitchPrevious, da: daPrevious } = statesBeforeDisconnect;
+    const { twitch: twitchPrevious, da: daPrevious, tourniquet: tourniquetPrevious } = statesBeforeDisconnect;
 
     if (user.authData.twitch && twitchPrevious) {
       integrationUtils.setSubscribeState(twitch, twitchPrevious, true);
@@ -100,6 +107,12 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
     } else {
       dispatch(setDaSubscribeState({ loading: false }));
     }
+
+    if (user.authData.tourniquet && twitchPrevious) {
+      integrationUtils.setSubscribeState(tourniquet, tourniquetPrevious, true);
+    } else {
+      dispatch(setTourniquetSubscribeState({ loading: false }));
+    }
   });
 
   globalSocket.on('disconnect', () => {
@@ -107,15 +120,17 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
     const {
       twitch: { actual: twitchPrevious },
       da: { actual: daPrevious },
+      tourniquet: { actual: tourniquetPrevious },
     } = subscription;
 
-    statesBeforeDisconnect = { twitch: twitchPrevious, da: daPrevious };
+    statesBeforeDisconnect = { twitch: twitchPrevious, da: daPrevious, tourniquet: tourniquetPrevious };
 
     dispatch(setTwitchSubscribeState({ loading: true, actual: false }));
     dispatch(setDaSubscribeState({ loading: true, actual: false }));
+    dispatch(setTourniquetSubscribeState({ loading: true, actual: false }));
   });
 
-  dispatch(setSocket({ twitchSocket, daSocket, globalSocket }));
+  dispatch(setSocket({ twitchSocket, daSocket, globalSocket, tourniquetSocket }));
 };
 
 export default socketIoSlice.reducer;

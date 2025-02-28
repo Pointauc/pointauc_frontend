@@ -124,7 +124,7 @@ export const saveSettings =
 
 export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action>): Promise<GetUserDto> => {
   const user = await getUserData();
-  const { twitchAuth, activeSettings, daAuth, donatePayAuth, activeSettingsPresetId } = user;
+  const { twitchAuth, activeSettings, daAuth, tourniquetAuth, donatePayAuth, activeSettingsPresetId } = user;
 
   if (activeSettings) {
     const { startTime, timeStep, ...settings } = activeSettings;
@@ -139,6 +139,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         donatePay: donatePayAuth,
         da: daAuth,
         twitch: twitchAuth,
+        tourniquet: tourniquetAuth,
       },
     }),
   );

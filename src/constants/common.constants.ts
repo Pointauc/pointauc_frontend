@@ -1,5 +1,6 @@
 export const QUERIES = {
   CODE: 'code',
+  REQUEST_ID: 'requestId',
   ORIGINAL_PATH: 'originalPath',
 };
 

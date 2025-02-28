@@ -11,6 +11,9 @@ const ENDPOINTS = {
     AUTH: '/api/donatePay/auth',
     TOKEN: 'https://donatepay.ru/api/v2/socket/token',
   },
+  TOURNIQUET: {
+    AUTH: '/api/tourniquet/auth',
+  },
   USER: {
     USERNAME: '/api/username',
     AUC_SETTINGS: '/api/aucSettings',

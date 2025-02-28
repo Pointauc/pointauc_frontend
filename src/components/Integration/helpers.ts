@@ -80,6 +80,7 @@ export const integrationUtils = {
       store.dispatch(setSubscribeState({ state: { actual: state, loading: true }, id }));
       if (state) {
         const userId = user.authData[id]?.id;
+        console.log(userId);
         if (!userId) throw new Error('User not found');
 
         await pubsubFlow.connect(userId);

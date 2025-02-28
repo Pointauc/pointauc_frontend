@@ -3,7 +3,7 @@ namespace Integration {
 
   import EventEmitter from '@utils/EventEmitter.ts';
 
-  type ID = 'donatePay' | 'da' | 'twitch';
+  type ID = 'donatePay' | 'da' | 'twitch' | 'tourniquet';
   type BidType = 'donate' | 'points';
 
   interface LoginButtonProps<Flow extends AuthFlow = AuthFlow> {
@@ -27,7 +27,8 @@ namespace Integration {
   interface RedirectFlow extends AuthFlowCommon {
     type: 'redirect';
     authenticate: (code: string) => Promise<unknown>;
-    url: string;
+    url: () => string;
+    redirectCodeQueryKey?: string;
   }
 
   interface TokenFlow extends AuthFlowCommon {

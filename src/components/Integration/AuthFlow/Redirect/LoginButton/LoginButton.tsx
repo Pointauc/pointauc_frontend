@@ -11,7 +11,7 @@ const RedirectLoginButton = ({ integration }: Integration.LoginButtonProps<Integ
   } = integration;
   const { t } = useTranslation();
   const handleAuth = (): void => {
-    window.open(authFlow.url, '_self');
+    window.open(authFlow.url(), '_self');
   };
 
   return (

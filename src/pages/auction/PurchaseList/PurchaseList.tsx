@@ -18,7 +18,7 @@ const PurchaseList: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { purchases } = useSelector((root: RootState) => root.purchases);
-  const { globalSocket, twitchSocket, daSocket } = useSelector((root: RootState) => root.socketIo);
+  const { globalSocket, twitchSocket, tourniquetSocket, daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -48,6 +48,9 @@ const PurchaseList: React.FC = () => {
     globalSocket?.on('Bid', (bid) => handleRedemption({ ...bid, source: 'API' }));
     twitchSocket?.on('Bid', (bid) => handleRedemption({ ...bid, source: 'twitch' }));
 
+    const handleTourniquetBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'tourniquet' });
+    tourniquetSocket?.on('Bid', handleTourniquetBid);
+
     const handleDaBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'da' });
     daSocket?.on('Bid', handleDaBid);
 
@@ -58,8 +61,9 @@ const PurchaseList: React.FC = () => {
     return () => {
       donatePayUnsub();
       daSocket?.off('Bid', handleDaBid);
+      tourniquetSocket?.off('Bid', handleTourniquetBid);
     };
-  }, [daSocket, handleRedemption, twitchSocket, globalSocket]);
+  }, [daSocket, handleRedemption, twitchSocket, globalSocket, tourniquetSocket]);
 
   return (
     <div className='purchase-container'>
