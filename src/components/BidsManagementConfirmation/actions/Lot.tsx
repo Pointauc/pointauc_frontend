@@ -20,7 +20,6 @@ const LotActionTitle = ({ config: { lotId } }: TitleProps) => {
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const lot = useMemo(() => {
-    console.log('get lot');
     return getSlot(slots, lotId);
   }, [lotId, slots]);
 

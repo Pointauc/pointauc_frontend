@@ -7,6 +7,8 @@ export interface IntegrationAvailability {
 export interface IntegrationDataDto extends IntegrationAvailability {
   username: string;
   id: string;
+  accessToken?: string;
+  socketConnectionToken?: string;
 }
 
 export interface TwitchRewardPresetDto {

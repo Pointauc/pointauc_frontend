@@ -12,18 +12,18 @@ import '@components/SettingsPage/SettingsPage.scss';
 import './MockBidForm.scss';
 
 const MockBidForm: FC = () => {
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+  // const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
 
   const formMethods = useForm<Partial<Purchase>>();
   const { handleSubmit, control } = formMethods;
 
-  const onSubmit = useCallback(
-    (data: Partial<Purchase>) => webSocket?.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE, ...data })),
-    [webSocket],
-  );
+  // const onSubmit = useCallback(
+  //   (data: Partial<Purchase>) => webSocket?.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE, ...data })),
+  //   [webSocket],
+  // );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='mock-bid-form settings'>
+    <form className='mock-bid-form settings'>
       <FormGroup row className='auc-settings-row'>
         <FormInput name='cost' label='Cost' control={control} type='number' className='field md' />
       </FormGroup>

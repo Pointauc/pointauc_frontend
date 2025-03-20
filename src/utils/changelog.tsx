@@ -14,6 +14,10 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2025-03-20T13:45:00.319Z',
+    fixes: ['Исправлена интеграция с Donation Alerts (теперь наверняка)'],
+  },
+  {
     date: '2025-01-05T14:37:00.797Z',
     videoPreview: 'https://youtu.be/zfkA4OPr3KI?feature=shared',
     newFeatures: [

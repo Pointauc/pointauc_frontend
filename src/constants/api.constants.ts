@@ -7,6 +7,10 @@ const ENDPOINTS = {
   DA_AUTH: '/api/da/auth',
   TWITCH_CHANNEL_POINTS: '/api/twitch/channelPoints',
   CAMILLE_BOT: '/api/requests/camilleBot',
+  DA: {
+    SUBSCRIBE: '/api/da/centrifuge/subscribe',
+    USER: 'https://www.donationalerts.com/api/v1/user/oauth',
+  },
   DONATE_PAY: {
     AUTH: '/api/donatePay/auth',
     TOKEN: 'https://donatepay.ru/api/v2/socket/token',

@@ -132,13 +132,4 @@ export const sendCpSubscribedState =
     }
   };
 
-export const sendDaSubscribedState =
-  (isSubscribed: boolean) => async (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState) => {
-    const { daSocket } = getState().socketIo;
-
-    if (daSocket) {
-      await sendSubscribeState(daSocket, isSubscribed, dispatch);
-    }
-  };
-
 export default subscriptionSlice.reducer;

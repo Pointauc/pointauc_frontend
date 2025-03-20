@@ -12,16 +12,14 @@ export default class CentrifugeV2 implements CentrifugeFlow.Adapter {
 
   constructor(params: CentrifugeFlow.AdapterParams) {
     this.centrifuge = new Centrifuge(params.url, {
-      subscribeEndpoint: 'https://donatepay.ru/api/v2/socket/token',
-      subscribeParams: {
-        access_token: params.accessToken,
-      },
+      subscribeEndpoint: params.subscribeEndpoint,
+      subscribeParams: params.subscribeParams,
       disableWithCredentials: true,
     });
     this.events = params.events;
     this.parseMessage = params.parseMessage;
 
-    this.centrifuge.subscribe(`$public:${params.userId}`, this.handleDonation);
+    this.centrifuge.subscribe(params.channel, this.handleDonation);
 
     this.centrifuge.on('connect', () => {
       this.ready = true;

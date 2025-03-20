@@ -27,7 +27,6 @@ import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
-
 import '@styles/index.scss';
 
 declare module '@mui/styles/defaultTheme' {

@@ -8,8 +8,7 @@ import { Slot, SlotResponse } from '@models/slot.model.ts';
 import { mergeLot } from '@reducers/Slots/Slots.ts';
 import { addedBidsMap, Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
-import { setDaSubscribeState, setTwitchSubscribeState } from '@reducers/Subscription/Subscription.ts';
-import da from '@components/Integration/DA';
+import { setTwitchSubscribeState } from '@reducers/Subscription/Subscription.ts';
 import twitch from '@components/Integration/Twitch';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 
@@ -18,7 +17,6 @@ import { RootState } from '../index';
 interface SocketIoState {
   client?: Socket | null;
   twitchSocket?: Socket | null;
-  daSocket?: Socket | null;
   globalSocket?: Socket | null;
 }
 
@@ -81,24 +79,17 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
   );
 
   const twitchSocket = io(`${getSocketIOUrl()}/twitch`, { query: { cookie: document.cookie } });
-  const daSocket = io(`${getSocketIOUrl()}/da`, { query: { cookie: document.cookie } });
 
-  let statesBeforeDisconnect = { twitch: false, da: false };
+  let statesBeforeDisconnect = { twitch: false };
 
   globalSocket.on('connect', () => {
     const { user } = getState();
-    const { twitch: twitchPrevious, da: daPrevious } = statesBeforeDisconnect;
+    const { twitch: twitchPrevious } = statesBeforeDisconnect;
 
     if (user.authData.twitch && twitchPrevious) {
       integrationUtils.setSubscribeState(twitch, twitchPrevious, true);
     } else {
       dispatch(setTwitchSubscribeState({ loading: false }));
-    }
-
-    if (user.authData.da && daPrevious) {
-      integrationUtils.setSubscribeState(da, daPrevious, true);
-    } else {
-      dispatch(setDaSubscribeState({ loading: false }));
     }
   });
 
@@ -106,16 +97,14 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
     const { subscription, user } = getState();
     const {
       twitch: { actual: twitchPrevious },
-      da: { actual: daPrevious },
     } = subscription;
 
-    statesBeforeDisconnect = { twitch: twitchPrevious, da: daPrevious };
+    statesBeforeDisconnect = { twitch: twitchPrevious };
 
     dispatch(setTwitchSubscribeState({ loading: true, actual: false }));
-    dispatch(setDaSubscribeState({ loading: true, actual: false }));
   });
 
-  dispatch(setSocket({ twitchSocket, daSocket, globalSocket }));
+  dispatch(setSocket({ twitchSocket, globalSocket }));
 };
 
 export default socketIoSlice.reducer;

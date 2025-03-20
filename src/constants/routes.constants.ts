@@ -19,6 +19,9 @@ const ROUTES = {
   REQUESTS: '/requests',
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
+  REDIRECT: {
+    DEFAULT: '/redirect',
+  },
   AUKUS: {
     REDIRECT: '/aukus/redirect',
   },
