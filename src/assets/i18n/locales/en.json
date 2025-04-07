@@ -106,6 +106,7 @@
     },
     "clearAll": "Clear All",
     "compactView": "Compact View",
+    "autoScroll": "Autoscroll",
     "downloadMarbles": "Download Marbles",
     "integrations": "Integrations",
     "language": "Language: {{lng}}",
