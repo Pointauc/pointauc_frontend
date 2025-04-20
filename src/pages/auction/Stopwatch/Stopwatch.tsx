@@ -19,6 +19,7 @@ import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
 import donatePay from '@components/Integration/DonatePay';
 import './Stopwatch.scss';
+import da from '@components/Integration/DA';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
@@ -33,7 +34,6 @@ const Stopwatch: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { daSocket } = useSelector((root: RootState) => root.socketIo);
   const {
     twitch: { actual: actualTwitchSub, loading: loadingTwitchSub },
   } = useSelector((root: RootState) => root.subscription);
@@ -152,7 +152,6 @@ const Stopwatch: React.FC = () => {
   );
 
   const handleDonation = useCallback(() => {
-    console.log('on donation');
     const { isIncrementActive, incrementTime } = daSettings.current;
 
     if (isIncrementActive) {
@@ -161,14 +160,14 @@ const Stopwatch: React.FC = () => {
   }, [autoUpdateTimer]);
 
   useEffect(() => {
-    daSocket?.on('Bid', handleDonation);
-    const unsub = donatePay.pubsubFlow.events.on('bid', handleDonation);
+    const unsubDonatePay = donatePay.pubsubFlow.events.on('bid', handleDonation);
+    const unsubDa = da.pubsubFlow.events.on('bid', handleDonation);
 
     return () => {
-      daSocket?.off('Bid', handleDonation);
-      unsub();
+      unsubDa();
+      unsubDonatePay();
     };
-  }, [daSocket, handleDonation]);
+  }, [handleDonation]);
 
   useEffect(() => {
     updateStopwatch();

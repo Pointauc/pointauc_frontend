@@ -50,7 +50,6 @@ const App: React.FC = () => {
   const { pathname } = useLocation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { username } = useSelector((root: RootState) => root.user);
-  const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
   const menuItems = useMenuItems();
 
   const showDrawer = useCallback(() => {
@@ -62,10 +61,10 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (username && !webSocket) {
+    if (username) {
       dispatch(connectToSocketIo);
     }
-  }, [dispatch, username, webSocket]);
+  }, [dispatch, username]);
 
   useEffect(() => {
     let interval: any;

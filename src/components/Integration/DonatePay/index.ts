@@ -52,10 +52,15 @@ const donatePay: Integration.Config<TokenFlow> = {
     version: '2',
     url: 'wss://centrifugo.donatepay.ru:43002/connection/websocket',
     parseMessage,
-    getAccessToken: authFlow.getAccessToken,
+    subscribeParams: async () => ({
+      access_token: authFlow.getAccessToken(),
+    }),
     id,
     authFlow,
     getToken: () => donatePayApi.pubsubToken(authFlow.getAccessToken()),
+    getChannel: (userId) => `$public:${userId}`,
+    subscribeEndpoint: 'https://donatepay.ru/api/v2/socket/token',
+    cacheToken: true,
   }),
   branding: {
     icon: DonatePaySvg,
