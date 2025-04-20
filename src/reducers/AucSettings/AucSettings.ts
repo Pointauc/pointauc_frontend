@@ -16,6 +16,7 @@ import { validateIntegrations } from '../Subscription/Subscription';
 export interface ViewSettings {
   compact: boolean;
   showRules: boolean;
+  autoScroll: boolean;
 }
 
 interface EventsSettings {
@@ -79,6 +80,7 @@ export const initialState: AucSettingsState = {
   view: {
     compact: false,
     showRules: showRules === 'true',
+    autoScroll: false,
   },
   settings: localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings') as string) : defaultSettings,
 };
@@ -104,10 +106,13 @@ const aucSettingsSlice = createSlice({
       state.view.showRules = action.payload;
       localStorage.setItem('showRules', String(action.payload));
     },
+    setAutoScroll(state, action: PayloadAction<boolean>): void {
+      state.view.autoScroll = action.payload;
+    },
   },
 });
 
-export const { setAucSettings, setCompact, setShowRules, setShowChances } = aucSettingsSlice.actions;
+export const { setAucSettings, setCompact, setShowRules, setShowChances, setAutoScroll } = aucSettingsSlice.actions;
 
 export const saveSettings =
   (settings: SettingsForm) =>

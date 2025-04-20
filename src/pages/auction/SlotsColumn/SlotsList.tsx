@@ -1,4 +1,4 @@
-import { CSSProperties, FC, memo, RefObject, useEffect, useState } from 'react';
+import { CSSProperties, FC, memo, RefObject, useEffect, useRef, useState } from 'react';
 import Grid from '@mui/material/Grid2';
 import FlipMove from 'react-flip-move';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 
 import DroppableSlot from '../Slot/DroppableSlot';
+import useAutoScroll from '@hooks/useAutoScroll';
 
 interface SlotsListProps {
   slots: Slot[];
@@ -35,10 +36,12 @@ interface VirtualListProps {
   slots: Slot[];
   height: number;
   compact: boolean;
+  containerRef: RefObject<HTMLDivElement>;
 }
 
-const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact }) => (
+const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRef }) => (
   <FixedSizeList
+    outerRef={containerRef}
     width='100%'
     height={height}
     itemData={slots}
@@ -55,7 +58,15 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
+  const autoScroll = useSelector((root: RootState) => root.aucSettings.view.autoScroll);
   const [height, setHeight] = useState<number>();
+  const containerVirtualRef = useRef<HTMLDivElement>(null);
+
+  useAutoScroll(compact || optimize ? containerVirtualRef : containerRef, slots.length, autoScroll, {
+    scrollSpeed: 50,
+    pauseOnEdgesDuration: 2,
+    mouseResumeDelay: 5,
+  });
 
   useEffect(() => {
     if (optimize && !compact) {
@@ -83,7 +94,9 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
 
   return (
     <Grid container className={classNames('slots-column-list', { 'compact-view': compact, optimize })}>
-      {(compact || optimize) && height != null && <VirtualLots slots={slots} height={height} compact={compact} />}
+      {(compact || optimize) && height != null && (
+        <VirtualLots slots={slots} height={height} compact={compact} containerRef={containerVirtualRef} />
+      )}
       {!compact && !optimize && (
         <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
           {slots.map((slot, index) => (

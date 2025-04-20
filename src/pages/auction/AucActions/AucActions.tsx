@@ -25,12 +25,19 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import PestControlIcon from '@mui/icons-material/PestControl';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
 import { LINE_BREAK } from '@constants/common.constants.ts';
 import { loadFile } from '@utils/common.utils.ts';
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
-import { saveSettings, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings.ts';
+import {
+  saveSettings,
+  setCompact,
+  setShowChances,
+  setShowRules,
+  setAutoScroll,
+} from '@reducers/AucSettings/AucSettings.ts';
 import { updateSettings } from '@api/userApi.ts';
 import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
@@ -48,15 +55,15 @@ const AucActions: React.FC = () => {
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances, isTotalVisible } = useSelector((root: RootState) => root.aucSettings.settings);
-  const { compact, showRules } = useSelector((root: RootState) => root.aucSettings.view);
+  const { compact, showRules, autoScroll } = useSelector((root: RootState) => root.aucSettings.view);
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 
   const selectedOptions = useMemo(() => {
-    const map = { showChances, compact, showRules };
+    const map = { showChances, compact, showRules, autoScroll };
 
     return Object.entries(map).reduce<string[]>((acc, [key, enabled]) => (enabled ? [...acc, key] : acc), []);
-  }, [compact, showChances, showRules]);
+  }, [compact, showChances, showRules, autoScroll]);
 
   const availableOptions: Option<string>[] = useMemo(
     () => [
@@ -87,6 +94,14 @@ const AucActions: React.FC = () => {
           </Tooltip>
         ),
       },
+      {
+        key: 'autoScroll',
+        label: (
+          <Tooltip title={t('auc.autoScroll')}>
+            <SwapVertIcon />
+          </Tooltip>
+        ),
+      },
     ],
     [t],
   );
@@ -96,10 +111,12 @@ const AucActions: React.FC = () => {
       const showChancesEnabled = options.includes('showChances');
       const compactEnabled = options.includes('compact');
       const rulesEnabled = options.includes('showRules');
+      const autoScrollEnabled = options.includes('autoScroll');
 
       dispatch(setShowChances(showChancesEnabled));
       dispatch(setCompact(compactEnabled));
       dispatch(setShowRules(rulesEnabled));
+      dispatch(setAutoScroll(autoScrollEnabled));
       updateSettings({ settings: { showChances: showChancesEnabled }, id: activeSettingsPresetId });
     },
     [activeSettingsPresetId, dispatch],

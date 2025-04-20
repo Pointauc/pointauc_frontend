@@ -154,6 +154,7 @@
     "language": "Language: {{lng}}",
     "showChances": "Показать шансы на победу",
     "compactView": "Компактный режим",
+    "autoScroll": "Автопрокрутка",
     "clearAll": "Очистить все",
     "saves": "Ваши сохранения",
     "sendBugReport": "Сообщить об ошибке",
