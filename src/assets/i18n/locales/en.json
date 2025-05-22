@@ -262,6 +262,11 @@
         "force": "Always",
         "match": "When the name fully matches",
         "none": "Never"
+      },
+      "bidNameStrategyLabel": "What to use as a bid name",
+      "bidNameStrategy": {
+        "message": "Message text",
+        "username": "Username"
       }
     },
     "auc": {

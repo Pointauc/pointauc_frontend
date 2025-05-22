@@ -6,12 +6,13 @@ import { getUserData, updateSettings } from '@api/userApi.ts';
 import { GetUserDto } from '@models/user.model.ts';
 import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import { COLORS } from '@constants/color.constants.ts';
-import { InsertStrategy } from '@enums/settings.enum.ts';
+import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
 import { validateIntegrations } from '../Subscription/Subscription';
+import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 export interface ViewSettings {
   compact: boolean;
@@ -65,6 +66,7 @@ const defaultSettings: AucSettingsState['settings'] = {
   rewardPresets: [],
   showUpdates: true,
   insertStrategy: InsertStrategy.Match,
+  bidNameStrategy: BidNameStrategy.Message,
   primaryColor: COLORS.THEME.PRIMARY,
   backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   hideAmounts: false,

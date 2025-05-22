@@ -51,6 +51,7 @@ import { store } from '../../../main.tsx';
 import type { ThunkDispatch } from 'redux-thunk';
 
 import './PurchaseComponent.scss';
+import { BidNameStrategy } from '@enums/bidNameStrategy.enum.ts';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -68,7 +69,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { settings } = useSelector((root: RootState) => root.aucSettings);
-  const { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts, reversePointsRate } = settings;
+  const { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts, reversePointsRate, bidNameStrategy } = settings;
   const { id, message, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
   const [casinoModalOpened, setCasinoModalOpened] = useState(false);
@@ -88,7 +89,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     const {
       bestMatch: { rating },
       bestMatchIndex,
-    } = findBestMatch(message || '', slotNames);
+    } = findBestMatch((bidNameStrategy === BidNameStrategy.Username ? username : message) || '', slotNames);
 
     return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps

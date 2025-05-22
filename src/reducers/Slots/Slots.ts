@@ -14,6 +14,7 @@ import { RootState } from '../index';
 import slotNamesMap from '../../services/SlotNamesMap';
 
 import LotQuery = PublicApi.LotQuery;
+import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 interface SlotsState {
   slots: Slot[];
@@ -197,18 +198,19 @@ export const createSlotFromPurchase =
       aucSettings: { settings },
       slots: { slots },
     } = getState();
-    const { message: name, cost } = bid;
+    const { message, username, cost } = bid;
+    const slotName = settings.bidNameStrategy === BidNameStrategy.Username ? username : message;
     // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),
-      name,
+      name: slotName,
       amount: bidUtils.parseCost(bid, settings, true),
       extra: null,
       fastId: ++maxFastId,
       investors: bid.investorId ? [bid.investorId] : [],
     };
     const updatedSlots = [...slots, newSlot];
-    slotNamesMap.set(name, newSlot.id);
+    slotNamesMap.set(slotName, newSlot.id);
     slotNamesMap.set(`#${maxFastId}`, newSlot.id);
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
@@ -234,10 +236,10 @@ export const addBid =
       return;
     }
 
-    const { message, id } = bid;
+    const { message, id, username } = bid;
     const amount = bidUtils.parseCost(bid, settings, false);
 
-    slotNamesMap.set(message, slotId);
+    slotNamesMap.set(settings.bidNameStrategy === BidNameStrategy.Username ? username : message, slotId);
     dispatch(addSlotAmount({ id: slotId, amount }));
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }, false));
     removeBid && dispatch(removePurchase(id));

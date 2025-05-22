@@ -218,6 +218,11 @@
         "force": "Всегда",
         "match": "При полном совпадении имени",
         "none": "Никогда"
+      },
+      "bidNameStrategyLabel": "Что использовать как имя лота",
+      "bidNameStrategy": {
+        "message": "Текст сообщения",
+        "username": "Имя пользователя"
       }
     },
     "twitch": {
