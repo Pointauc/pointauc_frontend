@@ -4,5 +4,3 @@ export enum InsertStrategy {
   None = 'none',
   Auto = 'auto',
 }
-
-
