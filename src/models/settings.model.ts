@@ -1,6 +1,7 @@
-import { InsertStrategy } from '@enums/settings.enum.ts';
+import { InsertStrategy } from '@enums/insertStrategy.enum';
 
 import { TwitchRewardPresetDto } from './user.model';
+import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 export interface SettingsPreset {
   name: string;
@@ -48,6 +49,7 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   luckyWheelSelectBet: boolean;
   showUpdates: boolean;
   insertStrategy: InsertStrategy;
+  bidNameStrategy: BidNameStrategy;
   hideAmounts: boolean;
 
   // Appearance
