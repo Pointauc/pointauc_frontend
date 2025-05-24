@@ -1,28 +1,38 @@
-import React, { useCallback, useMemo, useState, useRef } from 'react';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Button,
+  ButtonGroup,
   Card,
   CardContent,
+  ClickAwayListener,
   Dialog,
   DialogActions,
   DialogContent,
-  IconButton,
-  Typography,
-  ButtonGroup,
-  Popper,
   Grow,
-  Paper,
-  ClickAwayListener,
-  MenuList,
+  IconButton,
   MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  Typography,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
-import { findBestMatch } from 'string-similarity';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useDispatch, useSelector } from 'react-redux';
+import { findBestMatch } from 'string-similarity';
 
+import { updateRedemption } from '@api/twitchApi.ts';
+import PointsIcon from '@assets/icons/channelPoints.svg?react';
+import donationBackground from '@assets/img/donationBackground.jpg';
+import Marble from '@assets/img/Marble.png';
+import { useCostConvert } from '@hooks/useCostConvert.ts';
+import { AlertTypeEnum } from '@models/alert.model.ts';
+import { PurchaseStatusEnum } from '@models/purchase.ts';
+import { RedemptionStatus } from '@models/redemption.model.ts';
+import { RootState } from '@reducers';
+import { addAlert } from '@reducers/notifications/notifications.ts';
 import {
   logPurchase,
   Purchase,
@@ -31,27 +41,15 @@ import {
   updateBid,
   updateExistBids,
 } from '@reducers/Purchases/Purchases.ts';
-import { RootState } from '@reducers';
-import donationBackground from '@assets/img/donationBackground.jpg';
 import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
-import { useCostConvert } from '@hooks/useCostConvert.ts';
-import Marble from '@assets/img/Marble.png';
-import { PurchaseStatusEnum } from '@models/purchase.ts';
-import { updateRedemption } from '@api/twitchApi.ts';
-import { RedemptionStatus } from '@models/redemption.model.ts';
-import { addAlert } from '@reducers/notifications/notifications.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
 import bidUtils from '@utils/bid.utils.ts';
-import PointsIcon from '@assets/icons/channelPoints.svg?react';
-import { numberUtils } from '@utils/common/number.ts';
 
-import RouletteMenu from '../RouletteMenu/RouletteMenu';
 import { store } from '../../../main.tsx';
+import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
 import type { ThunkDispatch } from 'redux-thunk';
 
 import './PurchaseComponent.scss';
-import { BidNameStrategy } from '@enums/bidNameStrategy.enum.ts';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -69,11 +67,12 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { settings } = useSelector((root: RootState) => root.aucSettings);
-  const { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts, reversePointsRate, bidNameStrategy } = settings;
-  const { id, message, username, cost, color, rewardId, isDonation } = purchase;
+  const { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts, reversePointsRate } = settings;
+  const { id, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
   const [casinoModalOpened, setCasinoModalOpened] = useState(false);
   const { t } = useTranslation();
+  const name = bidUtils.getName(purchase);
 
   const [splitButtonMenuOpen, setSplitButtonMenuOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -89,7 +88,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     const {
       bestMatch: { rating },
       bestMatchIndex,
-    } = findBestMatch((bidNameStrategy === BidNameStrategy.Username ? username : message) || '', slotNames);
+    } = findBestMatch(name, slotNames);
 
     return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -175,7 +174,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
       cost: bidUtils.getDisplayCost(actualCost),
       username,
       slotName: slots[rnd].name,
-      message,
+      name,
     });
     dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
     dispatch(updateExistBids);
@@ -227,7 +226,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
             <CloseIcon />
           </IconButton>
         </div>
-        <Typography>{message}</Typography>
+        <Typography>{name}</Typography>
         {!hideActions && (
           <>
             <ButtonGroup size='small' className='purchase-new-split-button' ref={anchorRef}>

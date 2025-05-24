@@ -7,11 +7,11 @@ import { PurchaseStatusEnum } from '@models/purchase.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
+import { BidNameStrategy } from '@enums/bid.enum';
 
 import { RootState } from '../index';
 import { addBid, createSlotFromPurchase } from '../Slots/Slots';
 import { addAlert } from '../notifications/notifications';
-import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 export interface Purchase {
   timestamp: string;
@@ -118,11 +118,10 @@ export const fastAddBid =
     const {
       aucSettings: { settings },
     } = getState();
-    
+
     const showAlert = (cost: number): void => {
-      const { username, message } = bid;
-      const bidName = settings.bidNameStrategy === BidNameStrategy.Username ? username : message;
-      const alertMessage = `${username} добавил ${bidUtils.getDisplayCost(cost)} к "${name}" ("${bidName}")!`;
+      const name = bidUtils.getName(bid);
+      const alertMessage = `${bid.username} добавил ${bidUtils.getDisplayCost(cost)} к "${name}" ("${name}")!`;
       dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
     };
 
@@ -143,7 +142,7 @@ export const processRedemption =
       return;
     }
 
-    const slotName = settings.bidNameStrategy === BidNameStrategy.Username ? bid.username : bid.message;
+    const slotName = bidUtils.getName(bid);
     const similarSlotId = slotNamesMap.get(slotName);
     if (similarSlotId) {
       dispatch(fastAddBid(bid, similarSlotId));
@@ -167,7 +166,7 @@ export const updateExistBids = (dispatch: ThunkDispatch<RootState, {}, Action>, 
   } = getState();
 
   purchases.forEach((bid) => {
-    const similarSlotId = slotNamesMap.get(bid.message);
+    const similarSlotId = slotNamesMap.get(bidUtils.getName(bid));
 
     if (similarSlotId && !luckyWheelEnabled) {
       dispatch(fastAddBid(bid, similarSlotId));

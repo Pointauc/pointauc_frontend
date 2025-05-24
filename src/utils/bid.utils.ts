@@ -1,6 +1,7 @@
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { Settings } from '@models/settings.model.ts';
 import { numberUtils } from '@utils/common/number.ts';
+import { BidNameStrategy } from '@enums/bid.enum.ts';
 
 import { store } from '../main.tsx';
 
@@ -43,10 +44,26 @@ const getDisplayCost = (cost: number): number | string => {
   return hideAmounts ? '**' : cost;
 };
 
+// ToDo: Implement as a class propeerty
+const getName = (bid: Purchase): string => {
+  const { bidNameStrategy } = store.getState().aucSettings.settings;
+  const { message, username } = bid;
+
+  switch (bidNameStrategy) {
+    case BidNameStrategy.Username:
+      return username || 'Anonymous';
+    case BidNameStrategy.Message:
+      return message;
+    default:
+      return message;
+  }
+};
+
 const bidUtils = {
   parseCost,
   getDisplayCost,
   convertToMarble,
+  getName,
 };
 
 export default bidUtils;

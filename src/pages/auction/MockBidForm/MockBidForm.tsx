@@ -1,45 +1,57 @@
 import { FC, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, FormGroup } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Box, Button, FormGroup } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
-import { Purchase } from '@reducers/Purchases/Purchases.ts';
+import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import FormInput from '@components/Form/FormInput/FormInput';
-import { RootState } from '@reducers';
-import { MESSAGE_TYPES } from '@constants/webSocket.constants.ts';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
-import '@components/SettingsPage/SettingsPage.scss';
+
 import './MockBidForm.scss';
 
-const MockBidForm: FC = () => {
-  // const { webSocket } = useSelector((root: RootState) => root.pubSubSocket);
+const defaultPurchase: Purchase = {
+  cost: 100,
+  username: 'test',
+  message: 'test',
+  isDonation: false,
+  timestamp: new Date().toISOString(),
+  color: '#000000',
+  id: '1',
+  source: 'Mock',
+};
 
-  const formMethods = useForm<Partial<Purchase>>();
+const MockBidForm: FC = () => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  const formMethods = useForm<Purchase>({ defaultValues: defaultPurchase });
   const { handleSubmit, control } = formMethods;
 
-  // const onSubmit = useCallback(
-  //   (data: Partial<Purchase>) => webSocket?.send(JSON.stringify({ type: MESSAGE_TYPES.MOCK_PURCHASE, ...data })),
-  //   [webSocket],
-  // );
+  const onSubmit = useCallback(
+    (data: Purchase) => dispatch(processRedemption({ ...data, id: Math.random().toString() })),
+    [dispatch],
+  );
 
   return (
-    <form className='mock-bid-form settings'>
-      <FormGroup row className='auc-settings-row'>
-        <FormInput name='cost' label='Cost' control={control} type='number' className='field md' />
-      </FormGroup>
-      <FormGroup row className='auc-settings-row'>
-        <FormInput name='username' label='Username' control={control} className='field lg' />
-      </FormGroup>
-      <FormGroup row className='auc-settings-row'>
-        <FormInput name='message' label='Message' control={control} className='field lg' />
-      </FormGroup>
-      <FormGroup row className='auc-settings-row'>
-        <FormSwitch name='isDonation' label='Is donation' control={control} />
-      </FormGroup>
-      <Button type='submit' variant='contained' color='primary'>
-        Send test bid
-      </Button>
-    </form>
+    <Box sx={{ p: 2 }}>
+      <form className='mock-bid-form' onSubmit={handleSubmit(onSubmit)}>
+        <FormGroup row className='auc-settings-row'>
+          <FormInput name='cost' label='Cost' control={control} type='number' className='field md' />
+        </FormGroup>
+        <FormGroup row className='auc-settings-row'>
+          <FormInput name='username' label='Username' control={control} className='field lg' />
+        </FormGroup>
+        <FormGroup row className='auc-settings-row'>
+          <FormInput name='message' label='Message' control={control} className='field lg' />
+        </FormGroup>
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='isDonation' label='Is donation' control={control} />
+        </FormGroup>
+        <Button type='submit' variant='contained' color='primary'>
+          Send
+        </Button>
+      </form>
+    </Box>
   );
 };
 

@@ -219,10 +219,10 @@
         "match": "При полном совпадении имени",
         "none": "Никогда"
       },
-      "bidNameStrategyLabel": "Что использовать как имя лота",
+      "bidNameStrategyLabel": "Название ставки",
       "bidNameStrategy": {
-        "message": "Текст сообщения",
-        "username": "Имя пользователя"
+        "message": "Сообщение",
+        "username": "Имя зрителя"
       }
     },
     "twitch": {

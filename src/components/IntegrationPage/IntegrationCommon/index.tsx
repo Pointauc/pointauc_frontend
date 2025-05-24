@@ -1,23 +1,20 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { FormControl, FormGroup, MenuItem, Select, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Controller, useFormContext } from 'react-hook-form';
-import { FormControl, MenuItem, Select, Typography, FormGroup, Grid } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
-import SettingsGroupTitle from '@components/SettingsGroupTitle/SettingsGroupTitle.tsx';
-import { InsertStrategy } from '@enums/insertStrategy.enum';
-import { RootState } from '@reducers';
 import BidsSortSelect from '@components/SettingsPage/AucSettings/BidsSortSelect.tsx';
-
+import { InsertStrategy } from '@enums/insertStrategy.enum';
+import RadioButtonGroup from '@components/RadioButtonGroup/RadioButtonGroup';
+import { BidNameStrategy } from '@enums/bid.enum';
 import '@pages/settings/IntegrationsSettings/Common/CommonIntegrationsSettings.scss';
-import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 const IntegrationCommon = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'settings.integrationCommon' });
   const { control } = useFormContext();
 
   return (
-    <Grid container>
+    <Grid container direction='column'>
       <FormGroup row className='auc-settings-row'>
         <Typography className='label'>{t('insertStrategyLabel')}</Typography>
         <Controller
@@ -57,20 +54,17 @@ const IntegrationCommon = () => {
           control={control}
           render={({ field: { onChange, value, onBlur } }) => (
             <FormControl>
-              <Select
-                value={value}
-                onChange={(e) => {
-                  onChange(e.target.value);
+              <RadioButtonGroup
+                options={[
+                  { key: BidNameStrategy.Message, label: t('bidNameStrategy.message') },
+                  { key: BidNameStrategy.Username, label: t('bidNameStrategy.username') },
+                ]}
+                activeKey={value}
+                onChangeActive={(key) => {
+                  onChange(key);
                   onBlur();
                 }}
-              >
-                <MenuItem value={BidNameStrategy.Message}>
-                  <Typography>{t('bidNameStrategy.message')}</Typography>
-                </MenuItem>
-                <MenuItem value={BidNameStrategy.Username}>
-                  <Typography>{t('bidNameStrategy.username')}</Typography>
-                </MenuItem>
-              </Select>
+              />
             </FormControl>
           )}
         />

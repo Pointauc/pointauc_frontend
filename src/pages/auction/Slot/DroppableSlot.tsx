@@ -15,6 +15,7 @@ import { Purchase, setDraggedRedemption, updateExistBids } from '@reducers/Purch
 import slotNamesMap from '@services/SlotNamesMap';
 import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows.ts';
 import { handleDragOver } from '@utils/common.utils.ts';
+import bidUtils from '@utils/bid.utils';
 
 import SlotComponent from './SlotComponent';
 
@@ -74,15 +75,15 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
       const bid: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
-      const { message } = bid;
+      const name = bidUtils.getName(bid);
 
-      slotNamesMap.set(message, id);
+      slotNamesMap.set(name, id);
       dispatch(addBid(id, bid));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);
 
       if (!name) {
-        dispatch(setSlotName({ id, name: message }));
+        dispatch(setSlotName({ id, name }));
       }
       resetOverStyle();
     },

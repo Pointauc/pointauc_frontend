@@ -1,7 +1,7 @@
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 
 import { TwitchRewardPresetDto } from './user.model';
-import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
+import { BidNameStrategy } from '@enums/bid.enum';
 
 export interface SettingsPreset {
   name: string;

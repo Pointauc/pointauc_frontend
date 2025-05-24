@@ -8,13 +8,13 @@ import { PurchaseStatusEnum } from '@models/purchase.ts';
 import SaveLoadService from '@services/SaveLoadService.ts';
 import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
 import bidUtils from '@utils/bid.utils.ts';
+import { BidNameStrategy } from '@enums/bid.enum';
 
 import { addedBidsMap, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 import slotNamesMap from '../../services/SlotNamesMap';
 
 import LotQuery = PublicApi.LotQuery;
-import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 interface SlotsState {
   slots: Slot[];
@@ -198,8 +198,7 @@ export const createSlotFromPurchase =
       aucSettings: { settings },
       slots: { slots },
     } = getState();
-    const { message, username, cost } = bid;
-    const slotName = settings.bidNameStrategy === BidNameStrategy.Username ? username : message;
+    const slotName = bidUtils.getName(bid);
     // eslint-disable-next-line no-plusplus
     const newSlot: Slot = {
       id: Math.random().toString(),
@@ -215,7 +214,7 @@ export const createSlotFromPurchase =
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
     dispatch(setSlots(sortSlots(updatedSlots)));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: newSlot.id, cost }, true));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: newSlot.id, cost: bid.cost }, true));
   };
 
 interface BidHandleOptions {
@@ -236,10 +235,10 @@ export const addBid =
       return;
     }
 
-    const { message, id, username } = bid;
+    const { id } = bid;
     const amount = bidUtils.parseCost(bid, settings, false);
 
-    slotNamesMap.set(settings.bidNameStrategy === BidNameStrategy.Username ? username : message, slotId);
+    slotNamesMap.set(bidUtils.getName(bid), slotId);
     dispatch(addSlotAmount({ id: slotId, amount }));
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }, false));
     removeBid && dispatch(removePurchase(id));

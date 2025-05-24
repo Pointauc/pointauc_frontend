@@ -8,11 +8,11 @@ import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
+import { BidNameStrategy } from '@enums/bid.enum';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
 import { validateIntegrations } from '../Subscription/Subscription';
-import { BidNameStrategy } from '@enums/bidNameStrategy.enum';
 
 export interface ViewSettings {
   compact: boolean;

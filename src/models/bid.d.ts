@@ -5,7 +5,7 @@ namespace Bid {
   import { GlobalActionConfig } from '@components/BidsManagementConfirmation/actions/Global.tsx';
   import { LotActionConfig } from '@components/BidsManagementConfirmation/actions/Lot.tsx';
 
-  type Source = Integration.ID | 'API';
+  type Source = Integration.ID | 'API' | 'Mock';
 
   type Item = Purchase;
 
