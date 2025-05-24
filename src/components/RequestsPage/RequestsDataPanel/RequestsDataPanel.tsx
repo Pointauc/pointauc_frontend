@@ -1,12 +1,11 @@
-import { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, MenuItem, ThemeProvider, Theme, StyledEngineProvider, Select, Tooltip } from '@mui/material';
+import { Button, MenuItem, Select, SelectChangeEvent, StyledEngineProvider, Theme, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useForm } from 'react-hook-form';
 import { v4 } from 'uuid';
 import { ChatUserstate } from 'tmi.js';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 
 import { RootState } from '@reducers';
 import { CamilleList, RequestsListInfo } from '@models/requests.model.ts';
