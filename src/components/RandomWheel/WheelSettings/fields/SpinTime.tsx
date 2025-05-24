@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const SpinTimeField = () => {
   const { t } = useTranslation();
   return (
-    <Grid container alignItems='end'>
+    <Grid container alignItems='end' spacing={1}>
       <Controller
         name='spinTime'
         render={({ field: { onChange, value } }) => (

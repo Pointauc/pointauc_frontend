@@ -51,13 +51,17 @@ const WheelSettings = (props: WheelSettingsProps) => {
 
   return (
     <Grid container spacing={2} direction={direction} flexGrow={1} className='settings'>
-      <Grid container style={{ gap: 8 }} item direction='column' xs={direction === 'row' ? 6 : undefined}>
-        <div className='wheel-controls-row'>
+      <Grid container style={{ gap: 8 }} direction='column' size={direction === 'row' ? 6 : undefined}>
+        <Grid container className='wheel-controls-row' spacing={1}>
           {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-          {!randomSpinEnabled && <SpinTimeField />}
-          {randomSpinEnabled && <RandomSpinConfig />}
-          <RandomSpinSwitch />
-        </div>
+          <Grid flexGrow={1}>
+            {!randomSpinEnabled && <SpinTimeField />}
+            {randomSpinEnabled && <RandomSpinConfig />}
+          </Grid>
+          <Grid>
+            <RandomSpinSwitch />
+          </Grid>
+        </Grid>
         {controls.mode && <WheelFormatField />}
         {format === WheelFormat.Dropout && (
           <>
@@ -102,9 +106,8 @@ const WheelSettings = (props: WheelSettingsProps) => {
         flexShrink={1}
         flexWrap='nowrap'
         container
-        item
         direction='column'
-        xs={direction === 'row' ? 6 : undefined}
+        size={direction === 'row' ? 6 : undefined}
       >
         <CoreImageField />
       </Grid>

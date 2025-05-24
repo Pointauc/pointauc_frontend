@@ -98,8 +98,8 @@ const NewSettingsPage = () => {
       <FormProvider {...formMethods}>
         <form>
           <Grid container gap={3} direction='column'>
-            <Grid container item justifyContent='space-between'>
-              <Grid item xs={4}>
+            <Grid container justifyContent='space-between' alignItems='center'>
+              <Grid size={4}>
                 <RadioButtonGroup
                   fullWidth
                   size='large'
@@ -108,11 +108,11 @@ const NewSettingsPage = () => {
                   onChangeActive={changeSettingsGroup}
                 />
               </Grid>
-              <Grid item>
+              <Grid>
                 <SettingsPresetField allSettings={settings} onChange={onPresetChange} />
               </Grid>
             </Grid>
-            <Grid item>
+            <Grid>
               {settingGroup === 'auc' && <WebsiteSettings />}
               {settingGroup === 'integrations' && <IntegrationsSettings />}
             </Grid>

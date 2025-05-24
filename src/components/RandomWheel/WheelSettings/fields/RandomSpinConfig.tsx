@@ -7,7 +7,7 @@ const RandomSpinConfig = () => {
   const { t } = useTranslation();
 
   return (
-    <Grid container alignItems='end'>
+    <Grid container alignItems='end' spacing={1}>
       <Controller
         name='randomSpinConfig.min'
         render={({ field: { onChange, value } }) => (

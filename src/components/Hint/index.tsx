@@ -8,7 +8,7 @@ interface Props {
 
 const Hint = ({ text }: Props) => {
   return (
-    <Grid item sx={{ display: 'flex' }}>
+    <Grid sx={{ display: 'flex' }}>
       <Tooltip title={<Typography>{text}</Typography>}>
         <HelpOutlineOutlinedIcon color='primary' />
       </Tooltip>

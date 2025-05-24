@@ -12,10 +12,10 @@ const CommonIntegrationsSettings = () => {
   return (
     <SettingsGroup className='common-integrations-settings' title={t('settings.integrationCommon.integrationCommon')}>
       <Grid container spacing={4}>
-        <Grid item container direction='column' xs={6}>
+        <Grid container direction='column' size={6}>
           <IntegrationCommon />
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <TokenSettings />
         </Grid>
       </Grid>

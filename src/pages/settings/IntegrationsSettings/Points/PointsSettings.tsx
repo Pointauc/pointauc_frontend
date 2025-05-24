@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, FormGroup, Grid2 } from '@mui/material';
+import { Button, FormGroup, Grid } from '@mui/material';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
@@ -40,8 +40,8 @@ const PointsSettings = () => {
       ))}
       {available.length > 0 && (
         <FormGroup className='auc-settings-list'>
-          <Grid2 style={{ marginBottom: 10 }} container justifyContent='space-between'>
-            <Grid2>
+          <Grid style={{ marginBottom: 10 }} container justifyContent='space-between'>
+            <Grid>
               <LoadingButton
                 isLoading={loading}
                 variant='outlined'
@@ -59,9 +59,9 @@ const PointsSettings = () => {
               >
                 {t('settings.twitch.deleteRewards')}
               </Button>
-            </Grid2>
+            </Grid>
             <RevokeIntegrationButton revoke={available[0].authFlow.revoke} />
-          </Grid2>
+          </Grid>
           <FormGroup row className='auc-settings-row'>
             <FormSwitch name='isRefundAvailable' control={control} label={t('settings.twitch.returnCanceledBids')} />
           </FormGroup>

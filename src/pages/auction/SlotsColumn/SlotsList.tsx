@@ -1,5 +1,5 @@
 import { CSSProperties, FC, memo, RefObject, useEffect, useRef, useState } from 'react';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import FlipMove from 'react-flip-move';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -10,9 +10,9 @@ import { Slot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
+import useAutoScroll from '@hooks/useAutoScroll';
 
 import DroppableSlot from '../Slot/DroppableSlot';
-import useAutoScroll from '@hooks/useAutoScroll';
 
 interface SlotsListProps {
   slots: Slot[];

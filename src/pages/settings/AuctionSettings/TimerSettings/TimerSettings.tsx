@@ -20,7 +20,7 @@ const TimerSettings = () => {
   return (
     <SettingsGroup title={t('settings.stopwatch.stopwatch')}>
       <Grid container spacing={1} direction='column'>
-        <Grid item zIndex={1}>
+        <Grid zIndex={1}>
           <FormSwitch
             name='showTotalTime'
             control={control}
@@ -32,8 +32,8 @@ const TimerSettings = () => {
             }
           />
         </Grid>
-        <Grid container item spacing={4} className='timer-settings'>
-          <Grid container item direction='column' wrap='nowrap' xs={6} gap={1}>
+        <Grid container spacing={4} className='timer-settings'>
+          <Grid container direction='column' wrap='nowrap' gap={1} size={6}>
             <Typography className='add-time' variant='h6'>
               {t('settings.stopwatch.addOnCondition')}
             </Typography>
@@ -82,7 +82,7 @@ const TimerSettings = () => {
               </FormGroup>
             </div>
           </Grid>
-          <Grid container item direction='column' wrap='nowrap' xs={6} gap={1}>
+          <Grid container direction='column' wrap='nowrap' gap={1} size={6}>
             <Typography className='not-add-time' variant='h6'>
               {t('settings.stopwatch.notOnCondition')}
             </Typography>

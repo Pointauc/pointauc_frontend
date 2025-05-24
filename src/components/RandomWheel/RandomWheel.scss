@@ -1,4 +1,4 @@
-@import "../../styles/colors";
+@import '../../styles/colors';
 
 .wheel-wrapper {
   display: flex !important;
@@ -88,7 +88,7 @@
 
     .bracket-controls {
       position: absolute;
-      top:5px;
+      top: 5px;
       left: 5px;
       display: flex;
       align-items: flex-end;
@@ -148,8 +148,6 @@
     }
 
     &-input {
-      margin-left: 15px !important;
-      margin-right: 5px !important;
       width: 110px;
 
       &.small {
@@ -158,7 +156,6 @@
     }
 
     &-input-delimiter {
-      margin-left: 10px;
       align-self: center;
     }
 

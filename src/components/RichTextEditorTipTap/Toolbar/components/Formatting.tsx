@@ -75,7 +75,7 @@ const Formatting = () => {
         <MenuItem value={value} key={value} onClick={setter}>
           <Grid gap={1} container alignItems='center'>
             {icon}
-            <Grid item>{t(`textEditor.formatting.${value}`)}</Grid>
+            <Grid>{t(`textEditor.formatting.${value}`)}</Grid>
           </Grid>
         </MenuItem>
       ))}

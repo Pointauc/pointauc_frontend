@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CancelIcon from '@mui/icons-material/Cancel';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useDispatch } from 'react-redux';
 
 import { AucSettingsDto, SettingsPreset } from '@models/settings.model.ts';
@@ -116,23 +116,27 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
 
   return (
     <div className='settings-preset-fields'>
-      <div ref={anchorRef} className='settings-preset-mixed-select'>
-        <TextField
-          className='settings-preset-name'
-          value={activePresetName}
-          onChange={(e) => changeActivePresetName(e.target.value)}
-          label={t('settings.presets.nameFieldLabel')}
-          size='medium'
-        />
-        <Button
-          className='settings-preset-dropdown'
-          variant='outlined'
-          color='blank'
-          onClick={() => setPresetsDropdownOpen(!presetsDropdownOpen)}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </div>
+      <Grid container ref={anchorRef} className='settings-preset-mixed-select'>
+        <Grid>
+          <TextField
+            className='settings-preset-name'
+            value={activePresetName}
+            onChange={(e) => changeActivePresetName(e.target.value)}
+            label={t('settings.presets.nameFieldLabel')}
+            size='medium'
+          />
+        </Grid>
+        <Grid>
+          <Button
+            className='settings-preset-dropdown'
+            variant='outlined'
+            color='blank'
+            onClick={() => setPresetsDropdownOpen(!presetsDropdownOpen)}
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </Grid>
+      </Grid>
       <Popper
         placement='bottom-end'
         sx={{ zIndex: 1 }}
@@ -149,8 +153,8 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
               <ClickAwayListener onClickAway={() => setPresetsDropdownOpen(false)}>
                 <MenuList className='settings-preset-menu'>
                   {presets.map((preset) => (
-                    <Grid2 container>
-                      <Grid2 size='grow'>
+                    <Grid container>
+                      <Grid size='grow'>
                         <MenuItem
                           onClick={() => onPresetClick(preset)}
                           key={preset.id}
@@ -158,8 +162,8 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
                         >
                           {preset.name}
                         </MenuItem>
-                      </Grid2>
-                      <Grid2 size='auto'>
+                      </Grid>
+                      <Grid size='auto'>
                         <IconButton
                           className='settings-preset-menu-close'
                           disabled={presets.length === 1}
@@ -168,8 +172,8 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
                         >
                           <CancelIcon />
                         </IconButton>
-                      </Grid2>
-                    </Grid2>
+                      </Grid>
+                    </Grid>
                   ))}
                 </MenuList>
               </ClickAwayListener>
