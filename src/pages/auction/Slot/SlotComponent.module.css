@@ -13,7 +13,12 @@
 
 :global(.custom-background) .input:hover,
 :global(.custom-background) .input:focus {
-  background-color: color-mix(in srgb, black 20%, transparent);
+  background-color: color-mix(in srgb, black 30%, transparent);
+}
+
+:global(.compact-view) .input {
+  height: 41px;
+  min-height: 41px;
 }
 
 .name {

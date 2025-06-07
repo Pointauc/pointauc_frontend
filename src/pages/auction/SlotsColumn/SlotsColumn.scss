@@ -132,13 +132,13 @@
   .custom-background {
     .slot-grid-wrapper {
       .slot-wrapper {
-        background-color: color-mix(in srgb, black 10%, transparent);
+        background-color: color-mix(in srgb, black 20%, transparent);
         box-shadow: none;
       }
 
       &:nth-child(even) {
         .slot-wrapper {
-          background-color: color-mix(in srgb, black 15%, transparent);
+          background-color: color-mix(in srgb, black 25%, transparent);
         }
       }
     }
