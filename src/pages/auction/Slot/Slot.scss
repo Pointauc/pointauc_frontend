@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .slot-wrapper {
   display: flex;
@@ -7,7 +7,7 @@
   margin-bottom: 10px;
 
   color: rgb(243, 243, 243);
-  font-family: "Helvetica Neue", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Helvetica Neue', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-weight: 400;
   line-height: 1.5;
   font-size: 0.9em;
@@ -27,15 +27,8 @@
     display: flex;
     flex-grow: 1;
     height: 44px;
-    padding: 8px 10px;
-    //border: 1px solid transparent;
     border-radius: 10px;
     align-items: center;
-
-    input {
-      font-size: 19px;
-      padding: 11px 12px;
-    }
 
     &-input {
       border: 1px solid rgba(255, 255, 255, 0.23);
@@ -101,7 +94,7 @@
       }
 
       &:active {
-        background-color: rgba(255, 255, 255, 0.20);
+        background-color: rgba(255, 255, 255, 0.2);
       }
     }
 
@@ -141,7 +134,7 @@
       height: 80%;
       border: 2px solid $blue-gray-2;
       border-radius: 10px;
-      background-color: rgba($blue-gray-5, .3);
+      background-color: rgba($blue-gray-5, 0.3);
     }
 
     &-name {
@@ -172,7 +165,7 @@
       &-input {
         background-color: rgba(0, 0, 0, 0.2);
 
-        &:not(&:hover,&:focus) {
+        &:not(&:hover, &:focus) {
           border-color: $grey-5;
         }
       }
@@ -182,44 +175,42 @@
 
 .slots-column.dragging {
   .slot-wrapper {
-    .slot {
-      background-color: $grey-11;
-      border-color: $grey-9;
+    &:nth-child(1) {
+      background-color: $grey-10;
+    }
 
-      &.drag-over {
-        background-color: $blue-gray-3;
-        border-color: $blue-gray-2;
+    &.drag-over {
+      background-color: color-mix(in srgb, var(--mantine-color-blue-4) 20%, var(--mantine-color-dark-5));
 
-        &.remove-cost {
-          background-color: $red-1;
-          border-color: $red-2;
-        }
+      &.remove-cost {
+        // background-color: $red-1;
+        // border-color: $red-2;
       }
     }
 
     &.custom-background {
-      .slot {
-        background-color: rgba(100, 100, 100, 0.5);
-        border-color: $grey-5;
+      // .slot {
+      //   background-color: rgba(100, 100, 100, 0.5);
+      //   border-color: $grey-5;
 
-        .slot-input {
-          background-color: transparent;
-        }
+      //   .slot-input {
+      //     background-color: transparent;
+      //   }
 
-        &.drag-over {
-          background-color: rgba($blue-gray-3, 0.7);
-          border-color: $blue-gray-2;
+      //   &.drag-over {
+      //     background-color: rgba($blue-gray-3, 0.7);
+      //     border-color: $blue-gray-2;
 
-          .slot-input {
-            background-color: transparent;
-          }
+      //     .slot-input {
+      //       background-color: transparent;
+      //     }
 
-          &.remove-cost {
-            background-color: rgba($red-1, .7);
-            border-color: $red-2;
-          }
-        }
-      }
+      //     &.remove-cost {
+      //       background-color: rgba($red-1, 0.7);
+      //       border-color: $red-2;
+      //     }
+      //   }
+      // }
     }
   }
 }

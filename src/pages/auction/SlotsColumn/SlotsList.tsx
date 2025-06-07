@@ -59,6 +59,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
   const { t } = useTranslation();
   const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
   const autoScroll = useSelector((root: RootState) => root.aucSettings.view.autoScroll);
+  const background = useSelector((root: RootState) => root.aucSettings.settings.background);
   const [height, setHeight] = useState<number>();
   const containerVirtualRef = useRef<HTMLDivElement>(null);
 
@@ -93,7 +94,14 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
   }, [containerRef]);
 
   return (
-    <Grid container className={classNames('slots-column-list', { 'compact-view': compact, optimize })}>
+    <Grid
+      container
+      className={classNames('slots-column-list', {
+        'compact-view': compact,
+        optimize,
+        'custom-background': background,
+      })}
+    >
       {(compact || optimize) && height != null && (
         <VirtualLots slots={slots} height={height} compact={compact} containerRef={containerVirtualRef} />
       )}

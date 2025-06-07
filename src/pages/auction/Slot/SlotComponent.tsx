@@ -5,12 +5,15 @@ import './Slot.scss';
 import './SlotCompact.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { TextInput } from '@mantine/core';
 
 import { Slot } from '@models/slot.model.ts';
 import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '@reducers/Slots/Slots.ts';
 import { animateValue } from '@utils/common.utils.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { RootState } from '@reducers';
+
+import styles from './SlotComponent.module.css';
 
 interface SlotComponentProps {
   slot: Slot;
@@ -107,12 +110,15 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
   }, [name, extra]);
 
   const extraLength = Number(currentExtra?.toString().length);
-  const extraFieldWidth = `${extraLength > 2 ? 3 + extraLength : 6}ch`;
+  const extraFieldWidth = `${extraLength > 4 ? 4 + extraLength * 1.2 : 9}ch`;
 
   return (
     <>
-      <input
-        className='slot-name slot-input'
+      <TextInput
+        variant='unstyled'
+        size='lg'
+        classNames={{ input: styles.input, root: styles.name }}
+        radius={0}
         placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
@@ -120,9 +126,12 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
         value={currentName ?? ''}
       />
       {showChances && <span className='slot-chance' ref={percentsRef} />}
-      <input
+      <TextInput
+        variant='unstyled'
+        size='lg'
+        classNames={{ input: styles.input, root: styles.money }}
+        radius={0}
         hidden={hideAmounts}
-        className='slot-money slot-input'
         placeholder={t('common.currencySign')}
         ref={amountInput}
         onKeyPress={createNewSlotOnEnter}
@@ -131,8 +140,11 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       <button className='slot-icon-button slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')}>
         <AddIcon />
       </button>
-      <input
-        className='slot-money slot-input'
+      <TextInput
+        variant='unstyled'
+        size='lg'
+        classNames={{ input: styles.input, root: styles.extra }}
+        radius={0}
         style={{ width: extraFieldWidth }}
         placeholder={t('common.currencySign')}
         onBlur={handleExtraBlur}

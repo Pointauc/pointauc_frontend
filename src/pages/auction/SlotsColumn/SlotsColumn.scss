@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .slots {
   flex-grow: 1;
@@ -7,7 +7,16 @@
 
   .slot-grid-wrapper {
     width: 100%;
-    //right: 0 !important;
+
+    .slot-wrapper {
+      background-color: var(--mantine-color-dark-6);
+    }
+
+    &:nth-child(even) {
+      .slot-wrapper {
+        background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
+      }
+    }
   }
 
   &-wrapper {
@@ -40,12 +49,13 @@
       gap: 4px;
       position: relative;
 
-      &.optimize,&.compact-view {
+      &.optimize,
+      &.compact-view {
         flex-direction: row;
         flex: 1 1 auto;
       }
 
-      &>div:last-of-type {
+      & > div:last-of-type {
         flex-grow: 0;
         max-width: 100%;
         flex-basis: 100%;
@@ -114,6 +124,23 @@
     .total-sum {
       font-size: 16px;
       color: $grey-2;
+    }
+  }
+}
+
+.slots {
+  .custom-background {
+    .slot-grid-wrapper {
+      .slot-wrapper {
+        background-color: color-mix(in srgb, black 10%, transparent);
+        box-shadow: none;
+      }
+
+      &:nth-child(even) {
+        .slot-wrapper {
+          background-color: color-mix(in srgb, black 15%, transparent);
+        }
+      }
     }
   }
 }

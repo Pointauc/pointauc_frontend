@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import svgr from 'vite-plugin-svgr';
@@ -17,6 +19,14 @@ export default defineConfig({
       },
     },
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+        additionalData: `@use "${path.join(process.cwd(), 'src/_mantine').replace(/\\/g, '/')}" as mantine;`,
+      },
+    },
+  },
   server: {
     port: 3000,
     open: true,

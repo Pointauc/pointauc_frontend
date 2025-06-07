@@ -1,3 +1,6 @@
+import '@mantine/core/styles.css';
+import '@styles/index.scss';
+
 import { configureStore } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import { createRoot } from 'react-dom/client';
@@ -5,6 +8,7 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
+import { CSSVariablesResolver, MantineProvider } from '@mantine/core';
 import { Theme } from '@mui/material';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
@@ -27,7 +31,6 @@ import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
-import '@styles/index.scss';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -106,12 +109,32 @@ const router = createBrowserRouter([
   ...redirectRoutes,
 ]);
 
+const shadowOpacityMain = 0.12;
+const shadowOpacitySecondary = 0.09;
+const shadowOpacityXs = 0.2;
+
+const cssResolver: CSSVariablesResolver = (theme) => ({
+  variables: {},
+  dark: {
+    '--mantine-color-text': '#f3f3f3',
+
+    '--mantine-shadow-xs': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), 0 calc(0.0625rem * var(--mantine-scale)) calc(0.125rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityXs})`,
+    '--mantine-shadow-sm': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), rgba(0, 0, 0, ${shadowOpacityMain}) 0 calc(0.625rem * var(--mantine-scale)) calc(0.9375rem * var(--mantine-scale)) calc(-0.3125rem * var(--mantine-scale)), rgba(0, 0, 0, ${shadowOpacitySecondary}) 0 calc(0.4375rem * var(--mantine-scale)) calc(0.4375rem * var(--mantine-scale)) calc(-0.3125rem * var(--mantine-scale))`,
+    '--mantine-shadow-md': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), rgba(0, 0, 0, ${shadowOpacityMain}) 0 calc(1.25rem * var(--mantine-scale)) calc(1.5625rem * var(--mantine-scale)) calc(-0.3125rem * var(--mantine-scale)), rgba(0, 0, 0, ${shadowOpacitySecondary}) 0 calc(0.625rem * var(--mantine-scale)) calc(0.625rem * var(--mantine-scale)) calc(-0.3125rem * var(--mantine-scale))`,
+    '--mantine-shadow-lg': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), rgba(0, 0, 0, ${shadowOpacityMain}) 0 calc(1.75rem * var(--mantine-scale)) calc(1.4375rem * var(--mantine-scale)) calc(-0.4375rem * var(--mantine-scale)), rgba(0, 0, 0, ${shadowOpacitySecondary}) 0 calc(0.75rem * var(--mantine-scale)) calc(0.75rem * var(--mantine-scale)) calc(-0.4375rem * var(--mantine-scale))`,
+    '--mantine-shadow-xl': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), rgba(0, 0, 0, ${shadowOpacityMain}) 0 calc(2.25rem * var(--mantine-scale)) calc(1.75rem * var(--mantine-scale)) calc(-0.4375rem * var(--mantine-scale)), rgba(0, 0, 0, ${shadowOpacitySecondary}) 0 calc(1.0625rem * var(--mantine-scale)) calc(1.0625rem * var(--mantine-scale)) calc(-0.4375rem * var(--mantine-scale))`,
+  },
+  light: {},
+});
+
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(
   <Provider store={store}>
     <ThemeWrapper>
-      <RouterProvider router={router} />
+      <MantineProvider defaultColorScheme='dark' cssVariablesResolver={cssResolver}>
+        <RouterProvider router={router} />
+      </MantineProvider>
     </ThemeWrapper>
   </Provider>,
 );

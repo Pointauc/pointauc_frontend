@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .compact-view {
   gap: 0;
@@ -9,15 +9,7 @@
 
   .slot-grid-wrapper {
     box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: rgba(255, 255, 255, 0.23);
-
-    border-top-width: 0;
-
-    &:first-child {
-      border-top-width: 1px;
-    }
+    border-width: 0;
   }
 
   .slot-wrapper {
@@ -87,7 +79,7 @@
         height: 70%;
         border: 2px solid $blue-gray-2;
         border-radius: 10px;
-        background-color: rgba($blue-gray-5, .3);
+        background-color: rgba($blue-gray-5, 0.3);
       }
 
       &-name {
@@ -133,21 +125,6 @@
 
 .slots-column.dragging {
   .slot-wrapper {
-    .slot {
-      background-color: $grey-11;
-      border-color: $grey-9;
-
-      &.drag-over {
-        background-color: $blue-gray-3;
-        border-color: $blue-gray-2;
-
-        &.remove-cost {
-          background-color: $red-1;
-          border-color: $red-2;
-        }
-      }
-    }
-
     &.custom-background {
       .slot {
         background-color: rgba(100, 100, 100, 0.5);
@@ -166,7 +143,7 @@
           }
 
           &.remove-cost {
-            background-color: rgba($red-1, .7);
+            background-color: rgba($red-1, 0.7);
             border-color: $red-2;
           }
         }
