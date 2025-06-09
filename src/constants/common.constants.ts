@@ -38,9 +38,10 @@ export const TRAILER_MIN_SIZE = {
 };
 
 export const YOUTUBE_API_KEYS = [
+  'AIzaSyBMnL4y-4VNxQRRYfSXajuPH6OmkvDsbT0',
+  'AIzaSyAbkUdit9z4zGiSmXtYAuBoJYKMDeZ6rSM',
   'AIzaSyCVPinFlGHMn0uzeWFjNTA38QOZBejOlSs',
   'AIzaSyD0WjHt1tEIzdYLWSbcArCXTdBbDvyxDMk',
-  'AIzaSyAbkUdit9z4zGiSmXtYAuBoJYKMDeZ6rSM',
 ];
 
 export enum LocalStorage {

@@ -15,6 +15,14 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2025-06-09T12:40:00.898Z',
+    improvements: [
+      <div>
+        <p>Улучшен дизайн и функционал окна поиска видео YouTube по названию лота.</p>
+      </div>,
+    ],
+  },
+  {
     date: '2025-06-08T15:05:00.103Z',
     newFeatures: [
       <div>

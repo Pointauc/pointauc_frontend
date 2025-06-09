@@ -1,0 +1,22 @@
+.root {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: calc(50vh - 325px);
+  left: calc(50vw - 500px);
+  user-select: none;
+  background-color: var(--mantine-color-dark-6);
+  overflow: hidden;
+  border: 2px solid var(--mantine-color-dark-4);
+}
+
+.header {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  height: 46px;
+  background-color: var(--mantine-color-gray-8);
+  border-bottom: 2px solid var(--mantine-color-dark-4);
+}
