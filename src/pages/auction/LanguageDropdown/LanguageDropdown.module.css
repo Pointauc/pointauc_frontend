@@ -7,3 +7,7 @@
 .section {
   color: var(--mantine-color-dark-0);
 }
+
+:global(.custom-background) .input {
+  background-color: var(--mantine-color-darkOpaque-7);
+}

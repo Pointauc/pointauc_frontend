@@ -4,6 +4,7 @@
   height: 100vh;
   padding: 1.5em 2em 0.5em 2em !important;
   overflow: hidden !important;
+  max-width: none !important;
 
   &.centralize {
     align-items: center;

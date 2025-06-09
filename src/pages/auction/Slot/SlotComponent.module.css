@@ -12,17 +12,6 @@
   border: 1px solid var(--mantine-primary-color-filled);
 }
 
-:global(.custom-background) .input:hover,
-:global(.custom-background) .input:focus {
-  background-color: var(--mantine-color-darkOpaque-9);
-}
-
-:global(.compact-view) .input {
-  height: 41px;
-  min-height: 41px;
-  font-size: var(--mantine-font-size-lg);
-}
-
 .name {
   flex-grow: 1;
   margin-right: var(--mantine-spacing-md);
@@ -36,6 +25,17 @@
   margin-right: var(--mantine-spacing-xs);
 }
 
+:global(.compact-view) .input {
+  height: 41px;
+  min-height: 41px;
+  font-size: var(--mantine-font-size-lg);
+}
+
 :global(.custom-background) :global(.slot-chance) {
   color: var(--mantine-color-white);
+}
+
+:global(.custom-background) .input:hover,
+:global(.custom-background) .input:focus {
+  background-color: var(--mantine-color-darkOpaque-8);
 }

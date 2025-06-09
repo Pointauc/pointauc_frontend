@@ -76,7 +76,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const elements = useMemo(() => ({ ...initialAvailableSettings, ...elementsFromProps }), [elementsFromProps]);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const wheelController = useRef<WheelController | null>(null);
-  const { handleSubmit } = useFormContext<Wheel.Settings>();
+  const { handleSubmit, setValue } = useFormContext<Wheel.Settings>();
 
   const formValues = useWatch<Wheel.Settings>();
   const { randomSpinEnabled, randomSpinConfig, spinTime } = formValues;
@@ -85,8 +85,12 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
 
   useEffect(() => {
     const { split, ...settings } = formValues;
-    localStorage.setItem('wheelSettings', JSON.stringify(settings));
-  }, [formValues]);
+    try {
+      localStorage.setItem('wheelSettings', JSON.stringify(settings));
+    } catch (error) {
+      console.error(error);
+    }
+  }, [formValues, setValue]);
 
   useEffect(() => {
     wheelController.current?.resetPosition();

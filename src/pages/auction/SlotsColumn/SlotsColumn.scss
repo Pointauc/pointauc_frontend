@@ -105,20 +105,3 @@
     }
   }
 }
-
-.slots {
-  .custom-background {
-    .slot-grid-wrapper {
-      .slot-wrapper {
-        background-color: var(--mantine-color-darkOpaque-6);
-        box-shadow: none;
-      }
-
-      &:nth-child(even) {
-        .slot-wrapper {
-          background-color: var(--mantine-color-darkOpaque-5);
-        }
-      }
-    }
-  }
-}

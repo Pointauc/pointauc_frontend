@@ -110,7 +110,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
   }, [name, extra]);
 
   const extraLength = Number(currentExtra?.toString().length);
-  const extraFieldWidth = `${extraLength > 4 ? 4 + extraLength * 1.2 : 9}ch`;
+  const extraFieldWidth = `${extraLength > 4 ? 2 + extraLength * 1.1 : 7}ch`;
 
   return (
     <>

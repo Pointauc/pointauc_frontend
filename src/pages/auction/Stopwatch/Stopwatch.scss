@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .stopwatch-wrapper {
   display: flex;
@@ -12,6 +12,20 @@
     font-size: 80px;
     line-height: 1;
     width: 320px;
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      z-index: -1;
+
+      background-color: var(--mantine-color-darkOpaque-7);
+      border-radius: var(--mantine-radius-lg);
+    }
   }
 
   .timer-secondary {
@@ -37,7 +51,8 @@
     right: -10px;
     top: 52px;
 
-    &:after, &:before {
+    &:after,
+    &:before {
       content: '';
       position: absolute;
       left: 0;

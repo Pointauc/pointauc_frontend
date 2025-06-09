@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Box, Image, Overlay } from '@mantine/core';
+import classNames from 'classnames';
 
 import Notification from '@components/Notification/Notification';
 import { RootState } from '@reducers';
@@ -42,7 +43,7 @@ const AucPage: React.FC = () => {
   const imageOpacity = useMemo(() => calcBackgroundOpacity(backgroundOverlayOpacity), [backgroundOverlayOpacity]);
 
   return (
-    <PageContainer className='auc-container' maxWidth={false}>
+    <PageContainer className={classNames('auc-container', { 'custom-background': background })} maxWidth={false}>
       {background && (
         <Box className={styles.background}>
           <Image src={background} w='100%' h='100%' />
