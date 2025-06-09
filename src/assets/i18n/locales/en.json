@@ -280,7 +280,11 @@
       "showTotal": "Show Total Amount",
       "showWinningChances": "Show Winning Chances",
       "sortBids": "Sort Bids queue",
-      "uploadBackground": "Upload Background"
+      "uploadBackground": "Upload Background",
+      "backgroundOverlayOpacity": "Overlay opacity",
+      "backgroundBlur": "Blur",
+      "resetBackground": "Remove custom background",
+      "backgroundAlt": "Background unavailable. Please upload new image."
     },
     "donations": {
       "donations": "Donations",

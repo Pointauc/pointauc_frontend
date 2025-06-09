@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@mui/material';
+import { List } from '@mantine/core';
 
 export interface UpdateData {
   date: string;
@@ -13,6 +14,22 @@ export interface UpdateData {
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2025-06-08T15:05:00.103Z',
+    newFeatures: [
+      <div>
+        <p>Расширенные настройки фона.</p>
+        <List>
+          <List.Item>
+            <b>Прозрачность (затемнение)</b>
+          </List.Item>
+          <List.Item>
+            <b>Размытие</b>
+          </List.Item>
+        </List>
+      </div>,
+    ],
+  },
   {
     date: '2025-05-24T10:50:00.631Z',
     newFeatures: [

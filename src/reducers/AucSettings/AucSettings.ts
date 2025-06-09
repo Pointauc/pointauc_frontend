@@ -26,6 +26,8 @@ interface EventsSettings {
 
 interface SettingsMissingOnBackend {
   showTotalTime: boolean;
+  backgroundOverlayOpacity: number;
+  backgroundBlur: number;
 }
 
 interface AucSettingsState {
@@ -42,6 +44,8 @@ const defaultSettings: AucSettingsState['settings'] = {
   autoincrementTime: 30,
   purchaseSort: 0,
   background: null,
+  backgroundOverlayOpacity: 0.4,
+  backgroundBlur: 0,
   marblesAuc: false,
   marbleRate: 50,
   marbleCategory: 100,

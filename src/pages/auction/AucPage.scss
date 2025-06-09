@@ -26,5 +26,12 @@
     min-height: 0;
     min-width: 0;
     gap: 0.5em;
+    z-index: 1;
+  }
+
+  &-left-column {
+    @media (min-width: 1800px) {
+      min-width: 350px;
+    }
   }
 }

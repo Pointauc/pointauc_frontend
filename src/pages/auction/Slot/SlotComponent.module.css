@@ -1,5 +1,6 @@
 .input {
   padding: 0 var(--mantine-spacing-xs);
+  font-size: var(--mantine-font-size-xl);
 }
 
 .input:hover,
@@ -13,12 +14,13 @@
 
 :global(.custom-background) .input:hover,
 :global(.custom-background) .input:focus {
-  background-color: color-mix(in srgb, black 30%, transparent);
+  background-color: var(--mantine-color-darkOpaque-9);
 }
 
 :global(.compact-view) .input {
   height: 41px;
   min-height: 41px;
+  font-size: var(--mantine-font-size-lg);
 }
 
 .name {
@@ -32,4 +34,8 @@
 
 .extra {
   margin-right: var(--mantine-spacing-xs);
+}
+
+:global(.custom-background) :global(.slot-chance) {
+  color: var(--mantine-color-white);
 }

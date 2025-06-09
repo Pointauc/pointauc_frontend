@@ -102,6 +102,7 @@
       font-weight: 400;
       margin-right: 15px;
       font-size: 18px;
+      color: var(--mantine-color-dark-0);
     }
 
     &-add-extra {
@@ -157,18 +158,6 @@
   &:hover {
     .delete-button {
       opacity: 1;
-    }
-  }
-
-  &.custom-background {
-    .slot {
-      &-input {
-        background-color: rgba(0, 0, 0, 0.2);
-
-        &:not(&:hover, &:focus) {
-          border-color: $grey-5;
-        }
-      }
     }
   }
 }

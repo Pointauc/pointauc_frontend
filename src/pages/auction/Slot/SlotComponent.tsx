@@ -141,6 +141,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
         <AddIcon />
       </button>
       <TextInput
+        fz='xl'
         variant='unstyled'
         size='lg'
         classNames={{ input: styles.input, root: styles.extra }}

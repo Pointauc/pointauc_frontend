@@ -24,4 +24,4 @@ export const getWebsocketUrl = (): string =>
 export const getSocketIOUrl = (): string => (isProduction() ? document.location.origin : 'http://localhost:8000');
 
 export const getCloudifyUrl = (imageId: string): string =>
-  `https://res.cloudinary.com/dn4ue0pj9/image/upload/${imageId}`;
+  `https://res.cloudinary.com/dn4ue0pj9/image/upload/v1615110548/15879138916140_zgjk6z.jpg${imageId}`;
