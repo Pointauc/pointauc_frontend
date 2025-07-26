@@ -127,6 +127,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
         ref={amountInput}
         onKeyPress={createNewSlotOnEnter}
         type='number'
+        min='0'
       />
       <button className='slot-icon-button slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')}>
         <AddIcon />
