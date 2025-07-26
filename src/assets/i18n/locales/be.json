@@ -15,7 +15,10 @@
     "incorrectLink": "Памылковая спасылка",
     "authProgress": "Аўтарызацыя...",
     "accountProgress": "Загрузка акаўнта...",
-    "hideAmounts": "Hide values of lots and bids"
+    "hideAmounts": "Hide values of lots and bids",
+    "copyLink": "Капіраваць спасылку",
+    "linkCopied": "Спасылка скопіравана",
+    "copyFailed": "Копіраванне памылкава"
   },
   "auc": {
     "addPosition": "Дадаць лот",

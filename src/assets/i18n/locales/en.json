@@ -170,7 +170,10 @@
     "sec": "sec",
     "unsavedChanges": "Apply unsaved changes?",
     "from": "from",
-    "to": "to"
+    "to": "to",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "copyFailed": "Copy failed"
   },
   "history": {
     "addedTo": "Added to",
