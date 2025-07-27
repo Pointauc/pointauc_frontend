@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "docs:dev": "vitepress dev docs",
@@ -20,6 +20,7 @@
     "@kozjar/twitch-emoticons": "^2.3.3",
     "@mantine/core": "^8.0.2",
     "@mantine/hooks": "^8.0.2",
+    "@mantine/notifications": "^8.2.1",
     "@mui/icons-material": "^7.1.0",
     "@mui/lab": "^7.0.0-beta.12",
     "@mui/material": "^7.1.0",

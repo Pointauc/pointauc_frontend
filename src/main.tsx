@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import '@styles/index.scss';
 
 import { configureStore } from '@reduxjs/toolkit';
@@ -11,6 +12,7 @@ import thunk from 'redux-thunk';
 import { Theme } from '@mui/material';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import { Notifications } from '@mantine/notifications';
 
 import ROUTES from '@constants/routes.constants.ts';
 import rootReducer, { RootState } from '@reducers/index.ts';
@@ -115,6 +117,7 @@ root.render(
   <Provider store={store}>
     <ThemeWrapper>
       <MantineProvider>
+        <Notifications />
         <RouterProvider router={router} />
       </MantineProvider>
     </ThemeWrapper>

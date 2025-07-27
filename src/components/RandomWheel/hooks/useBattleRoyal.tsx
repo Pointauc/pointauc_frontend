@@ -2,15 +2,17 @@ import React, { ReactNode, RefObject, useCallback, useMemo, useState } from 'rea
 import { useFormContext, useWatch } from 'react-hook-form';
 import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Anchor } from '@mantine/core';
 
 import { WheelItem } from '@models/wheel.model.ts';
 import ResizableBracket from '@components/RandomWheel/ResizableBracket/ResizableBracket.tsx';
 import { WheelController } from '@components/BaseWheel/BaseWheel.tsx';
 import { getWheelColor } from '@utils/common.utils.ts';
-import DuelDescription from '@components/RandomWheel/WheelSettings/fields/DuelDescription.tsx';
 import Nesting from '@components/RandomWheel/WheelSettings/fields/Nesting.tsx';
 import { buildGame } from '@components/SlotsBracket/SlotsBracket.tsx';
 import useInitWrapper from '@components/RandomWheel/hooks/useInitWrapper.ts';
+import { DuelHelp } from '@components/RandomWheel/DuelHelp';
+import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 
 const useBattleRoyal = (controller: RefObject<WheelController>): Wheel.FormatHook => {
   const { t } = useTranslation();
@@ -84,9 +86,13 @@ const useBattleRoyal = (controller: RefObject<WheelController>): Wheel.FormatHoo
     return duel.map<WheelItem>(({ name, amount, id }) => ({ name, amount, id, color: getWheelColor() }));
   }, [gameOrder, step]);
 
+  const docsUrl = useDocsUrl(DOCS_PAGES.wheel.duel.page);
   const extraSettings = (
     <>
-      <DuelDescription />
+      <Anchor href={docsUrl} underline='not-hover' target='_blank'>
+        {t('wheel.duel.explanation.button')}
+      </Anchor>
+      <DuelHelp />
       <Nesting maxDepth={maxDepth} />
     </>
   );

@@ -176,7 +176,8 @@
     "sec": "sec",
     "unsavedChanges": "Apply unsaved changes?",
     "from": "from",
-    "to": "to"
+    "to": "to",
+    "needHelp": "Need help?"
   },
   "history": {
     "addedTo": "Added to",
@@ -202,7 +203,7 @@
         "title": "Auction"
       },
       "guides": {
-        "title": "About the website"
+        "title": "User manual"
       },
       "history": {
         "title": "History"
@@ -375,11 +376,16 @@
   "wheel": {
     "hideInactive": "Hide dropped lots",
     "totalItems": "Participants in the wheel - {{amount}}",
-    "newDropout": {
+    "dropout": {
+      "helpNotification": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>",
       "explanation": {
-        "button": "HOW DOES IT WORK?",
-        "title": "HOW DOES IT WORK?",
-        "content": "<h2>Be Sure to Read Before Spinning</h2>\n<p class='info'>All randomness and calculations occur beforehand, before the first spin:</p>\n<ol>\n<li>The final winner is determined according to the odds of the regular wheel</li>\n<li>A sequence of other eliminated participants is generated to create suspense</li>\n</ol>\n<h2>What Do the Sector Sizes Mean?</h2>\n<p class='info'>\nWhat you see on the wheel does not reflect the chances during the spin; it is designed for aesthetics. The wheel adjusts the winners according to a predetermined order.\n</p>\n"
+        "button": "how does it work?"
+      }
+    },
+    "duel": {
+      "helpNotification": "You can read more about the <2>battle royal</2> mode in our <1>user manual (battle-royal)</1>",
+      "explanation": {
+        "button": "how does it work?"
       }
     },
     "dropoutVariant": {
@@ -422,6 +428,7 @@
     "useRandomOrg": "Use random.org service",
     "wheel": "Wheel",
     "winner": "Winner",
-    "randomSpin": "Random spin time"
+    "randomSpin": "Random spin time",
+    "helpNotification": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>"
   }
 }

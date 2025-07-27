@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
 import { Checkbox, FormControlLabel, Grid } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Anchor } from '@mantine/core';
 
 import { WheelFormat } from '@constants/wheel.ts';
 import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
@@ -16,6 +17,9 @@ import SplitField from '@components/RandomWheel/WheelSettings/fields/Split.tsx';
 import CoreImageField from '@components/RandomWheel/WheelSettings/fields/CoreImage.tsx';
 import RandomSpinSwitch from '@components/RandomWheel/WheelSettings/fields/RandomSpinSwitch.tsx';
 import RandomSpinConfig from '@components/RandomWheel/WheelSettings/fields/RandomSpinConfig.tsx';
+import { DropoutHelp } from '@components/RandomWheel/DropoutHelp';
+import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
+import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -49,8 +53,19 @@ const WheelSettings = (props: WheelSettingsProps) => {
     </LoadingButton>
   );
 
+  const docsUrl = useDocsUrl(DOCS_PAGES.wheel.settings.page);
+
   return (
     <Grid container spacing={2} direction={direction} flexGrow={1} className='settings'>
+      <FirstTimeHelpNotification
+        featureKey='wheelSettingsHelpSeen'
+        message={
+          <Trans
+            i18nKey='wheel.helpNotification'
+            components={{ 1: <Anchor href={docsUrl} underline='not-hover' target='_blank' />, 2: <b /> }}
+          />
+        }
+      />
       <Grid container style={{ gap: 8 }} direction='column' size={direction === 'row' ? 6 : undefined}>
         <Grid container className='wheel-controls-row' spacing={1}>
           {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
@@ -66,6 +81,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
         {format === WheelFormat.Dropout && (
           <>
             <DropoutFormatField />
+            <DropoutHelp />
             {dropoutVariant === DropoutVariant.New && <NewDropoutDescription />}
             {dropoutVariant === DropoutVariant.Classic && <ClassicDropoutDescription />}
           </>

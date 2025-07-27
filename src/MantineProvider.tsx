@@ -4,6 +4,7 @@ import {
   MantineColorsTuple,
   alpha,
   createTheme,
+  MantineTheme,
 } from '@mantine/core';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -41,6 +42,19 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
     return createTheme({
       colors: {
         darkOpaque: DEFAULT_THEME.colors.dark.map((color) => alpha(color, uiOpacity)) as unknown as MantineColorsTuple,
+      },
+      components: {
+        Notification: {
+          styles: (theme: MantineTheme) => ({
+            title: {
+              fontSize: theme.fontSizes.lg, // Increased from default
+            },
+            description: {
+              fontSize: theme.fontSizes.md, // Increased from default (sm)
+              color: 'var(--mantine-color-dark-1)', // Brighter text color
+            },
+          }),
+        },
       },
     });
   }, [backgroundOverlayOpacity]);

@@ -3,7 +3,9 @@ import { ReactNode } from 'react';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@mui/material';
-import { List } from '@mantine/core';
+import { Anchor, List } from '@mantine/core';
+
+import { DOCS_PAGES, buildDocsUrl } from '@constants/docs.constants';
 
 export interface UpdateData {
   date: string;
@@ -14,6 +16,25 @@ export interface UpdateData {
 }
 
 const updates: UpdateData[] = [
+  {
+    date: '2025-07-27T18:05:00.101Z',
+    improvements: [
+      <div>
+        <p>
+          Добавлено{' '}
+          <Anchor href={buildDocsUrl(DOCS_PAGES.home.page, 'ru')} underline='not-hover' target='_blank'>
+            новое руководство
+          </Anchor>{' '}
+          по использованию сайта.
+        </p>
+        <p>Теперь оно стало более подробным, понятным и удобным для использования и навигации.</p>
+        <p>
+          Пока что в нем присутствует только общий обзор функционала и описание работы и настроек колеса, но в
+          дальнейшем я буду постепенно заполнять его всем остальным функционалом.
+        </p>
+      </div>,
+    ],
+  },
   {
     date: '2025-06-09T12:40:00.898Z',
     improvements: [
