@@ -2,12 +2,30 @@ import { withSidebar } from 'vitepress-sidebar';
 import { defineConfig } from 'vitepress';
 import { withI18n } from 'vitepress-i18n';
 
+const rootLocale = 'en';
+const supportedLocales = {
+  root: {
+    label: 'English',
+    lang: rootLocale,
+    description: 'User manual for Pointauc website',
+  },
+  ru: {
+    label: 'Русский',
+    lang: 'ru',
+    description: 'Руководство пользователя для сайта Pointauc',
+  },
+};
+
+const supportedLocaleKeys = Object.values(supportedLocales).map((locale) => locale.lang);
+
 const vitepressOptions = {
   // site-level options
   title: 'Pointauc',
+  description: 'User manual for Pointauc website',
   srcDir: 'src',
   cleanUrls: true,
   base: '/docs/',
+  locales: supportedLocales,
 
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
 
@@ -24,9 +42,6 @@ const vitepressOptions = {
   },
 };
 
-const rootLocale = 'en';
-const supportedLocales = [rootLocale, 'ru'];
-
 const commonSidebarConfigs = {
   srcDir: 'src',
   useTitleFromFrontmatter: true,
@@ -41,7 +56,7 @@ const commonSidebarConfigs = {
 };
 
 const vitePressSidebarConfigs = [
-  ...supportedLocales.map((lang) => {
+  ...supportedLocaleKeys.map((lang) => {
     return {
       ...commonSidebarConfigs,
       ...(rootLocale === lang ? {} : { basePath: `/${lang}/` }), // If using `rewrites` option
@@ -52,8 +67,9 @@ const vitePressSidebarConfigs = [
 ];
 
 const vitePressI18nOptions = {
-  locales: supportedLocales,
   searchProvider: 'local',
+  rootLocale: rootLocale,
+  locales: supportedLocales,
 };
 
 export default defineConfig(withSidebar(withI18n(vitepressOptions, vitePressI18nOptions), vitePressSidebarConfigs));
