@@ -17,10 +17,7 @@ const withApiKeyRotation = async <T>(requestFn: (keyId: number) => Promise<T>, k
   }
 };
 
-const fetchVideoStatistics = async (
-  videoIds: string[],
-  keyId: number,
-): Promise<Record<string, { viewCount: number; likeCount: number }>> => {
+const fetchVideoStatistics = async (videoIds: string[], keyId: number): Promise<any> => {
   const { data } = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
     params: {
       id: videoIds.join(','),

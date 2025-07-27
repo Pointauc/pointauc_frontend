@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "7tv": "^0.1.2",
@@ -72,6 +75,8 @@
     "tinycolor2": "^1.6.0",
     "tmi.js": "^1.8.5",
     "uuid": "^9.0.1",
+    "vitepress": "^1.6.3",
+    "vitepress-sidebar": "^1.33.0",
     "xlsx": "^0.18.5",
     "youtube-player": "^5.6.0"
   },
