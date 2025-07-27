@@ -67,6 +67,7 @@ Create auctions for anything - games, content, challenges. Viewers bid with chan
 | Method                   | Description                  |
 | ------------------------ | ---------------------------- |
 | **🎡 Wheel spin**        | Classic random selection     |
+| **🥇 Top contributor**   | Select the highest bidder    |
 | **⚔️ Elimination wheel** | Remove options one by one    |
 | **👑 Battle format**     | Tournament-style elimination |
 
