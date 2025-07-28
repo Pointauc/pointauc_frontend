@@ -377,6 +377,18 @@
   "wheel": {
     "hideInactive": "Hide dropped lots",
     "totalItems": "Participants in the wheel - {{amount}}",
+    "typeParticipants": "Or enter participants manually",
+    "import": {
+      "title": "Import participants",
+      "rulesTitle": "Import rules",
+      "rules": [
+        "Simple text file (extension does not matter)",
+        "Positions are separated by a new line",
+        "You can specify the cost through a comma - \"Name,123\"",
+        "<1>More detailed description and examples</1>"
+      ],
+      "submitDisabled": "Enter participants"
+    },
     "dropout": {
       "helpNotification": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>",
       "explanation": {
@@ -407,8 +419,13 @@
       "normal": "Normal"
     },
     "howItWorks": "How It Works?",
-    "importToWheel": "Import to Wheel",
-    "loadCustomMessage": "Load your image",
+    "coreImage": {
+      "expandPanel": "Select image in the wheel",
+      "wheelOverlay": "Change",
+      "customImageDialogTitle": "Add your image for the wheel"
+    },
+    "importToWheel": "Import participants",
+    "loadCustomMessage": "Upload your image",
     "lotDeleteWarning": "This action will delete the lot not only from the wheel but also from the auction itself.",
     "lotWasDeleted": "lot was deleted",
     "nesting": "Nesting",

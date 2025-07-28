@@ -1,5 +1,5 @@
-import React, { Key } from 'react';
-import { useWatch } from 'react-hook-form';
+import { Key, useCallback } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import BaseWheel, { BaseWheelProps } from '@components/BaseWheel/BaseWheel.tsx';
 import { WheelItem } from '@models/wheel.model.ts';
@@ -12,14 +12,22 @@ interface Props extends Pick<BaseWheelProps<any>, 'controller'> {
 
 const WheelComponent = ({ controller, shuffle, deleteItem, finalItems }: Props) => {
   const coreImage = useWatch<Wheel.Settings>({ name: 'coreImage' });
+  const { setValue } = useFormContext<Wheel.Settings>();
+  const onCoreImageChange = useCallback(
+    (image: string) => {
+      setValue('coreImage', image);
+    },
+    [setValue],
+  );
 
   return (
     <BaseWheel
       controller={controller}
-      background={coreImage || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x'}
+      coreImage={coreImage || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x'}
       deleteItem={deleteItem}
       isShuffle={shuffle}
       items={finalItems}
+      onCoreImageChange={onCoreImageChange}
     />
   );
 };

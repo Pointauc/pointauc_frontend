@@ -12,6 +12,7 @@ import { DEFAULT_THEME } from '@mantine/core';
 
 import mantineTheme from '@constants/mantineTheme';
 import { calcUiElementsOpacity } from '@utils/ui/background';
+import { COLORS } from '@constants/color.constants';
 
 import { RootState } from './reducers';
 
@@ -40,6 +41,8 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
   const theme = useMemo(() => {
     const uiOpacity = calcUiElementsOpacity(backgroundOverlayOpacity);
     return createTheme({
+      cursorType: 'pointer',
+      primaryColor: 'blue',
       colors: {
         darkOpaque: DEFAULT_THEME.colors.dark.map((color) => alpha(color, uiOpacity)) as unknown as MantineColorsTuple,
       },

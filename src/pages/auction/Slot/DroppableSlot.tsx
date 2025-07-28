@@ -1,4 +1,4 @@
-import { Badge, Center, Menu, Paper } from '@mantine/core';
+import { Badge, Center, Menu, Paper, useMantineTheme } from '@mantine/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import TagIcon from '@mui/icons-material/Tag';
@@ -104,6 +104,8 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
     dispatch(openTrailer(name || ''));
   }, [dispatch, name]);
 
+  const theme = useMantineTheme();
+
   return (
     <Paper
       radius='md'
@@ -120,6 +122,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
         <Center className={styles.fastIndexWrapper}>
           <Badge
             size='lg'
+            color={`${theme.primaryColor}.9`}
             variant='light'
             classNames={{ root: styles.fastIndex, section: styles.fastIndexIcon }}
             leftSection={<TagIcon fontSize='small' />}

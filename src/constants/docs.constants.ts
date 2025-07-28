@@ -10,12 +10,15 @@ export const DOCS_PAGES = {
   wheel: {
     settings: {
       page: '2.wheel-of-luck/1.settings-overview',
+      chapters: {
+        import: '2.wheel-of-luck/1.settings-overview#lots-import',
+      },
     },
     dropout: {
       page: '2.wheel-of-luck/2.formats/2.dropout',
       chapters: {
-        simulated: '2.wheel-of-luck/2.formats/2.dropout#simulated-modern-dropout-←-recommended',
-        classic: '2.wheel-of-luck/2.formats/2.dropout#classic-dropout',
+        simulated: '2.wheel-of-luck/2.formats/2.dropout#simulated',
+        classic: '2.wheel-of-luck/2.formats/2.dropout#classic',
       },
     },
     duel: {

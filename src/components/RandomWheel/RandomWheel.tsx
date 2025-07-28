@@ -1,4 +1,14 @@
-import { Key, ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Key,
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import classNames from 'classnames';
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
 
@@ -43,6 +53,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   isShuffle?: boolean;
   elements?: Partial<SettingElements>;
   children?: ReactNode;
+  wheelRef?: React.RefObject<RandomWheelController>;
 }
 
 const defaultSettings: Wheel.Settings = {
@@ -64,6 +75,10 @@ const defaultSettings: Wheel.Settings = {
 const savedSettings = JSON.parse(localStorage.getItem('wheelSettings') ?? '{}');
 const initialSettings = { ...defaultSettings, ...savedSettings };
 
+export interface RandomWheelController {
+  setItems: (items: WheelItem[]) => void;
+}
+
 const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   items: _itemsFromProps,
   deleteItem,
@@ -71,6 +86,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   isShuffle = true,
   elements: elementsFromProps,
   children,
+  wheelRef,
 }: RandomWheelProps<TWheelItem>): ReactElement => {
   const [itemsFromProps, setItemsFromProps] = useState<WheelItem[]>(_itemsFromProps);
   const elements = useMemo(() => ({ ...initialAvailableSettings, ...elementsFromProps }), [elementsFromProps]);
@@ -82,6 +98,12 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const { randomSpinEnabled, randomSpinConfig, spinTime } = formValues;
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
+
+  useImperativeHandle(wheelRef, () => ({
+    setItems: (items: WheelItem[]) => {
+      setItemsFromProps(items);
+    },
+  }));
 
   useEffect(() => {
     const { split, ...settings } = formValues;

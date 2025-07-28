@@ -1,6 +1,16 @@
-import React, { Key, MutableRefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  Key,
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
+import { Overlay, Popover, Stack, Text } from '@mantine/core';
 
 import { WheelItem, WheelItemWithAngle } from '@models/wheel.model.ts';
 import { getRandomInclusive, random, shuffle } from '@utils/common.utils.ts';
@@ -9,8 +19,10 @@ import wheelHelpers from '@components/BaseWheel/helpers.ts';
 import pradenW from '@assets/img/pradenW.png';
 import { useWheelDrawer } from '@components/BaseWheel/hooks/useWheelDrawer.ts';
 import { useWheelAnimator } from '@components/BaseWheel/hooks/useWheelAnimator.ts';
-import '@components/BaseWheel/BaseWheel.scss';
 import WinnerBackdrop from '@components/BaseWheel/WinnerBackdrop.tsx';
+import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
+import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
+import '@components/BaseWheel/BaseWheel.scss';
 
 export enum DropoutVariant {
   Classic,
@@ -39,7 +51,8 @@ export interface BaseWheelProps<T extends WheelItem> {
   deleteItem?: (id: Key) => void;
   isShuffle?: boolean;
   controller: MutableRefObject<WheelController | null>;
-  background?: string | null;
+  coreImage?: string | null;
+  onCoreImageChange?: (image: string) => void;
   resetWheel?: boolean;
   delay?: number;
 }
@@ -47,7 +60,7 @@ export interface BaseWheelProps<T extends WheelItem> {
 const calculateFixedAngle = (duration: number): number => duration * 270;
 
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
-  const { items, resetWheel, deleteItem, isShuffle, controller, background } = props;
+  const { items, resetWheel, deleteItem, isShuffle, controller, coreImage, onCoreImageChange } = props;
   const { t } = useTranslation();
   const { drawWheel, highlightItem, eatAnimation } = useWheelDrawer();
 
@@ -58,7 +71,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
-  const coreBackground = useMemo(() => `url(${background || pradenW})`, [background]);
+  const coreBackground = useMemo(() => `url(${coreImage || pradenW})`, [coreImage]);
   const normalizedItems = useMemo(
     () => wheelHelpers.defineAngle(isShuffle ? shuffle(items) : items),
     [isShuffle, items],
@@ -190,28 +203,38 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     }
   }, [t]);
 
-  useEffect(() => {
-    const highlight = (id: Key) => {
-      if (wheelCanvas.current && selectorCanvas.current) {
-        highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
-      }
-    };
+  useImperativeHandle(
+    controller,
+    () => {
+      const highlight = (id: Key) => {
+        if (wheelCanvas.current && selectorCanvas.current) {
+          highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
+        }
+      };
 
-    const resetStyles = () => {
-      if (wheelCanvas.current && selectorCanvas.current) {
-        drawWheel({ items: normalizedItems, wheelCanvas: wheelCanvas.current, pointerCanvas: selectorCanvas.current });
-      }
-    };
+      const resetStyles = () => {
+        if (wheelCanvas.current && selectorCanvas.current) {
+          drawWheel({
+            items: normalizedItems,
+            wheelCanvas: wheelCanvas.current,
+            pointerCanvas: selectorCanvas.current,
+          });
+        }
+      };
 
-    const _eatAnimation = async (id: Key, duration?: number) => {
-      if (wheelCanvas.current && selectorCanvas.current) {
-        await eatAnimation(id, normalizedItems, wheelCanvas.current, selectorCanvas.current, duration);
-      }
-    };
+      const _eatAnimation = async (id: Key, duration?: number) => {
+        if (wheelCanvas.current && selectorCanvas.current) {
+          await eatAnimation(id, normalizedItems, wheelCanvas.current, selectorCanvas.current, duration);
+        }
+      };
 
-    controller.current = { spin, clearWinner, resetPosition, highlight, resetStyles, eatAnimation: _eatAnimation };
+      return { spin, clearWinner, resetPosition, highlight, resetStyles, eatAnimation: _eatAnimation };
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clearWinner, controller, resetPosition, spin, normalizedItems]);
+    [clearWinner, controller, resetPosition, spin, normalizedItems],
+  );
+
+  const [isClickOusideAllowed, setIsClickOusideAllowed] = useState(true);
 
   return (
     <div style={{ width: '0', height: '100%', display: 'inline-block', pointerEvents: 'none' }} ref={wrapper}>
@@ -221,7 +244,32 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       <div className='wheel-content'>
         <canvas style={{ position: 'absolute', zIndex: 1 }} ref={selectorCanvas} />
         <canvas ref={wheelCanvas} />
-        <div className='wheel-core' style={{ backgroundImage: coreBackground }} />
+        {onCoreImageChange && (
+          <Popover width={420} withArrow position='right' closeOnClickOutside={isClickOusideAllowed}>
+            <Popover.Target>
+              <div className='wheel-core' style={{ backgroundImage: coreBackground }}>
+                <div className='wheel-core-overlay'>
+                  <Overlay color='black' opacity={0.7} />
+                  <Text className='wheel-core-text' size='xl'>
+                    {t('wheel.coreImage.wheelOverlay')}
+                  </Text>
+                </div>
+              </div>
+            </Popover.Target>
+            <Popover.Dropdown mah={430} p={8} className='wheel-core-emotes-list'>
+              <Stack gap={0}>
+                <ImageLinkInput
+                  dialogTitle={t('wheel.coreImage.customImageDialogTitle')}
+                  buttonTitle={t('wheel.loadCustomMessage')}
+                  buttonClass='upload-wheel-image'
+                  onChange={onCoreImageChange}
+                  onModalOpenChange={(isOpened) => setIsClickOusideAllowed(!isOpened)}
+                />
+                <TwitchEmotesList setActiveEmote={onCoreImageChange} />
+              </Stack>
+            </Popover.Dropdown>
+          </Popover>
+        )}
         {!!winnerItem && (
           <WinnerBackdrop
             name={winnerItem.name}
