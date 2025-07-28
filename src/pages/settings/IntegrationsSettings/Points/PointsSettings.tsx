@@ -9,7 +9,7 @@ import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
 import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import { closeTwitchRewards } from '@api/twitchApi.ts';
 import FormSwitch from '@components/Form/FormSwitch/FormSwitch.tsx';
-import RewardPresetsForm from '@components/IntegrationPage/TwitchIntegration/RewardPresetsForm.tsx';
+import RewardPresetsForm from '@pages/settings/IntegrationsSettings/Points/TwitchIntegration/RewardPresetsForm';
 import { RootState } from '@reducers';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';

@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Grid } from '@mui/material';
 
 import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
-import TokenSettings from '@components/SettingsPage/TokenSettings/TokenSettings.tsx';
-import IntegrationCommon from '@components/IntegrationPage/IntegrationCommon';
+import TokenSettings from '@pages/settings/IntegrationsSettings/TokenSettings/TokenSettings';
+import IntegrationCommon from '@pages/settings/IntegrationsSettings/Common/IntegrationCommon';
 
 const CommonIntegrationsSettings = () => {
   const { t } = useTranslation();

@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import BidsSortSelect from '@components/SettingsPage/AucSettings/BidsSortSelect.tsx';
+import BidsSortSelect from '@pages/settings/IntegrationsSettings/Common/AucSettings/BidsSortSelect';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import RadioButtonGroup from '@components/RadioButtonGroup/RadioButtonGroup';
 import { BidNameStrategy } from '@enums/bid.enum';

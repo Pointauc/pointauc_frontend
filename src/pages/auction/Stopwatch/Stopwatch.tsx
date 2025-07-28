@@ -136,19 +136,19 @@ const Stopwatch: React.FC = () => {
 
       if (isMinTimeActive && timeLeft.current > minTime * 60 * 1000) return;
 
-      if (isMaxTimeActive) {
-        if (timeLeft.current < maxMilliseconds) {
-          updateStopwatch(
-            timeLeft.current + timeChange > maxMilliseconds ? maxMilliseconds - timeLeft.current : timeChange,
-          );
-        }
+      // if (isMaxTimeActive) {
+      //   if (timeLeft.current < maxMilliseconds) {
+      //     updateStopwatch(
+      //       timeLeft.current + timeChange > maxMilliseconds ? maxMilliseconds - timeLeft.current : timeChange,
+      //     );
+      //   }
 
-        return;
-      }
+      //   return;
+      // }
 
       updateStopwatch(timeChange);
     },
-    [isMaxTimeActive, isMinTimeActive, maxTime, minTime, updateStopwatch],
+    [isMinTimeActive, maxTime, minTime, updateStopwatch],
   );
 
   const handleDonation = useCallback(() => {
