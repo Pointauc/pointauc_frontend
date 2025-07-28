@@ -7,6 +7,8 @@ import { COLORS } from '../constants/color.constants';
 import { WheelItem } from '../models/wheel.model';
 import { ATTRIBUTES, TAGS } from '../constants/common.constants';
 
+import { numberUtils } from './common/number';
+
 import type { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 
 export const isProduction = (): boolean => import.meta.env.MODE === 'production';
@@ -28,6 +30,8 @@ export const animateValue = (ref: HTMLInputElement, start: number, end: number, 
 
     if (progress < 1) {
       window.requestAnimationFrame(step);
+    } else {
+      ref.value = end.toString();
     }
   };
   window.requestAnimationFrame(step);

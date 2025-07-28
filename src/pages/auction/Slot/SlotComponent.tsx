@@ -12,6 +12,7 @@ import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '@re
 import { animateValue } from '@utils/common.utils.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { RootState } from '@reducers';
+import { numberUtils } from '@utils/common/number';
 
 import styles from './SlotComponent.module.css';
 
@@ -94,13 +95,17 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       if (amount === null) {
         amountInput.current.value = '';
       } else {
-        animateValue(
-          amountInput.current,
-          Number(amountInput.current.value),
-          Number(amount),
-          marblesAuc || !isAmountInitialized.current ? 0 : undefined,
-        );
+        const finalValue = numberUtils.roundFixed(amount, 2);
+        if (finalValue.toString() !== amountInput.current.value) {
+          animateValue(
+            amountInput.current,
+            Number(amountInput.current.value),
+            finalValue,
+            marblesAuc || !isAmountInitialized.current ? 0 : undefined,
+          );
+        }
       }
+
       isAmountInitialized.current = true;
     }
   }, [amount, marblesAuc]);
@@ -125,7 +130,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
         onKeyPress={createNewSlotOnEnter}
         value={currentName ?? ''}
       />
-      {showChances && <span className='slot-chance' ref={percentsRef} />}
+      {showChances && <span className='slot-chance' title={t('auc.chanceTooltip')} ref={percentsRef} />}
       <TextInput
         variant='unstyled'
         size='lg'

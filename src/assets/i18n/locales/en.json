@@ -106,6 +106,7 @@
     "addPosition": "Add Lot",
     "addToRandomSlot": "Add to Random Slot",
     "showRules": "Show rules",
+    "chanceTooltip": "Text is rounded to 2 decimal places, but the chance of winning is still calculated based on the actual value.",
     "casino": {
       "description": "You need to spin the normal wheel; if your selected lot wins, the bid will multiply by a specified number, otherwise, it will be reset.",
       "selectLot": "Lucky Wheel",
