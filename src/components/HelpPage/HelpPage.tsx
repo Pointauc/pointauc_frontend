@@ -1,23 +1,13 @@
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 
-import Documentation from '@pages/documentation/Documentation';
-
-import PageContainer from '../PageContainer/PageContainer';
-
-import './HelpPage.scss';
+import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 
 const HelpPage: FC = () => {
-  const { t } = useTranslation();
+  const docsUrl = useDocsUrl(DOCS_PAGES.home.page);
 
-  return (
-    <PageContainer title={t('menu.items.guides.title')} className='help-page'>
-      <div className='content'>
-        <Documentation />
-        {/*<TableOfContents paragraphs={DOCUMENTATION_PARAGRAPHS} url={ROUTES.HELP} />*/}
-      </div>
-    </PageContainer>
-  );
+  window.location.href = docsUrl;
+
+  return null;
 };
 
 export default HelpPage;

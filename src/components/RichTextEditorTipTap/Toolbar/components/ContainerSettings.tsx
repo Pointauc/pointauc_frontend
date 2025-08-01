@@ -46,9 +46,9 @@ const ContainerSettings = () => {
         >
           <Box width={290}>
             <Grid p={2} container direction='column' gap={1}>
-              <Grid item container xs={12} gap={2} alignItems='center' wrap={'nowrap'}>
+              <Grid container gap={2} alignItems='center' wrap={'nowrap'} size={12}>
                 <div>{t('rules.background')}</div>
-                <Grid item flexShrink={0}>
+                <Grid flexShrink={0}>
                   <ColorPicker value={background.color} onChange={(color) => merge({ background: { color } })} />
                 </Grid>
                 <Slider
@@ -59,7 +59,7 @@ const ContainerSettings = () => {
                   step={0.05}
                 />
               </Grid>
-              <Grid item container xs={12} gap={2} alignItems='center' wrap={'nowrap'}>
+              <Grid container gap={2} alignItems='center' wrap={'nowrap'} size={12}>
                 <div>{t('rules.size')}</div>
                 <Slider
                   value={size}

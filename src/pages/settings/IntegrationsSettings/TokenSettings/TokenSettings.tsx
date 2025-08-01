@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dialog, DialogContent, Link, OutlinedInput, Typography } from '@mui/material';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useDispatch } from 'react-redux';
 
@@ -54,21 +54,21 @@ const TokenSettings = () => {
           <Typography sx={{ marginBottom: 2 }} variant='h5' color='error'>
             {t('settings.token.dontShareToken')}
           </Typography>
-          <Grid2 container spacing={2}>
-            <Grid2 sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid sx={{ flexGrow: 1 }}>
               <OutlinedInput type='password' value={token ?? ''} fullWidth />
-            </Grid2>
-            <Grid2>
+            </Grid>
+            <Grid>
               <Button onClick={copyToken} startIcon={<ContentCopyIcon />} variant='contained'>
                 {t('settings.token.copy')}
               </Button>
-            </Grid2>
-            <Grid2>
+            </Grid>
+            <Grid>
               <LoadingButton onClick={resetToken} isLoading={loading} variant='outlined'>
                 {t('settings.token.update')}
               </LoadingButton>
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </DialogContent>
       </Dialog>
     </div>

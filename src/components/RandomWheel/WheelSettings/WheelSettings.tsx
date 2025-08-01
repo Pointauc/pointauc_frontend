@@ -1,21 +1,24 @@
-import React, { ReactNode } from 'react';
+import { Anchor } from '@mantine/core';
 import { Checkbox, FormControlLabel, Grid } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { ReactNode } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { WheelFormat } from '@constants/wheel.ts';
-import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
-import WheelFormatField from '@components/RandomWheel/WheelSettings/fields/WheelFormat.tsx';
-import DropoutFormatField from '@components/RandomWheel/WheelSettings/fields/DropoutFormat.tsx';
-import SpinTimeField from '@components/RandomWheel/WheelSettings/fields/SpinTime.tsx';
 import { DropoutVariant } from '@components/BaseWheel/BaseWheel.tsx';
-import ClassicDropoutDescription from '@components/RandomWheel/WheelSettings/fields/ClassicDropoutDescription.tsx';
+import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
+import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
+import { DropoutHelp } from '@components/RandomWheel/DropoutHelp';
 import NewDropoutDescription from '@components/RandomWheel/NewDropoutDescription/NewDropoutDescription.tsx';
-import ParticipantsImportField from '@components/RandomWheel/WheelSettings/fields/ParticipantsImport.tsx';
-import SplitField from '@components/RandomWheel/WheelSettings/fields/Split.tsx';
+import ClassicDropoutDescription from '@components/RandomWheel/WheelSettings/fields/ClassicDropoutDescription.tsx';
 import CoreImageField from '@components/RandomWheel/WheelSettings/fields/CoreImage.tsx';
-import RandomSpinSwitch from '@components/RandomWheel/WheelSettings/fields/RandomSpinSwitch.tsx';
+import DropoutFormatField from '@components/RandomWheel/WheelSettings/fields/DropoutFormat.tsx';
 import RandomSpinConfig from '@components/RandomWheel/WheelSettings/fields/RandomSpinConfig.tsx';
+import RandomSpinSwitch from '@components/RandomWheel/WheelSettings/fields/RandomSpinSwitch.tsx';
+import SpinTimeField from '@components/RandomWheel/WheelSettings/fields/SpinTime.tsx';
+import SplitField from '@components/RandomWheel/WheelSettings/fields/Split.tsx';
+import WheelFormatField from '@components/RandomWheel/WheelSettings/fields/WheelFormat.tsx';
+import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
+import { WheelFormat } from '@constants/wheel.ts';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -49,19 +52,35 @@ const WheelSettings = (props: WheelSettingsProps) => {
     </LoadingButton>
   );
 
+  const docsUrl = useDocsUrl(DOCS_PAGES.wheel.settings.page);
+
   return (
     <Grid container spacing={2} direction={direction} flexGrow={1} className='settings'>
-      <Grid container style={{ gap: 8 }} item direction='column' xs={direction === 'row' ? 6 : undefined}>
-        <div className='wheel-controls-row'>
+      <FirstTimeHelpNotification
+        featureKey='wheelSettingsHelpSeen'
+        message={
+          <Trans
+            i18nKey='wheel.helpNotification'
+            components={{ 1: <Anchor href={docsUrl} underline='not-hover' target='_blank' />, 2: <b /> }}
+          />
+        }
+      />
+      <Grid container style={{ gap: 8 }} direction='column' size={direction === 'row' ? 6 : undefined}>
+        <Grid container className='wheel-controls-row' spacing={1}>
           {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-          {!randomSpinEnabled && <SpinTimeField />}
-          {randomSpinEnabled && <RandomSpinConfig />}
-          <RandomSpinSwitch />
-        </div>
+          <Grid flexGrow={1}>
+            {!randomSpinEnabled && <SpinTimeField />}
+            {randomSpinEnabled && <RandomSpinConfig />}
+          </Grid>
+          <Grid>
+            <RandomSpinSwitch />
+          </Grid>
+        </Grid>
         {controls.mode && <WheelFormatField />}
         {format === WheelFormat.Dropout && (
           <>
             <DropoutFormatField />
+            <DropoutHelp />
             {dropoutVariant === DropoutVariant.New && <NewDropoutDescription />}
             {dropoutVariant === DropoutVariant.Classic && <ClassicDropoutDescription />}
           </>
@@ -82,7 +101,6 @@ const WheelSettings = (props: WheelSettingsProps) => {
             className='wheel-controls-checkbox'
           />
         )}
-        {controls.import && <ParticipantsImportField />}
         {/*{elements.randomPace && (*/}
         {/*  <>*/}
         {/*    <div className='wheel-controls-row'>*/}
@@ -102,9 +120,8 @@ const WheelSettings = (props: WheelSettingsProps) => {
         flexShrink={1}
         flexWrap='nowrap'
         container
-        item
         direction='column'
-        xs={direction === 'row' ? 6 : undefined}
+        size={direction === 'row' ? 6 : undefined}
       >
         <CoreImageField />
       </Grid>

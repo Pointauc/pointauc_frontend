@@ -1,10 +1,19 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .options-wrapper {
   position: relative;
-  //display: flex;
-  //justify-content: center;
-  //align-items: center;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: -0.5em;
+    left: -2em;
+    width: calc(100% + 4em);
+    height: calc(100% + 1em);
+    z-index: -1;
+
+    // background-color: var(--mantine-color-darkOpaque-7);
+  }
 
   .MuiGrid-item {
     //padding-top: 0;

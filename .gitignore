@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+docs/.vitepress/cache
+docs/.vitepress/dist
+
+.env
+.env.local
+.env.production

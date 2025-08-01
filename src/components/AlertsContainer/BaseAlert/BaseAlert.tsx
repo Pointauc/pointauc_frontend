@@ -1,7 +1,6 @@
 import { FC, useCallback, useEffect, useState } from 'react';
-import { Alert } from '@mui/lab';
 import { useDispatch } from 'react-redux';
-import { LinearProgress } from '@mui/material';
+import { Alert, LinearProgress } from '@mui/material';
 
 import { AlertType } from '@models/alert.model.ts';
 import { deleteAlert } from '@reducers/notifications/notifications.ts';

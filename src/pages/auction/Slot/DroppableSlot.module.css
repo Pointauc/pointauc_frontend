@@ -1,0 +1,27 @@
+:global(.compact-view) .card {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.index {
+  margin-left: var(--mantine-spacing-lg);
+  margin-right: var(--mantine-spacing-xs);
+  font-size: 1.1em;
+  width: 20px;
+}
+
+.fastIndex {
+  font-size: 1.1em;
+
+  padding: 0 8px;
+}
+
+.fastIndexIcon {
+  margin-right: 2px;
+  opacity: 0.5;
+}
+
+.fastIndexWrapper {
+  min-width: 60px;
+  margin-right: var(--mantine-spacing-xs);
+}

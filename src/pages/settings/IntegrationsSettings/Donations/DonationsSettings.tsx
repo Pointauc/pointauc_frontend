@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { FormGroup, Grid, Grid2, Typography } from '@mui/material';
+import { FormGroup, Grid, Typography } from '@mui/material';
 import { useFormContext } from 'react-hook-form';
 
 import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
@@ -28,10 +28,10 @@ const DonationsSettings = () => {
   return (
     <SettingsGroup className='donations-settings' title={t('settings.donations.donations')}>
       {available.map((integration) => (
-        <Grid2 container justifyContent='space-between'>
+        <Grid container justifyContent='space-between'>
           <PubsubSwitch integration={integration} key={integration.id} />
           <RevokeIntegrationButton revoke={integration.authFlow.revoke} />
-        </Grid2>
+        </Grid>
       ))}
       {unavailable.length > 0 && (
         <Grid container gap={2}>

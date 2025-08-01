@@ -3,7 +3,18 @@ import './App.scss';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { Container, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, styled } from '@mui/material';
+import {
+  Container,
+  Divider,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  Box,
+} from '@mui/material';
+import { OpenInNew } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reducers';
@@ -92,15 +103,31 @@ const App: React.FC = () => {
   const drawerClasses = useMemo(() => classNames('app-drawer', { open: isOpen, close: !isOpen }), [isOpen]);
 
   const createMenuItem = useCallback(
-    ({ icon, title, path, disabled, divide }: MenuItem) => (
-      <Fragment key={path}>
-        {divide && <Divider style={{ margin: '10px 0' }} />}
-        <ListItemButton disabled={disabled} key={t(title)} selected={path === pathname} component={Link} to={path}>
-          <ListItemIcon className='nav-icon'>{icon}</ListItemIcon>
-          <ListItemText className='nav-text' primary={t(title)} />
-        </ListItemButton>
-      </Fragment>
-    ),
+    ({ icon, title, path, disabled, divide, target }: MenuItem) => {
+      const isExternal = target === '_blank';
+      const linkProps = isExternal ? { href: path, target } : { to: path };
+
+      return (
+        <Fragment key={path}>
+          {divide && <Divider style={{ margin: '10px 0' }} />}
+          <ListItemButton
+            disabled={disabled}
+            key={t(title)}
+            selected={path === pathname}
+            component={isExternal ? 'a' : Link}
+            {...linkProps}
+          >
+            <ListItemIcon className='nav-icon'>{icon}</ListItemIcon>
+            <ListItemText className='nav-text' primary={t(title)} />
+            {isExternal && (
+              <Box sx={{ ml: 1, display: 'flex', alignItems: 'center' }}>
+                <OpenInNew fontSize='small' sx={{ opacity: 0.6 }} />
+              </Box>
+            )}
+          </ListItemButton>
+        </Fragment>
+      );
+    },
     [pathname, t],
   );
 

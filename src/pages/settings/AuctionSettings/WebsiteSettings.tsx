@@ -11,19 +11,19 @@ import '@pages/settings/AuctionSettings/WebsiteSettings.scss';
 const WebsiteSettings = () => {
   return (
     <Grid container wrap='wrap' className='auction-settings' spacing={4}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <TimerSettings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <AppearanceSettings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <AuctionSettings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <MarblesSettings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <WheelOfLuckSettings />
       </Grid>
     </Grid>

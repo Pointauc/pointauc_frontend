@@ -9,13 +9,13 @@ import EventsSettings from '@pages/settings/IntegrationsSettings/Events/EventsSe
 const IntegrationsSettings = () => {
   return (
     <Grid container wrap='wrap' className='auction-settings' spacing={4}>
-      <Grid item xs={12}>
+      <Grid size={12}>
         <CommonIntegrationsSettings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <PointsSettings />
       </Grid>
-      <Grid item xs={6}>
+      <Grid size={6}>
         <DonationsSettings />
         {/*<EventsSettings />*/}
       </Grid>

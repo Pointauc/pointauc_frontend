@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .slots {
   flex-grow: 1;
@@ -7,7 +7,16 @@
 
   .slot-grid-wrapper {
     width: 100%;
-    //right: 0 !important;
+
+    .slot-wrapper {
+      background-color: var(--mantine-color-dark-6);
+    }
+
+    &:nth-child(even) {
+      .slot-wrapper {
+        background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
+      }
+    }
   }
 
   &-wrapper {
@@ -40,12 +49,13 @@
       gap: 4px;
       position: relative;
 
-      &.optimize,&.compact-view {
+      &.optimize,
+      &.compact-view {
         flex-direction: row;
         flex: 1 1 auto;
       }
 
-      &>div:last-of-type {
+      & > div:last-of-type {
         flex-grow: 0;
         max-width: 100%;
         flex-basis: 100%;
@@ -79,28 +89,6 @@
       border: 2px solid transparent;
       align-self: center;
       transition: 0s;
-    }
-
-    &.dragging {
-      .add-button {
-        background-color: $grey-11;
-        border-color: $grey-9;
-
-        &.custom-background {
-          background-color: rgba(100, 100, 100, 0.5);
-          border-color: $grey-5;
-        }
-
-        &.drag-over {
-          background-color: $blue-gray-3;
-          border-color: $blue-gray-2;
-
-          &.custom-background {
-            background-color: rgba($blue-gray-3, 0.7);
-            border-color: $blue-gray-2;
-          }
-        }
-      }
     }
   }
 

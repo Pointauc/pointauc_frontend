@@ -26,6 +26,8 @@ interface EventsSettings {
 
 interface SettingsMissingOnBackend {
   showTotalTime: boolean;
+  backgroundOverlayOpacity: number;
+  backgroundBlur: number;
 }
 
 interface AucSettingsState {
@@ -42,6 +44,8 @@ const defaultSettings: AucSettingsState['settings'] = {
   autoincrementTime: 30,
   purchaseSort: 0,
   background: null,
+  backgroundOverlayOpacity: 0.4,
+  backgroundBlur: 0,
   marblesAuc: false,
   marbleRate: 50,
   marbleCategory: 100,
@@ -84,7 +88,9 @@ export const initialState: AucSettingsState = {
     showRules: showRules === 'true',
     autoScroll: false,
   },
-  settings: localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings') as string) : defaultSettings,
+  settings: localStorage.getItem('settings')
+    ? { ...defaultSettings, ...JSON.parse(localStorage.getItem('settings') as string) }
+    : defaultSettings,
 };
 
 const mergeCheck = <T>(obj: T, src: T): T => (src === undefined ? obj : src);

@@ -1,24 +1,41 @@
 import { useState } from 'react';
-import { Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
-import { DropzoneArea } from 'react-mui-dropzone';
+import { Button, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { Group, Modal, Stack, Text } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
+import ImageIcon from '@mui/icons-material/Image';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import BlockIcon from '@mui/icons-material/Block';
 import './ImageLinkInput.scss';
 
 interface ImageLinkInputProps {
   buttonTitle: string;
   onChange: (imageLink: string) => void;
+  onModalOpenChange?: (isOpened: boolean) => void;
   dialogTitle?: string;
   buttonClass?: string;
 }
 
-const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitle, buttonClass, onChange }) => {
+const ImageLinkInput: React.FC<ImageLinkInputProps> = ({
+  buttonTitle,
+  dialogTitle,
+  buttonClass,
+  onChange,
+  onModalOpenChange,
+}) => {
   const { t } = useTranslation();
-  const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
+  const [isInputOpened, setIsInputOpened] = useState(false);
   const [isCorrectUrl, setIsCorrectUrl] = useState(true);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const changeModalState = (isOpened: boolean): void => {
+    setIsInputOpened(isOpened);
+    onModalOpenChange?.(isOpened);
+  };
+
   const toggleDialog = (): void => {
     setIsCorrectUrl(true);
-    setIsInputOpened((prevOpened) => !prevOpened);
+    changeModalState(!isInputOpened);
   };
 
   const isImage = (url: string): Promise<Event> =>
@@ -36,7 +53,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
       isImage(imageUrl)
         .then(() => {
           onChange(imageUrl);
-          setIsInputOpened(false);
+          changeModalState(false);
         })
         .catch((e) => {
           setIsCorrectUrl(false);
@@ -51,7 +68,7 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
     reader.onloadend = (): void => {
       if (typeof reader.result === 'string') {
         onChange(reader.result);
-        setIsInputOpened(false);
+        changeModalState(false);
       }
     };
     reader.readAsDataURL(file);
@@ -59,28 +76,39 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({ buttonTitle, dialogTitl
 
   return (
     <>
-      <Dialog open={isInputOpened} onClose={toggleDialog} maxWidth={false}>
-        {!!dialogTitle && <DialogTitle>{dialogTitle}</DialogTitle>}
-        <DialogContent className='image-input-wrapper'>
-          <DropzoneArea
-            dropzoneClass='drop-zone'
-            dropzoneText={t('common.moveFileOrClick')}
-            onDrop={handleFileUpload}
-            filesLimit={1}
-            maxFileSize={1000 * 1000 * 50}
-          />
-          <Typography className='divider'>{t('common.or')}</Typography>
+      <Modal opened={isInputOpened} onClose={toggleDialog} size='xl' centered title={dialogTitle}>
+        <Stack gap='md' align='stretch' justify='center'>
+          <Dropzone onDrop={handleFileUpload} maxFiles={1} maxSize={1000 * 1000 * 50} accept={['image/*']}>
+            <Group justify='center' gap='xl' mih={120} style={{ pointerEvents: 'none' }}>
+              <Dropzone.Accept>
+                <AddPhotoAlternateIcon />
+              </Dropzone.Accept>
+              <Dropzone.Idle>
+                <ImageIcon />
+              </Dropzone.Idle>
+              <Dropzone.Reject>
+                <BlockIcon />
+              </Dropzone.Reject>
+              <div>
+                <Text size='lg' inline>
+                  {t('common.moveFileOrClick')}
+                </Text>
+              </div>
+            </Group>
+          </Dropzone>
+          <Text size='xl' ta='center'>
+            {t('common.or')}
+          </Text>
           <TextField
             disabled={isUploading}
             onPaste={handleLinkPaste}
             placeholder={t('common.insertImageLink')}
-            className='link-input'
             error={!isCorrectUrl}
             helperText={!isCorrectUrl ? t('common.incorrectLink') : undefined}
             variant='outlined'
           />
-        </DialogContent>
-      </Dialog>
+        </Stack>
+      </Modal>
       <Button variant='outlined' color='primary' onClick={toggleDialog} className={buttonClass}>
         {buttonTitle}
       </Button>

@@ -13,7 +13,7 @@ const FieldLabel: FC<FieldLabelProps> = ({ label, hint }) => {
   const labelElement = typeof label === 'string' ? <Typography>{label}</Typography> : label;
   return (
     <Grid container alignItems='center' spacing={1}>
-      <Grid item>{labelElement}</Grid>
+      <Grid>{labelElement}</Grid>
       {hint && <Hint text={hint} />}
     </Grid>
   );

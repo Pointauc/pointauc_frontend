@@ -5,12 +5,16 @@ import './Slot.scss';
 import './SlotCompact.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { TextInput } from '@mantine/core';
 
 import { Slot } from '@models/slot.model.ts';
 import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '@reducers/Slots/Slots.ts';
 import { animateValue } from '@utils/common.utils.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { RootState } from '@reducers';
+import { numberUtils } from '@utils/common/number';
+
+import styles from './SlotComponent.module.css';
 
 interface SlotComponentProps {
   slot: Slot;
@@ -91,13 +95,17 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       if (amount === null) {
         amountInput.current.value = '';
       } else {
-        animateValue(
-          amountInput.current,
-          Number(amountInput.current.value),
-          Number(amount),
-          marblesAuc || !isAmountInitialized.current ? 0 : undefined,
-        );
+        const finalValue = numberUtils.roundFixed(amount, 2);
+        if (finalValue.toString() !== amountInput.current.value) {
+          animateValue(
+            amountInput.current,
+            Number(amountInput.current.value),
+            finalValue,
+            marblesAuc || !isAmountInitialized.current ? 0 : undefined,
+          );
+        }
       }
+
       isAmountInitialized.current = true;
     }
   }, [amount, marblesAuc]);
@@ -107,22 +115,28 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
   }, [name, extra]);
 
   const extraLength = Number(currentExtra?.toString().length);
-  const extraFieldWidth = `${extraLength > 2 ? 3 + extraLength : 6}ch`;
+  const extraFieldWidth = `${extraLength > 4 ? 2 + extraLength * 1.1 : 7}ch`;
 
   return (
     <>
-      <input
-        className='slot-name slot-input'
+      <TextInput
+        variant='unstyled'
+        size='lg'
+        classNames={{ input: styles.input, root: styles.name }}
+        radius={0}
         placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
         onKeyPress={createNewSlotOnEnter}
         value={currentName ?? ''}
       />
-      {showChances && <span className='slot-chance' ref={percentsRef} />}
-      <input
+      {showChances && <span className='slot-chance' title={t('auc.chanceTooltip')} ref={percentsRef} />}
+      <TextInput
+        variant='unstyled'
+        size='lg'
+        classNames={{ input: styles.input, root: styles.money }}
+        radius={0}
         hidden={hideAmounts}
-        className='slot-money slot-input'
         placeholder={t('common.currencySign')}
         ref={amountInput}
         onKeyPress={createNewSlotOnEnter}
@@ -131,8 +145,12 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
       <button className='slot-icon-button slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')}>
         <AddIcon />
       </button>
-      <input
-        className='slot-money slot-input'
+      <TextInput
+        fz='xl'
+        variant='unstyled'
+        size='lg'
+        classNames={{ input: styles.input, root: styles.extra }}
+        radius={0}
         style={{ width: extraFieldWidth }}
         placeholder={t('common.currencySign')}
         onBlur={handleExtraBlur}

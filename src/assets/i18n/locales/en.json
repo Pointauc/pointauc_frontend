@@ -1,4 +1,10 @@
 {
+  "trailerWindow": {
+    "noResults": "No results found or the feature is temporarily unavailable. Please try again later."
+  },
+  "resizablePanel": {
+    "description": "You can move the window around the screen and change its size by dragging the bottom right corner."
+  },
   "documentation": {
     "content": "<h1>Auction Service for Streamers - <a href=\"https://pointauc.com\">pointauc.com</a></h1>\n\n<h2>Overview</h2>\n<p>\n    This service is designed to enhance the interaction between streamers and their audiences by providing a fun and engaging way to make decisions during live streams. Whether it's deciding which game a streamer should play next, which video or movie they should watch with their audience, or running a lottery or contest, this service offers a versatile set of tools to make your streams more interactive and entertaining.\n</p>\n<p>\n    The service features seamless integration with <strong>Twitch Channel Points</strong> and <strong>Donation Alerts</strong>, allowing streamers to easily manage incoming donations and channel point redemptions. This saves valuable time and energy, enabling streamers to focus on what they do best—entertaining their audience!\n</p>\n\n<h2>Integrations</h2>\n<p>The Pointauc supports the following integrations to enhance your streaming experience:</p>\n<ul>\n    <li><strong>Twitch Channel Points</strong>:\n        <p>Allows viewers to use their channel points to participate in auctions, lotteries, and other activities directly through Twitch.</p>\n    </li>\n    <li><strong>Donation Alerts</strong>:\n        <p>Integrates with Donation Alerts to manage monetary donations, which can be used in place of or alongside channel points in auctions and contests.</p>\n    </li>\n    <li><strong>DonatePay</strong> (another donation service)</li>\n</ul>\n\n<h2>Features</h2>\n\n<h3>1. <strong>Game &amp; Content Auctions</strong></h3>\n<ul>\n    <li>Streamers can create auctions where viewers bid using channel points or donations to decide which game should be played next or which content should be watched during the stream or any other activity.</li>\n</ul>\n\n<h3>2. <strong>Lotteries &amp; Contests</strong></h3>\n<ul>\n    <li>Run exciting lotteries or contests where viewers can participate using their channel points or donations. Multiple formats are available, including random draw, highest bid, or entry-based selection.</li>\n</ul>\n\n<h3>3. <strong>Decision-Making Tools</strong></h3>\n<ul>\n    <li>Choose from a variety of interactive decision-making tools to select winners or make choices:\n        <ul>\n            <li><strong>Wheel of Fortune</strong>: Spin a wheel to randomly select a winner or outcome.</li>\n            <li><strong>Dropout Wheel</strong>: Eliminate options gradually until only one remains.</li>\n            <li><strong>Battle Royale</strong>: A competitive elimination-style game where participants are gradually removed until the final winner is determined.</li>\n        </ul>\n    </li>\n</ul>\n\n<h3>4. <strong>Real-Time Updates</strong></h3>\n<ul>\n    <li>Real-time tracking and updates ensure that viewers and streamers are always in sync with the latest bids.</li>\n</ul>\n\n<h3>5. <strong>Customizable Settings</strong></h3>\n<ul>\n    <li>Streamers can personalize the website's appearance, automate timer rules, and add custom enhancements like <a href=\"https://store.steampowered.com/app/1170970/Marbles_on_Stream/\">Marbles on Stream Auction</a> and more. Additionally, the service supports automatic bid creation using channel points, simplifying a work for the streamer.</li>\n</ul>\n\n<h2>Suggestions and bug reports</h2>\n<p>You can create an <a href=\"https://github.com/Pointauc/pointauc_frontend/issues\">issue</a> if you want to suggest something or tell about a bug.</p>"
   },
@@ -100,6 +106,7 @@
     "addPosition": "Add Lot",
     "addToRandomSlot": "Add to Random Slot",
     "showRules": "Show rules",
+    "chanceTooltip": "Text is rounded to 2 decimal places, but the chance of winning is still calculated based on the actual value.",
     "casino": {
       "description": "You need to spin the normal wheel; if your selected lot wins, the bid will multiply by a specified number, otherwise, it will be reset.",
       "selectLot": "Lucky Wheel",
@@ -173,7 +180,8 @@
     "to": "to",
     "copyLink": "Copy link",
     "linkCopied": "Link copied",
-    "copyFailed": "Copy failed"
+    "copyFailed": "Copy failed",
+    "needHelp": "Need help?"
   },
   "history": {
     "addedTo": "Added to",
@@ -191,7 +199,7 @@
     "addAmount": "Add Cost",
     "delete": "Delete Slot",
     "extra": "Extra",
-    "trailer": "Trailer"
+    "trailer": "Trailer (YouTube)"
   },
   "menu": {
     "items": {
@@ -199,7 +207,7 @@
         "title": "Auction"
       },
       "guides": {
-        "title": "About the website"
+        "title": "User manual"
       },
       "history": {
         "title": "History"
@@ -283,7 +291,11 @@
       "showTotal": "Show Total Amount",
       "showWinningChances": "Show Winning Chances",
       "sortBids": "Sort Bids queue",
-      "uploadBackground": "Upload Background"
+      "uploadBackground": "Upload Background",
+      "backgroundOverlayOpacity": "Overlay opacity",
+      "backgroundBlur": "Blur",
+      "resetBackground": "Remove custom background",
+      "backgroundAlt": "Background unavailable. Please upload new image."
     },
     "donations": {
       "donations": "Donations",
@@ -368,11 +380,28 @@
   "wheel": {
     "hideInactive": "Hide dropped lots",
     "totalItems": "Participants in the wheel - {{amount}}",
-    "newDropout": {
+    "typeParticipants": "Or enter participants manually",
+    "import": {
+      "title": "Import participants",
+      "rulesTitle": "Import rules",
+      "rules": [
+        "Simple text file (extension does not matter)",
+        "Positions are separated by a new line",
+        "You can specify the cost through a comma - \"Name,123\"",
+        "<1>More detailed description and examples</1>"
+      ],
+      "submitDisabled": "Enter participants"
+    },
+    "dropout": {
+      "helpNotification": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>",
       "explanation": {
-        "button": "HOW DOES IT WORK?",
-        "title": "HOW DOES IT WORK?",
-        "content": "<h2>Be Sure to Read Before Spinning</h2>\n<p class='info'>All randomness and calculations occur beforehand, before the first spin:</p>\n<ol>\n<li>The final winner is determined according to the odds of the regular wheel</li>\n<li>A sequence of other eliminated participants is generated to create suspense</li>\n</ol>\n<h2>What Do the Sector Sizes Mean?</h2>\n<p class='info'>\nWhat you see on the wheel does not reflect the chances during the spin; it is designed for aesthetics. The wheel adjusts the winners according to a predetermined order.\n</p>\n"
+        "button": "how does it work?"
+      }
+    },
+    "duel": {
+      "helpNotification": "You can read more about the <2>battle royal</2> mode in our <1>user manual (battle-royal)</1>",
+      "explanation": {
+        "button": "how does it work?"
       }
     },
     "dropoutVariant": {
@@ -393,8 +422,13 @@
       "normal": "Normal"
     },
     "howItWorks": "How It Works?",
-    "importToWheel": "Import to Wheel",
-    "loadCustomMessage": "Load your image",
+    "coreImage": {
+      "expandPanel": "Select image in the wheel",
+      "wheelOverlay": "Change",
+      "customImageDialogTitle": "Add your image for the wheel"
+    },
+    "importToWheel": "Import participants",
+    "loadCustomMessage": "Upload your image",
     "lotDeleteWarning": "This action will delete the lot not only from the wheel but also from the auction itself.",
     "lotWasDeleted": "lot was deleted",
     "nesting": "Nesting",
@@ -415,6 +449,7 @@
     "useRandomOrg": "Use random.org service",
     "wheel": "Wheel",
     "winner": "Winner",
-    "randomSpin": "Random spin time"
+    "randomSpin": "Random spin time",
+    "helpNotification": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>"
   }
 }

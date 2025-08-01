@@ -1,6 +1,6 @@
 import { FC, MouseEvent, useCallback, useState } from 'react';
 import { ButtonBase, Popover } from '@mui/material';
-import { ColorResult, SketchPicker } from 'react-color';
+import SketchPicker, { SketchProps } from '@uiw/react-color-sketch';
 
 interface ColorPickerProps {
   value: string;
@@ -11,8 +11,8 @@ interface ColorPickerProps {
 const ColorPicker: FC<ColorPickerProps> = ({ value, onChange, onBlur }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleColorChange = useCallback(
-    ({ hex }: ColorResult) => {
+  const handleColorChange = useCallback<Required<SketchProps>['onChange']>(
+    ({ hex }) => {
       onChange(hex);
     },
     [onChange],

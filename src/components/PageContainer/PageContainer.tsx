@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import { Container, ContainerProps, Typography } from '@mui/material';
 import classNames from 'classnames';
 import './PageContainer.scss';
@@ -17,8 +17,8 @@ import './PageContainer.scss';
 //   }),
 // );
 
-interface PgeContainerProps extends ContainerProps {
-  title?: string;
+interface PgeContainerProps extends Omit<ContainerProps, 'title'> {
+  title?: string | ReactNode;
 }
 
 const PageContainer: FC<PgeContainerProps> = ({ title, children, className, ...props }) => {

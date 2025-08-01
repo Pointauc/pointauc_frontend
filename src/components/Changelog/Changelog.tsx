@@ -38,19 +38,23 @@ const Changelog: FC<ChangelogProps> = ({ updates }) => {
     <Grid className='changelog'>
       {updates.map(({ date, newFeatures, improvements, fixes, videoPreview }) => (
         <Grid container direction='column' spacing={2} key={date}>
-          <Grid className='changelog-date' container item justifyContent='center' alignItems='center'>
+          <Grid
+            className='changelog-date'
+            container
+            justifyContent='center'
+            alignItems='center'>
             <Divider className='changelog-date-divider' />
             <Typography className='changelog-date-text'>{dayjs(date).format('YYYY-MM-DD HH:mm')}</Typography>
             <Divider className='changelog-date-divider' />
           </Grid>
           {videoPreview && (
-            <Grid alignSelf='center' item>
+            <Grid alignSelf='center'>
               <Link href={videoPreview} target='_blank'>
                 Video Preview
               </Link>
             </Grid>
           )}
-          <Grid item>
+          <Grid>
             {newFeatures && (
               <FeaturesList title={t('changelog.types.functionality')} data={newFeatures} color='success' />
             )}

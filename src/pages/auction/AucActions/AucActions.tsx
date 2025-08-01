@@ -142,9 +142,9 @@ const AucActions: React.FC = () => {
 
   return (
     <Grid container justifyContent='center' className='options-wrapper'>
-      <Grid item>
-        <Grid container item spacing={4}>
-          <Grid item>
+      <Grid>
+        <Grid container spacing={4}>
+          <Grid>
             <ButtonGroup size='large' className='actions-group'>
               <Tooltip title='GitHub'>
                 <Link target='_blank' rel='noopener noreferrer' href='https://github.com/Pointauc/pointauc_frontend'>
@@ -159,7 +159,7 @@ const AucActions: React.FC = () => {
             </ButtonGroup>
           </Grid>
 
-          <Grid item>
+          <Grid>
             <ButtonGroup size='large' className='actions-group'>
               <Tooltip title={t('auc.downloadMarbles')}>
                 <Button onClick={downloadMarbles} startIcon={<DownloadIcon />} />
@@ -180,7 +180,7 @@ const AucActions: React.FC = () => {
             </ButtonGroup>
           </Grid>
 
-          <Grid item>
+          <Grid>
             <CheckboxButtonGroup
               options={availableOptions}
               onChangeActive={selectOptions}
@@ -189,7 +189,6 @@ const AucActions: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-
       <Dialog
         open={confirmRestoreOpen}
         onClose={handleRestoreClose}
@@ -202,11 +201,9 @@ const AucActions: React.FC = () => {
           <SaveLoad />
         </DialogContent>
       </Dialog>
-
       <div className='options'>
         <LanguageDropdown />
       </div>
-
       <div className='total-sum-wrapper'>
         {isTotalVisible && <Typography className='total-sum'>{t('auc.total', { totalSum })}</Typography>}
         <IconButton onClick={toggleTotalSumVisability} className='hide-sum' size='large'>

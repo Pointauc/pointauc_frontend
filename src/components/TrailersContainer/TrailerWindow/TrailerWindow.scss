@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .search-form {
   display: flex;
@@ -30,12 +30,15 @@
   }
 
   .trailers-list {
-
   }
 }
 
 .interaction {
   .youtube-container {
     pointer-events: none;
+    overflow: visible;
   }
+}
+.youtube-container {
+  overflow: visible;
 }

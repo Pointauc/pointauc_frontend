@@ -1,3 +1,8 @@
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import '@mantine/dropzone/styles.css';
+import '@styles/index.scss';
+
 import { configureStore } from '@reduxjs/toolkit';
 import dayjs from 'dayjs';
 import { createRoot } from 'react-dom/client';
@@ -8,6 +13,7 @@ import thunk from 'redux-thunk';
 import { Theme } from '@mui/material';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import { Notifications } from '@mantine/notifications';
 
 import ROUTES from '@constants/routes.constants.ts';
 import rootReducer, { RootState } from '@reducers/index.ts';
@@ -25,9 +31,9 @@ import INTEGRATIONS from '@components/Integration/integrations.ts';
 import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
 
-import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
-import '@styles/index.scss';
+import App from './App.tsx';
+import MantineProvider from './MantineProvider.tsx';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -111,7 +117,10 @@ const root = createRoot(container!);
 root.render(
   <Provider store={store}>
     <ThemeWrapper>
-      <RouterProvider router={router} />
+      <MantineProvider>
+        <Notifications />
+        <RouterProvider router={router} />
+      </MantineProvider>
     </ThemeWrapper>
   </Provider>,
 );

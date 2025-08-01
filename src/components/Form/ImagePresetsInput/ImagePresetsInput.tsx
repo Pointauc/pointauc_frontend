@@ -2,7 +2,7 @@ import { FC, ReactElement, useCallback, useRef, useState } from 'react';
 import { Button, Fade, Paper, Popper } from '@mui/material';
 import './ImagePresetsInput.scss';
 // @ts-ignore
-import { CloudinaryContext, Image, Transformation } from 'cloudinary-react';
+// import { CloudinaryContext, Image, Transformation } from 'cloudinary-react';
 
 import { getCloudifyUrl } from '@utils/url.utils.ts';
 
@@ -35,7 +35,7 @@ const ImagePresetsInput: FC<ImagePresetsInputProps> = ({ buttonTitle, images, on
         {({ TransitionProps }): ReactElement => (
           <Fade {...TransitionProps} timeout={350}>
             <Paper>
-              <CloudinaryContext cloudName='dn4ue0pj9' className='image-container'>
+              {/* <CloudinaryContext cloudName='dn4ue0pj9' className='image-container'>
                 {images.map((image) => (
                   <Button key={image} className='image-item' onClick={createImageSelectHandler(image)}>
                     <div className='image-item-shadow' />
@@ -44,7 +44,7 @@ const ImagePresetsInput: FC<ImagePresetsInputProps> = ({ buttonTitle, images, on
                     </Image>
                   </Button>
                 ))}
-              </CloudinaryContext>
+              </CloudinaryContext> */}
             </Paper>
           </Fade>
         )}

@@ -4,6 +4,7 @@
   height: 100vh;
   padding: 1.5em 2em 0.5em 2em !important;
   overflow: hidden !important;
+  max-width: none !important;
 
   &.centralize {
     align-items: center;
@@ -26,5 +27,12 @@
     min-height: 0;
     min-width: 0;
     gap: 0.5em;
+    z-index: 1;
+  }
+
+  &-left-column {
+    @media (min-width: 1800px) {
+      min-width: 350px;
+    }
   }
 }

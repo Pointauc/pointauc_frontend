@@ -10,7 +10,7 @@ import FormSwitch from '@components/Form/FormSwitch/FormSwitch';
 
 import './MockBidForm.scss';
 
-const defaultPurchase: Purchase = {
+const defaultPurchase: MockBidFormData = {
   cost: 100,
   username: 'test',
   message: 'test',
@@ -19,16 +19,36 @@ const defaultPurchase: Purchase = {
   color: '#000000',
   id: '1',
   source: 'Mock',
+  randomValues: true,
 };
+
+interface MockBidFormData extends Purchase {
+  randomValues: boolean;
+}
 
 const MockBidForm: FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-  const formMethods = useForm<Purchase>({ defaultValues: defaultPurchase });
+  const formMethods = useForm<MockBidFormData>({ defaultValues: defaultPurchase });
   const { handleSubmit, control } = formMethods;
 
   const onSubmit = useCallback(
-    (data: Purchase) => dispatch(processRedemption({ ...data, id: Math.random().toString() })),
+    (data: MockBidFormData) => {
+      const { randomValues, ...rest } = data;
+      if (randomValues) {
+        dispatch(
+          processRedemption({
+            ...rest,
+            id: Math.random().toString(),
+            cost: Math.floor(Math.random() * 1000),
+            message: 'Random message ' + Math.random().toString(),
+            username: 'Random username' + Math.random().toString(),
+          }),
+        );
+      } else {
+        dispatch(processRedemption({ ...rest, id: Math.random().toString() }));
+      }
+    },
     [dispatch],
   );
 
@@ -46,6 +66,9 @@ const MockBidForm: FC = () => {
         </FormGroup>
         <FormGroup row className='auc-settings-row'>
           <FormSwitch name='isDonation' label='Is donation' control={control} />
+        </FormGroup>
+        <FormGroup row className='auc-settings-row'>
+          <FormSwitch name='randomValues' label='Random values' control={control} />
         </FormGroup>
         <Button type='submit' variant='contained' color='primary'>
           Send

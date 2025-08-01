@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Backdrop, Button, Input } from '@mui/material';
 import confetti from 'canvas-confetti';
 import { useDispatch } from 'react-redux';
@@ -62,22 +62,22 @@ const AukusBackdrop = ({ onClose, open, winner }: AukusBackdropProps) => {
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
       open={open}
     >
-      <Grid2 direction='column' container spacing={4} alignItems='center'>
+      <Grid direction='column' container spacing={4} alignItems='center'>
         <div className='winner-label'>Победитель</div>
-        <Grid2 width='100%'>
+        <Grid width='100%'>
           <Input
             inputProps={{ className: 'winner-input', sx: { width: inputWidth } }}
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
-        </Grid2>
-        <Grid2 container spacing={2}>
-          <Grid2>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid>
             <Button onClick={onClose} size='large' variant='outlined' color='blank'>
               Закрыть
             </Button>
-          </Grid2>
-          <Grid2>
+          </Grid>
+          <Grid>
             <LoadingButton
               isLoading={loading}
               onClick={saveAukusResult}
@@ -88,9 +88,9 @@ const AukusBackdrop = ({ onClose, open, winner }: AukusBackdropProps) => {
             >
               Выставить как текущий ход
             </LoadingButton>
-          </Grid2>
-        </Grid2>
-      </Grid2>
+          </Grid>
+        </Grid>
+      </Grid>
     </Backdrop>
   );
 };

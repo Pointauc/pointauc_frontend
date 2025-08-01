@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, lazy, Suspense, useCallback, useMemo, useState } from 'react';
 
 import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
 import { Score } from '@models/statistic.ts';
@@ -8,8 +8,8 @@ import PageContainer from '@components/PageContainer/PageContainer';
 import { store } from '../../main.tsx';
 
 import Scoreboard from './Scoreboard/Scoreboard';
-import UsersChart from './UsersChart/UsersChart';
-import SlotsChart from './SlotsChart/SlotsChart';
+const UsersChart = lazy(() => import('./UsersChart/UsersChart'));
+const SlotsChart = lazy(() => import('./SlotsChart/SlotsChart'));
 
 const COST_SELECTOR = {
   ALL: ({ cost }: PurchaseLog): number => cost,
@@ -58,14 +58,16 @@ const Statistic: FC = () => {
   return (
     <div>
       <PageContainer title='Статистика'>
-        <div style={{ display: 'flex', paddingBottom: 30 }}>
-          <Scoreboard scoreboard={userScoreboard} />
-          <UsersChart scoreboard={userScoreboard} />
-        </div>
-        <div style={{ display: 'flex' }}>
-          <Scoreboard scoreboard={slotsScoreboard} />
-          <SlotsChart slotsMap={slotsMap} />
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <div style={{ display: 'flex', paddingBottom: 30 }}>
+            <Scoreboard scoreboard={userScoreboard} />
+            <UsersChart scoreboard={userScoreboard} />
+          </div>
+          <div style={{ display: 'flex' }}>
+            <Scoreboard scoreboard={slotsScoreboard} />
+            <SlotsChart slotsMap={slotsMap} />
+          </div>
+        </Suspense>
       </PageContainer>
     </div>
   );

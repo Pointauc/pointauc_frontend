@@ -15,13 +15,13 @@ const NewSlotForm = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { showChances, background } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const [enterIconVisible, setEnterIconVisible] = useState(false);
 
   const nameInput = useRef<HTMLInputElement>();
   const amountInput = useRef<HTMLInputElement>();
 
-  const wrapperClasses = classNames('new-slot-form', { 'custom-background': background });
+  const wrapperClasses = classNames('new-slot-form');
 
   const showEnterIcon = () => setEnterIconVisible(true);
   const hideEnterIcon = () => setEnterIconVisible(false);

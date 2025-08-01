@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useWatch } from 'react-hook-form';

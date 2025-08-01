@@ -1,6 +1,6 @@
 import React, { MouseEvent, useCallback, useState } from 'react';
 import { Button, Grid, Popover } from '@mui/material';
-import { ColorChangeHandler, SketchPicker } from 'react-color';
+import SketchPicker, { SketchProps } from '@uiw/react-color-sketch';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useCurrentEditor } from '@tiptap/react';
@@ -21,7 +21,7 @@ const TextColor = () => {
     return color ?? '#ffffff';
   };
 
-  const changeColor: ColorChangeHandler = ({ hex }) => {
+  const changeColor: Required<SketchProps>['onChange'] = ({ hex }) => {
     editor?.commands.setColor(hex);
   };
   const opened = !!anchorEl;

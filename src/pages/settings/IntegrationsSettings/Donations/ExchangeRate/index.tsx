@@ -4,7 +4,7 @@ import { Link, SvgIcon, Typography } from '@mui/material';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 
 import PointsIcon from '@assets/icons/channelPoints.svg?react';
 import FormInput from '@components/Form/FormInput/FormInput.tsx';
@@ -20,9 +20,9 @@ const ExchangeRate = () => {
   const showExample = pointsRate > 1;
 
   return (
-    <Grid2 container alignItems='center' color='#f3f3f3' sx={{ mb: showExample ? 3 : 0 }}>
+    <Grid container alignItems='center' color='#f3f3f3' sx={{ mb: showExample ? 3 : 0 }}>
       <Typography sx={{ mr: 4 }}>{t('settings.donations.conversion')}</Typography>
-      <Grid2 container alignItems='center' position='relative'>
+      <Grid container alignItems='center' position='relative'>
         <Typography fontSize='larger'>{`1 ${t('common.currencySign')}`}</Typography>
         <ForwardIcon
           sx={{
@@ -48,7 +48,7 @@ const ExchangeRate = () => {
               .join(' | ')}
           </Typography>
         )}
-      </Grid2>
+      </Grid>
       <Link
         sx={{ display: 'flex', alignItems: 'center', gap: 1, userSelect: 'none' }}
         onClick={() => setValue('reversePointsRate', !reversePointsRate, { shouldDirty: true, shouldTouch: true })}
@@ -56,7 +56,7 @@ const ExchangeRate = () => {
         {t('settings.donations.switchRates')}
         <SwapHorizIcon fontSize='medium' />
       </Link>
-    </Grid2>
+    </Grid>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { MouseEvent, useCallback, useState } from 'react';
 import { useCurrentEditor } from '@tiptap/react';
-import { ColorChangeHandler, SketchPicker } from 'react-color';
 import { Button, Grid, Popover } from '@mui/material';
+import SketchPicker, { SketchProps } from '@uiw/react-color-sketch';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
@@ -22,7 +22,7 @@ const FillColor = () => {
     return color ?? '#ffffff';
   };
 
-  const changeColor: ColorChangeHandler = ({ hex }) => {
+  const changeColor: Required<SketchProps>['onChange'] = ({ hex }) => {
     editor?.commands.setHighlight({ color: hex });
   };
   const opened = !!anchorEl;

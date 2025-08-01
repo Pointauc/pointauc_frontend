@@ -1,22 +1,23 @@
-import { DragEvent, memo, useCallback, useRef, useState } from 'react';
-import './Slot.scss';
-import { Menu, MenuItem } from '@mui/material';
+import { Badge, Center, Menu, Paper, useMantineTheme } from '@mantine/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { useDispatch, useSelector } from 'react-redux';
+import TagIcon from '@mui/icons-material/Tag';
 import classNames from 'classnames';
-import { ThunkDispatch } from 'redux-thunk';
+import { DragEvent, memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
-import { addBid, deleteSlot, setSlotName } from '@reducers/Slots/Slots.ts';
 import { Slot } from '@models/slot.model.ts';
-import { RootState } from '@reducers';
-import { Purchase, setDraggedRedemption, updateExistBids } from '@reducers/Purchases/Purchases.ts';
-import slotNamesMap from '@services/SlotNamesMap';
 import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows.ts';
-import { handleDragOver } from '@utils/common.utils.ts';
+import { Purchase, setDraggedRedemption, updateExistBids } from '@reducers/Purchases/Purchases.ts';
+import { addBid, deleteSlot, setSlotName } from '@reducers/Slots/Slots.ts';
+import slotNamesMap from '@services/SlotNamesMap';
 import bidUtils from '@utils/bid.utils';
+import { handleDragOver } from '@utils/common.utils.ts';
 
+import styles from './DroppableSlot.module.css';
+import './Slot.scss';
 import SlotComponent from './SlotComponent';
 
 interface DroppableSlotProps {
@@ -26,9 +27,7 @@ interface DroppableSlotProps {
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
   const { t } = useTranslation();
-  const background = useSelector((root: RootState) => root.aucSettings.settings.background);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const [isExtraOpen, setIsExtraOpen] = useState<boolean>(false);
   const extraIcon = useRef<HTMLButtonElement>(null);
   const { id, amount, name } = slot;
   const slotElement = useRef<HTMLDivElement>(null);
@@ -70,7 +69,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
     dispatch(deleteSlot(id));
   };
 
-  const slotWrapperClasses = classNames('slot-wrapper', { 'custom-background': background });
+  const slotWrapperClasses = classNames('slot-wrapper', styles.card);
 
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
@@ -101,50 +100,57 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
     updateOverStyle(-1);
   }, [updateOverStyle]);
 
-  const openExtra = useCallback(() => setIsExtraOpen(true), []);
-  const closeExtra = useCallback(() => setIsExtraOpen(false), []);
-
   const handleOpenTrailer = useCallback(() => {
-    closeExtra();
     dispatch(openTrailer(name || ''));
-  }, [closeExtra, dispatch, name]);
+  }, [dispatch, name]);
+
+  const theme = useMantineTheme();
 
   return (
-    <div
+    <Paper
+      radius='md'
+      shadow='md'
       className={slotWrapperClasses}
+      ref={slotElement}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      <div className='slot' ref={slotElement}>
-        <div className='slot-index'>{`${index}.`}</div>
-        <div className='slot-fast-index'>{`#${slot.fastId}`}</div>
+      <div className='slot'>
+        <div className={styles.index}>{`${index}`}</div>
+        <Center className={styles.fastIndexWrapper}>
+          <Badge
+            size='lg'
+            color={`${theme.primaryColor}.9`}
+            variant='light'
+            classNames={{ root: styles.fastIndex, section: styles.fastIndexIcon }}
+            leftSection={<TagIcon fontSize='small' />}
+          >
+            {`${slot.fastId}`}
+          </Badge>
+        </Center>
         <SlotComponent slot={slot} />
       </div>
       <button onClick={handleDelete} className=' slot-icon-button delete-button' title={t('lot.delete')}>
         <DeleteIcon />
       </button>
-      <button
-        onClick={openExtra}
-        className='slot-icon-button delete-button'
-        title={t('lot.extra')}
-        aria-controls='extra'
-        ref={extraIcon}
-      >
-        <MoreHorizIcon />
-      </button>
-      <Menu
-        id='extra'
-        open={isExtraOpen}
-        onClose={closeExtra}
-        anchorEl={extraIcon.current}
-        PaperProps={{ style: { width: '20ch' } }}
-        TransitionProps={{ timeout: 100 }}
-      >
-        <MenuItem onClick={handleOpenTrailer}>{t('lot.trailer')}</MenuItem>
+      <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow>
+        <Menu.Target>
+          <button
+            className='slot-icon-button delete-button'
+            title={t('lot.extra')}
+            aria-controls='extra'
+            ref={extraIcon}
+          >
+            <MoreHorizIcon />
+          </button>
+        </Menu.Target>
+        <Menu.Dropdown id='extra'>
+          <Menu.Item onClick={handleOpenTrailer}>{t('lot.trailer')}</Menu.Item>
+        </Menu.Dropdown>
       </Menu>
-    </div>
+    </Paper>
   );
 };
 

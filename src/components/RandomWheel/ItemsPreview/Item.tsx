@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { Divider } from '@mui/material';
 import classNames from 'classnames';
