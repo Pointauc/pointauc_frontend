@@ -15,7 +15,10 @@
     "insertImageLink": "Вставте посілання на зображення...",
     "incorrectLink": "Неправільне посілання",
     "authProgress": "Авторізація...",
-    "accountProgress": "Завантаження акаунта..."
+    "accountProgress": "Завантаження акаунта...",
+    "copyLink": "Копіювати посилання",
+    "linkCopied": "Посилання скопійовано",
+    "copyFailed": "Копіювання не вдалося",
   },
   "auc": {
     "addPosition": "Додаті Лот",

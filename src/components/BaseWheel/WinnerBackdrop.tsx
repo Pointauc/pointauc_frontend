@@ -1,5 +1,5 @@
 import React, { Key, useMemo, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Link, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import Grid from '@mui/material/Grid';
@@ -8,6 +8,7 @@ import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import BidsManagementDialog from '@components/BidsManagementConfirmation/Dialog.tsx';
 import { pointsManagementPresets } from '@components/BidsManagementConfirmation/utils.ts';
+import WinnerBackdropName from '@components/BaseWheel/WinnerBackdropName.tsx';
 
 interface WinnerBackdropProps {
   name: string;
@@ -37,13 +38,7 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
 
   return (
     <div style={{ pointerEvents: 'all' }} className='wheel-winner'>
-      {name.startsWith('https://') ? (
-        <Link href={name} target='_blank'>
-          {name}
-        </Link>
-      ) : (
-        <>{name}</>
-      )}
+      <WinnerBackdropName name={name} />
       <Grid container gap={2}>
         {onDelete && (
           <>

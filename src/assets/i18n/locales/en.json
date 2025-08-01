@@ -178,6 +178,9 @@
     "unsavedChanges": "Apply unsaved changes?",
     "from": "from",
     "to": "to",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "copyFailed": "Copy failed",
     "needHelp": "Need help?"
   },
   "history": {
