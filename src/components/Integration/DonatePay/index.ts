@@ -50,7 +50,7 @@ const donatePay: Integration.Config<TokenFlow> = {
   authFlow,
   pubsubFlow: buildCentrifugeFlow({
     version: '2',
-    url: 'wss://centrifugo.donatepay.ru:43002/connection/websocket',
+    url: 'wss://centrifugo.donatepay.ru:443/connection/websocket',
     parseMessage,
     subscribeParams: async () => ({
       access_token: authFlow.getAccessToken(),
