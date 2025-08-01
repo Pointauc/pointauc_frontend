@@ -8,12 +8,12 @@ https://pointauc.com/docs/
 
 ## 🛠️ Tech Stack (at a glance)
 
-- **React 18 + Vite + TypeScript** – modern UI framework, fast bundler and type safety
+- **React 18 + Vite + TypeScript**
 - **Redux Toolkit** – global state management
-- **Mantine & Material-UI (MUI)** – component libraries for rapid UI development (gradually migrating to Mantine)
-- **Socket.IO & Centrifuge** – real-time communication with the backend
+- **Mantine & Material-UI (MUI)** – component libraries (gradually migrating to Mantine)
+- **Socket.IO & Centrifuge** – real-time communication with the backend and external services
 - **i18next** – internationalisation
-- **Sass / CSS-Modules** – styling
+- **Sass / CSS-Modules** – styling (CSS-Modules preferred)
 
 ## 🚀 Getting Started
 
@@ -26,10 +26,10 @@ https://pointauc.com/docs/
 
 ```bash
 # install dependencies
-npm install
+yarn install
 
 # start the dev server (Vite)
-npm run dev
+yarn dev
 ```
 
 ## 📝 Contribution guidelines
