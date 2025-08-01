@@ -55,16 +55,17 @@ export interface BaseWheelProps<T extends WheelItem> {
   onCoreImageChange?: (image: string) => void;
   resetWheel?: boolean;
   delay?: number;
+  dropOut?: boolean;
 }
 
 const calculateFixedAngle = (duration: number): number => duration * 270;
 
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
-  const { items, resetWheel, deleteItem, isShuffle, controller, coreImage, onCoreImageChange } = props;
+  const { items, resetWheel, deleteItem, isShuffle, controller, coreImage, onCoreImageChange, dropOut } = props;
   const { t } = useTranslation();
   const { drawWheel, highlightItem, eatAnimation } = useWheelDrawer();
 
-  const [winnerItem, setWinnerItem] = useState<WheelItem>();
+  const [winnerItem, setWinnerItem] = useState<WheelItem | undefined>();
 
   const wheelCanvas = useRef<HTMLCanvasElement>(null);
   const selectorCanvas = useRef<HTMLCanvasElement>(null);
@@ -274,7 +275,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
           <WinnerBackdrop
             name={winnerItem.name}
             id={winnerItem.id}
+            winnerName={dropOut && items.length === 1 ? items[0]?.name : undefined}
             onDelete={deleteItem ? () => deleteItem(winnerItem.id) : undefined}
+            dropOut={dropOut}
           />
         )}
       </div>

@@ -29,6 +29,7 @@
     "@mui/system": "^7.1.0",
     "@mui/x-data-grid": "^6.18.0",
     "@reduxjs/toolkit": "^1.9.7",
+    "@tabler/icons-react": "^3.34.1",
     "@tiptap/extension-color": "^2.3.0",
     "@tiptap/extension-highlight": "^2.3.0",
     "@tiptap/extension-history": "^2.3.0",

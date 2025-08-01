@@ -13,11 +13,13 @@ import WinnerBackdropName from '@components/BaseWheel/WinnerBackdropName.tsx';
 interface WinnerBackdropProps {
   name: string;
   id: Key;
+  winnerName?: string;
   onDelete?: () => void;
+  dropOut?: boolean;
 }
 
 const WinnerBackdrop = (props: WinnerBackdropProps) => {
-  const { name, onDelete, id } = props;
+  const { name, onDelete, id, winnerName, dropOut } = props;
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -38,7 +40,7 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
 
   return (
     <div style={{ pointerEvents: 'all' }} className='wheel-winner'>
-      <WinnerBackdropName name={name} />
+      <WinnerBackdropName name={name} winnerName={winnerName} dropout={dropOut} />
       <Grid container gap={2}>
         {onDelete && (
           <>

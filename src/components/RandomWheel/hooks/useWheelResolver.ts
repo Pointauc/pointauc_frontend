@@ -3,7 +3,7 @@ import { RefObject, useMemo } from 'react';
 import useBattleRoyal from '@components/RandomWheel/hooks/useBattleRoyal.tsx';
 import useNormalWheel from '@components/RandomWheel/hooks/useNormalWheel.ts';
 import useRuntimeDropout from '@components/RandomWheel/hooks/useRuntimeDropout.ts';
-import useSimulationDropout from '@components/RandomWheel/hooks/useSimulationDropout.ts';
+import useSimulationDropout from '@components/RandomWheel/hooks/useSimulationDropout.tsx';
 import { WheelFormat } from '@constants/wheel.ts';
 import { DropoutVariant, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
 

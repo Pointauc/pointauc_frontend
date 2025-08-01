@@ -1,0 +1,54 @@
+.container {
+  text-align: center;
+}
+
+@keyframes strikethrough {
+  0% {
+    background-size: 0% 3px;
+    opacity: 0.6;
+    top: -8px;
+  }
+  1% {
+    background-size: 1% 3px;
+    opacity: 0.6;
+  }
+  100% {
+    background-size: 100% 3px;
+    opacity: 1;
+    top: 0;
+  }
+}
+
+.dropout {
+  display: inline;
+  position: relative;
+
+  text-decoration: none;
+  background-image: linear-gradient(var(--mantine-color-dark-0), var(--mantine-color-dark-0));
+  background-repeat: no-repeat;
+  background-position: center left;
+  background-size: 100% 3px;
+  opacity: 1;
+  color: var(--mantine-color-dark-0);
+  animation: strikethrough 1500ms ease-in-out;
+}
+
+.loserName {
+  position: absolute;
+}
+
+.winnerName {
+  opacity: 0;
+  animation: fadeIn 500ms ease-in-out 100ms forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

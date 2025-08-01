@@ -181,7 +181,10 @@
     "copyLink": "Copy link",
     "linkCopied": "Link copied",
     "copyFailed": "Copy failed",
-    "needHelp": "Need help?"
+    "needHelp": "Need help?",
+    "externalLinkWarning": "⚠️ External Link Warning",
+    "externalLinkDisclaimer": "Please be careful when opening unknown links. Only proceed if you trust this source.",
+    "openLink": "Open Link"
   },
   "history": {
     "addedTo": "Added to",
@@ -396,6 +399,12 @@
       "helpNotification": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>",
       "explanation": {
         "button": "how does it work?"
+      },
+      "reset": {
+        "modal": {
+          "title": "Reset the wheel?",
+          "description": "This action will return all participants back to the wheel."
+        }
       }
     },
     "duel": {

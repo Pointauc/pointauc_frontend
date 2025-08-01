@@ -6,6 +6,7 @@ import { getTotalSize } from '@utils/common.utils.ts';
 import { WheelController } from '@components/BaseWheel/BaseWheel.tsx';
 import useDropoutSpinEnd from '@components/RandomWheel/hooks/useDropoutSpinEnd.ts';
 import useInitWrapper from '@components/RandomWheel/hooks/useInitWrapper.ts';
+import ResetButton from '@components/RandomWheel/Dropout/ResetButton';
 
 const useSimulationDropout = (controller: RefObject<WheelController>): Wheel.FormatHook => {
   const [_items, setItems] = useState<WheelItem[] | undefined>();
@@ -44,10 +45,17 @@ const useSimulationDropout = (controller: RefObject<WheelController>): Wheel.For
   const onSpinStart = useCallback(() => ({ winner: dropoutQueueRef.current.shift() as string }), []);
   const onSpinEnd = useDropoutSpinEnd({ controller, setItems });
 
+  const onReset = useCallback(() => {
+    initInternal(initialItems);
+    controller.current?.clearWinner();
+    controller.current?.resetPosition();
+  }, [controller, initInternal, initialItems]);
+
   return {
     items: invertedItems,
     init,
     onSpinStart,
+    renderSubmitButton: (submitButton) => (items.length > 1 ? submitButton : <ResetButton onClick={onReset} />),
     onSpinEnd,
   };
 };

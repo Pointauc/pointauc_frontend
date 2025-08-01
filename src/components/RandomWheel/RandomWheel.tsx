@@ -128,7 +128,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const filteredItems = useMemo(
     () =>
       getTotalSize(itemsFromProps)
-        ? itemsFromProps.filter(({ amount }) => amount)
+        ? itemsFromProps.filter(({ amount }) => amount && amount > 0)
         : itemsFromProps.map((item) => ({ ...item, amount: 1 })),
     [itemsFromProps],
   );

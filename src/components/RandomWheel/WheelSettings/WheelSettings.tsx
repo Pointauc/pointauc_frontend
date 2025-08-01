@@ -68,7 +68,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
       <Grid container style={{ gap: 8 }} direction='column' size={direction === 'row' ? 6 : undefined}>
         <Grid container className='wheel-controls-row' spacing={1}>
           {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-          <Grid flexGrow={1}>
+          <Grid flexGrow={1} sx={{ position: 'relative', top: -2 }}>
             {!randomSpinEnabled && <SpinTimeField />}
             {randomSpinEnabled && <RandomSpinConfig />}
           </Grid>

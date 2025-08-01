@@ -18,7 +18,10 @@
     "hideAmounts": "Hide values of lots and bids",
     "copyLink": "Капіраваць спасылку",
     "linkCopied": "Спасылка скопіравана",
-    "copyFailed": "Копіраванне памылкава"
+    "copyFailed": "Копіраванне памылкава",
+    "externalLinkWarning": "⚠️ Папярэджанне пра знешнюю спасылку",
+    "externalLinkDisclaimer": "Будзьце асцярожныя пры пераходзе па невядомых спасылках. Працягвайце толькі калі давяраеце гэтай крыніцы.",
+    "openLink": "Адкрыць спасылку"
   },
   "auc": {
     "addPosition": "Дадаць лот",

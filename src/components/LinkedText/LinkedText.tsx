@@ -1,42 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
 import Linkify from 'linkify-react';
-import { MultiToken, Opts as LinkifyOptions } from 'linkifyjs';
+import { Opts as LinkifyOptions } from 'linkifyjs';
 
 import LinkedTextUrl from '@components/LinkedText/LinkedTextUrl.tsx';
 
-type LinkedTextProps =
-  | {
-      children: React.ReactNode;
-      safety?: false;
-      allowedDomains?: never;
-      copyable?: boolean;
-    }
-  | {
-      children: React.ReactNode;
-      safety: true;
-      allowedDomains: string[];
-      copyable?: boolean;
-    };
-
-function createUrlValidator(allowedDomains: string[]) {
-  return function validateUrl(value: string, token: MultiToken): boolean {
-    try {
-      const url = new URL(value);
-      const hostname = url.hostname.toLowerCase();
-
-      return allowedDomains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`));
-    } catch {
-      return false;
-    }
-  };
+interface LinkedTextProps {
+  children: React.ReactNode;
+  copyable?: boolean;
 }
 
-const LinkedText = ({ children, safety = false, allowedDomains = [], copyable = false }: LinkedTextProps) => {
-  const validateUrl = useMemo(
-    () => (safety ? createUrlValidator(allowedDomains) : () => true),
-    [allowedDomains, safety],
-  );
-
+const LinkedText = ({ children, copyable = false }: LinkedTextProps) => {
   const renderUrl = useCallback(
     ({ attributes, content }: { attributes: { [attr: string]: any }; content: string }) => {
       const { href, ...props } = attributes;
@@ -47,17 +20,14 @@ const LinkedText = ({ children, safety = false, allowedDomains = [], copyable = 
   );
 
   const linkifyOptions = useMemo((): LinkifyOptions => {
-    const options: LinkifyOptions = {
+    return {
       target: '_blank',
+      defaultProtocol: 'https',
       render: { url: renderUrl },
+      format: (text: string) => text.replace(/^https?:\/\//, ''),
+      truncate: 36,
     };
-
-    if (safety && validateUrl) {
-      options.validate = { url: validateUrl };
-    }
-
-    return options;
-  }, [renderUrl, safety, validateUrl]);
+  }, [renderUrl]);
 
   return <Linkify options={linkifyOptions}>{children}</Linkify>;
 };

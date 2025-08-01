@@ -1769,6 +1769,18 @@
   resolved "https://registry.yarnpkg.com/@swc/types/-/types-0.1.5.tgz#043b731d4f56a79b4897a3de1af35e75d56bc63a"
   integrity sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==
 
+"@tabler/icons-react@^3.34.1":
+  version "3.34.1"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-3.34.1.tgz#852b8efcab5382e44cc0f09b3de7d25ef3cba6f9"
+  integrity sha512-Ld6g0NqOO05kyyHsfU8h787PdHBm7cFmOycQSIrGp45XcXYDuOK2Bs0VC4T2FWSKZ6bx5g04imfzazf/nqtk1A==
+  dependencies:
+    "@tabler/icons" "3.34.1"
+
+"@tabler/icons@3.34.1":
+  version "3.34.1"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.34.1.tgz#a04a8cf79a5ebdcc44796dfa3de51d04811d2f9f"
+  integrity sha512-9gTnUvd7Fd/DmQgr3MKY+oJLa1RfNsQo8c/ir3TJAWghOuZXodbtbVp0QBY2DxWuuvrSZFys0HEbv1CoiI5y6A==
+
 "@tiptap/core@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@tiptap/core/-/core-2.3.0.tgz#5a0b41b63af62860dec6d6b689e2893118f76e83"
