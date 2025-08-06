@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import './SlotsColumn.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import throttle from 'lodash/throttle';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { RootState } from '@reducers';
@@ -9,6 +10,7 @@ import { RootState } from '@reducers';
 import SlotsHeader from '../SlotsHeader/SlotsHeader';
 
 import SlotsList from './SlotsList';
+import { Slot } from '@models/slot.model';
 
 const SlotsColumn: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -45,10 +47,30 @@ const SlotsColumn: React.FC = () => {
     [draggedRedemption],
   );
 
-  const filteredSlots = useMemo(
-    () => (searchTerm ? slots.filter(({ name, fastId }) => name?.toLowerCase().includes(searchTerm.toLowerCase()) || fastId?.toString().includes(searchTerm.toLowerCase())) : slots),
-    [searchTerm, slots],
+  const [filteredSlots, setFilteredSlots] = useState(slots);
+  const throttledSetFilteredSlots = useRef(
+    throttle((slots: Slot[], searchTerm: string) => {
+      setFilteredSlots(
+        searchTerm
+          ? slots.filter(
+              ({ name, fastId }) =>
+                name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                fastId?.toString().includes(searchTerm.toLowerCase())
+            )
+          : slots
+      );
+    }, 250)
   );
+
+  useEffect(() => {
+    throttledSetFilteredSlots.current(slots, searchTerm);
+  }, [searchTerm, slots]);
+
+  useEffect(() => {
+    return () => {
+      throttledSetFilteredSlots.current.cancel();
+    };
+  }, []);
 
   const optimize = useMemo(() => slots.length > 100, [slots.length]);
 

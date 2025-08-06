@@ -106,7 +106,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
         <VirtualLots slots={slots} height={height} compact={compact} containerRef={containerVirtualRef} />
       )}
       {!compact && !optimize && (
-        <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
+        <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight duration={200}>
           {slots.map((slot, index) => (
             <div className='slot-grid-wrapper' key={slot.id}>
               <DroppableSlot index={index + 1} slot={slot} />
