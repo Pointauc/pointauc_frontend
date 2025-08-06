@@ -46,7 +46,7 @@ const SlotsColumn: React.FC = () => {
   );
 
   const filteredSlots = useMemo(
-    () => (searchTerm ? slots.filter(({ name }) => name?.toLowerCase().includes(searchTerm.toLowerCase())) : slots),
+    () => (searchTerm ? slots.filter(({ name, fastId }) => name?.toLowerCase().includes(searchTerm.toLowerCase()) || fastId?.toString().includes(searchTerm.toLowerCase())) : slots),
     [searchTerm, slots],
   );
 
