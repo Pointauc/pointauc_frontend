@@ -1,0 +1,1654 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/app": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/user": {
+      "get": {
+        "operationId": "UserController_getUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/integration/validate": {
+      "get": {
+        "operationId": "UserController_validateIntegration",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/settings": {
+      "put": {
+        "operationId": "UserController_setAucSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/da/centrifuge/subscribe": {
+      "post": {
+        "operationId": "DaController_subscribe",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Da"
+        ]
+      }
+    },
+    "/da/auth": {
+      "post": {
+        "operationId": "DaController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Da"
+        ]
+      }
+    },
+    "/da/revoke": {
+      "post": {
+        "operationId": "DaController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Da"
+        ]
+      }
+    },
+    "/tourniquet/auth": {
+      "post": {
+        "operationId": "TourniquetController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tourniquet"
+        ]
+      }
+    },
+    "/tourniquet/revoke": {
+      "post": {
+        "operationId": "TourniquetController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tourniquet"
+        ]
+      }
+    },
+    "/tourniquet/webhook": {
+      "post": {
+        "operationId": "TourniquetController_webhook",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tourniquet"
+        ]
+      }
+    },
+    "/twitch/auth": {
+      "post": {
+        "operationId": "TwitchController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Twitch"
+        ]
+      }
+    },
+    "/twitch/rewards": {
+      "delete": {
+        "operationId": "TwitchController_deleteRewards",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Twitch"
+        ]
+      }
+    },
+    "/twitch/redemptions": {
+      "patch": {
+        "operationId": "TwitchController_updateRedemption",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Twitch"
+        ]
+      }
+    },
+    "/twitch/redemptions/batch": {
+      "patch": {
+        "operationId": "TwitchController_updateRedemptions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Twitch"
+        ]
+      }
+    },
+    "/twitch/settings/presets": {
+      "put": {
+        "operationId": "TwitchController_updatePresets",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Twitch"
+        ]
+      }
+    },
+    "/twitch/revoke": {
+      "post": {
+        "operationId": "TwitchController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Twitch"
+        ]
+      }
+    },
+    "/twitch/webhook/notification": {
+      "post": {
+        "operationId": "TwitchWebhookController_notification",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "TwitchWebhook"
+        ]
+      }
+    },
+    "/donatePay/auth": {
+      "post": {
+        "operationId": "DonatePayController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DonatePay"
+        ]
+      }
+    },
+    "/donatePay/revoke": {
+      "post": {
+        "operationId": "DonatePayController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "DonatePay"
+        ]
+      }
+    },
+    "/random/integer": {
+      "get": {
+        "operationId": "RandomController_getRandomInteger",
+        "parameters": [
+          {
+            "name": "min",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Random"
+        ]
+      }
+    },
+    "/api/broadcast/lots": {
+      "post": {
+        "operationId": "BroadcastingController_broadcastLots",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LotsBroadcastDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Broadcasting"
+        ]
+      }
+    },
+    "/api/broadcast/timer": {
+      "post": {
+        "operationId": "BroadcastingController_broadcastTimer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimerBroadcastDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Broadcasting"
+        ]
+      }
+    },
+    "/api/broadcast/wheel": {
+      "post": {
+        "operationId": "BroadcastingController_broadcastWheel",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WheelBroadcastDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Broadcasting"
+        ]
+      }
+    },
+    "/api/broadcast/settings": {
+      "post": {
+        "operationId": "BroadcastingController_broadcastSettings",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsBroadcastDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Broadcasting"
+        ]
+      }
+    },
+    "/auth/tokens/role/{role}": {
+      "get": {
+        "operationId": "AuthController_getRoleToken",
+        "parameters": [
+          {
+            "name": "role",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "enum": [
+                "api",
+                "overlay",
+                "viewer"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get or create role-based token",
+        "tags": [
+          "Auth"
+        ]
+      },
+      "delete": {
+        "operationId": "AuthController_revokeRoleToken",
+        "parameters": [
+          {
+            "name": "role",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "enum": [
+                "api",
+                "overlay",
+                "viewer"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevokeTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Revoke role-based token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/tokens/role/{role}/refresh": {
+      "post": {
+        "operationId": "AuthController_refreshRoleToken",
+        "parameters": [
+          {
+            "name": "role",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "enum": [
+                "api",
+                "overlay",
+                "viewer"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Refresh role-based token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/tokens/custom": {
+      "post": {
+        "operationId": "AuthController_createCustomToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create custom token",
+        "tags": [
+          "Auth"
+        ]
+      },
+      "delete": {
+        "operationId": "AuthController_revokeAllCustomTokens",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevokeAllCustomTokensResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Revoke all custom tokens",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/tokens": {
+      "get": {
+        "operationId": "AuthController_listTokens",
+        "parameters": [
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "role",
+                "custom",
+                "all"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTokensResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List user tokens",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/tokens/custom/{tokenId}": {
+      "delete": {
+        "operationId": "AuthController_revokeCustomToken",
+        "parameters": [
+          {
+            "name": "tokenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevokeCustomTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Revoke custom token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/tokens/info": {
+      "get": {
+        "operationId": "AuthController_getTokenInfo",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenInfoResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get current token information",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/overlays": {
+      "get": {
+        "operationId": "OverlaysController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/AuctionOverlayDto"
+                      },
+                      {
+                        "$ref": "#/components/schemas/WheelOverlayDto"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List overlays",
+        "tags": [
+          "Overlays"
+        ]
+      },
+      "post": {
+        "operationId": "OverlaysController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAuctionOverlayDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CreateWheelOverlayDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/AuctionOverlayDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WheelOverlayDto"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create overlay",
+        "tags": [
+          "Overlays"
+        ]
+      }
+    },
+    "/overlays/{id}": {
+      "get": {
+        "operationId": "OverlaysController_get",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/AuctionOverlayDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WheelOverlayDto"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get overlay by ID",
+        "tags": [
+          "Overlays"
+        ]
+      },
+      "patch": {
+        "operationId": "OverlaysController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateAuctionOverlayDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/UpdateWheelOverlayDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/AuctionOverlayDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WheelOverlayDto"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Update overlay (partial)",
+        "tags": [
+          "Overlays"
+        ]
+      },
+      "put": {
+        "operationId": "OverlaysController_replace",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAuctionOverlayDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/CreateWheelOverlayDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/AuctionOverlayDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WheelOverlayDto"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Replace overlay (full)",
+        "tags": [
+          "Overlays"
+        ]
+      },
+      "delete": {
+        "operationId": "OverlaysController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Delete overlay",
+        "tags": [
+          "Overlays"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "PointAuc Client API",
+    "description": "Client-side API endpoints for PointAuc frontend applications",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "LotDto": {
+        "type": "object",
+        "properties": {
+          "fastId": {
+            "type": "integer",
+            "description": "Fast ID for quick lot identification",
+            "example": 1001
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique lot identifier",
+            "example": "lot_abc123"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the lot",
+            "example": "Premium Gaming Setup",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "Current bid amount in currency units",
+            "example": 150.5,
+            "nullable": true
+          }
+        },
+        "required": [
+          "fastId",
+          "id"
+        ]
+      },
+      "LotsBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Array of lot data to be broadcasted",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LotDto"
+            }
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the lots broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "TimerDataDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Current state of the timer",
+            "enum": [
+              "paused",
+              "running"
+            ],
+            "example": "running"
+          },
+          "timeLeft": {
+            "type": "integer",
+            "description": "Time remaining in milliseconds",
+            "example": 60000,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "state",
+          "timeLeft"
+        ]
+      },
+      "TimerBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Timer data to be broadcasted",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TimerDataDto"
+              }
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the timer broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "WheelParticipantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the wheel participant",
+            "example": "John Doe"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the participant",
+            "example": "user_123abc"
+          },
+          "color": {
+            "type": "string",
+            "description": "Color assigned to the participant on the wheel (hex code)",
+            "example": "#FF5733",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Bid amount or weight of the participant",
+            "example": 100.5,
+            "minimum": 0
+          },
+          "startAngle": {
+            "type": "number",
+            "description": "Starting angle of participant segment in degrees",
+            "example": 0,
+            "minimum": 0,
+            "maximum": 360
+          },
+          "endAngle": {
+            "type": "number",
+            "description": "Ending angle of participant segment in degrees",
+            "example": 45,
+            "minimum": 0,
+            "maximum": 360
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "color",
+          "amount",
+          "startAngle",
+          "endAngle"
+        ]
+      },
+      "WheelParticipantsChangedDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Event type indicating participants have changed",
+            "enum": [
+              "participants-changed"
+            ],
+            "example": "participants-changed"
+          },
+          "participants": {
+            "description": "Array of current wheel participants",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WheelParticipantDto"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "participants"
+        ]
+      },
+      "WheelSpinDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Event type indicating a wheel spin",
+            "enum": [
+              "spin"
+            ],
+            "example": "spin"
+          },
+          "angle": {
+            "type": "number",
+            "description": "Final angle the wheel stopped at in degrees",
+            "example": 180.5,
+            "minimum": 0,
+            "maximum": 360
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration of the spin animation in milliseconds",
+            "example": 3000,
+            "minimum": 0
+          },
+          "winner": {
+            "type": "string",
+            "description": "Unique identifier of the winning participant",
+            "example": "user_123abc"
+          }
+        },
+        "required": [
+          "type",
+          "angle",
+          "duration",
+          "winner"
+        ]
+      },
+      "WheelBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Wheel event data (either participants changed or spin event)",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WheelParticipantsChangedDto"
+              },
+              {
+                "$ref": "#/components/schemas/WheelSpinDto"
+              }
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the wheel broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SettingsBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Settings data to be broadcasted (flexible structure)",
+            "example": {
+              "theme": "dark",
+              "language": "en",
+              "notifications": true
+            }
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the settings broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "TokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "tokenId",
+          "role",
+          "permissions",
+          "expiresAt",
+          "createdAt"
+        ]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "expiresIn": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "previousTokenRevoked": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "tokenId",
+          "role",
+          "permissions",
+          "expiresAt",
+          "createdAt",
+          "previousTokenRevoked"
+        ]
+      },
+      "RevokeTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "revokedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "role",
+          "revokedAt"
+        ]
+      },
+      "CreateCustomTokenDto": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "expiresIn": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "permissions"
+        ]
+      },
+      "CustomTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isRoleToken": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "token",
+          "tokenId",
+          "permissions",
+          "expiresAt",
+          "createdAt",
+          "isRoleToken"
+        ]
+      },
+      "CustomTokenDto": {
+        "type": "object",
+        "properties": {
+          "tokenId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tokenId",
+          "permissions",
+          "expiresAt",
+          "createdAt"
+        ]
+      },
+      "ListTokensResponseDto": {
+        "type": "object",
+        "properties": {
+          "roleTokens": {
+            "type": "object"
+          },
+          "customTokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomTokenDto"
+            }
+          }
+        }
+      },
+      "RevokeCustomTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "revokedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "tokenId",
+          "revokedAt"
+        ]
+      },
+      "RevokeAllCustomTokensResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "revokedCount": {
+            "type": "number"
+          },
+          "revokedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "revokedCount",
+          "revokedAt"
+        ]
+      },
+      "TokenInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "tokenId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "role": {
+            "type": "string"
+          },
+          "isRoleToken": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tokenId",
+          "userId",
+          "permissions",
+          "isRoleToken",
+          "expiresAt",
+          "createdAt",
+          "isActive"
+        ]
+      },
+      "AuctionOverlaySettingsDto": {
+        "type": "object",
+        "properties": {
+          "showRules": {
+            "type": "boolean"
+          },
+          "showTable": {
+            "type": "boolean"
+          },
+          "showTimer": {
+            "type": "boolean"
+          },
+          "backgroundTransparency": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "autoscroll": {
+            "type": "boolean"
+          },
+          "autoscrollSpeed": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "showRules",
+          "showTable",
+          "showTimer",
+          "backgroundTransparency",
+          "autoscroll",
+          "autoscrollSpeed"
+        ]
+      },
+      "AuctionOverlayDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Auction",
+              "Wheel"
+            ],
+            "default": "Auction"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/AuctionOverlaySettingsDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt",
+          "type",
+          "settings"
+        ]
+      },
+      "WheelOverlaySettingsDto": {
+        "type": "object",
+        "properties": {
+          "showWheel": {
+            "type": "boolean"
+          },
+          "showParticipants": {
+            "type": "boolean"
+          },
+          "backgroundTransparency": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "showWheel",
+          "showParticipants",
+          "backgroundTransparency"
+        ]
+      },
+      "WheelOverlayDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Auction",
+              "Wheel"
+            ],
+            "default": "Wheel"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/WheelOverlaySettingsDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt",
+          "type",
+          "settings"
+        ]
+      },
+      "CreateAuctionOverlayDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Auction",
+              "Wheel"
+            ],
+            "default": "Auction"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/AuctionOverlaySettingsDto"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "settings"
+        ]
+      },
+      "CreateWheelOverlayDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Auction",
+              "Wheel"
+            ],
+            "default": "Wheel"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/WheelOverlaySettingsDto"
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "settings"
+        ]
+      },
+      "UpdateAuctionOverlayDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/AuctionOverlaySettingsDto"
+          }
+        }
+      },
+      "UpdateWheelOverlayDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/WheelOverlaySettingsDto"
+          }
+        }
+      }
+    }
+  }
+}

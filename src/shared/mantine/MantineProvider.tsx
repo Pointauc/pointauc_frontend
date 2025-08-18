@@ -5,16 +5,17 @@ import {
   alpha,
   createTheme,
   MantineTheme,
+  TextInput,
 } from '@mantine/core';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { DEFAULT_THEME } from '@mantine/core';
 
-import mantineTheme from '@constants/mantineTheme';
 import { calcUiElementsOpacity } from '@utils/ui/background';
-import { COLORS } from '@constants/color.constants';
+import { RootState } from '@reducers';
 
-import { RootState } from './reducers';
+import ExtendedTextInput from './ui/Input';
+import ExtendedSlider from './ui/Slider';
 
 const shadowOpacityMain = 0.12;
 const shadowOpacitySecondary = 0.09;
@@ -23,7 +24,7 @@ const shadowOpacityXs = 0.2;
 const cssResolver: CSSVariablesResolver = (theme) => ({
   variables: {},
   dark: {
-    '--mantine-color-text': '#f3f3f3',
+    '--mantine-color-text': '#eeeeee',
 
     '--mantine-shadow-xs': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), 0 calc(0.0625rem * var(--mantine-scale)) calc(0.125rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityXs})`,
     '--mantine-shadow-sm': `0 calc(0.0625rem * var(--mantine-scale)) calc(0.1875rem * var(--mantine-scale)) rgba(0, 0, 0, ${shadowOpacityMain}), rgba(0, 0, 0, ${shadowOpacityMain}) 0 calc(0.625rem * var(--mantine-scale)) calc(0.9375rem * var(--mantine-scale)) calc(-0.3125rem * var(--mantine-scale)), rgba(0, 0, 0, ${shadowOpacitySecondary}) 0 calc(0.4375rem * var(--mantine-scale)) calc(0.4375rem * var(--mantine-scale)) calc(-0.3125rem * var(--mantine-scale))`,
@@ -36,13 +37,25 @@ const cssResolver: CSSVariablesResolver = (theme) => ({
 
 const MantineProvider = ({ children }: { children: React.ReactNode }) => {
   const backgroundOverlayOpacity = useSelector((root: RootState) => root.aucSettings.settings.backgroundOverlayOpacity);
+  const darkAlpha = useSelector((root: RootState) => root.overlay.darkAlpha);
   const backgroundTone = useSelector((root: RootState) => root.aucSettings.settings.backgroundTone);
 
+  const uiOpacity = useMemo(
+    () => darkAlpha ?? calcUiElementsOpacity(backgroundOverlayOpacity),
+    [darkAlpha, backgroundOverlayOpacity],
+  );
+
   const theme = useMemo(() => {
-    const uiOpacity = calcUiElementsOpacity(backgroundOverlayOpacity);
     return createTheme({
       cursorType: 'pointer',
       primaryColor: 'blue',
+      // fontSizes: {
+      //   xs: '0.875rem', // 14px (was 12px)
+      //   sm: '1rem', // 16px (was 14px)
+      //   md: '1.125rem', // 18px (was 16px)
+      //   lg: '1.25rem', // 20px (was 18px)
+      //   xl: '1.5rem', // 24px (was 20px)
+      // },
       colors: {
         darkOpaque: DEFAULT_THEME.colors.dark.map((color) => alpha(color, uiOpacity)) as unknown as MantineColorsTuple,
       },
@@ -58,16 +71,15 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
             },
           }),
         },
+        TextInput: ExtendedTextInput,
+        Slider: ExtendedSlider,
       },
     });
-  }, [backgroundOverlayOpacity]);
+  }, [uiOpacity]);
 
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--custom-background-ui-opacity',
-      calcUiElementsOpacity(backgroundOverlayOpacity).toString(),
-    );
-  }, [backgroundOverlayOpacity]);
+    document.documentElement.style.setProperty('--custom-background-ui-opacity', uiOpacity.toString());
+  }, [uiOpacity]);
 
   return (
     <MantineBaseProvider defaultColorScheme='dark' cssVariablesResolver={cssResolver} theme={theme}>

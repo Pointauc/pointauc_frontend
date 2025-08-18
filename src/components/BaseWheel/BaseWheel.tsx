@@ -49,7 +49,6 @@ export interface WheelController {
 export interface BaseWheelProps<T extends WheelItem> {
   items: T[];
   deleteItem?: (id: Key) => void;
-  isShuffle?: boolean;
   controller: MutableRefObject<WheelController | null>;
   coreImage?: string | null;
   onCoreImageChange?: (image: string) => void;
@@ -61,7 +60,7 @@ export interface BaseWheelProps<T extends WheelItem> {
 const calculateFixedAngle = (duration: number): number => duration * 270;
 
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
-  const { items, resetWheel, deleteItem, isShuffle, controller, coreImage, onCoreImageChange, dropOut } = props;
+  const { items, resetWheel, deleteItem, controller, coreImage, onCoreImageChange, dropOut } = props;
   const { t } = useTranslation();
   const { drawWheel, highlightItem, eatAnimation } = useWheelDrawer();
 
@@ -73,10 +72,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const wrapper = useRef<HTMLDivElement>(null);
 
   const coreBackground = useMemo(() => `url(${coreImage || pradenW})`, [coreImage]);
-  const normalizedItems = useMemo(
-    () => wheelHelpers.defineAngle(isShuffle ? shuffle(items) : items),
-    [isShuffle, items],
-  );
+  const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
   const normalizedRef = useRef(normalizedItems);
 
   useEffect(() => {

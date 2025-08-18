@@ -110,10 +110,77 @@
       "wheel": {
         "title": "Колесо рандома"
       },
+      "overlays": {
+        "title": "Наложения"
+      },
       "logout": {
         "title": "Выйти с Аккаунта"
       }
     }
+  },
+  "overlays": {
+    "title": "Оверлеи",
+    "newOverlay": "Новый оверлей",
+    "copyLink": "Копировать ссылку",
+    "openPage": "Открыть страницу",
+    "clickToEdit": "Нажмите для редактирования",
+    "chooseYourOverlay": "Выберите ваш оверлей",
+    "sections": "Секции",
+    "createSuccess": "Оверлей успешно создан",
+    "createSuccessMessage": "Оверлей \"{{name}}\" был создан и вы перенаправлены на страницу редактирования",
+    "createError": "Не удалось создать оверлей",
+    "updateSuccess": "Оверлей успешно обновлен",
+    "updateError": "Не удалось обновить оверлей",
+    "deleteSuccess": "Оверлей успешно удален",
+    "deleteError": "Не удалось удалить оверлей",
+    "overlayLink": "Ссылка для OBS",
+    "displaySettings": "Настройки отображения",
+    "overlayTypes": {
+      "Auction": "Аукцион",
+      "Wheel": "Колесо"
+    },
+    "auction": {
+      "description": "Отображает текущее состояние аукциона.",
+      "sections": {
+        "bidTable": "Таблица ставок с реальным временем",
+        "timer": "Таймер с настраиваемыми настройками",
+        "rules": "Настраиваемые правила отображения"
+      }
+    },
+    "wheel": {
+      "description": "Оверлей для колеса удачи.",
+      "sections": {
+        "wheelDisplay": "Анимированное вращающееся колесо",
+        "participants": "Список участников в реальном времени",
+        "results": "Отображение результатов (TBD)"
+      }
+    },
+    "settings": {
+      "title": "Настройки",
+      "overlayName": "Название оверлея",
+      "showRules": "Показать правила",
+      "showTable": "Показать таблицу",
+      "showTimer": "Показать таймер",
+      "showWheel": "Показать колесо",
+      "showParticipants": "Показать участников",
+      "autoscroll": "Автопрокрутка",
+      "autoscrollSpeed": "Скорость автопрокрутки",
+      "backgroundTransparency": "Прозрачность фона",
+      "backgroundTransparencyDescription": "Настройте прозрачность фона (0 = непрозрачный, 100 = прозрачный)",
+      "backgroundTransparencyDescriptionWheel": "Настройте прозрачность фона (0 = прозрачный, 100 = непрозрачный)",
+      "speedSlow": "Медленно",
+      "speedMedium": "Средне",
+      "speedFast": "Быстро"
+    },
+    "preview": {
+      "title": "Предпросмотр",
+      "comingSoon": "Предпросмотр скоро появится",
+      "description": "В этом разделе будет показан живой предпросмотр того, как ваш {{type}} оверлей будет выглядеть на стриме с текущими настройками.",
+      "urlLabel": "URL: /overlay/{{pathname}}"
+    },
+    "loading": "Загрузка...",
+    "backToOverlays": "Назад к оверлеям",
+    "overlayNotFound": "Оверлей не найден"
   },
   "common": {
     "connectTwitch": "Twitch",
@@ -133,6 +200,8 @@
     "authProgress": "Авторизация...",
     "accountProgress": "Загрузка аккаунта...",
     "reset": "Сбросить",
+    "revert": "Вернуть",
+    "save": "Сохранить",
     "from": "От",
     "to": "До",
     "copyLink": "Скопировать ссылку",
@@ -142,7 +211,9 @@
     "needHelp": "Нужна помощь?",
     "externalLinkWarning": "⚠️ Предупреждение о внешней ссылке",
     "externalLinkDisclaimer": "Будьте осторожны при переходе по неизвестным ссылкам. Продолжайте, только если доверяете этому источнику.",
-    "openLink": "Открыть ссылку"
+    "openLink": "Открыть ссылку",
+    "error": "Ошибка",
+    "noChanges": "Начните редактировать форму чтобы сохранить изменения"
   },
   "rules": {
     "background": "Фон",

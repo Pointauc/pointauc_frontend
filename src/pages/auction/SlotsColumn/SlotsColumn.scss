@@ -7,16 +7,6 @@
 
   .slot-grid-wrapper {
     width: 100%;
-
-    .slot-wrapper {
-      background-color: var(--mantine-color-dark-6);
-    }
-
-    &:nth-child(even) {
-      .slot-wrapper {
-        background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
-      }
-    }
   }
 
   &-wrapper {

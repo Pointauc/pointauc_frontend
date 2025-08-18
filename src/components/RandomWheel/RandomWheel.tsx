@@ -17,7 +17,7 @@ import { WheelItem } from '@models/wheel.model.ts';
 import { getTotalSize, random } from '@utils/common.utils.ts';
 import { getRandomNumber } from '@api/randomApi.ts';
 import withLoading from '@decorators/withLoading';
-import { DropoutVariant, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
+import { DropoutVariant, SpinParams, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
 import WheelSettings from '@components/RandomWheel/WheelSettings/WheelSettings.tsx';
 import { WheelContextProvider } from '@components/RandomWheel/WheelSettings/WheelContext.tsx';
 import WheelComponent from '@components/RandomWheel/WheelSettings/Wheel';
@@ -77,6 +77,7 @@ const initialSettings = { ...defaultSettings, ...savedSettings };
 
 export interface RandomWheelController {
   setItems: (items: WheelItem[]) => void;
+  spin?: WheelController['spin'];
 }
 
 const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
@@ -99,11 +100,16 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
 
-  useImperativeHandle(wheelRef, () => ({
-    setItems: (items: WheelItem[]) => {
-      setItemsFromProps(items);
-    },
-  }));
+  useImperativeHandle<RandomWheelController, RandomWheelController>(
+    wheelRef,
+    () => ({
+      setItems: (items: WheelItem[]) => {
+        setItemsFromProps(items);
+      },
+      spin: wheelController.current ? (params?: SpinParams) => wheelController.current!.spin(params) : undefined,
+    }),
+    [],
+  );
 
   useEffect(() => {
     const { split, ...settings } = formValues;
@@ -186,7 +192,7 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
         {content && <div className='wheel-content-negative-space' />}
         <WheelComponent
           finalItems={splittedItems}
-          shuffle={split != 1 ? false : isShuffle}
+          shouldShuffle={split != 1 ? false : isShuffle}
           deleteItem={deleteWheelItem}
           controller={wheelController}
         />

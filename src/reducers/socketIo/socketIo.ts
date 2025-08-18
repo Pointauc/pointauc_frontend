@@ -8,10 +8,7 @@ import { Slot, SlotResponse } from '@models/slot.model.ts';
 import { mergeLot } from '@reducers/Slots/Slots.ts';
 import { addedBidsMap, Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
-import {
-  setTourniquetSubscribeState,
-  setTwitchSubscribeState,
-} from '@reducers/Subscription/Subscription.ts';
+import { setTourniquetSubscribeState, setTwitchSubscribeState } from '@reducers/Subscription/Subscription.ts';
 import twitch from '@components/Integration/Twitch';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import tourniquet from '@components/Integration/Tourniquet';
@@ -109,7 +106,6 @@ export const connectToSocketIo: ThunkAction<void, RootState, {}, Action> = (disp
     const { subscription, user } = getState();
     const {
       twitch: { actual: twitchPrevious },
-      da: { actual: daPrevious },
       tourniquet: { actual: tourniquetPrevious },
     } = subscription;
 

@@ -1,0 +1,64 @@
+.root {
+  &[data-variant='outline'] {
+    position: relative;
+  }
+}
+
+.input {
+  &[data-variant='outline'] {
+    background-color: transparent !important;
+    border: 1px solid var(--mantine-color-gray-7);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:focus {
+      border-color: var(--mantine-primary-color-filled);
+      box-shadow: 0 0 0 1px var(--mantine-primary-color-filled);
+    }
+
+    &:focus-within {
+      border-color: var(--mantine-primary-color-filled);
+      box-shadow: 0 0 0 1px var(--mantine-primary-color-filled);
+    }
+
+    /* Floating label when input has focus or content */
+    &:focus + .label,
+    &:not(:placeholder-shown) + .label,
+    &[data-has-value] + .label {
+      top: 0;
+      transform: translateY(-50%);
+      font-size: var(--mantine-font-size-xs);
+      color: var(--mantine-primary-color-filled);
+    }
+  }
+}
+
+.label {
+  &[data-variant='outline'] {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--mantine-color-body);
+    padding: 0 4px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 1;
+    color: var(--mantine-color-gray-6);
+    font-size: var(--mantine-font-size-sm);
+  }
+}
+
+/* Alternative approach using wrapper focus-within */
+.label.elevated,
+.root[data-variant='outline']:focus-within .label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: var(--mantine-font-size-xs);
+  color: var(--mantine-color-text);
+}
+
+.root[data-variant='outline']:focus-within .label {
+  color: var(--mantine-primary-color-filled);
+}

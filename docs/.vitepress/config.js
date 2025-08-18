@@ -26,6 +26,7 @@ const vitepressOptions = {
   cleanUrls: true,
   base: '/docs/',
   locales: supportedLocales,
+  port: 3003,
 
   head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
 

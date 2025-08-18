@@ -14,10 +14,12 @@ import { Theme } from '@mui/material';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import { Notifications } from '@mantine/notifications';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import rootReducer, { RootState } from '@reducers/index.ts';
-import { setSlots } from '@reducers/Slots/Slots.ts';
+import { setSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
 import SaveLoadService from '@services/SaveLoadService.ts';
 import { sortSlots } from '@utils/common.utils.ts';
 import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
@@ -30,10 +32,10 @@ import { integrationUtils } from '@components/Integration/helpers.ts';
 import INTEGRATIONS from '@components/Integration/integrations.ts';
 import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
+import OverlayViewPage from '@pages/overlays/OverlayViewPage.tsx';
 
 import ThemeWrapper from './ThemeWrapper.tsx';
 import App from './App.tsx';
-import MantineProvider from './MantineProvider.tsx';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -45,6 +47,7 @@ dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
 const SORTABLE_SLOT_EVENTS = [
+  'slots/setSlotData',
   'slots/setSlotAmount',
   'slots/addExtra',
   'slots/deleteSlot',
@@ -66,6 +69,8 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
     return result;
   };
 
+const SLOTS_UPDATE_EVENTS = Object.keys(slotsSlice.actions).map((actionName) => `${slotsSlice.name}/${actionName}`);
+
 const saveSlotsWithCooldown = timedFunction((slots: Slot[]) => {
   SaveLoadService.rewrite(slots, AUTOSAVE_NAME);
 }, 2000);
@@ -75,7 +80,7 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
   (next) =>
   (action): AnyAction => {
     const result = next(action);
-    if (action.type.startsWith('slots')) {
+    if (SLOTS_UPDATE_EVENTS.includes(action.type)) {
       const { slots } = store.getState().slots;
 
       saveSlotsWithCooldown(slots);
@@ -109,8 +114,19 @@ const router = createBrowserRouter([
   { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
   { path: ROUTES.AUKUS.REDIRECT, element: <AukusRedirectPage /> },
+  { path: '/overlays/view/:id', element: <OverlayViewPage /> },
   ...redirectRoutes,
 ]);
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      gcTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
@@ -118,8 +134,10 @@ root.render(
   <Provider store={store}>
     <ThemeWrapper>
       <MantineProvider>
-        <Notifications />
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <Notifications />
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </MantineProvider>
     </ThemeWrapper>
   </Provider>,

@@ -3,6 +3,10 @@
   box-shadow: none;
 }
 
+.card {
+  background-color: var(--slot-background-color);
+}
+
 .index {
   margin-left: var(--mantine-spacing-lg);
   margin-right: var(--mantine-spacing-xs);

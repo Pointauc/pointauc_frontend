@@ -1,0 +1,721 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/admin/notification": {
+      "post": {
+        "operationId": "AdminController_addNotification",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "internal"
+        ]
+      }
+    },
+    "/admin/notification/{id}": {
+      "delete": {
+        "operationId": "AdminController_deleteNotification",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "internal"
+        ]
+      }
+    },
+    "/admin/notifications": {
+      "delete": {
+        "operationId": "AdminController_clearNotification",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "internal"
+        ]
+      }
+    },
+    "/admin/user/{id}": {
+      "delete": {
+        "operationId": "AdminController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "internal"
+        ]
+      }
+    },
+    "/admin/users/connected": {
+      "get": {
+        "operationId": "AdminController_getConnectedUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "internal"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "PointAuc Internal API",
+    "description": "Internal administration endpoints for PointAuc",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "LotDto": {
+        "type": "object",
+        "properties": {
+          "fastId": {
+            "type": "integer",
+            "description": "Fast ID for quick lot identification",
+            "example": 1001
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique lot identifier",
+            "example": "lot_abc123"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the lot",
+            "example": "Premium Gaming Setup",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "description": "Current bid amount in currency units",
+            "example": 150.5,
+            "nullable": true
+          }
+        },
+        "required": [
+          "fastId",
+          "id"
+        ]
+      },
+      "LotsBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Array of lot data to be broadcasted",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LotDto"
+            }
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the lots broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "TimerDataDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "description": "Current state of the timer",
+            "enum": [
+              "paused",
+              "running"
+            ],
+            "example": "running"
+          },
+          "timeLeft": {
+            "type": "integer",
+            "description": "Time remaining in milliseconds",
+            "example": 60000,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "state",
+          "timeLeft"
+        ]
+      },
+      "TimerBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Timer data to be broadcasted",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TimerDataDto"
+              }
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the timer broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "WheelParticipantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the wheel participant",
+            "example": "John Doe"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the participant",
+            "example": "user_123abc"
+          },
+          "color": {
+            "type": "string",
+            "description": "Color assigned to the participant on the wheel (hex code)",
+            "example": "#FF5733",
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Bid amount or weight of the participant",
+            "example": 100.5,
+            "minimum": 0
+          },
+          "startAngle": {
+            "type": "number",
+            "description": "Starting angle of participant segment in degrees",
+            "example": 0,
+            "minimum": 0,
+            "maximum": 360
+          },
+          "endAngle": {
+            "type": "number",
+            "description": "Ending angle of participant segment in degrees",
+            "example": 45,
+            "minimum": 0,
+            "maximum": 360
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "color",
+          "amount",
+          "startAngle",
+          "endAngle"
+        ]
+      },
+      "WheelParticipantsChangedDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Event type indicating participants have changed",
+            "enum": [
+              "participants-changed"
+            ],
+            "example": "participants-changed"
+          },
+          "participants": {
+            "description": "Array of current wheel participants",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WheelParticipantDto"
+            }
+          }
+        },
+        "required": [
+          "type",
+          "participants"
+        ]
+      },
+      "WheelSpinDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Event type indicating a wheel spin",
+            "enum": [
+              "spin"
+            ],
+            "example": "spin"
+          },
+          "angle": {
+            "type": "number",
+            "description": "Final angle the wheel stopped at in degrees",
+            "example": 180.5,
+            "minimum": 0,
+            "maximum": 360
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Duration of the spin animation in milliseconds",
+            "example": 3000,
+            "minimum": 0
+          },
+          "winner": {
+            "type": "string",
+            "description": "Unique identifier of the winning participant",
+            "example": "user_123abc"
+          }
+        },
+        "required": [
+          "type",
+          "angle",
+          "duration",
+          "winner"
+        ]
+      },
+      "WheelBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Wheel event data (either participants changed or spin event)",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WheelParticipantsChangedDto"
+              },
+              {
+                "$ref": "#/components/schemas/WheelSpinDto"
+              }
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the wheel broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "SettingsBroadcastDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Settings data to be broadcasted (flexible structure)",
+            "example": {
+              "theme": "dark",
+              "language": "en",
+              "notifications": true
+            }
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Timestamp of the settings broadcast in ISO format",
+            "example": "2024-01-15T10:30:00.000Z"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "TokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "tokenId",
+          "role",
+          "permissions",
+          "expiresAt",
+          "createdAt"
+        ]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "expiresIn": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "previousTokenRevoked": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token",
+          "tokenId",
+          "role",
+          "permissions",
+          "expiresAt",
+          "createdAt",
+          "previousTokenRevoked"
+        ]
+      },
+      "RevokeTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "revokedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "role",
+          "revokedAt"
+        ]
+      },
+      "CreateCustomTokenDto": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "expiresIn": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "permissions"
+        ]
+      },
+      "CustomTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isRoleToken": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "token",
+          "tokenId",
+          "permissions",
+          "expiresAt",
+          "createdAt",
+          "isRoleToken"
+        ]
+      },
+      "CustomTokenDto": {
+        "type": "object",
+        "properties": {
+          "tokenId": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tokenId",
+          "permissions",
+          "expiresAt",
+          "createdAt"
+        ]
+      },
+      "ListTokensResponseDto": {
+        "type": "object",
+        "properties": {
+          "roleTokens": {
+            "type": "object"
+          },
+          "customTokens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomTokenDto"
+            }
+          }
+        }
+      },
+      "RevokeCustomTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "tokenId": {
+            "type": "string"
+          },
+          "revokedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "tokenId",
+          "revokedAt"
+        ]
+      },
+      "RevokeAllCustomTokensResponseDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "revokedCount": {
+            "type": "number"
+          },
+          "revokedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message",
+          "revokedCount",
+          "revokedAt"
+        ]
+      },
+      "TokenInfoResponseDto": {
+        "type": "object",
+        "properties": {
+          "tokenId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "role": {
+            "type": "string"
+          },
+          "isRoleToken": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tokenId",
+          "userId",
+          "permissions",
+          "isRoleToken",
+          "expiresAt",
+          "createdAt",
+          "isActive"
+        ]
+      },
+      "AuctionOverlaySettingsDto": {
+        "type": "object",
+        "properties": {
+          "showRules": {
+            "type": "boolean"
+          },
+          "showTable": {
+            "type": "boolean"
+          },
+          "showTimer": {
+            "type": "boolean"
+          },
+          "backgroundTransparency": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "autoscroll": {
+            "type": "boolean"
+          },
+          "autoscrollSpeed": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "showRules",
+          "showTable",
+          "showTimer",
+          "backgroundTransparency",
+          "autoscroll",
+          "autoscrollSpeed"
+        ]
+      },
+      "AuctionOverlayDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Auction",
+              "Wheel"
+            ],
+            "default": "Auction"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/AuctionOverlaySettingsDto"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt",
+          "type",
+          "settings"
+        ]
+      }
+    }
+  }
+}

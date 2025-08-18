@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import FlipMove from 'react-flip-move';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FixedSizeList } from 'react-window';
 
@@ -13,6 +14,8 @@ import { AlertTypeEnum } from '@models/alert.model.ts';
 import useAutoScroll from '@hooks/useAutoScroll';
 
 import DroppableSlot from '../Slot/DroppableSlot';
+
+import classes from './SlotsList.module.css';
 
 interface SlotsListProps {
   slots: Slot[];
@@ -26,8 +29,10 @@ interface RowProps {
   style: CSSProperties;
 }
 
+const slotWrapperClasses = clsx(classes.slotWrapper, 'slot-grid-wrapper');
+
 const Row: FC<RowProps> = ({ index, style, data }) => (
-  <div className='slot-grid-wrapper' style={style}>
+  <div className={slotWrapperClasses} style={style}>
     <DroppableSlot index={index + 1} slot={data[index]} />
   </div>
 );
@@ -108,7 +113,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
       {!compact && !optimize && (
         <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
           {slots.map((slot, index) => (
-            <div className='slot-grid-wrapper' key={slot.id}>
+            <div className={slotWrapperClasses} key={slot.id}>
               <DroppableSlot index={index + 1} slot={slot} />
             </div>
           ))}

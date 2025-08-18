@@ -97,10 +97,14 @@ const slotsQueryComparator = {
   bidId: (lot: Slot, bidId: string) => lot.id === addedBidsMap.get(bidId),
 };
 
-const slotsSlice = createSlice({
+export const slotsSlice = createSlice({
   name: 'slots',
   initialState,
   reducers: {
+    setSlotData(state, action: PayloadAction<Partial<Slot>>): void {
+      const { id, ...rest } = action.payload;
+      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, ...rest } : slot));
+    },
     setSlotName(state, action: PayloadAction<{ id: string; name: string }>): void {
       const { id, name } = action.payload;
       state.slots = state.slots.map((slot) => {
@@ -178,6 +182,7 @@ const slotsSlice = createSlice({
 });
 
 export const {
+  setSlotData,
   setSlotAmount,
   setSlotExtra,
   setSlotName,
@@ -231,15 +236,21 @@ export const addBid =
       slots: { slots },
     } = getState();
 
-    if (!slots.find(({ id }) => id === slotId)) {
+    const lot = slots.find(({ id }) => id === slotId);
+
+    if (!lot) {
       return;
     }
 
     const { id } = bid;
     const amount = bidUtils.parseCost(bid, settings, false);
+    const bidName = bidUtils.getName(bid);
 
-    slotNamesMap.set(bidUtils.getName(bid), slotId);
-    dispatch(addSlotAmount({ id: slotId, amount }));
+    slotNamesMap.set(bidName, slotId);
+
+    const newLotName = !lot.name || lot.name === '' ? bidName : lot.name;
+
+    dispatch(setSlotData({ id: slotId, amount: amount + (lot.amount ?? 0), name: newLotName }));
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }, false));
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);

@@ -1,4 +1,14 @@
-import { ReactText, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactText,
+  RefObject,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { IconButton, Typography, darken, emphasize } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ReplayIcon from '@mui/icons-material/Replay';
@@ -30,7 +40,25 @@ const HOUR = 60 * 60 * 1000;
 
 type TimerType = 'stopwatch' | 'total';
 
-const Stopwatch: React.FC = () => {
+export interface StopwatchController {
+  getTimeLeft: () => number;
+  getState: () => 'paused' | 'running';
+  start: () => void;
+  stop: () => void;
+  reset: () => void;
+  setTime: (time: number) => void;
+}
+
+export interface StopwatchProps {
+  controller?: RefObject<StopwatchController>;
+  onPause?: (timeLeft: number) => void;
+  onStart?: (timeLeft: number) => void;
+  onReset?: (timeLeft: number) => void;
+  onTimeChanged?: (timeLeft: number, state: 'paused' | 'running') => void;
+  onEnd?: () => void;
+}
+
+const Stopwatch: React.FC<StopwatchProps> = ({ controller, onPause, onStart, onReset, onTimeChanged, onEnd }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
@@ -90,20 +118,24 @@ const Stopwatch: React.FC = () => {
   }, [slots]);
   const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 
-  const updateStopwatch = useCallback((timeDifference = 0): void => {
-    if (stopwatchElement.current) {
-      timeLeft.current += timeDifference;
-      if (timeLeft.current < 0) {
-        timeLeft.current = 0;
-        setIsStopped(true);
-        setIsStopwatchChanged(true);
+  const updateStopwatch = useCallback(
+    (timeDifference = 0): void => {
+      if (stopwatchElement.current) {
+        timeLeft.current += timeDifference;
+        if (timeLeft.current < 0) {
+          timeLeft.current = 0;
+          setIsStopped(true);
+          setIsStopwatchChanged(true);
+          onEnd?.();
+        }
+        const date = dayjs(timeLeft.current);
+        const hours = Math.floor(timeLeft.current / HOUR);
+        const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
+        stopwatchElement.current.innerHTML = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
       }
-      const date = dayjs(timeLeft.current);
-      const hours = Math.floor(timeLeft.current / HOUR);
-      const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
-      stopwatchElement.current.innerHTML = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
-    }
-  }, []);
+    },
+    [onEnd],
+  );
 
   const updateTotalTime = useCallback((timeDifference = 0) => {
     totalTime.current += timeDifference;
@@ -197,6 +229,7 @@ const Stopwatch: React.FC = () => {
     }
     setIsStopped(true);
     setIsStopwatchChanged(true);
+    onPause?.(timeLeft.current);
   };
 
   const resetTimer = useCallback((): void => {
@@ -204,11 +237,13 @@ const Stopwatch: React.FC = () => {
       stopTimer();
       timeLeft.current = defaultTime;
       updateStopwatch();
+      onReset?.(timeLeft.current);
     } else {
       totalTime.current = 0;
       updateTotalTime();
     }
-  }, [defaultTime, focusedTimer, updateStopwatch, updateTotalTime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultTime, focusedTimer, onReset, updateTotalTime, updateStopwatch]);
 
   const startTimer = (): void => {
     if (timeLeft.current) {
@@ -216,12 +251,22 @@ const Stopwatch: React.FC = () => {
       setIsStopwatchChanged(true);
       prevTimestamp.current = undefined;
       frameId.current = requestAnimationFrame(updateTimeOnFrame);
+      onStart?.(timeLeft.current);
     }
   };
 
-  const addTime = (): void => updateFocusedTimer(stopwatchStep);
-  const addDoubleTime = (): void => updateFocusedTimer(stopwatchStep * 2);
-  const subtractTime = (): void => updateFocusedTimer(-stopwatchStep);
+  const addTime = (): void => {
+    updateFocusedTimer(stopwatchStep);
+    onTimeChanged?.(timeLeft.current, isStopped ? 'paused' : 'running');
+  };
+  const addDoubleTime = (): void => {
+    updateFocusedTimer(stopwatchStep * 2);
+    onTimeChanged?.(timeLeft.current, isStopped ? 'paused' : 'running');
+  };
+  const subtractTime = (): void => {
+    updateFocusedTimer(-stopwatchStep);
+    onTimeChanged?.(timeLeft.current, isStopped ? 'paused' : 'running');
+  };
 
   useEffect(() => {
     if (isAutoincrementActive && winnerSlot.amount && previousWinnerSlotId.current !== winnerSlot.id) {
@@ -232,6 +277,18 @@ const Stopwatch: React.FC = () => {
 
   const swapTimers = () => setFocusedTimer((type) => (type === 'stopwatch' ? 'total' : 'stopwatch'));
   const timerClasses = (type: TimerType) => ({ [focusedTimer === type ? 'timer-primary' : 'timer-secondary']: true });
+
+  useImperativeHandle(controller, () => ({
+    start: startTimer,
+    stop: stopTimer,
+    reset: resetTimer,
+    setTime: (time: number) => {
+      timeLeft.current = time;
+      updateStopwatch();
+    },
+    getTimeLeft: () => timeLeft.current,
+    getState: () => (isStopped ? 'paused' : 'running'),
+  }));
 
   return (
     <div className='stopwatch-wrapper'>

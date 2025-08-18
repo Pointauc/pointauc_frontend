@@ -1,13 +1,11 @@
-// const debounce = <T extends Function>(callback: T, duration: number) => {
-//   let timeout;
-//
-//   return (...args: any) => {
-//     cle
-//   }
-// };
-
-import { RefObject, RefAttributes } from 'react';
-
+/**
+ * Returns a function that calls the callback after the duration has passed.
+ * If the function is called again before the duration has passed, the callback is postponed.
+ * After the duration has passed, the callback is called with the last arguments.
+ * @param callback - The function to call.
+ * @param duration - The duration in milliseconds.
+ * @returns A function that calls the callback after the duration has passed.
+ */
 export const timedFunction = <T extends (...args: any) => any>(
   callback: T,
   duration: number,

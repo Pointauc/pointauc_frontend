@@ -37,11 +37,15 @@ import HelpPage from './components/HelpPage/HelpPage';
 import Statistic from './components/Statistic/Statistic';
 import StopwatchPage from './components/StopwatchPage/StopwatchPage';
 import RequestsPage from './components/RequestsPage/RequestsPage';
+import OverlaysPage from './pages/overlays/OverlaysPage';
+import OverlayPage from './pages/Overlay/OverlayPage';
 import { connectToSocketIo } from './reducers/socketIo/socketIo';
 import { getCookie } from './utils/common.utils';
 import { getIntegrationsValidity } from './api/userApi';
 import { AlertType, AlertTypeEnum } from './models/alert.model';
 import { addAlert, deleteAlert } from './reducers/notifications/notifications';
+import { connectToBroadcastingSocket } from './features/broadcasting/lib/socket';
+import { useLotsBroadcasting } from './features/broadcasting/lib/broadcastHooks/useLotsBroadcasting';
 
 import type { ThunkDispatch } from 'redux-thunk';
 
@@ -71,9 +75,12 @@ const App: React.FC = () => {
     setIsDrawerOpen(false);
   }, []);
 
+  useLotsBroadcasting();
+
   useEffect(() => {
     if (username) {
       dispatch(connectToSocketIo);
+      dispatch(connectToBroadcastingSocket);
     }
   }, [dispatch, username]);
 
@@ -205,6 +212,8 @@ const App: React.FC = () => {
           <Route path={ROUTES.STATISTIC} element={<Statistic />} />
           <Route path={ROUTES.STOPWATCH} element={<StopwatchPage />} />
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
+          <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
+          <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
           <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         </Routes>
       </Container>

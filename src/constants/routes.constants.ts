@@ -17,6 +17,9 @@ const ROUTES = {
   STOPWATCH: '/stopwatch',
   CHAT_WHEEL: '/chatWheel/:channel',
   REQUESTS: '/requests',
+  OVERLAYS: '/overlays',
+  OVERLAY_EDIT: '/overlays/edit/:id',
+  OVERLAY_VIEW: '/overlays/view/:id',
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
   REDIRECT: {

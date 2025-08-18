@@ -1,5 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
+import broadcasting from '../features/broadcasting/model/store';
+
 import slots from './Slots/Slots';
 import user from './User/User';
 import purchases from './Purchases/Purchases';
@@ -9,6 +11,7 @@ import subscription from './Subscription/Subscription';
 import extraWindows from './ExtraWindows/ExtraWindows';
 import requests from './Requests/Requests';
 import socketIo from './socketIo/socketIo';
+import overlay from './Overlay/Overlay';
 
 const rootReducer = combineReducers({
   slots,
@@ -20,6 +23,8 @@ const rootReducer = combineReducers({
   extraWindows,
   requests,
   socketIo,
+  overlay,
+  broadcasting,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

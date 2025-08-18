@@ -214,5 +214,69 @@
     "addedTo": "Додано до",
     "status": "Статус",
     "returnRedemptions": "Повернуті Вібрані Нагороді"
+  },
+  "overlays": {
+    "title": "Оверлеї",
+    "newOverlay": "Новий оверлей",
+    "copyLink": "Копіювати посилання",
+    "openPage": "Відкрити сторінку",
+    "clickToEdit": "Натисніть для редагування",
+    "chooseYourOverlay": "Виберіть ваш оверлей",
+    "sections": "Секції",
+    "createSuccess": "Оверлей успішно створено",
+    "createSuccessMessage": "Оверлей \"{{name}}\" було створено і ви перенаправлені на сторінку редагування",
+    "createError": "Не вдалося створити оверлей",
+    "updateSuccess": "Оверлей успішно оновлено",
+    "updateError": "Не вдалося оновити оверлей",
+    "deleteSuccess": "Оверлей успішно видалено",
+    "deleteError": "Не вдалося видалити оверлей",
+    "overlayLink": "Посилання для OBS",
+    "displaySettings": "Налаштування відображення",
+    "overlayTypes": {
+      "Auction": "Аукціон",
+      "Wheel": "Колесо"
+    },
+    "auction": {
+      "description": "Відображає поточний стан аукціону.",
+      "sections": {
+        "bidTable": "Таблиця ставок з реальним часом",
+        "timer": "Таймер з налаштуваннями",
+        "rules": "Налаштування правил відображення"
+      }
+    },
+    "wheel": {
+      "description": "Оверлей колеса удачі.",
+      "sections": {
+        "wheelDisplay": "Анімоване колесо що крутиться",
+        "participants": "Список учасників в реальному часі",
+        "results": "Відображення результатів (TBD)"
+      }
+    },
+    "settings": {
+      "title": "Налаштування",
+      "overlayName": "Назва оверлею",
+      "showRules": "Показати правила",
+      "showTable": "Показати таблицю",
+      "showTimer": "Показати таймер",
+      "showWheel": "Показати колесо",
+      "showParticipants": "Показати учасників",
+      "autoscroll": "Автопрокрутка",
+      "autoscrollSpeed": "Швидкість автопрокрутки",
+      "backgroundTransparency": "Прозорість фону",
+      "backgroundTransparencyDescription": "Налаштуйте прозорість фону (0 = непрозорий, 100 = прозорий)",
+      "backgroundTransparencyDescriptionWheel": "Налаштуйте прозорість фону (0 = прозорий, 100 = непрозорий)",
+      "speedSlow": "Повільно",
+      "speedMedium": "Середньо",
+      "speedFast": "Швидко"
+    },
+    "preview": {
+      "title": "Попередній перегляд",
+      "comingSoon": "Попередній перегляд скоро з'явиться",
+      "description": "В цьому розділі буде показано живий попередній перегляд того, як ваш {{type}} оверлей буде виглядати на стрімі з поточними налаштуваннями.",
+      "urlLabel": "URL: /overlay/{{pathname}}"
+    },
+    "loading": "Завантаження...",
+    "backToOverlays": "Назад до оверлеїв",
+    "overlayNotFound": "Оверлей не знайдено"
   }
 }

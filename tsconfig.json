@@ -41,9 +41,12 @@
       "@reducers": ["./src/reducers/index.ts"],
       "@services/*": ["./src/services/*"],
       "@styles/*": ["./src/styles/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@features/*": ["./src/features/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@types/*": ["./src/types/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "openapi-ts.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

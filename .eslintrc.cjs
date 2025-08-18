@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'postcss.config.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'postcss.config.cjs', 'src/api/openapi'],
   parser: '@typescript-eslint/parser',
   plugins: ['import', 'react-refresh'],
   rules: {
@@ -42,6 +42,7 @@ module.exports = {
     '@typescript-eslint/no-unsafe-enum-comparison': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-namespace': 'off',
   },
   settings: {
     'import/parsers': {
