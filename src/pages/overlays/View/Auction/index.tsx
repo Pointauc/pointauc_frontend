@@ -5,6 +5,8 @@ import { Slot } from '@models/slot.model';
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
 import { Broadcasting } from '@features/broadcasting/model/types';
 
+import OverlayStatusMessage from '../shared/OverlayStatusMessage';
+
 import Layout, { TimerProps } from './ui/Layout/Layout';
 
 const generateMockLots = (count: number): Slot[] => {
@@ -28,6 +30,7 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
   const [lots, setLots] = useState<Slot[]>([]);
   const [rules, setRules] = useState<string>('');
   const [timer, setTimer] = useState<TimerProps>(defaultTimer);
+  const [hasReceivedLotsData, setHasReceivedLotsData] = useState(false);
 
   const previousScopes = useRef<Broadcasting.DataType[]>([]);
 
@@ -52,6 +55,7 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
               fastId: lot.fastId,
             })),
           );
+          setHasReceivedLotsData(true);
           break;
         case 'timer':
           setTimer(data.data);
@@ -78,6 +82,16 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
 
     previousScopes.current = scopesToListen;
   }, [socket, scopesToListen]);
+
+  // Show status message if we're supposed to show the table but haven't received lots data yet
+  if (overlay.settings.showTable && !hasReceivedLotsData) {
+    return (
+      <OverlayStatusMessage
+        type='info'
+        message='Overlay is waiting for data... Please open the Auction page on the main website to initialize the overlay.'
+      />
+    );
+  }
 
   return (
     <Layout

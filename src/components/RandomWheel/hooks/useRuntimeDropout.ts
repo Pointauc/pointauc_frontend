@@ -18,6 +18,7 @@ const useRuntimeDropout = (controller: RefObject<WheelController>): Wheel.Format
     return items.map((item) => ({
       ...item,
       amount: PredictionService.getReverseSize(item.amount, total, items.length),
+      originalAmount: item.amount,
     }));
   }, [items]);
   const onSpinEnd = useDropoutSpinEnd({ controller, setItems });

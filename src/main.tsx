@@ -32,7 +32,7 @@ import { integrationUtils } from '@components/Integration/helpers.ts';
 import INTEGRATIONS from '@components/Integration/integrations.ts';
 import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
-import OverlayViewPage from '@pages/overlays/OverlayViewPage.tsx';
+import OverlayViewPage from '@pages/overlays/View/OverlayViewPage.tsx';
 
 import ThemeWrapper from './ThemeWrapper.tsx';
 import App from './App.tsx';
@@ -72,6 +72,7 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
 const SLOTS_UPDATE_EVENTS = Object.keys(slotsSlice.actions).map((actionName) => `${slotsSlice.name}/${actionName}`);
 
 const saveSlotsWithCooldown = timedFunction((slots: Slot[]) => {
+  console.log('saveSlotsWithCooldown', slots);
   SaveLoadService.rewrite(slots, AUTOSAVE_NAME);
 }, 2000);
 

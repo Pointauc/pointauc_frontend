@@ -13,9 +13,9 @@ import {
   overlaysControllerListQueryKey,
 } from '@api/openapi/@tanstack/react-query.gen';
 
-import { Overlay, OverlayType, AuctionOverlay, WheelOverlay } from './types/overlay.types';
-import OverlaysGrid from './components/OverlaysGrid/OverlaysGrid';
-import CreateOverlayModal from './components/CreateOverlayModal/CreateOverlayModal';
+import { Overlay, OverlayType, AuctionOverlay, WheelOverlay } from '../types/overlay.types';
+import OverlaysGrid from './ui/OverlaysGrid/OverlaysGrid';
+import CreateOverlayModal from './ui/CreateOverlayModal/CreateOverlayModal';
 
 import type {
   AuctionOverlayDto,

@@ -16,13 +16,17 @@ import { WheelItem, WheelItemWithAngle } from '@models/wheel.model.ts';
 import { getRandomInclusive, random, shuffle } from '@utils/common.utils.ts';
 import { RandomPaceConfig } from '@services/SpinPaceService.ts';
 import wheelHelpers from '@components/BaseWheel/helpers.ts';
-import pradenW from '@assets/img/pradenW.png';
 import { useWheelDrawer } from '@components/BaseWheel/hooks/useWheelDrawer.ts';
 import { useWheelAnimator } from '@components/BaseWheel/hooks/useWheelAnimator.ts';
 import WinnerBackdrop from '@components/BaseWheel/WinnerBackdrop.tsx';
 import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
 import '@components/BaseWheel/BaseWheel.scss';
+import {
+  calculateRandomSpinDistance,
+  calculateWinnerSpinDistance,
+  getWinnerFromDistance,
+} from '@features/wheel/lib/geometry';
 
 export enum DropoutVariant {
   Classic,
@@ -34,9 +38,12 @@ export interface SpinParams {
   duration?: number;
   paceConfig?: RandomPaceConfig;
   winner?: Key;
+  distance?: number;
 }
 
 export interface WheelController {
+  getItems: () => WheelItemWithAngle[];
+
   clearWinner: () => void;
   spin: (params?: SpinParams) => Promise<WheelItem>;
   resetPosition: () => void;
@@ -57,8 +64,6 @@ export interface BaseWheelProps<T extends WheelItem> {
   dropOut?: boolean;
 }
 
-const calculateFixedAngle = (duration: number): number => duration * 270;
-
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const { items, resetWheel, deleteItem, controller, coreImage, onCoreImageChange, dropOut } = props;
   const { t } = useTranslation();
@@ -71,7 +76,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
 
-  const coreBackground = useMemo(() => `url(${coreImage || pradenW})`, [coreImage]);
+  const coreBackground = useMemo(() => `url(${coreImage})`, [coreImage]);
   const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
   const normalizedRef = useRef(normalizedItems);
 
@@ -79,14 +84,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     normalizedRef.current = normalizedItems;
   }, [normalizedItems]);
 
-  const getWinnerFromRotation = (rotation: number): WheelItemWithAngle | undefined => {
-    const angle = wheelHelpers.getWheelAngle(rotation);
-
-    return normalizedRef.current.find(({ startAngle, endAngle }) => angle >= startAngle && angle <= endAngle);
-  };
-
   const onSpinTick = useCallback((rotation: number): void => {
-    const winner = getWinnerFromRotation(rotation);
+    const winner = getWinnerFromDistance({ distance: rotation, items: normalizedRef.current });
 
     if (winner && spinTarget.current) {
       spinTarget.current.innerHTML = winner.name;
@@ -151,37 +150,31 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   };
 
   const { animate } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick });
-  const spinToWinner = useCallback(
-    async (winner: Key, duration: number) => {
-      const localSpin = distanceTo(winner);
-      const spinDistance = Math.round(calculateFixedAngle(duration) / 360) * 360 + localSpin;
-      await animate(spinDistance, duration);
 
-      return normalizedRef.current.find(({ id }) => id === winner);
-    },
-    [animate],
-  );
-
-  const spinRandom = useCallback(
-    async (duration: number, seed?: number | null) => {
-      const spinDistance = calculateFixedAngle(duration) + (seed ? seed : random.value()) * 360;
-      const end = await animate(spinDistance, duration);
-
-      return getWinnerFromRotation(end);
-    },
-    [animate],
-  );
+  const generateSpinDistance = useCallback((winner?: Key, duration = 20, seed?: number | null) => {
+    return winner
+      ? calculateWinnerSpinDistance({ duration, winnerId: winner, items: normalizedRef.current })
+      : calculateRandomSpinDistance({ duration, seed });
+  }, []);
 
   const spin: WheelController['spin'] = useCallback(
     async (params = {}) => {
-      const { seed, winner, duration = 20 } = params;
+      const { seed, winner, distance, duration = 20 } = params;
       setWinnerItem(undefined);
-      const winnerItem = await (winner ? spinToWinner(winner, duration) : spinRandom(duration, seed));
+
+      const spinDistance = distance ?? generateSpinDistance(winner, duration, seed);
+
+      const endAngle = await animate(spinDistance, duration);
+
+      const winnerItem = winner
+        ? normalizedRef.current.find(({ id }) => id === winner)
+        : getWinnerFromDistance({ distance: endAngle, items: normalizedRef.current });
+
       const finalized = await finalizeSpin(winnerItem);
 
       return finalized ? finalized : Promise.reject(new Error('No winner'));
     },
-    [finalizeSpin, spinRandom, spinToWinner],
+    [finalizeSpin, animate, generateSpinDistance],
   );
 
   useEffect(() => {
@@ -225,7 +218,15 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
         }
       };
 
-      return { spin, clearWinner, resetPosition, highlight, resetStyles, eatAnimation: _eatAnimation };
+      return {
+        spin,
+        clearWinner,
+        resetPosition,
+        highlight,
+        resetStyles,
+        eatAnimation: _eatAnimation,
+        getItems: () => normalizedRef.current,
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [clearWinner, controller, resetPosition, spin, normalizedItems],
@@ -234,13 +235,18 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const [isClickOusideAllowed, setIsClickOusideAllowed] = useState(true);
 
   return (
-    <div style={{ width: '0', height: '100%', display: 'inline-block', pointerEvents: 'none' }} ref={wrapper}>
+    <div
+      style={{ width: '0', height: '100%', display: 'inline-block', pointerEvents: 'none', overflow: 'visible' }}
+      ref={wrapper}
+    >
       <div className='wheel-target' ref={spinTarget}>
         {t('wheel.winner')}
       </div>
       <div className='wheel-content'>
-        <canvas style={{ position: 'absolute', zIndex: 1 }} ref={selectorCanvas} />
-        <canvas ref={wheelCanvas} />
+        <canvas style={{ position: 'absolute', zIndex: 1, top: -18 }} ref={selectorCanvas} />
+        <div className='wheel-canvas-wrapper'>
+          <canvas ref={wheelCanvas} />
+        </div>
         {onCoreImageChange && (
           <Popover width={420} withArrow position='right' closeOnClickOutside={isClickOusideAllowed}>
             <Popover.Target>
@@ -267,6 +273,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
             </Popover.Dropdown>
           </Popover>
         )}
+        {!onCoreImageChange && <div className='wheel-core' style={{ backgroundImage: coreBackground }}></div>}
         {!!winnerItem && (
           <WinnerBackdrop
             name={winnerItem.name}

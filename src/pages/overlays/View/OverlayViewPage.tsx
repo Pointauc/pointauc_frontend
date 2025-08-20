@@ -9,8 +9,9 @@ import { client } from '@api/openapi/client.gen';
 import { AuctionOverlayDto, WheelOverlayDto } from '@api/openapi/types.gen';
 import { Broadcasting } from '@features/broadcasting/model/types';
 
-import AuctionOverlayPage from './pages/Auction';
-import WheelOverlayPage from './pages/Wheel';
+import OverlayStatusMessage from './shared/OverlayStatusMessage';
+import AuctionOverlayPage from './Auction';
+import WheelOverlayPage from './Wheel';
 
 interface OverlayViewPageProps {}
 
@@ -60,10 +61,6 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
       }
     });
 
-    socket.on('auth_error', (error) => {
-      console.error('Socket authentication error:', error);
-    });
-
     socket.on('connect', () => {
       setSocketLoading(false);
       setSocket(socket);
@@ -89,12 +86,14 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
 
   // Show loading state while fetching overlay data
   if (overlayQuery.isLoading || socketLoading) {
-    return <div>Loading overlay...</div>;
+    return <OverlayStatusMessage type='loading' message='Loading overlay...' />;
   }
 
   // Show error state if overlay fetch failed
   if (overlayQuery.isError || !overlay || !socket) {
-    return <div>Error loading overlay</div>;
+    return (
+      <OverlayStatusMessage type='error' message='Error loading overlay. Please check your connection and try again.' />
+    );
   }
 
   // Render appropriate overlay component based on type
@@ -104,7 +103,7 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     case 'Wheel':
       return <WheelOverlayPage socket={socket} overlay={overlay as WheelOverlayDto} />;
     default:
-      return <div>Unknown overlay type: {overlay.type}</div>;
+      return <OverlayStatusMessage type='error' message={`Unknown overlay type: ${overlay.type}`} />;
   }
 };
 

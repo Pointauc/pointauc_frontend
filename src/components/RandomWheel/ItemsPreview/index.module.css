@@ -1,0 +1,9 @@
+.itemsCentered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  & > div {
+    position: relative;
+  }
+}

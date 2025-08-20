@@ -52,6 +52,7 @@
     "cloudinary-react": "^1.8.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
+    "eventemitter3": "^5.0.1",
     "gsap": "3",
     "i18next": "^23.6.0",
     "i18next-browser-languagedetector": "^7.1.0",

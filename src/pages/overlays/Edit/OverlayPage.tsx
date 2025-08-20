@@ -15,10 +15,10 @@ import {
   overlaysControllerListQueryKey,
 } from '@api/openapi/@tanstack/react-query.gen';
 
-import { Overlay } from '../overlays/types/overlay.types';
+import { Overlay } from '../types/overlay.types';
 
-import SettingsSection from './components/SettingsSection/SettingsSection';
-import PreviewSection from './components/PreviewSection/PreviewSection';
+import SettingsSection from './ui/SettingsSection/SettingsSection';
+import PreviewSection from './ui/PreviewSection/PreviewSection';
 
 import type {
   AuctionOverlayDto,

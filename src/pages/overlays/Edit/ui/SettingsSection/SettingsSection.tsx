@@ -4,7 +4,7 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { Title, TextInput, Button, Group, Stack, Divider, Badge, Text, Tooltip, ActionIcon } from '@mantine/core';
 import { IconDeviceFloppy, IconTrash, IconEdit, IconArrowBackUp } from '@tabler/icons-react';
 
-import { Overlay } from '../../../overlays/types/overlay.types';
+import { Overlay } from '../../../types/overlay.types';
 import UrlControls from '../UrlControls';
 
 import AuctionSettings from './AuctionSettings';

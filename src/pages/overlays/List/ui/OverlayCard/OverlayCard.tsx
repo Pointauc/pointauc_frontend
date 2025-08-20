@@ -3,9 +3,9 @@ import { Card, Badge, Group, Text, Stack, ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import UrlControls from '@pages/Overlay/components/UrlControls';
+import UrlControls from '@pages/overlays/Edit/ui/UrlControls';
 
-import { Overlay } from '../../types/overlay.types';
+import { Overlay } from '../../../types/overlay.types';
 import './OverlayCard.scss';
 
 interface OverlayCardProps {

@@ -11,11 +11,8 @@ import { type Config, type ClientOptions as DefaultClientOptions, createClient, 
  * `setConfig()`. This is useful for example if you're using Next.js
  * to ensure your client always has the correct values.
  */
-export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> = (
-  override?: Config<DefaultClientOptions & T>,
-) => Config<Required<DefaultClientOptions> & T>;
-export const client = createClient(
-  createConfig<ClientOptions>({
-    baseURL: '/api',
-  }),
-);
+export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> = (override?: Config<DefaultClientOptions & T>) => Config<Required<DefaultClientOptions> & T>;
+
+export const client = createClient(createConfig<ClientOptions>({
+    baseURL: '/api'
+}));

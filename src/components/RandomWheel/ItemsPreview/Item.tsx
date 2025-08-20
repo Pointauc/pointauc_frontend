@@ -4,21 +4,22 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import { Divider } from '@mui/material';
 import classNames from 'classnames';
 
-import { WheelItem } from '@models/wheel.model.ts';
+import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 import { WheelContext } from '@components/RandomWheel/WheelSettings/WheelContext.tsx';
-
+import * as wheelItem from '@features/wheel/lib/item.ts';
 import '@components/RandomWheel/ItemsPreview/Item.scss';
 
 interface Props {
-  item: WheelItem;
+  item: WheelItemWithMetadata;
   disabled: boolean;
   total: number;
   actionable?: boolean;
 }
 
 const Item = ({ item, disabled, total, actionable }: Props) => {
-  const { name, amount, color } = item;
-  const chance = useMemo(() => ((amount / total) * 100).toFixed(1), [amount, total]);
+  const { name, color } = item;
+  const amountToDisplay = wheelItem.getAmount(item);
+  const chance = useMemo(() => ((amountToDisplay / total) * 100).toFixed(1), [amountToDisplay, total]);
   const { controller } = useContext(WheelContext);
 
   const onHover = () => {
@@ -41,7 +42,7 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
       onMouseLeave={onLeave}
     >
       <Grid className='name'>{name}</Grid>
-      <Grid className='amount'>{amount}</Grid>
+      <Grid className='amount'>{amountToDisplay}</Grid>
       <Divider orientation='vertical' />
       <Grid className='chance'>{chance + ' %'}</Grid>
       <Grid>

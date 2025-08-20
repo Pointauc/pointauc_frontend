@@ -3,7 +3,7 @@ import { Stack, Title, Text, Center, Paper, ThemeIcon } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-import { Overlay } from '../../../overlays/types/overlay.types';
+import { Overlay } from '../../../types/overlay.types';
 
 interface PreviewSectionProps {
   overlay: Overlay;

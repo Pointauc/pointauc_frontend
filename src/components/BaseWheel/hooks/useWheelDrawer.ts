@@ -35,9 +35,12 @@ interface Result {
   eatAnimation: EatAnimationFunc;
 }
 
-const borderWidth = 3;
+const borderWidth = 5;
+const innerBorderWidth = 2;
 const maxTextLength = 21;
 const selectorAngle = (Math.PI / 2) * 3;
+// Pointer size multiplier - adjust this to make the pointer bigger/smaller (default 1.4 = 40% larger)
+const defaultPointerSizeMultiplier = 1.4;
 
 const colorGetter = (item: WheelItem) => item.color || '#000';
 
@@ -83,7 +86,7 @@ export const useWheelDrawer = (): Result => {
     const { startAngle, endAngle } = item;
     ctx.fillStyle = getColor(item);
     ctx.strokeStyle = '#eee';
-    ctx.lineWidth = borderWidth;
+    ctx.lineWidth = innerBorderWidth;
 
     const pieEdge = pieEdgeDefault || { x: center, y: center };
     const radius = center - ctx.lineWidth;
@@ -97,6 +100,116 @@ export const useWheelDrawer = (): Result => {
     ctx.stroke();
   };
 
+  const drawPointer = (
+    ctx: CanvasRenderingContext2D,
+    center: number,
+    sizeMultiplier = defaultPointerSizeMultiplier,
+  ): void => {
+    const baseWidth = 28;
+    const baseHeight = 46;
+    const pointerWidth = baseWidth * sizeMultiplier;
+    const pointerHeight = baseHeight * sizeMultiplier;
+    const pointerX = center;
+    const pointerY = borderWidth;
+
+    // Clear the pointer canvas
+    ctx.clearRect(0, 0, center * 2, center * 2);
+
+    // Save context for transformations
+    ctx.save();
+
+    // Create gradient for the pointer - elegant silver/steel
+    const gradient = ctx.createLinearGradient(
+      pointerX - pointerWidth / 2,
+      pointerY,
+      pointerX + pointerWidth / 2,
+      pointerY + pointerHeight,
+    );
+    gradient.addColorStop(0, '#E8E8E8'); // Light silver
+    gradient.addColorStop(0.3, '#C0C0C0'); // Silver
+    gradient.addColorStop(0.7, '#808080'); // Medium gray
+    gradient.addColorStop(1, '#4A4A4A'); // Dark steel
+
+    // Configure shadow properties for enhanced depth effect
+    ctx.shadowOffsetX = 4 * sizeMultiplier;
+    ctx.shadowOffsetY = 6 * sizeMultiplier;
+    ctx.shadowBlur = 10 * sizeMultiplier;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+
+    // Draw main pointer body
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.moveTo(pointerX, pointerY + pointerHeight); // Point at bottom
+    ctx.lineTo(pointerX - pointerWidth / 2, pointerY + 15 * sizeMultiplier); // Left side
+    ctx.quadraticCurveTo(
+      pointerX - pointerWidth / 2 - 5 * sizeMultiplier,
+      pointerY + 5 * sizeMultiplier,
+      pointerX - pointerWidth / 3,
+      pointerY,
+    ); // Left top curve
+    ctx.quadraticCurveTo(pointerX, pointerY - 5 * sizeMultiplier, pointerX + pointerWidth / 3, pointerY); // Top curve
+    ctx.quadraticCurveTo(
+      pointerX + pointerWidth / 2 + 5 * sizeMultiplier,
+      pointerY + 5 * sizeMultiplier,
+      pointerX + pointerWidth / 2,
+      pointerY + 15 * sizeMultiplier,
+    ); // Right top curve
+    ctx.closePath();
+    ctx.fill();
+
+    // Reset shadow properties before drawing border and other elements
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
+
+    // Add border/outline
+    ctx.strokeStyle = '#3F3F3F'; // Dark charcoal border
+    ctx.lineWidth = 2 * sizeMultiplier;
+    ctx.stroke();
+
+    // Add highlight shine
+    const shineGradient = ctx.createLinearGradient(
+      pointerX - pointerWidth / 4,
+      pointerY + 5 * sizeMultiplier,
+      pointerX + pointerWidth / 4,
+      pointerY + 20 * sizeMultiplier,
+    );
+    shineGradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+    shineGradient.addColorStop(1, 'rgba(255, 255, 255, 0.05)');
+
+    ctx.fillStyle = shineGradient;
+    ctx.beginPath();
+    ctx.moveTo(pointerX - pointerWidth / 4, pointerY + 8 * sizeMultiplier);
+    ctx.lineTo(pointerX + pointerWidth / 4, pointerY + 8 * sizeMultiplier);
+    ctx.lineTo(pointerX + pointerWidth / 6, pointerY + 25 * sizeMultiplier);
+    ctx.lineTo(pointerX - pointerWidth / 6, pointerY + 25 * sizeMultiplier);
+    ctx.closePath();
+    ctx.fill();
+
+    // Add small decorative gem at the top
+    ctx.fillStyle = '#1E3A8A'; // Deep navy blue
+    ctx.beginPath();
+    ctx.ellipse(pointerX, pointerY + 3 * sizeMultiplier, 4 * sizeMultiplier, 6 * sizeMultiplier, 0, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Gem highlight
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.beginPath();
+    ctx.ellipse(
+      pointerX - 1 * sizeMultiplier,
+      pointerY + 2 * sizeMultiplier,
+      1.5 * sizeMultiplier,
+      2 * sizeMultiplier,
+      0,
+      0,
+      2 * Math.PI,
+    );
+    ctx.fill();
+
+    ctx.restore();
+  };
+
   const drawWheel: DrawWheelFunc = ({ items, wheelCanvas, pointerCanvas, getColor = colorGetter, clear = true }) => {
     const ctx = wheelCanvas.getContext('2d');
     const pointerCtx = pointerCanvas.getContext('2d');
@@ -106,18 +219,44 @@ export const useWheelDrawer = (): Result => {
       clear && ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
       items.forEach((item) => drawSlice(ctx, radius, item, undefined, getColor));
       items.forEach((item) => drawText(ctx, radius, item));
+
+      // Draw outer border (thick circle around the wheel)
+      ctx.strokeStyle = '#eee';
+      ctx.lineWidth = borderWidth;
+      ctx.beginPath();
+      ctx.arc(radius, radius, radius - borderWidth / 2, 0, 2 * Math.PI);
+      ctx.stroke();
+
+      // Add inner shadow to the wheel for depth
+      const innerShadowWidth = 15;
+      const innerRadius = radius - borderWidth;
+
+      // Create radial gradient for inner shadow
+      const innerShadowGradient = ctx.createRadialGradient(
+        radius,
+        radius,
+        innerRadius - innerShadowWidth,
+        radius,
+        radius,
+        innerRadius,
+      );
+      innerShadowGradient.addColorStop(0, 'rgba(0, 0, 0, 0)'); // Transparent at inner edge
+      innerShadowGradient.addColorStop(0.6, 'rgba(0, 0, 0, 0.1)'); // Light shadow
+      innerShadowGradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)'); // Darker shadow at border
+
+      // Draw the inner shadow ring
+      ctx.save();
+      ctx.fillStyle = innerShadowGradient;
+      ctx.beginPath();
+      ctx.arc(radius, radius, innerRadius, 0, 2 * Math.PI);
+      ctx.arc(radius, radius, innerRadius - innerShadowWidth, 0, 2 * Math.PI, true); // Inner hole
+      ctx.fill();
+      ctx.restore();
     }
 
+    // Draw the pointer on the pointer canvas
     if (pointerCtx) {
-      const preset: WheelItemWithAngle = {
-        startAngle: selectorAngle - 0.12,
-        endAngle: selectorAngle + 0.12,
-        color: '#353535',
-        id: 'pointer',
-        name: 'pointer',
-        amount: 0,
-      };
-      drawSlice(pointerCtx, radius, preset, { x: radius, y: 45 });
+      drawPointer(pointerCtx, radius);
     }
   };
 

@@ -1,15 +1,18 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useMutation } from '@tanstack/react-query';
 
 import { broadcastingControllerBroadcastWheelMutation } from '@api/openapi/@tanstack/react-query.gen';
 import { RootState } from '@reducers/index';
-import { WheelItem } from '@models/wheel.model';
-import { Broadcasting } from '@features/broadcasting/model/types';
+import { WheelItemWithMetadata } from '@models/wheel.model';
+import { WheelParticipantDto, WheelSettingsChangedDto } from '@api/openapi/types.gen';
+
+export type WheelBroadcastSettings = Omit<WheelSettingsChangedDto, 'type'>;
 
 interface WheelBroadcastingHooks {
-  broadcastParticipantsChanged: (participants: WheelItem[]) => void;
+  broadcastParticipantsChanged: (participants: WheelItemWithMetadata[]) => void;
   broadcastSpin: (angle: number, duration: number, winner: string) => void;
+  broadcastSettingsChanged: (settings: WheelBroadcastSettings) => void;
 }
 
 export const useWheelBroadcasting = (): WheelBroadcastingHooks => {
@@ -20,14 +23,15 @@ export const useWheelBroadcasting = (): WheelBroadcastingHooks => {
   });
 
   const broadcastParticipantsChanged = useCallback(
-    (participants: WheelItem[]) => {
+    (participants: WheelItemWithMetadata[]) => {
       if (!isBroadcastEnabled) return;
 
-      const wheelParticipants: Broadcasting.WheelParticipant[] = participants.map((item) => ({
+      const wheelParticipants: WheelParticipantDto[] = participants.map((item) => ({
         name: item.name,
         id: item.id.toString(),
-        color: item.color || '#FF0000', // Default color if not provided
+        color: item.color || '#FF0000',
         amount: item.amount || 0,
+        originalAmount: item.originalAmount || null,
       }));
 
       broadcastWheel({
@@ -60,11 +64,26 @@ export const useWheelBroadcasting = (): WheelBroadcastingHooks => {
     [broadcastWheel, isBroadcastEnabled],
   );
 
+  const broadcastSettingsChanged = useCallback(
+    (settings: WheelBroadcastSettings) => {
+      broadcastWheel({
+        body: {
+          data: {
+            type: 'settings',
+            ...settings,
+          },
+        },
+      });
+    },
+    [broadcastWheel],
+  );
+
   return useMemo(
     () => ({
       broadcastParticipantsChanged,
       broadcastSpin,
+      broadcastSettingsChanged,
     }),
-    [broadcastParticipantsChanged, broadcastSpin],
+    [broadcastParticipantsChanged, broadcastSpin, broadcastSettingsChanged],
   );
 };

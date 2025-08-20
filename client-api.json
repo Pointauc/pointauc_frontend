@@ -1025,19 +1025,11 @@
             "example": 100.5,
             "minimum": 0
           },
-          "startAngle": {
+          "originalAmount": {
             "type": "number",
-            "description": "Starting angle of participant segment in degrees",
-            "example": 0,
-            "minimum": 0,
-            "maximum": 360
-          },
-          "endAngle": {
-            "type": "number",
-            "description": "Ending angle of participant segment in degrees",
-            "example": 45,
-            "minimum": 0,
-            "maximum": 360
+            "description": "Original amount of the participant. Used for the dropout wheel.",
+            "example": 100.5,
+            "nullable": true
           }
         },
         "required": [
@@ -1045,8 +1037,7 @@
           "id",
           "color",
           "amount",
-          "startAngle",
-          "endAngle"
+          "originalAmount"
         ]
       },
       "WheelParticipantsChangedDto": {
@@ -1110,6 +1101,33 @@
           "winner"
         ]
       },
+      "WheelSettingsChangedDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "settings"
+            ]
+          },
+          "format": {
+            "type": "number",
+            "description": "Type of the wheel format",
+            "enum": [
+              0,
+              1,
+              2
+            ]
+          },
+          "coreImage": {
+            "type": "string",
+            "description": "Core image of the wheel"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
       "WheelBroadcastDto": {
         "type": "object",
         "properties": {
@@ -1121,6 +1139,9 @@
               },
               {
                 "$ref": "#/components/schemas/WheelSpinDto"
+              },
+              {
+                "$ref": "#/components/schemas/WheelSettingsChangedDto"
               }
             ]
           },
@@ -1470,7 +1491,7 @@
           "autoscrollSpeed": {
             "type": "number",
             "minimum": 0,
-            "maximum": 1
+            "maximum": 100
           }
         },
         "required": [

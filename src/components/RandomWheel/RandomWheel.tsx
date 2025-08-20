@@ -10,11 +10,11 @@ import {
   useState,
 } from 'react';
 import classNames from 'classnames';
-import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form';
+import { FormProvider, UseFormReturn, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
 import { WheelItem } from '@models/wheel.model.ts';
-import { getTotalSize, random } from '@utils/common.utils.ts';
+import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
 import { getRandomNumber } from '@api/randomApi.ts';
 import withLoading from '@decorators/withLoading';
 import { DropoutVariant, SpinParams, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
@@ -26,6 +26,7 @@ import wheelUtils from '@components/RandomWheel/wheelUtils.ts';
 import array from '@utils/dataType/array.ts';
 import ItemsPreview from '@components/RandomWheel/ItemsPreview';
 import './RandomWheel.scss';
+import { calculateRandomSpinDistance } from '@features/wheel/lib/geometry';
 
 export interface SettingElements {
   mode: boolean;
@@ -47,13 +48,16 @@ const initialAvailableSettings: SettingElements = {
 
 interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   items: TWheelItem[];
-  deleteItem?: (id: Key) => void;
   initialSpinTime?: number;
-  onWin?: (winner: TWheelItem) => void;
-  isShuffle?: boolean;
+  shouldShuffle?: boolean;
   elements?: Partial<SettingElements>;
   children?: ReactNode;
   wheelRef?: React.RefObject<RandomWheelController>;
+  // callbacks
+  deleteItem?: (id: Key) => void;
+  onWin?: (winner: TWheelItem) => void;
+  onWheelItemsChanged?: (items: TWheelItem[]) => void;
+  onSpinStart?: (params: SpinParams) => void;
 }
 
 const defaultSettings: Wheel.Settings = {
@@ -84,7 +88,9 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   items: _itemsFromProps,
   deleteItem,
   onWin,
-  isShuffle = true,
+  onWheelItemsChanged,
+  onSpinStart,
+  shouldShuffle = true,
   elements: elementsFromProps,
   children,
   wheelRef,
@@ -125,11 +131,8 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
     wheelController.current?.clearWinner();
   }, [format, dropoutVariant]);
 
-  const { items, init, onSpinStart, extraSettings, renderSubmitButton, onSpinEnd, content } = useWheelResolver({
-    format,
-    dropoutVariant,
-    controller: wheelController,
-  });
+  const wheelStrategy = useWheelResolver({ format, dropoutVariant, controller: wheelController });
+  const { items, init, extraSettings, renderSubmitButton, onSpinEnd, content } = wheelStrategy;
 
   const filteredItems = useMemo(
     () =>
@@ -153,30 +156,31 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
 
   const onSpinClick = useCallback(
     async ({ useRandomOrg }: Wheel.Settings) => {
-      const spinConfig = onSpinStart?.();
       const { min, max } = randomSpinConfig!;
       const duration = randomSpinEnabled ? random.getInt(min!, max!) : spinTime;
-      const winner = await wheelController.current?.spin({
-        seed: useRandomOrg ? await getSeed() : undefined,
-        duration: duration,
+
+      const initialSpinParams = {
+        duration,
+        distance: calculateRandomSpinDistance({ duration, seed: useRandomOrg ? await getSeed() : undefined }),
+      };
+
+      const spinConfig = wheelStrategy.onSpinStart?.(initialSpinParams, wheelController.current?.getItems() ?? []);
+
+      const config = {
+        ...initialSpinParams,
         ...spinConfig,
-      });
+      };
+
+      onSpinStart?.(config);
+      const winner = await wheelController.current?.spin(config);
       await onSpinEnd?.(winner);
       winner && onWin?.(winner as TWheelItem);
     },
-    [getSeed, onSpinEnd, onSpinStart, onWin, randomSpinConfig, randomSpinEnabled, spinTime],
+    [getSeed, onSpinEnd, wheelStrategy, onSpinStart, onWin, randomSpinConfig, randomSpinEnabled, spinTime],
   );
 
   const split = useWatch<Wheel.Settings>({ name: 'split' });
   const maxSize = useMemo(() => Math.max(...items.map<number>(({ amount }) => Number(amount))), [items]);
-  const splittedItems = useMemo(() => {
-    if (split === 1) {
-      return items;
-    }
-
-    const newItems = wheelUtils.splitItems(items, split * maxSize);
-    return newItems.length ? array.distributeEvenly(newItems) : [];
-  }, [items, maxSize, split]);
   const deleteWheelItem = (id: Key) => {
     if (format === WheelFormat.Default) {
       setItemsFromProps(itemsFromProps.filter((item) => item.id !== id));
@@ -185,17 +189,27 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
     deleteItem?.(id);
   };
 
+  const shuffledItems = useMemo(() => (shouldShuffle ? shuffle(items) : items), [items, shouldShuffle]);
+
+  const splittedItems = useMemo(() => {
+    if (split === 1) {
+      return shuffledItems;
+    }
+
+    const newItems = wheelUtils.splitItems(shuffledItems, split * maxSize);
+    return newItems.length ? array.distributeEvenly(newItems) : [];
+  }, [shuffledItems, maxSize, split]);
+
+  useEffect(() => {
+    onWheelItemsChanged?.(splittedItems);
+  }, [splittedItems, onWheelItemsChanged]);
+
   return (
     <WheelContextProvider controller={wheelController} changeInitialItems={setItemsFromProps}>
       <form className='wheel-content' onSubmit={handleSubmit(onSpinClick)}>
-        {!content && elements.preview && <ItemsPreview allItems={filteredItems} activeItems={items} />}
+        {!content && elements.preview && <ItemsPreview allItems={filteredItems} activeItems={items} format={format} />}
         {content && <div className='wheel-content-negative-space' />}
-        <WheelComponent
-          finalItems={splittedItems}
-          shouldShuffle={split != 1 ? false : isShuffle}
-          deleteItem={deleteWheelItem}
-          controller={wheelController}
-        />
+        <WheelComponent finalItems={splittedItems} deleteItem={deleteWheelItem} controller={wheelController} />
         <div className={classNames('wheel-info-wrapper', { shrink: content })}>
           <div className={classNames('wheel-controls')}>
             <WheelSettings
@@ -217,12 +231,20 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   );
 };
 
-const Provider = <TWheelItem extends WheelItem = WheelItem>(props: RandomWheelProps<TWheelItem>): ReactElement => {
+interface RandomWheelProviderProps<TWheelItem extends WheelItem = WheelItem> extends RandomWheelProps<TWheelItem> {
+  form?: React.RefObject<UseFormReturn<Wheel.Settings>>;
+}
+
+const Provider = <TWheelItem extends WheelItem = WheelItem>(
+  props: RandomWheelProviderProps<TWheelItem>,
+): ReactElement => {
   const initial = useMemo(
     () => ({ ...initialSettings, spinTime: props.initialSpinTime || initialSettings.spinTime }),
     [props.initialSpinTime],
   );
   const form = useForm<Wheel.Settings>({ defaultValues: initial });
+
+  useImperativeHandle<UseFormReturn<Wheel.Settings>, UseFormReturn<Wheel.Settings>>(props.form, () => form);
 
   return (
     <FormProvider {...form}>

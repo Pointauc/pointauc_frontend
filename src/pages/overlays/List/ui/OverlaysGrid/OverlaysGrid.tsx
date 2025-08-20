@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { SimpleGrid } from '@mantine/core';
 
-import { Overlay } from '../../types/overlay.types';
+import { Overlay } from '../../../types/overlay.types';
 import OverlayCard from '../OverlayCard/OverlayCard';
 import NewOverlayCard from '../NewOverlayCard/NewOverlayCard';
 import './OverlaysGrid.scss';

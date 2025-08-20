@@ -1,3 +1,5 @@
+import { WheelParticipantsChangedDto, WheelSettingsChangedDto, WheelSpinDto } from '@api/openapi/types.gen';
+
 export namespace Broadcasting {
   export type DataType = 'lots' | 'timer' | 'rules' | 'wheel';
 
@@ -33,23 +35,23 @@ export namespace Broadcasting {
 
   export interface DataUpdateWheelParticipantsChangedPayload {
     dataType: 'wheel';
-    data: {
-      type: 'participants-changed';
-      participants: WheelParticipant[];
-    };
+    data: WheelParticipantsChangedDto;
   }
 
   export interface DataUpdateWheelSpinPayload {
     dataType: 'wheel';
-    data: {
-      type: 'spin';
-      angle: number;
-      duration: number;
-      winner: string; // id
-    };
+    data: WheelSpinDto;
   }
 
-  export type DataUpdateWheelPayload = DataUpdateWheelParticipantsChangedPayload | DataUpdateWheelSpinPayload;
+  export interface DataUpdateWheelSettingsChangedPayload {
+    dataType: 'wheel';
+    data: WheelSettingsChangedDto;
+  }
+
+  export type DataUpdateWheelPayload =
+    | DataUpdateWheelParticipantsChangedPayload
+    | DataUpdateWheelSpinPayload
+    | DataUpdateWheelSettingsChangedPayload;
 
   export type DataUpdatePayload = DataUpdateLotsPayload | DataUpdateTimerPayload | DataUpdateWheelPayload;
 

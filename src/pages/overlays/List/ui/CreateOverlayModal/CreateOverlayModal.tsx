@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Modal, Grid, Card, Text, Stack, Group, Box } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
-import { OverlayType } from '../../types/overlay.types';
+import { OverlayType } from '../../../types/overlay.types';
 
 import './CreateOverlayModal.scss';
 

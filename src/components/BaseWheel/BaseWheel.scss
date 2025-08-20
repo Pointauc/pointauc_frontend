@@ -1,5 +1,11 @@
 .wheel-content {
   position: relative;
+  overflow: visible;
+}
+
+.wheel-canvas-wrapper {
+  position: relative;
+  overflow: hidden;
 }
 
 .wheel-core {
