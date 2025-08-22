@@ -5,12 +5,12 @@ import BaseWheel, { BaseWheelProps } from '@components/BaseWheel/BaseWheel.tsx';
 import { WheelItem } from '@models/wheel.model.ts';
 import { WheelFormat } from '@constants/wheel';
 
-interface Props extends Pick<BaseWheelProps<any>, 'controller'> {
+interface Props extends Pick<BaseWheelProps<any>, 'controller' | 'className' | 'onOptimalSizeChange'> {
   deleteItem?: (id: Key) => void;
   finalItems: WheelItem[];
 }
 
-const WheelComponent = ({ controller, deleteItem, finalItems }: Props) => {
+const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptimalSizeChange }: Props) => {
   const coreImage = useWatch<Wheel.Settings>({ name: 'coreImage' });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const { setValue } = useFormContext<Wheel.Settings>();
@@ -29,6 +29,8 @@ const WheelComponent = ({ controller, deleteItem, finalItems }: Props) => {
       items={finalItems}
       onCoreImageChange={onCoreImageChange}
       dropOut={format === WheelFormat.Dropout}
+      className={className}
+      onOptimalSizeChange={onOptimalSizeChange}
     />
   );
 };

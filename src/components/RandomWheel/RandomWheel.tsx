@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import {
   Key,
   ReactElement,
@@ -9,24 +10,24 @@ import {
   useRef,
   useState,
 } from 'react';
-import classNames from 'classnames';
 import { FormProvider, UseFormReturn, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
-import { WheelItem } from '@models/wheel.model.ts';
-import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
 import { getRandomNumber } from '@api/randomApi.ts';
-import withLoading from '@decorators/withLoading';
 import { DropoutVariant, SpinParams, WheelController } from '@components/BaseWheel/BaseWheel.tsx';
-import WheelSettings from '@components/RandomWheel/WheelSettings/WheelSettings.tsx';
-import { WheelContextProvider } from '@components/RandomWheel/WheelSettings/WheelContext.tsx';
+import WheelFlexboxAutosizer from '@components/BaseWheel/FlexboxAutosizer';
+import ItemsPreview from '@components/RandomWheel/ItemsPreview';
 import WheelComponent from '@components/RandomWheel/WheelSettings/Wheel';
+import { WheelContextProvider } from '@components/RandomWheel/WheelSettings/WheelContext.tsx';
+import WheelSettings from '@components/RandomWheel/WheelSettings/WheelSettings.tsx';
 import useWheelResolver from '@components/RandomWheel/hooks/useWheelResolver.ts';
 import wheelUtils from '@components/RandomWheel/wheelUtils.ts';
-import array from '@utils/dataType/array.ts';
-import ItemsPreview from '@components/RandomWheel/ItemsPreview';
-import './RandomWheel.scss';
+import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
+import withLoading from '@decorators/withLoading';
 import { calculateRandomSpinDistance } from '@features/wheel/lib/geometry';
+import { WheelItem } from '@models/wheel.model.ts';
+import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
+import array from '@utils/dataType/array.ts';
+import './RandomWheel.scss';
 
 export interface SettingElements {
   mode: boolean;
@@ -100,7 +101,6 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const wheelController = useRef<WheelController | null>(null);
   const { handleSubmit, setValue } = useFormContext<Wheel.Settings>();
-
   const formValues = useWatch<Wheel.Settings>();
   const { randomSpinEnabled, randomSpinConfig, spinTime } = formValues;
   const format = useWatch<Wheel.Settings>({ name: 'format' });
@@ -209,7 +209,16 @@ const RandomWheel = <TWheelItem extends WheelItem = WheelItem>({
       <form className='wheel-content' onSubmit={handleSubmit(onSpinClick)}>
         {!content && elements.preview && <ItemsPreview allItems={filteredItems} activeItems={items} format={format} />}
         {content && <div className='wheel-content-negative-space' />}
-        <WheelComponent finalItems={splittedItems} deleteItem={deleteWheelItem} controller={wheelController} />
+        <WheelFlexboxAutosizer>
+          {({ onOptimalSizeChange }) => (
+            <WheelComponent
+              finalItems={splittedItems}
+              deleteItem={deleteWheelItem}
+              controller={wheelController}
+              onOptimalSizeChange={onOptimalSizeChange}
+            />
+          )}
+        </WheelFlexboxAutosizer>
         <div className={classNames('wheel-info-wrapper', { shrink: content })}>
           <div className={classNames('wheel-controls')}>
             <WheelSettings

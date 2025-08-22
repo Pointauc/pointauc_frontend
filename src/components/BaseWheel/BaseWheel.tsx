@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -11,6 +12,7 @@ import React, {
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 import { Overlay, Popover, Stack, Text } from '@mantine/core';
+import clsx from 'clsx';
 
 import { WheelItem, WheelItemWithAngle } from '@models/wheel.model.ts';
 import { getRandomInclusive, random, shuffle } from '@utils/common.utils.ts';
@@ -59,13 +61,25 @@ export interface BaseWheelProps<T extends WheelItem> {
   controller: MutableRefObject<WheelController | null>;
   coreImage?: string | null;
   onCoreImageChange?: (image: string) => void;
+  onOptimalSizeChange?: (size: number) => void;
   resetWheel?: boolean;
   delay?: number;
   dropOut?: boolean;
+  className?: string;
 }
 
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
-  const { items, resetWheel, deleteItem, controller, coreImage, onCoreImageChange, dropOut } = props;
+  const {
+    items,
+    resetWheel,
+    deleteItem,
+    controller,
+    coreImage,
+    onCoreImageChange,
+    dropOut,
+    className,
+    onOptimalSizeChange,
+  } = props;
   const { t } = useTranslation();
   const { drawWheel, highlightItem, eatAnimation } = useWheelDrawer();
 
@@ -75,6 +89,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const selectorCanvas = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
+  const wheelContent = useRef<HTMLDivElement>(null);
 
   const coreBackground = useMemo(() => `url(${coreImage})`, [coreImage]);
   const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
@@ -108,12 +123,12 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   }, []);
 
   const resizeWheel = useCallback(() => {
-    if (!wrapper.current || !spinTarget.current || !wheelCanvas.current) return;
+    if (!wrapper.current || !spinTarget.current || !wheelCanvas.current || !wheelContent.current) return;
 
-    const canvasSize =
-      Math.max(wrapper.current.clientHeight, wrapper.current.clientWidth) - 20 - spinTarget.current.clientHeight;
-
-    console.log('resizeWheel', canvasSize);
+    const canvasSize = Math.min(
+      wrapper.current.clientHeight - 20 - spinTarget.current.clientHeight,
+      wrapper.current.clientWidth,
+    );
 
     if (canvasSize === wheelCanvas.current.height) {
       return;
@@ -121,7 +136,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
     resizeCanvas(wheelCanvas.current, canvasSize);
     resizeCanvas(selectorCanvas.current, canvasSize);
-    wrapper.current.style.width = `${canvasSize}px`;
+    wheelContent.current.style.width = `${canvasSize}px`;
+    onOptimalSizeChange?.(canvasSize);
 
     if (!isInitialResize.current && wheelCanvas.current && selectorCanvas.current) {
       drawWheel({
@@ -131,9 +147,10 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       });
     }
     isInitialResize.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
       console.log('resizeObserver');
       resizeWheel();
@@ -257,53 +274,56 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   return (
     <div
-      style={{ width: '0', height: '100%', display: 'inline-block', pointerEvents: 'none', overflow: 'visible' }}
+      className={clsx('base-wheel-wrapper', className)}
+      style={{ width: '100%', height: '100%', display: 'inline-block', pointerEvents: 'none', overflow: 'visible' }}
       ref={wrapper}
     >
-      <div className='wheel-target' ref={spinTarget}>
-        {t('wheel.winner')}
-      </div>
-      <div className='wheel-content'>
-        <canvas style={{ position: 'absolute', zIndex: 1, top: -18 }} ref={selectorCanvas} />
-        <div className='wheel-canvas-wrapper'>
-          <canvas ref={wheelCanvas} />
+      <div ref={wheelContent}>
+        <div className='wheel-target' ref={spinTarget}>
+          {t('wheel.winner')}
         </div>
-        {onCoreImageChange && (
-          <Popover width={420} withArrow position='right' closeOnClickOutside={isClickOusideAllowed}>
-            <Popover.Target>
-              <div className='wheel-core' style={{ backgroundImage: coreBackground }}>
-                <div className='wheel-core-overlay'>
-                  <Overlay color='black' opacity={0.7} />
-                  <Text className='wheel-core-text' size='xl'>
-                    {t('wheel.coreImage.wheelOverlay')}
-                  </Text>
+        <div className='wheel-content'>
+          <canvas style={{ position: 'absolute', zIndex: 1, top: -18 }} ref={selectorCanvas} />
+          <div className='wheel-canvas-wrapper'>
+            <canvas ref={wheelCanvas} />
+          </div>
+          {onCoreImageChange && (
+            <Popover width={420} withArrow position='right' closeOnClickOutside={isClickOusideAllowed}>
+              <Popover.Target>
+                <div className='wheel-core' style={{ backgroundImage: coreBackground }}>
+                  <div className='wheel-core-overlay'>
+                    <Overlay color='black' opacity={0.7} />
+                    <Text className='wheel-core-text' size='xl'>
+                      {t('wheel.coreImage.wheelOverlay')}
+                    </Text>
+                  </div>
                 </div>
-              </div>
-            </Popover.Target>
-            <Popover.Dropdown mah={430} p={8} className='wheel-core-emotes-list'>
-              <Stack gap={0}>
-                <ImageLinkInput
-                  dialogTitle={t('wheel.coreImage.customImageDialogTitle')}
-                  buttonTitle={t('wheel.loadCustomMessage')}
-                  buttonClass='upload-wheel-image'
-                  onChange={onCoreImageChange}
-                  onModalOpenChange={(isOpened) => setIsClickOusideAllowed(!isOpened)}
-                />
-                <TwitchEmotesList setActiveEmote={onCoreImageChange} />
-              </Stack>
-            </Popover.Dropdown>
-          </Popover>
-        )}
-        {!onCoreImageChange && <div className='wheel-core' style={{ backgroundImage: coreBackground }}></div>}
-        {!!winnerItem && (
-          <WinnerBackdrop
-            name={winnerItem.name}
-            id={winnerItem.id}
-            winnerName={dropOut && items.length === 1 ? items[0]?.name : undefined}
-            onDelete={deleteItem ? () => deleteItem(winnerItem.id) : undefined}
-            dropOut={dropOut}
-          />
-        )}
+              </Popover.Target>
+              <Popover.Dropdown mah={430} p={8} className='wheel-core-emotes-list'>
+                <Stack gap={0}>
+                  <ImageLinkInput
+                    dialogTitle={t('wheel.coreImage.customImageDialogTitle')}
+                    buttonTitle={t('wheel.loadCustomMessage')}
+                    buttonClass='upload-wheel-image'
+                    onChange={onCoreImageChange}
+                    onModalOpenChange={(isOpened) => setIsClickOusideAllowed(!isOpened)}
+                  />
+                  <TwitchEmotesList setActiveEmote={onCoreImageChange} />
+                </Stack>
+              </Popover.Dropdown>
+            </Popover>
+          )}
+          {!onCoreImageChange && <div className='wheel-core' style={{ backgroundImage: coreBackground }}></div>}
+          {!!winnerItem && (
+            <WinnerBackdrop
+              name={winnerItem.name}
+              id={winnerItem.id}
+              winnerName={dropOut && items.length === 1 ? items[0]?.name : undefined}
+              onDelete={deleteItem ? () => deleteItem(winnerItem.id) : undefined}
+              dropOut={dropOut}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

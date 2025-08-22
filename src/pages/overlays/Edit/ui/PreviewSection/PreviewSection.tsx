@@ -1,16 +1,15 @@
-import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Stack, Title, Text, Paper, Group } from '@mantine/core';
+import { Group, Paper, Stack, Title } from '@mantine/core';
+import { FC, useLayoutEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useFormContext } from 'react-hook-form';
 
 import { AuctionOverlayDto, WheelOverlayDto } from '@api/openapi/types.gen';
 
 import { Overlay } from '../../../types/overlay.types';
 
-import AuctionOverlayPreview from './ui/AuctionOverlayPreview';
-import WheelOverlayPreview from './ui/WheelOverlayPreview';
-import CanvasResolutionSelector from './ui/CanvasResolutionSelector';
 import classes from './PreviewSection.module.css';
+import AuctionOverlayPreview from './ui/AuctionOverlayPreview';
+import CanvasResolutionSelector from './ui/CanvasResolutionSelector';
+import WheelOverlayPreview from './ui/WheelOverlayPreview';
 
 interface PreviewSectionProps {
   overlay: Overlay;
@@ -19,32 +18,8 @@ interface PreviewSectionProps {
 const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
   const viewportRef = useRef<HTMLDivElement>(null);
   const canvasResolution = overlay.canvasResolution;
-
-  // Calculate scale to fit dynamic canvas resolution in container
-  // useEffect(() => {
-  //   const updateScale = () => {
-  //     if (containerRef.current && canvasResolution) {
-  //       const containerRect = containerRef.current.getBoundingClientRect();
-  //       const containerWidth = containerRect.width;
-  //       const containerHeight = containerRect.height;
-
-  //       // Calculate scale to fit both width and height for current canvas resolution
-  //       const scaleX = containerWidth / canvasResolution.width;
-  //       const scaleY = containerHeight / canvasResolution.height;
-  //       const newScale = Math.min(scaleX, scaleY);
-
-  //       setScale(newScale);
-  //     }
-  //   };
-
-  //   updateScale();
-  //   window.addEventListener('resize', updateScale);
-
-  //   return () => window.removeEventListener('resize', updateScale);
-  // }, [canvasResolution]);
 
   useLayoutEffect(() => {
     if (containerRef.current && canvasResolution) {
@@ -111,7 +86,6 @@ const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
                 className={classes.previewViewport}
                 ref={viewportRef}
                 style={{
-                  transform: `scale(${scale})`,
                   width: canvasResolution.width,
                   minWidth: canvasResolution.width,
                   maxWidth: canvasResolution.width,

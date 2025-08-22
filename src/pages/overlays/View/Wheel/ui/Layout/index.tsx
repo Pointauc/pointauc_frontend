@@ -5,6 +5,7 @@ import { WheelOverlayDto } from '@api/openapi/types.gen';
 import { WheelFormat } from '@constants/wheel';
 import BaseWheel, { WheelController } from '@components/BaseWheel/BaseWheel';
 import ItemsPreview from '@components/RandomWheel/ItemsPreview';
+import WheelFlexboxAutosizer from '@components/BaseWheel/FlexboxAutosizer';
 
 import classes from './index.module.css';
 
@@ -30,12 +31,17 @@ export const WheelLayout: FC<WheelLayoutProps> = ({ overlay, participants, forma
         />
       )}
       {overlay.settings.showWheel && (
-        <BaseWheel
-          items={participants}
-          controller={wheelRef}
-          dropOut={format === WheelFormat.Dropout}
-          coreImage={coreImage}
-        />
+        <WheelFlexboxAutosizer>
+          {({ onOptimalSizeChange }) => (
+            <BaseWheel
+              items={participants}
+              controller={wheelRef}
+              dropOut={format === WheelFormat.Dropout}
+              coreImage={coreImage}
+              onOptimalSizeChange={onOptimalSizeChange}
+            />
+          )}
+        </WheelFlexboxAutosizer>
       )}
     </div>
   );

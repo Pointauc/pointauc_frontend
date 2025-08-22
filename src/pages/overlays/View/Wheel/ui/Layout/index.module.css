@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: row !important;
+  align-items: stretch;
   gap: var(--mantine-spacing-xl);
 }
 
