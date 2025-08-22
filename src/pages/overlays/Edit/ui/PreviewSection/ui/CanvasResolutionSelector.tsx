@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { Group, Select, Text, Tooltip, ActionIcon } from '@mantine/core';
+import { Group, Select, Text, Tooltip, ActionIcon, Code } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
 import { useFormContext, Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { useTranslation, Trans } from 'react-i18next';
 
 import { CanvasResolutionDto } from '@api/openapi/types.gen';
 import { CANVAS_RESOLUTIONS, findResolutionOption } from '@constants/resolutions.constants';
@@ -23,13 +23,26 @@ const CanvasResolutionSelector: FC = () => {
       render={({ field }) => {
         return (
           <Group gap='xs' align='center'>
-            <Text size='sm' fw={500}>
-              {t('overlays.canvasResolution.label')}
-            </Text>
-            <Tooltip label={t('overlays.canvasResolution.tooltip')} multiline w={200} position='bottom' withArrow>
-              <ActionIcon variant='subtle' size='xs' c='dimmed'>
-                <IconInfoCircle size={14} />
-              </ActionIcon>
+            <Tooltip
+              label={
+                <Trans
+                  i18nKey='overlays.canvasResolution.tooltip'
+                  components={{
+                    1: <Code color='dark.0' />,
+                  }}
+                />
+              }
+              multiline
+              w={300}
+              position='bottom'
+              withArrow
+            >
+              <Group gap='xs' align='center'>
+                <Text size='sm' fw={500}>
+                  {t('overlays.canvasResolution.label')}
+                </Text>
+                <IconInfoCircle size={20} color='var(--mantine-color-dimmed)' />
+              </Group>
             </Tooltip>
             <Select
               value={`${field.value.width}x${field.value.height}`}

@@ -298,7 +298,7 @@
     },
     "canvasResolution": {
       "label": "Canvas Resolution",
-      "tooltip": "This is the same value that should be used for canvas resolution in OBS. It determines the size of the container where your overlay will be rendered in your broadcasting software."
+      "tooltip": "This is your <1>Base (Canvas) Resolution</1> in OBS. For better accuracy use the exact same values for the <1>width</1> and <1>height</1> of your browser source."
     },
     "preview": {
       "title": "Preview",
