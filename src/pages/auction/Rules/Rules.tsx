@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
 import { RulesSettingsContext, RulesSettingsProvider } from '@pages/auction/Rules/RulesSettingsContext.tsx';
+import { useRulesBroadcasting } from '@features/broadcasting/lib/broadcastHooks/useRulesBroadcasting';
 import './Rules.scss';
 
 interface RulesPreset {
@@ -24,6 +25,7 @@ const saveRules = (rules: RulesPreset[]) => localStorage.setItem('rules', JSON.s
 
 const RulesComponent = () => {
   const { t } = useTranslation();
+  const { broadcastRules } = useRulesBroadcasting();
 
   const buildDefaultRule = (rules: RulesPreset[] = []): RulesPreset => {
     const names = rules.map((rule) => rule.name);
@@ -99,6 +101,12 @@ const RulesComponent = () => {
   const onRulesChanged = (content: JSONContent) => {
     setRuleContent(content);
   };
+
+  useEffect(() => {
+    if (currentRule) {
+      broadcastRules(currentRule.content);
+    }
+  }, [currentRule, broadcastRules]);
 
   const onRuleSelect = (id: string) => {
     if (id === NEW_RULE_KEY) {

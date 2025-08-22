@@ -14,11 +14,11 @@ const WheelSettings: FC = () => {
       <Stack gap='xs'>
         <Card withBorder padding='sm' radius='md'>
           <Controller
-            name='settings.showWheel'
+            name='settings.showParticipants'
             control={control}
             render={({ field }) => (
               <Switch
-                label={<CardSwitchLabel text={t('overlays.settings.showWheel')} />}
+                label={<CardSwitchLabel text={t('overlays.settings.showParticipants')} />}
                 size='md'
                 checked={field.value}
                 onChange={field.onChange}
@@ -26,14 +26,13 @@ const WheelSettings: FC = () => {
             )}
           />
         </Card>
-
         <Card withBorder padding='sm' radius='md'>
           <Controller
-            name='settings.showParticipants'
+            name='settings.showWheel'
             control={control}
             render={({ field }) => (
               <Switch
-                label={<CardSwitchLabel text={t('overlays.settings.showParticipants')} />}
+                label={<CardSwitchLabel text={t('overlays.settings.showWheel')} />}
                 size='md'
                 checked={field.value}
                 onChange={field.onChange}

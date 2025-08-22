@@ -21,6 +21,7 @@ interface SlotsListProps {
   slots: Slot[];
   optimize: boolean;
   containerRef: RefObject<HTMLDivElement>;
+  readonly?: boolean;
 }
 
 interface RowProps {
@@ -59,7 +60,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
   </FixedSizeList>
 );
 
-const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
+const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
@@ -114,7 +115,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
         <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
           {slots.map((slot, index) => (
             <div className={slotWrapperClasses} key={slot.id}>
-              <DroppableSlot index={index + 1} slot={slot} />
+              <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
             </div>
           ))}
         </FlipMove>

@@ -12,6 +12,7 @@
   &.padding {
     padding-left: 40px !important;
     padding-right: 20px !important;
+    padding-bottom: 12px !important;
   }
 }
 
@@ -22,6 +23,7 @@
   // overflow-y: hidden;
   width: 100%;
   gap: 56px;
+  min-height: 0;
 
   .description-link {
     background-color: transparent;
@@ -58,7 +60,7 @@
       }
 
       .emotes-container {
-        max-height: 40vh;
+        max-height: calc(var(--vh, 1vh) * 40);
       }
     }
   }

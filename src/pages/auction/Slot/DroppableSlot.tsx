@@ -23,9 +23,10 @@ import SlotComponent from './SlotComponent';
 interface DroppableSlotProps {
   index: number;
   slot: Slot;
+  readonly?: boolean;
 }
 
-const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
+const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const extraIcon = useRef<HTMLButtonElement>(null);
@@ -130,11 +131,13 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot }) => {
             {`${slot.fastId}`}
           </Badge>
         </Center>
-        <SlotComponent slot={slot} />
+        <SlotComponent slot={slot} readonly={readonly} />
       </div>
-      <button onClick={handleDelete} className=' slot-icon-button delete-button' title={t('lot.delete')}>
-        <DeleteIcon />
-      </button>
+      {!readonly && (
+        <button onClick={handleDelete} className=' slot-icon-button delete-button' title={t('lot.delete')}>
+          <DeleteIcon />
+        </button>
+      )}
       <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow>
         <Menu.Target>
           <button

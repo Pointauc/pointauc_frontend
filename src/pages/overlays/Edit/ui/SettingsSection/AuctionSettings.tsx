@@ -13,7 +13,7 @@ const AuctionSettings: FC = () => {
     <Stack gap='md'>
       <Stack gap='xs'>
         {/* Rules card */}
-        <Card withBorder padding='sm' radius='md'>
+        <Card withBorder padding='sm' radius='md' shadow='sm'>
           <Controller
             name='settings.showRules'
             control={control}
@@ -29,7 +29,7 @@ const AuctionSettings: FC = () => {
         </Card>
 
         {/* Table card with inner settings */}
-        <Card withBorder padding='sm' radius='md'>
+        <Card withBorder padding='sm' radius='md' shadow='sm'>
           <Controller
             name='settings.showTable'
             control={control}
@@ -96,7 +96,7 @@ const AuctionSettings: FC = () => {
         </Card>
 
         {/* Timer card */}
-        <Card withBorder padding='sm' radius='md'>
+        <Card withBorder padding='sm' radius='md' shadow='sm'>
           <Controller
             name='settings.showTimer'
             control={control}

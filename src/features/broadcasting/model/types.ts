@@ -53,7 +53,18 @@ export namespace Broadcasting {
     | DataUpdateWheelSpinPayload
     | DataUpdateWheelSettingsChangedPayload;
 
-  export type DataUpdatePayload = DataUpdateLotsPayload | DataUpdateTimerPayload | DataUpdateWheelPayload;
+  export interface DataUpdateRulesPayload {
+    dataType: 'rules';
+    data: {
+      text: string;
+    };
+  }
+
+  export type DataUpdatePayload =
+    | DataUpdateLotsPayload
+    | DataUpdateTimerPayload
+    | DataUpdateWheelPayload
+    | DataUpdateRulesPayload;
 
   export interface ListenEvents {
     updatesRequested: (data: DataRequestPayload) => void;

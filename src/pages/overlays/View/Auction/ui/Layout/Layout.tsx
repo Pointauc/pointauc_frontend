@@ -1,13 +1,10 @@
-import { FC, useEffect, useRef } from 'react';
 import { Grid } from '@mantine/core';
-import { useDispatch } from 'react-redux';
+import { FC, useEffect, useRef } from 'react';
 
 import { Slot } from '@models/slot.model';
-import useAutoScroll from '@hooks/useAutoScroll';
-import RulesComponent from '@pages/auction/Rules/Rules';
 import Stopwatch, { StopwatchController } from '@pages/auction/Stopwatch/Stopwatch';
-import { setDarkAlpha } from '@reducers/Overlay/Overlay';
 
+import OverlayRules from '../OverlayRules';
 import LotsColumn from '../LotsColumn';
 
 import classes from './Layout.module.css';
@@ -35,12 +32,6 @@ interface LayoutProps {
 }
 
 const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   dispatch(setDarkAlpha(darkAlpha));
-  // }, [darkAlpha, dispatch]);
-
   const timerController = useRef<StopwatchController | null>(null);
 
   useEffect(() => {
@@ -59,7 +50,7 @@ const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
     <Grid classNames={{ inner: classes.grid }} gutter='0'>
       {rules && (
         <Grid.Col span='content'>
-          <RulesComponent />
+          <OverlayRules rules={rules.rules} />
         </Grid.Col>
       )}
       {lots && (
@@ -69,7 +60,7 @@ const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
       )}
       {timer && (
         <Grid.Col span='content'>
-          <Stopwatch controller={timerController} />
+          <Stopwatch controller={timerController} showControls={false} />
         </Grid.Col>
       )}
     </Grid>

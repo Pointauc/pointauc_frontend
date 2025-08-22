@@ -60,6 +60,10 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
         case 'timer':
           setTimer(data.data);
           break;
+        case 'rules':
+          console.log('rules', data.data);
+          setRules(data.data.text);
+          break;
       }
     });
 
@@ -69,6 +73,7 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
   }, [socket]);
 
   useEffect(() => {
+    console.log('scopesToListen', scopesToListen);
     const newScopes = scopesToListen.filter((scope) => !previousScopes.current.includes(scope));
     const removedScopes = previousScopes.current.filter((scope) => !scopesToListen.includes(scope));
 
@@ -96,7 +101,7 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
   return (
     <Layout
       lots={overlay.settings.showTable ? { items: lots, autoScroll: true, scrollSpeed: 100 } : undefined}
-      rules={overlay.settings.showRules ? { rules: '' } : undefined}
+      rules={overlay.settings.showRules ? { rules } : undefined}
       timer={overlay.settings.showTimer ? timer : undefined}
       darkAlpha={0.5}
     />

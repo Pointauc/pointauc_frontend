@@ -211,6 +211,7 @@ export const useWheelDrawer = (): Result => {
   };
 
   const drawWheel: DrawWheelFunc = ({ items, wheelCanvas, pointerCanvas, getColor = colorGetter, clear = true }) => {
+    console.log('drawWheel');
     const ctx = wheelCanvas.getContext('2d');
     const pointerCtx = pointerCanvas.getContext('2d');
     const radius = Number(wheelCanvas.width) / 2;

@@ -51,6 +51,7 @@ export interface StopwatchController {
 
 export interface StopwatchProps {
   controller?: RefObject<StopwatchController>;
+  showControls?: boolean;
   onPause?: (timeLeft: number) => void;
   onStart?: (timeLeft: number) => void;
   onReset?: (timeLeft: number) => void;
@@ -58,7 +59,15 @@ export interface StopwatchProps {
   onEnd?: () => void;
 }
 
-const Stopwatch: React.FC<StopwatchProps> = ({ controller, onPause, onStart, onReset, onTimeChanged, onEnd }) => {
+const Stopwatch: React.FC<StopwatchProps> = ({
+  controller,
+  showControls = true,
+  onPause,
+  onStart,
+  onReset,
+  onTimeChanged,
+  onEnd,
+}) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
@@ -307,29 +316,31 @@ const Stopwatch: React.FC<StopwatchProps> = ({ controller, onPause, onStart, onR
           </div>
         </>
       )}
-      <div className='stopwatch-controls'>
-        {isStopped ? (
-          <IconButton onClick={startTimer} title={t('stopwatch.continue')} size='large'>
-            <PlayArrowIcon fontSize='large' />
+      {showControls && (
+        <div className='stopwatch-controls'>
+          {isStopped ? (
+            <IconButton onClick={startTimer} title={t('stopwatch.continue')} size='large'>
+              <PlayArrowIcon fontSize='large' />
+            </IconButton>
+          ) : (
+            <IconButton onClick={stopTimer} title={t('stopwatch.pause')} size='large'>
+              <PauseIcon fontSize='large' />
+            </IconButton>
+          )}
+          <IconButton onClick={resetTimer} title={t('stopwatch.reset')} size='large'>
+            <ReplayIcon fontSize='large' />
           </IconButton>
-        ) : (
-          <IconButton onClick={stopTimer} title={t('stopwatch.pause')} size='large'>
-            <PauseIcon fontSize='large' />
+          <IconButton onClick={addTime} title={t('stopwatch.addTime')} size='large'>
+            <ExpandLessIcon fontSize='large' />
           </IconButton>
-        )}
-        <IconButton onClick={resetTimer} title={t('stopwatch.reset')} size='large'>
-          <ReplayIcon fontSize='large' />
-        </IconButton>
-        <IconButton onClick={addTime} title={t('stopwatch.addTime')} size='large'>
-          <ExpandLessIcon fontSize='large' />
-        </IconButton>
-        <IconButton onClick={subtractTime} title={t('stopwatch.reduceTime')} size='large'>
-          <ExpandMoreIcon fontSize='large' />
-        </IconButton>
-        <IconButton onClick={addDoubleTime} title={t('stopwatch.addTimex2')} size='large'>
-          <KeyboardCapslockIcon fontSize='large' />
-        </IconButton>
-      </div>
+          <IconButton onClick={subtractTime} title={t('stopwatch.reduceTime')} size='large'>
+            <ExpandMoreIcon fontSize='large' />
+          </IconButton>
+          <IconButton onClick={addDoubleTime} title={t('stopwatch.addTimex2')} size='large'>
+            <KeyboardCapslockIcon fontSize='large' />
+          </IconButton>
+        </div>
+      )}
     </div>
   );
 };

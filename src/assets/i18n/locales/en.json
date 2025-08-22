@@ -296,6 +296,10 @@
       "speedMedium": "Medium",
       "speedFast": "Fast"
     },
+    "canvasResolution": {
+      "label": "Canvas Resolution",
+      "tooltip": "This is the same value that should be used for canvas resolution in OBS. It determines the size of the container where your overlay will be rendered in your broadcasting software."
+    },
     "preview": {
       "title": "Preview",
       "comingSoon": "Preview Coming Soon",

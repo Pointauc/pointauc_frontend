@@ -1,9 +1,16 @@
-import { FC } from 'react';
-import { Stack, Title, Text, Center, Paper, ThemeIcon } from '@mantine/core';
-import { IconEye } from '@tabler/icons-react';
+import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Stack, Title, Text, Paper, Group } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import { useFormContext } from 'react-hook-form';
+
+import { AuctionOverlayDto, WheelOverlayDto } from '@api/openapi/types.gen';
 
 import { Overlay } from '../../../types/overlay.types';
+
+import AuctionOverlayPreview from './ui/AuctionOverlayPreview';
+import WheelOverlayPreview from './ui/WheelOverlayPreview';
+import CanvasResolutionSelector from './ui/CanvasResolutionSelector';
+import classes from './PreviewSection.module.css';
 
 interface PreviewSectionProps {
   overlay: Overlay;
@@ -11,42 +18,114 @@ interface PreviewSectionProps {
 
 const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
   const { t } = useTranslation();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const canvasResolution = overlay.canvasResolution;
+
+  // Calculate scale to fit dynamic canvas resolution in container
+  // useEffect(() => {
+  //   const updateScale = () => {
+  //     if (containerRef.current && canvasResolution) {
+  //       const containerRect = containerRef.current.getBoundingClientRect();
+  //       const containerWidth = containerRect.width;
+  //       const containerHeight = containerRect.height;
+
+  //       // Calculate scale to fit both width and height for current canvas resolution
+  //       const scaleX = containerWidth / canvasResolution.width;
+  //       const scaleY = containerHeight / canvasResolution.height;
+  //       const newScale = Math.min(scaleX, scaleY);
+
+  //       setScale(newScale);
+  //     }
+  //   };
+
+  //   updateScale();
+  //   window.addEventListener('resize', updateScale);
+
+  //   return () => window.removeEventListener('resize', updateScale);
+  // }, [canvasResolution]);
+
+  useLayoutEffect(() => {
+    if (containerRef.current && canvasResolution) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+
+      // Calculate scale to fit both width and height for current canvas resolution
+      const scaleX = containerWidth / canvasResolution.width;
+      const scaleY = containerHeight / canvasResolution.height;
+      const newScale = Math.min(scaleX, scaleY);
+
+      if (viewportRef.current) {
+        viewportRef.current.style.transform = `scale(${newScale})`;
+      }
+    }
+  }, [canvasResolution]);
+
+  // Calculate dynamic viewport units based on canvas resolution
+  const viewportUnits = {
+    '--vh': `${canvasResolution.height / 100}px`,
+    '--vw': `${canvasResolution.width / 100}px`,
+    '--vmin': `${Math.min(canvasResolution.width, canvasResolution.height) / 100}px`,
+    '--vmax': `${Math.max(canvasResolution.width, canvasResolution.height) / 100}px`,
+  } as React.CSSProperties;
+
+  console.log(viewportUnits);
+
+  const renderOverlayPreview = () => {
+    if (overlay.type === 'Auction') {
+      return <AuctionOverlayPreview overlay={overlay as AuctionOverlayDto} />;
+    } else if (overlay.type === 'Wheel') {
+      return <WheelOverlayPreview overlay={overlay as WheelOverlayDto} />;
+    }
+    return null;
+  };
 
   return (
     <Stack gap='lg' h='100%'>
-      <Title order={3}>{t('overlays.preview.title')}</Title>
+      <Group justify='space-between' align='center'>
+        <Title order={3}>{t('overlays.preview.title')}</Title>
+        <CanvasResolutionSelector />
+      </Group>
 
       <Paper
         withBorder
-        p='xl'
         radius='md'
         style={{
           flex: 1,
-          backgroundColor: '#f8f9fa',
           minHeight: '300px',
+          padding: 0,
+          overflow: 'hidden',
         }}
       >
-        <Center h='100%'>
-          <Stack align='center' gap='md'>
-            <ThemeIcon size='xl' variant='light' color='gray'>
-              <IconEye size={24} />
-            </ThemeIcon>
-
-            <Text size='lg' fw={500} ta='center' c='dimmed'>
-              {t('overlays.preview.comingSoon')}
-            </Text>
-
-            <Text size='sm' ta='center' c='dimmed' maw={300}>
-              {t('overlays.preview.description', { type: overlay.type.toLowerCase() })}
-            </Text>
-
-            <Paper withBorder p='sm' bg='white' radius='sm'>
-              <Text size='xs' c='dimmed'>
-                {t('overlays.preview.urlLabel', { pathname: `view/${overlay.id}` })}
-              </Text>
-            </Paper>
-          </Stack>
-        </Center>
+        <div
+          className={classes.aspectRatioWrapper}
+          style={{
+            aspectRatio: `${canvasResolution.width} / ${canvasResolution.height}`,
+          }}
+        >
+          <div className={classes.aspectRatioContent}>
+            <div ref={containerRef} className={classes.previewContainer}>
+              <div
+                className={classes.previewViewport}
+                ref={viewportRef}
+                style={{
+                  transform: `scale(${scale})`,
+                  width: canvasResolution.width,
+                  minWidth: canvasResolution.width,
+                  maxWidth: canvasResolution.width,
+                  height: canvasResolution.height,
+                  minHeight: canvasResolution.height,
+                  maxHeight: canvasResolution.height,
+                  ...viewportUnits,
+                }}
+              >
+                <div className={classes.previewContent}>{renderOverlayPreview()}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </Paper>
     </Stack>
   );

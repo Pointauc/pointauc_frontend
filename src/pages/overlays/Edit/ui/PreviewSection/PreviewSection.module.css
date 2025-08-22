@@ -1,0 +1,40 @@
+.previewContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #000;
+}
+
+.previewViewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  background-color: #000;
+
+  /* Custom viewport units set dynamically via inline styles based on canvas resolution */
+}
+
+.previewContent {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Dynamic aspect ratio set via inline styles based on canvas resolution */
+.aspectRatioWrapper {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio set dynamically via inline styles */
+}
+
+.aspectRatioContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

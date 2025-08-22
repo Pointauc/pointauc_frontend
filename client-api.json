@@ -370,16 +370,16 @@
         ]
       }
     },
-    "/api/broadcast/settings": {
+    "/api/broadcast/rules": {
       "post": {
-        "operationId": "BroadcastingController_broadcastSettings",
+        "operationId": "BroadcastingController_broadcastRules",
         "parameters": [],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SettingsBroadcastDto"
+                "$ref": "#/components/schemas/RulesBroadcastDto"
               }
             }
           }
@@ -1155,21 +1155,33 @@
           "data"
         ]
       },
-      "SettingsBroadcastDto": {
+      "RulesDataDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Rules text content",
+            "example": "No duplicate bids allowed. Winner pays full amount."
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "RulesBroadcastDto": {
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "description": "Settings data to be broadcasted (flexible structure)",
-            "example": {
-              "theme": "dark",
-              "language": "en",
-              "notifications": true
-            }
+            "description": "Rules data to be broadcasted",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RulesDataDto"
+              }
+            ]
           },
           "timestamp": {
             "type": "string",
-            "description": "Timestamp of the settings broadcast in ISO format",
+            "description": "Timestamp of the rules broadcast in ISO format",
             "example": "2024-01-15T10:30:00.000Z"
           }
         },
@@ -1468,6 +1480,82 @@
           "isActive"
         ]
       },
+      "CanvasResolutionDto": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "number",
+            "description": "Canvas width in pixels"
+          },
+          "height": {
+            "type": "number",
+            "description": "Canvas height in pixels"
+          }
+        },
+        "required": [
+          "width",
+          "height"
+        ]
+      },
+      "TransformOriginDto": {
+        "type": "object",
+        "properties": {
+          "X": {
+            "type": "number",
+            "description": "X coordinate"
+          },
+          "Y": {
+            "type": "number",
+            "description": "Y coordinate"
+          }
+        },
+        "required": [
+          "X",
+          "Y"
+        ]
+      },
+      "TransformSizeDto": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "number",
+            "description": "Transform width"
+          },
+          "height": {
+            "type": "number",
+            "description": "Transform height"
+          }
+        },
+        "required": [
+          "width",
+          "height"
+        ]
+      },
+      "TransformDto": {
+        "type": "object",
+        "properties": {
+          "origin": {
+            "description": "Transform origin coordinates",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformOriginDto"
+              }
+            ]
+          },
+          "size": {
+            "description": "Transform size",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformSizeDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "origin",
+          "size"
+        ]
+      },
       "AuctionOverlaySettingsDto": {
         "type": "object",
         "properties": {
@@ -1520,6 +1608,23 @@
             "format": "date-time",
             "type": "string"
           },
+          "canvasResolution": {
+            "description": "Canvas resolution in pixels",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CanvasResolutionDto"
+              }
+            ]
+          },
+          "transform": {
+            "nullable": true,
+            "description": "Overlay transform settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformDto"
+              }
+            ]
+          },
           "type": {
             "type": "string",
             "enum": [
@@ -1537,6 +1642,7 @@
           "name",
           "createdAt",
           "updatedAt",
+          "canvasResolution",
           "type",
           "settings"
         ]
@@ -1579,6 +1685,23 @@
             "format": "date-time",
             "type": "string"
           },
+          "canvasResolution": {
+            "description": "Canvas resolution in pixels",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CanvasResolutionDto"
+              }
+            ]
+          },
+          "transform": {
+            "nullable": true,
+            "description": "Overlay transform settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformDto"
+              }
+            ]
+          },
           "type": {
             "type": "string",
             "enum": [
@@ -1596,6 +1719,7 @@
           "name",
           "createdAt",
           "updatedAt",
+          "canvasResolution",
           "type",
           "settings"
         ]
@@ -1616,12 +1740,30 @@
           },
           "settings": {
             "$ref": "#/components/schemas/AuctionOverlaySettingsDto"
+          },
+          "canvasResolution": {
+            "description": "Canvas resolution in pixels",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CanvasResolutionDto"
+              }
+            ]
+          },
+          "transform": {
+            "nullable": true,
+            "description": "Overlay transform settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformDto"
+              }
+            ]
           }
         },
         "required": [
           "name",
           "type",
-          "settings"
+          "settings",
+          "canvasResolution"
         ]
       },
       "CreateWheelOverlayDto": {
@@ -1640,12 +1782,30 @@
           },
           "settings": {
             "$ref": "#/components/schemas/WheelOverlaySettingsDto"
+          },
+          "canvasResolution": {
+            "description": "Canvas resolution in pixels",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CanvasResolutionDto"
+              }
+            ]
+          },
+          "transform": {
+            "nullable": true,
+            "description": "Overlay transform settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformDto"
+              }
+            ]
           }
         },
         "required": [
           "name",
           "type",
-          "settings"
+          "settings",
+          "canvasResolution"
         ]
       },
       "UpdateAuctionOverlayDto": {
@@ -1656,6 +1816,23 @@
           },
           "settings": {
             "$ref": "#/components/schemas/AuctionOverlaySettingsDto"
+          },
+          "canvasResolution": {
+            "description": "Canvas resolution in pixels",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CanvasResolutionDto"
+              }
+            ]
+          },
+          "transform": {
+            "nullable": true,
+            "description": "Overlay transform settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformDto"
+              }
+            ]
           }
         }
       },
@@ -1667,6 +1844,23 @@
           },
           "settings": {
             "$ref": "#/components/schemas/WheelOverlaySettingsDto"
+          },
+          "canvasResolution": {
+            "description": "Canvas resolution in pixels",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CanvasResolutionDto"
+              }
+            ]
+          },
+          "transform": {
+            "nullable": true,
+            "description": "Overlay transform settings",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TransformDto"
+              }
+            ]
           }
         }
       }

@@ -1,7 +1,6 @@
-@import "src/styles/colors";
+@import 'src/styles/colors';
 
 .wheel-preview {
-
 }
 
 .wheel-preview-wrapper {
@@ -11,7 +10,6 @@
   flex-grow: 15;
   flex-basis: 0;
   gap: 8px;
-  padding-bottom: 8px;
 
   .wheel-controls-checkbox .MuiFormControlLabel-label {
     font-size: 1.1rem;

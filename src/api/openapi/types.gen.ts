@@ -128,15 +128,20 @@ export type WheelBroadcastDto = {
     timestamp?: string;
 };
 
-export type SettingsBroadcastDto = {
+export type RulesDataDto = {
     /**
-     * Settings data to be broadcasted (flexible structure)
+     * Rules text content
      */
-    data: {
-        [key: string]: unknown;
-    };
+    text: string;
+};
+
+export type RulesBroadcastDto = {
     /**
-     * Timestamp of the settings broadcast in ISO format
+     * Rules data to be broadcasted
+     */
+    data: RulesDataDto;
+    /**
+     * Timestamp of the rules broadcast in ISO format
      */
     timestamp?: string;
 };
@@ -225,6 +230,50 @@ export type TokenInfoResponseDto = {
     isActive: boolean;
 };
 
+export type CanvasResolutionDto = {
+    /**
+     * Canvas width in pixels
+     */
+    width: number;
+    /**
+     * Canvas height in pixels
+     */
+    height: number;
+};
+
+export type TransformOriginDto = {
+    /**
+     * X coordinate
+     */
+    X: number;
+    /**
+     * Y coordinate
+     */
+    Y: number;
+};
+
+export type TransformSizeDto = {
+    /**
+     * Transform width
+     */
+    width: number;
+    /**
+     * Transform height
+     */
+    height: number;
+};
+
+export type TransformDto = {
+    /**
+     * Transform origin coordinates
+     */
+    origin: TransformOriginDto;
+    /**
+     * Transform size
+     */
+    size: TransformSizeDto;
+};
+
 export type AuctionOverlaySettingsDto = {
     showRules: boolean;
     showTable: boolean;
@@ -239,6 +288,14 @@ export type AuctionOverlayDto = {
     name: string;
     createdAt: string;
     updatedAt: string;
+    /**
+     * Canvas resolution in pixels
+     */
+    canvasResolution: CanvasResolutionDto;
+    /**
+     * Overlay transform settings
+     */
+    transform?: TransformDto | null;
     type: 'Auction' | 'Wheel';
     settings: AuctionOverlaySettingsDto;
 };
@@ -254,6 +311,14 @@ export type WheelOverlayDto = {
     name: string;
     createdAt: string;
     updatedAt: string;
+    /**
+     * Canvas resolution in pixels
+     */
+    canvasResolution: CanvasResolutionDto;
+    /**
+     * Overlay transform settings
+     */
+    transform?: TransformDto | null;
     type: 'Auction' | 'Wheel';
     settings: WheelOverlaySettingsDto;
 };
@@ -262,22 +327,54 @@ export type CreateAuctionOverlayDto = {
     name: string;
     type: 'Auction' | 'Wheel';
     settings: AuctionOverlaySettingsDto;
+    /**
+     * Canvas resolution in pixels
+     */
+    canvasResolution: CanvasResolutionDto;
+    /**
+     * Overlay transform settings
+     */
+    transform?: TransformDto | null;
 };
 
 export type CreateWheelOverlayDto = {
     name: string;
     type: 'Auction' | 'Wheel';
     settings: WheelOverlaySettingsDto;
+    /**
+     * Canvas resolution in pixels
+     */
+    canvasResolution: CanvasResolutionDto;
+    /**
+     * Overlay transform settings
+     */
+    transform?: TransformDto | null;
 };
 
 export type UpdateAuctionOverlayDto = {
     name?: string;
     settings?: AuctionOverlaySettingsDto;
+    /**
+     * Canvas resolution in pixels
+     */
+    canvasResolution?: CanvasResolutionDto;
+    /**
+     * Overlay transform settings
+     */
+    transform?: TransformDto | null;
 };
 
 export type UpdateWheelOverlayDto = {
     name?: string;
     settings?: WheelOverlaySettingsDto;
+    /**
+     * Canvas resolution in pixels
+     */
+    canvasResolution?: CanvasResolutionDto;
+    /**
+     * Overlay transform settings
+     */
+    transform?: TransformDto | null;
 };
 
 export type AppControllerGetHelloData = {
@@ -536,14 +633,14 @@ export type BroadcastingControllerBroadcastWheelResponses = {
     201: unknown;
 };
 
-export type BroadcastingControllerBroadcastSettingsData = {
-    body: SettingsBroadcastDto;
+export type BroadcastingControllerBroadcastRulesData = {
+    body: RulesBroadcastDto;
     path?: never;
     query?: never;
-    url: '/api/broadcast/settings';
+    url: '/api/broadcast/rules';
 };
 
-export type BroadcastingControllerBroadcastSettingsResponses = {
+export type BroadcastingControllerBroadcastRulesResponses = {
     201: unknown;
 };
 

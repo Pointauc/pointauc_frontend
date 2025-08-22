@@ -1,34 +1,35 @@
+import { notifications } from '@mantine/notifications';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FC, useCallback, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { notifications } from '@mantine/notifications';
 
+import {
+  overlaysControllerCreateMutation,
+  overlaysControllerListOptions,
+  overlaysControllerListQueryKey,
+  overlaysControllerRemoveMutation,
+} from '@api/openapi/@tanstack/react-query.gen';
 import PageContainer from '@components/PageContainer/PageContainer';
 import ROUTES from '@constants/routes.constants';
-import {
-  overlaysControllerListOptions,
-  overlaysControllerCreateMutation,
-  overlaysControllerRemoveMutation,
-  overlaysControllerListQueryKey,
-} from '@api/openapi/@tanstack/react-query.gen';
+import { detectDefaultResolution } from '@constants/resolutions.constants';
 
-import { Overlay, OverlayType, AuctionOverlay, WheelOverlay } from '../types/overlay.types';
-import OverlaysGrid from './ui/OverlaysGrid/OverlaysGrid';
+import { Overlay, OverlayType } from '../types/overlay.types';
+
 import CreateOverlayModal from './ui/CreateOverlayModal/CreateOverlayModal';
+import OverlaysGrid from './ui/OverlaysGrid/OverlaysGrid';
 
-import type {
-  AuctionOverlayDto,
-  WheelOverlayDto,
-  CreateAuctionOverlayDto,
-  CreateWheelOverlayDto,
-} from '@api/openapi/types.gen';
+import type { CreateAuctionOverlayDto, CreateWheelOverlayDto } from '@api/openapi/types.gen';
 
 const createDefaultOverlayDto = (type: OverlayType): CreateAuctionOverlayDto | CreateWheelOverlayDto => {
+  const defaultCanvasResolution = detectDefaultResolution();
+
   if (type === 'Auction') {
     return {
       name: `${type} Overlay`,
       type: 'Auction',
+      canvasResolution: defaultCanvasResolution,
+      transform: null,
       settings: {
         showRules: true,
         showTable: true,
@@ -42,6 +43,8 @@ const createDefaultOverlayDto = (type: OverlayType): CreateAuctionOverlayDto | C
     return {
       name: `${type} Overlay`,
       type: 'Wheel',
+      canvasResolution: defaultCanvasResolution,
+      transform: null,
       settings: {
         showWheel: true,
         showParticipants: true,

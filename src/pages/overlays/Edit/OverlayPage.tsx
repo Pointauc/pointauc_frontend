@@ -17,8 +17,7 @@ import {
 
 import { Overlay } from '../types/overlay.types';
 
-import SettingsSection from './ui/SettingsSection/SettingsSection';
-import PreviewSection from './ui/PreviewSection/PreviewSection';
+import { OverlayForm } from './ui/Form';
 
 import type {
   AuctionOverlayDto,
@@ -31,11 +30,13 @@ const convertLocalOverlayToUpdateDto = (overlay: Overlay): UpdateAuctionOverlayD
   if (overlay.type === 'Auction') {
     return {
       name: overlay.name,
+      canvasResolution: overlay.canvasResolution,
       settings: overlay.settings,
     } as UpdateAuctionOverlayDto;
   } else {
     return {
       name: overlay.name,
+      canvasResolution: overlay.canvasResolution,
       settings: overlay.settings,
     } as UpdateWheelOverlayDto;
   }
@@ -135,22 +136,7 @@ const OverlayPage: FC = () => {
         </Button>
         <Title order={2}>{overlay.name}</Title>
       </Group>
-
-      <Grid>
-        <Grid.Col span={3}>
-          <Paper withBorder p='md' h='100%'>
-            <SettingsSection overlay={overlay} onUpdate={handleOverlayUpdate} onDelete={handleOverlayDelete} />
-          </Paper>
-        </Grid.Col>
-
-        <Grid.Col span={9}>
-          <Paper withBorder p='md' h='100%'>
-            <AspectRatio ratio={16 / 9}>
-              <PreviewSection overlay={overlay} />
-            </AspectRatio>
-          </Paper>
-        </Grid.Col>
-      </Grid>
+      <OverlayForm overlay={overlay} onUpdate={handleOverlayUpdate} onDelete={handleOverlayDelete} />
     </Container>
   );
 };

@@ -80,6 +80,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
   const normalizedRef = useRef(normalizedItems);
 
+  const isInitialResize = useRef(true);
+
   useEffect(() => {
     normalizedRef.current = normalizedItems;
   }, [normalizedItems]);
@@ -92,21 +94,60 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     }
   }, []);
 
-  const resizeCanvas = (canvasElement: HTMLCanvasElement | null): void => {
-    if (wrapper.current && canvasElement) {
-      const canvasSize = Math.max(wrapper.current.clientHeight, wrapper.current.clientWidth) + 8 - 72;
-      canvasElement.height = canvasSize;
-      canvasElement.width = canvasSize;
-      wrapper.current.style.width = `${canvasSize}px`;
+  const resetStyles = useCallback(() => {
+    if (wheelCanvas.current && selectorCanvas.current) {
+      drawWheel({ items: normalizedItems, wheelCanvas: wheelCanvas.current, pointerCanvas: selectorCanvas.current });
     }
-  };
+  }, [drawWheel, normalizedItems]);
+
+  const resizeCanvas = useCallback((canvasElement: HTMLCanvasElement | null, size: number): void => {
+    if (canvasElement) {
+      canvasElement.height = size;
+      canvasElement.width = size;
+    }
+  }, []);
+
+  const resizeWheel = useCallback(() => {
+    if (!wrapper.current || !spinTarget.current || !wheelCanvas.current) return;
+
+    const canvasSize =
+      Math.max(wrapper.current.clientHeight, wrapper.current.clientWidth) - 20 - spinTarget.current.clientHeight;
+
+    console.log('resizeWheel', canvasSize);
+
+    if (canvasSize === wheelCanvas.current.height) {
+      return;
+    }
+
+    resizeCanvas(wheelCanvas.current, canvasSize);
+    resizeCanvas(selectorCanvas.current, canvasSize);
+    wrapper.current.style.width = `${canvasSize}px`;
+
+    if (!isInitialResize.current && wheelCanvas.current && selectorCanvas.current) {
+      drawWheel({
+        items: normalizedRef.current,
+        wheelCanvas: wheelCanvas.current,
+        pointerCanvas: selectorCanvas.current,
+      });
+    }
+    isInitialResize.current = false;
+  }, []);
 
   useEffect(() => {
-    resizeCanvas(wheelCanvas.current);
-    resizeCanvas(selectorCanvas.current);
-    // window.addEventListener('resize', updateWheel);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const resizeObserver = new ResizeObserver(() => {
+      console.log('resizeObserver');
+      resizeWheel();
+    });
+
+    if (wrapper.current) {
+      resizeWheel();
+      resizeObserver.observe(wrapper.current);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [resizeWheel]);
 
   const resetPosition = useCallback(() => {
     gsap.to(wheelCanvas.current, {
@@ -138,17 +179,6 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     [resetPosition, resetWheel],
   );
 
-  const distanceTo = (id: Key): number => {
-    const { startAngle, endAngle } = normalizedRef.current.find(
-      ({ id: itemId }) => itemId === id,
-    ) as WheelItemWithAngle;
-    const fullCircle = Math.PI * 2;
-
-    const x = getRandomInclusive(startAngle / fullCircle, endAngle / fullCircle);
-
-    return (1 - x) * 360 + 270;
-  };
-
   const { animate } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick });
 
   const generateSpinDistance = useCallback((winner?: Key, duration = 20, seed?: number | null) => {
@@ -179,8 +209,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   useEffect(() => {
     if (wheelCanvas.current && selectorCanvas.current) {
+      console.log('resetStyles effect', normalizedItems);
       resetPosition();
-      drawWheel({ items: normalizedItems, wheelCanvas: wheelCanvas.current, pointerCanvas: selectorCanvas.current });
+      resetStyles();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedItems]);
@@ -199,16 +230,6 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       const highlight = (id: Key) => {
         if (wheelCanvas.current && selectorCanvas.current) {
           highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
-        }
-      };
-
-      const resetStyles = () => {
-        if (wheelCanvas.current && selectorCanvas.current) {
-          drawWheel({
-            items: normalizedItems,
-            wheelCanvas: wheelCanvas.current,
-            pointerCanvas: selectorCanvas.current,
-          });
         }
       };
 
