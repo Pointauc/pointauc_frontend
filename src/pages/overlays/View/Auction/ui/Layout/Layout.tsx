@@ -1,11 +1,11 @@
-import { Grid } from '@mantine/core';
 import { FC, useEffect, useRef } from 'react';
 
 import { Slot } from '@models/slot.model';
 import Stopwatch, { StopwatchController } from '@pages/auction/Stopwatch/Stopwatch';
+import OverlayThemeScope from '@shared/mantine/OverlayThemeScope';
 
-import OverlayRules from '../OverlayRules';
 import LotsColumn from '../LotsColumn';
+import OverlayRules from '../OverlayRules';
 
 import classes from './Layout.module.css';
 
@@ -28,10 +28,10 @@ interface LayoutProps {
   lots?: LotsProps;
   rules?: RulesProps;
   timer?: TimerProps;
-  darkAlpha?: number | null;
+  transparency?: number;
 }
 
-const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
+const Layout: FC<LayoutProps> = ({ lots, rules, timer, transparency }) => {
   const timerController = useRef<StopwatchController | null>(null);
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
   }, [timer?.state, timer?.timeLeft]);
 
   return (
-    <div className={classes.grid}>
+    <OverlayThemeScope className={classes.grid} backgroundTransparency={transparency}>
       {rules && (
         <div className={classes.rules}>
           <OverlayRules rules={rules.rules} />
@@ -63,7 +63,7 @@ const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
           <Stopwatch controller={timerController} showControls={false} />
         </div>
       )}
-    </div>
+    </OverlayThemeScope>
   );
 };
 

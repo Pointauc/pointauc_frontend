@@ -57,7 +57,9 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
       //   xl: '1.5rem', // 24px (was 20px)
       // },
       colors: {
-        darkOpaque: DEFAULT_THEME.colors.dark.map((color) => alpha(color, uiOpacity)) as unknown as MantineColorsTuple,
+        darkTransparent: DEFAULT_THEME.colors.dark.map((color) =>
+          alpha(color, uiOpacity),
+        ) as unknown as MantineColorsTuple,
       },
       components: {
         Notification: {

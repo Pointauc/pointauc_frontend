@@ -165,13 +165,13 @@
 .custom-background {
   .slot-grid-wrapper {
     .slot-wrapper {
-      background-color: var(--mantine-color-darkOpaque-6);
+      background-color: var(--mantine-color-darkTransparent-6);
       box-shadow: none;
     }
 
     &:nth-child(even) {
       .slot-wrapper {
-        background-color: var(--mantine-color-darkOpaque-5);
+        background-color: var(--mantine-color-darkTransparent-5);
       }
     }
   }

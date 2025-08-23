@@ -4,6 +4,7 @@ import { Socket } from 'socket.io-client';
 import { Slot } from '@models/slot.model';
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
 import { Broadcasting } from '@features/broadcasting/model/types';
+import OverlayThemeScope from '@shared/mantine/OverlayThemeScope';
 
 import OverlayStatusMessage from '../shared/OverlayStatusMessage';
 
@@ -61,7 +62,6 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
           setTimer(data.data);
           break;
         case 'rules':
-          console.log('rules', data.data);
           setRules(data.data.text);
           break;
       }
@@ -73,7 +73,6 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
   }, [socket]);
 
   useEffect(() => {
-    console.log('scopesToListen', scopesToListen);
     const newScopes = scopesToListen.filter((scope) => !previousScopes.current.includes(scope));
     const removedScopes = previousScopes.current.filter((scope) => !scopesToListen.includes(scope));
 
@@ -100,10 +99,14 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
 
   return (
     <Layout
-      lots={overlay.settings.showTable ? { items: lots, autoScroll: true, scrollSpeed: 100 } : undefined}
+      lots={
+        overlay.settings.showTable
+          ? { items: lots, autoScroll: overlay.settings.autoscroll, scrollSpeed: overlay.settings.autoscrollSpeed }
+          : undefined
+      }
       rules={overlay.settings.showRules ? { rules } : undefined}
       timer={overlay.settings.showTimer ? timer : undefined}
-      darkAlpha={0.5}
+      transparency={overlay.settings.backgroundTransparency}
     />
   );
 };

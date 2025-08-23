@@ -1,4 +1,4 @@
-import { Group, Paper, Stack, Title } from '@mantine/core';
+import { Group, MantineProvider, Paper, Stack, Title } from '@mantine/core';
 import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

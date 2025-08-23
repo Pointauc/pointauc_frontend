@@ -22,6 +22,7 @@ interface SlotsListProps {
   optimize: boolean;
   containerRef: RefObject<HTMLDivElement>;
   readonly?: boolean;
+  isTransparentUi?: boolean;
 }
 
 interface RowProps {
@@ -60,7 +61,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
   </FixedSizeList>
 );
 
-const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly }) => {
+const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly, isTransparentUi }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
@@ -105,7 +106,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
       className={classNames('slots-column-list', {
         'compact-view': compact,
         optimize,
-        'custom-background': background,
+        'custom-background': background || isTransparentUi,
       })}
     >
       {(compact || optimize) && height != null && (

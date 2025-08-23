@@ -23,7 +23,7 @@ const LotsColumn: FC<LotsColumnProps> = ({ items, autoScroll, scrollSpeed }) => 
 
   return (
     <div className={classes.scrollCol} ref={containerRef}>
-      <SlotsList slots={items} optimize={false} containerRef={containerRef} readonly />
+      <SlotsList slots={items} optimize={false} containerRef={containerRef} readonly isTransparentUi />
     </div>
   );
 };

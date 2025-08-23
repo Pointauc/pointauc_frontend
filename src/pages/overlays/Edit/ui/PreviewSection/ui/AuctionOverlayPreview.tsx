@@ -1,5 +1,4 @@
 import { FC, useMemo } from 'react';
-import { JSONContent } from '@tiptap/react';
 import { useTranslation } from 'react-i18next';
 
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
@@ -76,7 +75,7 @@ const AuctionOverlayPreview: FC<AuctionOverlayPreviewProps> = ({ overlay }) => {
       }
       rules={overlay.settings.showRules ? { rules: mockRules } : undefined}
       timer={overlay.settings.showTimer ? mockTimer : undefined}
-      darkAlpha={overlay.settings.backgroundTransparency / 100}
+      transparency={overlay.settings.backgroundTransparency}
     />
   );
 };

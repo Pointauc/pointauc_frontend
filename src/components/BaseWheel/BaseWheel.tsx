@@ -81,15 +81,17 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     onOptimalSizeChange,
   } = props;
   const { t } = useTranslation();
-  const { drawWheel, highlightItem, eatAnimation } = useWheelDrawer();
+  const { drawWheel, highlightItem, eatAnimation, initializeEffects, updateEffects } = useWheelDrawer();
 
   const [winnerItem, setWinnerItem] = useState<WheelItem | undefined>();
 
   const wheelCanvas = useRef<HTMLCanvasElement>(null);
   const selectorCanvas = useRef<HTMLCanvasElement>(null);
+  const effectsCanvas = useRef<HTMLCanvasElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const wheelContent = useRef<HTMLDivElement>(null);
+  const effectsManager = useRef<any>(null); // EffectsManager type
 
   const coreBackground = useMemo(() => `url(${coreImage})`, [coreImage]);
   const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
@@ -112,8 +114,17 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const resetStyles = useCallback(() => {
     if (wheelCanvas.current && selectorCanvas.current) {
       drawWheel({ items: normalizedItems, wheelCanvas: wheelCanvas.current, pointerCanvas: selectorCanvas.current });
+
+      // Initialize or update effects if effects canvas is available
+      if (effectsCanvas.current) {
+        if (effectsManager.current) {
+          updateEffects(effectsManager.current, wheelCanvas.current);
+        } else {
+          effectsManager.current = initializeEffects(effectsCanvas.current, wheelCanvas.current);
+        }
+      }
     }
-  }, [drawWheel, normalizedItems]);
+  }, [drawWheel, normalizedItems, initializeEffects, updateEffects]);
 
   const resizeCanvas = useCallback((canvasElement: HTMLCanvasElement | null, size: number): void => {
     if (canvasElement) {
@@ -138,6 +149,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
     resizeCanvas(wheelCanvas.current, canvasSize);
     resizeCanvas(selectorCanvas.current, canvasSize);
+    // Effects canvas will be resized by the CanvasUtils.setupEffectsCanvas method
     wheelContent.current.style.width = `${canvasSize}px`;
     onOptimalSizeChange?.(canvasSize);
 
@@ -234,6 +246,16 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedItems]);
 
+  // Cleanup effects on unmount
+  useEffect(() => {
+    return () => {
+      if (effectsManager.current) {
+        effectsManager.current.destroy();
+        effectsManager.current = null;
+      }
+    };
+  }, []);
+
   const clearWinner = useCallback(() => {
     setWinnerItem(undefined);
 
@@ -284,7 +306,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
           {t('wheel.winner')}
         </div>
         <div className='wheel-content'>
-          <canvas style={{ position: 'absolute', zIndex: 1, top: -18 }} ref={selectorCanvas} />
+          <canvas style={{ position: 'absolute', zIndex: 1, top: -32 }} ref={selectorCanvas} />
+          <canvas style={{ position: 'absolute', zIndex: 2, pointerEvents: 'none' }} ref={effectsCanvas} />
           <div className='wheel-canvas-wrapper'>
             <canvas ref={wheelCanvas} />
           </div>

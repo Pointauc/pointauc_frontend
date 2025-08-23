@@ -6,6 +6,7 @@ import { WheelFormat } from '@constants/wheel';
 import BaseWheel, { WheelController } from '@components/BaseWheel/BaseWheel';
 import ItemsPreview from '@components/RandomWheel/ItemsPreview';
 import WheelFlexboxAutosizer from '@components/BaseWheel/FlexboxAutosizer';
+import OverlayThemeScope from '@shared/mantine/OverlayThemeScope';
 
 import classes from './index.module.css';
 
@@ -19,7 +20,10 @@ interface WheelLayoutProps {
 
 export const WheelLayout: FC<WheelLayoutProps> = ({ overlay, participants, format, coreImage, wheelRef }) => {
   return (
-    <div className={`wheel-wrapper ${classes.wheelWrapper}`}>
+    <OverlayThemeScope
+      className={`wheel-wrapper ${classes.wheelWrapper}`}
+      backgroundTransparency={overlay.settings.backgroundTransparency}
+    >
       {overlay.settings.showParticipants && (
         <ItemsPreview
           allItems={participants}
@@ -43,6 +47,6 @@ export const WheelLayout: FC<WheelLayoutProps> = ({ overlay, participants, forma
           )}
         </WheelFlexboxAutosizer>
       )}
-    </div>
+    </OverlayThemeScope>
   );
 };

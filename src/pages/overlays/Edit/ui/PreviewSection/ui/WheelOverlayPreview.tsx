@@ -1,9 +1,9 @@
 import { FC, useMemo, useRef } from 'react';
 
 import { WheelOverlayDto } from '@api/openapi/types.gen';
-import { WheelItemWithMetadata } from '@models/wheel.model';
-import { WheelFormat } from '@constants/wheel';
 import { WheelController } from '@components/BaseWheel/BaseWheel';
+import { WheelFormat } from '@constants/wheel';
+import { WheelItemWithMetadata } from '@models/wheel.model';
 import { WheelLayout } from '@pages/overlays/View/Wheel/ui/Layout';
 
 interface WheelOverlayPreviewProps {

@@ -84,6 +84,10 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    document.body.style.backgroundColor = 'transparent';
+  }, []);
+
   // Show loading state while fetching overlay data
   if (overlayQuery.isLoading || socketLoading) {
     return <OverlayStatusMessage type='loading' message='Loading overlay...' />;
@@ -96,15 +100,17 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     );
   }
 
-  // Render appropriate overlay component based on type
-  switch (overlay.type) {
-    case 'Auction':
-      return <AuctionOverlayPage socket={socket} overlay={overlay as AuctionOverlayDto} />;
-    case 'Wheel':
-      return <WheelOverlayPage socket={socket} overlay={overlay as WheelOverlayDto} />;
-    default:
-      return <OverlayStatusMessage type='error' message={`Unknown overlay type: ${overlay.type}`} />;
-  }
+  const { origin, size } = overlay.transform ?? { origin: { X: 0, Y: 0 }, size: { width: '100%', height: '100%' } };
+
+  return (
+    <div style={{ position: 'absolute', top: origin.Y, left: origin.X, width: size.width, height: size.height }}>
+      {overlay.type === 'Auction' ? (
+        <AuctionOverlayPage socket={socket} overlay={overlay as AuctionOverlayDto} />
+      ) : (
+        <WheelOverlayPage socket={socket} overlay={overlay as WheelOverlayDto} />
+      )}
+    </div>
+  );
 };
 
 export default OverlayViewPage;

@@ -4,5 +4,10 @@
 
   :global(.rich-editor-tiptap) {
     border: none;
+
+    > div {
+      background-color: var(--mantine-color-darkTransparent-8);
+      border-radius: var(--mantine-radius-md);
+    }
   }
 }

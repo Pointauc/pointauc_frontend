@@ -36,7 +36,7 @@ const createDefaultOverlayDto = (type: OverlayType): CreateAuctionOverlayDto | C
         showRules: true,
         showTable: true,
         showTimer: true,
-        backgroundTransparency: 0,
+        backgroundTransparency: 0.5,
         autoscroll: false,
         autoscrollSpeed: 50,
       },
@@ -50,7 +50,7 @@ const createDefaultOverlayDto = (type: OverlayType): CreateAuctionOverlayDto | C
       settings: {
         showWheel: true,
         showParticipants: true,
-        backgroundTransparency: 0,
+        backgroundTransparency: 0.5,
       },
     };
   }
