@@ -1,5 +1,5 @@
 import { Group, Paper, Stack, Title } from '@mantine/core';
-import { FC, useLayoutEffect, useRef } from 'react';
+import { FC, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuctionOverlayDto, WheelOverlayDto } from '@api/openapi/types.gen';
@@ -10,16 +10,19 @@ import classes from './PreviewSection.module.css';
 import AuctionOverlayPreview from './ui/AuctionOverlayPreview';
 import CanvasResolutionSelector from './ui/CanvasResolutionSelector';
 import WheelOverlayPreview from './ui/WheelOverlayPreview';
+import ResizeController from './ui/ResizeController';
 
 interface PreviewSectionProps {
   overlay: Overlay;
+  onTransformUpdate?: (transform: Overlay['transform']) => void;
 }
 
-const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
+const PreviewSection: FC<PreviewSectionProps> = ({ overlay, onTransformUpdate }) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const canvasResolution = overlay.canvasResolution;
+  const [currentScale, setCurrentScale] = useState(1);
 
   useLayoutEffect(() => {
     if (containerRef.current && canvasResolution) {
@@ -31,6 +34,8 @@ const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
       const scaleX = containerWidth / canvasResolution.width;
       const scaleY = containerHeight / canvasResolution.height;
       const newScale = Math.min(scaleX, scaleY);
+
+      setCurrentScale(newScale);
 
       if (viewportRef.current) {
         viewportRef.current.style.transform = `scale(${newScale})`;
@@ -45,8 +50,6 @@ const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
     '--vmin': `${Math.min(canvasResolution.width, canvasResolution.height) / 100}px`,
     '--vmax': `${Math.max(canvasResolution.width, canvasResolution.height) / 100}px`,
   } as React.CSSProperties;
-
-  console.log(viewportUnits);
 
   const renderOverlayPreview = () => {
     if (overlay.type === 'Auction') {
@@ -66,12 +69,11 @@ const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
 
       <Paper
         withBorder
-        radius='md'
+        radius='0'
         style={{
           flex: 1,
           minHeight: '300px',
           padding: 0,
-          overflow: 'hidden',
         }}
       >
         <div
@@ -95,7 +97,17 @@ const PreviewSection: FC<PreviewSectionProps> = ({ overlay }) => {
                   ...viewportUnits,
                 }}
               >
-                <div className={classes.previewContent}>{renderOverlayPreview()}</div>
+                <div className={classes.previewContent}>
+                  <ResizeController
+                    overlay={overlay}
+                    onTransformUpdate={onTransformUpdate}
+                    containerWidth={canvasResolution.width}
+                    containerHeight={canvasResolution.height}
+                    scaleFactor={currentScale}
+                  >
+                    {renderOverlayPreview()}
+                  </ResizeController>
+                </div>
               </div>
             </div>
           </div>

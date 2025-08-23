@@ -130,6 +130,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       wrapper.current.clientWidth,
     );
 
+    console.log('resizeWheel', canvasSize);
+
     if (canvasSize === wheelCanvas.current.height) {
       return;
     }
@@ -152,7 +154,6 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   useLayoutEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
-      console.log('resizeObserver');
       resizeWheel();
     });
 

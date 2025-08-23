@@ -1,8 +1,11 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
+import { JSONContent } from '@tiptap/react';
+import { useTranslation } from 'react-i18next';
 
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
 import { Slot } from '@models/slot.model';
 import Layout from '@pages/overlays/View/Auction/ui/Layout/Layout';
+import { buildDefaultRule } from '@pages/auction/Rules/Rules';
 
 interface AuctionOverlayPreviewProps {
   overlay: AuctionOverlayDto;
@@ -49,19 +52,17 @@ const generateMockLots = (): Slot[] => {
     .sort((a, b) => b.amount - a.amount);
 };
 
-const mockRules = `
-1. Ставки принимаются в формате !bid [номер лота] [сумма]
-2. Минимальная ставка: 100 поинтов
-3. Шаг аукциона: 50 поинтов
-4. Время на ставку: 30 секунд
-5. После окончания аукциона победитель получает лот
-6. Поинты снимаются автоматически после победы
-`.trim();
-
 const mockTimer = { state: 'paused' as const, timeLeft: 1000 * 60 * 5 }; // 5 minutes
 const mockLots = generateMockLots();
 
 const AuctionOverlayPreview: FC<AuctionOverlayPreviewProps> = ({ overlay }) => {
+  const { t } = useTranslation();
+  const mockRules = useMemo<string>(() => {
+    const savedRules = localStorage.getItem('rules');
+    const jsonContent = savedRules == null ? buildDefaultRule(t).content : JSON.parse(savedRules)[0].content;
+    return JSON.stringify(jsonContent);
+  }, [t]);
+
   return (
     <Layout
       lots={

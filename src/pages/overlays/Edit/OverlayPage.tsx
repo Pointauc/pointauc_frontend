@@ -19,12 +19,7 @@ import { Overlay } from '../types/overlay.types';
 
 import { OverlayForm } from './ui/Form';
 
-import type {
-  AuctionOverlayDto,
-  WheelOverlayDto,
-  UpdateAuctionOverlayDto,
-  UpdateWheelOverlayDto,
-} from '@api/openapi/types.gen';
+import type { UpdateAuctionOverlayDto, UpdateWheelOverlayDto } from '@api/openapi/types.gen';
 
 const convertLocalOverlayToUpdateDto = (overlay: Overlay): UpdateAuctionOverlayDto | UpdateWheelOverlayDto => {
   if (overlay.type === 'Auction') {
@@ -32,12 +27,14 @@ const convertLocalOverlayToUpdateDto = (overlay: Overlay): UpdateAuctionOverlayD
       name: overlay.name,
       canvasResolution: overlay.canvasResolution,
       settings: overlay.settings,
+      transform: overlay.transform,
     } as UpdateAuctionOverlayDto;
   } else {
     return {
       name: overlay.name,
       canvasResolution: overlay.canvasResolution,
       settings: overlay.settings,
+      transform: overlay.transform,
     } as UpdateWheelOverlayDto;
   }
 };

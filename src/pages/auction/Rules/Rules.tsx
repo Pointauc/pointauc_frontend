@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
@@ -20,6 +21,23 @@ interface RulesPreset {
 
 const getNextName = (index: number) => `Правила${index > 0 ? ` #${index + 1}` : ''}`;
 
+export const buildDefaultRule = (t: TFunction, rules: RulesPreset[] = []): RulesPreset => {
+  const names = rules.map((rule) => rule.name);
+
+  let index = 0;
+  let name = getNextName(index);
+  while (names.includes(name)) {
+    index += 1;
+    name = getNextName(index);
+  }
+
+  return {
+    name,
+    id: Math.random().toString(),
+    content: JSON.parse(t('auc.defaultRules')),
+  };
+};
+
 const NEW_RULE_KEY = 'new-rule';
 const saveRules = (rules: RulesPreset[]) => localStorage.setItem('rules', JSON.stringify(rules));
 
@@ -27,27 +45,10 @@ const RulesComponent = () => {
   const { t } = useTranslation();
   const { broadcastRules } = useRulesBroadcasting();
 
-  const buildDefaultRule = (rules: RulesPreset[] = []): RulesPreset => {
-    const names = rules.map((rule) => rule.name);
-
-    let index = 0;
-    let name = getNextName(index);
-    while (names.includes(name)) {
-      index += 1;
-      name = getNextName(index);
-    }
-
-    return {
-      name,
-      id: Math.random().toString(),
-      content: JSON.parse(t('auc.defaultRules')),
-    };
-  };
-
   const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
   const [rules, setRules] = React.useState<RulesPreset[]>(() => {
     const savedRules = localStorage.getItem('rules');
-    return savedRules == null ? [buildDefaultRule()] : JSON.parse(savedRules);
+    return savedRules == null ? [buildDefaultRule(t)] : JSON.parse(savedRules);
   });
   const [selectedRuleId, setSelectedRuleId] = React.useState<string>(rules[0].id);
   const [initialRulesContent, setInitialRulesContent] = React.useState<JSONContent>(rules[0].content);
@@ -110,7 +111,7 @@ const RulesComponent = () => {
 
   const onRuleSelect = (id: string) => {
     if (id === NEW_RULE_KEY) {
-      const newRule = buildDefaultRule(rules);
+      const newRule = buildDefaultRule(t, rules);
       setRules([...rules, newRule]);
       setSelectedRuleId(newRule.id);
     } else {
@@ -127,7 +128,7 @@ const RulesComponent = () => {
         if (updatedRules.length > 0) {
           setSelectedRuleId(updatedRules[0].id);
         } else {
-          const newRule = buildDefaultRule();
+          const newRule = buildDefaultRule(t);
           setSelectedRuleId(newRule.id);
 
           return [...updatedRules, newRule];

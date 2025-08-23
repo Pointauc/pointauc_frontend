@@ -5,6 +5,8 @@ import { generateHTML } from '@tiptap/core';
 import editorUtils from '@components/RichTextEditorTipTap/helpers';
 import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap';
 
+import classes from './index.module.css';
+
 interface OverlayRulesProps {
   rules: string; // JSON string containing the JSONContent
 }
@@ -49,7 +51,11 @@ const OverlayRules: React.FC<OverlayRulesProps> = ({ rules }) => {
     return null;
   }
 
-  return <RichTextEditorTipTap initialValue={jsonContent} onChange={() => {}} showToolbar={false} />;
+  return (
+    <div className={classes.overlayRulesContainer}>
+      <RichTextEditorTipTap initialValue={jsonContent} onChange={() => {}} showToolbar={false} />
+    </div>
+  );
 };
 
 export default OverlayRules;

@@ -1,0 +1,154 @@
+.resizeController {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  --resize-handle-border-width: 2px;
+  --resize-frame-color: transparent;
+  --resize-frame-color-dragging: transparent;
+  --resize-handle-color: #f33c3c;
+  --resize-handle-color-hover: #fb6e6e;
+  --resize-handle-color-dragging: #fb6e6e;
+  --resize-handle-size: 16px;
+}
+
+.resizableWrapper {
+  position: absolute;
+  cursor: move;
+  user-select: none;
+  border: var(--resize-handle-border-width) solid var(--resize-frame-color);
+  box-sizing: border-box;
+}
+
+.resizableWrapper.dragging {
+  /* border-color: var(--resize-frame-color-dragging); */
+}
+
+.resizableContent {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Resize handles */
+.resizeHandle {
+  position: absolute;
+  box-sizing: border-box;
+  z-index: 10;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--resize-handle-color);
+    z-index: 11;
+  }
+}
+
+.resizeHandle:hover {
+  &:after {
+    background-color: var(--resize-handle-color-hover);
+  }
+}
+
+.resizeHandle.dragging {
+  &:after {
+    background-color: var(--resize-handle-color-dragging);
+  }
+}
+
+/* Border handles */
+.resizeHandleTop {
+  top: calc(var(--resize-handle-size) * -0.5);
+  height: var(--resize-handle-size);
+  width: 100%;
+  cursor: ns-resize;
+
+  &:after {
+    width: 100%;
+    height: var(--resize-handle-border-width);
+  }
+}
+
+.resizeHandleBottom {
+  bottom: calc(var(--resize-handle-size) * -0.5);
+  height: var(--resize-handle-size);
+  width: 100%;
+  cursor: ns-resize;
+
+  &:after {
+    width: 100%;
+    height: var(--resize-handle-border-width);
+  }
+}
+
+.resizeHandleLeft {
+  top: 0;
+  left: calc(var(--resize-handle-size) * -0.5);
+  width: var(--resize-handle-size);
+  height: 100%;
+  cursor: ew-resize;
+
+  &:after {
+    width: var(--resize-handle-border-width);
+    height: 100%;
+  }
+}
+
+.resizeHandleRight {
+  top: 0;
+  right: calc(var(--resize-handle-size) * -0.5);
+  width: var(--resize-handle-size);
+  height: 100%;
+  cursor: ew-resize;
+
+  &:after {
+    width: var(--resize-handle-border-width);
+    height: 100%;
+  }
+}
+
+/* Corner handle */
+.resizeHandleCorner {
+  bottom: -7px;
+  right: -7px;
+  width: 16px;
+  height: 16px;
+  cursor: nw-resize;
+  border-radius: 2px;
+  background-color: var(--resize-handle-color);
+}
+
+/* Guidelines */
+.guidelines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.guideline {
+  position: absolute;
+  background-color: #00ff00;
+  opacity: 0.7;
+  transition: opacity 0.1s ease;
+}
+
+.guideline.hidden {
+  opacity: 0;
+}
+
+.guidelineVertical {
+  width: 1px;
+  height: 100%;
+}
+
+.guidelineHorizontal {
+  height: 1px;
+  width: 100%;
+}

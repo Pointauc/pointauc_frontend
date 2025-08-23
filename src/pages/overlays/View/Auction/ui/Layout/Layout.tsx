@@ -47,23 +47,23 @@ const Layout: FC<LayoutProps> = ({ lots, rules, timer, darkAlpha }) => {
   }, [timer?.state, timer?.timeLeft]);
 
   return (
-    <Grid classNames={{ inner: classes.grid }} gutter='0'>
+    <div className={classes.grid}>
       {rules && (
-        <Grid.Col span='content'>
+        <div className={classes.rules}>
           <OverlayRules rules={rules.rules} />
-        </Grid.Col>
+        </div>
       )}
       {lots && (
-        <Grid.Col span='auto'>
+        <div className={classes.lots}>
           <LotsColumn items={lots.items} autoScroll={lots.autoScroll} scrollSpeed={lots.scrollSpeed} />
-        </Grid.Col>
+        </div>
       )}
       {timer && (
-        <Grid.Col span='content'>
+        <div className={classes.timer}>
           <Stopwatch controller={timerController} showControls={false} />
-        </Grid.Col>
+        </div>
       )}
-    </Grid>
+    </div>
   );
 };
 

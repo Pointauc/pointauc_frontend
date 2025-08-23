@@ -1,15 +1,14 @@
-import { FC } from 'react';
-import { Group, Select, Text, Tooltip, ActionIcon, Code } from '@mantine/core';
+import { Code, Group, Select, Text, Tooltip } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { useFormContext, Controller } from 'react-hook-form';
-import { useTranslation, Trans } from 'react-i18next';
+import { FC } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { CanvasResolutionDto } from '@api/openapi/types.gen';
-import { CANVAS_RESOLUTIONS, findResolutionOption } from '@constants/resolutions.constants';
+import { CANVAS_RESOLUTIONS, buildTransform } from '@pages/overlays/utils/canvas';
 
 const CanvasResolutionSelector: FC = () => {
   const { t } = useTranslation();
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
 
   const selectData = CANVAS_RESOLUTIONS.map((resolution) => ({
     value: `${resolution.value.width}x${resolution.value.height}`,
@@ -50,11 +49,12 @@ const CanvasResolutionSelector: FC = () => {
                 if (newValue) {
                   const [width, height] = newValue.split('x').map(Number);
                   field.onChange({ width, height });
+                  setValue('transform', buildTransform({ canvasResolution: { width, height } }));
                 }
               }}
               data={selectData}
               size='sm'
-              style={{ minWidth: 200 }}
+              style={{ minWidth: 240 }}
               clearable={false}
             />
           </Group>
