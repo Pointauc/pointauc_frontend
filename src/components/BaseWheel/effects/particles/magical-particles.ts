@@ -23,6 +23,7 @@ export class MagicalParticleSystem {
   private centerX: number;
   private centerY: number;
   private radius: number;
+  public speedMultiplier: number = 1;
 
   constructor(centerX: number, centerY: number, radius: number) {
     this.centerX = centerX;
@@ -81,7 +82,7 @@ export class MagicalParticleSystem {
   public update(deltaTime: number): void {
     this.particles.forEach((particle) => {
       // Update orbit angle
-      particle.angle += particle.orbitSpeed * deltaTime;
+      particle.angle += particle.orbitSpeed * deltaTime * this.speedMultiplier;
 
       // Update base position (slow drift)
       const driftAngle = particle.id * 0.1 + Date.now() * particle.floatSpeed;
@@ -94,7 +95,7 @@ export class MagicalParticleSystem {
       particle.y = particle.baseY + Math.sin(particle.angle) * particle.orbitRadius;
 
       // Update pulse phase using configurable duration
-      particle.pulsePhase += (deltaTime / PULSE_DURATION) * Math.PI * 2;
+      particle.pulsePhase += (deltaTime / PULSE_DURATION) * (0.75 + this.speedMultiplier / 4) * Math.PI * 2;
 
       // Wrap angles
       if (particle.angle > Math.PI * 2) {

@@ -23,6 +23,8 @@ namespace Wheel {
     dropoutVariant: DropoutVariant;
 
     coreImage?: string | null;
+
+    wheelStyles?: 'default' | 'genshinImpact' | null;
   }
 
   interface SettingControls {

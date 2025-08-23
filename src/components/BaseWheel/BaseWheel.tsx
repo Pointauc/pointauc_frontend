@@ -18,7 +18,8 @@ import { WheelItem, WheelItemWithAngle } from '@models/wheel.model.ts';
 import { getRandomInclusive, random, shuffle } from '@utils/common.utils.ts';
 import { RandomPaceConfig } from '@services/SpinPaceService.ts';
 import wheelHelpers from '@components/BaseWheel/helpers.ts';
-import { useWheelDrawer } from '@components/BaseWheel/hooks/useWheelDrawer.ts';
+import { genshinWheelDrawer } from '@components/BaseWheel/hooks/genshinWheelDrawer';
+import { defaultWheelDrawer } from '@components/BaseWheel/hooks/defaultWheelDrawer';
 import { useWheelAnimator } from '@components/BaseWheel/hooks/useWheelAnimator.ts';
 import WinnerBackdrop from '@components/BaseWheel/WinnerBackdrop.tsx';
 import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
@@ -66,7 +67,10 @@ export interface BaseWheelProps<T extends WheelItem> {
   delay?: number;
   dropOut?: boolean;
   className?: string;
+  wheelStyle?: 'default' | 'genshinImpact' | null;
 }
+
+// Wheel drawer instances will be created dynamically based on wheelStyle
 
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const {
@@ -79,9 +83,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     dropOut,
     className,
     onOptimalSizeChange,
+    wheelStyle,
   } = props;
   const { t } = useTranslation();
-  const { drawWheel, highlightItem, eatAnimation, initializeEffects, updateEffects } = useWheelDrawer();
 
   const [winnerItem, setWinnerItem] = useState<WheelItem | undefined>();
 
@@ -96,6 +100,24 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const coreBackground = useMemo(() => `url(${coreImage})`, [coreImage]);
   const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
   const normalizedRef = useRef(normalizedItems);
+  const previousStyle = useRef<string | null>(wheelStyle ?? null);
+
+  // Select wheel drawer based on wheelStyle
+  const wheelDrawer = useMemo(() => {
+    switch (wheelStyle) {
+      case 'genshinImpact':
+        return genshinWheelDrawer();
+      case 'default':
+      case null:
+      case undefined:
+      default:
+        return defaultWheelDrawer();
+    }
+  }, [wheelStyle]);
+
+  const hasEffects = useMemo(() => {
+    return 'initializeEffects' in wheelDrawer && 'updateEffects' in wheelDrawer;
+  }, [wheelDrawer]);
 
   const isInitialResize = useRef(true);
 
@@ -113,18 +135,23 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   const resetStyles = useCallback(() => {
     if (wheelCanvas.current && selectorCanvas.current) {
-      drawWheel({ items: normalizedItems, wheelCanvas: wheelCanvas.current, pointerCanvas: selectorCanvas.current });
+      wheelDrawer.drawWheel({
+        items: normalizedItems,
+        wheelCanvas: wheelCanvas.current,
+        pointerCanvas: selectorCanvas.current,
+      });
 
-      // Initialize or update effects if effects canvas is available
-      if (effectsCanvas.current) {
+      // Initialize or update effects if effects canvas is available and drawer supports it
+      if (effectsCanvas.current && hasEffects) {
+        const drawerWithEffects = wheelDrawer as any;
         if (effectsManager.current) {
-          updateEffects(effectsManager.current, wheelCanvas.current);
+          drawerWithEffects.updateEffects(effectsManager.current, wheelCanvas.current);
         } else {
-          effectsManager.current = initializeEffects(effectsCanvas.current, wheelCanvas.current);
+          effectsManager.current = drawerWithEffects.initializeEffects(effectsCanvas.current, wheelCanvas.current);
         }
       }
     }
-  }, [drawWheel, normalizedItems, initializeEffects, updateEffects]);
+  }, [wheelDrawer, normalizedItems, hasEffects]);
 
   const resizeCanvas = useCallback((canvasElement: HTMLCanvasElement | null, size: number): void => {
     if (canvasElement) {
@@ -141,8 +168,6 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       wrapper.current.clientWidth,
     );
 
-    console.log('resizeWheel', canvasSize);
-
     if (canvasSize === wheelCanvas.current.height) {
       return;
     }
@@ -154,7 +179,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     onOptimalSizeChange?.(canvasSize);
 
     if (!isInitialResize.current && wheelCanvas.current && selectorCanvas.current) {
-      drawWheel({
+      wheelDrawer.drawWheel({
         items: normalizedRef.current,
         wheelCanvas: wheelCanvas.current,
         pointerCanvas: selectorCanvas.current,
@@ -162,7 +187,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     }
     isInitialResize.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [wheelDrawer]);
 
   useLayoutEffect(() => {
     const resizeObserver = new ResizeObserver(() => {
@@ -222,6 +247,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       const { seed, winner, distance, duration = 20 } = params;
       setWinnerItem(undefined);
 
+      effectsManager.current?.setSpeedMultiplier(5);
+
       const spinDistance = distance ?? generateSpinDistance(winner, duration, seed);
 
       const endAngle = await animate(spinDistance, duration);
@@ -232,6 +259,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
       const finalized = await finalizeSpin(winnerItem);
 
+      effectsManager.current?.setSpeedMultiplier(1);
+
       return finalized ? finalized : Promise.reject(new Error('No winner'));
     },
     [finalizeSpin, animate, generateSpinDistance],
@@ -239,22 +268,32 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   useEffect(() => {
     if (wheelCanvas.current && selectorCanvas.current) {
-      console.log('resetStyles effect', normalizedItems);
       resetPosition();
       resetStyles();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedItems]);
 
-  // Cleanup effects on unmount
+  // Redraw wheel when wheelStyle changes
   useEffect(() => {
+    if (previousStyle.current !== wheelStyle) {
+      if (wheelCanvas.current && selectorCanvas.current) {
+        resetStyles();
+      }
+    }
+    previousStyle.current = wheelStyle ?? null;
+
     return () => {
+      if ('destroy' in wheelDrawer) {
+        (wheelDrawer as any).destroy();
+      }
+
       if (effectsManager.current) {
         effectsManager.current.destroy();
         effectsManager.current = null;
       }
     };
-  }, []);
+  }, [wheelStyle, resetStyles, wheelDrawer]);
 
   const clearWinner = useCallback(() => {
     setWinnerItem(undefined);
@@ -269,13 +308,13 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     () => {
       const highlight = (id: Key) => {
         if (wheelCanvas.current && selectorCanvas.current) {
-          highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
+          wheelDrawer.highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
         }
       };
 
       const _eatAnimation = async (id: Key, duration?: number) => {
         if (wheelCanvas.current && selectorCanvas.current) {
-          await eatAnimation(id, normalizedItems, wheelCanvas.current, selectorCanvas.current, duration);
+          await wheelDrawer.eatAnimation(id, normalizedItems, wheelCanvas.current, selectorCanvas.current, duration);
         }
       };
 
@@ -290,7 +329,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [clearWinner, controller, resetPosition, spin, normalizedItems],
+    [clearWinner, controller, resetPosition, spin, normalizedItems, wheelDrawer],
   );
 
   const [isClickOusideAllowed, setIsClickOusideAllowed] = useState(true);
@@ -307,7 +346,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
         </div>
         <div className='wheel-content'>
           <canvas style={{ position: 'absolute', zIndex: 1, top: -32 }} ref={selectorCanvas} />
-          <canvas style={{ position: 'absolute', zIndex: 2, pointerEvents: 'none' }} ref={effectsCanvas} />
+          {hasEffects && (
+            <canvas style={{ position: 'absolute', zIndex: 2, pointerEvents: 'none' }} ref={effectsCanvas} />
+          )}
           <div className='wheel-canvas-wrapper'>
             <canvas ref={wheelCanvas} />
           </div>

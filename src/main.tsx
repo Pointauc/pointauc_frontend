@@ -1,41 +1,40 @@
 import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
 import '@mantine/dropzone/styles.css';
+import '@mantine/notifications/styles.css';
 import '@styles/index.scss';
 
+import { Notifications } from '@mantine/notifications';
+import { Theme } from '@mui/material';
 import { configureStore } from '@reduxjs/toolkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
-import { Theme } from '@mui/material';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import duration from 'dayjs/plugin/duration';
-import { Notifications } from '@mantine/notifications';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import MantineProvider from '@shared/mantine/MantineProvider.tsx';
+import '@assets/i18n/index.ts';
+import i18n from '@assets/i18n/index.ts';
+import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
+import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
+import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import INTEGRATIONS from '@components/Integration/integrations.ts';
 import ROUTES from '@constants/routes.constants.ts';
+import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
+import { Slot } from '@models/slot.model.ts';
 import rootReducer, { RootState } from '@reducers/index.ts';
 import { setSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
 import SaveLoadService from '@services/SaveLoadService.ts';
+import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import { sortSlots } from '@utils/common.utils.ts';
-import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
-import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
-import { Slot } from '@models/slot.model.ts';
-import i18n from '@assets/i18n/index.ts';
-import '@assets/i18n/index.ts';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import INTEGRATIONS from '@components/Integration/integrations.ts';
-import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
-import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
-import OverlayViewPage from '@pages/overlays/View/OverlayViewPage.tsx';
 
-import ThemeWrapper from './ThemeWrapper.tsx';
 import App from './App.tsx';
+import ThemeWrapper from './ThemeWrapper.tsx';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -115,7 +114,7 @@ const router = createBrowserRouter([
   { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
   { path: ROUTES.AUKUS.REDIRECT, element: <AukusRedirectPage /> },
-  { path: '/overlays/view/:id', element: <OverlayViewPage /> },
+  // { path: '/overlays/view/:id', element: <OverlayViewPage /> },
   ...redirectRoutes,
 ]);
 

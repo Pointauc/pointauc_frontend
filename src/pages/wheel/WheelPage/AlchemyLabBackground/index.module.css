@@ -1,0 +1,538 @@
+.root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background: radial-gradient(ellipse at center, #8b4513 0%, #cd853f 30%, #daa520 60%, #8b0000 100%); */
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Base magical background overlay */
+.magicalOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(255, 165, 0, 0.1) 0%, rgba(139, 69, 19, 0.2) 50%, rgba(139, 0, 0, 0.3) 100%);
+  animation: ambientGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes ambientGlow {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+/* Magical circles and runes */
+.magicalCircle {
+  position: absolute;
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  border-radius: 50%;
+  animation: rotateClockwise 20s linear infinite;
+}
+
+.magicalCircle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border: 1px solid rgba(255, 165, 0, 0.4);
+  border-radius: 50%;
+  animation: rotateCounterClockwise 15s linear infinite;
+}
+
+.magicalCircle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 50%;
+  animation: rotateClockwise 10s linear infinite;
+}
+
+.circle1 {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  right: 15%;
+  animation-duration: 25s;
+}
+
+.circle2 {
+  width: 150px;
+  height: 150px;
+  bottom: 20%;
+  left: 10%;
+  animation-duration: 18s;
+}
+
+.circle3 {
+  width: 120px;
+  height: 120px;
+  top: 60%;
+  right: 8%;
+  animation-duration: 22s;
+}
+
+@keyframes rotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateCounterClockwise {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* Pulsing magical energy */
+.magicalPulse {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #ffd700 0%, transparent 70%);
+  border-radius: 50%;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(2);
+    opacity: 1;
+  }
+}
+
+.pulse1 {
+  top: 25%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.pulse2 {
+  top: 70%;
+  right: 25%;
+  animation-delay: 1s;
+}
+
+.pulse3 {
+  bottom: 30%;
+  left: 60%;
+  animation-delay: 2s;
+}
+
+/* Bookshelf silhouettes */
+.bookshelf {
+  position: absolute;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+  box-shadow: inset 0 0 20px rgba(255, 165, 0, 0.3);
+}
+
+.leftBookshelf {
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+}
+
+.rightBookshelf {
+  right: 0;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+}
+
+/* Glowing bottles on shelves */
+.glowingBottle {
+  position: absolute;
+  width: 8px;
+  height: 15px;
+  background: linear-gradient(to bottom, rgba(255, 165, 0, 0.8), rgba(255, 215, 0, 0.6));
+  border-radius: 40% 40% 60% 60%;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  animation: bottleGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes bottleGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    opacity: 0.7;
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 165, 0, 0.9);
+    opacity: 1;
+  }
+}
+
+.bottle1 {
+  left: 30px;
+  top: 15%;
+  animation-delay: 0.5s;
+}
+
+.bottle2 {
+  left: 50px;
+  top: 35%;
+  animation-delay: 1.5s;
+}
+
+.bottle3 {
+  left: 20px;
+  top: 55%;
+  animation-delay: 2.5s;
+}
+
+.bottle4 {
+  right: 30px;
+  top: 25%;
+  animation-delay: 1s;
+}
+
+.bottle5 {
+  right: 50px;
+  top: 45%;
+  animation-delay: 2s;
+}
+
+/* Floating scrolls and maps */
+.floatingScroll {
+  position: absolute;
+  width: 60px;
+  height: 8px;
+  background: linear-gradient(to right, rgba(222, 184, 135, 0.7), rgba(210, 180, 140, 0.5));
+  border-radius: 4px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  animation: float 12s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px) rotateZ(0deg);
+  }
+  25% {
+    transform: translateY(-15px) rotateZ(2deg);
+  }
+  50% {
+    transform: translateY(-8px) rotateZ(-1deg);
+  }
+  75% {
+    transform: translateY(-20px) rotateZ(1deg);
+  }
+}
+
+.scroll1 {
+  top: 30%;
+  left: 70%;
+  animation-delay: 0s;
+}
+
+.scroll2 {
+  top: 45%;
+  left: 25%;
+  animation-delay: 4s;
+}
+
+.scroll3 {
+  bottom: 35%;
+  right: 40%;
+  animation-delay: 8s;
+}
+
+/* Particle effects */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 215, 0, 0.8);
+  border-radius: 50%;
+  animation: particleFloat 8s linear infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10px) translateX(20px);
+    opacity: 0;
+  }
+}
+
+.particle1 {
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle2 {
+  left: 30%;
+  animation-delay: 2s;
+}
+
+.particle3 {
+  left: 50%;
+  animation-delay: 4s;
+}
+
+.particle4 {
+  left: 70%;
+  animation-delay: 6s;
+}
+
+.particle5 {
+  left: 90%;
+  animation-delay: 1s;
+}
+
+/* Crystalline formations */
+.crystal {
+  position: absolute;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 215, 0, 0.3));
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation: crystalGlow 6s ease-in-out infinite alternate;
+}
+
+@keyframes crystalGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    filter: brightness(1);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 165, 0, 0.6);
+    filter: brightness(1.3);
+  }
+}
+
+.crystal1 {
+  left: 15%;
+  width: 30px;
+  height: 50px;
+  animation-delay: 0s;
+}
+
+.crystal2 {
+  left: 20%;
+  width: 20px;
+  height: 35px;
+  animation-delay: 2s;
+}
+
+.crystal3 {
+  right: 25%;
+  width: 25px;
+  height: 45px;
+  animation-delay: 4s;
+}
+
+.crystal4 {
+  right: 30%;
+  width: 15px;
+  height: 30px;
+  animation-delay: 1s;
+}
+
+/* Candle flame effects */
+.candleFlame {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  background: radial-gradient(ellipse at bottom, #ff4500 0%, #ffd700 50%, transparent 100%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flicker 2s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1) skew(0deg);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.1) skew(2deg);
+    filter: brightness(1.2);
+  }
+  75% {
+    transform: scale(0.9) skew(-1deg);
+    filter: brightness(0.9);
+  }
+  100% {
+    transform: scale(1.05) skew(1deg);
+    filter: brightness(1.1);
+  }
+}
+
+.flame1 {
+  left: 25px;
+  top: 20%;
+  animation-delay: 0s;
+}
+
+.flame2 {
+  right: 35px;
+  top: 60%;
+  animation-delay: 0.7s;
+}
+
+.flame3 {
+  left: 60%;
+  bottom: 25%;
+  animation-delay: 1.4s;
+}
+
+/* Arcane symbols */
+.arcaneSymbol {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 215, 0, 0.6);
+  font-size: 16px;
+  font-family: 'Times New Roman', serif;
+  animation: symbolAppear 8s ease-in-out infinite;
+}
+
+@keyframes symbolAppear {
+  0%,
+  70% {
+    opacity: 0;
+    transform: scale(0.5) rotate(0deg);
+  }
+  85% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) rotate(720deg);
+  }
+}
+
+.symbol1 {
+  top: 40%;
+  left: 40%;
+  animation-delay: 0s;
+}
+
+.symbol1::before {
+  content: '⟐';
+}
+
+.symbol2 {
+  top: 25%;
+  right: 30%;
+  animation-delay: 2s;
+}
+
+.symbol2::before {
+  content: '☽';
+}
+
+.symbol3 {
+  bottom: 40%;
+  left: 35%;
+  animation-delay: 4s;
+}
+
+.symbol3::before {
+  content: '⬟';
+}
+
+.symbol4 {
+  top: 70%;
+  right: 45%;
+  animation-delay: 6s;
+}
+
+.symbol4::before {
+  content: '◊';
+}
+
+/* Light motes */
+.lightMote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 215, 0, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+  animation: moteDrift 15s linear infinite;
+}
+
+@keyframes moteDrift {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100px, -200px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.mote1 {
+  top: 20%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.mote2 {
+  top: 60%;
+  left: 30%;
+  animation-delay: 3s;
+}
+
+.mote3 {
+  top: 40%;
+  right: 20%;
+  animation-delay: 6s;
+}
+
+.mote4 {
+  bottom: 30%;
+  left: 80%;
+  animation-delay: 9s;
+}
+
+.mote5 {
+  top: 80%;
+  right: 60%;
+  animation-delay: 12s;
+}

@@ -40,6 +40,7 @@ interface Result {
   eatAnimation: EatAnimationFunc;
   initializeEffects: InitializeEffectsFunc;
   updateEffects: UpdateEffectsFunc;
+  destroy: () => void;
 }
 
 const borderWidth = 5;
@@ -48,6 +49,8 @@ const maxTextLength = 21;
 const selectorAngle = (Math.PI / 2) * 3;
 // Pointer size multiplier - adjust this to make the pointer bigger/smaller (default 1.4 = 40% larger)
 const defaultPointerSizeMultiplier = 1.4;
+
+let pointerAnimationFrame: number | null = null;
 
 const colorGetter = (item: WheelItem) => item.color || '#000';
 
@@ -61,7 +64,7 @@ const getAnimationManager = (): AnimationManager => {
   return sharedAnimationManager;
 };
 
-export const useWheelDrawer = (): Result => {
+export const genshinWheelDrawer = (): Result => {
   const drawText = (
     ctx: CanvasRenderingContext2D,
     center: number,
@@ -80,7 +83,6 @@ export const useWheelDrawer = (): Result => {
     // Enhanced font with better styling
     ctx.font = 'bold 22px Arial, sans-serif';
     ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
 
     const offsetModifier = -text.length * 0.007 + 1.3;
     const textRadius = (radius - ctx.measureText(text).width) / offsetModifier;
@@ -138,7 +140,7 @@ export const useWheelDrawer = (): Result => {
     }
 
     // Add small magical sparkles around longer text
-    if (text.length > 8) {
+    if (text.length > 14) {
       const sparkleCount = 3;
       const textWidth = ctx.measureText(text).width;
 
@@ -214,13 +216,13 @@ export const useWheelDrawer = (): Result => {
     const angleSpan = endAngle - startAngle;
 
     // Only add facets if slice is large enough
-    if (angleSpan > 0.3) {
+    if (angleSpan > 0.002) {
       // Inner crystalline lines
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.lineWidth = 1;
 
       // Radial facet lines
-      const facetCount = Math.max(2, Math.floor(angleSpan * 3));
+      const facetCount = Math.max(0, Math.floor(angleSpan * 3));
       for (let i = 1; i < facetCount; i++) {
         const facetAngle = startAngle + (angleSpan * i) / facetCount;
         const innerRadius = radius * 0.4;
@@ -303,7 +305,7 @@ export const useWheelDrawer = (): Result => {
     ctx.save();
 
     // Genshin Impact inspired crystal pointer design
-    const currentTime = Date.now() * 0.003; // For animation effects
+    const currentTime = Date.now() * 0.001; // For animation effects
 
     // Main crystal gradient - celestial blue to deep purple
     const mainGradient = ctx.createLinearGradient(
@@ -585,7 +587,16 @@ export const useWheelDrawer = (): Result => {
 
     // Draw the pointer on the pointer canvas
     if (pointerCtx) {
-      drawPointer(pointerCtx, radius);
+      if (pointerAnimationFrame) {
+        cancelAnimationFrame(pointerAnimationFrame);
+      }
+
+      const callback = () => {
+        drawPointer(pointerCtx, radius);
+        pointerAnimationFrame = requestAnimationFrame(callback);
+      };
+
+      pointerAnimationFrame = requestAnimationFrame(callback);
     }
   };
 
@@ -691,5 +702,11 @@ export const useWheelDrawer = (): Result => {
     });
   };
 
-  return { drawWheel, highlightItem, eatAnimation, initializeEffects, updateEffects };
+  const destroy = () => {
+    if (pointerAnimationFrame) {
+      cancelAnimationFrame(pointerAnimationFrame);
+    }
+  };
+
+  return { drawWheel, highlightItem, eatAnimation, initializeEffects, updateEffects, destroy };
 };

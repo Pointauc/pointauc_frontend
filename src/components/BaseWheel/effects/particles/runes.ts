@@ -20,6 +20,7 @@ export class RuneSystem {
   private centerX: number;
   private centerY: number;
   private radius: number;
+  public speedMultiplier: number = 1;
   private runeSymbols: string[] = [
     'ᚠ',
     'ᚢ',
@@ -84,7 +85,7 @@ export class RuneSystem {
   public update(deltaTime: number): void {
     this.runes.forEach((rune) => {
       // Move rune backward (counter-clockwise)
-      rune.angle += rune.speed * deltaTime;
+      rune.angle += rune.speed * deltaTime * this.speedMultiplier;
 
       // Update position with slight orbital variation
       const orbitVariation = Math.sin(Date.now() * 0.001 + rune.id) * 15;
@@ -93,7 +94,7 @@ export class RuneSystem {
       rune.y = this.centerY + Math.sin(rune.angle) * orbitRadius;
 
       // Update pulse phase for animation using configurable duration
-      rune.pulsePhase += (deltaTime / PULSE_DURATION) * Math.PI * 2;
+      rune.pulsePhase += (deltaTime / PULSE_DURATION) * (0.5 + this.speedMultiplier / 2) * Math.PI * 2;
 
       // Wrap angles
       if (rune.angle < 0) {

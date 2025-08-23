@@ -9,25 +9,22 @@ import { setSocket, updateDataState } from '../model/store';
 import { Broadcasting } from '../model/types';
 
 export const connectToBroadcastingSocket: ThunkAction<void, RootState, {}, Action> = (dispatch, getState) => {
-  const socket = io(`${getSocketIOUrl()}/broadcasting`, { query: { cookie: document.cookie } }) as Socket<
-    Broadcasting.ListenEvents,
-    Broadcasting.EmitEvents
-  >;
-  socket.on('updatesRequested', (data) => {
-    console.log('updatesRequested', data);
-    dispatch(updateDataState({ dataType: data.dataType, value: true }));
-  });
-
-  socket.on('updatesSilenced', (data) => {
-    console.log('updatesSilenced', data);
-    dispatch(updateDataState({ dataType: data.dataType, value: false }));
-  });
-
-  socket.on('connect', () => {
-    dispatch(setSocket(socket));
-  });
-
-  socket.on('disconnect', () => {
-    dispatch(setSocket(null));
-  });
+  // const socket = io(`${getSocketIOUrl()}/broadcasting`, { query: { cookie: document.cookie } }) as Socket<
+  //   Broadcasting.ListenEvents,
+  //   Broadcasting.EmitEvents
+  // >;
+  // socket.on('updatesRequested', (data) => {
+  //   console.log('updatesRequested', data);
+  //   dispatch(updateDataState({ dataType: data.dataType, value: true }));
+  // });
+  // socket.on('updatesSilenced', (data) => {
+  //   console.log('updatesSilenced', data);
+  //   dispatch(updateDataState({ dataType: data.dataType, value: false }));
+  // });
+  // socket.on('connect', () => {
+  //   dispatch(setSocket(socket));
+  // });
+  // socket.on('disconnect', () => {
+  //   dispatch(setSocket(null));
+  // });
 };

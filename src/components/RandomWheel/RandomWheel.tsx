@@ -76,6 +76,7 @@ const defaultSettings: Wheel.Settings = {
   depthRestriction: null,
 
   dropoutVariant: DropoutVariant.New,
+  wheelStyles: 'default',
 };
 const savedSettings = JSON.parse(localStorage.getItem('wheelSettings') ?? '{}');
 const initialSettings = { ...defaultSettings, ...savedSettings };

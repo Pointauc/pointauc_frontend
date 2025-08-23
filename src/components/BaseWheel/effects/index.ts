@@ -43,6 +43,12 @@ export class EffectsManager {
     this.animationCallback = this.animate.bind(this);
   }
 
+  setSpeedMultiplier(speedMultiplier: number): void {
+    this.cometSystem.speedMultiplier = speedMultiplier;
+    this.runeSystem.speedMultiplier = speedMultiplier;
+    this.magicalParticleSystem.speedMultiplier = speedMultiplier;
+  }
+
   /**
    * Start the effects animation
    */

@@ -20,6 +20,7 @@ export class CometSystem {
   private centerX: number;
   private centerY: number;
   private radius: number;
+  public speedMultiplier: number = 1;
 
   constructor(centerX: number, centerY: number, radius: number) {
     this.centerX = centerX;
@@ -57,7 +58,7 @@ export class CometSystem {
   public update(deltaTime: number): void {
     this.comets.forEach((comet) => {
       // Move comet forward (clockwise)
-      comet.angle += comet.speed * deltaTime;
+      comet.angle += comet.speed * deltaTime * this.speedMultiplier;
 
       // Update position using static orbit radius (perfect circle)
       comet.x = this.centerX + Math.cos(comet.angle) * comet.orbitRadius;
@@ -89,7 +90,7 @@ export class CometSystem {
 
       // Draw curved arc trail perpendicular to wheel center
       const trailSegments = 8;
-      const trailAngleSpan = (comet.trailLength / trailArcRadius) * 0.5; // Convert length to angle
+      const trailAngleSpan = (comet.trailLength / trailArcRadius) * (0.8 + this.speedMultiplier / 5) * 0.5; // Convert length to angle
 
       ctx.strokeStyle = `rgba(147, 197, 253, ${currentOpacity * 0.6})`;
       ctx.lineWidth = comet.size * 0.8;

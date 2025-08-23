@@ -1,9 +1,6 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import './App.scss';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames';
+import { OpenInNew } from '@mui/icons-material';
 import {
+  Box,
   Container,
   Divider,
   Drawer,
@@ -12,40 +9,42 @@ import {
   ListItemIcon,
   ListItemText,
   styled,
-  Box,
 } from '@mui/material';
-import { OpenInNew } from '@mui/icons-material';
+import classNames from 'classnames';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import './App.scss';
 
-import { RootState } from '@reducers';
-import donatePay from '@components/Integration/DonatePay';
-import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
-import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
+import donatePay from '@components/Integration/DonatePay';
 import Metadata from '@components/Metadata';
 import LogoutPage from '@pages/logout/LogoutPage.tsx';
+import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
+import { RootState } from '@reducers';
+import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 
-import ROUTES from './constants/routes.constants';
-import AucPage from './pages/auction/AucPage';
-import { MenuItem } from './models/common.model';
-import { useMenuItems } from './constants/menuItems.constants';
-import { loadUserData } from './reducers/AucSettings/AucSettings';
+import { getIntegrationsValidity } from './api/userApi';
 import AlertsContainer from './components/AlertsContainer/AlertsContainer';
-import HistoryPage from './pages/history/HistoryPage/HistoryPage';
-import WheelPage from './pages/wheel/WheelPage/WheelPage';
 import HelpPage from './components/HelpPage/HelpPage';
+import RequestsPage from './components/RequestsPage/RequestsPage';
 import Statistic from './components/Statistic/Statistic';
 import StopwatchPage from './components/StopwatchPage/StopwatchPage';
-import RequestsPage from './components/RequestsPage/RequestsPage';
+import { useMenuItems } from './constants/menuItems.constants';
+import ROUTES from './constants/routes.constants';
+import { useLotsBroadcasting } from './features/broadcasting/lib/broadcastHooks/useLotsBroadcasting';
+import { connectToBroadcastingSocket } from './features/broadcasting/lib/socket';
+import { AlertType, AlertTypeEnum } from './models/alert.model';
+import { MenuItem } from './models/common.model';
+import AucPage from './pages/auction/AucPage';
+import HistoryPage from './pages/history/HistoryPage/HistoryPage';
 import OverlaysPage from './pages/overlays/List/OverlaysPage';
-import OverlayPage from './pages/overlays/Edit/OverlayPage';
+import WheelPage from './pages/wheel/WheelPage/WheelPage';
+import { loadUserData } from './reducers/AucSettings/AucSettings';
+import { addAlert, deleteAlert } from './reducers/notifications/notifications';
 import { connectToSocketIo } from './reducers/socketIo/socketIo';
 import { getCookie } from './utils/common.utils';
-import { getIntegrationsValidity } from './api/userApi';
-import { AlertType, AlertTypeEnum } from './models/alert.model';
-import { addAlert, deleteAlert } from './reducers/notifications/notifications';
-import { connectToBroadcastingSocket } from './features/broadcasting/lib/socket';
-import { useLotsBroadcasting } from './features/broadcasting/lib/broadcastHooks/useLotsBroadcasting';
 
 import type { ThunkDispatch } from 'redux-thunk';
 
@@ -213,7 +212,7 @@ const App: React.FC = () => {
           <Route path={ROUTES.STOPWATCH} element={<StopwatchPage />} />
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
           <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
-          <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
+          {/* <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} /> */}
           <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         </Routes>
       </Container>

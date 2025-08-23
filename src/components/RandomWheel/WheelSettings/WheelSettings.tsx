@@ -20,6 +20,8 @@ import WheelFormatField from '@components/RandomWheel/WheelSettings/fields/Wheel
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { WheelFormat } from '@constants/wheel.ts';
 
+import WheelStyleSelect from './fields/StyleSelect';
+
 interface WheelSettingsProps {
   nextWinner?: string;
   isLoadingSeed: boolean;
@@ -65,7 +67,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
           />
         }
       />
-      <Grid container style={{ gap: 8 }} direction='column' size={direction === 'row' ? 6 : undefined}>
+      <Grid container style={{ gap: 10 }} direction='column' size={direction === 'row' ? 6 : undefined}>
         <Grid container className='wheel-controls-row' spacing={1}>
           {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
           <Grid flexGrow={1} sx={{ position: 'relative', top: -2 }}>
@@ -76,6 +78,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
             <RandomSpinSwitch />
           </Grid>
         </Grid>
+        <WheelStyleSelect />
         {controls.mode && <WheelFormatField />}
         {format === WheelFormat.Dropout && (
           <>

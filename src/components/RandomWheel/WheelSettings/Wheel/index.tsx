@@ -13,6 +13,7 @@ interface Props extends Pick<BaseWheelProps<any>, 'controller' | 'className' | '
 const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptimalSizeChange }: Props) => {
   const coreImage = useWatch<Wheel.Settings>({ name: 'coreImage' });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
+  const wheelStyles = useWatch<Wheel.Settings>({ name: 'wheelStyles' });
   const { setValue } = useFormContext<Wheel.Settings>();
   const onCoreImageChange = useCallback(
     (image: string) => {
@@ -31,6 +32,7 @@ const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptim
       dropOut={format === WheelFormat.Dropout}
       className={className}
       onOptimalSizeChange={onOptimalSizeChange}
+      wheelStyle={wheelStyles}
     />
   );
 };
