@@ -586,11 +586,7 @@ export const genshinWheelDrawer = (): Result => {
     }
 
     // Draw the pointer on the pointer canvas
-    if (pointerCtx) {
-      if (pointerAnimationFrame) {
-        cancelAnimationFrame(pointerAnimationFrame);
-      }
-
+    if (pointerCtx && !pointerAnimationFrame) {
       const callback = () => {
         drawPointer(pointerCtx, radius);
         pointerAnimationFrame = requestAnimationFrame(callback);
@@ -704,8 +700,10 @@ export const genshinWheelDrawer = (): Result => {
 
   const destroy = () => {
     if (pointerAnimationFrame) {
+      console.log('destroy pointer animation');
       cancelAnimationFrame(pointerAnimationFrame);
     }
+    pointerAnimationFrame = null;
   };
 
   return { drawWheel, highlightItem, eatAnimation, initializeEffects, updateEffects, destroy };

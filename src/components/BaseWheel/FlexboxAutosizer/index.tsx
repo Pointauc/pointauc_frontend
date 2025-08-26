@@ -11,18 +11,18 @@ interface Props {
 }
 
 const WheelFlexboxAutosizer = ({ children }: Props) => {
-  const [optimalSize, setOptimalSize] = useState<number | undefined>();
+  const optimalSize = useRef<number | undefined>();
   const previousHeight = useRef<number | undefined>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     if (containerRef.current) {
-      containerRef.current.style.flexBasis = optimalSize ? `${optimalSize}px` : '100%';
+      containerRef.current.style.flexBasis = optimalSize.current ? `${optimalSize.current}px` : '100%';
     }
-  }, [optimalSize]);
+  }, []);
 
   const handleSetOptimalSize = (size: number) => {
-    setOptimalSize(size);
+    optimalSize.current = size;
     if (containerRef.current) {
       containerRef.current.style.flexBasis = `${size}px`;
     }
@@ -30,14 +30,24 @@ const WheelFlexboxAutosizer = ({ children }: Props) => {
 
   useLayoutEffect(() => {
     if (containerRef.current) {
-      const height = containerRef.current.clientHeight;
-      if (previousHeight.current && previousHeight.current !== height) {
-        setOptimalSize(undefined);
-        containerRef.current.style.flexBasis = '100%';
-      }
-      previousHeight.current = height;
+      const resizeObserver = new ResizeObserver(() => {
+        if (!containerRef.current) return;
+        const height = containerRef.current?.clientHeight;
+        const isWheelSizeIncreased =
+          height > (previousHeight.current ?? Infinity) && height > (optimalSize.current ?? Infinity);
+        if (isWheelSizeIncreased && containerRef.current) {
+          optimalSize.current = undefined;
+          containerRef.current.style.flexBasis = '100%';
+        }
+        previousHeight.current = height;
+      });
+      resizeObserver.observe(containerRef.current);
+
+      return () => {
+        resizeObserver.disconnect();
+      };
     }
-  });
+  }, [containerRef]);
 
   return (
     <div ref={containerRef} className={classes.wheelFlexboxAutosizer}>

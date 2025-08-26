@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 import { WheelContext } from '@components/RandomWheel/WheelSettings/WheelContext.tsx';
-import * as wheelItem from '@features/wheel/lib/item.ts';
+import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
 import '@components/RandomWheel/ItemsPreview/Item.scss';
 
 interface Props {

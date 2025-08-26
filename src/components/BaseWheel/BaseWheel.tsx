@@ -29,7 +29,7 @@ import {
   calculateRandomSpinDistance,
   calculateWinnerSpinDistance,
   getWinnerFromDistance,
-} from '@features/wheel/lib/geometry';
+} from '@domains/winner-selection/wheel-of-random/lib/geometry';
 
 export enum DropoutVariant {
   Classic,

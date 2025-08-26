@@ -44,7 +44,8 @@
       "@utils/*": ["./src/utils/*"],
       "@features/*": ["./src/features/*"],
       "@shared/*": ["./src/shared/*"],
-      "@types/*": ["./src/types/*"]
+      "@types/*": ["./src/types/*"],
+      "@domains/*": ["./src/domains/*"]
     }
   },
   "include": ["src", "openapi-ts.config.ts"],

@@ -23,7 +23,7 @@ import useWheelResolver from '@components/RandomWheel/hooks/useWheelResolver.ts'
 import wheelUtils from '@components/RandomWheel/wheelUtils.ts';
 import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
 import withLoading from '@decorators/withLoading';
-import { calculateRandomSpinDistance } from '@features/wheel/lib/geometry';
+import { calculateRandomSpinDistance } from '@domains/winner-selection/wheel-of-random/lib/geometry';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
 import array from '@utils/dataType/array.ts';

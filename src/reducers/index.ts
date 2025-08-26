@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
-import broadcasting from '../features/broadcasting/model/store';
+import broadcasting from '../domains/broadcasting/model/store';
 
 import slots from './Slots/Slots';
 import user from './User/User';

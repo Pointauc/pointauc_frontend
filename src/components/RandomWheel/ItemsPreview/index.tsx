@@ -12,7 +12,7 @@ import { createMapByKey } from '@utils/common.utils.ts';
 import Item from '@components/RandomWheel/ItemsPreview/Item.tsx';
 import { WheelFormat } from '@constants/wheel.ts';
 import useStorageState from '@hooks/useStorageState.ts';
-import * as wheelItem from '@features/wheel/lib/item.ts';
+import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
 
 import './index.scss';
 import classes from './index.module.css';

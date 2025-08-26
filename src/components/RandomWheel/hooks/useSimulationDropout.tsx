@@ -7,7 +7,7 @@ import { SpinParams, WheelController } from '@components/BaseWheel/BaseWheel.tsx
 import useDropoutSpinEnd from '@components/RandomWheel/hooks/useDropoutSpinEnd.ts';
 import useInitWrapper from '@components/RandomWheel/hooks/useInitWrapper.ts';
 import ResetButton from '@components/RandomWheel/Dropout/ResetButton';
-import { calculateWinnerSpinDistance } from '@features/wheel/lib/geometry';
+import { calculateWinnerSpinDistance } from '@domains/winner-selection/wheel-of-random/lib/geometry';
 
 const useSimulationDropout = (controller: RefObject<WheelController>): Wheel.FormatHook => {
   const [_items, setItems] = useState<WheelItem[] | undefined>();

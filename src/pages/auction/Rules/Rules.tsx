@@ -10,7 +10,7 @@ import { TFunction } from 'i18next';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
 import { RulesSettingsContext, RulesSettingsProvider } from '@pages/auction/Rules/RulesSettingsContext.tsx';
-import { useRulesBroadcasting } from '@features/broadcasting/lib/broadcastHooks/useRulesBroadcasting';
+import { useRulesBroadcasting } from '@domains/broadcasting/lib/useRulesBroadcasting';
 import './Rules.scss';
 
 interface RulesPreset {

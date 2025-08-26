@@ -12,7 +12,7 @@ import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
 import { deleteSlot, setSlots } from '@reducers/Slots/Slots';
 import { slotToWheel } from '@utils/slots.utils';
-import { useWheelBroadcasting } from '@features/broadcasting/lib/broadcastHooks/useWheelBroadcasting';
+import { useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
 import { WheelFormat } from '@constants/wheel';
 import { skipSameValueCalls } from '@utils/dataType/function.utils';
 import { SpinParams } from '@components/BaseWheel/BaseWheel';

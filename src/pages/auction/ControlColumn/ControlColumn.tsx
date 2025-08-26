@@ -1,4 +1,4 @@
-import { useTimerBroadcasting } from '@features/broadcasting/lib/broadcastHooks/useTimerBroadcasting';
+import { useTimerBroadcasting } from '@domains/broadcasting/lib/useTimerBroadcasting';
 
 import Stopwatch from '../Stopwatch/Stopwatch';
 import PurchaseList from '../PurchaseList/PurchaseList';
