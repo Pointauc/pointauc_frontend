@@ -1,9 +1,12 @@
 import { TextInput } from '@mantine/core';
 
-import classes from './index.module.css';
+import OutlineInput from './OutlineInput';
 
 const ExtendedTextInput = TextInput.extend({
-  classNames: classes,
+  defaultProps: {
+    size: 'md',
+  },
 });
 
 export default ExtendedTextInput;
+export { OutlineInput };

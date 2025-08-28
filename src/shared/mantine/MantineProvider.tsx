@@ -5,7 +5,9 @@ import {
   alpha,
   createTheme,
   MantineTheme,
+  Checkbox,
   TextInput,
+  rem,
 } from '@mantine/core';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,6 +18,8 @@ import { RootState } from '@reducers';
 
 import ExtendedTextInput from './ui/Input';
 import ExtendedSlider from './ui/Slider';
+import ExtendedCheckbox from './ui/Checkbox';
+import ExtendedSegmentedControl from './ui/SegmentedControl';
 
 const shadowOpacityMain = 0.12;
 const shadowOpacitySecondary = 0.09;
@@ -49,6 +53,11 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
     return createTheme({
       cursorType: 'pointer',
       primaryColor: 'blue',
+      spacing: {
+        ...DEFAULT_THEME.spacing,
+        xxs: rem(6),
+      },
+      fontFamily: 'Inter, sans-serif',
       // fontSizes: {
       //   xs: '0.875rem', // 14px (was 12px)
       //   sm: '1rem', // 16px (was 14px)
@@ -75,6 +84,15 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
         },
         TextInput: ExtendedTextInput,
         Slider: ExtendedSlider,
+        Button: { defaultProps: { size: 'md' } },
+        Checkbox: ExtendedCheckbox,
+        SegmentedControl: ExtendedSegmentedControl,
+        Select: {
+          defaultProps: {
+            size: 'md',
+            comboboxProps: { transitionProps: { transition: 'pop', duration: 100 } },
+          },
+        },
       },
     });
   }, [uiOpacity]);

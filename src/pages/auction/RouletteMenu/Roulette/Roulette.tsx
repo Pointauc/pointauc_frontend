@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { WheelItem } from '@models/wheel.model.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { RootState } from '@reducers';
-import RandomWheel, { SettingElements } from '@components/RandomWheel/RandomWheel';
+import RandomWheel, { SettingElements } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import array from '@utils/dataType/array.ts';
 
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';

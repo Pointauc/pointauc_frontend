@@ -38,7 +38,6 @@ The outline variant includes:
 - Border color changes on focus
 - Label transitions with size and position changes
 - Proper z-index layering for the floating label
-- Support for both light and dark themes
 
 ## Implementation Details
 

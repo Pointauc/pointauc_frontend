@@ -1,24 +1,18 @@
 import { notifications } from '@mantine/notifications';
 import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 
 interface FirstTimeHelpNotificationProps {
   featureKey: string;
   message: string | React.ReactNode;
+  title: string;
 }
 
-export const FirstTimeHelpNotification = ({ featureKey, message }: FirstTimeHelpNotificationProps) => {
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    console.log('FirstTimeHelpNotification');
-  }, []);
-
+export const FirstTimeHelpNotification = ({ featureKey, message, title }: FirstTimeHelpNotificationProps) => {
   useEffect(() => {
     const shouldShowHelpNotification = localStorage.getItem(featureKey) !== 'true';
     if (shouldShowHelpNotification) {
       notifications.show({
-        title: t('common.needHelp'),
+        title,
         message,
         color: 'blue',
         withCloseButton: true,

@@ -471,7 +471,10 @@
       "submitDisabled": "Enter participants"
     },
     "dropout": {
-      "helpNotification": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>",
+      "helpNotification": {
+        "title": "About the Dropout",
+        "message": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>"
+      },
       "explanation": {
         "button": "how does it work?"
       },
@@ -483,7 +486,10 @@
       }
     },
     "duel": {
-      "helpNotification": "You can read more about the <2>battle royal</2> mode in our <1>user manual (battle-royal)</1>",
+      "helpNotification": {
+        "title": "About the Battle Royal",
+        "message": "You can read more about the <2>battle royal</2> mode in our <1>user manual (battle-royal)</1>"
+      },
       "explanation": {
         "button": "how does it work?"
       }
@@ -534,7 +540,10 @@
     "wheel": "Wheel",
     "winner": "Winner",
     "randomSpin": "Random spin time",
-    "helpNotification": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>",
+    "helpNotification": {
+      "title": "About the Wheel",
+      "message": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>"
+    },
     "style": {
       "label": "Wheel Style",
       "default": "Default",

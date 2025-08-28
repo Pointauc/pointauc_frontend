@@ -6,7 +6,7 @@ import { UseFormReturn } from 'react-hook-form';
 
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
 import PageContainer from '@components/PageContainer/PageContainer';
-import RandomWheel, { RandomWheelController } from '@components/RandomWheel/RandomWheel';
+import RandomWheel, { RandomWheelController } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import { Slot } from '@models/slot.model';
 import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
@@ -15,7 +15,7 @@ import { slotToWheel } from '@utils/slots.utils';
 import { useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
 import { WheelFormat } from '@constants/wheel';
 import { skipSameValueCalls } from '@utils/dataType/function.utils';
-import { SpinParams } from '@components/BaseWheel/BaseWheel';
+import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 
 const WheelPage: FC = () => {
   const dispatch = useDispatch();

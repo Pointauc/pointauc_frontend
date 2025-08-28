@@ -1,7 +1,7 @@
 import { FC, useMemo, useRef } from 'react';
 
 import { WheelOverlayDto } from '@api/openapi/types.gen';
-import { WheelController } from '@components/BaseWheel/BaseWheel';
+import { WheelController } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 import { WheelFormat } from '@constants/wheel';
 import { WheelItemWithMetadata } from '@models/wheel.model';
 

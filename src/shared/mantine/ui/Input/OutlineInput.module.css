@@ -1,0 +1,89 @@
+.fieldset {
+  position: relative;
+  border: 1px solid var(--mantine-color-gray-7);
+  border-radius: var(--mantine-radius-sm);
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--mantine-primary-color-filled);
+    outline: none;
+
+    .floatingLabelElevated {
+      color: var(--mantine-primary-color-filled);
+    }
+  }
+
+  &:hover:not(:focus-within) {
+    border-color: var(--mantine-color-gray-6);
+  }
+}
+
+/* The legend draws the notch. We keep it inline to cut the border */
+
+/* legend creates the notch in the outline. We hide only the text visually */
+.legend {
+  float: initial;
+  display: block;
+  width: 0; /* collapse notch by default */
+  max-width: 0;
+  height: 0.01px; /* keep layout */
+  padding: 0;
+  margin: 0; /* no offset when not elevated */
+  overflow: hidden;
+  border: 0;
+  transition:
+    width 0.2s ease,
+    max-width 0.2s ease,
+    margin 0.2s ease;
+}
+
+.legendLabel {
+  display: inline-block;
+  font-size: var(--mantine-font-size-xs);
+  padding: 0 var(--mantine-spacing-xxs);
+  opacity: 0; /* text invisible but legend still defines notch width */
+}
+
+/* When elevated, notch is visible (legend has width) */
+.legendNotched {
+  width: auto; /* expand to content width to create notch */
+  max-width: 100%;
+  margin-left: calc(var(--mantine-spacing-md) - var(--mantine-spacing-xxs));
+}
+
+/* Floating label sits above the notch without background */
+.floatingLabel {
+  position: absolute;
+  left: var(--mantine-spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mantine-color-dimmed);
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease,
+    font-size 0.2s ease,
+    top 0.2s ease,
+    left 0.2s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.floatingLabelElevated {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.input {
+  border: none;
+  background-color: transparent;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}

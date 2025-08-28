@@ -1,9 +1,9 @@
 import { FC } from 'react';
 
 import { WheelOverlayDto } from '@api/openapi/types.gen';
-import BaseWheel, { WheelController } from '@components/BaseWheel/BaseWheel';
-import WheelFlexboxAutosizer from '@components/BaseWheel/FlexboxAutosizer';
-import ItemsPreview from '@components/RandomWheel/ItemsPreview';
+import BaseWheel, { WheelController } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+import WheelFlexboxAutosizer from '@domains/winner-selection/wheel-of-random/BaseWheel/FlexboxAutosizer';
+import ItemsPreview from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview';
 import { WheelFormat } from '@constants/wheel';
 import { WheelItemWithMetadata } from '@models/wheel.model';
 import OverlayThemeScope from '@shared/mantine/OverlayThemeScope';

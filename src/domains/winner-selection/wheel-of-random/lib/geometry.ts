@@ -1,8 +1,9 @@
 import { Key } from 'react';
 
 import { WheelItemWithAngle } from '@models/wheel.model';
-import { getRandomInclusive, random } from '@utils/common.utils.ts';
-import wheelHelpers from '@components/BaseWheel/helpers';
+import { getRandomInclusive, random } from '@utils/common.utils';
+
+import wheelHelpers from '../BaseWheel/helpers';
 
 /**
  * Calculate the minimum distance of the wheel spin

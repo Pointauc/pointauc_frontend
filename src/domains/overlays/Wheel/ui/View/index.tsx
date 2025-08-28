@@ -1,9 +1,9 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Socket } from 'socket.io-client';
-import { Broadcasting } from '@domains/broadcasting/model/types';
 
+import { Broadcasting } from '@domains/broadcasting/model/types';
 import { WheelOverlayDto, WheelSettingsChangedDto } from '@api/openapi/types.gen';
-import { WheelController } from '@components/BaseWheel/BaseWheel';
+import { WheelController } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 import { WheelFormat } from '@constants/wheel';
 import { EventQueue } from '@shared/lib/event-queue';
 import { WheelItemWithMetadata } from '@models/wheel.model';

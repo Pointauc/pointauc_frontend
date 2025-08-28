@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import { CHAT_WHEEL_PREFIX, WheelCommand } from '@constants/wheel.ts';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getWheelColor } from '@utils/common.utils.ts';
-import BaseWheel, { WheelController } from '@components/BaseWheel/BaseWheel.tsx';
+import BaseWheel, { WheelController } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 
 const getOpts = (channel: string) => ({
   identity: {
