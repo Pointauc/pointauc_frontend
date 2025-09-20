@@ -13,6 +13,7 @@ import { animateValue } from '@utils/common.utils.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { RootState } from '@reducers';
 import { numberUtils } from '@utils/common/number';
+import { useIsMobile } from '@shared/lib/ui';
 
 import styles from './SlotComponent.module.css';
 
@@ -33,6 +34,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot, readonly }) => {
   const amountInput = useRef<HTMLInputElement>(null);
   const percentsRef = useRef<HTMLSpanElement>(null);
   const isAmountInitialized = useRef(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (percentsRef.current) {
@@ -144,7 +146,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot, readonly }) => {
         type='number'
         min='0'
       />
-      {!readonly && (
+      {!readonly && !isMobile && (
         <>
           <button className='slot-icon-button slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')}>
             <AddIcon />

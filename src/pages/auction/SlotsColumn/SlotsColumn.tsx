@@ -1,17 +1,16 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import './SlotsColumn.scss';
-import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
-import { ThunkDispatch } from 'redux-thunk';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import './SlotsColumn.scss';
 
 import { RootState } from '@reducers';
+import { useIsMobile } from '@shared/lib/ui';
 
 import SlotsHeader from '../SlotsHeader/SlotsHeader';
 
 import SlotsList from './SlotsList';
 
 const SlotsColumn: React.FC = () => {
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const buyoutInput = useRef<HTMLInputElement>(null);
   const { slots, searchTerm } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
@@ -51,10 +50,11 @@ const SlotsColumn: React.FC = () => {
   );
 
   const optimize = useMemo(() => slots.length > 100, [slots.length]);
+  const isMobile = useIsMobile();
 
   return (
     <div className='slots'>
-      <SlotsHeader />
+      {!isMobile && <SlotsHeader />}
       <div className='slots-wrapper'>
         <div className={slotsColumnClasses} ref={containerRef}>
           <SlotsList containerRef={containerRef} slots={filteredSlots} optimize={optimize} />

@@ -1,19 +1,22 @@
-import { AppShell, Divider, NavLink, Stack, Text, Tooltip } from '@mantine/core';
+import { AppShell, Burger, Divider, Group, NavLink, Stack, Text, Title, Tooltip } from '@mantine/core';
 import { OpenInNew } from '@mui/icons-material';
 import clsx from 'clsx';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks';
 
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
 import donatePay from '@components/Integration/DonatePay';
 import Metadata from '@components/Metadata';
+import MobileLanguageSelector from '@components/MobileLanguageSelector/MobileLanguageSelector';
 import UserSettings from '@domains/user-settings/pages/UserSettings/UserSettings';
 import LogoutPage from '@pages/logout/LogoutPage.tsx';
 import { RootState } from '@reducers';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import { COLORS } from '@constants/color.constants';
+import { useIsMobile } from '@shared/lib/ui';
 
 import classes from './App.module.css';
 import { getIntegrationsValidity } from './api/userApi';
@@ -49,6 +52,9 @@ const App: React.FC = () => {
   const menuItems = useMenuItems();
   const activeMenu = useActiveMenu(menuItems);
   const isColorResetDone = useRef(localStorage.getItem('isColorResetDone') === 'true');
+
+  const [isNavbarOpened, mobileNavbar] = useDisclosure();
+  const isMobile = useIsMobile();
 
   if (!isColorResetDone.current && !hasToken) {
     localStorage.setItem('isColorResetDone', 'true');
@@ -109,6 +115,12 @@ const App: React.FC = () => {
               component={Link}
               target={target}
               disabled={disabled}
+              onClick={() => {
+                if (isMobile) {
+                  console.log('close');
+                  mobileNavbar.close();
+                }
+              }}
               label={<Text className={classes.navText}>{t(title)}</Text>}
               leftSection={<div className={classes.navIcon}>{icon}</div>}
               rightSection={
@@ -122,7 +134,7 @@ const App: React.FC = () => {
         </Fragment>
       );
     },
-    [activeMenu?.navbarFixedState, activeMenu?.path, t],
+    [activeMenu?.navbarFixedState, activeMenu?.path, t, isMobile, mobileNavbar],
   );
 
   useEffect(() => {
@@ -173,14 +185,24 @@ const App: React.FC = () => {
         [classes.expanded]: isNavbarExpanded,
         [classes.fixedOpened]: activeMenu?.navbarFixedState === 'opened',
       })}
-      navbar={{ width: 61, breakpoint: 'sm' }}
-      transitionDuration={0}
+      header={{ height: { base: 50, sm: 0 } }}
+      navbar={{ width: 61, breakpoint: 'sm', collapsed: { mobile: !isNavbarOpened } }}
+      transitionDuration={isMobile ? 200 : 0}
     >
       <Metadata />
+      <AppShell.Header hiddenFrom='sm' px='md' className={classes.header}>
+        <Group gap='md' align='center' justify='space-between' h='100%'>
+          <Group gap='md' align='center'>
+            <Burger opened={isNavbarOpened} onClick={mobileNavbar.toggle} />
+            <Title order={2}>{t(activeMenu?.title ?? 'common.appName')}</Title>
+          </Group>
+          <MobileLanguageSelector />
+        </Group>
+      </AppShell.Header>
       <AppShell.Navbar className={classes.nav} onMouseEnter={showDrawer} onMouseLeave={hideDrawer}>
         <Stack justify='space-between' h='100%'>
           <Stack gap={0}>{menuItems.map(createMenuItem)}</Stack>
-          <AuthorContacts compact={!isNavbarExpanded} />
+          <AuthorContacts compact={isMobile ? false : !isNavbarExpanded} />
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main className={classes.main}>

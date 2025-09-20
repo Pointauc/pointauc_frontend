@@ -22,14 +22,17 @@ import { ThunkDispatch } from 'redux-thunk';
 import { useTranslation } from 'react-i18next';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import classNames from 'classnames';
+import clsx from 'clsx';
 
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
 import donatePay from '@components/Integration/DonatePay';
-import './Stopwatch.scss';
 import da from '@components/Integration/DA';
+import { useHeadroom } from '@shared/lib/scroll';
+
+import './Stopwatch.scss';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
@@ -93,6 +96,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const defaultTime = Number(startTime) * 60 * 1000;
   const stopwatchStep = Number(timeStep) * 1000;
   const stopwatchAutoincrement = Number(autoincrementTime) * 1000;
+  const controlsCompact = useHeadroom({ fixedAt: 60 });
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
   const [isStopwatchChanged, setIsStopwatchChanged] = useState<boolean>(false);
@@ -300,7 +304,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   }));
 
   return (
-    <div className='stopwatch-wrapper'>
+    <div className={clsx('stopwatch-wrapper', { 'stopwatch-wrapper-compact': controlsCompact })}>
       <Typography className={classNames('stopwatch', timerClasses('stopwatch'))} ref={stopwatchElement} />
       {showTotalTime && (
         <>
@@ -317,7 +321,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
         </>
       )}
       {showControls && (
-        <div className='stopwatch-controls'>
+        <div className={clsx('stopwatch-controls')}>
           {isStopped ? (
             <IconButton onClick={startTimer} title={t('stopwatch.continue')} size='large'>
               <PlayArrowIcon fontSize='large' />

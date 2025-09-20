@@ -262,7 +262,10 @@
       "yourBid": "Ваша ставка в аукционе:"
     },
     "rules": "Правила",
-    "revertClearAll": "Нажмите чтобы <b>отменить</b> очистку всех лотов (кол-во <b>{{count}}</b>)"
+    "revertClearAll": "Нажмите чтобы <b>отменить</b> очистку всех лотов (кол-во <b>{{count}}</b>)",
+    "clearAllConfirmation": "Удалить {{count}} лотов?",
+    "clearAllConfirmationDetails": "Это действие удалит все лоты и ставки.",
+    "noLotsToDelete": "Нет лотов для удаления"
   },
   "settings": {
     "pageTitle": "Настройки",

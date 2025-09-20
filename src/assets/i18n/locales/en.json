@@ -114,6 +114,9 @@
       "yourBid": "Your bid in the auction:",
       "yourLot": "Your Lot:"
     },
+    "clearAllConfirmation": "Delete {{count}} lots?",
+    "clearAllConfirmationDetails": "This action will clear all lots and bids.",
+    "noLotsToDelete": "No lots to delete",
     "clearAll": "Clear All",
     "compactView": "Compact View",
     "autoScroll": "Autoscroll",

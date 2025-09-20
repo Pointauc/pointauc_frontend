@@ -15,10 +15,11 @@ import { addBid, deleteSlot, setSlotName } from '@reducers/Slots/Slots.ts';
 import slotNamesMap from '@services/SlotNamesMap';
 import bidUtils from '@utils/bid.utils';
 import { handleDragOver } from '@utils/common.utils.ts';
+import { useIsMobile } from '@shared/lib/ui';
 
+import SlotComponent from './SlotComponent';
 import styles from './DroppableSlot.module.css';
 import './Slot.scss';
-import SlotComponent from './SlotComponent';
 
 interface DroppableSlotProps {
   index: number;
@@ -33,6 +34,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
   const { id, amount, name } = slot;
   const slotElement = useRef<HTMLDivElement>(null);
   const enterCounter = useRef<number>(0);
+  const isMobile = useIsMobile();
 
   const resetOverStyle = useCallback(() => {
     enterCounter.current = 0;
@@ -119,21 +121,25 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
       onDragLeave={handleDragLeave}
     >
       <div className='slot'>
-        <div className={styles.index}>{`${index}`}</div>
-        <Center className={styles.fastIndexWrapper}>
-          <Badge
-            size='lg'
-            color={`${theme.primaryColor}.9`}
-            variant='light'
-            classNames={{ root: styles.fastIndex, section: styles.fastIndexIcon }}
-            leftSection={<TagIcon fontSize='small' />}
-          >
-            {`${slot.fastId}`}
-          </Badge>
-        </Center>
+        {!isMobile && (
+          <>
+            <div className={styles.index}>{`${index}`}</div>
+            <Center className={styles.fastIndexWrapper}>
+              <Badge
+                size='lg'
+                color={`${theme.primaryColor}.9`}
+                variant='light'
+                classNames={{ root: styles.fastIndex, section: styles.fastIndexIcon }}
+                leftSection={<TagIcon fontSize='small' />}
+              >
+                {`${slot.fastId}`}
+              </Badge>
+            </Center>
+          </>
+        )}
         <SlotComponent slot={slot} readonly={readonly} />
       </div>
-      {!readonly && (
+      {!readonly && !isMobile && (
         <button onClick={handleDelete} className=' slot-icon-button delete-button' title={t('lot.delete')}>
           <DeleteIcon />
         </button>
@@ -150,6 +156,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
           </button>
         </Menu.Target>
         <Menu.Dropdown id='extra'>
+          {isMobile && <Menu.Item onClick={handleDelete}>{t('lot.delete')}</Menu.Item>}
           <Menu.Item onClick={handleOpenTrailer}>{t('lot.trailer')}</Menu.Item>
         </Menu.Dropdown>
       </Menu>

@@ -1,0 +1,36 @@
+.section {
+  margin-right: var(--mantine-spacing-xxs);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.menuLangKey {
+  font-weight: 600;
+  font-size: 12px;
+  min-width: 24px;
+  color: var(--mantine-color-gray-1);
+  letter-spacing: 0.5px;
+}
+
+.menuLangName {
+  font-size: 13px;
+  color: var(--mantine-color-gray-3);
+  flex: 1;
+}
+
+.activeItem {
+  background-color: var(--mantine-color-dark-5);
+}
+
+.activeItem .menuLangKey {
+  color: var(--mantine-color-blue-4);
+}
+
+.activeItem .menuLangName {
+  color: var(--mantine-color-gray-2);
+}

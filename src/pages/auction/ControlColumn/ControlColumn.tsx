@@ -1,4 +1,7 @@
+import { Box } from '@mantine/core';
+
 import { useTimerBroadcasting } from '@domains/broadcasting/lib/useTimerBroadcasting';
+import { useIsMobile } from '@shared/lib/ui';
 
 import Stopwatch from '../Stopwatch/Stopwatch';
 import PurchaseList from '../PurchaseList/PurchaseList';
@@ -8,11 +11,17 @@ import './ControlColumn.scss';
 
 const ControlColumn: React.FC = () => {
   const timerProps = useTimerBroadcasting();
+  const isMobile = useIsMobile();
+
   return (
     <div className='control-column'>
       <Stopwatch {...timerProps} />
-      <FastAccessPanel />
-      <PurchaseList />
+      {!isMobile && (
+        <>
+          <FastAccessPanel />
+          <PurchaseList />
+        </>
+      )}
     </div>
   );
 };

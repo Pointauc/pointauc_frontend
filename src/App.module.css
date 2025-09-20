@@ -17,9 +17,11 @@
 }
 
 .navText {
-  opacity: 0;
-  transition: opacity 0.2s;
-  white-space: nowrap;
+  @media (min-width: 48em) {
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
 }
 
 .navLink {
@@ -38,37 +40,40 @@
   }
 }
 
-.nav {
-  transition: width 0.2s;
-  padding: var(--mantine-spacing-sm) 0;
-  background-color: var(--mantine-color-dark-6);
-}
-
 .main {
   display: flex;
   align-items: stretch;
+  max-height: 100dvh;
 }
 
-.app {
-  &.expanded {
-    .navText {
-      opacity: 1;
-    }
-
-    .navIconRight {
-      left: 0;
-      top: 0;
-      scale: 1;
-    }
-
-    .nav {
-      width: 240px;
-    }
+@media (min-width: 48em) {
+  .nav {
+    transition: width 0.2s;
+    padding: var(--mantine-spacing-sm) 0;
+    background-color: var(--mantine-color-dark-6);
   }
 
-  &.fixedOpened {
-    .main {
-      padding-inline-start: calc(240px + var(--app-shell-padding));
+  .app {
+    &.expanded {
+      .navText {
+        opacity: 1;
+      }
+
+      .navIconRight {
+        left: 0;
+        top: 0;
+        scale: 1;
+      }
+
+      .nav {
+        width: 240px;
+      }
+    }
+
+    &.fixedOpened {
+      .main {
+        padding-inline-start: calc(240px + var(--app-shell-padding));
+      }
     }
   }
 }
