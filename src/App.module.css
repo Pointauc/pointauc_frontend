@@ -46,6 +46,10 @@
   max-height: 100dvh;
 }
 
+.header {
+  background-color: var(--mantine-color-dark-8);
+}
+
 @media (min-width: 48em) {
   .nav {
     transition: width 0.2s;

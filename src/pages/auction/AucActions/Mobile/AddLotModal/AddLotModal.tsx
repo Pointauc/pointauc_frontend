@@ -76,6 +76,7 @@ const AddLotModal: FC<AddLotModalProps> = ({ opened, onClose }) => {
     >
       <Stack gap='md'>
         <TextInput
+          data-autofocus
           label={t('auc.newLotName')}
           placeholder={t('auc.newLotName')}
           value={lotName}
@@ -98,14 +99,9 @@ const AddLotModal: FC<AddLotModalProps> = ({ opened, onClose }) => {
           </Text>
         )}
 
-        <Group justify='flex-end' gap='sm'>
-          <Button variant='subtle' onClick={handleClose}>
-            {t('common.cancel')}
-          </Button>
-          <Button leftSection={<AddIcon />} onClick={createNewSlot}>
-            {t('auc.addPosition')}
-          </Button>
-        </Group>
+        <Button leftSection={<AddIcon />} onClick={createNewSlot}>
+          {t('auc.addPosition')}
+        </Button>
       </Stack>
 
       {/* Hidden element for percentage calculation */}

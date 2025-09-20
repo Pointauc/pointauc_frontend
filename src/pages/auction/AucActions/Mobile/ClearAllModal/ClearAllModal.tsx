@@ -76,9 +76,6 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
         </Alert>
 
         <Group justify='flex-end' gap='sm'>
-          <Button variant='subtle' onClick={onClose}>
-            {t('common.cancel')}
-          </Button>
           <Button leftSection={<DeleteSweepIcon />} color='red' onClick={handleResetSlots} disabled={!hasSlots}>
             {t('auc.clearAll')}
           </Button>

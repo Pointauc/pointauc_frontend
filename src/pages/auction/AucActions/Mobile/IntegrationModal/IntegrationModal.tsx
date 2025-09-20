@@ -1,14 +1,13 @@
+import { Button, Group, Modal, Stack, Title } from '@mantine/core';
 import { FC, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Button, Group, Modal, Popover, Stack, Title } from '@mantine/core';
 
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import INTEGRATIONS from '@components/Integration/integrations.ts';
 import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
 import PubsubSwitchGroup from '@components/Integration/PubsubFlow/components/PubsubSwitchGroup.tsx';
 import SwitchAllIntegrations from '@components/SwitchAllIntegrations/SwitchAllIntegrations.tsx';
-import MockBidForm from '@pages/auction/MockBidForm/MockBidForm';
 import { RootState } from '@reducers';
 import { isProduction } from '@utils/common.utils';
 
@@ -74,16 +73,6 @@ const IntegrationModal: FC<IntegrationModalProps> = ({ opened, onClose }) => {
             <Button ref={anchorRef} onClick={() => setMockBidOpen(true)} variant='filled' color='blue'>
               Send Test Bid
             </Button>
-            {mockBidOpen && (
-              <Popover
-                opened={mockBidOpen}
-                onClose={() => setMockBidOpen(false)}
-                target={anchorRef.current}
-                position='top'
-              >
-                <MockBidForm />
-              </Popover>
-            )}
           </>
         )}
       </Stack>
