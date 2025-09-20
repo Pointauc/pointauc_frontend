@@ -67,3 +67,13 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.2s;
+}
+
+.rotate-0 {
+  transform: rotate(0deg);
+  transition: transform 0.2s;
+}

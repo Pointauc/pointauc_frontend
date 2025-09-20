@@ -1,8 +1,8 @@
 import React from 'react';
+import { Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 
-import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import withLoading from '@decorators/withLoading.ts';
 
 interface Props {
@@ -20,9 +20,9 @@ const RevokeIntegrationButton = (props: Props) => {
   };
 
   return (
-    <LoadingButton startIcon={<LinkOffIcon />} isLoading={loading} variant='outlined' color='blank' onClick={revoke}>
+    <Button leftSection={<LinkOffIcon />} loading={loading} size='sm' variant='outline' color='white' onClick={revoke}>
       {t('settings.integrationCommon.revoke')}
-    </LoadingButton>
+    </Button>
   );
 };
 

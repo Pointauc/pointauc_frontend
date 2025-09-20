@@ -15,7 +15,7 @@ export const updatePercents = (slots: Slot[], chanceRefMap = percentsRefMap, cac
     const ref = chanceRefMap.get(id);
 
     if (ref) {
-      ref.innerHTML = `${((getValidAmount(amount) / lastTotalSum) * 100).toFixed(1) || 0}%`;
+      ref.textContent = `${((getValidAmount(amount) / lastTotalSum) * 100).toFixed(1) || 0}%`;
     }
   });
 };

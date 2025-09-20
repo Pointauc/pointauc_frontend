@@ -8,42 +8,8 @@
   }
 
   &-drawer {
-    .author-contacts {
-      h6,
-      a {
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-
-      .icon {
-        position: relative;
-        left: -24px;
-        scale: 1.3;
-
-        transition:
-          left 0.2s,
-          scale 0.2s;
-      }
-    }
-
     &.open {
       width: 240px;
-
-      .nav-text {
-        opacity: 1;
-      }
-
-      .author-contacts {
-        h6,
-        a {
-          opacity: 1;
-        }
-
-        .icon {
-          left: 0;
-          scale: 1;
-        }
-      }
     }
 
     &.close {
@@ -68,24 +34,5 @@
         //fill: #fff;
       }
     }
-
-    &-text {
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
   }
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-  transition: transform 0.2s;
-}
-
-.rotate-0 {
-  transform: rotate(0deg);
-  transition: transform 0.2s;
-}
-
-:root {
-  // font-size: 18px;
 }

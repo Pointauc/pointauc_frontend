@@ -1,0 +1,25 @@
+.settingsPresetFields {
+  display: flex;
+  gap: 12px;
+  height: 100%;
+}
+
+.settingsPresetName {
+  width: 350px;
+}
+
+.settingsPresetDropdown {
+  position: relative;
+  left: -1px;
+  height: 100%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.menuItem {
+  padding: 0;
+}
+
+.menuItemSection {
+  color: var(--mantine-color-dark-3);
+}

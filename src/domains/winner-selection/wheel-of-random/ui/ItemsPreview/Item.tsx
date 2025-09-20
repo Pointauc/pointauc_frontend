@@ -7,7 +7,8 @@ import classNames from 'classnames';
 import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
 import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
-import '@domains/winner-selection/wheel-of-random/ui/ItemsPreview/Item.scss';
+
+import classes from './Item.module.css';
 
 interface Props {
   item: WheelItemWithMetadata;
@@ -36,20 +37,20 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
     <Grid
       container
       alignItems='center'
-      className={classNames('wheel-preview-item', { disabled })}
+      className={classNames(classes.item, { [classes.disabled]: disabled })}
       direction='row'
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
-      <Grid className='name'>{name}</Grid>
-      <Grid className='amount'>{amountToDisplay}</Grid>
+      <Grid className={classes.name}>{name}</Grid>
+      <Grid className={classes.amount}>{amountToDisplay}</Grid>
       <Divider orientation='vertical' />
-      <Grid className='chance'>{chance + ' %'}</Grid>
+      <Grid className={classes.chance}>{chance + ' %'}</Grid>
       <Grid>
-        <div className='color'>
+        <div className={classes.color}>
           {!disabled && (
             <>
-              {actionable && <HighlightIcon className='find-icon' />}
+              {actionable && <HighlightIcon className={classes.findIcon} />}
               <div style={{ color }} />
             </>
           )}

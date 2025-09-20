@@ -6,7 +6,7 @@ export const COLORS = {
     [PurchaseStatusEnum.Processed]: '#AED581',
   },
   THEME: {
-    PRIMARY: '#a6d4fa',
+    PRIMARY: '#228be6',
     BACKGROUND_TONE: '#242424',
   },
   WHEEL: [

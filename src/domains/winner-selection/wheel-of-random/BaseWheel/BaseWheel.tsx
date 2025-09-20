@@ -58,7 +58,8 @@ export interface WheelController {
 
 export interface BaseWheelProps<T extends WheelItem> {
   items: T[];
-  deleteItem?: (id: Key) => void;
+  showDeleteConfirmation?: boolean;
+  deleteItem?: (id: Key, showConfirmation?: boolean) => void;
   controller: MutableRefObject<WheelController | null>;
   coreImage?: string | null;
   onCoreImageChange?: (image: string) => void;
@@ -75,6 +76,7 @@ export interface BaseWheelProps<T extends WheelItem> {
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const {
     items,
+    showDeleteConfirmation,
     resetWheel,
     deleteItem,
     controller,
@@ -129,7 +131,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     const winner = getWinnerFromDistance({ distance: rotation, items: normalizedRef.current });
 
     if (winner && spinTarget.current) {
-      spinTarget.current.innerHTML = winner.name;
+      spinTarget.current.textContent = winner.name;
     }
   }, []);
 
@@ -168,7 +170,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       wrapper.current.clientWidth,
     );
 
-    if (canvasSize === wheelCanvas.current.height) {
+    if (canvasSize === wheelCanvas.current.height || canvasSize < 160) {
       return;
     }
 
@@ -216,7 +218,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       return new Promise((resolve) => {
         if (winner && spinTarget.current) {
           setWinnerItem(winner);
-          spinTarget.current.innerHTML = winner.name;
+          spinTarget.current.textContent = winner.name;
 
           if (resetWheel) {
             setTimeout(() => {
@@ -299,7 +301,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     setWinnerItem(undefined);
 
     if (spinTarget.current) {
-      spinTarget.current.innerHTML = t('wheel.winner');
+      spinTarget.current.textContent = t('wheel.winner');
     }
   }, [t]);
 
@@ -384,7 +386,10 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
               name={winnerItem.name}
               id={winnerItem.id}
               winnerName={dropOut && items.length === 1 ? items[0]?.name : undefined}
-              onDelete={deleteItem ? () => deleteItem(winnerItem.id) : undefined}
+              onDelete={
+                deleteItem ? (showConfirmation?: boolean) => deleteItem(winnerItem.id, showConfirmation) : undefined
+              }
+              showDeleteConfirmation={showDeleteConfirmation}
               dropOut={dropOut}
             />
           )}

@@ -6,7 +6,6 @@ import classNames from 'classnames';
 
 import Notification from '@components/Notification/Notification';
 import { RootState } from '@reducers';
-import PageContainer from '@components/PageContainer/PageContainer';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import ChangelogModal from '@components/Changelog/ChangelogModal/ChangelogModal';
@@ -43,7 +42,7 @@ const AucPage: React.FC = () => {
   const imageOpacity = useMemo(() => calcBackgroundOpacity(backgroundOverlayOpacity), [backgroundOverlayOpacity]);
 
   return (
-    <PageContainer className={classNames('auc-container', { 'custom-background': background })} maxWidth={false}>
+    <div className={classNames('auc-container', { 'custom-background': background })}>
       {background && (
         <Box className={styles.background}>
           <Image src={background} w='100%' h='100%' />
@@ -63,7 +62,7 @@ const AucPage: React.FC = () => {
       </div>
       <Notification />
       <TrailersContainer />
-    </PageContainer>
+    </div>
   );
 };
 

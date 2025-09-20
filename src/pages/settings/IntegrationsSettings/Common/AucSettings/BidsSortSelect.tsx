@@ -1,12 +1,14 @@
-import React, { FC } from 'react';
-import { FormControl, Grid, MenuItem, Select, Typography } from '@mui/material';
-import { Control, Controller } from 'react-hook-form';
-import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
+import { ComboboxItem, ComboboxLikeRenderOptionInput, Group, Text } from '@mantine/core';
 import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
-import { useSelector } from 'react-redux';
+import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
+import { FC } from 'react';
+import { Control, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { RootState } from '@reducers';
+import SettingLabel from '@domains/user-settings/ui/SettingLabel';
+import FormSelect from '@shared/mantine/ui/Select/FormSelect';
+
+// t('sortBids')
 
 interface BidsSortSelectProps {
   control: Control;
@@ -14,51 +16,36 @@ interface BidsSortSelectProps {
 
 const BidsSortSelect: FC<BidsSortSelectProps> = ({ control }) => {
   const { t } = useTranslation();
-  const { settings } = useSelector((root: RootState) => root.aucSettings);
-  const { purchaseSort } = settings;
+
+  const value = useWatch({ control, name: 'purchaseSort' });
+
+  const data = [
+    { value: '0', label: t('settings.auc.dateSort'), icon: <ArrowUpwardOutlinedIcon /> },
+    { value: '1', label: t('settings.auc.dateSort'), icon: <ArrowDownwardOutlinedIcon /> },
+    { value: '2', label: t('settings.auc.costSort'), icon: <ArrowUpwardOutlinedIcon /> },
+    { value: '3', label: t('settings.auc.costSort'), icon: <ArrowDownwardOutlinedIcon /> },
+  ];
+
+  const renderOption = (option: ComboboxLikeRenderOptionInput<ComboboxItem>) => (
+    <Group>
+      {data[Number(option.option.value)].icon}
+      <Text>{option.option.label}</Text>
+    </Group>
+  );
 
   return (
-    <Controller
+    <FormSelect
       control={control}
       name='purchaseSort'
-      defaultValue={purchaseSort}
-      render={({ field: { onChange, onBlur, value } }) => (
-        <FormControl size='small'>
-          <Select
-            className='auc-settings-option'
-            value={value}
-            onChange={(e) => {
-              onChange(e.target.value);
-              onBlur();
-            }}
-          >
-            <MenuItem value={0}>
-              <Grid container>
-                <Typography>{t('settings.auc.dateSort')}</Typography>
-                <ArrowUpwardOutlinedIcon fontSize='small' />
-              </Grid>
-            </MenuItem>
-            <MenuItem value={1}>
-              <Grid container>
-                <Typography>{t('settings.auc.dateSort')}</Typography>
-                <ArrowDownwardOutlinedIcon fontSize='small' />
-              </Grid>
-            </MenuItem>
-            <MenuItem value={2}>
-              <Grid container>
-                <Typography>{t('settings.auc.costSort')}</Typography>
-                <ArrowUpwardOutlinedIcon fontSize='small' />
-              </Grid>
-            </MenuItem>
-            <MenuItem value={3}>
-              <Grid container>
-                <Typography>{t('settings.auc.costSort')}</Typography>
-                <ArrowDownwardOutlinedIcon fontSize='small' />
-              </Grid>
-            </MenuItem>
-          </Select>
-        </FormControl>
-      )}
+      label={<SettingLabel text={t('settings.integrationCommon.sortBids')} />}
+      data={data}
+      renderOption={renderOption}
+      leftSection={data[value].icon}
+      leftSectionPointerEvents='none'
+      isInlineLabel
+      isNumberValue
+      inputWidth='md'
+      allowDeselect={false}
     />
   );
 };

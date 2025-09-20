@@ -15,6 +15,7 @@ const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptim
   const coreImage = useWatch<Wheel.Settings>({ name: 'coreImage' });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const wheelStyles = useWatch<Wheel.Settings>({ name: 'wheelStyles' });
+  const showDeleteConfirmation = useWatch<Wheel.Settings>({ name: 'showDeleteConfirmation' });
   const { setValue } = useFormContext<Wheel.Settings>();
   const onCoreImageChange = useCallback(
     (image: string) => {
@@ -23,17 +24,26 @@ const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptim
     [setValue],
   );
 
+  const handleDeleteItem = useCallback(
+    (id: Key, showConfirmation?: boolean) => {
+      deleteItem?.(id);
+      setValue('showDeleteConfirmation', showConfirmation ?? true);
+    },
+    [deleteItem, setValue],
+  );
+
   return (
     <BaseWheel
       controller={controller}
       coreImage={coreImage || 'https://cdn.7tv.app/emote/60db33899a9fbb6acd26b151/4x'}
-      deleteItem={deleteItem}
+      deleteItem={format === WheelFormat.Default ? handleDeleteItem : undefined}
       items={finalItems}
       onCoreImageChange={onCoreImageChange}
       dropOut={format === WheelFormat.Dropout}
       className={className}
       onOptimalSizeChange={onOptimalSizeChange}
       wheelStyle={wheelStyles}
+      showDeleteConfirmation={showDeleteConfirmation}
     />
   );
 };

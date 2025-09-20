@@ -1,4 +1,4 @@
-import { Group } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import { FC, Key, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,8 @@ import { useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcas
 import { WheelFormat } from '@constants/wheel';
 import { skipSameValueCalls } from '@utils/dataType/function.utils';
 import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+
+import styles from './WheelPage.module.css';
 
 const WheelPage: FC = () => {
   const dispatch = useDispatch();
@@ -46,7 +48,7 @@ const WheelPage: FC = () => {
 
   const title = (
     <Group>
-      <span>{t('wheel.wheel')}</span>
+      <Title order={1}>{t('wheel.wheel')}</Title>
       <SlotsPresetInput buttonTitle={t('wheel.importToWheel')} onChange={setCustomWheelItems} />
     </Group>
   );
@@ -82,7 +84,11 @@ const WheelPage: FC = () => {
   );
 
   return (
-    <PageContainer className='wheel-wrapper padding' title={title}>
+    <PageContainer
+      className={`${styles.container} wheel-wrapper padding`}
+      classes={{ content: styles.content }}
+      title={title}
+    >
       <RandomWheel
         items={wheelItems}
         deleteItem={deleteItem}

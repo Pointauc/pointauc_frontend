@@ -7,10 +7,14 @@ interface FormColorPickerProps {
   name: string;
   control: Control;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 const FormColorPicker: FC<FormColorPickerProps> = (props) => {
-  const renderColorPicker = useCallback(({ field }: any) => <ColorPicker {...field} />, []);
+  const renderColorPicker = useCallback(
+    ({ field }: any) => <ColorPicker {...field} disabled={props.disabled} />,
+    [props.disabled],
+  );
 
   return <Controller {...props} render={renderColorPicker} />;
 };

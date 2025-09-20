@@ -1,24 +1,21 @@
-import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid } from '@mantine/core';
 
 import CommonIntegrationsSettings from '@pages/settings/IntegrationsSettings/Common/CommonIntegrationsSettings.tsx';
-import PointsSettings from '@pages/settings/IntegrationsSettings/Points/PointsSettings.tsx';
 import DonationsSettings from '@pages/settings/IntegrationsSettings/Donations/DonationsSettings.tsx';
-import EventsSettings from '@pages/settings/IntegrationsSettings/Events/EventsSettings.tsx';
+import PointsSettings from '@pages/settings/IntegrationsSettings/Points/PointsSettings.tsx';
 
 const IntegrationsSettings = () => {
   return (
-    <Grid container wrap='wrap' className='auction-settings' spacing={4}>
-      <Grid size={12}>
+    <Grid gutter='xl' overflow='clip'>
+      <Grid.Col span={12}>
         <CommonIntegrationsSettings />
-      </Grid>
-      <Grid size={6}>
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <PointsSettings />
-      </Grid>
-      <Grid size={6}>
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <DonationsSettings />
-        {/*<EventsSettings />*/}
-      </Grid>
+      </Grid.Col>
     </Grid>
   );
 };

@@ -1,0 +1,40 @@
+.wrapper {
+  padding: 16px;
+
+  text-overflow: ellipsis;
+  flex-wrap: nowrap;
+}
+
+.boostyIcon {
+  font-size: 28px;
+
+  path {
+    fill: #ff9b7a;
+  }
+}
+
+.contact {
+  margin-left: 24px;
+}
+
+.text {
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.icon {
+  position: relative;
+  left: 0;
+  transition: all 0.2s;
+}
+
+.compact {
+  .text {
+    opacity: 0;
+  }
+
+  .icon {
+    left: -24px;
+    scale: 1.3;
+  }
+}

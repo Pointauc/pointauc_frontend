@@ -1,47 +1,35 @@
+import { AppShell, Divider, NavLink, Stack, Text, Tooltip } from '@mantine/core';
 import { OpenInNew } from '@mui/icons-material';
-import {
-  Box,
-  Container,
-  Divider,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  styled,
-} from '@mui/material';
-import classNames from 'classnames';
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import clsx from 'clsx';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import './App.scss';
 
 import AuthorContacts from '@components/AuthorContacts/AuthorContacts.tsx';
 import donatePay from '@components/Integration/DonatePay';
 import Metadata from '@components/Metadata';
+import UserSettings from '@domains/user-settings/pages/UserSettings/UserSettings';
 import LogoutPage from '@pages/logout/LogoutPage.tsx';
-import NewSettingsPage from '@pages/settings/NewSettingsPage.tsx';
 import { RootState } from '@reducers';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
+import { COLORS } from '@constants/color.constants';
 
+import classes from './App.module.css';
 import { getIntegrationsValidity } from './api/userApi';
 import AlertsContainer from './components/AlertsContainer/AlertsContainer';
 import HelpPage from './components/HelpPage/HelpPage';
 import RequestsPage from './components/RequestsPage/RequestsPage';
-import Statistic from './components/Statistic/Statistic';
-import StopwatchPage from './components/StopwatchPage/StopwatchPage';
-import { useMenuItems } from './constants/menuItems.constants';
+import { useActiveMenu, useMenuItems } from './constants/menuItems.constants';
 import ROUTES from './constants/routes.constants';
-import { useLotsBroadcasting } from './domains/broadcasting/lib/useLotsBroadcasting';
 import { connectToBroadcastingSocket } from './domains/broadcasting/lib/socket';
+import { useLotsBroadcasting } from './domains/broadcasting/lib/useLotsBroadcasting';
 import { AlertType, AlertTypeEnum } from './models/alert.model';
 import { MenuItem } from './models/common.model';
 import AucPage from './pages/auction/AucPage';
 import HistoryPage from './pages/history/HistoryPage/HistoryPage';
-import OverlaysPage from './domains/overlays/ui/List/Page/OverlaysPage';
 import WheelPage from './pages/wheel/WheelPage/WheelPage';
-import { loadUserData } from './reducers/AucSettings/AucSettings';
+import { loadUserData, setAucSettings } from './reducers/AucSettings/AucSettings';
 import { addAlert, deleteAlert } from './reducers/notifications/notifications';
 import { connectToSocketIo } from './reducers/socketIo/socketIo';
 import { getCookie } from './utils/common.utils';
@@ -49,22 +37,24 @@ import { getCookie } from './utils/common.utils';
 import type { ThunkDispatch } from 'redux-thunk';
 
 const hasToken = !!getCookie('userSession');
-const hiddenDrawerRoutes = [ROUTES.HOME, ROUTES.STOPWATCH, ROUTES.WHEEL];
-const lockedDrawerRoutes = [ROUTES.WHEEL];
 
 let openDriverTimeout: any;
-
-const StyledDrawer = styled(Drawer)(({ theme }: any) => ({
-  transition: theme.transitions.create('width', { duration: theme.transitions.duration.shorter }),
-})) as any;
 
 const App: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { pathname } = useLocation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isHovered, setIsDrawerOpen] = useState(false);
   const { username } = useSelector((root: RootState) => root.user);
   const menuItems = useMenuItems();
+  const activeMenu = useActiveMenu(menuItems);
+  const isColorResetDone = useRef(localStorage.getItem('isColorResetDone') === 'true');
+
+  if (!isColorResetDone.current && !hasToken) {
+    localStorage.setItem('isColorResetDone', 'true');
+    isColorResetDone.current = true;
+    dispatch(setAucSettings({ primaryColor: COLORS.THEME.PRIMARY }));
+  }
 
   const showDrawer = useCallback(() => {
     openDriverTimeout = setTimeout(() => setIsDrawerOpen(true), 70);
@@ -102,11 +92,6 @@ const App: React.FC = () => {
   }, [username]);
 
   const isHomePage = useMemo(() => pathname === ROUTES.HOME, [pathname]);
-  const isOpen = useMemo(
-    () => (!hiddenDrawerRoutes.includes(pathname) || isDrawerOpen) && !lockedDrawerRoutes.includes(pathname),
-    [isDrawerOpen, pathname],
-  );
-  const drawerClasses = useMemo(() => classNames('app-drawer', { open: isOpen, close: !isOpen }), [isOpen]);
 
   const createMenuItem = useCallback(
     ({ icon, title, path, disabled, divide, target }: MenuItem) => {
@@ -116,25 +101,28 @@ const App: React.FC = () => {
       return (
         <Fragment key={path}>
           {divide && <Divider style={{ margin: '10px 0' }} />}
-          <ListItemButton
-            disabled={disabled}
-            key={t(title)}
-            selected={path === pathname}
-            component={isExternal ? 'a' : Link}
-            {...linkProps}
-          >
-            <ListItemIcon className='nav-icon'>{icon}</ListItemIcon>
-            <ListItemText className='nav-text' primary={t(title)} />
-            {isExternal && (
-              <Box sx={{ ml: 1, display: 'flex', alignItems: 'center' }}>
-                <OpenInNew fontSize='small' sx={{ opacity: 0.6 }} />
-              </Box>
-            )}
-          </ListItemButton>
+          <Tooltip hidden={activeMenu?.navbarFixedState !== 'closed'} label={t(title)} position='right' withArrow>
+            <NavLink<'a' | typeof Link>
+              classNames={{ section: classes.section }}
+              to={path}
+              active={path === activeMenu?.path}
+              component={Link}
+              target={target}
+              disabled={disabled}
+              label={<Text className={classes.navText}>{t(title)}</Text>}
+              leftSection={<div className={classes.navIcon}>{icon}</div>}
+              rightSection={
+                isExternal ? (
+                  <OpenInNew fontSize='small' sx={{ opacity: 0.6 }} className={classes.navIconRight} />
+                ) : undefined
+              }
+              className={classes.navLink}
+            />
+          </Tooltip>
         </Fragment>
       );
     },
-    [pathname, t],
+    [activeMenu?.navbarFixedState, activeMenu?.path, t],
   );
 
   useEffect(() => {
@@ -174,49 +162,45 @@ const App: React.FC = () => {
     };
   }, [dispatch]);
 
+  const isNavbarExpanded = useMemo(() => {
+    return (isHovered && activeMenu?.navbarFixedState !== 'closed') || activeMenu?.navbarFixedState === 'opened';
+  }, [isHovered, activeMenu]);
+
   return (
-    <div className='app'>
+    <AppShell
+      padding={0}
+      className={clsx(classes.app, {
+        [classes.expanded]: isNavbarExpanded,
+        [classes.fixedOpened]: activeMenu?.navbarFixedState === 'opened',
+      })}
+      navbar={{ width: 61, breakpoint: 'sm' }}
+      transitionDuration={0}
+    >
       <Metadata />
-      <StyledDrawer
-        className={drawerClasses}
-        variant='permanent'
-        PaperProps={{
-          sx: {
-            position: 'relative',
-            flexShrink: 0,
-            whiteSpace: 'nowrap',
-            overflowX: 'hidden',
-          },
-        }}
-        onMouseEnter={showDrawer}
-        onMouseLeave={hideDrawer}
-      >
-        <div className='c'>
-          <div className='grow'>
-            <List>{menuItems.map(createMenuItem)}</List>
-          </div>
-          <AuthorContacts />
-        </div>
-      </StyledDrawer>
-      <Container className='app-content'>
-        <div hidden={!isHomePage}>
+      <AppShell.Navbar className={classes.nav} onMouseEnter={showDrawer} onMouseLeave={hideDrawer}>
+        <Stack justify='space-between' h='100%'>
+          <Stack gap={0}>{menuItems.map(createMenuItem)}</Stack>
+          <AuthorContacts compact={!isNavbarExpanded} />
+        </Stack>
+      </AppShell.Navbar>
+      <AppShell.Main className={classes.main}>
+        <div style={{ display: isHomePage ? 'contents' : 'none' }} hidden={!isHomePage}>
           <AucPage />
         </div>
         <AlertsContainer />
         <Routes>
-          <Route path={`${ROUTES.SETTINGS}/*`} element={<NewSettingsPage />} />
+          <Route path={`${ROUTES.SETTINGS}/*`} element={<UserSettings />} />
           <Route path={ROUTES.WHEEL} element={<WheelPage />} />
           <Route path={ROUTES.HISTORY} element={<HistoryPage />} />
           <Route path={ROUTES.HELP} element={<HelpPage />} />
-          <Route path={ROUTES.STATISTIC} element={<Statistic />} />
-          <Route path={ROUTES.STOPWATCH} element={<StopwatchPage />} />
+          {/* <Route path={ROUTES.STATISTIC} element={<Statistic />} /> */}
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
-          <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
+          {/* <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} /> */}
           {/* <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} /> */}
           <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         </Routes>
-      </Container>
-    </div>
+      </AppShell.Main>
+    </AppShell>
   );
 };
 

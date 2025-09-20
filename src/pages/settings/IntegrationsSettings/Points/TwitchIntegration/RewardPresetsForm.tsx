@@ -1,51 +1,25 @@
+import { ActionIcon, Button, Group, Paper, Stack, Table, Text } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
 import { ReactNode, useCallback, useState } from 'react';
-import {
-  Button,
-  FormGroup,
-  Grid,
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableCellProps,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { useFieldArray, useForm } from 'react-hook-form';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import FormColorPicker from '@components/Form/FormColorPicker/FormColorPicker';
-import { SettingsForm } from '@models/settings.model.ts';
-import FormInput from '@components/Form/FormInput/FormInput';
 import { updateRewardPresets } from '@api/twitchApi.ts';
-import { setAucSettings } from '@reducers/AucSettings/AucSettings.ts';
-import LoadingButton from '@components/LoadingButton/LoadingButton';
-import withLoading from '@decorators/withLoading';
 import ConfirmFormOnLeave from '@components/ConfirmFormOnLeave/ConfirmFormOnLeave';
+import FormColorPicker from '@components/Form/FormColorPicker/FormColorPicker';
+import withLoading from '@decorators/withLoading';
+import SettingLabel from '@domains/user-settings/ui/SettingLabel';
+import { SettingsForm } from '@models/settings.model.ts';
 import { RootState } from '@reducers';
+import { setAucSettings } from '@reducers/AucSettings/AucSettings.ts';
+import FormInput from '@shared/mantine/ui/Input/FormInput';
+import { OutlineInput } from '@shared/mantine/ui/Input';
 
 import RewardPresetsConfirmation from './RewardPresetsConfirmation';
+import classes from './RewardPresetsForm.module.css';
 
 type PresetsForm = Pick<SettingsForm, 'rewardPresets' | 'rewardsPrefix'>;
-
-const StyledTableCell = styled(TableCell)<TableCellProps>({
-  '&.MuiTableCell-head': {
-    backgroundColor: '#505754',
-    color: '#fff',
-    fontSize: 15,
-  },
-  '&.MuiTableCell-body': {
-    paddingTop: 7,
-    paddingBottom: 7,
-    fontSize: 14,
-  },
-}) as any;
 
 const RewardPresetsForm: React.FunctionComponent = () => {
   const { t } = useTranslation();
@@ -75,9 +49,9 @@ const RewardPresetsForm: React.FunctionComponent = () => {
       const handleDeleteReward = (): void => remove(index);
 
       return (
-        <IconButton onClick={handleDeleteReward} size='large'>
-          <DeleteIcon />
-        </IconButton>
+        <ActionIcon onClick={handleDeleteReward} variant='subtle' color='red' size='lg'>
+          <IconTrash />
+        </ActionIcon>
       );
     },
     [remove],
@@ -86,12 +60,10 @@ const RewardPresetsForm: React.FunctionComponent = () => {
   const renderCostColumn = useCallback(
     (cost: number, index: number): ReactNode => {
       return (
-        <FormInput
-          name={`rewardPresets[${index}].cost`}
+        <Controller
           control={control}
-          type='number'
-          defaultValue={cost}
-          className='field lg'
+          name={`rewardPresets.${index}.cost`}
+          render={({ field }) => <OutlineInput {...field} type='number' />}
         />
       );
     },
@@ -129,62 +101,77 @@ const RewardPresetsForm: React.FunctionComponent = () => {
   );
 
   return (
-    <div>
+    <>
       <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(savePresets)} content={confirmationModal} />
       <RewardPresetsConfirmation
         open={confirmOpened}
         onCLose={() => setConfirmOpened(false)}
         onConfirm={handleSubmit(savePresets)}
       />
-      <FormGroup row className='auc-settings-row'>
+      <Stack gap='xs'>
         <FormInput
           name='rewardsPrefix'
           control={control}
-          label={t('settings.twitch.commonRewardsName')}
-          className='field lg'
-          hint={t('settings.twitch.commonRewardsNameDesc')}
+          size='sm'
+          label={
+            <SettingLabel
+              size='lg'
+              text={t('settings.twitch.commonRewardsName')}
+              hint={t('settings.twitch.commonRewardsNameDesc')}
+            />
+          }
         />
-      </FormGroup>
-      <Typography variant='body1' className='MuiFormControlLabel-label'>
-        {t('settings.twitch.rewardsList')}
-      </Typography>
-      <TableContainer component={Paper} style={{ width: 490, marginTop: 15 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>{t('settings.twitch.cost')}</StyledTableCell>
-              <StyledTableCell align='center'>{t('settings.twitch.color')}</StyledTableCell>
-              <StyledTableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {fields.map(({ cost, color, id }, index) => {
-              return (
-                <TableRow key={id}>
-                  <StyledTableCell>{renderCostColumn(cost, index)}</StyledTableCell>
-                  <StyledTableCell align='center'>{renderColorColumn(color, index)}</StyledTableCell>
-                  <StyledTableCell align='right'>{renderActionColumn(index)}</StyledTableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Grid container justifyContent='space-between' style={{ marginTop: 15, width: 490 }}>
-        <Button onClick={handleAppendReward} color='primary' variant='outlined'>
-          {t('settings.twitch.addReward')}
-        </Button>
-        <LoadingButton
-          isLoading={isLoading}
-          onClick={() => setConfirmOpened(true)}
-          color='primary'
-          variant='contained'
-          disabled={!isDirty}
-        >
-          {t('settings.twitch.saveRewards')}
-        </LoadingButton>
-      </Grid>
-    </div>
+      </Stack>
+      <Stack gap='xs'>
+        <Text size='lg' fw={600}>
+          {t('settings.twitch.rewardsList')}
+        </Text>
+        <Paper withBorder radius='md' className={classes.tableWrapper}>
+          <Table stripedColor='dark.8' classNames={{ thead: classes.thead, td: classes.td }}>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Td>
+                  <Text size='md' fw={600}>
+                    {t('settings.twitch.cost')}
+                  </Text>
+                </Table.Td>
+                <Table.Td>
+                  <Text size='md' fw={600}>
+                    {t('settings.twitch.color')}
+                  </Text>
+                </Table.Td>
+                <Table.Td />
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {fields.map(({ cost, color, id }, index) => {
+                return (
+                  <Table.Tr key={id}>
+                    <Table.Td>{renderCostColumn(cost, index)}</Table.Td>
+                    <Table.Td align='center'>{renderColorColumn(color, index)}</Table.Td>
+                    <Table.Td align='right'>{renderActionColumn(index)}</Table.Td>
+                  </Table.Tr>
+                );
+              })}
+            </Table.Tbody>
+          </Table>
+        </Paper>
+        <Group justify='space-between'>
+          <Button onClick={handleAppendReward} variant='outline' size='sm'>
+            {t('settings.twitch.addReward')}
+          </Button>
+          <Button
+            loading={isLoading}
+            onClick={() => setConfirmOpened(true)}
+            variant='filled'
+            size='sm'
+            disabled={!isDirty}
+          >
+            {t('settings.twitch.saveRewards')}
+          </Button>
+        </Group>
+      </Stack>
+    </>
   );
 };
 

@@ -141,7 +141,13 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
 
   if (activeSettings) {
     const { startTime, timeStep, ...settings } = activeSettings;
-    dispatch(setAucSettings({ ...settings }));
+    dispatch(
+      setAucSettings({
+        ...settings,
+        primaryColor:
+          localStorage.getItem('isColorResetDone') !== 'true' ? COLORS.THEME.PRIMARY : settings.primaryColor,
+      }),
+    );
   }
   dispatch(
     setUserState({
@@ -156,6 +162,11 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
       },
     }),
   );
+
+  if (localStorage.getItem('isColorResetDone') !== 'true') {
+    dispatch(saveSettings({ primaryColor: COLORS.THEME.PRIMARY }));
+    localStorage.setItem('isColorResetDone', 'true');
+  }
   // if (localStorage.getItem('minTime')) {
   //   dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime }));
   //   localStorage.removeItem('isMinTimeActive');

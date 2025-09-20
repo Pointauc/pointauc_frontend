@@ -140,7 +140,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
         const date = dayjs(timeLeft.current);
         const hours = Math.floor(timeLeft.current / HOUR);
         const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
-        stopwatchElement.current.innerHTML = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
+        stopwatchElement.current.textContent = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
       }
     },
     [onEnd],
@@ -154,7 +154,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
 
     if (totalTimeElement.current) {
       const date = dayjs.duration(totalTime.current);
-      totalTimeElement.current.innerHTML = date.format(STOPWATCH.TOTAL_FORMAT);
+      totalTimeElement.current.textContent = date.format(STOPWATCH.TOTAL_FORMAT);
     }
   }, []);
 

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Controller } from 'react-hook-form';
 import { Group, Text } from '@mantine/core';
 
-import OutlineInput from '@shared/mantine/ui/Input/OutlineInput';
+import OutlineInput from '@shared/mantine/ui/Input/Outline/OutlineInput';
 
 const RandomSpinConfig = () => {
   const { t } = useTranslation();

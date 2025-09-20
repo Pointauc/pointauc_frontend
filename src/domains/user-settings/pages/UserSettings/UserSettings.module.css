@@ -1,0 +1,28 @@
+.tabLabel {
+  font-weight: 600;
+  font-size: var(--mantine-font-size-lg);
+}
+
+.root {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  --tab-border-color: var(--mantine-color-dark-3);
+}
+
+.panel {
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--mantine-spacing-xl) 0 var(--mantine-spacing-lg) 0;
+}
+
+.pageContainer {
+  height: 100%;
+}
+
+.pageContent {
+  padding-bottom: 0;
+}

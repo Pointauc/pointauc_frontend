@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@reducers';
-import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
+import SettingsGroup from '@domains/user-settings/ui/SettingsGroup/SettingsGroup';
 import { aukus } from '@components/Event/events.ts';
 import './EventsSettings.scss';
 

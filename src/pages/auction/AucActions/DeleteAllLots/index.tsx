@@ -1,8 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Link, Tooltip } from '@mui/material';
+import { Link, Tooltip } from '@mui/material';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { Trans, useTranslation } from 'react-i18next';
+import { Button } from '@mantine/core';
 
 import { resetPurchases, setPurchases } from '@reducers/Purchases/Purchases.ts';
 import { resetSlots, setSlots } from '@reducers/Slots/Slots.ts';
@@ -49,7 +50,9 @@ const DeleteAllLots = () => {
 
   return (
     <Tooltip title={t('auc.clearAll')}>
-      <Button onClick={handleResetSlots} startIcon={<DeleteSweepIcon />} />
+      <Button onClick={handleResetSlots} size='sm' variant='outline' color='primary.3'>
+        <DeleteSweepIcon />
+      </Button>
     </Tooltip>
   );
 };

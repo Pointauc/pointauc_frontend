@@ -1,8 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
-import Grid from '@mui/material/Grid';
-import { Checkbox, FormControlLabel, IconButton, Typography } from '@mui/material';
+import { Checkbox, Grid, ActionIcon, Text, Group, Stack } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import { IconChevronsLeft } from '@tabler/icons-react';
 import classNames from 'classnames';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
@@ -14,10 +13,7 @@ import { WheelFormat } from '@constants/wheel.ts';
 import useStorageState from '@hooks/useStorageState.ts';
 import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
 
-import './index.scss';
 import classes from './index.module.css';
-
-console.log(classes);
 
 interface Props {
   allItems: WheelItemWithMetadata[];
@@ -62,32 +58,42 @@ const ItemsPreview = ({
   );
 
   return (
-    <div className={classNames('wheel-preview-wrapper', { collapsed }, className)}>
+    <div className={classNames(classes.wrapper, { [classes.collapsed]: collapsed }, className)}>
       {showControls && (
-        <Grid container>
-          <Grid flexGrow={collapsed ? 0 : 1}>
-            {format === WheelFormat.Dropout && !collapsed && (
-              <FormControlLabel
-                control={
+        <Grid align='center'>
+          {!collapsed && (
+            <Grid.Col span='auto'>
+              {format === WheelFormat.Dropout && (
+                <Group>
                   <Checkbox
                     checked={hideInactive}
-                    onChange={(e) => setHideInactive(e.target.checked)}
-                    color='primary'
+                    onChange={(event) => setHideInactive(event.currentTarget.checked)}
+                    label={t('wheel.hideInactive')}
                   />
-                }
-                label={t('wheel.hideInactive')}
-                className='wheel-controls-checkbox'
-              />
-            )}
-          </Grid>
-          <IconButton className='wheel-preview-collapse-button' onClick={() => setCollapsed(!collapsed)}>
-            <KeyboardDoubleArrowLeftIcon />
-          </IconButton>
+                </Group>
+              )}
+            </Grid.Col>
+          )}
+          <Grid.Col span='content'>
+            <ActionIcon
+              className={classes.collapseButton}
+              onClick={() => setCollapsed(!collapsed)}
+              variant='subtle'
+              radius='xl'
+              size='lg'
+              color='white'
+            >
+              <IconChevronsLeft size={24} />
+            </ActionIcon>
+          </Grid.Col>
         </Grid>
       )}
       {!collapsed && (
-        <>
-          <Grid ref={listContainer} flex='1 1 auto' container direction='column' width='100%'>
+        <Stack className={classes.expandedContainer} gap='xs'>
+          <div
+            ref={listContainer}
+            style={{ flex: '1 1 auto', width: '100%', display: 'flex', flexDirection: 'column' }}
+          >
             <AutoSizer disableWidth>
               {({ height }) => (
                 <FixedSizeList
@@ -110,11 +116,9 @@ const ItemsPreview = ({
                 </FixedSizeList>
               )}
             </AutoSizer>
-          </Grid>
-          <Grid>
-            <Typography fontSize='1.1rem'>{t('wheel.totalItems', { amount: activeItems.length })}</Typography>
-          </Grid>
-        </>
+          </div>
+          <Text size='lg'>{t('wheel.totalItems', { amount: activeItems.length })}</Text>
+        </Stack>
       )}
     </div>
   );

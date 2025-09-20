@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { Anchor, Button, CopyButton, Group, Modal, Stack, Text, TextInput, Title } from '@mantine/core';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Dialog, DialogContent, Link, OutlinedInput, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { notifications } from '@mantine/notifications';
 
 import { loadToken, updateToken } from '@api/tokenApi.ts';
 import withLoading from '@decorators/withLoading.ts';
-import { addAlert } from '@reducers/notifications/notifications.ts';
-import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
-import { AlertTypeEnum } from '@models/alert.model.ts';
-import './TokenSettings.scss';
+import { RootState } from '@reducers';
 
 const TokenSettings = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const { userId } = useSelector((root: RootState) => root.user);
   const [opened, setOpened] = useState(false);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
@@ -31,47 +28,53 @@ const TokenSettings = () => {
 
   const resetToken = async (): Promise<void> => {
     await withLoading(setLoading, async () => setToken(await updateToken()))();
-    dispatch(addAlert({ message: t('settings.token.tokenUpdated'), type: AlertTypeEnum.Success, duration: 3000 }));
-  };
-
-  const copyToken = (): void => {
-    navigator.clipboard.writeText(token ?? '');
-    dispatch(addAlert({ message: t('settings.token.copied'), type: AlertTypeEnum.Success, duration: 3000 }));
+    notifications.show({
+      message: t('settings.token.tokenUpdated'),
+      color: 'green',
+    });
   };
 
   return (
-    <div className='token-settings'>
-      <Typography variant='h6'>
-        <Link href='https://app.theneo.io/bf08f5b1-1025-4a83-8518-14458df03592/pointauc/api-reference' target='_blank'>
+    <Stack align='flex-start'>
+      <Text variant='h6'>
+        <Anchor
+          href='https://app.theneo.io/bf08f5b1-1025-4a83-8518-14458df03592/pointauc/api-reference'
+          target='_blank'
+        >
           {t('settings.token.openDocs')}
-        </Link>
-      </Typography>
-      <Button sx={{ width: 380 }} onClick={() => setOpened(true)} variant='outlined'>
+        </Anchor>
+      </Text>
+      <Button disabled={!userId} onClick={() => setOpened(true)} variant='outline'>
         {t('settings.token.show')}
       </Button>
-      <Dialog fullWidth maxWidth='md' open={opened} onClose={() => setOpened(false)}>
-        <DialogContent>
-          <Typography sx={{ marginBottom: 2 }} variant='h5' color='error'>
+      {!userId && <Text color='dimmed'>{t('settings.token.userIdRequired')}</Text>}
+      <Modal opened={opened} centered size='xl' title={t('settings.token.modalTitle')} onClose={() => setOpened(false)}>
+        <Stack gap='dm'>
+          <Title order={4} c='red'>
             {t('settings.token.dontShareToken')}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid sx={{ flexGrow: 1 }}>
-              <OutlinedInput type='password' value={token ?? ''} fullWidth />
-            </Grid>
-            <Grid>
-              <Button onClick={copyToken} startIcon={<ContentCopyIcon />} variant='contained'>
-                {t('settings.token.copy')}
-              </Button>
-            </Grid>
-            <Grid>
-              <LoadingButton onClick={resetToken} isLoading={loading} variant='outlined'>
-                {t('settings.token.update')}
-              </LoadingButton>
-            </Grid>
-          </Grid>
-        </DialogContent>
-      </Dialog>
-    </div>
+          </Title>
+          <Group gap='sm'>
+            <TextInput type='password' value={token ?? ''} flex={1} readOnly />
+            <CopyButton value={token ?? ''}>
+              {({ copied, copy }) => (
+                <Button
+                  disabled={!token}
+                  onClick={copy}
+                  leftSection={copied ? <IconCheck /> : <IconCopy />}
+                  color={copied ? 'green' : 'blue'}
+                  variant='filled'
+                >
+                  {t(copied ? 'common.copied' : 'common.copy')}
+                </Button>
+              )}
+            </CopyButton>
+            <Button onClick={resetToken} loading={loading} variant='outline'>
+              {t('settings.token.update')}
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+    </Stack>
   );
 };
 

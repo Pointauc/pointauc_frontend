@@ -48,9 +48,7 @@
   .wheel-info-wrapper {
     display: flex;
     flex-direction: column;
-    flex-grow: 12;
-    flex-basis: 0;
-    max-width: 550px;
+    flex-grow: 0;
     height: 100%;
     overflow: visible;
     gap: var(--mantine-spacing-md);

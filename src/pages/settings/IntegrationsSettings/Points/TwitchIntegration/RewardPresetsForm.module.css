@@ -1,0 +1,14 @@
+.tableWrapper {
+  width: 470px;
+  overflow: hidden;
+  background-color: var(--mantine-color-dark-6);
+}
+
+.thead {
+  background-color: color-mix(in srgb, var(--mantine-color-blue-6) 40%, var(--mantine-color-dark-6) 60%);
+}
+
+.td {
+  padding-top: var(--mantine-spacing-sm);
+  padding-bottom: var(--mantine-spacing-sm);
+}

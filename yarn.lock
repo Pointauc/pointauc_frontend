@@ -1063,6 +1063,11 @@
   resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
+"@mantine/colors-generator@^8.3.1":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@mantine/colors-generator/-/colors-generator-8.3.1.tgz#3a03ce809a6d08e49ca8e9cdd8b587c083d3d537"
+  integrity sha512-1JJ/wIN+JaLhObWi3Ap4dvTk4ksN7dvOHa+ynEaxMg5Ienb2sv2V/zadiFISXkMw1zgBkcFe1UJbgm3QL4gsmg==
+
 "@mantine/core@^8.2.4":
   version "8.2.4"
   resolved "https://registry.yarnpkg.com/@mantine/core/-/core-8.2.4.tgz#2e28effa7680b2311c676a5f8daac86d00c2366c"
@@ -3059,6 +3064,11 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
+
+chroma-js@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/chroma-js/-/chroma-js-3.1.2.tgz#cfb807045182228574eae5380587cdb830e985d6"
+  integrity sha512-IJnETTalXbsLx1eKEgx19d5L6SRM7cH4vINw/99p/M11HCuXGRWL+6YmCm7FWFGIo6dtWuQoQi1dc5yQ7ESIHg==
 
 citty@^0.1.6:
   version "0.1.6"

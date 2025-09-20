@@ -2,7 +2,7 @@ import { Controller } from 'react-hook-form';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import OutlineInput from '@shared/mantine/ui/Input/OutlineInput';
+import OutlineInput from '@shared/mantine/ui/Input/Outline/OutlineInput';
 
 const SpinTimeField = () => {
   const { t } = useTranslation();

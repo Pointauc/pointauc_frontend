@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 
 import classes from './index.module.css';
 
@@ -10,36 +10,45 @@ interface Props {
   children: (props: ChildProps) => React.ReactNode;
 }
 
+const getMinWidth = (element: Element): number => {
+  return parseFloat(getComputedStyle(element).minWidth);
+};
+
 const WheelFlexboxAutosizer = ({ children }: Props) => {
-  const optimalSize = useRef<number | undefined>();
-  const previousHeight = useRef<number | undefined>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const staticContainerRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.style.flexBasis = optimalSize.current ? `${optimalSize.current}px` : '100%';
-    }
-  }, []);
+  const getAvailableSpace = (): number => {
+    const parent = containerRef.current?.parentElement;
+    const fullWidth = parent?.clientWidth || 0;
+    if (!containerRef.current) return fullWidth;
 
-  const handleSetOptimalSize = (size: number) => {
-    optimalSize.current = size;
-    if (containerRef.current) {
-      containerRef.current.style.flexBasis = `${size}px`;
-    }
+    const siblings = parent?.children;
+
+    if (!siblings) return fullWidth;
+
+    const siblingsWidth = Array.from(siblings).reduce((acc, sibling) => acc + (getMinWidth(sibling) || 0), 0);
+    const gap = parseFloat(getComputedStyle(parent).gap);
+    return fullWidth - siblingsWidth - gap * (siblings.length - 1);
   };
 
+  const getWheelSize = useCallback(() => {
+    if (!containerRef.current) return;
+    const availableSpace = getAvailableSpace();
+    const wheelSize = Math.min(availableSpace, containerRef.current.clientHeight - 20 - 38);
+    return wheelSize;
+  }, []);
+
+  const updateWheelSize = useCallback(() => {
+    if (!containerRef.current) return;
+    const wheelSize = getWheelSize();
+    containerRef.current.style.flexBasis = `${wheelSize}px`;
+  }, [getWheelSize]);
+
   useLayoutEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && staticContainerRef.current) {
       const resizeObserver = new ResizeObserver(() => {
-        if (!containerRef.current) return;
-        const height = containerRef.current?.clientHeight;
-        const isWheelSizeIncreased =
-          height > (previousHeight.current ?? Infinity) && height > (optimalSize.current ?? Infinity);
-        if (isWheelSizeIncreased && containerRef.current) {
-          optimalSize.current = undefined;
-          containerRef.current.style.flexBasis = '100%';
-        }
-        previousHeight.current = height;
+        updateWheelSize();
       });
       resizeObserver.observe(containerRef.current);
 
@@ -47,11 +56,13 @@ const WheelFlexboxAutosizer = ({ children }: Props) => {
         resizeObserver.disconnect();
       };
     }
-  }, [containerRef]);
+  }, [containerRef, updateWheelSize]);
 
   return (
-    <div ref={containerRef} className={classes.wheelFlexboxAutosizer}>
-      {children({ onOptimalSizeChange: handleSetOptimalSize })}
+    <div ref={containerRef} className={classes.flexibleContainer}>
+      <div ref={staticContainerRef} className={classes.wheelStaticContainer}>
+        {children({})}
+      </div>
     </div>
   );
 };

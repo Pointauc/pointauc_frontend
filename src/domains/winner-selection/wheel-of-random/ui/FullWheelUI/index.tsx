@@ -28,7 +28,9 @@ import { getRandomNumber } from '@api/randomApi';
 
 import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
+
 import './index.scss';
+import styles from './index.module.css';
 
 export interface SettingElements {
   mode: boolean;
@@ -78,6 +80,7 @@ const defaultSettings: Wheel.Settings = {
 
   dropoutVariant: DropoutVariant.New,
   wheelStyles: 'default',
+  showDeleteConfirmation: true,
 };
 const savedSettings = JSON.parse(localStorage.getItem('wheelSettings') ?? '{}');
 const initialSettings = { ...defaultSettings, ...savedSettings };
@@ -221,7 +224,12 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
             />
           )}
         </WheelFlexboxAutosizer>
-        <div className={classNames('wheel-info-wrapper', { shrink: content })}>
+        <div
+          className={classNames(styles.rightSide, 'wheel-info-wrapper', {
+            shrink: content,
+            [styles.withExtraContent]: content,
+          })}
+        >
           <div className={classNames('wheel-controls')}>
             <WheelSettings
               direction={content ? 'row' : 'column'}

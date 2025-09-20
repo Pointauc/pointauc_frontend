@@ -26,7 +26,7 @@ const WheelFormatField = () => {
           <SegmentedControl
             className='wheel-format-field'
             fullWidth
-            color='blue'
+            color='primary'
             data={wheelOptions}
             value={value.toString()}
             onChange={(value) => onChange(Number(value))}

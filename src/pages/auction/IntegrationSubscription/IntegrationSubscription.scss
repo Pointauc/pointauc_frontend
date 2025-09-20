@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .login-button {
   height: 40px;
@@ -36,7 +36,7 @@
       flex-direction: row;
 
       .integration-switch {
-          width: auto;
+        width: auto;
       }
     }
 
@@ -45,17 +45,5 @@
       display: flex;
       align-items: center;
     }
-  }
-}
-
-.integration-switch {
-  width: 100%;
-  justify-content: space-between;
-  display: flex;
-
-  &.compose {
-    width: 100%;
-    justify-content: space-between;
-    display: flex;
   }
 }

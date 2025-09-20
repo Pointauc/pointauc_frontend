@@ -1,38 +1,24 @@
 import { FC, ReactNode } from 'react';
-import { Container, ContainerProps, Typography } from '@mui/material';
-import classNames from 'classnames';
-import './PageContainer.scss';
+import clsx from 'clsx';
+import { Title } from '@mantine/core';
 
-// const useStyles = makeStyles((theme) =>
-//   createStyles({
-//     root: {
-//       background: theme.palette.background.default,
-//       color: theme.palette.text.primary,
-//       height: '100vh',
-//       paddingTop: theme.spacing(4),
-//       paddingBottom: theme.spacing(4),
-//       overflowX: 'hidden',
-//       overflowY: 'auto',
-//     },
-//   }),
-// );
+import styles from './PageContainer.module.css';
 
-interface PgeContainerProps extends Omit<ContainerProps, 'title'> {
-  title?: string | ReactNode;
+interface PageContainerProps {
+  title: string | ReactNode;
+  className?: string;
+  children: ReactNode;
+  classes?: {
+    content?: string;
+  };
 }
 
-const PageContainer: FC<PgeContainerProps> = ({ title, children, className, ...props }) => {
-  // const classes = useStyles();
-
+const PageContainer: FC<PageContainerProps> = ({ title, children, className, classes }) => {
   return (
-    <Container className={classNames(className, 'page-container')} style={{ maxWidth: '95%' }} {...props}>
-      {!!title && (
-        <Typography color='textPrimary' variant='h3'>
-          {title}
-        </Typography>
-      )}
-      {children}
-    </Container>
+    <div className={clsx(className, styles.pageContainer)}>
+      {!!title && (typeof title === 'string' ? <Title order={1}>{title}</Title> : title)}
+      <div className={clsx(styles.pageContainerContent, classes?.content)}>{children}</div>
+    </div>
   );
 };
 

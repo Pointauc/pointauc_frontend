@@ -76,7 +76,7 @@ const useBattleRoyal = (controller: RefObject<WheelController>): Wheel.FormatHoo
         winnerBg.style.fill = '#ff7324';
       }
       if (parentTitle) {
-        parentTitle.innerHTML = winner.name;
+        parentTitle.textContent = winner.name;
       }
     },
     [gameOrder, step],

@@ -5,13 +5,14 @@ import {
   alpha,
   createTheme,
   MantineTheme,
-  Checkbox,
-  TextInput,
   rem,
+  VariantColorsResolver,
+  defaultVariantColorsResolver,
 } from '@mantine/core';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { DEFAULT_THEME } from '@mantine/core';
+import { generateColors } from '@mantine/colors-generator';
 
 import { calcUiElementsOpacity } from '@utils/ui/background';
 import { RootState } from '@reducers';
@@ -20,6 +21,8 @@ import ExtendedTextInput from './ui/Input';
 import ExtendedSlider from './ui/Slider';
 import ExtendedCheckbox from './ui/Checkbox';
 import ExtendedSegmentedControl from './ui/SegmentedControl';
+import ModalExtended from './ui/Modal';
+import ExtendedSwitch from './ui/Switch';
 
 const shadowOpacityMain = 0.12;
 const shadowOpacitySecondary = 0.09;
@@ -39,10 +42,26 @@ const cssResolver: CSSVariablesResolver = (theme) => ({
   light: {},
 });
 
+const variantColorResolver: VariantColorsResolver = (input) => {
+  const defaultResolvedColors = defaultVariantColorsResolver(input);
+
+  if (input.variant === 'subtle' && input.color === 'white') {
+    return {
+      ...defaultResolvedColors,
+      hover: 'var(--mantine-color-dark-5)',
+    };
+  }
+
+  return defaultResolvedColors;
+};
+
 const MantineProvider = ({ children }: { children: React.ReactNode }) => {
+  const primaryColor = useSelector((root: RootState) => root.aucSettings.settings.primaryColor);
   const backgroundOverlayOpacity = useSelector((root: RootState) => root.aucSettings.settings.backgroundOverlayOpacity);
   const darkAlpha = useSelector((root: RootState) => root.overlay.darkAlpha);
   const backgroundTone = useSelector((root: RootState) => root.aucSettings.settings.backgroundTone);
+
+  const adjustedPrimary = primaryColor === '#a6d4fa' ? '#228be6' : primaryColor ?? '#228be6';
 
   const uiOpacity = useMemo(
     () => darkAlpha ?? calcUiElementsOpacity(backgroundOverlayOpacity),
@@ -51,24 +70,19 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
 
   const theme = useMemo(() => {
     return createTheme({
+      variantColorResolver,
       cursorType: 'pointer',
-      primaryColor: 'blue',
+      primaryColor: 'primary',
       spacing: {
         ...DEFAULT_THEME.spacing,
         xxs: rem(6),
       },
       fontFamily: 'Inter, sans-serif',
-      // fontSizes: {
-      //   xs: '0.875rem', // 14px (was 12px)
-      //   sm: '1rem', // 16px (was 14px)
-      //   md: '1.125rem', // 18px (was 16px)
-      //   lg: '1.25rem', // 20px (was 18px)
-      //   xl: '1.5rem', // 24px (was 20px)
-      // },
       colors: {
         darkTransparent: DEFAULT_THEME.colors.dark.map((color) =>
           alpha(color, uiOpacity),
         ) as unknown as MantineColorsTuple,
+        primary: generateColors(adjustedPrimary),
       },
       components: {
         Notification: {
@@ -87,15 +101,22 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
         Button: { defaultProps: { size: 'md' } },
         Checkbox: ExtendedCheckbox,
         SegmentedControl: ExtendedSegmentedControl,
+        Switch: ExtendedSwitch,
         Select: {
           defaultProps: {
             size: 'md',
             comboboxProps: { transitionProps: { transition: 'pop', duration: 100 } },
           },
         },
+        Modal: ModalExtended,
+        Tooltip: {
+          defaultProps: {
+            color: 'gray',
+          },
+        },
       },
     });
-  }, [uiOpacity]);
+  }, [uiOpacity, adjustedPrimary]);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--custom-background-ui-opacity', uiOpacity.toString());

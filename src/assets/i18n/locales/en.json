@@ -157,6 +157,8 @@
     }
   },
   "common": {
+    "copy": "Copy",
+    "copied": "Copied",
     "accountProgress": "Account loading...",
     "apply": "Apply",
     "authProgress": "Authorization...",
@@ -327,8 +329,9 @@
       "nameFieldLabel": "Active settings template",
       "defaultTitle": "Template 1",
       "newTitle": "New template",
-      "create": "Create template",
-      "created": "Template created"
+      "create": "Create New",
+      "created": "Template created",
+      "switchPreset": "Switch preset"
     },
     "groups": {
       "auc": "Auction",
@@ -353,6 +356,7 @@
         "none": "Never"
       },
       "bidNameStrategyLabel": "What to use as a bid name",
+      "bidNameStrategyHint": "This value will be used as the main text for new bids.<ul><li><b>{{messageLabel}}</b> - for auctions where the viewer specifies an arbitrary outcome</li><li><b>{{usernameLabel}}</b> - convenient in an auction on the victory of a specific person</li></ul>",
       "bidNameStrategy": {
         "message": "Message text",
         "username": "Username"
@@ -385,8 +389,8 @@
     },
     "integrations": "Integrations",
     "luckyWheel": {
-      "desc": "Spin the wheel and get a chance to multiply the bid",
-      "groupTitle": "Lucky Wheel",
+      "desc": "For each bid you can spin the wheel and get a chance to multiply the bid or lose it",
+      "groupTitle": "Lucky bid",
       "luckyWheel": "Wheel for bids",
       "selectBet": "Viewer selects a lot"
     },
@@ -419,7 +423,8 @@
       "totalTimeHint": "Time is only counted when the timer is running. The total time does not grow while the timer is paused.",
 
       "addOnCondition": "Add time on conditions",
-      "notOnCondition": "DO NOT Add time on conditions"
+      "notOnCondition": "DO NOT Add time on conditions",
+      "maxAdditionalTimeHint": "Example when the field value is <b>5 min</b> and leader change happens: <u><li>Time left 10 min - add extra time</li><li>Time left 2 min - do not add</li></u>"
     },
     "token": {
       "copied": "Copied",
@@ -429,7 +434,9 @@
       "show": "Show Token",
       "token": "Personal Token",
       "tokenUpdated": "Token Updated",
-      "update": "Generate New"
+      "update": "Generate New",
+      "modalTitle": "Your API Token",
+      "userIdRequired": "You need to be logged in to generate a token. Use any service below to create an account."
     },
     "twitch": {
       "addReward": "Add Reward",
@@ -501,6 +508,12 @@
     "addLotsToAuc": "Save lots in auction",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
     "deleteLot": "Delete Lot",
+    "deleteLotConfirmationModal": {
+      "title": "Delete Lot?",
+      "description": "This action will delete the lot not only from the wheel but also from the auction itself.",
+      "confirm": "Delete",
+      "dontShowAgain": "Don't show again"
+    },
     "returnPointsToTheRest": "Return points to the others",
     "dividing": "Dividing",
     "dividingDesc": "Divides expensive lots into several positions.",
@@ -519,7 +532,6 @@
     },
     "importToWheel": "Import participants",
     "loadCustomMessage": "Upload your image",
-    "lotDeleteWarning": "This action will delete the lot not only from the wheel but also from the auction itself.",
     "lotWasDeleted": "lot was deleted",
     "nesting": "Nesting",
     "nestingDesc": "Groups cheap lots to reduce the number of spins",

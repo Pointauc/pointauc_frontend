@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { FormControlLabel } from '@mui/material';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { Switch } from '@mantine/core';
 
 import SwitchAllIntegrations from '@components/SwitchAllIntegrations/SwitchAllIntegrations.tsx';
 import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
@@ -10,9 +10,10 @@ import { RootState } from '@reducers';
 
 interface Props {
   integrations: Integration.Config[];
+  classNames?: any;
 }
 
-const PubsubSwitchGroup = ({ integrations }: Props) => {
+const PubsubSwitchGroup = ({ integrations, classNames }: Props) => {
   const { t } = useTranslation();
   const subscriptions = useSelector((root: RootState) => root.subscription);
   const [discrepancy, setDiscrepancy] = React.useState(false);
@@ -27,24 +28,11 @@ const PubsubSwitchGroup = ({ integrations }: Props) => {
 
   return (
     <>
-      <FormControlLabel
-        className={classNames('integration-switch compose')}
-        labelPlacement='start'
-        control={<SwitchAllIntegrations integrations={integrations} />}
-        label={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span>{t('integration.groups.donations')} (</span>
-            {integrations.map((integration) => (
-              <integration.branding.icon key={integration.id} className={classNames('base-icon', integration.id)} />
-            ))}
-            <span>)</span>
-          </div>
-        }
-      />
+      <SwitchAllIntegrations integrations={integrations} classNames={classNames} />
       {discrepancy && (
         <div className='available-integrations'>
           {integrations.map((integration) => (
-            <PubsubSwitch hideTitle key={integration.id} integration={integration} />
+            <PubsubSwitch hideTitle key={integration.id} integration={integration} switchProps={{ classNames }} />
           ))}
         </div>
       )}

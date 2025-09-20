@@ -21,7 +21,7 @@ const DropoutFormatField = () => {
       render={({ field: { onChange, value }, formState: { isSubmitting } }) => (
         <SegmentedControl
           fullWidth
-          color='blue'
+          color='primary'
           data={dropoutVariantOptions}
           value={value.toString()}
           onChange={(value) => onChange(Number(value))}
