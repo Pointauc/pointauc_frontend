@@ -1,4 +1,5 @@
-import { FC, useEffect, useRef } from 'react';
+import { Portal } from '@mantine/core';
+import { FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@reducers';
@@ -15,18 +16,17 @@ export const draggedBid: DraggedBid = {
 
 const DragBidContext: FC = () => {
   const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
-  const dragRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (dragRef.current) {
-      draggedBid.ref = dragRef.current;
-    }
+  const handleRef = useCallback((ref: HTMLDivElement) => {
+    draggedBid.ref = ref;
   }, []);
 
   return (
-    <div style={{ pointerEvents: 'none', position: 'absolute' }} className='drag-context' ref={dragRef}>
-      {draggedRedemption && <PurchaseComponent {...draggedRedemption} showBestMatch={false} />}
-    </div>
+    <Portal>
+      <div style={{ pointerEvents: 'none', position: 'absolute' }} className='drag-context' ref={handleRef}>
+        {draggedRedemption && <PurchaseComponent {...draggedRedemption} showBestMatch={false} />}
+      </div>
+    </Portal>
   );
 };
 

@@ -187,6 +187,10 @@
       &.drag-over {
         background-color: color-mix(in srgb, var(--mantine-color-blue-4) 20%, var(--mantine-color-dark-5));
 
+        // & * {
+        // pointer-events: none !important;
+        // }
+
         &.remove-cost {
           // background-color: $red-1;
           // border-color: $red-2;
