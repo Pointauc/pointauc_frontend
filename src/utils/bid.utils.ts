@@ -53,9 +53,8 @@ const getName = (bid: Purchase): string => {
     case BidNameStrategy.Username:
       return username || 'Anonymous';
     case BidNameStrategy.Message:
-      return message;
     default:
-      return message;
+      return message || '';
   }
 };
 
