@@ -116,7 +116,7 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
 
   const extraLength = Number(currentExtra?.toString().length);
   const extraFieldWidth = `${extraLength > 4 ? 2 + extraLength * 1.1 : 7}ch`;
-
+  const showError =  amount === null ? false : amount  < 1 ? true : false
   return (
     <>
       <TextInput
@@ -140,8 +140,8 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot }) => {
         placeholder={t('common.currencySign')}
         ref={amountInput}
         onKeyPress={createNewSlotOnEnter}
+        error={showError}
         type='number'
-        min='0'
       />
       <button className='slot-icon-button slot-add-extra' onClick={handleAddExtra} title={t('lot.addAmount')}>
         <AddIcon />
