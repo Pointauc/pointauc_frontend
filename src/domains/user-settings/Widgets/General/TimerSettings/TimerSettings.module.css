@@ -5,3 +5,11 @@
 .notAddTime {
   color: #d58a62;
 }
+
+.offset {
+  margin-left: 16px;
+
+  @media (min-width: 48em) {
+    margin-left: 36px;
+  }
+}

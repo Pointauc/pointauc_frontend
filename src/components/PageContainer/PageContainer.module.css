@@ -5,8 +5,15 @@
   gap: 1rem;
   box-sizing: border-box;
   max-height: 100dvh;
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-md) 0 var(--mantine-spacing-md);
 
-  padding: 2rem 3em 0 3em;
+  @media (min-width: 48em) {
+    padding: 2rem 3em 0 3em;
+  }
+
+  &.fixedHeight {
+    max-height: 100dvh;
+  }
 }
 
 .pageContainerContent {

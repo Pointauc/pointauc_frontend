@@ -1,4 +1,4 @@
-import { Group, Tabs, Title } from '@mantine/core';
+import { Group, Tabs, Title, ScrollArea } from '@mantine/core';
 import classNames from 'classnames';
 import { useCallback, useEffect, useMemo, useTransition } from 'react';
 import { FormProvider, useForm, type FieldNamesMarkedBoolean } from 'react-hook-form';
@@ -118,12 +118,21 @@ const UserSettings = () => {
                 </Tabs.Tab>
               ))}
             </Tabs.List>
-            <Tabs.Panel value='auc'>
-              <WebsiteSettings />
-            </Tabs.Panel>
-            <Tabs.Panel value='integrations'>
-              <IntegrationsSettings />
-            </Tabs.Panel>
+            <ScrollArea
+              h='100%'
+              type='always'
+              scrollbars='y'
+              scrollbarSize={6}
+              offsetScrollbars={true}
+              classNames={{ viewport: styles.scrollArea }}
+            >
+              <Tabs.Panel value='auc'>
+                <WebsiteSettings />
+              </Tabs.Panel>
+              <Tabs.Panel value='integrations'>
+                <IntegrationsSettings />
+              </Tabs.Panel>
+            </ScrollArea>
           </Tabs>
         </PageContainer>
       </form>

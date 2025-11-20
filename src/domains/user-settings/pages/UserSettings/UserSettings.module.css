@@ -26,3 +26,9 @@
 .pageContent {
   padding-bottom: 0;
 }
+
+.scrollArea {
+  /* height: 100%; */
+  /* overflow: clip; */
+  padding-bottom: var(--mantine-spacing-md);
+}

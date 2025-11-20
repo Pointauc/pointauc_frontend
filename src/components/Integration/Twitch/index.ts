@@ -1,6 +1,6 @@
 import TwitchSvg from '@assets/icons/twitch.svg?react';
 import { buildRedirectAuthFlow } from '@components/Integration/AuthFlow/Redirect/redirect.ts';
-import { buildBackendFlow } from '@components/Integration/PubsubFlow/Backend/backendFlow.ts';
+import { buildHeadlessFlow } from '@components/Integration/PubsubFlow/Headless/headlessFlow.ts';
 import { sendCpSubscribedState } from '@reducers/Subscription/Subscription.ts';
 import { authenticateTwitch } from '@api/twitchApi.ts';
 
@@ -29,7 +29,7 @@ const twitch: Integration.Config = {
   id,
   type: 'points',
   authFlow,
-  pubsubFlow: buildBackendFlow({
+  pubsubFlow: buildHeadlessFlow({
     sendSubscribeState: (active) => store.dispatch(sendCpSubscribedState(active) as any),
   }),
   branding: {

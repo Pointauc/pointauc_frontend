@@ -82,6 +82,9 @@
     },
     "tourniquet": {
       "name": "Tourniquet"
+    },
+    "ihaq": {
+      "name": "IHAQ Donate"
     }
   },
   "textEditor": {

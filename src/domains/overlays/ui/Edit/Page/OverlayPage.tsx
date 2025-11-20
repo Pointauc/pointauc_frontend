@@ -13,6 +13,7 @@ import {
   overlaysControllerRemoveMutation,
   overlaysControllerUpdateMutation,
 } from '@api/openapi/@tanstack/react-query.gen';
+import PageContainer from '@components/PageContainer/PageContainer';
 
 import { Overlay } from '../../../model/overlay.types';
 import { OverlayForm } from '../Form';
@@ -124,15 +125,21 @@ const OverlayPage: FC = () => {
   }
 
   return (
-    <Container fluid p='xl'>
-      <Group mb='xl'>
-        <Button variant='subtle' leftSection={<IconArrowLeft size={16} />} onClick={handleGoBack}>
-          {t('overlays.title')}
-        </Button>
-        <Title order={2}>{overlay.name}</Title>
-      </Group>
+    <PageContainer
+      title={
+        <>
+          <Group mb='xl'>
+            <Button variant='subtle' leftSection={<IconArrowLeft size={16} />} onClick={handleGoBack}>
+              {t('overlays.title')}
+            </Button>
+            <Title order={2}>{overlay.name}</Title>
+          </Group>
+        </>
+      }
+      fixedHeight
+    >
       <OverlayForm overlay={overlay} onUpdate={handleOverlayUpdate} onDelete={handleOverlayDelete} />
-    </Container>
+    </PageContainer>
   );
 };
 

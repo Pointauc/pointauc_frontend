@@ -10,6 +10,7 @@ export interface UserInfo {
 export interface UserState extends UserInfo {
   activeSettingsPresetId: string;
   authData: {
+    ihaq?: IntegrationDataDto;
     donatePay?: IntegrationDataDto;
     da?: IntegrationDataDto;
     twitch?: IntegrationDataDto;

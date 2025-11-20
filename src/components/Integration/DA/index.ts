@@ -2,13 +2,12 @@ import DASvg from '@assets/icons/DAAlert.svg?react';
 import { buildRedirectAuthFlow } from '@components/Integration/AuthFlow/Redirect/redirect.ts';
 import { authenticateDA } from '@api/daApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
-
-import './index.scss';
 import { buildCentrifugeFlow } from '@components/Integration/PubsubFlow/Centrifuge/centrifugeFlow.ts';
 import ENDPOINTS from '@constants/api.constants.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 
 import { store } from '../../../main.tsx';
+import './index.scss';
 
 const id = 'da';
 

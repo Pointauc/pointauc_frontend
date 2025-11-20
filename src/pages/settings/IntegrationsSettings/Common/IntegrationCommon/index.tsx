@@ -30,7 +30,7 @@ const IntegrationCommon = () => {
         allowDeselect={false}
       />
       <BidsSortSelect control={control} />
-      <Group gap='xxs'>
+      <Group gap='xxs' wrap='wrap'>
         <SettingLabel
           text={t('bidNameStrategyLabel')}
           hint={

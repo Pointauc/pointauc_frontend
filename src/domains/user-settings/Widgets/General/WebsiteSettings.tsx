@@ -1,4 +1,4 @@
-import { Grid } from '@mantine/core';
+import { Grid, ScrollArea } from '@mantine/core';
 
 import TimerSettings from '@domains/user-settings/Widgets/General/TimerSettings/TimerSettings';
 import AppearanceSettings from '@domains/user-settings/Widgets/General/Appearance/AppearanceSettings';
@@ -12,16 +12,16 @@ const WebsiteSettings = () => {
       <Grid.Col span={12}>
         <TimerSettings />
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <AppearanceSettings />
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <AuctionSettings />
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <MarblesSettings />
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col span={{ base: 12, md: 6 }}>
         <WheelOfLuckSettings />
       </Grid.Col>
     </Grid>

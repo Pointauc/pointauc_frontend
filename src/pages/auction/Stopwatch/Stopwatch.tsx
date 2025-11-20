@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import classNames from 'classnames';
 import clsx from 'clsx';
+import { debounce, throttle } from '@tanstack/react-pacer';
 
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
@@ -131,6 +132,24 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   }, [slots]);
   const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
 
+  const updateTimerUIDebounced = useMemo(
+    () =>
+      throttle(
+        (timeLeft: number): void => {
+          const date = dayjs(timeLeft);
+          const hours = Math.floor(timeLeft / HOUR);
+          const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
+          if (stopwatchElement.current) {
+            stopwatchElement.current.textContent = hours
+              ? `${hours > 9 ? hours : `0${hours}`}:${formatted}`
+              : formatted;
+          }
+        },
+        { wait: 68, leading: true, trailing: true },
+      ),
+    [],
+  );
+
   const updateStopwatch = useCallback(
     (timeDifference = 0): void => {
       if (stopwatchElement.current) {
@@ -141,13 +160,10 @@ const Stopwatch: React.FC<StopwatchProps> = ({
           setIsStopwatchChanged(true);
           onEnd?.();
         }
-        const date = dayjs(timeLeft.current);
-        const hours = Math.floor(timeLeft.current / HOUR);
-        const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
-        stopwatchElement.current.textContent = hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
+        updateTimerUIDebounced(timeLeft.current);
       }
     },
-    [onEnd],
+    [onEnd, updateTimerUIDebounced],
   );
 
   const updateTotalTime = useCallback((timeDifference = 0) => {

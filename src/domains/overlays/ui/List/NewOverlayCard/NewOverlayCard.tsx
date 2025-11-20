@@ -21,7 +21,6 @@ const NewOverlayCard: FC<NewOverlayCardProps> = ({ onClick }) => {
       onClick={onClick}
       style={{
         cursor: onClick ? 'pointer' : 'default',
-        height: '100%',
         minHeight: '200px',
       }}
     >

@@ -18,6 +18,8 @@ import { Overlay, OverlayType } from '../../../model/overlay.types';
 import CreateOverlayModal from '../CreateOverlayModal/CreateOverlayModal';
 import OverlaysGrid from '../OverlaysGrid/OverlaysGrid';
 
+import classes from './OverlaysPage.module.css';
+
 import type { CreateAuctionOverlayDto, CreateWheelOverlayDto } from '@api/openapi/types.gen';
 
 const createDefaultOverlayDto = (type: OverlayType): CreateAuctionOverlayDto | CreateWheelOverlayDto => {
@@ -127,7 +129,7 @@ const OverlaysPage: FC = () => {
   );
 
   return (
-    <PageContainer title={t('overlays.title')}>
+    <PageContainer title={t('overlays.title')} classes={{ content: classes.pageContent }}>
       <OverlaysGrid
         overlays={overlays}
         onEditOverlay={handleEditOverlay}

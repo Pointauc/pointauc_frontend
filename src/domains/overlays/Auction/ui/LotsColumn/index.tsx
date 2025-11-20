@@ -1,8 +1,9 @@
-import { FC, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
 import SlotsList from '@pages/auction/SlotsColumn/SlotsList';
 import { Slot } from '@models/slot.model';
 import useAutoScroll from '@hooks/useAutoScroll';
+import { updatePercents } from '@services/PercentsRefMap.ts';
 
 import classes from './index.module.css';
 
@@ -20,6 +21,10 @@ const LotsColumn: FC<LotsColumnProps> = ({ items, autoScroll, scrollSpeed }) => 
     pauseOnEdgesDuration: 2,
     mouseResumeDelay: 5,
   });
+
+  useEffect(() => {
+    updatePercents(items);
+  }, [items]);
 
   return (
     <div className={classes.scrollCol} ref={containerRef}>

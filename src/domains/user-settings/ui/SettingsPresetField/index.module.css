@@ -1,11 +1,16 @@
 .settingsPresetFields {
   display: flex;
   gap: 12px;
-  height: 100%;
+
+  @media (min-width: 48em) {
+    height: 100%;
+  }
 }
 
 .settingsPresetName {
-  width: 350px;
+  @media (min-width: 48em) {
+    width: 350px;
+  }
 }
 
 .settingsPresetDropdown {
@@ -22,4 +27,8 @@
 
 .menuItemSection {
   color: var(--mantine-color-dark-3);
+}
+
+.presetButton {
+  flex-shrink: 0;
 }

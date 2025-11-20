@@ -19,7 +19,7 @@ const sizeMap = {
 
 const SettingLabel = ({ text, hint, canPin, leftSection, size = 'md' }: SettingLabelProps) => {
   return (
-    <Group miw={sizeMap[size]} gap='xs'>
+    <Group miw={{ base: 'auto', sm: sizeMap[size] }} gap='xs'>
       {canPin && (
         <ActionIcon>
           <IconPin />

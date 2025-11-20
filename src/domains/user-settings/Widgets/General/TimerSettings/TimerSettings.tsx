@@ -1,5 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { Group, Stack, Text, List } from '@mantine/core';
+import { Group, Stack, Text, List, Flex } from '@mantine/core';
 import { IconArrowsUpDown, IconSquareRoundedPlusFilled, IconMoneybagPlus, IconClock } from '@tabler/icons-react';
 import { useFormContext } from 'react-hook-form';
 
@@ -26,12 +26,12 @@ const TimerSettings = () => {
             control={control}
           />
         </Group>
-        <Group gap='lg' align='flex-start' className='timer-settings'>
+        <Flex gap='lg' align='flex-start' className='timer-settings' direction={{ base: 'column', md: 'row' }}>
           <Stack gap='sm' style={{ flex: 1 }}>
             <Text className={styles.addTime} size='lg' fw={600}>
               {t('settings.stopwatch.addOnCondition')}
             </Text>
-            <Stack gap='sm' style={{ marginLeft: 36 }}>
+            <Stack gap='sm' className={styles.offset}>
               <Group>
                 <FormSwitch
                   name='isAutoincrementActive'
@@ -99,7 +99,7 @@ const TimerSettings = () => {
             <Text className={styles.notAddTime} size='lg' fw={600}>
               {t('settings.stopwatch.notOnCondition')}
             </Text>
-            <Stack gap='sm' style={{ marginLeft: 36 }}>
+            <Stack gap='sm' className={styles.offset}>
               <Group className='auc-settings-row'>
                 <FormSwitch
                   name='isMinTimeActive'
@@ -131,7 +131,7 @@ const TimerSettings = () => {
               </Group>
             </Stack>
           </Stack>
-        </Group>
+        </Flex>
       </Stack>
     </SettingsGroup>
   );

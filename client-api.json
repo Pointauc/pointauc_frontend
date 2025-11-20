@@ -225,20 +225,6 @@
         ]
       }
     },
-    "/twitch/webhook/notification": {
-      "post": {
-        "operationId": "TwitchWebhookController_notification",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "TwitchWebhook"
-        ]
-      }
-    },
     "/donatePay/auth": {
       "post": {
         "operationId": "DonatePayController_authorize",
@@ -264,6 +250,64 @@
         },
         "tags": [
           "DonatePay"
+        ]
+      }
+    },
+    "/ihaq/auth": {
+      "post": {
+        "description": "Processes IHAQ OAuth authorization code and links the IHAQ account to the user session. Returns whether this is a new user registration.",
+        "operationId": "IhaqController_authorize",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "OAuth authorization code and redirect URI",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IhaqAuthDto"
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "code": "oauth_authorization_code",
+                    "redirect_uri": "https://your-app.com/callback"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully authorized with IHAQ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IhaqAuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authorize user with IHAQ",
+        "tags": [
+          "Ihaq"
+        ]
+      }
+    },
+    "/ihaq/revoke": {
+      "post": {
+        "description": "Invalidates and removes IHAQ integration for the authenticated user. Requires authentication via cookie.",
+        "operationId": "IhaqController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successfully revoked IHAQ integration"
+          }
+        },
+        "summary": "Revoke IHAQ integration",
+        "tags": [
+          "Ihaq"
         ]
       }
     },
@@ -904,6 +948,38 @@
   "servers": [],
   "components": {
     "schemas": {
+      "IhaqAuthDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "OAuth authorization code received from IHAQ",
+            "example": "oauth_authorization_code_here"
+          },
+          "redirect_uri": {
+            "type": "string",
+            "description": "Redirect URI used in the OAuth flow",
+            "example": "https://your-app.com/callback"
+          }
+        },
+        "required": [
+          "code",
+          "redirect_uri"
+        ]
+      },
+      "IhaqAuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "isNew": {
+            "type": "boolean",
+            "description": "Indicates whether this authorization resulted in a new user registration",
+            "example": false
+          }
+        },
+        "required": [
+          "isNew"
+        ]
+      },
       "LotDto": {
         "type": "object",
         "properties": {

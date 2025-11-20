@@ -1,5 +1,5 @@
 import { FC, useCallback, useMemo } from 'react';
-import { Grid, Paper } from '@mantine/core';
+import { Box, Grid, Group, Paper } from '@mantine/core';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Overlay } from '../../../model/overlay.types';
@@ -71,20 +71,16 @@ export const OverlayForm: FC<OverlayFormProps> = ({ overlay, onUpdate, onDelete 
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ height: '100%' }}>
-        <Grid align='start'>
-          <Grid.Col span={3}>
-            <Paper withBorder p='md' bg='dark.6' shadow='md'>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ height: '100%', width: '100%' }}>
+        <Group align='start' h='100%' wrap='nowrap'>
+          <Box h='100%' display='flex' style={{ alignItems: 'flex-start' }}>
+            <Paper withBorder p='md' bg='dark.6' shadow='md' mah='100%' display='flex'>
               <SettingsSection onDelete={onDelete} id={overlay.id} type={overlay.type} />
             </Paper>
-          </Grid.Col>
+          </Box>
 
-          <Grid.Col span={9}>
-            <Paper withBorder p='md' bg='dark.6' shadow='md'>
-              <PreviewSection overlay={previewOverlay} onTransformUpdate={handleTransformUpdate} />
-            </Paper>
-          </Grid.Col>
-        </Grid>
+          <PreviewSection overlay={previewOverlay} onTransformUpdate={handleTransformUpdate} />
+        </Group>
       </form>
     </FormProvider>
   );

@@ -11,3 +11,10 @@
     }
   }
 }
+
+.withMarks {
+  margin-bottom: 1.45rem;
+  /* .markWrapper {
+    ...classes.markWrapper,
+  } */
+}

@@ -8,14 +8,15 @@ interface PageContainerProps {
   title: string | ReactNode;
   className?: string;
   children: ReactNode;
+  fixedHeight?: boolean;
   classes?: {
     content?: string;
   };
 }
 
-const PageContainer: FC<PageContainerProps> = ({ title, children, className, classes }) => {
+const PageContainer: FC<PageContainerProps> = ({ title, children, className, classes, fixedHeight }) => {
   return (
-    <div className={clsx(className, styles.pageContainer)}>
+    <div className={clsx(className, styles.pageContainer, { [styles.fixedHeight]: fixedHeight })}>
       {!!title && (typeof title === 'string' ? <Title order={1}>{title}</Title> : title)}
       <div className={clsx(styles.pageContainerContent, classes?.content)}>{children}</div>
     </div>

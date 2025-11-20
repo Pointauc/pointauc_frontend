@@ -46,7 +46,7 @@ const OverlayCard: FC<OverlayCardProps> = ({ overlay, onEdit, onDelete }) => {
       padding='md'
       radius='md'
       onClick={handleCardClick}
-      style={{ cursor: 'pointer', height: '100%' }}
+      style={{ cursor: 'pointer' }}
     >
       <Stack gap='sm' style={{ height: '100%' }}>
         {/* Header with badge and delete button */}

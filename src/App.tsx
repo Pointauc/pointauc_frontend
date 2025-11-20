@@ -17,6 +17,8 @@ import { RootState } from '@reducers';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import { COLORS } from '@constants/color.constants';
 import { useIsMobile } from '@shared/lib/ui';
+import OverlaysPage from '@domains/overlays/ui/List/Page/OverlaysPage';
+import OverlayPage from '@domains/overlays/ui/Edit/Page/OverlayPage';
 
 import classes from './App.module.css';
 import { getIntegrationsValidity } from './api/userApi';
@@ -217,8 +219,8 @@ const App: React.FC = () => {
           <Route path={ROUTES.HELP} element={<HelpPage />} />
           {/* <Route path={ROUTES.STATISTIC} element={<Statistic />} /> */}
           <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
-          {/* <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} /> */}
-          {/* <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} /> */}
+          <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
+          <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
           <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         </Routes>
       </AppShell.Main>

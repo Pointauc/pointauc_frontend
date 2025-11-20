@@ -1,7 +1,19 @@
 import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm, FormProvider, useFormContext } from 'react-hook-form';
-import { Title, TextInput, Button, Group, Stack, Divider, Badge, Text, Tooltip, ActionIcon } from '@mantine/core';
+import {
+  Title,
+  TextInput,
+  Button,
+  Group,
+  Stack,
+  Divider,
+  Badge,
+  Text,
+  Tooltip,
+  ActionIcon,
+  ScrollArea,
+} from '@mantine/core';
 import { IconDeviceFloppy, IconTrash, IconEdit, IconArrowBackUp } from '@tabler/icons-react';
 
 import { Overlay } from '../../../model/overlay.types';
@@ -36,44 +48,46 @@ const SettingsSection: FC<SettingsSectionProps> = ({ onDelete, id, type }) => {
   };
 
   return (
-    <Stack gap='lg' h='100%' justify='space-between'>
-      <Stack gap='sm'>
-        <Group justify='space-between' align='center'>
-          <Title order={3}>{t('overlays.settings.title')}</Title>
-          <Group gap='xs'>
-            <Badge color={getBadgeColor(type)} variant='filled' size='md'>
-              {t(`overlays.overlayTypes.${type}`)}
-            </Badge>
-            <ActionIcon color='red' size='lg' onClick={onDelete}>
-              <IconTrash size={16} />
-            </ActionIcon>
-          </Group>
+    <Stack gap='lg' justify='space-between'>
+      <Group justify='space-between' align='center'>
+        <Title order={3}>{t('overlays.settings.title')}</Title>
+        <Group gap='xs'>
+          <Badge color={getBadgeColor(type)} variant='filled' size='md'>
+            {t(`overlays.overlayTypes.${type}`)}
+          </Badge>
+          <ActionIcon color='red' size='lg' onClick={onDelete}>
+            <IconTrash size={16} />
+          </ActionIcon>
         </Group>
+      </Group>
 
-        {/* Overlay Name */}
+      <ScrollArea type='auto' scrollbars='y' offsetScrollbars>
         <Stack gap='sm'>
-          <TextInput label={t('overlays.settings.overlayName')} {...register('name', { required: true })} />
+          {/* Overlay Name */}
+          <Stack gap='sm'>
+            <TextInput label={t('overlays.settings.overlayName')} {...register('name', { required: true })} />
+          </Stack>
+
+          {/* Overlay Links */}
+
+          <Stack gap='sm'>
+            <Title order={5} c='dark.2'>
+              {t('overlays.overlayLink')}
+            </Title>
+            <UrlControls overlayId={id} />
+          </Stack>
+
+          <Divider />
+
+          {/* Type-specific Settings */}
+          <Stack gap='sm'>
+            <Title order={5} c='dark.2'>
+              {t('overlays.displaySettings')}
+            </Title>
+            {type === 'Auction' ? <AuctionSettings /> : <WheelSettings />}
+          </Stack>
         </Stack>
-
-        {/* Overlay Links */}
-
-        <Stack gap='sm'>
-          <Title order={5} c='dark.2'>
-            {t('overlays.overlayLink')}
-          </Title>
-          <UrlControls overlayId={id} />
-        </Stack>
-
-        <Divider />
-
-        {/* Type-specific Settings */}
-        <Stack gap='sm'>
-          <Title order={5} c='dark.2'>
-            {t('overlays.displaySettings')}
-          </Title>
-          {type === 'Auction' ? <AuctionSettings /> : <WheelSettings />}
-        </Stack>
-      </Stack>
+      </ScrollArea>
 
       <Group grow>
         <Button

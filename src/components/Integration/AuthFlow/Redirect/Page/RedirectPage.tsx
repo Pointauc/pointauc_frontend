@@ -9,7 +9,6 @@ import withLoading from '@decorators/withLoading.ts';
 import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
 import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
 import ROUTES from '@constants/routes.constants.ts';
-import { getCookie } from '@utils/common.utils.ts';
 
 const RedirectPage = ({ integration }: Integration.LoginButtonProps<Integration.RedirectFlow>) => {
   const { t } = useTranslation();

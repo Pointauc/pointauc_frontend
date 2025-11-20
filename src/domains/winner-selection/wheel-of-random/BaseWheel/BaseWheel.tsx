@@ -121,8 +121,6 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     return 'initializeEffects' in wheelDrawer && 'updateEffects' in wheelDrawer;
   }, [wheelDrawer]);
 
-  const isInitialResize = useRef(true);
-
   useEffect(() => {
     normalizedRef.current = normalizedItems;
   }, [normalizedItems]);
@@ -180,14 +178,13 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     wheelContent.current.style.width = `${canvasSize}px`;
     onOptimalSizeChange?.(canvasSize);
 
-    if (!isInitialResize.current && wheelCanvas.current && selectorCanvas.current) {
+    if (wheelCanvas.current && selectorCanvas.current) {
       wheelDrawer.drawWheel({
         items: normalizedRef.current,
         wheelCanvas: wheelCanvas.current,
         pointerCanvas: selectorCanvas.current,
       });
     }
-    isInitialResize.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wheelDrawer]);
 

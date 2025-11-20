@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useTransition } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { Button, ActionIcon, Menu, Group, Text } from '@mantine/core';
+import { Button, ActionIcon, Menu, Group, Text, Flex } from '@mantine/core';
 import { IconChevronDown, IconX, IconSquareRoundedPlusFilled, IconCheck } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 
@@ -102,7 +102,7 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
 
   return (
     <div className={classes.settingsPresetFields}>
-      <Group>
+      <Flex gap={{ base: 'xs', sm: 'md' }} direction='row'>
         <OutlineInput
           className={classes.settingsPresetName}
           value={activePresetName}
@@ -111,7 +111,7 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
         />
         <Menu position='bottom-end' width={350} classNames={{ itemSection: classes.menuItemSection }}>
           <Menu.Target>
-            <Button variant='outline' rightSection={<IconChevronDown />}>
+            <Button variant='outline' rightSection={<IconChevronDown />} className={classes.presetButton}>
               {t('settings.presets.switchPreset')}
             </Button>
           </Menu.Target>
@@ -144,7 +144,7 @@ const SettingsPresetField = ({ onChange, allSettings }: Props) => {
             ))}
           </Menu.Dropdown>
         </Menu>
-      </Group>
+      </Flex>
     </div>
   );
 };

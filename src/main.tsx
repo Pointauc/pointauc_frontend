@@ -32,6 +32,7 @@ import SaveLoadService from '@services/SaveLoadService.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import { sortSlots } from '@utils/common.utils.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
+import { OverlayViewPage } from '@domains/overlays/index.ts';
 
 import App from './App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
@@ -114,7 +115,7 @@ const router = createBrowserRouter([
   { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
   { path: ROUTES.AUKUS.REDIRECT, element: <AukusRedirectPage /> },
-  // { path: '/overlays/view/:id', element: <OverlayViewPage /> },
+  { path: '/overlays/view/:id', element: <OverlayViewPage /> },
   ...redirectRoutes,
 ]);
 
