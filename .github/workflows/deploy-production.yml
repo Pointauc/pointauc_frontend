@@ -26,6 +26,9 @@ jobs:
       - name: Build application
         run: yarn build
 
+      - name: Build documentation
+        run: yarn docs:build
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -33,12 +36,19 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to production server
+      - name: Deploy application to production server
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
             dist/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/pointauc.com/html/
+
+      - name: Deploy documentation to production server
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
+            docs/.vitepress/dist/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/pointauc.com/html/docs/
 
       - name: Cleanup
         if: always()

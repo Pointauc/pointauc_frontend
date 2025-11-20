@@ -1,6 +1,9 @@
-name: Deploy to Staging
+name: Build and Deploy to Staging
 
 on:
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       branch:
@@ -9,8 +12,8 @@ on:
         default: ''
 
 jobs:
-  deploy:
-    name: Build and Deploy to Staging
+  build:
+    name: Build Application and Documentation
     runs-on: ubuntu-latest
 
     steps:
@@ -31,28 +34,52 @@ jobs:
       - name: Build application
         run: yarn build
 
+      - name: Build documentation
+        run: yarn docs:build
+
+      - name: Build Status Check
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "### ✅ Build Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The application and documentation built successfully." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To deploy this PR to staging, go to the Actions tab and manually trigger the workflow." >> $GITHUB_STEP_SUMMARY
+
       - name: Setup SSH
+        if: github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to staging server
+      - name: Deploy application to staging server
+        if: github.event_name == 'workflow_dispatch'
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
             dist/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/test.pointauc.com/html/
 
+      - name: Deploy documentation to staging server
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
+            docs/.vitepress/dist/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/test.pointauc.com/html/docs/
+
       - name: Cleanup
-        if: always()
+        if: always() && github.event_name == 'workflow_dispatch'
         run: rm -f ~/.ssh/deploy_key
 
       - name: Deployment Summary
+        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "### Staging Deployment Complete! 🚀" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** ${{ github.event.inputs.branch || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Deployed to:** test.pointauc.com" >> $GITHUB_STEP_SUMMARY
+          echo "- **App URL:** test.pointauc.com" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docs URL:** test.pointauc.com/docs" >> $GITHUB_STEP_SUMMARY
