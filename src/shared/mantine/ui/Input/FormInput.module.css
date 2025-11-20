@@ -1,0 +1,12 @@
+.root {
+  display: flex;
+  align-items: center;
+}
+
+.input.sm {
+  width: 80px;
+}
+
+.label {
+  padding-right: var(--mantine-spacing-md);
+}

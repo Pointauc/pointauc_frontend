@@ -20,6 +20,7 @@ interface SubscriptionStoreState {
   da: SubscribeState;
   donatePay: SubscribeState;
   tourniquet: SubscribeState;
+  ihaq: SubscribeState;
 }
 
 const initialSubscribeState = {
@@ -32,6 +33,7 @@ export const initialState: SubscriptionStoreState = {
   da: initialSubscribeState,
   donatePay: initialSubscribeState,
   tourniquet: initialSubscribeState,
+  ihaq: initialSubscribeState,
 };
 
 interface SetSubscribeProps {
@@ -63,6 +65,9 @@ const subscriptionSlice = createSlice({
       state.da = { ...state.da, ...action.payload };
       state.donatePay = { ...state.donatePay, ...action.payload };
     },
+    setIhaqSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
+      state.ihaq = { ...state.ihaq, ...action.payload };
+    },
   },
 });
 
@@ -73,6 +78,7 @@ export const {
   setTwitchSubscribeState,
   setDonatePaySubscribeState,
   setTourniquetSubscribeState,
+  setIhaqSubscribeState,
 } = subscriptionSlice.actions;
 
 export const validateIntegrations = async (

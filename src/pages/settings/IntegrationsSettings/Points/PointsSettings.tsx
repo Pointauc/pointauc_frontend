@@ -1,21 +1,20 @@
-import React, { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button, FormGroup, Grid } from '@mui/material';
+import { Button, Group, Stack } from '@mantine/core';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
+import { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import SettingsGroup from '@pages/settings/SettingsGroup/SettingsGroup.tsx';
-import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import { closeTwitchRewards } from '@api/twitchApi.ts';
-import FormSwitch from '@components/Form/FormSwitch/FormSwitch.tsx';
+import twitch from '@components/Integration/Twitch';
+import { integrationUtils } from '@components/Integration/helpers.ts';
+import { integrations } from '@components/Integration/integrations.ts';
+import SettingsGroup from '@domains/user-settings/ui/SettingsGroup/SettingsGroup';
+import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
 import RewardPresetsForm from '@pages/settings/IntegrationsSettings/Points/TwitchIntegration/RewardPresetsForm';
 import { RootState } from '@reducers';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import twitch from '@components/Integration/Twitch';
-import { integrations } from '@components/Integration/integrations.ts';
-import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
-import '@pages/settings/IntegrationsSettings/Points/PointsSettings.scss';
+import SettingLabel from '@domains/user-settings/ui/SettingLabel';
+import FormSwitch from '@shared/mantine/ui/Switch/FormSwitch';
 
 const PointsSettings = () => {
   const { t } = useTranslation();
@@ -34,47 +33,47 @@ const PointsSettings = () => {
   );
 
   return (
-    <SettingsGroup className='points-settings' title={t('settings.points.points')}>
+    <SettingsGroup title={t('settings.points.points')}>
       {unavailable.map((integration) => (
         <integration.authFlow.loginComponent key={integration.id} integration={integration} />
       ))}
       {available.length > 0 && (
-        <FormGroup className='auc-settings-list'>
-          <Grid style={{ marginBottom: 10 }} container justifyContent='space-between'>
-            <Grid>
-              <LoadingButton
-                isLoading={loading}
-                variant='outlined'
-                color='primary'
-                className={classNames('open-rewards-button', { close: actual })}
+        <Stack gap='sm'>
+          <Group justify='space-between'>
+            <Group gap='sm'>
+              <Button
+                loading={loading}
+                variant='outline'
+                size='sm'
+                color={actual ? 'white' : undefined}
                 onClick={toggleSubscribe}
               >
                 {actual ? t('settings.twitch.closeRewards') : t('settings.twitch.openRewards')}
-              </LoadingButton>
-              <Button
-                variant='outlined'
-                color='secondary'
-                style={{ width: 175, marginLeft: 20 }}
-                onClick={closeTwitchRewards}
-              >
+              </Button>
+              <Button variant='outline' color='red' size='sm' onClick={closeTwitchRewards}>
                 {t('settings.twitch.deleteRewards')}
               </Button>
-            </Grid>
+            </Group>
             <RevokeIntegrationButton revoke={available[0].authFlow.revoke} />
-          </Grid>
-          <FormGroup row className='auc-settings-row'>
-            <FormSwitch name='isRefundAvailable' control={control} label={t('settings.twitch.returnCanceledBids')} />
-          </FormGroup>
-          <FormGroup row className='auc-settings-row'>
-            <FormSwitch
-              name='dynamicRewards'
-              control={control}
-              label={t('settings.twitch.bindRewardsToTimer')}
-              hint={t('settings.twitch.bindRewardsToTimerDesc')}
-            />
-          </FormGroup>
+          </Group>
+          <FormSwitch
+            name='isRefundAvailable'
+            control={control}
+            label={<SettingLabel size='lg' text={t('settings.twitch.returnCanceledBids')} />}
+          />
+          <FormSwitch
+            name='dynamicRewards'
+            control={control}
+            label={
+              <SettingLabel
+                size='lg'
+                text={t('settings.twitch.bindRewardsToTimer')}
+                hint={t('settings.twitch.bindRewardsToTimerDesc')}
+              />
+            }
+          />
           <RewardPresetsForm />
-        </FormGroup>
+        </Stack>
       )}
     </SettingsGroup>
   );

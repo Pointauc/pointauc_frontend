@@ -9,5 +9,5 @@
 }
 
 :global(.custom-background) .input {
-  background-color: var(--mantine-color-darkOpaque-7);
+  background-color: var(--mantine-color-darkTransparent-7);
 }

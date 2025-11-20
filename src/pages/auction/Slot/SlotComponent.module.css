@@ -37,5 +37,5 @@
 
 :global(.custom-background) .input:hover,
 :global(.custom-background) .input:focus {
-  background-color: var(--mantine-color-darkOpaque-8);
+  background-color: var(--mantine-color-darkTransparent-8);
 }

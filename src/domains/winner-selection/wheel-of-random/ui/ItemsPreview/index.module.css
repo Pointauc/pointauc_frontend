@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  flex-grow: 15;
+  flex-basis: 0;
+  gap: 8px;
+}
+
+.collapsed {
+  /* flex-grow: 0; */
+}
+
+.collapsed .collapseButton {
+  transform: scale(-1, 1);
+}
+
+.itemsCentered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  & > div {
+    position: relative;
+  }
+}
+
+.expandedContainer {
+  min-width: calc(18rem * var(--mantine-scale));
+  width: 100%;
+  flex: 1 1 auto;
+}

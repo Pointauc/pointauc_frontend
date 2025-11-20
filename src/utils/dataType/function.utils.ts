@@ -1,13 +1,13 @@
-// const debounce = <T extends Function>(callback: T, duration: number) => {
-//   let timeout;
-//
-//   return (...args: any) => {
-//     cle
-//   }
-// };
+import { isEqual } from 'lodash';
 
-import { RefObject, RefAttributes } from 'react';
-
+/**
+ * Returns a function that calls the callback after the duration has passed.
+ * If the function is called again before the duration has passed, the callback is postponed.
+ * After the duration has passed, the callback is called with the last arguments.
+ * @param callback - The function to call.
+ * @param duration - The duration in milliseconds.
+ * @returns A function that calls the callback after the duration has passed.
+ */
 export const timedFunction = <T extends (...args: any) => any>(
   callback: T,
   duration: number,
@@ -33,6 +33,47 @@ export const timedFunction = <T extends (...args: any) => any>(
   };
 
   return callable;
+};
+
+interface SkipSameValueCallsOptions {
+  compareNested?: boolean;
+}
+
+interface SkipSameValueCallsResult<TParams extends any[]> {
+  call: (...args: TParams) => void;
+  callThrough: (...args: TParams) => void;
+}
+
+/**
+ * Returns a function that calls the callback only if the arguments are different from the last call.
+ * @param callback - The function to call.
+ * @param {Object} options - Configuration options:
+ * - `compareNested` - Whether to compare nested objects using lodash isEqual or simple equality.
+ * @returns {Object} An object with two functions:
+ * - `call` - Calls the callback only if the arguments are different from the last call.
+ * - `callThrough` - Calls the callback with the arguments regardless of whether they are the same as the last call.
+ */
+export const skipSameValueCalls = <TParams extends any[]>(
+  callback: (...args: TParams) => void,
+  options?: SkipSameValueCallsOptions,
+): SkipSameValueCallsResult<TParams> => {
+  let lastArgs: TParams | null = null;
+  const compareFn = options?.compareNested ? isEqual : (a: any, b: any) => a === b;
+
+  const callThrough = (...args: TParams): void => {
+    lastArgs = args;
+    callback(...args);
+  };
+
+  const call = (...args: TParams): void => {
+    if (lastArgs && compareFn(lastArgs, args)) {
+      return;
+    }
+    lastArgs = args;
+    callback(...args);
+  };
+
+  return { call, callThrough };
 };
 
 export enum Ease {

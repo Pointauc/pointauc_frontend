@@ -1,9 +1,10 @@
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, OutlinedInput, Typography } from '@mui/material';
+import { OutlinedInput, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@mantine/core';
 
 import { RootState } from '@reducers';
 import { addSlot } from '@reducers/Slots/Slots.ts';
@@ -104,13 +105,14 @@ const NewSlotForm = () => {
 
       <Button
         className='add-slot-button'
-        variant='contained'
-        color='primary'
-        startIcon={<AddIcon />}
+        variant='filled'
+        color='primary.3'
+        leftSection={<AddIcon />}
+        autoContrast
+        rightSection={enterIconVisible && <span> &#9166;</span>}
         onClick={createNewSlot}
       >
         {t('auc.addPosition')}
-        {enterIconVisible && <span> &#9166;</span>}
       </Button>
     </div>
   );

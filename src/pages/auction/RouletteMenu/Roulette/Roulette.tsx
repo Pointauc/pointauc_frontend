@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { WheelItem } from '@models/wheel.model.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { RootState } from '@reducers';
-import RandomWheel, { SettingElements } from '@components/RandomWheel/RandomWheel';
+import RandomWheel, { SettingElements } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import array from '@utils/dataType/array.ts';
 
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
@@ -69,7 +69,7 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
   return (
     <div className='roulette'>
       <div className='roulette-wheel'>
-        <RandomWheel items={rawItems} isShuffle={false} onWin={handleWin} elements={wheelElements} initialSpinTime={5}>
+        <RandomWheel items={rawItems} onWin={handleWin} elements={wheelElements} initialSpinTime={5}>
           {settings.luckyWheelSelectBet && selectedPreset && (
             <div className='roulette-preset-wrapper'>
               <Typography>{t('auc.casino.yourLot')}</Typography>

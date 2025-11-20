@@ -1,0 +1,16 @@
+.wheelWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row !important;
+  align-items: stretch;
+  gap: var(--mantine-spacing-xl);
+}
+
+.itemsPreview {
+  width: 600px;
+  max-width: 600px;
+  height: 100%;
+}

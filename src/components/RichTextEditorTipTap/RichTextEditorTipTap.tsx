@@ -9,6 +9,7 @@ import './RichTextEditorTipTap.scss';
 interface Props {
   onChange: (content: JSONContent) => void;
   initialValue: JSONContent;
+  showToolbar?: boolean;
 }
 
 const ValueChangeObserver = ({ initialValue }: Pick<Props, 'initialValue'>): ReactNode => {
@@ -20,7 +21,7 @@ const ValueChangeObserver = ({ initialValue }: Pick<Props, 'initialValue'>): Rea
   return null;
 };
 
-const RichTextEditorTipTap = ({ onChange, initialValue }: Props) => {
+const RichTextEditorTipTap = ({ onChange, initialValue, showToolbar = true }: Props) => {
   const {
     data: { background },
   } = useContext(RulesSettingsContext);
@@ -34,7 +35,11 @@ const RichTextEditorTipTap = ({ onChange, initialValue }: Props) => {
         className='rich-editor-tiptap-background'
         style={{ backgroundColor: background.color, opacity: background.opacity }}
       />
-      <EditorProvider onUpdate={handleUpdate} slotBefore={<Toolbar />} extensions={editorUtils.extensions}>
+      <EditorProvider
+        onUpdate={handleUpdate}
+        slotBefore={showToolbar ? <Toolbar /> : undefined}
+        extensions={editorUtils.extensions}
+      >
         <ValueChangeObserver initialValue={initialValue} />
       </EditorProvider>
     </div>

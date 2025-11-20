@@ -4,7 +4,7 @@ import { mergeAuthData } from '@reducers/User/User.ts';
 import RedirectLoginButton from '@components/Integration/AuthFlow/Redirect/LoginButton/LoginButton.tsx';
 import { authenticateTourniquet } from '@api/tourniquetApi.ts';
 import { QUERIES } from '@constants/common.constants.ts';
-import { buildBackendFlow } from '@components/Integration/PubsubFlow/Backend/backendFlow.ts';
+import { buildHeadlessFlow } from '@components/Integration/PubsubFlow/Headless/headlessFlow.ts';
 import { sendTourniquetSubscribedState } from '@reducers/Subscription/Subscription.ts';
 
 import { store } from '../../../main.tsx';
@@ -47,7 +47,7 @@ const tourniquet: Integration.Config = {
   id,
   type: 'donate',
   authFlow,
-  pubsubFlow: buildBackendFlow({
+  pubsubFlow: buildHeadlessFlow({
     sendSubscribeState: (active) => store.dispatch(sendTourniquetSubscribedState(active) as any),
   }),
   branding: {

@@ -9,6 +9,7 @@ import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { PURCHASE_SORT_OPTIONS } from '@constants/purchase.constants.ts';
 import donatePay from '@components/Integration/DonatePay';
 import da from '@components/Integration/DA';
+import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
 
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 import DragBidContext from '../DragBidContext/DragBidContext';
@@ -57,10 +58,12 @@ const PurchaseList: React.FC = () => {
     );
 
     const daUnsub = da.pubsubFlow.events?.on('bid', handleRedemption);
+    const ihaqUnsub = ihaq.pubsubFlow.events?.on('bid', handleRedemption);
 
     return () => {
       donatePayUnsub();
       daUnsub();
+      ihaqUnsub();
       tourniquetSocket?.off('Bid', handleTourniquetBid);
     };
   }, [handleRedemption, twitchSocket, globalSocket, tourniquetSocket]);

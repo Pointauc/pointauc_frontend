@@ -1,0 +1,88 @@
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(var(--vw, 1vw) * 100);
+  height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.message {
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  max-width: calc(var(--vw, 1vw) * 80);
+  line-height: 1.4;
+
+  /* Text shadow for better readability */
+  text-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.8),
+    -1px -1px 2px rgba(0, 0, 0, 0.6),
+    1px -1px 2px rgba(0, 0, 0, 0.6),
+    -1px 1px 2px rgba(0, 0, 0, 0.6);
+
+  /* White outline using box-shadow */
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.3),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.info {
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.loading {
+  color: rgba(173, 216, 230, 0.9);
+  border: 1px solid rgba(173, 216, 230, 0.3);
+}
+
+.error {
+  color: rgba(255, 182, 193, 0.9);
+  border: 1px solid rgba(255, 182, 193, 0.3);
+}
+
+/* Animation for loading state */
+.loading::after {
+  content: '';
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.5em;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive text size */
+@media (max-width: 768px) {
+  .message {
+    font-size: 2rem;
+    padding: 1.5rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .message {
+    font-size: 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+}

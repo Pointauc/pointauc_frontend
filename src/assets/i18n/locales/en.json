@@ -82,6 +82,9 @@
     },
     "tourniquet": {
       "name": "Tourniquet"
+    },
+    "ihaq": {
+      "name": "IHAQ Donate"
     }
   },
   "textEditor": {
@@ -114,6 +117,9 @@
       "yourBid": "Your bid in the auction:",
       "yourLot": "Your Lot:"
     },
+    "clearAllConfirmation": "Delete {{count}} lots?",
+    "clearAllConfirmationDetails": "This action will clear all lots and bids.",
+    "noLotsToDelete": "No lots to delete",
     "clearAll": "Clear All",
     "compactView": "Compact View",
     "autoScroll": "Autoscroll",
@@ -157,11 +163,15 @@
     }
   },
   "common": {
+    "copy": "Copy",
+    "copied": "Copied",
     "accountProgress": "Account loading...",
     "apply": "Apply",
     "authProgress": "Authorization...",
     "cancel": "Cancel",
     "reset": "Reset",
+    "revert": "Revert",
+    "save": "Save",
     "connectDA": "Donation Alerts",
     "connectDonatePay": "Donate Pay",
     "connectTwitch": "Twitch",
@@ -179,12 +189,14 @@
     "from": "from",
     "to": "to",
     "copyLink": "Copy link",
-    "linkCopied": "Link copied",
+    "linkCopied": "Link copied to clipboard",
     "copyFailed": "Copy failed",
     "needHelp": "Need help?",
     "externalLinkWarning": "⚠️ External Link Warning",
     "externalLinkDisclaimer": "Please be careful when opening unknown links. Only proceed if you trust this source.",
-    "openLink": "Open Link"
+    "openLink": "Open Link",
+    "error": "Error",
+    "noChanges": "Start editing the form to save changes"
   },
   "history": {
     "addedTo": "Added to",
@@ -230,10 +242,81 @@
       "wheel": {
         "title": "Wheel of Random"
       },
+      "overlays": {
+        "title": "Overlays"
+      },
       "logout": {
         "title": "Exit Account"
       }
     }
+  },
+  "overlays": {
+    "title": "Overlays",
+    "newOverlay": "New Overlay",
+    "copyLink": "Copy Link",
+    "openPage": "Open Page",
+    "clickToEdit": "Click to edit",
+    "chooseYourOverlay": "Choose your overlay",
+    "sections": "Sections",
+    "createSuccess": "Overlay created successfully",
+    "createSuccessMessage": "Overlay \"{{name}}\" has been created and you've been redirected to the edit page",
+    "createError": "Failed to create overlay",
+    "updateSuccess": "Overlay updated successfully",
+    "updateError": "Failed to update overlay",
+    "deleteSuccess": "Overlay deleted successfully",
+    "deleteError": "Failed to delete overlay",
+    "overlayLink": "OBS Link",
+    "displaySettings": "Display Settings",
+    "overlayTypes": {
+      "Auction": "Auction",
+      "Wheel": "Wheel"
+    },
+    "auction": {
+      "description": "Displays the current auction state.",
+      "sections": {
+        "bidTable": "Bid table with real-time updates",
+        "timer": "Countdown timer with customizable settings",
+        "rules": "Customizable rules display"
+      }
+    },
+    "wheel": {
+      "description": "Spinning wheel overlay for randomly selecting winners.",
+      "sections": {
+        "wheelDisplay": "Animated spinning wheel",
+        "participants": "Live participant list",
+        "results": "Winner announcement display (TBD)"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "overlayName": "Overlay Name",
+      "showRules": "Show Rules",
+      "showTable": "Show Table",
+      "showTimer": "Show Timer",
+      "showWheel": "Show Wheel",
+      "showParticipants": "Show Participants",
+      "autoscroll": "Autoscroll",
+      "autoscrollSpeed": "Autoscroll Speed",
+      "backgroundTransparency": "Background Transparency",
+      "backgroundTransparencyDescription": "Adjust the background transparency (0 = opaque, 100 = transparent)",
+      "backgroundTransparencyDescriptionWheel": "Adjust the background transparency (0 = transparent, 100 = opaque)",
+      "speedSlow": "Slow",
+      "speedMedium": "Medium",
+      "speedFast": "Fast"
+    },
+    "canvasResolution": {
+      "label": "Canvas Resolution",
+      "tooltip": "This is your <1>Base (Canvas) Resolution</1> in OBS. For better accuracy use the exact same values for the <1>width</1> and <1>height</1> of your browser source."
+    },
+    "preview": {
+      "title": "Preview",
+      "comingSoon": "Preview Coming Soon",
+      "description": "This section will show a live preview of how your {{type}} overlay will appear on your stream with the current settings.",
+      "urlLabel": "URL: /overlay/{{pathname}}"
+    },
+    "loading": "Loading...",
+    "backToOverlays": "Back to Overlays",
+    "overlayNotFound": "Overlay not found"
   },
   "save": {
     "costColumnIndex": "Cost column index",
@@ -252,8 +335,9 @@
       "nameFieldLabel": "Active settings template",
       "defaultTitle": "Template 1",
       "newTitle": "New template",
-      "create": "Create template",
-      "created": "Template created"
+      "create": "Create New",
+      "created": "Template created",
+      "switchPreset": "Switch preset"
     },
     "groups": {
       "auc": "Auction",
@@ -278,6 +362,7 @@
         "none": "Never"
       },
       "bidNameStrategyLabel": "What to use as a bid name",
+      "bidNameStrategyHint": "This value will be used as the main text for new bids.<ul><li><b>{{messageLabel}}</b> - for auctions where the viewer specifies an arbitrary outcome</li><li><b>{{usernameLabel}}</b> - convenient in an auction on the victory of a specific person</li></ul>",
       "bidNameStrategy": {
         "message": "Message text",
         "username": "Username"
@@ -310,8 +395,8 @@
     },
     "integrations": "Integrations",
     "luckyWheel": {
-      "desc": "Spin the wheel and get a chance to multiply the bid",
-      "groupTitle": "Lucky Wheel",
+      "desc": "For each bid you can spin the wheel and get a chance to multiply the bid or lose it",
+      "groupTitle": "Lucky bid",
       "luckyWheel": "Wheel for bids",
       "selectBet": "Viewer selects a lot"
     },
@@ -344,7 +429,8 @@
       "totalTimeHint": "Time is only counted when the timer is running. The total time does not grow while the timer is paused.",
 
       "addOnCondition": "Add time on conditions",
-      "notOnCondition": "DO NOT Add time on conditions"
+      "notOnCondition": "DO NOT Add time on conditions",
+      "maxAdditionalTimeHint": "Example when the field value is <b>5 min</b> and leader change happens: <u><li>Time left 10 min - add extra time</li><li>Time left 2 min - do not add</li></u>"
     },
     "token": {
       "copied": "Copied",
@@ -354,7 +440,9 @@
       "show": "Show Token",
       "token": "Personal Token",
       "tokenUpdated": "Token Updated",
-      "update": "Generate New"
+      "update": "Generate New",
+      "modalTitle": "Your API Token",
+      "userIdRequired": "You need to be logged in to generate a token. Use any service below to create an account."
     },
     "twitch": {
       "addReward": "Add Reward",
@@ -396,7 +484,10 @@
       "submitDisabled": "Enter participants"
     },
     "dropout": {
-      "helpNotification": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>",
+      "helpNotification": {
+        "title": "About the Dropout",
+        "message": "You can read more about the <2>dropout wheel</2> in our <1>user manual (dropout)</1>"
+      },
       "explanation": {
         "button": "how does it work?"
       },
@@ -408,7 +499,10 @@
       }
     },
     "duel": {
-      "helpNotification": "You can read more about the <2>battle royal</2> mode in our <1>user manual (battle-royal)</1>",
+      "helpNotification": {
+        "title": "About the Battle Royal",
+        "message": "You can read more about the <2>battle royal</2> mode in our <1>user manual (battle-royal)</1>"
+      },
       "explanation": {
         "button": "how does it work?"
       }
@@ -420,6 +514,12 @@
     "addLotsToAuc": "Save lots in auction",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
     "deleteLot": "Delete Lot",
+    "deleteLotConfirmationModal": {
+      "title": "Delete Lot?",
+      "description": "This action will delete the lot not only from the wheel but also from the auction itself.",
+      "confirm": "Delete",
+      "dontShowAgain": "Don't show again"
+    },
     "returnPointsToTheRest": "Return points to the others",
     "dividing": "Dividing",
     "dividingDesc": "Divides expensive lots into several positions.",
@@ -438,7 +538,6 @@
     },
     "importToWheel": "Import participants",
     "loadCustomMessage": "Upload your image",
-    "lotDeleteWarning": "This action will delete the lot not only from the wheel but also from the auction itself.",
     "lotWasDeleted": "lot was deleted",
     "nesting": "Nesting",
     "nestingDesc": "Groups cheap lots to reduce the number of spins",
@@ -459,6 +558,14 @@
     "wheel": "Wheel",
     "winner": "Winner",
     "randomSpin": "Random spin time",
-    "helpNotification": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>"
+    "helpNotification": {
+      "title": "About the Wheel",
+      "message": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>"
+    },
+    "style": {
+      "label": "Wheel Style",
+      "default": "Default",
+      "genshinImpact": "???"
+    }
   }
 }

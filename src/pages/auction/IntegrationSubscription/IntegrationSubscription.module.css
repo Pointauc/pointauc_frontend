@@ -1,0 +1,13 @@
+.switchLabelWrapper {
+  flex-grow: 1;
+}
+
+.switchBody {
+  width: 100%;
+}
+
+.switchRoot:not([data-checked]) {
+  .switchTrack {
+    background-color: var(--mantine-color-dark-6);
+  }
+}

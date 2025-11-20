@@ -1,18 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import './AucActions.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Button,
-  ButtonGroup,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  IconButton,
-  Link,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Tooltip, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -26,6 +15,7 @@ import PestControlIcon from '@mui/icons-material/PestControl';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { Button, Text } from '@mantine/core';
 
 import { LINE_BREAK } from '@constants/common.constants.ts';
 import { loadFile } from '@utils/common.utils.ts';
@@ -73,7 +63,7 @@ const AucActions: React.FC = () => {
           <Tooltip title={t('auc.showRules')}>
             <Grid container gap={1} alignItems='center' flexWrap='nowrap'>
               <VerticalSplitIcon />
-              <b>{t('auc.rules')}</b>
+              <Text fw={500}>{t('auc.rules')}</Text>
             </Grid>
           </Tooltip>
         ),
@@ -145,39 +135,63 @@ const AucActions: React.FC = () => {
       <Grid>
         <Grid container spacing={4}>
           <Grid>
-            <ButtonGroup size='large' className='actions-group'>
+            <Button.Group className='actions-group'>
               <Tooltip title='GitHub'>
-                <Link target='_blank' rel='noopener noreferrer' href='https://github.com/Pointauc/pointauc_frontend'>
-                  <Button startIcon={<GitHubIcon />} />
-                </Link>
+                <Button
+                  size='sm'
+                  component={Link}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='https://github.com/Pointauc/pointauc_frontend'
+                  variant='outline'
+                  color='primary.3'
+                >
+                  <GitHubIcon />
+                </Button>
               </Tooltip>
               <Tooltip title={t('auc.supportCreator')}>
-                <Link target='_blank' rel='noopener noreferrer' href='https://www.donationalerts.com/r/kozjar'>
-                  <Button startIcon={<AttachMoneyIcon />} />
-                </Link>
+                <Button
+                  size='sm'
+                  component={Link}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='https://www.donationalerts.com/r/kozjar'
+                  variant='outline'
+                  color='primary.3'
+                >
+                  <AttachMoneyIcon />
+                </Button>
               </Tooltip>
-            </ButtonGroup>
+            </Button.Group>
           </Grid>
 
           <Grid>
-            <ButtonGroup size='large' className='actions-group'>
+            <Button.Group>
               <Tooltip title={t('auc.downloadMarbles')}>
-                <Button onClick={downloadMarbles} startIcon={<DownloadIcon />} />
+                <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary.3'>
+                  <DownloadIcon />
+                </Button>
               </Tooltip>
               <Tooltip title={t('auc.saveLoad')}>
-                <Button onClick={handleRestoreOpen} startIcon={<SaveIcon />} />
+                <Button onClick={handleRestoreOpen} size='sm' variant='outline' color='primary.3'>
+                  <SaveIcon />
+                </Button>
               </Tooltip>
               <Tooltip title={t('auc.sendBugReport')}>
-                <Link
+                <Button
+                  component={Link}
                   target='_blank'
                   rel='noopener noreferrer'
                   href='https://docs.google.com/forms/d/e/1FAIpQLSe9b82ColWOLyomlrqCGXXjFBWhwL7opZycPYz5v1ovwVdbjA/viewform?usp=sf_link'
+                  size='sm'
+                  variant='outline'
+                  color='primary.3'
                 >
-                  <Button startIcon={<PestControlIcon />} />
-                </Link>
+                  <PestControlIcon />
+                </Button>
               </Tooltip>
               <DeleteAllLots />
-            </ButtonGroup>
+            </Button.Group>
           </Grid>
 
           <Grid>

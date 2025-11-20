@@ -17,6 +17,10 @@ export interface UpdateData {
 
 const updates: UpdateData[] = [
   {
+    date: '2025-08-23T15:20:00.754Z',
+    newFeatures: [<div>Добавлен новый стиль колеса!</div>],
+  },
+  {
     date: '2025-07-27T18:05:00.101Z',
     improvements: [
       <div>

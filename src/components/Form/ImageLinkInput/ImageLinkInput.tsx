@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Button, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Group, Modal, Stack, Text } from '@mantine/core';
+import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import ImageIcon from '@mui/icons-material/Image';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
@@ -99,17 +98,15 @@ const ImageLinkInput: React.FC<ImageLinkInputProps> = ({
           <Text size='xl' ta='center'>
             {t('common.or')}
           </Text>
-          <TextField
+          <TextInput
             disabled={isUploading}
             onPaste={handleLinkPaste}
             placeholder={t('common.insertImageLink')}
-            error={!isCorrectUrl}
-            helperText={!isCorrectUrl ? t('common.incorrectLink') : undefined}
-            variant='outlined'
+            error={isCorrectUrl ? undefined : t('common.incorrectLink')}
           />
         </Stack>
       </Modal>
-      <Button variant='outlined' color='primary' onClick={toggleDialog} className={buttonClass}>
+      <Button variant='outline' onClick={toggleDialog} className={buttonClass}>
         {buttonTitle}
       </Button>
     </>

@@ -207,5 +207,69 @@
     "addedTo": "Дададзены да",
     "status": "Статус",
     "returnRedemptions": "Павяртаць абраныя ўзнагароды"
+  },
+  "overlays": {
+    "title": "Аверлеі",
+    "newOverlay": "Новы аверлей",
+    "copyLink": "Капіяваць спасылку",
+    "openPage": "Адкрыць старонку",
+    "clickToEdit": "Націсьніце для рэдагаваньня",
+    "chooseYourOverlay": "Выберыце ваш аверлей",
+    "sections": "Сэкцыі",
+    "createSuccess": "Аверлей пасьпяхова створаны",
+    "createSuccessMessage": "Аверлей \"{{name}}\" быў створаны і вы перанакіраваны на старонку рэдагаваньня",
+    "createError": "Не атрымалася стварыць аверлей",
+    "updateSuccess": "Аверлей пасьпяхова абноўлены",
+    "updateError": "Не атрымалася абнавіць аверлей",
+    "deleteSuccess": "Аверлей пасьпяхова выдалены",
+    "deleteError": "Не атрымалася выдаліць аверлей",
+    "overlayLink": "Спасылка для OBS",
+    "displaySettings": "Наладкі адлюстраваньня",
+    "overlayTypes": {
+      "Auction": "Аўкцыён",
+      "Wheel": "Кола"
+    },
+    "auction": {
+      "description": "Адлюстроўвае бягучы стан аўкцыёну.",
+      "sections": {
+        "bidTable": "Табліца стаўкі з рэальным часам",
+        "timer": "Таймэр з наладкамі",
+        "rules": "Наладкі правілаў адлюстраваньня"
+      }
+    },
+    "wheel": {
+      "description": "Аверлей колы ўдачы.",
+      "sections": {
+        "wheelDisplay": "Анімаванае кола што круціцца",
+        "participants": "Сьпіс удзельнікаў у рэальным часе",
+        "results": "Адлюстраваньне вынікаў (TBD)"
+      }
+    },
+    "settings": {
+      "title": "Наладкі",
+      "overlayName": "Назва аверлея",
+      "showRules": "Паказаць правілы",
+      "showTable": "Паказаць табліцу",
+      "showTimer": "Паказаць таймэр",
+      "showWheel": "Паказаць кола",
+      "showParticipants": "Паказаць удзельнікаў",
+      "autoscroll": "Аўтапракрутка",
+      "autoscrollSpeed": "Хуткасьць аўтапракруткі",
+      "backgroundTransparency": "Празрыстасьць фону",
+      "backgroundTransparencyDescription": "Наладзьце празрыстасьць фону (0 = непразрысты, 100 = празрысты)",
+      "backgroundTransparencyDescriptionWheel": "Наладзьце празрыстасьць фону (0 = празрысты, 100 = непразрысты)",
+      "speedSlow": "Павольна",
+      "speedMedium": "Сярэдне",
+      "speedFast": "Хутка"
+    },
+    "preview": {
+      "title": "Папярэдні прагляд",
+      "comingSoon": "Папярэдні прагляд хутка зьявіцца",
+      "description": "У гэтым раздзеле будзе паказаны жывы папярэдні прагляд таго, як ваш {{type}} аверлей будзе выглядаць на стрыме з бягучымі наладкамі.",
+      "urlLabel": "URL: /overlay/{{pathname}}"
+    },
+    "loading": "Загрузка...",
+    "backToOverlays": "Назад да аверлеяў",
+    "overlayNotFound": "Аверлей не знойдзены"
   }
 }

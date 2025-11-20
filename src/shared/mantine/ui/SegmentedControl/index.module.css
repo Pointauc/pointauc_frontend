@@ -1,0 +1,9 @@
+.root {
+  border: 1px solid var(--mantine-color-dark-5);
+}
+
+.control[data-active='true'] {
+  .label[data-disabled='true'] {
+    color: var(--mantine-color-blue-4);
+  }
+}

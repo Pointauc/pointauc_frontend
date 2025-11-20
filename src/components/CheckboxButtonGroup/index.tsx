@@ -1,9 +1,9 @@
 import React, { Key, useCallback } from 'react';
-import { Button, ButtonGroup, ButtonGroupProps } from '@mui/material';
+import { Button } from '@mantine/core';
 
 import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 
-interface CheckboxButtonGroupProps<T = Key> extends ButtonGroupProps {
+interface CheckboxButtonGroupProps<T = Key> {
   options: Option<T>[];
   activeKeys: T[];
   onChangeActive: (key: T[]) => void;
@@ -13,7 +13,6 @@ const CheckboxButtonGroup = <T extends Key = Key>({
   onChangeActive,
   options,
   activeKeys,
-  ...props
 }: CheckboxButtonGroupProps<T>): JSX.Element => {
   const createButton = useCallback(
     ({ key, label }: Option<T>) => {
@@ -28,7 +27,14 @@ const CheckboxButtonGroup = <T extends Key = Key>({
       };
 
       return (
-        <Button key={key} variant={activeKeys.includes(key) ? 'contained' : 'outlined'} onClick={handleClick}>
+        <Button
+          key={key}
+          color='primary.3'
+          autoContrast
+          size='sm'
+          variant={activeKeys.includes(key) ? 'filled' : 'outline'}
+          onClick={handleClick}
+        >
           {label}
         </Button>
       );
@@ -36,11 +42,7 @@ const CheckboxButtonGroup = <T extends Key = Key>({
     [activeKeys, onChangeActive],
   );
 
-  return (
-    <ButtonGroup color='primary' {...props}>
-      {options.map(createButton)}
-    </ButtonGroup>
-  );
+  return <Button.Group>{options.map(createButton)}</Button.Group>;
 };
 
 export default CheckboxButtonGroup;

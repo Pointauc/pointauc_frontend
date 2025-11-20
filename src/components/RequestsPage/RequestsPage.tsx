@@ -6,7 +6,7 @@ import PageContainer from '@components/PageContainer/PageContainer';
 import { WheelItem } from '@models/wheel.model.ts';
 import { UserRequest } from '@models/requests.model.ts';
 import { getCookie, getWheelColor } from '@utils/common.utils.ts';
-import RandomWheel from '@components/RandomWheel/RandomWheel';
+import RandomWheel from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 
 import StepWrapper from './StepWrapper/StepWrapper';
 import RequestsList from './RequestsList/RequestsList';

@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import FlipMove from 'react-flip-move';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FixedSizeList } from 'react-window';
 
@@ -14,10 +15,14 @@ import useAutoScroll from '@hooks/useAutoScroll';
 
 import DroppableSlot from '../Slot/DroppableSlot';
 
+import classes from './SlotsList.module.css';
+
 interface SlotsListProps {
   slots: Slot[];
   optimize: boolean;
   containerRef: RefObject<HTMLDivElement>;
+  readonly?: boolean;
+  isTransparentUi?: boolean;
 }
 
 interface RowProps {
@@ -26,8 +31,10 @@ interface RowProps {
   style: CSSProperties;
 }
 
+const slotWrapperClasses = clsx(classes.slotWrapper, 'slot-grid-wrapper');
+
 const Row: FC<RowProps> = ({ index, style, data }) => (
-  <div className='slot-grid-wrapper' style={style}>
+  <div className={slotWrapperClasses} style={style}>
     <DroppableSlot index={index + 1} slot={data[index]} />
   </div>
 );
@@ -54,7 +61,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
   </FixedSizeList>
 );
 
-const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
+const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly, isTransparentUi }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
@@ -99,7 +106,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
       className={classNames('slots-column-list', {
         'compact-view': compact,
         optimize,
-        'custom-background': background,
+        'custom-background': background || isTransparentUi,
       })}
     >
       {(compact || optimize) && height != null && (
@@ -108,8 +115,8 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef }) => {
       {!compact && !optimize && (
         <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
           {slots.map((slot, index) => (
-            <div className='slot-grid-wrapper' key={slot.id}>
-              <DroppableSlot index={index + 1} slot={slot} />
+            <div className={slotWrapperClasses} key={slot.id}>
+              <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
             </div>
           ))}
         </FlipMove>

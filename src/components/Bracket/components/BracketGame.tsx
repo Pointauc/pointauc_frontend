@@ -55,7 +55,18 @@ const defaultProps: Partial<BracketGameProps> = {
 
 class BracketGame extends React.PureComponent<BracketGameProps> {
   render() {
-    const { game, hoveredTeamId, onHoveredTeamIdChange, styles, fromSide, isCurrent, ...rest } = {
+    const {
+      game,
+      hoveredTeamId,
+      onHoveredTeamIdChange,
+      styles,
+      fromSide,
+      isCurrent,
+      homeOnTop,
+      topText,
+      bottomText,
+      ...rest
+    } = {
       ...defaultProps,
       ...this.props,
     };

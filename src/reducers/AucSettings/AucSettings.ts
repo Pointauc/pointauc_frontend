@@ -137,11 +137,17 @@ export const saveSettings =
 
 export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action>): Promise<GetUserDto> => {
   const user = await getUserData();
-  const { twitchAuth, activeSettings, daAuth, tourniquetAuth, donatePayAuth, activeSettingsPresetId } = user;
+  const { twitchAuth, activeSettings, daAuth, tourniquetAuth, donatePayAuth, activeSettingsPresetId, ihaqAuth } = user;
 
   if (activeSettings) {
     const { startTime, timeStep, ...settings } = activeSettings;
-    dispatch(setAucSettings({ ...settings }));
+    dispatch(
+      setAucSettings({
+        ...settings,
+        primaryColor:
+          localStorage.getItem('isColorResetDone') !== 'true' ? COLORS.THEME.PRIMARY : settings.primaryColor,
+      }),
+    );
   }
   dispatch(
     setUserState({
@@ -153,9 +159,15 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         da: daAuth,
         twitch: twitchAuth,
         tourniquet: tourniquetAuth,
+        ihaq: ihaqAuth,
       },
     }),
   );
+
+  if (localStorage.getItem('isColorResetDone') !== 'true') {
+    dispatch(saveSettings({ primaryColor: COLORS.THEME.PRIMARY }));
+    localStorage.setItem('isColorResetDone', 'true');
+  }
   // if (localStorage.getItem('minTime')) {
   //   dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime }));
   //   localStorage.removeItem('isMinTimeActive');

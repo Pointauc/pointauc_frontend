@@ -1,0 +1,15 @@
+.switchLabelWrapper {
+  width: 100%;
+}
+
+.switchBody {
+  padding: 8px 0;
+}
+
+.switchTrack {
+  cursor: pointer;
+}
+
+.switchRoot {
+  width: 100%;
+}

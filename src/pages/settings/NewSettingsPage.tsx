@@ -13,9 +13,9 @@ import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts
 import { getDirtyValues } from '@utils/common.utils.ts';
 import RadioButtonGroup, { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 import { integrations } from '@components/Integration/integrations.ts';
-import WebsiteSettings from '@pages/settings/AuctionSettings/WebsiteSettings.tsx';
+import WebsiteSettings from '@domains/user-settings/Widgets/General/WebsiteSettings';
 import IntegrationsSettings from '@pages/settings/IntegrationsSettings/IntegrationsSettings.tsx';
-import SettingsPresetField from '@pages/settings/SettingsPresetField';
+import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';
 import { settingsApi } from '@api/userApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
 
@@ -94,7 +94,7 @@ const NewSettingsPage = () => {
   }, [t]);
 
   return (
-    <PageContainer title={t('settings.pageTitle')} className='new-search-page' classes={{ root: 'settings' }}>
+    <PageContainer title={t('settings.pageTitle')} className='new-search-page'>
       <FormProvider {...formMethods}>
         <form>
           <Grid container gap={3} direction='column'>

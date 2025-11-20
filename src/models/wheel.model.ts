@@ -7,6 +7,10 @@ export interface WheelItem {
   amount: number;
 }
 
+export interface WheelItemWithMetadata extends WheelItem {
+  originalAmount?: number;
+}
+
 export interface WheelItemWithAngle extends WheelItem {
   startAngle: number;
   endAngle: number;

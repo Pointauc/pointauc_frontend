@@ -5,14 +5,28 @@
   flex-direction: column;
   width: 100%;
   align-items: center;
-  position: relative;
+  position: sticky;
+  top: 0;
+
+  @media (min-width: 48em) {
+    position: relative;
+  }
 
   .timer-primary {
     order: -2;
-    font-size: 80px;
-    line-height: 1;
-    width: 320px;
+    font-size: 40px;
+    // width: 160px;
+    line-height: 60px;
     position: relative;
+    transition:
+      font-size 0.2s,
+      width 0.2s;
+
+    @media (min-width: 48em) {
+      font-size: 80px;
+      line-height: 80px;
+      width: 320px;
+    }
 
     &:after {
       content: '';
@@ -23,8 +37,8 @@
       height: calc(100% + 10px);
       z-index: -1;
 
-      background-color: var(--mantine-color-darkOpaque-7);
-      border-radius: var(--mantine-radius-lg);
+      background-color: var(--mantine-color-darkTransparent-8);
+      border-radius: var(--mantine-radius-md);
     }
   }
 
@@ -44,6 +58,12 @@
   .stopwatch-controls {
     display: flex;
     justify-content: space-around;
+
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
   }
 
   .swap-timers {
@@ -77,6 +97,27 @@
     &-button {
       border: 1px solid $grey-7;
       padding: 1px;
+    }
+  }
+
+  &.stopwatch-wrapper-compact {
+    .timer-primary {
+      font-size: 60px;
+      // width: 320px;
+
+      @media (min-width: 48em) {
+        font-size: 80px;
+        width: 320px;
+      }
+    }
+
+    .timer-secondary {
+      font-size: 22px;
+    }
+
+    .stopwatch-controls {
+      opacity: 1;
+      visibility: visible;
     }
   }
 }

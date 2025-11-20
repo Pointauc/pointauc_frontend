@@ -1,0 +1,54 @@
+.topContainer {
+  position: relative;
+  /* width: 100%; */
+  height: 100%;
+  flex-grow: 1;
+  display: flex;
+  align-items: start;
+}
+
+.previewTopContainer {
+  overflow: hidden;
+}
+
+.previewContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  background-color: #000;
+}
+
+.previewViewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  background-color: #000;
+  background-image: radial-gradient(circle at 2px 2px, rgba(88, 88, 88, 0.5) 2px, transparent 0);
+  background-size: 50px 50px;
+  background-position: 10px 10px;
+
+  /* Custom viewport units set dynamically via inline styles based on canvas resolution */
+}
+
+.previewContent {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Dynamic aspect ratio set via inline styles based on canvas resolution */
+.aspectRatioWrapper {
+  position: relative;
+  width: 100%;
+  /* aspect-ratio set dynamically via inline styles */
+}
+
+.aspectRatioContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

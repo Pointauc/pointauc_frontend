@@ -1,0 +1,9 @@
+.rightSide {
+  /* flex-basis: calc(28rem * var(--mantine-scale)); */
+  min-width: calc(26rem * var(--mantine-scale));
+  width: calc(26rem * var(--mantine-scale));
+}
+
+.withExtraContent {
+  width: calc(26rem * var(--mantine-scale) * 2);
+}

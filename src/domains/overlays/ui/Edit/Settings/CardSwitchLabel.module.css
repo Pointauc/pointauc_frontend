@@ -1,0 +1,9 @@
+.groupClickOverlay {
+  cursor: pointer;
+  position: absolute;
+  top: calc(var(--mantine-spacing-sm) * -1);
+  left: calc(var(--mantine-spacing-sm) * -1);
+  width: calc(100% + var(--mantine-spacing-sm) * 2);
+  height: calc(100% + var(--mantine-spacing-sm) * 2);
+  z-index: 10;
+}

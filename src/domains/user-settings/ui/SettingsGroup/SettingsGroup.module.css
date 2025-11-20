@@ -1,0 +1,30 @@
+.titleText {
+  color: var(--mantine-color-dark-2);
+}
+
+.titleWrapper {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  padding: 0 12px;
+  transform: translateY(-50%);
+  background-color: var(--mantine-color-dark-7);
+}
+
+.root {
+  border: 2px solid var(--mantine-color-dark-4);
+  border-radius: 12px;
+  position: relative;
+}
+
+.switchBody {
+  align-items: center;
+}
+
+.content {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+
+  @media (min-width: 48em) {
+    padding: 32px 24px 16px;
+  }
+}

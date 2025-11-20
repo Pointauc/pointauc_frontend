@@ -5,10 +5,19 @@ export type SortOrder = 'ascend' | 'descend';
 export interface MenuItem {
   title: string;
   path: string;
+  pathMatch?: string;
   icon: ReactNode;
   disabled?: boolean;
   divide?: boolean;
   target?: '_blank' | '_self' | '_parent' | '_top';
+  /** @default 'auto' */
+  navbarFixedState?: 'opened' | 'closed' | 'auto';
+  /**
+   * - true: the navbar will take page space when opened
+   * - false: the navbar will overlap the page content when opened
+   * @default false
+   */
+  shouldTakePageSpace?: boolean;
 }
 
 export interface Size {

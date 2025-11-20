@@ -1,0 +1,7 @@
+.slotWrapper {
+  --slot-background-color: var(--mantine-color-dark-6);
+}
+
+.slotWrapper:nth-child(even) {
+  --slot-background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
+}

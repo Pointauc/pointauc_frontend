@@ -1,0 +1,9 @@
+.collapse {
+  display: flex;
+  min-height: 0;
+}
+
+.uploadButton {
+  flex-shrink: 0;
+  align-self: center;
+}

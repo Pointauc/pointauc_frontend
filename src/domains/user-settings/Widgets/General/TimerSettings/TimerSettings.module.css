@@ -1,0 +1,15 @@
+.addTime {
+  color: #72c57f;
+}
+
+.notAddTime {
+  color: #d58a62;
+}
+
+.offset {
+  margin-left: 16px;
+
+  @media (min-width: 48em) {
+    margin-left: 36px;
+  }
+}

@@ -1,0 +1,26 @@
+.create-overlay-modal {
+  .overlay-type-card {
+    transition: all 0.2s ease;
+    min-height: 300px;
+
+    &:hover {
+      // transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border-color: var(--mantine-color-blue-5);
+    }
+
+    .preview-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      &::before {
+        content: 'Preview';
+        color: var(--mantine-color-gray-5);
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}

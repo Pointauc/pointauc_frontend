@@ -10,14 +10,21 @@ interface Params {
     params: Record<string, string>;
   };
   authenticate: Integration.RedirectFlow['authenticate'];
+  redirectCodeQueryKey?: string;
 }
 
-export const buildRedirectAuthFlow = ({ url, authenticate, id }: Params): Integration.RedirectFlow => {
+export const buildRedirectAuthFlow = ({
+  url,
+  authenticate,
+  id,
+  redirectCodeQueryKey,
+}: Params): Integration.RedirectFlow => {
   const authUrl = new URL(url.path);
   authUrl.search = new URLSearchParams(url.params).toString();
 
   return {
     type: 'redirect',
+    redirectCodeQueryKey,
     authenticate,
     url: () => authUrl.toString(),
     validate: () => true,

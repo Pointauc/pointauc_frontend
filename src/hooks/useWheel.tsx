@@ -191,7 +191,7 @@ const useWheel = ({
       return;
     }
 
-    spinTarget.current.innerHTML = winner.name;
+    spinTarget.current.textContent = winner.name;
   };
 
   const handleWin = (previousRotate: number, nextRotate: number): void => {
@@ -200,7 +200,7 @@ const useWheel = ({
     if (winner && spinTarget.current) {
       onWin(winner);
       setWinnerItem(winner);
-      spinTarget.current.innerHTML = winner.name;
+      spinTarget.current.textContent = winner.name;
     }
   };
 
@@ -273,7 +273,7 @@ const useWheel = ({
     setWinnerItem(undefined);
 
     if (spinTarget.current) {
-      spinTarget.current.innerHTML = t('wheel.winner');
+      spinTarget.current.textContent = t('wheel.winner');
     }
   }, [t]);
 

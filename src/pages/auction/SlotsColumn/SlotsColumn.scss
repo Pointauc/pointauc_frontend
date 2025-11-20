@@ -7,22 +7,15 @@
 
   .slot-grid-wrapper {
     width: 100%;
-
-    .slot-wrapper {
-      background-color: var(--mantine-color-dark-6);
-    }
-
-    &:nth-child(even) {
-      .slot-wrapper {
-        background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
-      }
-    }
   }
 
   &-wrapper {
     display: flex;
-    flex: 1 1 0;
     min-height: 0;
+
+    @media (min-width: 48em) {
+      flex: 1 1 0;
+    }
   }
 
   .slots-column {

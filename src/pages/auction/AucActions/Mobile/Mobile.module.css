@@ -1,0 +1,31 @@
+.mobileActionsContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  padding: 8px 16px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  z-index: 100;
+  pointer-events: none;
+}
+
+.mobileActionsContainer > * {
+  pointer-events: auto;
+}
+
+/* Add subtle shadow to buttons for better visibility */
+.mobileActionsContainer :global(.mantine-ActionIcon-root) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.mobileActionsContainer :global(.mantine-ActionIcon-root):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.mobileActionsContainer :global(.mantine-ActionIcon-root):active {
+  transform: translateY(0);
+  transition: transform 0.1s ease;
+}
