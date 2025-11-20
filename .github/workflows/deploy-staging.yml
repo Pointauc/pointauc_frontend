@@ -6,21 +6,20 @@ on:
       - master
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to deploy'
+      pr_number:
+        description: 'PR number to deploy (leave empty to build and deploy current branch)'
         required: false
-        default: ''
+        type: string
 
 jobs:
   build:
     name: Build Application and Documentation
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && github.event.inputs.pr_number == '')
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,17 +36,77 @@ jobs:
       - name: Build documentation
         run: yarn docs:build
 
-      - name: Build Status Check
-        if: github.event_name == 'pull_request'
+      - name: Upload application artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-dist-pr-${{ github.event.pull_request.number || 'manual' }}-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-dist-pr-${{ github.event.pull_request.number || 'manual' }}-${{ github.sha }}
+          path: docs/.vitepress/dist/
+          retention-days: 7
+
+      - name: Build Status Summary
         run: |
           echo "### ✅ Build Successful!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "The application and documentation built successfully." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "To deploy this PR to staging, go to the Actions tab and manually trigger the workflow." >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "**Artifacts stored for 7 days**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**To deploy this PR to staging:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Go to the **Actions** tab" >> $GITHUB_STEP_SUMMARY
+            echo "2. Select **Build and Deploy to Staging** workflow" >> $GITHUB_STEP_SUMMARY
+            echo "3. Click **Run workflow**" >> $GITHUB_STEP_SUMMARY
+            echo "4. Enter PR number: **${{ github.event.pull_request.number }}**" >> $GITHUB_STEP_SUMMARY
+            echo "5. Click **Run workflow** button" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  deploy:
+    name: Deploy to Staging Server
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: always() && github.event_name == 'workflow_dispatch' && (needs.build.result == 'success' || needs.build.result == 'skipped')
+
+    steps:
+      - name: Determine artifact names
+        id: artifacts
+        run: |
+          if [ -n "${{ github.event.inputs.pr_number }}" ]; then
+            # Deploying existing PR artifacts - need to fetch commit SHA from PR
+            echo "Deploying PR #${{ github.event.inputs.pr_number }}"
+            PR_SHA=$(gh pr view ${{ github.event.inputs.pr_number }} --json headRefOid --jq '.headRefOid')
+            echo "pr_sha=$PR_SHA" >> $GITHUB_OUTPUT
+            echo "app_artifact=app-dist-pr-${{ github.event.inputs.pr_number }}-$PR_SHA" >> $GITHUB_OUTPUT
+            echo "docs_artifact=docs-dist-pr-${{ github.event.inputs.pr_number }}-$PR_SHA" >> $GITHUB_OUTPUT
+          else
+            # Deploying from workflow_dispatch build
+            echo "Deploying from current workflow build"
+            echo "pr_sha=${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "app_artifact=app-dist-pr-manual-${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "docs_artifact=docs-dist-pr-manual-${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Download application artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.artifacts.outputs.app_artifact }}
+          path: dist/
+
+      - name: Download documentation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.artifacts.outputs.docs_artifact }}
+          path: docs-dist/
 
       - name: Setup SSH
-        if: github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
@@ -55,7 +114,6 @@ jobs:
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy application to staging server
-        if: github.event_name == 'workflow_dispatch'
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
@@ -63,23 +121,26 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/test.pointauc.com/html/
 
       - name: Deploy documentation to staging server
-        if: github.event_name == 'workflow_dispatch'
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
-            docs/.vitepress/dist/ \
+            docs-dist/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/test.pointauc.com/html/docs/
 
       - name: Cleanup
-        if: always() && github.event_name == 'workflow_dispatch'
+        if: always()
         run: rm -f ~/.ssh/deploy_key
 
       - name: Deployment Summary
-        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "### Staging Deployment Complete! 🚀" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** ${{ github.event.inputs.branch || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **App URL:** test.pointauc.com" >> $GITHUB_STEP_SUMMARY
-          echo "- **Docs URL:** test.pointauc.com/docs" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ github.event.inputs.pr_number }}" ]; then
+            echo "- **PR:** #${{ github.event.inputs.pr_number }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Commit:** ${{ steps.artifacts.outputs.pr_sha }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+            echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "- **App URL:** https://test.pointauc.com" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docs URL:** https://test.pointauc.com/docs" >> $GITHUB_STEP_SUMMARY
