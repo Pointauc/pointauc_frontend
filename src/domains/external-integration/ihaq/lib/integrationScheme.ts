@@ -8,8 +8,6 @@ import './ihaqStyles.scss';
 
 const id = 'ihaq';
 
-console.log('..');
-
 const redirectUri = `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}`;
 const authParams = {
   client_id: '97045f2d-e0c1-416a-9b8f-d9de09d67775',

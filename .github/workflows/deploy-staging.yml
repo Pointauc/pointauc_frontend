@@ -31,6 +31,9 @@ jobs:
       - name: Build application
         run: yarn build
 
+      - name: Build documentation
+        run: yarn docs:build
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -38,12 +41,19 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to staging server
+      - name: Deploy application to staging server
         run: |
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
             dist/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/test.pointauc.com/html/
+
+      - name: Deploy documentation to staging server
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=yes" \
+            docs/.vitepress/dist/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/test.pointauc.com/html/docs/
 
       - name: Cleanup
         if: always()
@@ -55,4 +65,5 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** ${{ github.event.inputs.branch || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Deployed to:** test.pointauc.com" >> $GITHUB_STEP_SUMMARY
+          echo "- **App URL:** test.pointauc.com" >> $GITHUB_STEP_SUMMARY
+          echo "- **Docs URL:** test.pointauc.com/docs" >> $GITHUB_STEP_SUMMARY
