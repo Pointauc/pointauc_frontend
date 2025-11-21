@@ -30,7 +30,7 @@ interface SettingsMissingOnBackend {
   backgroundBlur: number;
 }
 
-interface AucSettingsState {
+export interface AucSettingsState {
   view: ViewSettings;
   settings: AucSettingsDto & { events: EventsSettings } & SettingsMissingOnBackend;
 }

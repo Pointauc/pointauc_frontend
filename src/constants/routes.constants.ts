@@ -22,6 +22,7 @@ const ROUTES = {
   OVERLAY_VIEW: '/overlays/view/:id',
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
+  TEST: '/test',
   REDIRECT: {
     DEFAULT: '/redirect',
   },

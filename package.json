@@ -36,6 +36,7 @@
     "@mui/x-data-grid": "^6.18.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@tabler/icons-react": "^3.34.1",
+    "@tanstack/react-form": "^1.25.0",
     "@tanstack/react-pacer": "^0.17.3",
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-store": "^0.8.0",

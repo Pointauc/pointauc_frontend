@@ -35,7 +35,7 @@ import { sortSlots } from '@utils/common.utils.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
 import { OverlayViewPage } from '@domains/overlays/index.ts';
 
-import App from './App.tsx';
+import App from './App/entrypoint/App.tsx';
 import ThemeWrapper from './ThemeWrapper.tsx';
 
 declare module '@mui/styles/defaultTheme' {
