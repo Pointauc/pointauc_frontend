@@ -211,7 +211,7 @@ const App: React.FC = () => {
         <div style={{ display: isHomePage ? 'contents' : 'none' }} hidden={!isHomePage}>
           <AucPage />
         </div>
-        <AlertsContainer />
+        {/* <AlertsContainer /> */}
         <Routes>
           <Route path={`${ROUTES.SETTINGS}/*`} element={<UserSettings />} />
           <Route path={ROUTES.WHEEL} element={<WheelPage />} />
