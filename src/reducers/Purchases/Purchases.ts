@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { ReactText } from 'react';
 import { Action } from 'redux';
 
 import { AlertTypeEnum } from '@models/alert.model.ts';
@@ -68,7 +67,7 @@ const purchasesSlice = createSlice({
     addPurchase(state, action: PayloadAction<Purchase>): void {
       state.purchases = [...state.purchases, action.payload];
     },
-    removePurchase(state, action: PayloadAction<ReactText>): void {
+    removePurchase(state, action: PayloadAction<string | number>): void {
       state.purchases = state.purchases.filter(({ id }) => id !== action.payload);
     },
     setPurchases(state, action: PayloadAction<Purchase[]>): void {

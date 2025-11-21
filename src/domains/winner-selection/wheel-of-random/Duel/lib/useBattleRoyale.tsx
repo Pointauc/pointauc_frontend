@@ -15,7 +15,7 @@ import useInitWrapper from '../../lib/strategy/useInitWrapper';
 import Nesting from '../ui/NestingField/Nesting';
 import { DuelHelp } from '../ui/DuelHelp';
 
-const useBattleRoyal = (controller: RefObject<WheelController>): Wheel.FormatHook => {
+const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.FormatHook => {
   const { t } = useTranslation();
   const { setValue } = useFormContext<Wheel.Settings>();
   const [_items, setItems] = useState<WheelItem[] | undefined>();

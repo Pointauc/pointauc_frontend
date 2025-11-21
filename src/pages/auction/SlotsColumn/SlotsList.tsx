@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { FixedSizeList } from 'react-window';
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { Slot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
@@ -20,21 +20,15 @@ import classes from './SlotsList.module.css';
 interface SlotsListProps {
   slots: Slot[];
   optimize: boolean;
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
   readonly?: boolean;
   isTransparentUi?: boolean;
 }
 
-interface RowProps {
-  data: Slot[];
-  index: number;
-  style: CSSProperties;
-}
-
 const slotWrapperClasses = clsx(classes.slotWrapper, 'slot-grid-wrapper');
 
-const Row: FC<RowProps> = ({ index, style, data }) => (
-  <div className={slotWrapperClasses} style={style}>
+const Row = ({ index, style, data }: ListChildComponentProps<Slot[]>) => (
+  <div className={slotWrapperClasses} style={style as any}>
     <DroppableSlot index={index + 1} slot={data[index]} />
   </div>
 );
@@ -43,7 +37,7 @@ interface VirtualListProps {
   slots: Slot[];
   height: number;
   compact: boolean;
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
 }
 
 const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRef }) => (
@@ -57,7 +51,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
     overscanCount={20}
     itemKey={(index: any) => slots[index].id}
   >
-    {Row}
+    {Row as any}
   </FixedSizeList>
 );
 
@@ -112,15 +106,13 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
       {(compact || optimize) && height != null && (
         <VirtualLots slots={slots} height={height} compact={compact} containerRef={containerVirtualRef} />
       )}
-      {!compact && !optimize && (
-        <FlipMove typeName={null} enterAnimation='fade' leaveAnimation='fade' maintainContainerHeight>
-          {slots.map((slot, index) => (
-            <div className={slotWrapperClasses} key={slot.id}>
-              <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
-            </div>
-          ))}
-        </FlipMove>
-      )}
+      {!compact &&
+        !optimize &&
+        slots.map((slot, index) => (
+          <div className={slotWrapperClasses} key={slot.id}>
+            <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
+          </div>
+        ))}
     </Grid>
   );
 };

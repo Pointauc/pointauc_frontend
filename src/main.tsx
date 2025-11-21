@@ -15,8 +15,9 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
-
+import { StrictMode } from 'react';
 import '@assets/i18n/index.ts';
+
 import i18n from '@assets/i18n/index.ts';
 import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
 import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
@@ -132,14 +133,16 @@ const queryClient = new QueryClient({
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(
-  <Provider store={store}>
-    <ThemeWrapper>
-      <MantineProvider>
-        <QueryClientProvider client={queryClient}>
-          <Notifications />
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </MantineProvider>
-    </ThemeWrapper>
-  </Provider>,
+  <StrictMode>
+    <Provider store={store}>
+      <ThemeWrapper>
+        <MantineProvider>
+          <QueryClientProvider client={queryClient}>
+            <Notifications />
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </MantineProvider>
+      </ThemeWrapper>
+    </Provider>
+  </StrictMode>,
 );

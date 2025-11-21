@@ -1,4 +1,4 @@
-import { ReactText, useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Typography } from '@mui/material';
 import { ThunkDispatch } from 'redux-thunk';
@@ -32,7 +32,7 @@ const PurchaseList: React.FC = () => {
     [dispatch],
   );
 
-  const compareValues = (a: ReactText, b: ReactText): number => {
+  const compareValues = (a: string | number, b: string | number): number => {
     if (a === b) {
       return 0;
     }

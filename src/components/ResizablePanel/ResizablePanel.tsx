@@ -25,7 +25,7 @@ interface ResizablePanelProps {
   onResize?: (size: Size) => void;
   onClose: () => void;
   children: ReactNode;
-  contentRef?: RefObject<HTMLDivElement>;
+  contentRef?: RefObject<HTMLDivElement | null>;
   contentClassName?: string;
 }
 

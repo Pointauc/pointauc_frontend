@@ -10,7 +10,7 @@ interface YoutubePlayerProps {
 
 const YoutubePlayer: FC<YoutubePlayerProps> = ({ width, videoId, height }) => {
   const container = useRef<HTMLDivElement>(null);
-  const playerInstanceRef = useRef<YouTubePlayer>();
+  const playerInstanceRef = useRef<YouTubePlayer | undefined>(undefined);
 
   useEffect(() => {
     if (container.current && videoId) {

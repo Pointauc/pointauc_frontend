@@ -1,5 +1,4 @@
 import {
-  ReactText,
   RefObject,
   useCallback,
   useEffect,
@@ -54,7 +53,7 @@ export interface StopwatchController {
 }
 
 export interface StopwatchProps {
-  controller?: RefObject<StopwatchController>;
+  controller?: RefObject<StopwatchController | null>;
   showControls?: boolean;
   onPause?: (timeLeft: number) => void;
   onStart?: (timeLeft: number) => void;
@@ -104,11 +103,11 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const previousSlotsLength = useRef(1);
   const timeLeft = useRef<number>(defaultTime);
   const totalTime = useRef<number>(0);
-  const frameId = useRef<number>();
-  const prevTimestamp = useRef<number>();
+  const frameId = useRef<number | undefined>(undefined);
+  const prevTimestamp = useRef<number | undefined>(undefined);
   const stopwatchElement = useRef<HTMLDivElement>(null);
   const totalTimeElement = useRef<HTMLDivElement>(null);
-  const winnerRef = useRef<Slot>();
+  const winnerRef = useRef<Slot | undefined>(undefined);
   const daSettings = useRef(restSettings);
   const [focusedTimer, setFocusedTimer] = useState<TimerType>('stopwatch');
 
@@ -130,7 +129,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
 
     return slots[0];
   }, [slots]);
-  const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
+  const previousWinnerSlotId = useRef<string | undefined>(winnerSlot.id);
 
   const updateTimerUIDebounced = useMemo(
     () =>

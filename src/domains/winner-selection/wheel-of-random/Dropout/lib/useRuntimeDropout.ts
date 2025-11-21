@@ -7,7 +7,7 @@ import { WheelController } from '@domains/winner-selection/wheel-of-random/BaseW
 
 import useDropoutSpinEnd from './useDropoutSpinEnd';
 
-const useRuntimeDropout = (controller: RefObject<WheelController>): Wheel.FormatHook => {
+const useRuntimeDropout = (controller: RefObject<WheelController | null>): Wheel.FormatHook => {
   const [_items, setItems] = useState<WheelItem[] | undefined>();
   const items = useMemo(() => _items || [], [_items]);
 

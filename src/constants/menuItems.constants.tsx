@@ -68,7 +68,7 @@ export const useMenuItems = (): MenuItem[] => {
     //   navbarFixedState: 'opened',
     // },
     { title: 'menu.items.history.title', icon: <AssignmentIcon />, path: ROUTES.HISTORY, navbarFixedState: 'opened' },
-    // { title: 'menu.items.overlays.title', icon: <LayersIcon />, path: ROUTES.OVERLAYS },
+    { title: 'menu.items.overlays.title', icon: <LayersIcon />, path: ROUTES.OVERLAYS },
     { title: 'menu.items.guides.title', icon: <HelpIcon />, divide: true, path: docsPath, target: '_blank' },
     ...(userId
       ? [

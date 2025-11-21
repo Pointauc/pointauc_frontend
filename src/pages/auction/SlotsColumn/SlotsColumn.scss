@@ -41,6 +41,7 @@
       width: 100%;
       gap: 4px;
       position: relative;
+      flex-wrap: nowrap;
 
       &.optimize,
       &.compact-view {

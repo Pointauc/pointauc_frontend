@@ -2,7 +2,7 @@ import { useIsomorphicEffect } from '@mantine/hooks';
 import { MutableRefObject, RefObject, createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
 
 interface ScrollContextData {
-  elementRef: RefObject<HTMLDivElement>;
+  elementRef: RefObject<HTMLDivElement | null>;
 }
 
 export const ScrollContext = createContext<ScrollContextData>({

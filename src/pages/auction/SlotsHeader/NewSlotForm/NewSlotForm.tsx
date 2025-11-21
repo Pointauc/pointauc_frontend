@@ -19,8 +19,8 @@ const NewSlotForm = () => {
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const [enterIconVisible, setEnterIconVisible] = useState(false);
 
-  const nameInput = useRef<HTMLInputElement>();
-  const amountInput = useRef<HTMLInputElement>();
+  const nameInput = useRef<HTMLInputElement | undefined>(undefined);
+  const amountInput = useRef<HTMLInputElement | undefined>(undefined);
 
   const wrapperClasses = classNames('new-slot-form');
 

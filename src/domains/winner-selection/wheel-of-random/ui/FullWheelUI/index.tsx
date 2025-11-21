@@ -56,7 +56,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   shouldShuffle?: boolean;
   elements?: Partial<SettingElements>;
   children?: ReactNode;
-  wheelRef?: React.RefObject<RandomWheelController>;
+  wheelRef?: React.RefObject<RandomWheelController | null>;
   // callbacks
   deleteItem?: (id: Key) => void;
   onWin?: (winner: TWheelItem) => void;
@@ -251,7 +251,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 };
 
 interface RandomWheelProviderProps<TWheelItem extends WheelItem = WheelItem> extends RandomWheelProps<TWheelItem> {
-  form?: React.RefObject<UseFormReturn<Wheel.Settings>>;
+  form?: React.RefObject<UseFormReturn<Wheel.Settings> | null>;
 }
 
 const Provider = <TWheelItem extends WheelItem = WheelItem>(
