@@ -107,6 +107,7 @@ const UserSettings = () => {
           classes={{ content: styles.pageContent }}
         >
           <Tabs
+            keepMounted={false}
             value={initialSettingGroup}
             onChange={changeSettingsGroup}
             classNames={{ tab: styles.tabLabel, root: styles.root, panel: styles.panel, list: styles.list }}

@@ -29,8 +29,8 @@ const DonationsSettings = () => {
     <SettingsGroup title={t('settings.donations.donations')}>
       <Stack gap='md'>
         {available.map((integration) => (
-          <Group justify='space-between'>
-            <PubsubSwitch integration={integration} key={integration.id} />
+          <Group justify='space-between' key={integration.id}>
+            <PubsubSwitch integration={integration} />
             <RevokeIntegrationButton revoke={integration.authFlow.revoke} />
           </Group>
         ))}
