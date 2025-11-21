@@ -1,6 +1,6 @@
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { unstable_useBlocker as useBlocker, useNavigate } from 'react-router-dom';
+import { useBlocker, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './ConfirmFormOnLeave.scss';
 
