@@ -1,31 +1,33 @@
 import { FC } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { Button, Group, Modal, Stack, Text } from '@mantine/core';
 
-interface RewardPresetsConfirmation {
+interface RewardPresetsConfirmationProps {
   open: boolean;
-  onCLose: () => void;
+  onClose: () => void;
   onConfirm: () => void;
 }
 
-const RewardPresetsConfirmation: FC<RewardPresetsConfirmation> = ({ open, onCLose, onConfirm }) => {
+const RewardPresetsConfirmation: FC<RewardPresetsConfirmationProps> = ({ open, onClose, onConfirm }) => {
+  const { t } = useTranslation();
+
   const handleConfirmClick = (): void => {
     onConfirm();
-    onCLose();
+    onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onCLose}>
-      <DialogTitle>Внимание</DialogTitle>
-      <DialogContent>После обновления наград, текущие выкупы зрителей нельзя будет вернуть!</DialogContent>
-      <DialogActions>
-        <Button onClick={onCLose} variant='outlined'>
-          Закрыть
-        </Button>
-        <Button variant='contained' onClick={handleConfirmClick} color='primary'>
-          Обновить награды
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal opened={open} onClose={onClose} title={t('settings.twitch.rewardPresetsConfirmation.title')}>
+      <Stack>
+        <Text>{t('settings.twitch.rewardPresetsConfirmation.description')}</Text>
+        <Group justify='flex-end'>
+          <Button onClick={onClose} variant='outline'>
+            {t('common.cancel')}
+          </Button>
+          <Button onClick={handleConfirmClick}>{t('settings.twitch.rewardPresetsConfirmation.confirm')}</Button>
+        </Group>
+      </Stack>
+    </Modal>
   );
 };
 

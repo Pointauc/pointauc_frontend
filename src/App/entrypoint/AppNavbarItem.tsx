@@ -1,5 +1,5 @@
 import { Divider, NavLink, Text, Tooltip } from '@mantine/core';
-import { OpenInNew } from '@mui/icons-material';
+import { IconExternalLink } from '@tabler/icons-react';
 import { Fragment, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -36,9 +36,7 @@ export function AppNavbarItem({ menuItem, isActive, showTooltip, onClick }: AppN
         onClick={onClick}
         label={<Text className={classes.navText}>{t(title)}</Text>}
         leftSection={<div className={classes.navIcon}>{icon}</div>}
-        rightSection={
-          isExternal ? <OpenInNew fontSize='small' sx={{ opacity: 0.6 }} className={classes.navIconRight} /> : undefined
-        }
+        rightSection={isExternal ? <IconExternalLink size={24} className={classes.navIconRight} /> : undefined}
         className={classes.navLink}
       />
     </Fragment>

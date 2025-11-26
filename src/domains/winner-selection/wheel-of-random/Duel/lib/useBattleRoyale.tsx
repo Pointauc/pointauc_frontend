@@ -1,19 +1,18 @@
-import React, { ReactNode, RefObject, useCallback, useMemo, useState } from 'react';
+import { Anchor, Button } from '@mantine/core';
+import { ReactNode, RefObject, useCallback, useMemo, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { Anchor } from '@mantine/core';
 
+import { buildGame } from '@components/SlotsBracket/SlotsBracket';
+import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getWheelColor } from '@utils/common.utils.ts';
-import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
-import { buildGame } from '@components/SlotsBracket/SlotsBracket';
 
-import ResizableBracket from '../../Duel/ui/ResizableBracket/ResizableBracket';
 import { WheelController } from '../../BaseWheel/BaseWheel';
+import ResizableBracket from '../../Duel/ui/ResizableBracket/ResizableBracket';
 import useInitWrapper from '../../lib/strategy/useInitWrapper';
-import Nesting from '../ui/NestingField/Nesting';
 import { DuelHelp } from '../ui/DuelHelp';
+import Nesting from '../ui/NestingField/Nesting';
 
 const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.FormatHook => {
   const { t } = useTranslation();
@@ -43,16 +42,20 @@ const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.Fo
   const selectedGame = useMemo(() => gameOrder[step], [gameOrder, step]);
   const content = <ResizableBracket rootGame={game} currentGame={selectedGame} />;
 
-  const nextTurn = useCallback(() => {
-    controller.current?.clearWinner();
-    controller.current?.resetPosition();
-    setNextWinner(null);
-    setStep(step + 1);
-  }, [controller, step]);
+  const nextTurn = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      controller.current?.clearWinner();
+      controller.current?.resetPosition();
+      setNextWinner(null);
+      setStep(step + 1);
+    },
+    [controller, step],
+  );
 
   const renderSubmitButton = (defaultButton: ReactNode) =>
     nextWinner ? (
-      <Button className='wheel-controls-button' variant='contained' color='primary' onClick={nextTurn}>
+      <Button variant='filled' color='primary' onClick={nextTurn} type='button'>
         {t('wheel.nextDuel')}
       </Button>
     ) : (

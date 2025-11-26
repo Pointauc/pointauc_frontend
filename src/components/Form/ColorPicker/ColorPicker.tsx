@@ -1,5 +1,5 @@
 import { FC, MouseEvent, useCallback, useState } from 'react';
-import { ButtonBase, Popover } from '@mui/material';
+import { Button, Popover } from '@mantine/core';
 import SketchPicker, { SketchProps } from '@uiw/react-color-sketch';
 
 interface ColorPickerProps {
@@ -9,8 +9,6 @@ interface ColorPickerProps {
 }
 
 const ColorPicker: FC<ColorPickerProps> = ({ value, onChange, onBlur }) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const handleColorChange = useCallback<Required<SketchProps>['onChange']>(
     ({ hex }) => {
       onChange(hex);
@@ -18,41 +16,25 @@ const ColorPicker: FC<ColorPickerProps> = ({ value, onChange, onBlur }) => {
     [onChange],
   );
 
-  const handleOpen = useCallback((e: MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget), []);
-  const handleClose = useCallback(() => {
-    onBlur?.();
-    setAnchorEl(null);
-  }, [onBlur]);
-
   return (
     <>
-      <Popover
-        open={!!anchorEl}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        elevation={10}
-        onClose={handleClose}
-      >
-        <SketchPicker color={value} onChange={handleColorChange} disableAlpha />
+      <Popover position='top'>
+        <Popover.Target>
+          <Button
+            style={{
+              width: 34,
+              height: 34,
+              backgroundColor: value,
+              padding: 0,
+              border: '3px solid #eee',
+              borderRadius: 5,
+            }}
+          />
+        </Popover.Target>
+        <Popover.Dropdown p={0} bd='none' bg='transparent'>
+          <SketchPicker color={value} onChange={handleColorChange} disableAlpha />
+        </Popover.Dropdown>
       </Popover>
-      <ButtonBase
-        style={{
-          width: 34,
-          height: 34,
-          backgroundColor: value,
-          padding: 0,
-          border: '3px solid #eee',
-          borderRadius: 5,
-        }}
-        onClick={handleOpen}
-      />
     </>
   );
 };

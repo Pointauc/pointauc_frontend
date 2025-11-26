@@ -79,7 +79,7 @@ export const getDirtyValues = <T extends FieldValues>(
   Object.keys(dirtyFields).reduce((accum, key) => {
     const getValue = () => (values[key] === undefined ? defaultValues[key] : values[key]);
 
-    return touched[key] ? { ...accum, [key]: getValue() } : accum;
+    return touched[key as keyof typeof touched] ? { ...accum, [key]: getValue() } : accum;
   }, {});
 
 export const shuffle = <T>(_a: T[]): T[] => {

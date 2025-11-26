@@ -1,16 +1,17 @@
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { OutlinedInput, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
-import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
+import clsx from 'clsx';
 
 import { RootState } from '@reducers';
 import { addSlot } from '@reducers/Slots/Slots.ts';
 import { Slot } from '@models/slot.model.ts';
 import { updatePercents } from '@services/PercentsRefMap.ts';
-import './NewSlotForm.scss';
+import { OutlineInput } from '@shared/mantine/ui/Input';
+
+import classes from './NewSlotForm.module.css';
 
 const NewSlotForm = () => {
   const dispatch = useDispatch();
@@ -19,15 +20,13 @@ const NewSlotForm = () => {
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const [enterIconVisible, setEnterIconVisible] = useState(false);
 
-  const nameInput = useRef<HTMLInputElement | undefined>(undefined);
-  const amountInput = useRef<HTMLInputElement | undefined>(undefined);
-
-  const wrapperClasses = classNames('new-slot-form');
+  const nameInput = useRef<HTMLInputElement>(null);
+  const amountInput = useRef<HTMLInputElement>(null);
 
   const showEnterIcon = () => setEnterIconVisible(true);
   const hideEnterIcon = () => setEnterIconVisible(false);
 
-  const percentsRef = useRef<HTMLSpanElement>(null);
+  const percentsRef = useRef<HTMLParagraphElement>(null);
 
   const getNewSlot = useCallback(
     (): Partial<Slot> => ({
@@ -78,33 +77,32 @@ const NewSlotForm = () => {
   );
 
   return (
-    <div className={wrapperClasses}>
-      <OutlinedInput
-        className='slot-name slot-input'
+    <div className={classes.root}>
+      <OutlineInput
+        className={classes.slotName}
         placeholder={t('auc.newLotName')}
-        type='text'
-        inputRef={nameInput}
-        onKeyPress={createSlotOnEnter}
+        ref={nameInput}
+        onKeyDown={createSlotOnEnter}
         onFocus={showEnterIcon}
         onBlur={hideEnterIcon}
+        classNames={{ input: classes.slotInput }}
       />
 
-      {showChances && <Typography className='slot-chance' ref={percentsRef} />}
+      {showChances && <Text fz='lg' ref={percentsRef} />}
 
-      <OutlinedInput type='number' style={{ display: 'none' }} />
-      <OutlinedInput
-        className='slot-money slot-input'
+      <OutlineInput
+        className={classes.slotMoney}
+        classNames={{ input: classes.slotInput }}
         placeholder={t('common.currencySign')}
         type='number'
-        inputRef={amountInput}
-        onKeyPress={createSlotOnEnter}
+        ref={amountInput}
+        onKeyDown={createSlotOnEnter}
         onFocus={showEnterIcon}
         onBlur={hideEnterIcon}
         onChange={updateNewSlotChance}
       />
 
       <Button
-        className='add-slot-button'
         variant='filled'
         color='primary.3'
         leftSection={<AddIcon />}

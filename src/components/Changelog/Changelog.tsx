@@ -1,7 +1,7 @@
-import { FC, ReactNode } from 'react';
-import dayjs from 'dayjs';
+import { Anchor, Divider, Grid, Text } from '@mantine/core';
 import classNames from 'classnames';
-import { Divider, Grid, Link, Typography } from '@mui/material';
+import dayjs from 'dayjs';
+import { FC, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { UpdateData } from '@utils/changelog.tsx';
@@ -37,21 +37,17 @@ const Changelog: FC<ChangelogProps> = ({ updates }) => {
   return (
     <Grid className='changelog'>
       {updates.map(({ date, newFeatures, improvements, fixes, videoPreview }) => (
-        <Grid container direction='column' spacing={2} key={date}>
-          <Grid
-            className='changelog-date'
-            container
-            justifyContent='center'
-            alignItems='center'>
-            <Divider className='changelog-date-divider' />
-            <Typography className='changelog-date-text'>{dayjs(date).format('YYYY-MM-DD HH:mm')}</Typography>
-            <Divider className='changelog-date-divider' />
+        <Grid key={date}>
+          <Grid className='changelog-date' justify='center' align='center'>
+            <Divider />
+            <Text className='changelog-date-text'>{dayjs(date).format('YYYY-MM-DD HH:mm')}</Text>
+            <Divider />
           </Grid>
           {videoPreview && (
-            <Grid alignSelf='center'>
-              <Link href={videoPreview} target='_blank'>
+            <Grid justify='center'>
+              <Anchor href={videoPreview} target='_blank'>
                 Video Preview
-              </Link>
+              </Anchor>
             </Grid>
           )}
           <Grid>

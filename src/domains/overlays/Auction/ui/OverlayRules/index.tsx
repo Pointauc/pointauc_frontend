@@ -1,11 +1,13 @@
-import React from 'react';
-import { JSONContent } from '@tiptap/react';
+import React, { lazy } from 'react';
 import { generateHTML } from '@tiptap/core';
 
 import editorUtils from '@components/RichTextEditorTipTap/helpers';
-import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap';
 
 import classes from './index.module.css';
+
+import type { JSONContent } from '@tiptap/react';
+
+const RichTextEditorTipTap = lazy(() => import('@components/RichTextEditorTipTap/RichTextEditorTipTap'));
 
 interface OverlayRulesProps {
   rules: string; // JSON string containing the JSONContent

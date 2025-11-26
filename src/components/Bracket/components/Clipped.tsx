@@ -1,10 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
 import * as React from 'react';
 import { v4 } from 'uuid';
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 export interface ClippedProps {
-  path: JSX.Element | JSX.Element[];
+  path: ReactElement | ReactElement[];
   children: ReactNode;
 }
 

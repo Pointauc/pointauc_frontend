@@ -9,7 +9,7 @@ interface NotificationsState {
 }
 
 const initialState: NotificationsState = {
-  message: null,
+  message: 'qwer qewr qwer qwe',
   alerts: [],
 };
 

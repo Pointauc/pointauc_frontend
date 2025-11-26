@@ -1,4 +1,3 @@
-import { Editor } from '@tiptap/react';
 import TextAlign from '@tiptap/extension-text-align';
 import { Underline } from '@tiptap/extension-underline';
 import { Color } from '@tiptap/extension-color';
@@ -7,6 +6,8 @@ import ListItem from '@tiptap/extension-list-item';
 import StarterKit from '@tiptap/starter-kit';
 
 import { HighlightExtended } from '@components/RichTextEditorTipTap/HighlightExtended.ts';
+
+import type { Editor } from '@tiptap/react';
 
 export type Formatting = 'paragraph' | 'header1' | 'header2' | 'bulletList' | 'orderedList';
 

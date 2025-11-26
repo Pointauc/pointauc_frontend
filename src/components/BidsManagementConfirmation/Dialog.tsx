@@ -1,5 +1,5 @@
-import React from 'react';
-import { Dialog, DialogContent } from '@mui/material';
+import { useState } from 'react';
+import { Modal } from '@mantine/core';
 
 import BidsManagementConfirmation, {
   BidsManagementConfirmationProps,
@@ -11,17 +11,15 @@ interface Props extends BidsManagementConfirmationProps {
   children?: React.ReactNode | null;
 }
 
-const BidsManagementDialog = ({ open, onClose, children, ...props }: Props) => {
-  const [isLoading, setIsLoading] = React.useState(false);
+function BidsManagementDialog({ open, onClose, children, ...props }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <Dialog open={open} onClose={isLoading ? undefined : onClose} maxWidth='md' fullWidth>
+    <Modal opened={open} onClose={isLoading ? () => {} : onClose} size='55rem' centered>
       {children}
-      <DialogContent>
-        <BidsManagementConfirmation {...props} onLoadingChanged={setIsLoading} onClose={onClose} />
-      </DialogContent>
-    </Dialog>
+      <BidsManagementConfirmation {...props} onLoadingChanged={setIsLoading} onClose={onClose} />
+    </Modal>
   );
-};
+}
 
 export default BidsManagementDialog;

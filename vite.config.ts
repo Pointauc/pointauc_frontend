@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { analyzer } from 'vite-bundle-analyzer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,6 +23,8 @@ export default defineConfig({
         return [];
       },
     },
+    // Bundle analyzer - only runs when ANALYZE env variable is set
+    ...(process.env.ANALYZE === 'true' ? [analyzer()] : []),
   ],
   css: {
     preprocessorOptions: {

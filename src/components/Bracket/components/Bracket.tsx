@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FC, Key, useEffect, useRef, useState } from 'react';
+import { FC, Key, ReactElement, useEffect, useRef, useState } from 'react';
 
 import { Size } from '@models/common.model.ts';
 
@@ -50,7 +50,7 @@ const toBracketGames = ({
   fromSide,
   currentGame,
   ...rest
-}: BracketGamesFunctionProps): JSX.Element[] => {
+}: BracketGamesFunctionProps): ReactElement[] => {
   const { width: gameWidth, height } = gameDimensions;
 
   const data = game.sides

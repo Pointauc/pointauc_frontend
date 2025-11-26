@@ -1,0 +1,11 @@
+.input {
+  flex-grow: 1;
+}
+
+.input::placeholder {
+  color: var(--mantine-color-dark-2);
+}
+
+.input:focus {
+  outline: none;
+}

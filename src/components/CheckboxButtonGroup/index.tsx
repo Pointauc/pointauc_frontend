@@ -1,7 +1,5 @@
-import React, { Key, useCallback } from 'react';
+import React, { Key, ReactElement, useCallback } from 'react';
 import { Button } from '@mantine/core';
-
-import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 
 interface CheckboxButtonGroupProps<T = Key> {
   options: Option<T>[];
@@ -13,7 +11,7 @@ const CheckboxButtonGroup = <T extends Key = Key>({
   onChangeActive,
   options,
   activeKeys,
-}: CheckboxButtonGroupProps<T>): JSX.Element => {
+}: CheckboxButtonGroupProps<T>): ReactElement => {
   const createButton = useCallback(
     ({ key, label }: Option<T>) => {
       const handleClick = (): void => {

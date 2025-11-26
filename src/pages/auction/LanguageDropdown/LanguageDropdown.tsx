@@ -1,9 +1,7 @@
-import React from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import { Select } from '@mantine/core';
 import LanguageIcon from '@mui/icons-material/Language';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { getCurrentLanguage, SupportedLanguages } from '@constants/language.constants.ts';
 import { Language } from '@enums/language.enum.ts';

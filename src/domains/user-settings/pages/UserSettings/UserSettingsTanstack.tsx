@@ -10,7 +10,6 @@ import { useStore } from '@tanstack/react-store';
 import { settingsApi } from '@api/userApi.ts';
 import { integrations } from '@components/Integration/integrations.ts';
 import PageContainer from '@components/PageContainer/PageContainer.tsx';
-import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import WebsiteSettings from '@domains/user-settings/Widgets/General/WebsiteSettings';
@@ -49,7 +48,7 @@ const UserSettingsTanstack = () => {
   const [_, startTransition] = useTransition();
   const onSubmit = useCallback(
     (data: SettingsForm, dirty: Partial<SettingsForm>) => {
-      dispatch(saveSettings(dirty));
+      // dispatch(saveSettings(dirty));
       reset({ ...data, ...dirty });
     },
     [dispatch, reset],
@@ -83,10 +82,10 @@ const UserSettingsTanstack = () => {
   // }, [JSON.stringify(dirtyFields), JSON.stringify(touchedFields), handleSubmit, onSubmit]);
 
   const onPresetChange = (presetData: AucSettingsDto) => {
-    handleSubmit((data) => onSubmit(data, presetData));
+    handleSubmit((data: SettingsForm) => onSubmit(data, presetData));
   };
 
-  const settingsGroupOptions = useMemo<Option<SettingGroup>[]>(() => {
+  const settingsGroupOptions = useMemo<any[]>(() => {
     const integrationsLabel = (
       <Group align='center' gap='xxs'>
         <div style={{ marginRight: 8 }}>Integrations</div>

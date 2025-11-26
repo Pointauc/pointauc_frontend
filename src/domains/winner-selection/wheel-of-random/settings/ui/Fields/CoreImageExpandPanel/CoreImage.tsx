@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 // @ts-ignore
 import { Emote } from '@kozjar/twitch-emoticons';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { Button, Collapse, Stack, Text } from '@mantine/core';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { getRandomIntInclusive } from '@utils/common.utils.ts';
-import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList.tsx';
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput.tsx';
+import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList.tsx';
+import { getRandomIntInclusive } from '@utils/common.utils.ts';
 
 import styles from './CoreImage.module.css';
 
@@ -51,7 +51,7 @@ const CoreImageField = () => {
         <Text size='md'>{t('wheel.coreImage.expandPanel')}</Text>
       </Button>
       <Collapse in={isExpanded} className={styles.collapse}>
-        <Stack mah={390} gap='sm'>
+        <Stack mah={390} gap='sm' w='100%'>
           <Controller
             render={({ field: { onChange } }) => (
               <TwitchEmotesList setActiveEmote={onChange} onEmotesLoad={handleEmotesLoad} />

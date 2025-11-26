@@ -1,0 +1,126 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  font-family: 'Helvetica Neue', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+@media (min-width: 48em) {
+  .wrapper {
+    position: relative;
+  }
+}
+
+.timerPrimary {
+  order: -2;
+  font-size: 50px;
+  line-height: 60px;
+  position: relative;
+  transition:
+    font-size 0.2s,
+    width 0.2s;
+}
+
+@media (min-width: 48em) {
+  .timerPrimary {
+    font-size: 80px;
+    line-height: 80px;
+    width: 320px;
+  }
+}
+
+.timerPrimary::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  z-index: -1;
+  background-color: var(--mantine-color-darkTransparent-8);
+  border-radius: var(--mantine-radius-md);
+}
+
+.timerSecondary {
+  order: -1;
+  position: relative;
+  font-size: 22px;
+  top: -6px;
+  height: 12px;
+  letter-spacing: 2px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-around;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+}
+
+.swapTimers {
+  position: absolute;
+  right: -10px;
+  top: 50px;
+  display: flex;
+}
+
+.swapTimers::after,
+.swapTimers::before {
+  content: '';
+  position: absolute;
+  left: 10%;
+  width: 40%;
+  border-right: 1px solid var(--mantine-color-dark-3);
+}
+
+.swapTimers::after {
+  height: 12px;
+  bottom: 0;
+  transform: translateY(100%);
+  border-bottom: 1px solid var(--mantine-color-dark-3);
+}
+
+.swapTimers::before {
+  height: 20px;
+  top: 0;
+  transform: translateY(-100%);
+  border-top: 1px solid var(--mantine-color-dark-3);
+}
+
+.swapTimersButton {
+  border: 1px solid var(--mantine-color-dark-3);
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Compact state */
+.wrapperCompact .timerPrimary {
+  font-size: 70px;
+}
+
+@media (min-width: 48em) {
+  .wrapperCompact .timerPrimary {
+    font-size: 80px;
+  }
+}
+
+.wrapperCompact .timerSecondary {
+  font-size: 22px;
+}
+
+.wrapperCompact .controls {
+  opacity: 1;
+  visibility: visible;
+}
+
+.actionIcon {
+  width: 3.25rem;
+  height: 3.25rem;
+}

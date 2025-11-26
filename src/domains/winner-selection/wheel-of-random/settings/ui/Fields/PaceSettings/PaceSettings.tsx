@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useCallback, useMemo } from 'react';
-import { Checkbox, FormControlLabel, Slider, Typography } from '@mui/material';
+import { Checkbox, Slider, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { RandomPaceConfig } from '@services/SpinPaceService.ts';
@@ -29,19 +29,19 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
   //   [setPaceConfig],
   // );
   const handleValueRandomZoneChange = useCallback(
-    (e: any, value: number | number[]) => {
+    (value: number) => {
       setPaceConfig((config) => ({ ...config, valueRandomZone: Number(value) }));
     },
     [setPaceConfig],
   );
   const handleRandomOffsetChange = useCallback(
-    (e: any, value: number | number[]) => {
+    (value: number) => {
       setPaceConfig((config) => ({ ...config, randomOffset: Number(value) }));
     },
     [setPaceConfig],
   );
   const handleDisabledZoneChange = useCallback(
-    (e: any, value: number | number[]) => {
+    (value: number) => {
       setPaceConfig((config) => ({ ...config, valueDisabledZone: Number(value) }));
     },
     [setPaceConfig],
@@ -49,11 +49,8 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
 
   return (
     <>
-      <FormControlLabel
-        control={<Checkbox checked={allowBackStep} onChange={handleBackStepChange} color='primary' />}
-        label={t('wheel.pace.spinInReverse')}
-        className='wheel-controls-checkbox'
-      />
+      <Checkbox checked={allowBackStep} className='wheel-controls-checkbox' />
+      <Text>{t('wheel.pace.spinInReverse')}</Text>
       {/* <div className="wheel-controls-row"> */}
       {/*  <Typography className="wheel-controls-tip">Количество точек</Typography> */}
       {/*  <TextField */}
@@ -65,53 +62,47 @@ const PaceSettings: FC<PaceSettingsProps> = ({ paceConfig, setPaceConfig, spinTi
       {/*  /> */}
       {/* </div> */}
       <div className='wheel-controls-row'>
-        <Typography className='wheel-controls-tip lg'>{t('wheel.pace.randomZoneStart')}</Typography>
+        <Text className='wheel-controls-tip lg'>{t('wheel.pace.randomZoneStart')}</Text>
         <Slider
           value={randomOffset}
           step={0.5}
           min={0.5}
           max={maxOffset}
-          valueLabelDisplay='auto'
-          valueLabelFormat={formatSeconds}
-          onChange={handleRandomOffsetChange}
+          onChange={(value) => handleRandomOffsetChange(value)}
           marks={[
             { value: 0.5, label: '0.5c.' },
             { value: maxOffset, label: `${Math.round(maxOffset)}c.` },
           ]}
         />
       </div>
-      <Typography className='wheel-controls-tip hint'>{t('wheel.pace.respinMark')}</Typography>
+      <Text className='wheel-controls-tip hint'>{t('wheel.pace.respinMark')}</Text>
       <div className='wheel-controls-row'>
-        <Typography className='wheel-controls-tip lg'>{t('wheel.pace.maxDistance')}</Typography>
+        <Text className='wheel-controls-tip lg'>{t('wheel.pace.maxDistance')}</Text>
         <Slider
           value={valueRandomZone}
           step={30}
           min={90}
           max={900}
-          valueLabelDisplay='auto'
-          valueLabelFormat={formatDegree}
-          onChange={handleValueRandomZoneChange}
+          onChange={(value) => handleValueRandomZoneChange(value)}
           marks={[
             { value: 90, label: '180°' },
             { value: 900, label: '900°' },
           ]}
         />
       </div>
-      <Typography className='wheel-controls-tip lg'>{t('wheel.pace.blockedZone')}</Typography>
+      <Text className='wheel-controls-tip lg'>{t('wheel.pace.blockedZone')}</Text>
       <Slider
         value={valueDisabledZone}
         step={0.01}
         min={0}
         max={0.7}
-        valueLabelDisplay='auto'
-        valueLabelFormat={formatPercents}
-        onChange={handleDisabledZoneChange}
+        onChange={(value: number) => handleDisabledZoneChange(value)}
         marks={[
           { value: 0, label: '0%' },
           { value: 0.7, label: '70%' },
         ]}
       />
-      <Typography className='wheel-controls-tip hint'>{t('wheel.pace.blockedZoneDescription')}</Typography>
+      <Text className='wheel-controls-tip hint'>{t('wheel.pace.blockedZoneDescription')}</Text>
     </>
   );
 };

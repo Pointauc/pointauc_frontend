@@ -1,5 +1,4 @@
 import { createTheme, lighten } from '@mui/material';
-import { alpha, getContrastRatio } from '@mui/material/styles';
 
 const backgroundColor = '#242424';
 

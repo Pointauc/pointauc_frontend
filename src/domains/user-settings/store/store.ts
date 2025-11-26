@@ -17,7 +17,7 @@ interface SettingsMissingOnBackend {
   autoScroll: boolean;
 }
 
-type AucSettingsStore = AucSettingsDto & SettingsMissingOnBackend;
+export type AucSettingsStore = AucSettingsDto & SettingsMissingOnBackend;
 
 const defaultState: AucSettingsStore = {
   startTime: 10,
@@ -74,9 +74,7 @@ const settingsFromStorage = localStorage.getItem('userSettings')
 
 // When data structure was changed we need to migrate settings from the local storage to the new structure
 const migratedSettings = {
-  // compact: settingsFromStorage.view.compact,
   showRules: localStorage.getItem('showRules') === 'true',
-  // autoScroll: settingsFromStorage.view.autoScroll,
 };
 
 const initialState: AucSettingsStore = {
@@ -94,33 +92,5 @@ const saveLocally = new Effect({
   deps: [userSettingsStore],
 });
 saveLocally.mount();
-
-let pendingSettings: Partial<AucSettingsStore> = {};
-
-const uploadPendingSettingsDebounced = debounce(
-  () => {
-    userControllerSetAucSettings({ body: pendingSettings as any });
-    pendingSettings = {};
-  },
-  {
-    wait: 1000,
-    trailing: true,
-    leading: false,
-  },
-);
-
-const updateSettings = (updatedSettings: Partial<AucSettingsStore>) => {
-  userSettingsStore.setState((prev) => ({
-    ...prev,
-    ...updatedSettings,
-  }));
-
-  pendingSettings = {
-    ...pendingSettings,
-    ...updatedSettings,
-  };
-
-  uploadPendingSettingsDebounced();
-};
 
 export default userSettingsStore;

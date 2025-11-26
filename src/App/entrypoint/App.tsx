@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQuery } from '@tanstack/react-query';
 
 import classes from '@App/entrypoint/App.module.css';
 import { AppHeader } from '@App/entrypoint/AppHeader';
@@ -14,6 +15,7 @@ import { COLORS } from '@constants/color.constants';
 import { RootState } from '@reducers';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import { useIsMobile } from '@shared/lib/ui';
+import { userControllerGetUserOptions } from '@api/openapi/@tanstack/react-query.gen';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
@@ -83,6 +85,10 @@ const App: React.FC = () => {
       }
     };
   }, [username]);
+
+  const userQuery = useQuery({
+    ...userControllerGetUserOptions({}),
+  });
 
   useEffect(() => {
     const loadUser = async () => {

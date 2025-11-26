@@ -1,14 +1,13 @@
-.login-button.donatePay {
-  background-color: #44AB4F !important;
-  color: #F1F1F1 !important;
+[data-integration='donatePay'] {
+  background-color: #44ab4f !important;
+  color: #f1f1f1 !important;
 
   &:hover {
     background-color: #3e8648 !important;
   }
 }
 
-.integration-switch,
-.login-button {
+.integration-switch {
   &.donatePay {
     .base-icon {
       width: 30px;
@@ -19,15 +18,6 @@
       }
     }
   }
-
-  .base-icon.donatePay {
-    width: 30px;
-    height: 30px;
-
-    path {
-      fill: #8ddc96;
-    }
-  }
 }
 
 .base-icon.donatePay {
@@ -35,17 +25,6 @@
   height: 30px;
 
   path {
-    fill: #8ddc96;
-  }
-}
-
-.MuiButton-containedPrimary {
-  .base-icon.donatePay {
-    width: 30px;
-    height: 30px;
-
-    path {
-      fill: #349b40;
-    }
+    fill: #f1f1f1;
   }
 }

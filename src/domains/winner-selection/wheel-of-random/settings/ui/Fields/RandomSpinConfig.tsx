@@ -13,7 +13,7 @@ const RandomSpinConfig = () => {
         name='randomSpinConfig.min'
         render={({ field: { onChange, value } }) => (
           <OutlineInput
-            w={70}
+            w={64}
             label={t('common.from')}
             type='number'
             onChange={(e) => (e.target.value === '' ? onChange(null) : onChange(Number(e.target.value)))}
@@ -26,7 +26,7 @@ const RandomSpinConfig = () => {
         name='randomSpinConfig.max'
         render={({ field: { onChange, value } }) => (
           <OutlineInput
-            w={70}
+            w={64}
             label={t('common.to')}
             type='number'
             onChange={(e) => (e.target.value === '' ? onChange(null) : onChange(Number(e.target.value)))}

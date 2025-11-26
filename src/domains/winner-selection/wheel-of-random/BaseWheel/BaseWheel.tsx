@@ -1,4 +1,7 @@
-import React, {
+import { Overlay, Popover, Stack, Text } from '@mantine/core';
+import clsx from 'clsx';
+import gsap from 'gsap';
+import {
   Key,
   MutableRefObject,
   useCallback,
@@ -10,20 +13,17 @@ import React, {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import gsap from 'gsap';
-import { Overlay, Popover, Stack, Text } from '@mantine/core';
-import clsx from 'clsx';
 
-import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
+import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import {
   calculateRandomSpinDistance,
   calculateWinnerSpinDistance,
   getWinnerFromDistance,
 } from '@domains/winner-selection/wheel-of-random/lib/geometry';
-import './BaseWheel.scss';
-import { WheelItemWithAngle, WheelItem } from '@models/wheel.model';
+import { WheelItem, WheelItemWithAngle } from '@models/wheel.model';
 import { RandomPaceConfig } from '@services/SpinPaceService';
+import './BaseWheel.scss';
 
 import WinnerBackdrop from './WinnerBackdrop';
 import wheelHelpers from './helpers';
@@ -364,7 +364,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
                 </div>
               </Popover.Target>
               <Popover.Dropdown mah={430} p={8} className='wheel-core-emotes-list'>
-                <Stack gap={0}>
+                <Stack gap='sm'>
                   <ImageLinkInput
                     dialogTitle={t('wheel.coreImage.customImageDialogTitle')}
                     buttonTitle={t('wheel.loadCustomMessage')}

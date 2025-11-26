@@ -11,3 +11,8 @@
     background-color: var(--mantine-color-dark-6);
   }
 }
+
+.accordion {
+  width: 100%;
+  margin-bottom: 10px;
+}

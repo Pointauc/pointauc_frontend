@@ -1,6 +1,6 @@
 import { FC, FocusEvent, useCallback } from 'react';
 import dayjs from 'dayjs';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, Group, Text, TextInput } from '@mantine/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +10,8 @@ import SaveLoadService from '@services/SaveLoadService';
 import { RootState } from '@reducers';
 import { setSlots, updateFastIdCounter } from '@reducers/Slots/Slots.ts';
 import { loadFile } from '@utils/common.utils.ts';
-import './SaveRecord.scss';
+
+import classes from './SaveRecord.module.css';
 
 interface SaveRecordProps extends SaveInfo {
   onConfigChange: (config: SaveInfo[]) => void;
@@ -47,30 +48,30 @@ const SaveRecord: FC<SaveRecordProps> = ({ timestamp, name, length, onConfigChan
   }, [name]);
 
   return (
-    <div className='save-record'>
-      <div className='row'>
-        <div className='row'>
-          <TextField variant='outlined' className='name-input' defaultValue={name} onBlur={handleRename} />
-          <Typography className='timestamp'>{t('save.lotsAmount', { length })}</Typography>
-        </div>
-        <Typography className='timestamp'>{dayjs(timestamp).format(FORMAT.DATE.dateTime)}</Typography>
-      </div>
-      <div className='row actions'>
-        <div className='save-actions'>
-          <Button variant='contained' color='primary' size='small' onClick={handleLoad}>
+    <div className={classes.root}>
+      <Group className={classes.row} justify='space-between'>
+        <Group>
+          <TextInput className={classes.nameInput} defaultValue={name} onBlur={handleRename} />
+          <Text c='dimmed'>{t('save.lotsAmount', { length })}</Text>
+        </Group>
+        <Text c='dimmed'>{dayjs(timestamp).format(FORMAT.DATE.dateTime)}</Text>
+      </Group>
+      <Group className={classes.actions} justify='space-between'>
+        <Group className={classes.saveActions}>
+          <Button size='sm' onClick={handleLoad}>
             {t('save.load')}
           </Button>
-          <Button variant='contained' color='primary' size='small' onClick={handleSave}>
+          <Button size='sm' onClick={handleSave}>
             {t('save.save')}
           </Button>
-          <Button variant='outlined' color='primary' size='small' onClick={handleDownloadFile}>
+          <Button variant='outline' size='sm' onClick={handleDownloadFile}>
             {t('save.downloadFile')}
           </Button>
-        </div>
-        <Button variant='outlined' color='secondary' size='small' onClick={handleDelete}>
+        </Group>
+        <Button variant='outline' color='red' size='sm' onClick={handleDelete}>
           {t('save.delete')}
         </Button>
-      </div>
+      </Group>
     </div>
   );
 };

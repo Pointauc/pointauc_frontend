@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -16,15 +16,15 @@ interface TitleProps {
   config: ConfigProps;
 }
 
-const LotActionTitle = ({ config: { lotId } }: TitleProps) => {
+function LotActionTitle({ config: { lotId } }: TitleProps) {
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const lot = useMemo(() => {
     return getSlot(slots, lotId);
   }, [lotId, slots]);
 
-  return <Typography>{t('bidsManagement.lotBids', { name: lot?.name })}</Typography>;
-};
+  return <Text>{t('bidsManagement.lotBids', { name: lot?.name })}</Text>;
+}
 
 export class LotActionConfig implements ConfigProps, Bid.BaseActionConfig {
   Title = LotActionTitle;

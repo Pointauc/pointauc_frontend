@@ -1,0 +1,27 @@
+.root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.savesContainer {
+  max-height: 60vh;
+  overflow: auto;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--mantine-spacing-md);
+  gap: var(--mantine-spacing-sm);
+}
+
+.dropZone {
+  min-height: 200px;
+}
+
+.sheetSettings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}

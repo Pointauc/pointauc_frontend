@@ -1,9 +1,9 @@
+import { Modal } from '@mantine/core';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import { getUpdates } from '@utils/changelog.tsx';
 import useStorageState from '@hooks/useStorageState.ts';
+import { getUpdates } from '@utils/changelog.tsx';
 import { getCookie } from '@utils/common.utils.ts';
 
 import Changelog from '../Changelog';
@@ -22,17 +22,9 @@ const ChangelogModal: FC = () => {
   }, [setLastVisit]);
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)} maxWidth='sm' fullWidth>
-      <DialogTitle>{t('changelog.modal.title')}</DialogTitle>
-      <DialogContent>
-        <Changelog updates={updates} />
-      </DialogContent>
-      <DialogActions>
-        <Button variant='outlined' onClick={() => setOpen(false)}>
-          {t('bid.close')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <Modal opened={open} onClose={() => setOpen(false)} title={t('changelog.modal.title')}>
+      <Changelog updates={updates} />
+    </Modal>
   );
 };
 

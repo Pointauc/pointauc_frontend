@@ -1,17 +1,15 @@
-import { CSSProperties, FC, memo, RefObject, useEffect, useRef, useState } from 'react';
-import Grid from '@mui/material/Grid';
-import FlipMove from 'react-flip-move';
-import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames';
+import { Box } from '@mantine/core';
 import clsx from 'clsx';
+import { FC, memo, RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
+import useAutoScroll from '@hooks/useAutoScroll';
+import { AlertTypeEnum } from '@models/alert.model.ts';
 import { Slot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
 import { addAlert } from '@reducers/notifications/notifications.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
-import useAutoScroll from '@hooks/useAutoScroll';
 
 import DroppableSlot from '../Slot/DroppableSlot';
 
@@ -95,9 +93,8 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
   }, [containerRef]);
 
   return (
-    <Grid
-      container
-      className={classNames('slots-column-list', {
+    <Box
+      className={clsx('slots-column-list', {
         'compact-view': compact,
         optimize,
         'custom-background': background || isTransparentUi,
@@ -113,7 +110,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
             <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
           </div>
         ))}
-    </Grid>
+    </Box>
   );
 };
 

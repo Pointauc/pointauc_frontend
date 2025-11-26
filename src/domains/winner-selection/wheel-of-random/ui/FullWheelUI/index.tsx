@@ -161,6 +161,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
   const onSpinClick = useCallback(
     async ({ useRandomOrg }: Wheel.Settings) => {
+      console.log('submit');
       const { min, max } = randomSpinConfig!;
       const duration = randomSpinEnabled ? random.getInt(min!, max!) : spinTime;
 

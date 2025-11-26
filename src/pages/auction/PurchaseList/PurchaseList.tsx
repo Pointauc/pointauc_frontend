@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Typography } from '@mui/material';
+import { Group, Text } from '@mantine/core';
 import { ThunkDispatch } from 'redux-thunk';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 import DragBidContext from '../DragBidContext/DragBidContext';
 
-import './PurchaseList.scss';
+import classes from './PurchaseList.module.css';
 
 const PurchaseList: React.FC = () => {
   const { t } = useTranslation();
@@ -69,18 +69,18 @@ const PurchaseList: React.FC = () => {
   }, [handleRedemption, twitchSocket, globalSocket, tourniquetSocket]);
 
   return (
-    <div className='purchase-container'>
+    <div className={classes.container}>
       <DragBidContext />
-      <div className='purchase-list'>
+      <div className={classes.list}>
         {sortedPurchases.map((purchase) => (
           <DraggableRedemption {...purchase} key={purchase.id} />
         ))}
       </div>
       {!!purchases.length && (
-        <Typography className='total-purchases'>
-          <span>{t('bid.totalBids')}</span>
-          <span>{purchases.length}</span>
-        </Typography>
+        <Group className={classes.totalPurchases} gap='xs'>
+          <Text>{t('bid.totalBids')}</Text>
+          <Text fw={600}>{purchases.length}</Text>
+        </Group>
       )}
     </div>
   );

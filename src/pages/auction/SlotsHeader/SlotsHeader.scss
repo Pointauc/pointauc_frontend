@@ -1,4 +1,4 @@
-@import "../../../styles/colors";
+@import '../../../styles/colors';
 
 .slots-header {
   display: flex;
@@ -7,8 +7,7 @@
   flex-shrink: 0;
   padding-bottom: 1.5em;
 
-  &>.item {
-
+  & > .item {
   }
 
   .vertical-divider {
@@ -22,5 +21,6 @@
 
   .slot-search-wrapper {
     flex-grow: 3;
+    flex-basis: 320px;
   }
 }

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
@@ -25,9 +25,9 @@ const PresetSelect: FC<PresetSelectProps> = ({ presets, onSelect }) => {
 
   return (
     <div className='roulette-preset-select'>
-      <Typography variant='h2'>{t('auc.casino.selectLot')}</Typography>
-      <Typography className='roulette-preset-select-desc'>{t('auc.casino.description')}</Typography>
-      <Typography className='roulette-preset-select-warning'>{t('auc.casino.warning')}</Typography>
+      <Text size='xl'>{t('auc.casino.selectLot')}</Text>
+      <Text className='roulette-preset-select-desc'>{t('auc.casino.description')}</Text>
+      <Text className='roulette-preset-select-warning'>{t('auc.casino.warning')}</Text>
       <div className='roulette-menu-presets'>
         {presets.map((preset) => (
           <RoulettePresetView key={preset.multiplier} preset={preset} onSelect={onSelect} />

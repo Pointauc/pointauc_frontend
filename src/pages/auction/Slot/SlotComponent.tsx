@@ -1,11 +1,10 @@
 import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
-import { FilledInputProps, IconButton, OutlinedInput, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import './Slot.scss';
 import './SlotCompact.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { TextInput } from '@mantine/core';
+import { TextInput, TextInputProps } from '@mantine/core';
 
 import { Slot } from '@models/slot.model.ts';
 import { addExtra, addSlot, setSlotAmount, setSlotExtra, setSlotName } from '@reducers/Slots/Slots.ts';
@@ -47,17 +46,17 @@ const SlotComponent: FC<SlotComponentProps> = ({ slot, readonly }) => {
     };
   }, [id, showChances]);
 
-  const handleNameBlur: FilledInputProps['onBlur'] = (e): void => {
+  const handleNameBlur: TextInputProps['onBlur'] = (e): void => {
     dispatch(setSlotName({ id, name: e.target.value }));
   };
-  const handleNameChange: FilledInputProps['onChange'] = (e): void => {
+  const handleNameChange: TextInputProps['onChange'] = (e): void => {
     setCurrentName(e.target.value);
   };
 
-  const handleExtraBlur: FilledInputProps['onBlur'] = (e): void => {
+  const handleExtraBlur: TextInputProps['onBlur'] = (e): void => {
     dispatch(setSlotExtra({ id, extra: Number(e.target.value) }));
   };
-  const handleExtraChange: FilledInputProps['onChange'] = (e): void => {
+  const handleExtraChange: TextInputProps['onChange'] = (e): void => {
     setCurrentExtra(Number(e.target.value));
   };
 

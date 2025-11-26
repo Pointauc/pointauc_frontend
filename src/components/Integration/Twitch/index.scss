@@ -1,13 +1,5 @@
 @import "../../../styles/colors";
 
-.login-button {
-  &.twitch {
-    .base-icon path {
-      fill: $twitch;
-    }
-  }
-}
-
 .integration-switch {
   &.twitch {
     .base-icon path {
@@ -16,7 +8,7 @@
   }
 }
 
-.login-button.twitch {
+[data-integration='twitch'] {
   background-color: #7c43d0 !important;
   color: #F1F1F1 !important;
 

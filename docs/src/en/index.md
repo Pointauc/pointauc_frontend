@@ -1,30 +1,32 @@
 ---
 title: Overview
 order: 1
-outline: 2
+outline: deep
 ---
 
-# 🎯 [Pointauc](https://pointauc.com)
+# Introduction to Pointauc
 
 > **Let your viewers decide what happens on your stream**
 
-Pointauc is a web tool that organizes viewer input for streamers. Instead of asking "what should I play next?" and getting flooded with chat messages, viewers can place bids using channel points or donations.
+Pointauc helps you organize viewer input. Instead of trying to read every "play this!" message in chat, you can let your viewers place official bids using channel points or donations.
 
-You get a clear list of what people want, and can pick winners using different selection methods. It encourages viewer engagement and activity on stream.
+You get a clean, organized list of requests and can pick winners fairly using fun selection methods. It's the perfect way to boost engagement and give your community a real voice in your content.
 
-> 💡 **Not just for streaming** - Use Pointauc for any kind of lottery, contest, or group decision-making where you need to collect entries and pick winners fairly.
+::: tip 💡 Not just for streaming
+While built for streamers, Pointauc works great for **any** group decision-making. Use it for lotteries, contests, or community polls where you need to collect entries and pick winners transparently.
+:::
 
-## 🎮 What does it do?
+## What can you do?
 
-Your viewers can bid on:
+Give your viewers control over:
 
 > 🎲 **What game you play next**  
 > 🎬 **Which movie/video to watch**  
 > ⭐ **Any custom option you create**
 
-You get the bids organized in a clean interface, and can pick winners using different methods like wheels, battles, or simple highest bidder.
+You manage everything from a simple dashboard, picking winners via **Spin Wheels** or **Highest Bidder**.
 
-## 👥 How viewers participate
+## How viewers participate
 
 **There are 2 ways for viewers to place bids:**
 
@@ -54,41 +56,35 @@ Viewers send monetary donations that count as bids. Works through:
 </tbody>
 </table>
 
-## ⚡ Main features
+Choose how you want to pick the winner:
 
-### 🏆 Auctions & Bidding
+| Method              | Description                                       |
+| :------------------ | :------------------------------------------------ |
+| **Wheel Spin**      | Classic random selection – great for suspense!    |
+| **Top Contributor** | Reward the highest bidder directly.               |
+| **Elimination**     | Remove options one by one until a winner remains. |
+| **Battle**          | A tournament-style bracket to find the champion.  |
 
-Create auctions for anything - games, content, challenges. Viewers bid with channel points or donations. You decide who wins.
+### 🤖 Smart Automation
 
-### 🎯 Winner Selection Tools
+- **Auto-create bids** from channel point redemptions
+- **Timers & Rules** to keep auctions running smoothly
+- **Live Updates** so viewers always see the current state
+- **Customization** to match your stream's branding
 
-**Pick winners however you want:**
+## Documentation Guide
 
-| Method                   | Description                  |
-| ------------------------ | ---------------------------- |
-| **🎡 Wheel spin**        | Classic random selection     |
-| **🥇 Top contributor**   | Select the highest bidder    |
-| **⚔️ Elimination wheel** | Remove options one by one    |
-| **👑 Battle format**     | Tournament-style elimination |
+Here is what you'll find in these docs:
 
-### 🤖 Automation
-
-- ✅ Auto-create bids from channel point redemptions
-- ⏰ Set timers and rules
-- 🎨 Customize the look however you want
-- 🔄 Everything updates live for viewers
-
-## 📚 What's in these docs
-
-**We'll cover:**
-
-| Topic                   | What you'll learn            |
-| ----------------------- | ---------------------------- |
-| **🚀 Setup**            | Getting everything connected |
-| **🎯 Running auctions** | Day-to-day usage             |
-| **🔌 Integrations**     | Platform-specific setup      |
-| **⚙️ Customization**    | Making it yours              |
+| Section              | Content                                      |
+| :------------------- | :------------------------------------------- |
+| **Setup**            | Connecting your accounts and getting started |
+| **Running Auctions** | How to manage bids and pick winners daily    |
+| **Integrations**     | Setting up Twitch, Donation Alerts, and more |
+| **Customization**    | Tweaking the look and feel of your auctions  |
 
 ---
 
-💬 **Found a bug or have ideas?** [Let us know on GitHub](https://github.com/Pointauc/pointauc_frontend/issues)
+::: info Have feedback?
+Found a bug or have a feature request? [Let us know on GitHub](https://github.com/Pointauc/pointauc_frontend/issues).
+:::

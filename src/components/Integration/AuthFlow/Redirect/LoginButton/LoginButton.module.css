@@ -1,0 +1,20 @@
+.loginButton {
+  height: 40px;
+}
+
+.partnerButton {
+  height: auto;
+  min-height: 56px;
+  padding: 8px 16px;
+}
+
+.partnerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+}

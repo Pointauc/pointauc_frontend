@@ -1,25 +1,24 @@
-import { Anchor, Button, Checkbox, Flex, Grid, Group, SimpleGrid, Stack } from '@mantine/core';
+import { Anchor, Button, Checkbox, Group, SimpleGrid, Stack } from '@mantine/core';
 import { ReactNode } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
-import LoadingButton from '@components/LoadingButton/LoadingButton';
+import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
+import { WheelFormat } from '@constants/wheel.ts';
 import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ClassicDropoutDescription';
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
 import WheelFormatField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat';
-import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
-import { WheelFormat } from '@constants/wheel.ts';
 
-import NewDropoutDescription from '../../../Dropout/ui/NewDropoutDescription/NewDropoutDescription';
-import { DropoutHelp } from '../../../Dropout/ui/DropoutHelp';
 import { DropoutVariant } from '../../../BaseWheel/BaseWheel';
-import WheelStyleSelect from '../Fields/StyleSelect/StyleSelect';
+import { DropoutHelp } from '../../../Dropout/ui/DropoutHelp';
+import NewDropoutDescription from '../../../Dropout/ui/NewDropoutDescription/NewDropoutDescription';
 import CoreImageField from '../Fields/CoreImageExpandPanel/CoreImage';
 import DropoutFormatField from '../Fields/DropoutFormat';
 import RandomSpinConfig from '../Fields/RandomSpinConfig';
 import RandomSpinSwitch from '../Fields/RandomSpinSwitch';
 import SpinTimeField from '../Fields/SpinTime';
+import WheelStyleSelect from '../Fields/StyleSelect/StyleSelect';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -41,7 +40,13 @@ const WheelSettings = (props: WheelSettingsProps) => {
   const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
 
   const submitButton = (
-    <Button loading={isLoadingSeed} disabled={isSubmitting} variant='contained' type='submit'>
+    <Button
+      loading={isLoadingSeed}
+      disabled={isSubmitting}
+      variant='contained'
+      type='submit'
+      onClick={() => console.log('submit click')}
+    >
       {isSubmitting ? t('wheel.spinning') : t('wheel.spin')}
     </Button>
   );

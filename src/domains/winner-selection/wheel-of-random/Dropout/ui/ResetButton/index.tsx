@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mui/material';
+import { Button } from '@mantine/core';
 import { IconRefresh } from '@tabler/icons-react';
 import { Group, Modal, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
@@ -16,13 +16,7 @@ const ResetButton = (props: ResetButtonProps) => {
 
   return (
     <>
-      <Button
-        className='wheel-controls-button'
-        onClick={() => setOpened(true)}
-        variant='contained'
-        color='primary'
-        endIcon={<IconRefresh size={18} style={{ marginBottom: 2 }} />}
-      >
+      <Button onClick={() => setOpened(true)} variant='filled' color='primary' rightSection={<IconRefresh size={18} />}>
         {t('common.reset')}
       </Button>
 
@@ -36,8 +30,10 @@ const ResetButton = (props: ResetButtonProps) => {
         <Stack gap='xs'>
           <Text>{t('wheel.dropout.reset.modal.description')}</Text>
           <Group justify='flex-end'>
-            <Button onClick={() => setOpened(false)}>{t('common.cancel')}</Button>
-            <Button onClick={onClick} variant='contained' color='primary'>
+            <Button onClick={() => setOpened(false)} variant='outline'>
+              {t('common.cancel')}
+            </Button>
+            <Button onClick={onClick} variant='filled' color='primary'>
               {t('common.reset')}
             </Button>
           </Group>

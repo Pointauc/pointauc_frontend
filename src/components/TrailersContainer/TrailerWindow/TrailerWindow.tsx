@@ -1,8 +1,7 @@
 import { ChangeEvent, KeyboardEvent, FC, useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { CircularProgress, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Group, Kbd, Stack, Text, Title } from '@mantine/core';
+import { ActionIcon, Center, Group, Input, Kbd, Loader, Stack, Text, Title } from '@mantine/core';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useTranslation } from 'react-i18next';
 
@@ -81,6 +80,8 @@ const TrailerWindow: FC<Trailer> = ({ id, title: windowTitle }) => {
     }
   }, []);
 
+  const isLoading2 = true;
+
   return (
     <ResizablePanel
       initialSize={initialSize}
@@ -89,9 +90,9 @@ const TrailerWindow: FC<Trailer> = ({ id, title: windowTitle }) => {
       title={
         <Group align='center' gap='xs'>
           {currentVideo && (
-            <IconButton onClick={() => setCurrentVideo(null)} title='Назад' size='large'>
+            <ActionIcon radius='xl' variant='subtle' onClick={() => setCurrentVideo(null)} title='Назад' size='xl'>
               <ArrowBackIcon />
-            </IconButton>
+            </ActionIcon>
           )}
           <Title order={4}>{`Трейлер: ${windowTitle}`}</Title>
         </Group>
@@ -99,41 +100,49 @@ const TrailerWindow: FC<Trailer> = ({ id, title: windowTitle }) => {
       contentClassName={currentVideo ? styles.panelContentWithYoutube : undefined}
     >
       <div
-        style={{ position: 'absolute', top: 0, left: 0, ...(currentVideo ? windowSize : { width: 0, height: 0 }) }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          zIndex: 10,
+          ...(currentVideo ? windowSize : { width: 0, height: 0 }),
+        }}
         className='youtube-container'
       >
         <YoutubePlayer videoId={currentVideo} width={windowSize.width} height={windowSize.height} />
       </div>
+      {currentVideo && (
+        <Stack align='center' justify='center' pos='absolute' top={0} left={0} w='100%' h='100%'>
+          <Loader size='lg' type='dots' />
+          <Text>{t('trailerWindow.playerLoading')}</Text>
+        </Stack>
+      )}
       {!currentVideo && (
-        <div className='trailer'>
-          <div className='search-form'>
-            <IconButton type='submit' className='search-form-icon' onClick={onSubmit} size='large'>
-              <SearchIcon />
-            </IconButton>
-            <InputBase
-              placeholder='Поиск YouTube'
-              className='search-form-input'
-              value={searchRequest}
-              onChange={handleRequestChange}
-              onKeyPress={handleKeyPress}
-            />
-            <Kbd className={styles.searchFormKbd}>Enter</Kbd>
-          </div>
-          <div className='trailers-list'>
-            {isLoading ? (
-              <div className='trailer-loading'>
-                <CircularProgress className='trailer-loading-spinner' />
-              </div>
-            ) : (
-              <Stack gap='xs'>
-                {videos.map((video) => (
-                  <VideoPreview {...video} onSelect={setCurrentVideo} key={video.id.videoId} />
-                ))}
-                {videos.length === 0 && <Text>{t('trailerWindow.noResults')}</Text>}
-              </Stack>
-            )}
-          </div>
-        </div>
+        <Stack>
+          <Input
+            leftSection={<SearchIcon onClick={onSubmit} />}
+            rightSection={<Kbd className={styles.searchFormKbd}>Enter</Kbd>}
+            rightSectionWidth={76}
+            size='md'
+            placeholder='Поиск YouTube'
+            className='search-form-input'
+            value={searchRequest}
+            onChange={handleRequestChange}
+            onKeyPress={handleKeyPress}
+          />
+          {isLoading ? (
+            <Center pt='md' w='100%'>
+              <Loader size='lg' />
+            </Center>
+          ) : (
+            <Stack gap='xs'>
+              {videos.map((video) => (
+                <VideoPreview {...video} onSelect={setCurrentVideo} key={video.id.videoId} />
+              ))}
+              {videos.length === 0 && <Text>{t('trailerWindow.noResults')}</Text>}
+            </Stack>
+          )}
+        </Stack>
       )}
     </ResizablePanel>
   );

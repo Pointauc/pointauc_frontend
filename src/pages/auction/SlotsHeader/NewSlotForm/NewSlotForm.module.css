@@ -1,0 +1,26 @@
+.root {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: var(--mantine-spacing-md);
+}
+
+.slotName {
+  flex-grow: 1;
+}
+
+.slotMoney {
+  flex-basis: 110px;
+}
+
+.slotInput {
+  font-size: var(--mantine-font-size-lg);
+}
+
+:global(.custom-background) .slotInput {
+  background-color: var(--mantine-color-darkTransparent-7);
+}
+
+:global(.custom-background) .slotInput::placeholder {
+  color: var(--mantine-color-dark-1);
+}

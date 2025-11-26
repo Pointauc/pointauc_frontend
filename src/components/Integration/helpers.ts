@@ -70,6 +70,18 @@ export const integrationUtils = {
         },
         { donate: [], points: [] },
       ),
+    partner: (integrations: Integration.Config[]) =>
+      integrations.reduce<{ partner: Integration.Config[]; regular: Integration.Config[] }>(
+        (acc, item) => {
+          if (item.branding.partner) {
+            acc.partner.push(item);
+          } else {
+            acc.regular.push(item);
+          }
+          return acc;
+        },
+        { partner: [], regular: [] },
+      ),
   },
   setSubscribeState: async ({ id, pubsubFlow }: Integration.Config, state: boolean, ignoreLoading?: boolean) => {
     const { subscription, user } = store.getState();

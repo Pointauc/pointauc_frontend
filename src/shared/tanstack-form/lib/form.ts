@@ -1,9 +1,15 @@
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 
-const { fieldContext, formContext } = createFormHookContexts();
+import { TextField, NumberField, SwitchField } from '@shared/tanstack-form/fields';
+
+export const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
 
 const formFactory = createFormHook({
-  fieldComponents: {},
+  fieldComponents: {
+    TextField,
+    NumberField,
+    SwitchField,
+  },
   formComponents: {},
   fieldContext,
   formContext,

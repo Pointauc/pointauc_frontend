@@ -1,5 +1,4 @@
 import { RandomPaceConfig } from '@services/SpinPaceService';
-import { Option } from '@components/RadioButtonGroup/RadioButtonGroup';
 
 export enum WheelCommand {
   OpenReg = 'openReg',

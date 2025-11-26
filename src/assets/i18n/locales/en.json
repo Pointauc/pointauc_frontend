@@ -1,6 +1,7 @@
 {
   "trailerWindow": {
-    "noResults": "No results found or the feature is temporarily unavailable. Please try again later."
+    "noResults": "No results found or the feature is temporarily unavailable. Please try again later.",
+    "playerLoading": "Loading the player..."
   },
   "resizablePanel": {
     "description": "You can move the window around the screen and change its size by dragging the bottom right corner."
@@ -18,9 +19,10 @@
     "lotBids": "Points for the lot - \"{{name}}\"",
     "restBids": "All other points",
     "statistic": {
-      "bidsAmount": "Total bids: <b>{{amount}}</b>",
-      "totalCost": "Total cost: <b>{{amount}}</b>",
-      "largestInvestor": "Contributed the most: <b style=\"color: {{color}}\">{{name}}</b> with <b>{{amount}}</b> points",
+      "bidsAmount": "Total bids:",
+      "totalCost": "Total cost:",
+      "largestInvestor": "Contributed the most:",
+      "investorAmount": "<b style=\"color: {{color}}\">{{name}}</b> with <b>{{amount}}</b> points",
       "noBids": "No bids for this category"
     },
     "requestStatus": {
@@ -72,7 +74,20 @@
       "donations": "Donations"
     },
     "donatePay": {
-      "name": "Donate Pay"
+      "name": "Donate Pay",
+      "modal": {
+        "title": "DonatePay Integration",
+        "description1": "Connecting DonatePay will allow you to display incoming donations directly on the website in real-time. This significantly simplifies and speeds up the process of adding bids to the auction, and also opens up several new features of the website.",
+        "description2": "The website does NOT track or store donation statistics on its servers, including the streamer's personal information such as email, card details, balance, etc. All statistics that can be found on the website are stored in the browser on the user's computer and are deleted when the tab is closed.",
+        "apiKeyTitle": "Getting API Key",
+        "securityWarning": "DO NOT SHOW THE API KEY AND DONATEPAY PAGE ON STREAM!",
+        "instructionsPart1": "Go to the page",
+        "instructionsPart2": "then copy the value of the \"Your API key\" field and paste it into the field below on the auction website.",
+        "apiKeyPlaceholder": "Paste your API key...",
+        "authorize": "Authorize",
+        "hideScreenWarning": "Hide the screen on stream before proceeding to the next page",
+        "screenHidden": "I hid the screen"
+      }
     },
     "da": {
       "name": "Donation Alerts"
@@ -331,6 +346,26 @@
   },
   "settings": {
     "pageTitle": "Settings",
+    "twitch": {
+      "rewardPresetsConfirmation": {
+        "title": "Warning",
+        "description": "After updating rewards, current viewer redemptions cannot be refunded!",
+        "confirm": "Update Rewards"
+      },
+      "addReward": "Add Reward",
+      "bindRewardsToTimer": "Bind Reward Activation to Timer",
+      "bindRewardsToTimerDesc": "Rewards will automatically activate when the timer resumes and deactivate when paused or completed.",
+      "closeRewards": "Hide Rewards",
+      "color": "Color",
+      "commonRewardsName": "Common Name for Rewards",
+      "commonRewardsNameDesc": "When integration is enabled, rewards in the format \"Name + Cost\" are automatically created on the channel.",
+      "cost": "Cost",
+      "deleteRewards": "Delete Rewards",
+      "openRewards": "Enable Rewards",
+      "returnCanceledBids": "Return Canceled Rewards",
+      "rewardsList": "Rewards List:",
+      "saveRewards": "Save"
+    },
     "presets": {
       "nameFieldLabel": "Active settings template",
       "defaultTitle": "Template 1",
@@ -443,21 +478,6 @@
       "update": "Generate New",
       "modalTitle": "Your API Token",
       "userIdRequired": "You need to be logged in to generate a token. Use any service below to create an account."
-    },
-    "twitch": {
-      "addReward": "Add Reward",
-      "bindRewardsToTimer": "Bind Reward Activation to Timer",
-      "bindRewardsToTimerDesc": "Rewards will automatically activate when the timer resumes and deactivate when paused or completed.",
-      "closeRewards": "Hide Rewards",
-      "color": "Color",
-      "commonRewardsName": "Common Name for Rewards",
-      "commonRewardsNameDesc": "When integration is enabled, rewards in the format \"Name + Cost\" are automatically created on the channel.",
-      "cost": "Cost",
-      "deleteRewards": "Delete Rewards",
-      "openRewards": "Enable Rewards",
-      "returnCanceledBids": "Return Canceled Rewards",
-      "rewardsList": "Rewards List:",
-      "saveRewards": "Save"
     }
   },
   "stopwatch": {
@@ -512,7 +532,7 @@
       "classic": "Classic"
     },
     "addLotsToAuc": "Save lots in auction",
-    "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
+    "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel (7TV, BTTV, FFZ)",
     "deleteLot": "Delete Lot",
     "deleteLotConfirmationModal": {
       "title": "Delete Lot?",

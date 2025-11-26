@@ -1,5 +1,5 @@
 import { Controller } from 'react-hook-form';
-import { Grid, Typography } from '@mui/material';
+import { Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import OutlineInput from '@shared/mantine/ui/Input/Outline/OutlineInput';
@@ -7,7 +7,7 @@ import OutlineInput from '@shared/mantine/ui/Input/Outline/OutlineInput';
 const SpinTimeField = () => {
   const { t } = useTranslation();
   return (
-    <Grid container alignItems='end' spacing={1}>
+    <Group align='end' gap='xs'>
       <Controller
         name='spinTime'
         render={({ field: { onChange, value } }) => (
@@ -20,8 +20,8 @@ const SpinTimeField = () => {
           />
         )}
       />
-      <Typography className='wheel-controls-tip'>с.</Typography>
-    </Grid>
+      <Text className='wheel-controls-tip'>с.</Text>
+    </Group>
   );
 };
 

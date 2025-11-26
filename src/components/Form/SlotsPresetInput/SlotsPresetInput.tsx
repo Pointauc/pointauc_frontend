@@ -1,6 +1,3 @@
-import { FC, ReactNode, useState } from 'react';
-import { DropzoneArea } from 'react-mui-dropzone';
-import { Trans, useTranslation } from 'react-i18next';
 import {
   Anchor,
   Button,
@@ -16,14 +13,15 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
+import BlockIcon from '@mui/icons-material/Block';
 import TaskIcon from '@mui/icons-material/Task';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import BlockIcon from '@mui/icons-material/Block';
-import { Link } from 'react-router-dom';
+import { FC, ReactNode, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 
-import { parseSlotsPreset } from '@utils/slots.utils.ts';
-import { Slot } from '@models/slot.model.ts';
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
+import { Slot } from '@models/slot.model.ts';
+import { parseSlotsPreset } from '@utils/slots.utils.ts';
 import './SlotsPresetInput.scss';
 
 interface SlotsPresetInputProps {

@@ -1,0 +1,63 @@
+.purchase {
+  cursor: pointer;
+}
+
+.purchase.disabled {
+  pointer-events: none;
+  cursor: initial;
+}
+
+.actionButton {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-0) 15%, transparent);
+  border-color: color-mix(in srgb, var(--mantine-color-white) 50%, transparent);
+}
+
+.actionButton:hover {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-0) 25%, transparent);
+}
+
+.splitButtonRight {
+  border-left: 0;
+}
+
+.removeCost {
+  border: solid 3px var(--mantine-color-red-6);
+}
+
+.dragPlaceholder {
+  border: 3px dashed var(--mantine-color-dark-3);
+  background-color: transparent;
+}
+
+.dragPlaceholder .purchaseContent {
+  opacity: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.removeButton {
+  padding: 5px;
+}
+
+/* Drag context styles */
+:global(.drag-context) {
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+}
+
+:global(.drag-context) .purchase {
+  width: 304px;
+}

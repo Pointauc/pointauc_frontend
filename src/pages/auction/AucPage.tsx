@@ -1,33 +1,30 @@
-import { lazy, Suspense, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { Box, Image, Overlay, ScrollArea } from '@mantine/core';
 import classNames from 'classnames';
-import { useHeadroom } from '@mantine/hooks';
+import { lazy, Suspense, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import Notification from '@components/Notification/Notification';
-import { RootState } from '@reducers';
-import { updatePercents } from '@services/PercentsRefMap.ts';
-import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import ChangelogModal from '@components/Changelog/ChangelogModal/ChangelogModal';
+import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import { getCurrentLanguage } from '@constants/language.constants.ts';
 import { Language } from '@enums/language.enum.ts';
-import { calcBackgroundOpacity } from '@utils/ui/background.ts';
-import { useIsMobile } from '@shared/lib/ui';
+import { RootState } from '@reducers';
+import { updatePercents } from '@services/PercentsRefMap.ts';
 import { ScrollContextProvider, useScrollContext } from '@shared/lib/scroll';
+import { useIsMobile } from '@shared/lib/ui';
+import { calcBackgroundOpacity } from '@utils/ui/background.ts';
 
 import AucActions from './AucActions/AucActions';
 import MobileActions from './AucActions/Mobile';
+import styles from './AucPage.module.css';
 import ControlColumn from './ControlColumn/ControlColumn';
 import SlotsColumn from './SlotsColumn/SlotsColumn';
-import styles from './AucPage.module.css';
 
 import './AucPage.scss';
 
-const LazyRules = lazy(() => import('./Rules/Rules.tsx'));
+const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
 
 const AucPageContent: React.FC = () => {
-  const { elementRef } = useScrollContext();
   const { background, backgroundOverlayOpacity, backgroundBlur } = useSelector(
     (root: RootState) => root.aucSettings.settings,
   );
@@ -66,7 +63,6 @@ const AucPageContent: React.FC = () => {
         </div>
         {isMobile ? <MobileActions /> : <AucActions />}
       </div>
-      <Notification />
       <TrailersContainer />
     </Box>
   );

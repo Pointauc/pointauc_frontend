@@ -1,5 +1,5 @@
 import { FC, useCallback, useMemo } from 'react';
-import { Typography } from '@mui/material';
+import { Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -72,13 +72,13 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
         <RandomWheel items={rawItems} onWin={handleWin} elements={wheelElements} initialSpinTime={5}>
           {settings.luckyWheelSelectBet && selectedPreset && (
             <div className='roulette-preset-wrapper'>
-              <Typography>{t('auc.casino.yourLot')}</Typography>
+              <Text>{t('auc.casino.yourLot')}</Text>
               <RoulettePresetView preset={selectedPreset} />
             </div>
           )}
           <div className='roulette-wheel-extra'>
             <div>
-              <Typography>{t('auc.casino.yourBid')}</Typography>
+              <Text>{t('auc.casino.yourBid')}</Text>
               <PurchaseComponent {...bid} hideActions disabled />
             </div>
           </div>

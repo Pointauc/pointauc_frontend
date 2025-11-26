@@ -1,16 +1,14 @@
-import { FC, MouseEvent, ReactNode, RefObject, useCallback, useEffect, useRef, useState } from 'react';
-import './ResizablePanel.scss';
-import { IconButton, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import classNames from 'classnames';
-import { Alert, Box, Flex, Group, Paper, Text, Title, Transition } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { Alert, Box, CloseButton, Group, Paper, Stack, Text, Transition } from '@mantine/core';
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
+import classNames from 'classnames';
+import { FC, MouseEvent, ReactNode, RefObject, useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import './ResizablePanel.scss';
 
 import { DragPosition, Size } from '@models/common.model.ts';
 
-import Resizer from './Resizer/Resizer';
 import styles from './ResizablePanel.module.css';
+import Resizer from './Resizer/Resizer';
 
 const scaleY = {
   in: { opacity: 1, transform: 'scaleY(1)', height: 'auto' },
@@ -119,9 +117,7 @@ const ResizablePanel: FC<ResizablePanelProps> = ({
       <Box className={styles.header} onMouseDown={handleMouseDown}>
         <Group align='center' justify='space-between' w='100%'>
           {title}
-          <IconButton onClick={onClose} className='resizable-panel-close' title='Закрыть' size='large'>
-            <CloseIcon />
-          </IconButton>
+          <CloseButton onClick={onClose} title={t('common.close')} radius='xl' size='xl' />
         </Group>
       </Box>
       <div className={classNames('resizable-panel-content', contentClassName)} ref={contentRef}>

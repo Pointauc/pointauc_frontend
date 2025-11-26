@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
-import mergewith from 'lodash.mergewith';
+import { mergeWith } from 'es-toolkit';
 
 import { getUserData, updateSettings } from '@api/userApi.ts';
 import { GetUserDto } from '@models/user.model.ts';
@@ -100,7 +100,7 @@ const aucSettingsSlice = createSlice({
   initialState,
   reducers: {
     setAucSettings(state, action: PayloadAction<Partial<AucSettingsDto>>): void {
-      const mergedSettings = mergewith(state.settings, action.payload, mergeCheck);
+      const mergedSettings = mergeWith(state.settings, action.payload, mergeCheck);
       localStorage.setItem('settings', JSON.stringify(mergedSettings));
       state.settings = mergedSettings;
     },

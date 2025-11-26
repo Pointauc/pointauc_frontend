@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
-import { Group, Stack, Text } from '@mantine/core';
+import { Divider, Group, Stack, Text } from '@mantine/core';
 
 import SettingsGroup from '@domains/user-settings/ui/SettingsGroup/SettingsGroup';
 import { RootState } from '@reducers';
@@ -24,6 +24,12 @@ const DonationsSettings = () => {
     () => integrationUtils.groupBy.availability(integrations.donate, authData),
     [authData],
   );
+  const { partner: partnerIntegrations, regular: regularIntegrations } = useMemo(
+    () => integrationUtils.groupBy.partner(unavailable),
+    [unavailable],
+  );
+
+  const hasPartnerAndRegular = partnerIntegrations.length > 0 && regularIntegrations.length > 0;
 
   return (
     <SettingsGroup title={t('settings.donations.donations')}>
@@ -34,9 +40,17 @@ const DonationsSettings = () => {
             <RevokeIntegrationButton revoke={integration.authFlow.revoke} />
           </Group>
         ))}
-        {unavailable.length > 0 && (
+        {partnerIntegrations.length > 0 && (
+          <Group gap='sm'>
+            {partnerIntegrations.map((integration) => (
+              <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+            ))}
+          </Group>
+        )}
+        {hasPartnerAndRegular && <Divider />}
+        {regularIntegrations.length > 0 && (
           <Group gap='md'>
-            {unavailable.map((integration) => (
+            {regularIntegrations.map((integration) => (
               <integration.authFlow.loginComponent key={integration.id} integration={integration} />
             ))}
           </Group>
