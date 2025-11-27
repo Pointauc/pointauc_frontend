@@ -519,6 +519,12 @@
       "genshinImpact": "???"
     }
   },
+  "editableSelect": {
+    "placeholder": "Выбрать вариант",
+    "editOption": "Редактировать выбранный вариант",
+    "addOption": "Добавить новый вариант",
+    "newOptionPlaceholder": "Название нового варианта"
+  },
   "save": {
     "fileImport": "Импорт из файла",
     "newSave": "Новое сохранение",

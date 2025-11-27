@@ -1,15 +1,14 @@
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { useClickOutside } from '@mantine/hooks';
 import classNames from 'classnames';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
 import { useRulesBroadcasting } from '@domains/broadcasting/lib/useRulesBroadcasting';
-import { RulesSettingsContext } from '@pages/auction/Rules/RulesSettingsContext.tsx';
-import { timedFunction } from '@utils/dataType/function.utils.ts';
 import { buildDefaultRule, RulesPreset } from '@pages/auction/Rules/helpers';
+import { RulesSettingsContext } from '@pages/auction/Rules/RulesSettingsContext.tsx';
+import EditableSelect from '@shared/ui/EditableSelect/EditableSelect';
+import { timedFunction } from '@utils/dataType/function.utils.ts';
 
 import type { JSONContent } from '@tiptap/react';
 import './Rules.scss';
@@ -35,7 +34,15 @@ const RulesLayout = () => {
     data: { size, background },
   } = useContext(RulesSettingsContext);
 
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [dropdownRef, setDropdownRef] = React.useState<HTMLDivElement | null>(null);
+  const [containerRef, setContainerRef] = React.useState<HTMLDivElement | null>(null);
+  useClickOutside(
+    () => {
+      setActive(false);
+    },
+    null,
+    [dropdownRef, containerRef],
+  );
 
   useEffect(() => {
     const savedRules = localStorage.getItem('rules');
@@ -85,18 +92,13 @@ const RulesLayout = () => {
     }
   }, [currentRule, broadcastRules]);
 
-  const onRuleSelect = (id: string) => {
-    if (id === NEW_RULE_KEY) {
-      const newRule = buildDefaultRule(t, rules);
-      setRules([...rules, newRule]);
-      setSelectedRuleId(newRule.id);
-    } else {
-      setSelectedRuleId(id);
-    }
+  const createNewRule = () => {
+    const newRule = buildDefaultRule(t, rules);
+    setRules([...rules, newRule]);
+    setSelectedRuleId(newRule.id);
   };
 
-  const removeRule = (id: string, event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
+  const removeRule = (id: string) => {
     setRules((rules) => {
       const updatedRules = rules.filter((rule) => rule.id !== id);
 
@@ -115,75 +117,24 @@ const RulesLayout = () => {
     });
   };
 
-  const handleMouseMove = useMemo(
-    () =>
-      timedFunction((e: MouseEvent) => {
-        setActive((prevActive) => {
-          if (!document.body.contains(e.target as Node)) return prevActive;
-          const isInsideRules = containerRef.current?.contains(e.target as Node) ?? false;
-
-          if (!isInsideRules && prevActive) {
-            const modal = document.getElementsByClassName('MuiModal-root');
-
-            return modal.length > 0;
-          }
-
-          return isInsideRules;
-        });
-      }, 200),
-    [],
-  );
-
-  useEffect(() => {
-    if (active) {
-      document.addEventListener('mousedown', handleMouseMove);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleMouseMove);
-    };
-  }, [active, handleMouseMove]);
-
   return (
     <div
       className={classNames('auc-rules', { active })}
       style={{ width: size }}
-      ref={containerRef}
+      ref={setContainerRef}
       onClick={() => setActive(true)}
     >
       <div className='title-container' ref={onRender}>
-        <OutlinedInput
-          value={currentRule?.name}
-          onChange={(e) => setRuleName(e.target.value)}
-          className='rules-title'
-        />
-        <Select
+        <EditableSelect
+          size='md'
           value={selectedRuleId}
-          className='rules-select'
-          MenuProps={{
-            className: 'rules-select-menu',
-            anchorEl: container,
-            anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-            transformOrigin: { vertical: 'top', horizontal: 'left' },
-            PaperProps: { sx: { width: () => container?.clientWidth ?? 0 } },
-          }}
-          renderValue={() => null}
-          onChange={(e) => onRuleSelect(e.target.value as string)}
-        >
-          {rules.map((rule) => (
-            <MenuItem value={rule.id} key={rule.id}>
-              {rule.name}
-              <IconButton className='remove-rule-btn' onClick={(e) => removeRule(rule.id, e)}>
-                <CloseIcon />
-              </IconButton>
-            </MenuItem>
-          ))}
-          <MenuItem value={NEW_RULE_KEY}>
-            <IconButton>
-              <AddIcon />
-            </IconButton>
-          </MenuItem>
-        </Select>
+          onChange={setSelectedRuleId}
+          options={rules.map((rule) => ({ value: rule.id, label: rule.name }))}
+          onOptionRename={(value, newLabel) => setRuleName(newLabel)}
+          onOptionAdd={createNewRule}
+          onOptionDelete={removeRule}
+          dropdownRef={setDropdownRef}
+        />
       </div>
       <div className='rules-description'>
         <RichTextEditorTipTap initialValue={initialRulesContent} onChange={onRulesChanged} />

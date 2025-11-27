@@ -587,5 +587,11 @@
       "default": "Default",
       "genshinImpact": "???"
     }
+  },
+  "editableSelect": {
+    "placeholder": "Select option",
+    "editOption": "Edit selected option",
+    "addOption": "Add new option",
+    "newOptionPlaceholder": "New option name"
   }
 }
