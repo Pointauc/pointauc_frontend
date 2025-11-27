@@ -1,13 +1,9 @@
 import { Box, Image, Overlay, ScrollArea } from '@mantine/core';
 import classNames from 'classnames';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
-import ChangelogModal from '@components/Changelog/ChangelogModal/ChangelogModal';
 import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
-import { getCurrentLanguage } from '@constants/language.constants.ts';
-import { Language } from '@enums/language.enum.ts';
 import { RootState } from '@reducers';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 import { ScrollContextProvider, useScrollContext } from '@shared/lib/scroll';
@@ -23,6 +19,7 @@ import SlotsColumn from './SlotsColumn/SlotsColumn';
 import './AucPage.scss';
 
 const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
+const ChangelogModal = lazy(() => import('@domains/changelog/ui/ChangelogModal'));
 
 const AucPageContent: React.FC = () => {
   const { background, backgroundOverlayOpacity, backgroundBlur } = useSelector(
@@ -32,9 +29,6 @@ const AucPageContent: React.FC = () => {
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const { slots, searchTerm } = useSelector((root: RootState) => root.slots);
   const { showRules } = useSelector((root: RootState) => root.aucSettings.view);
-
-  const { i18n } = useTranslation();
-  const currentLanguage = getCurrentLanguage(i18n);
 
   useEffect(() => {
     if (showChances && !searchTerm) {
@@ -52,7 +46,7 @@ const AucPageContent: React.FC = () => {
           <Overlay backgroundOpacity={imageOpacity} color='#242424' blur={backgroundBlur} />
         </Box>
       )}
-      {currentLanguage.key !== Language.EN && <ChangelogModal />}
+      <ChangelogModal />
       <div className='auc-container-column'>
         <div className='auc-container-row'>
           <Box className='auc-container-left-column' visibleFrom='sm'>
