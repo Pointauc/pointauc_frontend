@@ -11,6 +11,7 @@ import ROUTES from '@constants/routes.constants';
 import AucPage from '@pages/auction/AucPage';
 import WheelPage from '@pages/wheel/WheelPage/WheelPage';
 import LoadingPage from '@components/LoadingPage/LoadingPage';
+import TestPage from '@pages/test/TestPage';
 
 import classes from './App.module.css';
 
@@ -35,8 +36,8 @@ export const AppMain = () => {
         {/* <Route path={ROUTES.STATISTIC} element={<Statistic />} /> */}
         <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
         <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
-        <Route path={ROUTES.TEST} element={<LoadingPage helpText={'lorem ipsum dolor sit amet'} />} />
         <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
+        <Route path={ROUTES.TEST} element={<TestPage />} />
       </Routes>
     </AppShell.Main>
   );

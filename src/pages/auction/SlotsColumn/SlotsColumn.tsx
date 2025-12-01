@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import './SlotsColumn.scss';
@@ -8,7 +8,8 @@ import { useIsMobile } from '@shared/lib/ui';
 
 import SlotsHeader from '../SlotsHeader/SlotsHeader';
 
-import SlotsList from './SlotsList';
+import SlotsList from './List/SlotsList';
+import classes from './SlotsColumn.module.css';
 
 const SlotsColumn: React.FC = () => {
   const buyoutInput = useRef<HTMLInputElement>(null);
@@ -40,7 +41,7 @@ const SlotsColumn: React.FC = () => {
   }, [buyoutInput]);
 
   const slotsColumnClasses = useMemo(
-    () => classNames('slots-column', { dragging: !!draggedRedemption }),
+    () => clsx(classes.column, { dragging: !!draggedRedemption }),
     [draggedRedemption],
   );
 
@@ -53,9 +54,9 @@ const SlotsColumn: React.FC = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className='slots'>
+    <div className={classes.root}>
       {!isMobile && <SlotsHeader />}
-      <div className='slots-wrapper'>
+      <div className={classes.wrapper}>
         <div className={slotsColumnClasses} ref={containerRef}>
           <SlotsList containerRef={containerRef} slots={filteredSlots} optimize={optimize} />
         </div>

@@ -5,10 +5,13 @@
 }
 
 .list {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   height: 0;
   overflow: auto;
   width: 310px;
+  gap: var(--mantine-spacing-sm);
 }
 
 .totalPurchases {

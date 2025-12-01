@@ -83,7 +83,7 @@ export const HeadingDropdown = () => {
         />
       </Menu.Target>
 
-      <Menu.Dropdown>
+      <Menu.Dropdown className={classes.dropdown}>
         {HEADING_OPTIONS.map((option) => (
           <Menu.Item
             key={option.level ?? 'p'}

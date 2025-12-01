@@ -18,7 +18,6 @@
   font-weight: 400;
 }
 
-[data-active] {
+.dropdown [data-active] {
   background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
 }
-

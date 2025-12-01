@@ -114,7 +114,6 @@ const redirectRoutes = integrationUtils.filterBy
 
 const router = createBrowserRouter([
   { path: `${ROUTES.HOME}*`, element: <App /> },
-  { path: `${ROUTES.TEST}*`, element: <LoadingPage helpText={'lorem ipsum dolor sit amet'} /> },
   { path: '/overlays/view/:id', element: <OverlayViewPage /> },
   ...redirectRoutes,
 ]);

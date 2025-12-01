@@ -7,17 +7,23 @@ export interface RulesPreset {
   content: JSONContent;
 }
 
-const getNextName = (index: number) => `Правила${index > 0 ? ` #${index + 1}` : ''}`;
+const getNextName = (prefix: string, index: number) => `${prefix}${index > 0 ? ` #${index + 1}` : ''}`;
 
-export const buildDefaultRule = (t: TFunction, rules: RulesPreset[] = []): RulesPreset => {
-  const names = rules.map((rule) => rule.name);
-
+const getAvailableName = (prefix: string, names: string[]) => {
   let index = 0;
-  let name = getNextName(index);
+  let name = getNextName(prefix, index);
   while (names.includes(name)) {
     index += 1;
-    name = getNextName(index);
+    name = getNextName(prefix, index);
   }
+  return name;
+};
+
+export const buildDefaultRule = (t: TFunction, rules: RulesPreset[] = [], newName?: string): RulesPreset => {
+  const name = getAvailableName(
+    newName || t('auc.defaultRuleName'),
+    rules.map((rule) => rule.name),
+  );
 
   return {
     name,

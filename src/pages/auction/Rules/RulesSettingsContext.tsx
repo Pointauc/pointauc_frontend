@@ -1,11 +1,20 @@
 import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
 import { DeepPartial } from 'redux';
 import { useSelector } from 'react-redux';
+import tinycolor2 from 'tinycolor2';
 
 import { deepMerge } from '@utils/common.utils.ts';
 import { RootState } from '@reducers';
 
 export interface RulesSettings {
+  size: number;
+  position: 'left' | 'bottom';
+  background: {
+    color: string;
+  };
+}
+
+export interface RulesSettingsLegacy {
   size: number;
   position: 'left' | 'bottom';
   background: {
@@ -24,7 +33,6 @@ const initialSettings: RulesSettings = {
   position: 'left',
   background: {
     color: '#00000000',
-    opacity: 0,
   },
 };
 
@@ -32,7 +40,6 @@ const backgroundSettings = {
   ...initialSettings,
   background: {
     color: '#00000026',
-    opacity: 0.15,
   },
 };
 
@@ -40,10 +47,29 @@ export const RulesSettingsContext = createContext<RulesContextData>({ data: init
 
 export const RulesSettingsProvider = ({ children }: { children: ReactNode }): ReactNode => {
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
-  const storageSettings = useMemo(() => {
+  const storageSettings: RulesSettings | null = useMemo(() => {
     const fromStorage = localStorage.getItem('rulesLayout');
+    if (!fromStorage) return null;
 
-    return fromStorage ? JSON.parse(fromStorage) : null;
+    const parsedSettings = JSON.parse(fromStorage) as RulesSettingsLegacy;
+
+    const isLegacy = parsedSettings.background.opacity !== undefined;
+
+    if (isLegacy) {
+      const normalizedSettings: RulesSettings = {
+        size: parsedSettings.size,
+        position: parsedSettings.position,
+        background: {
+          color: tinycolor2(parsedSettings.background.color ?? '#000000')
+            .setAlpha(1 - (parsedSettings.background.opacity ?? 0))
+            .toHexString(),
+        },
+      };
+      localStorage.setItem('rulesLayout', JSON.stringify(normalizedSettings));
+      return normalizedSettings;
+    }
+
+    return parsedSettings;
   }, []);
   const [settings, setSettings] = useState<RulesSettings>(storageSettings ?? initialSettings);
   const [hasChanged, setHasChanged] = useState(false);

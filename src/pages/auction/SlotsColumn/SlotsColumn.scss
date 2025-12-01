@@ -1,26 +1,8 @@
 @import '../../../styles/colors';
 
 .slots {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-
   .slot-grid-wrapper {
     width: 100%;
-  }
-
-  &-wrapper {
-    display: flex;
-    min-height: 0;
-
-    @media (min-width: 48em) {
-      flex: 1 1 0;
-    }
-  }
-
-  .slots-column {
-    display: flex;
-    flex-direction: column;
   }
 
   &-width-wrapper {
@@ -32,27 +14,11 @@
   }
 
   &-column {
-    flex-grow: 1;
-    overflow: auto;
-
     &-list {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      gap: 4px;
-      position: relative;
-      flex-wrap: nowrap;
-
       &.optimize,
       &.compact-view {
         flex-direction: row;
         flex: 1 1 auto;
-      }
-
-      & > div:last-of-type {
-        flex-grow: 0;
-        max-width: 100%;
-        flex-basis: 100%;
       }
     }
 

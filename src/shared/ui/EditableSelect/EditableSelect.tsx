@@ -21,7 +21,7 @@ export interface EditableSelectProps {
   /** Callback fired when an option label is renamed */
   onOptionRename: (value: string, newLabel: string) => void;
   /** Callback fired when a new option is added. Returns the new option to be added. */
-  onOptionAdd: (option: EditableSelectOption) => void;
+  onOptionAdd: (label?: string) => void;
   /** Callback fired when an option is deleted */
   onOptionDelete: (value: string) => void;
   /** Label displayed above the input */
@@ -75,19 +75,19 @@ function EditableSelect({
   const selectedOption = options.find((opt) => opt.value === value);
   const canDelete = options.length > 1;
 
-  const handleStartEdit = useCallback(() => {
+  const handleStartEdit = () => {
     if (selectedOption) {
       setEditValue(selectedOption.label);
       setIsEditing(true);
     }
-  }, [selectedOption]);
+  };
 
-  const handleCancelEdit = useCallback(() => {
+  const handleCancelEdit = () => {
     setIsEditing(false);
     setEditValue('');
-  }, []);
+  };
 
-  const handleConfirmEdit = useCallback(() => {
+  const handleConfirmEdit = () => {
     const trimmedValue = editValue.trim();
     if (!trimmedValue || !selectedOption) {
       handleCancelEdit();
@@ -97,51 +97,38 @@ function EditableSelect({
     onOptionRename(value, trimmedValue);
     setIsEditing(false);
     setEditValue('');
-  }, [editValue, selectedOption, value, onOptionRename, handleCancelEdit]);
+  };
 
-  const handleDeleteOption = useCallback(
-    (optionValue: string) => {
-      if (!canDelete) return;
+  const handleDeleteOption = (optionValue: string) => {
+    if (!canDelete) return;
 
-      onOptionDelete(optionValue);
+    onOptionDelete(optionValue);
 
-      if (value === optionValue) {
-        const remainingOption = options.find((opt) => opt.value !== optionValue);
-        if (remainingOption) {
-          onChange(remainingOption.value);
-        }
+    if (value === optionValue) {
+      const remainingOption = options.find((opt) => opt.value !== optionValue);
+      if (remainingOption) {
+        onChange(remainingOption.value);
       }
-    },
-    [canDelete, options, onOptionDelete, value, onChange],
-  );
+    }
+  };
 
-  const handleStartAddNew = useCallback(() => {
+  const handleStartAddNew = () => {
     setIsAddingNew(true);
-  }, []);
+  };
 
-  const handleCancelAddNew = useCallback(() => {
+  const handleCancelAddNew = () => {
     setIsAddingNew(false);
     setNewOptionValue('');
-  }, []);
+  };
 
-  const handleConfirmAddNew = useCallback(() => {
+  const handleConfirmAddNew = () => {
     const trimmedValue = newOptionValue.trim();
-    if (!trimmedValue) {
-      handleCancelAddNew();
-      return;
-    }
 
-    const newOption: EditableSelectOption = {
-      value: `option_${Date.now()}`,
-      label: trimmedValue,
-    };
-
-    onOptionAdd(newOption);
-    onChange(newOption.value);
+    onOptionAdd(trimmedValue);
     setIsAddingNew(false);
     setNewOptionValue('');
     combobox.closeDropdown();
-  }, [newOptionValue, onOptionAdd, onChange, combobox, handleCancelAddNew]);
+  };
 
   if (isEditing) {
     return (
@@ -203,6 +190,7 @@ function EditableSelect({
           {options.map((option) => (
             <OptionItem
               key={option.value}
+              selectedValue={value}
               option={option}
               size={size}
               canDelete={canDelete}

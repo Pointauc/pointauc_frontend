@@ -19,7 +19,6 @@ const ExtraControls = ({ children }: ExtraControlsProps) => {
           limiter: {
             fn: (state) => {
               initialPosition.current = initialPosition.current ?? { x: state.x, y: state.y };
-              console.log(state);
               return {
                 x: initialPosition.current.x,
                 y: initialPosition.current.y,

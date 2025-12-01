@@ -3,15 +3,17 @@ import clsx from 'clsx';
 import { FC, memo, RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useStore } from '@tanstack/react-store';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import useAutoScroll from '@hooks/useAutoScroll';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { Slot } from '@models/slot.model.ts';
+import DroppableSlot from '@pages/auction/Slot/DroppableSlot';
+import AnimatedList from '@pages/auction/SlotsColumn/AnimatedList/AnimatedList';
 import { RootState } from '@reducers';
 import { addAlert } from '@reducers/notifications/notifications.ts';
-
-import DroppableSlot from '../Slot/DroppableSlot';
+import userSettingsStore from '@domains/user-settings/store/store';
 
 import classes from './SlotsList.module.css';
 
@@ -56,8 +58,8 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
 const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly, isTransparentUi }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
-  const autoScroll = useSelector((root: RootState) => root.aucSettings.view.autoScroll);
+  const compact = useStore(userSettingsStore, (state) => state.compact);
+  const autoScroll = useStore(userSettingsStore, (state) => state.autoScroll);
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
   const [height, setHeight] = useState<number>();
   const containerVirtualRef = useRef<HTMLDivElement>(null);
@@ -94,7 +96,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
 
   return (
     <Box
-      className={clsx('slots-column-list', {
+      className={clsx(classes.root, {
         'compact-view': compact,
         optimize,
         'custom-background': background || isTransparentUi,
@@ -103,13 +105,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
       {(compact || optimize) && height != null && (
         <VirtualLots slots={slots} height={height} compact={compact} containerRef={containerVirtualRef} />
       )}
-      {!compact &&
-        !optimize &&
-        slots.map((slot, index) => (
-          <div className={slotWrapperClasses} key={slot.id}>
-            <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
-          </div>
-        ))}
+      {!compact && !optimize && <AnimatedList slots={slots} classNames={{ slotWrapper: slotWrapperClasses }} />}
     </Box>
   );
 };

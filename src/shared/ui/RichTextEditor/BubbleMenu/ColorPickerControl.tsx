@@ -29,7 +29,7 @@ export function ColorPickerControl({
   onChange,
   colorIndicator = value,
   isActive,
-  position = 'top',
+  position = 'bottom',
   onReset,
 }: ColorPickerControlProps) {
   const [opened, setOpened] = useState(false);

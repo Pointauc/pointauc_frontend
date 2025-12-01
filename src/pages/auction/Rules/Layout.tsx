@@ -16,7 +16,6 @@ import RulesSettings from './Settings';
 
 import type { JSONContent } from '@tiptap/react';
 
-const NEW_RULE_KEY = 'new-rule';
 const saveRules = (rules: RulesPreset[]) => localStorage.setItem('rules', JSON.stringify(rules));
 
 const RulesLayout = () => {
@@ -28,10 +27,9 @@ const RulesLayout = () => {
     return savedRules == null ? [buildDefaultRule(t)] : JSON.parse(savedRules);
   });
   const [selectedRuleId, setSelectedRuleId] = React.useState<string>(rules[0].id);
-  const [initialRulesContent, setInitialRulesContent] = React.useState<JSONContent>(rules[0].content);
   const getRule = useCallback((id: string) => rules.find((rule) => rule.id === id), [rules]);
   const currentRule = useMemo(() => getRule(selectedRuleId), [getRule, selectedRuleId]);
-  const [active, setActive] = React.useState(true);
+  const [active, setActive] = React.useState(false);
   const {
     data: { size, background },
   } = useContext(RulesSettingsContext);
@@ -46,25 +44,26 @@ const RulesLayout = () => {
     [containerRef, portalRoot],
   );
 
-  useEffect(() => {
-    const savedRules = localStorage.getItem('rules');
+  /**
+   * Initial content of the active rule.
+   * Used to set the content of the editor when the rule is changed or initially loaded.
+   * We don't update this value on each change because tiptap has an issue with frequent updates.
+   */
+  const [initialContent, setInitialContent] = React.useState<JSONContent>(
+    currentRule?.content ?? { type: 'doc', content: [] },
+  );
 
-    if (savedRules !== null) {
-      const parsedRules = JSON.parse(savedRules);
-      setRules(parsedRules);
-      setSelectedRuleId(parsedRules[0].id);
+  const setActiveRule = (id: string | RulesPreset) => {
+    const rule = typeof id === 'string' ? getRule(id) : id;
+    if (rule) {
+      setSelectedRuleId(rule.id);
+      setInitialContent(rule.content);
     }
-  }, []);
+  };
 
   useEffect(() => {
     saveRules(rules);
   }, [rules]);
-
-  useEffect(() => {
-    setInitialRulesContent((prev) => rules.find((rule) => rule.id === selectedRuleId)?.content ?? prev);
-    // to not update editor content on each change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRuleId]);
 
   const updateRule = useCallback((id: string, data: Partial<RulesPreset>) => {
     setRules((rules) => rules.map<RulesPreset>((rule) => (rule.id === id ? { ...rule, ...data } : rule)));
@@ -90,10 +89,10 @@ const RulesLayout = () => {
     }
   }, [currentRule, broadcastRules]);
 
-  const createNewRule = () => {
-    const newRule = buildDefaultRule(t, rules);
+  const createNewRule = (label?: string) => {
+    const newRule = buildDefaultRule(t, rules, label);
     setRules([...rules, newRule]);
-    setSelectedRuleId(newRule.id);
+    setActiveRule(newRule);
   };
 
   const removeRule = (id: string) => {
@@ -102,10 +101,10 @@ const RulesLayout = () => {
 
       if (id === selectedRuleId) {
         if (updatedRules.length > 0) {
-          setSelectedRuleId(updatedRules[0].id);
+          setActiveRule(updatedRules[0].id);
         } else {
           const newRule = buildDefaultRule(t);
-          setSelectedRuleId(newRule.id);
+          setActiveRule(newRule);
 
           return [...updatedRules, newRule];
         }
@@ -127,7 +126,7 @@ const RulesLayout = () => {
           <EditableSelect
             size='md'
             value={selectedRuleId}
-            onChange={setSelectedRuleId}
+            onChange={setActiveRule}
             options={rules.map((rule) => ({ value: rule.id, label: rule.name }))}
             onOptionRename={(value, newLabel) => setRuleName(newLabel)}
             onOptionAdd={createNewRule}
@@ -137,7 +136,7 @@ const RulesLayout = () => {
       )}
       <div className={classes.editorWrapper} style={{ backgroundColor: background.color }}>
         <RichTextEditorComponent
-          content={initialRulesContent}
+          content={initialContent}
           onChange={onRulesChanged}
           isToolbarVisible={active}
           className={classes.editor}

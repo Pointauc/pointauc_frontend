@@ -14,6 +14,7 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useStore } from '@tanstack/react-store';
 
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
 import { LINE_BREAK } from '@constants/common.constants.ts';
@@ -22,6 +23,7 @@ import { Slot } from '@models/slot.model.ts';
 import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
 import { RootState } from '@reducers';
 import { loadFile } from '@utils/common.utils.ts';
+import userSettingsStore from '@domains/user-settings/store/store';
 
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 import SaveLoad from '../SaveLoad/SaveLoad';
@@ -37,7 +39,13 @@ const AucActions: React.FC = () => {
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances, isTotalVisible } = useSelector((root: RootState) => root.aucSettings.settings);
-  const { compact, showRules, autoScroll } = useSelector((root: RootState) => root.aucSettings.view);
+
+  const compact = useStore(userSettingsStore, (state) => state.compact);
+  const showRules = useStore(userSettingsStore, (state) => state.showRules);
+  const autoScroll = useStore(userSettingsStore, (state) => state.autoScroll);
+
+  console.log(compact, showRules, autoScroll);
+
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 
