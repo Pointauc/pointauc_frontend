@@ -20,6 +20,7 @@ export interface IntegrationData {
   twitchAuth: IntegrationDataDto;
   daAuth: IntegrationDataDto;
   donatePayAuth: IntegrationDataDto;
+  donatePayEuAuth: IntegrationDataDto;
   tourniquetAuth: IntegrationDataDto;
   ihaqAuth: IntegrationDataDto;
 }

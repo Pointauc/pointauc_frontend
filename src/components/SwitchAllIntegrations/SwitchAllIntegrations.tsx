@@ -6,6 +6,7 @@ import clsx from 'clsx';
 
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import { RootState } from '@reducers';
+import { toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 
 interface Props {
   integrations: Integration.Config[];
@@ -23,8 +24,8 @@ const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames }: P
     });
   };
 
-  const isAllSelected = integrations.every((integration) => subscriptions[integration.id]?.actual);
-  const selectAllDisabled = integrations.some((integration) => subscriptions[integration.id]?.loading);
+  const isAllSelected = integrations.every((integration) => subscriptions[toSubscriptionId(integration.id)]?.actual);
+  const selectAllDisabled = integrations.some((integration) => subscriptions[toSubscriptionId(integration.id)]?.loading);
 
   const label = (
     <div style={{ display: 'flex', alignItems: 'center' }}>

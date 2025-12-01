@@ -1,0 +1,46 @@
+.regionCard {
+  cursor: pointer;
+  padding: var(--mantine-spacing-md);
+  border: 2px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-md);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.regionCard:hover {
+  border-color: var(--mantine-color-dark-3);
+  background-color: var(--mantine-color-dark-6);
+}
+
+.regionCard[data-selected='true'] {
+  border-color: var(--mantine-primary-color-filled);
+  background-color: color-mix(in srgb, var(--mantine-primary-color-filled) 10%, transparent);
+}
+
+.regionTitle {
+  font-weight: 600;
+  font-size: var(--mantine-font-size-md);
+}
+
+.regionDescription {
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.tokenInput {
+  font-family: monospace;
+}
+
+.warningText {
+  color: var(--mantine-color-red-5);
+  font-weight: 500;
+}
+
+.instructionsLink {
+  color: var(--mantine-primary-color-filled);
+  cursor: pointer;
+}
+
+.instructionsLink:hover {
+  text-decoration: underline;
+}
+

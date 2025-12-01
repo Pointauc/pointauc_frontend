@@ -1,5 +1,5 @@
 import { UserState } from '@reducers/User/User.ts';
-import { setSubscribeState } from '@reducers/Subscription/Subscription.ts';
+import { setSubscribeState, toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 
 import { store } from '../../main.tsx';
 
@@ -16,6 +16,12 @@ const setStorageValue = (id: Integration.Config['id'], key: StorageKey, value: s
 };
 
 const isAvailable = (integration: Integration.Config, authData: UserState['authData']): boolean => {
+  // For DonatePay, check both region auth data (EU has priority)
+  if (integration.id === 'donatePay') {
+    const hasValidAuth = !!authData.donatePayEu?.isValid || !!authData.donatePay?.isValid;
+    return hasValidAuth && integration.authFlow.validate();
+  }
+
   return !!authData[integration.id]?.isValid && integration.authFlow.validate();
 };
 
@@ -41,6 +47,7 @@ export const integrationUtils = {
       sessionStorage.getItem(getStorageKey(id, key)),
     set: (id: Integration.Config['id'], key: StorageKey, value: string): void =>
       sessionStorage.setItem(getStorageKey(id, key), value),
+    remove: (id: Integration.Config['id'], key: StorageKey) => sessionStorage.removeItem(getStorageKey(id, key)),
   },
   filterBy: {
     authFlow: <T extends Integration.AuthFlow>(
@@ -73,13 +80,16 @@ export const integrationUtils = {
   },
   setSubscribeState: async ({ id, pubsubFlow }: Integration.Config, state: boolean, ignoreLoading?: boolean) => {
     const { subscription, user } = store.getState();
-    const previous = subscription[id];
+    const subscriptionId = toSubscriptionId(id);
+    const previous = subscription[subscriptionId];
     if (previous.actual === state || (!ignoreLoading && previous.loading)) return;
 
     try {
-      store.dispatch(setSubscribeState({ state: { actual: state, loading: true }, id }));
+      store.dispatch(setSubscribeState({ state: { actual: state, loading: true }, id: subscriptionId }));
       if (state) {
-        const userId = user.authData[id]?.id;
+        // For DonatePay, check both region auth data
+        const userId =
+          id === 'donatePay' ? user.authData.donatePayEu?.id ?? user.authData.donatePay?.id : user.authData[id]?.id;
         console.log(userId);
         if (!userId) throw new Error('User not found');
 
@@ -88,10 +98,10 @@ export const integrationUtils = {
         await pubsubFlow.disconnect();
       }
 
-      store.dispatch(setSubscribeState({ state: { loading: false }, id }));
+      store.dispatch(setSubscribeState({ state: { loading: false }, id: subscriptionId }));
     } catch (e) {
       console.log(e);
-      store.dispatch(setSubscribeState({ state: previous, id }));
+      store.dispatch(setSubscribeState({ state: previous, id: subscriptionId }));
     }
   },
 };

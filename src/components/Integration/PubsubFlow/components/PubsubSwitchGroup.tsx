@@ -7,6 +7,7 @@ import { Switch } from '@mantine/core';
 import SwitchAllIntegrations from '@components/SwitchAllIntegrations/SwitchAllIntegrations.tsx';
 import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
 import { RootState } from '@reducers';
+import { toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 
 interface Props {
   integrations: Integration.Config[];
@@ -19,11 +20,12 @@ const PubsubSwitchGroup = ({ integrations, classNames }: Props) => {
   const [discrepancy, setDiscrepancy] = React.useState(false);
 
   useEffect(() => {
-    const targetValue = subscriptions[integrations[0].id]?.actual;
-    const loaded = integrations.every(({ id }) => subscriptions[id]?.loading === false);
+    const firstSubId = toSubscriptionId(integrations[0].id);
+    const targetValue = subscriptions[firstSubId]?.actual;
+    const loaded = integrations.every(({ id }) => subscriptions[toSubscriptionId(id)]?.loading === false);
     if (!loaded) return;
 
-    setDiscrepancy(integrations.some(({ id }) => subscriptions[id]?.actual !== targetValue));
+    setDiscrepancy(integrations.some(({ id }) => subscriptions[toSubscriptionId(id)]?.actual !== targetValue));
   }, [integrations, subscriptions]);
 
   return (

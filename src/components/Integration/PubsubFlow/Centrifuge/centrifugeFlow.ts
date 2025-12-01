@@ -5,12 +5,12 @@ import CentrifugeWebsocketV2 from '@components/Integration/PubsubFlow/Centrifuge
 
 interface Params {
   version: CentrifugeFlow.Version;
-  url: string;
+  url: string | (() => string);
   parseMessage: CentrifugeFlow.AdapterParams['parseMessage'];
   id: Integration.ID;
   authFlow: Integration.AuthFlow;
   getToken: () => Promise<string | null | undefined>;
-  subscribeEndpoint: string;
+  subscribeEndpoint: string | (() => string);
   getChannel: (userId: string) => string | Promise<string>;
   subscribeParams?: () => any;
   subscribeHeaders?: () => any;
@@ -45,8 +45,16 @@ const getPubsubToken = async ({ id, getToken, cacheToken }: Params): Promise<str
   return token;
 };
 
-export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
-  const { url, version, parseMessage, authFlow, getChannel, subscribeEndpoint } = params;
+const resolveValue = <T>(value: T | (() => T)): T => {
+  return typeof value === 'function' ? (value as () => T)() : value;
+};
+
+interface CentrifugeFlow extends Integration.PubsubFlow {
+  invalidateToken: () => void;
+}
+
+export const buildCentrifugeFlow = (params: Params): CentrifugeFlow => {
+  const { version, parseMessage, authFlow, getChannel } = params;
   const events = new EventEmitter<Integration.PubsubEvents>();
   let centrifuge: CentrifugeFlow.Adapter;
 
@@ -55,6 +63,8 @@ export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
       if (!centrifuge) {
         const subscribeParams = await params.subscribeParams?.();
         const channel = await getChannel(userId);
+        const url = resolveValue(params.url);
+        const subscribeEndpoint = resolveValue(params.subscribeEndpoint);
         const adapterParams: CentrifugeFlow.AdapterParams = {
           url,
           events,
@@ -69,6 +79,7 @@ export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
       }
 
       const token = await getPubsubToken(params);
+      console.log(token);
       if (!token) throw new InvalidTokenError();
 
       return centrifuge.connect(token);
@@ -85,5 +96,11 @@ export const buildCentrifugeFlow = (params: Params): Integration.PubsubFlow => {
     return centrifuge?.disconnect();
   };
 
-  return { events, connect, disconnect, async: true };
+  return {
+    events,
+    connect,
+    disconnect,
+    async: true,
+    invalidateToken: () => integrationUtils.session.remove(params.id, 'pubsubToken2'),
+  };
 };

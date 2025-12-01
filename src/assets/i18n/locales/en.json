@@ -72,6 +72,35 @@
       "donations": "Donations"
     },
     "donatePay": {
+      "name": "Donate Pay",
+      "regionSelect": {
+        "title": "Select Region",
+        "description": "Choose the region based on the DonatePay domain you use for your account.",
+        "ru": {
+          "title": "Russia (donatepay.ru)",
+          "description": "Select if you use donatepay.ru"
+        },
+        "eu": {
+          "title": "Europe (donatepay.eu)",
+          "description": "Select if you use donatepay.eu"
+        },
+        "steps": {
+          "region": "Region",
+          "token": "API Token"
+        }
+      },
+      "tokenModal": {
+        "title": "DonatePay Integration",
+        "description": "Connecting DonatePay allows you to display incoming donations directly on the site in real-time. This significantly simplifies and speeds up the process of adding bids to the auction and unlocks several new site features.",
+        "privacy": "The site does NOT track or store donation statistics on its servers, including personal streamer information such as email, card data, balance, etc. All statistics found on the site are stored in the browser on the user's computer and are deleted when the tab is closed.",
+        "apiKeyTitle": "Getting the API Key",
+        "warning": "DO NOT SHOW THE API KEY OR THE DONATEPAY PAGE ON STREAM!",
+        "instructions": "Go to the page <1>{{url}}</1>, then copy the value of the \"Your API Key\" field and paste it into the field below.",
+        "confirmHideScreen": "Before navigating to the next page, hide your screen on the stream",
+        "hiddenConfirm": "I've hidden my screen"
+      }
+    },
+    "donatePayEu": {
       "name": "Donate Pay"
     },
     "da": {
