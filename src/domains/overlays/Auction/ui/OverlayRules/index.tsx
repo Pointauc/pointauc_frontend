@@ -1,5 +1,4 @@
 import React, { lazy } from 'react';
-import { generateHTML } from '@tiptap/core';
 
 // import editorUtils from '@components/RichTextEditorTipTap/helpers';
 
