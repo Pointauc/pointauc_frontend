@@ -1,4 +1,11 @@
-.markWrapper {
+.withMarks {
+  margin-bottom: 1.45rem;
+  /* .markWrapper {
+    ...classes.markWrapper,
+  } */
+}
+
+.withMarkOffset {
   &:first-child {
     .markLabel {
       transform: translate(0, calc(var(--mantine-spacing-xs) / 2));
@@ -10,11 +17,4 @@
       transform: translate(calc(-100% + var(--slider-size)), calc(var(--mantine-spacing-xs) / 2));
     }
   }
-}
-
-.withMarks {
-  margin-bottom: 1.45rem;
-  /* .markWrapper {
-    ...classes.markWrapper,
-  } */
 }

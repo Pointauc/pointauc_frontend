@@ -3,15 +3,18 @@ import classNames from 'classnames';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap.tsx';
 import { useRulesBroadcasting } from '@domains/broadcasting/lib/useRulesBroadcasting';
 import { buildDefaultRule, RulesPreset } from '@pages/auction/Rules/helpers';
 import { RulesSettingsContext } from '@pages/auction/Rules/RulesSettingsContext.tsx';
 import EditableSelect from '@shared/ui/EditableSelect/EditableSelect';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
+import { RichTextEditorComponent } from '@shared/ui/RichTextEditor/RichTextEditor';
+import { PortalContext } from '@App/storage/portalContext';
+
+import classes from './Rules.module.css';
+import RulesSettings from './Settings';
 
 import type { JSONContent } from '@tiptap/react';
-import './Rules.scss';
 
 const NEW_RULE_KEY = 'new-rule';
 const saveRules = (rules: RulesPreset[]) => localStorage.setItem('rules', JSON.stringify(rules));
@@ -20,7 +23,6 @@ const RulesLayout = () => {
   const { t } = useTranslation();
   const { broadcastRules } = useRulesBroadcasting();
 
-  const [container, setContainer] = React.useState<HTMLDivElement | null>(null);
   const [rules, setRules] = React.useState<RulesPreset[]>(() => {
     const savedRules = localStorage.getItem('rules');
     return savedRules == null ? [buildDefaultRule(t)] : JSON.parse(savedRules);
@@ -29,19 +31,19 @@ const RulesLayout = () => {
   const [initialRulesContent, setInitialRulesContent] = React.useState<JSONContent>(rules[0].content);
   const getRule = useCallback((id: string) => rules.find((rule) => rule.id === id), [rules]);
   const currentRule = useMemo(() => getRule(selectedRuleId), [getRule, selectedRuleId]);
-  const [active, setActive] = React.useState(false);
+  const [active, setActive] = React.useState(true);
   const {
     data: { size, background },
   } = useContext(RulesSettingsContext);
+  const { portalRoot } = useContext(PortalContext);
 
-  const [dropdownRef, setDropdownRef] = React.useState<HTMLDivElement | null>(null);
   const [containerRef, setContainerRef] = React.useState<HTMLDivElement | null>(null);
   useClickOutside(
     () => {
       setActive(false);
     },
     null,
-    [dropdownRef, containerRef],
+    [containerRef, portalRoot],
   );
 
   useEffect(() => {
@@ -63,10 +65,6 @@ const RulesLayout = () => {
     // to not update editor content on each change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRuleId]);
-
-  const onRender = (element: HTMLDivElement) => {
-    setContainer(element);
-  };
 
   const updateRule = useCallback((id: string, data: Partial<RulesPreset>) => {
     setRules((rules) => rules.map<RulesPreset>((rule) => (rule.id === id ? { ...rule, ...data } : rule)));
@@ -119,25 +117,32 @@ const RulesLayout = () => {
 
   return (
     <div
-      className={classNames('auc-rules', { active })}
+      className={classNames(classes.rules, { [classes.active]: active })}
       style={{ width: size }}
       ref={setContainerRef}
       onClick={() => setActive(true)}
     >
-      <div className='title-container' ref={onRender}>
-        <EditableSelect
-          size='md'
-          value={selectedRuleId}
-          onChange={setSelectedRuleId}
-          options={rules.map((rule) => ({ value: rule.id, label: rule.name }))}
-          onOptionRename={(value, newLabel) => setRuleName(newLabel)}
-          onOptionAdd={createNewRule}
-          onOptionDelete={removeRule}
-          dropdownRef={setDropdownRef}
+      {active && (
+        <div>
+          <EditableSelect
+            size='md'
+            value={selectedRuleId}
+            onChange={setSelectedRuleId}
+            options={rules.map((rule) => ({ value: rule.id, label: rule.name }))}
+            onOptionRename={(value, newLabel) => setRuleName(newLabel)}
+            onOptionAdd={createNewRule}
+            onOptionDelete={removeRule}
+          />
+        </div>
+      )}
+      <div className={classes.editorWrapper} style={{ backgroundColor: background.color }}>
+        <RichTextEditorComponent
+          content={initialRulesContent}
+          onChange={onRulesChanged}
+          isToolbarVisible={active}
+          className={classes.editor}
+          extraControls={<RulesSettings />}
         />
-      </div>
-      <div className='rules-description'>
-        <RichTextEditorTipTap initialValue={initialRulesContent} onChange={onRulesChanged} />
       </div>
     </div>
   );

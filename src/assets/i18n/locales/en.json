@@ -211,7 +211,8 @@
     "externalLinkDisclaimer": "Please be careful when opening unknown links. Only proceed if you trust this source.",
     "openLink": "Open Link",
     "error": "Error",
-    "noChanges": "Start editing the form to save changes"
+    "noChanges": "Start editing the form to save changes",
+    "default": "Default"
   },
   "history": {
     "addedTo": "Added to",
@@ -593,5 +594,26 @@
     "editOption": "Edit selected option",
     "addOption": "Add new option",
     "newOptionPlaceholder": "New option name"
+  },
+  "richTextEditor": {
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "paragraph": "Paragraph",
+    "headingDropdown": "Headings",
+    "alignLeft": "Align left",
+    "alignCenter": "Align center",
+    "alignRight": "Align right",
+    "alignJustify": "Justify",
+    "alignmentDropdown": "Text alignment",
+    "fontSizeSmall": "Small",
+    "fontSizeNormal": "Normal",
+    "fontSizeLarge": "Large",
+    "fontSizeXL": "Extra Large",
+    "fontSizeDropdown": "Font size",
+    "textColor": "Text color",
+    "clearColor": "Clear color",
+    "highlightColor": "Highlight",
+    "clearHighlight": "Clear highlight"
   }
 }

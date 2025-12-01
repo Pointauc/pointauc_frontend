@@ -42,3 +42,10 @@ input[type='number'] {
   border: 6px solid transparent;
   background-clip: padding-box;
 }
+
+#portal-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 101;
+}

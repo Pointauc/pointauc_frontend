@@ -23,7 +23,7 @@ const initialSettings: RulesSettings = {
   size: 380,
   position: 'left',
   background: {
-    color: '#000000',
+    color: '#00000000',
     opacity: 0,
   },
 };
@@ -31,7 +31,7 @@ const initialSettings: RulesSettings = {
 const backgroundSettings = {
   ...initialSettings,
   background: {
-    color: '#000000',
+    color: '#00000026',
     opacity: 0.15,
   },
 };

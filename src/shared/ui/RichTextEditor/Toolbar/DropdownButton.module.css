@@ -1,0 +1,4 @@
+.button {
+  min-width: 46px;
+  height: var(--rich-text-editor-control-height);
+}

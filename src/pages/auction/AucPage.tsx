@@ -50,7 +50,7 @@ const AucPageContent: React.FC = () => {
       <div className='auc-container-column'>
         <div className='auc-container-row'>
           <Box className='auc-container-left-column' visibleFrom='sm'>
-            <Suspense fallback={<></>}>{showRules && <LazyRules />}</Suspense>
+            <Suspense fallback={<></>}>{!showRules && <LazyRules />}</Suspense>
           </Box>
           <SlotsColumn />
           <ControlColumn />

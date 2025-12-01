@@ -227,29 +227,115 @@
     },
     "/donatePay/auth": {
       "post": {
-        "operationId": "DonatePayController_authorize",
+        "description": "Processes DonatePay access token and links the DonatePay account to the user session. Returns whether this is a new user registration.",
+        "operationId": "DonatePayRuController_authorize",
         "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
+        "requestBody": {
+          "required": true,
+          "description": "DonatePay access token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonatePayAuthBodyDto"
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "accessToken": "donatepay_access_token_here"
+                  }
+                }
+              }
+            }
           }
         },
+        "responses": {
+          "201": {
+            "description": "Successfully authorized with DonatePay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonatePayAuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authorize user with DonatePay",
         "tags": [
-          "DonatePay"
+          "DonatePayRu"
         ]
       }
     },
     "/donatePay/revoke": {
       "post": {
-        "operationId": "DonatePayController_revoke",
+        "description": "Invalidates and removes DonatePay integration for the authenticated user. Requires authentication via cookie.",
+        "operationId": "DonatePayRuController_revoke",
         "parameters": [],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Successfully revoked DonatePay integration"
           }
         },
+        "summary": "Revoke DonatePay integration",
         "tags": [
-          "DonatePay"
+          "DonatePayRu"
+        ]
+      }
+    },
+    "/donatePayEu/auth": {
+      "post": {
+        "description": "Processes DonatePay access token and links the DonatePay account to the user session. Returns whether this is a new user registration.",
+        "operationId": "DonatePayEuController_authorize",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "DonatePay access token",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonatePayAuthBodyDto"
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "accessToken": "donatepay_access_token_here"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully authorized with DonatePay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonatePayAuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authorize user with DonatePay",
+        "tags": [
+          "DonatePayEu"
+        ]
+      }
+    },
+    "/donatePayEu/revoke": {
+      "post": {
+        "description": "Invalidates and removes DonatePay integration for the authenticated user. Requires authentication via cookie.",
+        "operationId": "DonatePayEuController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successfully revoked DonatePay integration"
+          }
+        },
+        "summary": "Revoke DonatePay integration",
+        "tags": [
+          "DonatePayEu"
         ]
       }
     },
@@ -948,6 +1034,32 @@
   "servers": [],
   "components": {
     "schemas": {
+      "DonatePayAuthBodyDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Access token received from DonatePay OAuth flow",
+            "example": "abc123xyz"
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "DonatePayAuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "isNew": {
+            "type": "boolean",
+            "description": "Indicates whether this authorization resulted in a new user registration",
+            "example": false
+          }
+        },
+        "required": [
+          "isNew"
+        ]
+      },
       "IhaqAuthDto": {
         "type": "object",
         "properties": {

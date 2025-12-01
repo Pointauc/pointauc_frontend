@@ -230,7 +230,8 @@
     "externalLinkDisclaimer": "Будьте осторожны при переходе по неизвестным ссылкам. Продолжайте, только если доверяете этому источнику.",
     "openLink": "Открыть ссылку",
     "error": "Ошибка",
-    "noChanges": "Начните редактировать форму чтобы сохранить изменения"
+    "noChanges": "Начните редактировать форму чтобы сохранить изменения",
+    "default": "По умолчанию"
   },
   "rules": {
     "background": "Фон",
@@ -574,5 +575,26 @@
     "returnRedemptions": "Вернуть выбранные награды",
     "previousBids": "Список прошлых ставок",
     "fastBidsActions": "Быстрые действия с баллами канала:"
+  },
+  "richTextEditor": {
+    "heading1": "Заголовок 1",
+    "heading2": "Заголовок 2",
+    "heading3": "Заголовок 3",
+    "paragraph": "Обычный текст",
+    "headingDropdown": "Заголовки",
+    "alignLeft": "По левому краю",
+    "alignCenter": "По центру",
+    "alignRight": "По правому краю",
+    "alignJustify": "По ширине",
+    "alignmentDropdown": "Выравнивание текста",
+    "fontSizeSmall": "Маленький",
+    "fontSizeNormal": "Обычный",
+    "fontSizeLarge": "Большой",
+    "fontSizeXL": "Очень большой",
+    "fontSizeDropdown": "Размер шрифта",
+    "textColor": "Цвет текста",
+    "clearColor": "Сбросить цвет",
+    "highlightColor": "Выделение",
+    "clearHighlight": "Сбросить выделение"
   }
 }

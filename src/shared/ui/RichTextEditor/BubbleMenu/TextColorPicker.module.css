@@ -1,0 +1,13 @@
+.colorPicker {
+  --cp-body-spacing: var(--mantine-spacing-xs);
+  --cp-preview-size: 20px;
+  --cp-thumb-size: 14px;
+  --cp-saturation-height: 100px;
+  width: 200px;
+}
+
+.resetButton {
+  position: absolute;
+  top: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
+}

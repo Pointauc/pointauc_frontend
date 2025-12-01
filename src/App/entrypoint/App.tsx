@@ -16,6 +16,7 @@ import { RootState } from '@reducers';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { userControllerGetUserOptions } from '@api/openapi/@tanstack/react-query.gen';
+import { PortalContextProvider } from '@App/storage/portalContext';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
@@ -132,29 +133,31 @@ const App: React.FC = () => {
   }, [isHovered, activeMenu]);
 
   return (
-    <AppShell
-      padding={0}
-      className={clsx(classes.app, {
-        [classes.expanded]: isNavbarExpanded,
-        [classes.fixedOpened]: activeMenu?.navbarFixedState === 'opened',
-      })}
-      header={{ height: { base: 50, sm: 0 } }}
-      navbar={{ width: 61, breakpoint: 'sm', collapsed: { mobile: !isNavbarOpened } }}
-      transitionDuration={isMobile ? 200 : 0}
-    >
-      <AppHeader isNavbarOpened={isNavbarOpened} toggleNavbar={mobileNavbar.toggle} activeMenu={activeMenu} t={t} />
-      <AppNavbar
-        menuItems={menuItems}
-        activeMenu={activeMenu}
-        isMobile={isMobile}
-        closeNavbar={mobileNavbar.close}
-        isNavbarExpanded={isNavbarExpanded}
-        t={t}
-        showDrawer={showDrawer}
-        hideDrawer={hideDrawer}
-      />
-      <AppMain />
-    </AppShell>
+    <PortalContextProvider>
+      <AppShell
+        padding={0}
+        className={clsx(classes.app, {
+          [classes.expanded]: isNavbarExpanded,
+          [classes.fixedOpened]: activeMenu?.navbarFixedState === 'opened',
+        })}
+        header={{ height: { base: 50, sm: 0 } }}
+        navbar={{ width: 61, breakpoint: 'sm', collapsed: { mobile: !isNavbarOpened } }}
+        transitionDuration={isMobile ? 200 : 0}
+      >
+        <AppHeader isNavbarOpened={isNavbarOpened} toggleNavbar={mobileNavbar.toggle} activeMenu={activeMenu} t={t} />
+        <AppNavbar
+          menuItems={menuItems}
+          activeMenu={activeMenu}
+          isMobile={isMobile}
+          closeNavbar={mobileNavbar.close}
+          isNavbarExpanded={isNavbarExpanded}
+          t={t}
+          showDrawer={showDrawer}
+          hideDrawer={hideDrawer}
+        />
+        <AppMain />
+      </AppShell>
+    </PortalContextProvider>
   );
 };
 

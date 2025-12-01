@@ -131,6 +131,11 @@ const queryClient = new QueryClient({
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
+
+const portalRoot = document.createElement('div');
+portalRoot.id = 'portal-root';
+document.body.appendChild(portalRoot);
+
 root.render(
   <StrictMode>
     <Provider store={store}>
