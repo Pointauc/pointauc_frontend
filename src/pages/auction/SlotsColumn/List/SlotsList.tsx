@@ -56,6 +56,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
   const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
   const autoScroll = useSelector((root: RootState) => root.aucSettings.view.autoScroll);
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
+  const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [height, setHeight] = useState<number>();
   const containerVirtualRef = useRef<HTMLDivElement>(null);
 
@@ -87,9 +88,10 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
 
   return (
     <Box
-      className={clsx(classes.root, 'liquid-glass', {
+      className={clsx(classes.root, {
         'compact-view': compact,
         'custom-background': background || isTransparentUi,
+        dragging: !!draggedRedemption,
       })}
     >
       {(compact || optimize) && height != null && (
