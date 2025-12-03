@@ -50,7 +50,7 @@ const SlotsColumn: React.FC = () => {
     [searchTerm, slots],
   );
 
-  const optimize = useMemo(() => slots.length > 100, [slots.length]);
+  const optimize = useMemo(() => slots.length > 50, [slots.length]);
   const isMobile = useIsMobile();
 
   return (

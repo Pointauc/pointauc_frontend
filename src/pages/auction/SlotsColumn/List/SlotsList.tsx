@@ -25,10 +25,8 @@ interface SlotsListProps {
   isTransparentUi?: boolean;
 }
 
-const slotWrapperClasses = clsx(classes.slotWrapper, 'slot-grid-wrapper');
-
 const Row = ({ index, style, data }: ListChildComponentProps<Slot[]>) => (
-  <div className={slotWrapperClasses} style={style as any}>
+  <div style={style as any}>
     <DroppableSlot index={index + 1} slot={data[index]} />
   </div>
 );
@@ -47,7 +45,7 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
     height={height}
     itemData={slots}
     itemCount={slots.length}
-    itemSize={compact ? 41 : 64}
+    itemSize={compact ? 41 : 54}
     overscanCount={20}
     itemKey={(index: any) => slots[index].id}
   >
@@ -98,14 +96,13 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
     <Box
       className={clsx(classes.root, {
         'compact-view': compact,
-        optimize,
         'custom-background': background || isTransparentUi,
       })}
     >
       {(compact || optimize) && height != null && (
         <VirtualLots slots={slots} height={height} compact={compact} containerRef={containerVirtualRef} />
       )}
-      {!compact && !optimize && <AnimatedList slots={slots} classNames={{ slotWrapper: slotWrapperClasses }} />}
+      {!compact && !optimize && <AnimatedList slots={slots} />}
     </Box>
   );
 };

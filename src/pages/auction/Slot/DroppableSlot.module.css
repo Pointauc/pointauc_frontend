@@ -1,31 +1,37 @@
-:global(.compact-view) .card {
-  border-radius: 0;
-  box-shadow: none;
+.root {
+  background-color: var(--mantine-color-dark-6);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-md);
+  padding: 0 var(--mantine-spacing-sm) 0 var(--mantine-spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xs);
+  height: 50px;
+  overflow: hidden;
+  margin-bottom: 4px;
 }
 
-.card {
-  background-color: var(--slot-background-color);
+:global(.compact-view) .root {
+  border-radius: 0;
+  box-shadow: none;
+  height: 41px;
+}
+
+.even {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
 }
 
 .index {
-  margin-left: var(--mantine-spacing-lg);
-  margin-right: var(--mantine-spacing-xs);
   font-size: 1.1em;
   width: 20px;
 }
 
-.fastIndex {
-  font-size: 1.1em;
-
-  padding: 0 8px;
+:global(.custom-background) .root {
+  background-color: var(--mantine-color-darkTransparent-7);
+  box-shadow: none;
 }
 
-.fastIndexIcon {
-  margin-right: 2px;
-  opacity: 0.5;
-}
-
-.fastIndexWrapper {
-  min-width: 60px;
-  margin-right: var(--mantine-spacing-xs);
+:global(.custom-background) .even {
+  background-color: var(--mantine-color-darkTransparent-6);
 }

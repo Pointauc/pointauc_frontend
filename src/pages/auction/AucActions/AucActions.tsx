@@ -44,8 +44,6 @@ const AucActions: React.FC = () => {
   const showRules = useStore(userSettingsStore, (state) => state.showRules);
   const autoScroll = useStore(userSettingsStore, (state) => state.autoScroll);
 
-  console.log(compact, showRules, autoScroll);
-
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
 

@@ -6,12 +6,12 @@ import { Slot } from '@models/slot.model';
 import DroppableSlot from '@pages/auction/Slot/DroppableSlot';
 
 interface AnimatedListClassNames {
-  slotWrapper: string;
+  slotWrapper?: string;
 }
 
 interface AnimatedListProps {
   slots: Slot[];
-  classNames: AnimatedListClassNames;
+  classNames?: AnimatedListClassNames;
   readonly?: boolean;
 }
 
@@ -26,10 +26,15 @@ const AnimatedList: FC<AnimatedListProps> = ({ slots, classNames, readonly }) =>
     <AnimatePresence>
       {slots.map((slot, index) => (
         <motion.div
-          className={classNames.slotWrapper}
+          className={classNames?.slotWrapper}
           key={slot.id}
           layout
-          style={{ overflow: 'hidden', flexShrink: 0, flexGrow: 0 }}
+          style={{
+            flexShrink: 0,
+            flexGrow: 0,
+            backgroundColor: 'transparent',
+            overflow: 'hidden',
+          }}
           initial={isAnimationsActive ? { height: 0, opacity: 0 } : false}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}

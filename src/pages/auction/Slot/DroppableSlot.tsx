@@ -1,25 +1,18 @@
-import { Badge, Center, Menu, Paper, useMantineTheme } from '@mantine/core';
-import DeleteIcon from '@mui/icons-material/Delete';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import TagIcon from '@mui/icons-material/Tag';
-import classNames from 'classnames';
+import clsx from 'clsx';
 import { DragEvent, memo, useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
 import { Slot } from '@models/slot.model.ts';
-import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows.ts';
 import { Purchase, setDraggedRedemption, updateExistBids } from '@reducers/Purchases/Purchases.ts';
-import { addBid, deleteSlot, setSlotName } from '@reducers/Slots/Slots.ts';
+import { addBid, setSlotName } from '@reducers/Slots/Slots.ts';
 import slotNamesMap from '@services/SlotNamesMap';
+import { useIsMobile } from '@shared/lib/ui';
 import bidUtils from '@utils/bid.utils';
 import { handleDragOver } from '@utils/common.utils.ts';
-import { useIsMobile } from '@shared/lib/ui';
 
-import SlotComponent from './SlotComponent';
+import LotControls from './Controls/LotControls';
 import styles from './DroppableSlot.module.css';
-import './Slot.scss';
 
 interface DroppableSlotProps {
   index: number;
@@ -28,10 +21,8 @@ interface DroppableSlotProps {
 }
 
 const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) => {
-  const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const extraIcon = useRef<HTMLButtonElement>(null);
-  const { id, amount, name } = slot;
+  const { id, name } = slot;
   const slotElement = useRef<HTMLDivElement>(null);
   const enterCounter = useRef<number>(0);
   const isMobile = useIsMobile();
@@ -68,12 +59,6 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
     [resetOverStyle],
   );
 
-  const handleDelete = (): void => {
-    dispatch(deleteSlot(id));
-  };
-
-  const slotWrapperClasses = classNames('slot-wrapper', styles.card);
-
   const handleDrop = useCallback(
     (e: DragEvent<HTMLDivElement>) => {
       const bid: Purchase = JSON.parse(e.dataTransfer.getData('redemption'));
@@ -103,67 +88,19 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
     updateOverStyle(-1);
   }, [updateOverStyle]);
 
-  const handleOpenTrailer = useCallback(() => {
-    dispatch(openTrailer(name || ''));
-  }, [dispatch, name]);
-
-  const theme = useMantineTheme();
-
   return (
-    <Paper
-      radius='md'
-      shadow='md'
-      className={slotWrapperClasses}
+    <div
+      className={clsx(styles.root, { [styles.even]: index % 2 === 0 })}
       ref={slotElement}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
     >
-      <div className='slot'>
-        {!isMobile && (
-          <>
-            <div className={styles.index}>{`${index}`}</div>
-            <Center className={styles.fastIndexWrapper}>
-              <Badge
-                size='lg'
-                color={`${theme.primaryColor}.9`}
-                variant='light'
-                classNames={{ root: styles.fastIndex, section: styles.fastIndexIcon }}
-                leftSection={<TagIcon fontSize='small' />}
-              >
-                {`${slot.fastId}`}
-              </Badge>
-            </Center>
-          </>
-        )}
-        <SlotComponent slot={slot} readonly={readonly} />
-      </div>
-      {!readonly && !isMobile && (
-        <button onClick={handleDelete} className=' slot-icon-button delete-button' title={t('lot.delete')}>
-          <DeleteIcon />
-        </button>
-      )}
-      <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow>
-        <Menu.Target>
-          <button
-            className='slot-icon-button delete-button'
-            title={t('lot.extra')}
-            aria-controls='extra'
-            ref={extraIcon}
-          >
-            <MoreHorizIcon />
-          </button>
-        </Menu.Target>
-        <Menu.Dropdown id='extra'>
-          {isMobile && <Menu.Item onClick={handleDelete}>{t('lot.delete')}</Menu.Item>}
-          <Menu.Item onClick={handleOpenTrailer}>{t('lot.trailer')}</Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
-    </Paper>
+      {!isMobile && <div className={styles.index}>{`${index}`}</div>}
+      <LotControls lot={slot} readonly={readonly} />
+    </div>
   );
 };
 
-const MemorizedDroppableSlot = memo(DroppableSlot);
-
-export default MemorizedDroppableSlot;
+export default memo(DroppableSlot);
