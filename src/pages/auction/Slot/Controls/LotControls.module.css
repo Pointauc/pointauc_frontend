@@ -112,3 +112,7 @@
     color: var(--mantine-color-text);
   }
 }
+
+:global(.liquid-glass) {
+  /* styles for liquid glass ui */
+}

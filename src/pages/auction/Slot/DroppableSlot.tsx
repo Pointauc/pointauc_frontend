@@ -32,8 +32,8 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
 
     requestAnimationFrame(() => {
       if (slotElement.current) {
-        slotElement.current.classList.remove('drag-over');
-        slotElement.current.classList.remove('remove-cost');
+        slotElement.current.classList.remove(styles.dragOver);
+        slotElement.current.classList.remove(styles.removeCost);
       }
     });
   }, []);
@@ -45,10 +45,10 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
       if (enterCounter.current > 0) {
         requestAnimationFrame(() => {
           if (slotElement.current) {
-            slotElement.current.classList.add('drag-over');
+            slotElement.current.classList.add(styles.dragOver);
 
             if (isRemove) {
-              slotElement.current.classList.add('remove-cost');
+              slotElement.current.classList.add(styles.removeCost);
             }
           }
         });

@@ -94,7 +94,7 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
 
   return (
     <Box
-      className={clsx(classes.root, {
+      className={clsx(classes.root, 'liquid-glass', {
         'compact-view': compact,
         'custom-background': background || isTransparentUi,
       })}

@@ -10,6 +10,11 @@
   height: 50px;
   overflow: hidden;
   margin-bottom: 4px;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+  border: 2px solid transparent;
 }
 
 :global(.compact-view) .root {
@@ -27,11 +32,82 @@
   width: 20px;
 }
 
-:global(.custom-background) .root {
-  background-color: var(--mantine-color-darkTransparent-7);
-  box-shadow: none;
+/* Subtle highlight when dragging has started (ready to receive) */
+:global(.dragging) {
+  .root {
+    background-color: color-mix(in srgb, var(--mantine-color-dark-6) 97%, var(--mantine-primary-color-filled) 3%);
+    border-color: color-mix(in srgb, var(--mantine-primary-color-filled) 15%, transparent 85%);
+  }
+
+  .even {
+    background-color: color-mix(in srgb, var(--mantine-color-dark-5) 97%, var(--mantine-primary-color-filled) 3%);
+  }
+
+  /* Strong highlight when hovering over the slot */
+  .dragOver {
+    background-color: color-mix(in srgb, var(--mantine-color-dark-6) 70%, var(--mantine-primary-color-filled) 30%);
+    border-color: var(--mantine-primary-color-filled);
+    box-shadow:
+      var(--mantine-shadow-md),
+      0 0 12px color-mix(in srgb, var(--mantine-primary-color-filled) 50%, transparent 50%);
+  }
 }
 
-:global(.custom-background) .even {
-  background-color: var(--mantine-color-darkTransparent-6);
+/* Remove cost variant (different color) */
+.removeCost {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-6) 70%, var(--mantine-color-red-filled) 30%);
+  border-color: var(--mantine-color-red-filled);
+  box-shadow:
+    var(--mantine-shadow-md),
+    0 0 12px color-mix(in srgb, var(--mantine-color-red-filled) 50%, transparent 50%);
+}
+
+:global(.custom-background) {
+  .root {
+    background-color: var(--mantine-color-darkTransparent-7);
+    box-shadow: none;
+  }
+
+  .even {
+    background-color: var(--mantine-color-darkTransparent-6);
+  }
+}
+
+:global(.custom-background.dragging) {
+  .root {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-7) 97%,
+      var(--mantine-primary-color-filled) 3%
+    );
+    border-color: color-mix(in srgb, var(--mantine-primary-color-filled) 15%, transparent 85%);
+  }
+
+  .even {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-6) 97%,
+      var(--mantine-primary-color-filled) 3%
+    );
+  }
+
+  .dragOver {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-7) 70%,
+      var(--mantine-primary-color-filled) 30%
+    );
+    border-color: var(--mantine-primary-color-filled);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-primary-color-filled) 50%, transparent 50%);
+  }
+}
+
+:global(.custom-background) .removeCost {
+  background-color: color-mix(in srgb, var(--mantine-color-darkTransparent-7) 70%, var(--mantine-color-red-filled) 30%);
+  border-color: var(--mantine-color-red-filled);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-color-red-filled) 50%, transparent 50%);
+}
+
+:global(.liquid-glass) {
+  /* styles for liquid glass ui */
 }

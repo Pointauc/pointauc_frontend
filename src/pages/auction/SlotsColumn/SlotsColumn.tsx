@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import './SlotsColumn.scss';
 
 import { RootState } from '@reducers';
 import { useIsMobile } from '@shared/lib/ui';

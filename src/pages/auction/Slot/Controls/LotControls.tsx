@@ -97,7 +97,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (amountInput.current) {
       if (amount === null) {
         amountInput.current.value = '';
