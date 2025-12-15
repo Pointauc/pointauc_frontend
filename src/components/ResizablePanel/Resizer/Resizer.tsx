@@ -2,7 +2,7 @@ import { FC, MouseEvent, MutableRefObject, useCallback, useEffect, useState } fr
 
 import { TRAILER_MIN_SIZE } from '@constants/common.constants.ts';
 import { Size } from '@models/common.model.ts';
-import './Resizer.scss';
+import classes from './Resizer.module.css';
 
 interface ResizerProps {
   container: MutableRefObject<HTMLDivElement | null>;
@@ -54,8 +54,8 @@ const Resizer: FC<ResizerProps> = ({ container, onResize }) => {
   }, [handleMouseMove, handleMouseUp]);
 
   return (
-    <div role='button' className='resizer' onMouseDown={handleMouseDown} tabIndex={0}>
-      <div className='resizer-icon' />
+    <div role='button' className={classes.resizer} onMouseDown={handleMouseDown} tabIndex={0}>
+      <div className={classes.resizerIcon} />
     </div>
   );
 };

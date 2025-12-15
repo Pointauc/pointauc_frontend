@@ -1,23 +1,7 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardContent,
-  ClickAwayListener,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  Grow,
-  IconButton,
-  MenuItem,
-  MenuList,
-  Paper,
-  Popper,
-  Typography,
-} from '@mui/material';
-import classNames from 'classnames';
+import { ActionIcon, Button, Card, CloseButton, Menu, Modal, Stack, Text, Title } from '@mantine/core';
+import clsx from 'clsx';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -47,9 +31,9 @@ import bidUtils from '@utils/bid.utils.ts';
 import { store } from '../../../main.tsx';
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
-import type { ThunkDispatch } from 'redux-thunk';
+import classes from './PurchaseComponent.module.css';
 
-import './PurchaseComponent.scss';
+import type { ThunkDispatch } from 'redux-thunk';
 
 interface PurchaseComponentProps extends Purchase {
   isDragging?: boolean;
@@ -74,9 +58,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   const { t } = useTranslation();
   const name = bidUtils.getName(purchase);
 
-  const [splitButtonMenuOpen, setSplitButtonMenuOpen] = useState(false);
-  const anchorRef = useRef<HTMLDivElement>(null);
-  const menuOptions = [t('auc.addToRandomSlot')];
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   const bestMatch = useMemo(() => {
     if (!showBestMatch) {
@@ -116,7 +98,6 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
 
   const { getMarblesAmount, formatMarblesCost } = useCostConvert();
 
-  const redemptionStyles = { backgroundColor: color };
   const donationStyles = {
     backgroundImage: `url(${donationBackground})`,
     backgroundColor: 'transparent',
@@ -124,17 +105,17 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
   };
-  const cardStyles = isDonation ? donationStyles : redemptionStyles;
-  const purchaseClasses = classNames([
-    'purchase',
-    { 'drag-placeholder': isDragging, 'remove-cost': isRemovePurchase, disabled },
-  ]);
+  const backgroundStyles = isDonation ? donationStyles : { backgroundColor: color };
+  const purchaseClasses = clsx(classes.purchase, {
+    [classes.dragPlaceholder]: isDragging,
+    [classes.removeCost]: isRemovePurchase,
+    [classes.disabled]: disabled,
+  });
 
   const actualCost = useMemo(() => bidUtils.parseCost(purchase, settings, false), [purchase, settings]);
+  const actualUsername = username ?? t('bid.anonymous');
 
   const bidTitle = useMemo(() => {
-    const actualUsername = username ?? t('bid.anonymous');
-
     if (hideAmounts) return bidUtils.getDisplayCost(actualCost);
 
     if (marblesAuc) {
@@ -164,7 +145,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     }
 
     return `${actualCost} ${actualUsername}`;
-  }, [actualCost, cost, hideAmounts, isDonation, marblesAuc, pointsRate, reversePointsRate, t, username]);
+  }, [actualCost, actualUsername, cost, hideAmounts, isDonation, marblesAuc, pointsRate, reversePointsRate, t]);
 
   const addToRandomSlot = () => {
     const { slots } = store.getState().slots;
@@ -200,86 +181,57 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     dispatch(updateBid({ ...purchase, cost: purchase.cost * multi }));
   };
 
-  const handleMenuItemClick = () => {
-    setSplitButtonMenuOpen(false);
-
-    /* Currently, only one item in the dropdown menu, no need to check
-     the index. If more options added, implement index checking */
-    addToRandomSlot();
-  };
-
-  const handleToggle = () => {
-    setSplitButtonMenuOpen((prevOpen) => !prevOpen);
-  };
-
   return (
-    <Card className={purchaseClasses} style={isDragging ? undefined : cardStyles}>
-      <CardContent className='purchase-content'>
-        <div className='purchase-header'>
-          <Typography variant='h6'>{bidTitle}</Typography>
-          <IconButton
-            onClick={handleRemove}
-            className='purchase-header-remove-button'
-            title={t('bid.delete')}
-            size='large'
-          >
-            <CloseIcon />
-          </IconButton>
-        </div>
-        <Typography>{name}</Typography>
+    <Card className={purchaseClasses} style={isDragging ? undefined : backgroundStyles} padding='sm'>
+      <div className={classes.header}>
+        <Text size='xl' className={classes.headerTitle} title={actualUsername}>
+          {bidTitle}
+        </Text>
+        <CloseButton onClick={handleRemove} c='white' radius='xl' title={t('bid.delete')} size='lg' />
+      </div>
+
+      <Stack gap='xs'>
+        <Text>{name}</Text>
         {!hideActions && (
           <>
-            <ButtonGroup size='small' className='purchase-new-split-button' ref={anchorRef}>
+            <Button.Group>
               <Button
-                color='blank'
-                variant='outlined'
-                size='small'
-                className='purchase-new-split-button-left'
+                variant='outline'
+                color='white'
+                size='xs'
+                fz='sm'
+                flex={1}
+                className={classes.actionButton}
                 onClick={handleAddNewSlot}
               >
                 {t('bid.new')}
               </Button>
-              <Button
-                color='blank'
-                variant='outlined'
-                size='small'
-                className='purchase-new-split-button-right'
-                onClick={handleToggle}
-              >
-                <ArrowDropDownIcon />
-              </Button>
-            </ButtonGroup>
-            <Popper
-              open={splitButtonMenuOpen}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              transition
-              disablePortal
-              className='purchase-new-split-button-popper'
-            >
-              {({ TransitionProps }) => (
-                <Grow {...TransitionProps}>
-                  <Paper>
-                    <ClickAwayListener onClickAway={() => setSplitButtonMenuOpen(false)}>
-                      <MenuList>
-                        {menuOptions.map((option) => (
-                          <MenuItem key={option} onClick={handleMenuItemClick}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
+              <Menu position='bottom-end'>
+                <Menu.Target>
+                  <Button
+                    ref={anchorRef}
+                    variant='outline'
+                    color='white'
+                    size='xs'
+                    fz='sm'
+                    className={clsx(classes.actionButton, classes.splitButtonRight)}
+                  >
+                    <ArrowDropDownIcon />
+                  </Button>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item onClick={addToRandomSlot}>{t('auc.addToRandomSlot')}</Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Button.Group>
 
             {luckyWheelEnabled && (
               <Button
-                color='blank'
-                variant='outlined'
-                size='small'
-                className='purchase-new-button'
+                variant='outline'
+                color='gray'
+                size='xs'
+                fz='sm'
+                className={classes.actionButton}
                 onClick={openCasino}
               >
                 {t('bid.luckyWheel')}
@@ -287,10 +239,11 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
             )}
             {bestMatch && (
               <Button
-                color='blank'
-                variant='outlined'
-                size='small'
-                className='purchase-new-button'
+                variant='outline'
+                color='white'
+                size='xs'
+                fz='sm'
+                className={classes.actionButton}
                 onClick={handleAddToBestMatch}
               >
                 {t('bid.toLot', { name: bestMatch.name })}
@@ -298,18 +251,16 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
             )}
           </>
         )}
-      </CardContent>
+      </Stack>
       {casinoModalOpened && (
-        <Dialog open={casinoModalOpened} onClose={(): void => setCasinoModalOpened(false)} maxWidth='lg'>
-          <DialogContent>
+        <Modal opened={casinoModalOpened} onClose={() => setCasinoModalOpened(false)} size='lg'>
+          <Stack>
             <RouletteMenu onRoll={multiplySlot} bid={purchase} />
-          </DialogContent>
-          <DialogActions>
-            <Button color='primary' variant='outlined' onClick={(): void => setCasinoModalOpened(false)}>
+            <Button variant='outline' onClick={() => setCasinoModalOpened(false)}>
               {t('bid.close')}
             </Button>
-          </DialogActions>
-        </Dialog>
+          </Stack>
+        </Modal>
       )}
     </Card>
   );

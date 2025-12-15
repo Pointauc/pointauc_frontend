@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux';
-import { ReactText, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { RootState } from '@reducers';
 import bidUtils from '@utils/bid.utils.ts';
 
 interface UseCostConvertResult {
   getMarblesAmount: (cost: number, newSlot?: boolean) => number;
-  formatMarblesCost: (cost: number) => ReactText;
+  formatMarblesCost: (cost: number) => string | number;
 }
 
 export const useCostConvert = (): UseCostConvertResult => {
@@ -26,7 +26,7 @@ export const useCostConvert = (): UseCostConvertResult => {
   );
 
   const formatMarblesCost = useCallback(
-    (cost: number): ReactText => {
+    (cost: number): string | number => {
       if (!marblesAuc) {
         return cost;
       }

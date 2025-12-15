@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Button } from '@mui/material';
+import { Button } from '@mantine/core';
 
 import { RoulettePreset } from '../PresetSelect/PresetSelect';
 

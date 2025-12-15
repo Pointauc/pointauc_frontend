@@ -104,7 +104,7 @@ const ItemsPreview = ({
                   className={classNames({ [classes.itemsCentered]: centerItems })}
                 >
                   {({ index, style }) => (
-                    <div style={style}>
+                    <div style={style as any}>
                       <Item
                         item={allSorted[index]}
                         actionable={allSorted.length < 300}

@@ -1,0 +1,15 @@
+.slotsPresetInputHint {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #c0c0c0;
+  margin-top: 10px;
+  padding: 3px;
+  font-size: 1.05rem;
+}
+
+.saveSlotsCheckbox {
+  align-items: center !important;
+  margin-top: 10px;
+}

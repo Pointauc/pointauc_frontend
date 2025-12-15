@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
 import { Slot } from '@models/slot.model';
-import { buildDefaultRule } from '@pages/auction/Rules/Rules';
+import { buildDefaultRule } from '@pages/auction/Rules/helpers';
 
 import Layout from '../Layout/Layout';
 

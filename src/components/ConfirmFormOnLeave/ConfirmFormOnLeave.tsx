@@ -1,8 +1,7 @@
 import { FC, ReactNode, useCallback, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { unstable_useBlocker as useBlocker, useNavigate } from 'react-router-dom';
+import { Button, Group, Modal, Stack, Text } from '@mantine/core';
+import { useBlocker, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import './ConfirmFormOnLeave.scss';
 
 interface ConfirmFormOnLeaveProps {
   isDirtyForm: boolean;
@@ -40,15 +39,14 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
   if (content && isOpen) return <>{content(handleClose, handleConfirm)}</>;
 
   return (
-    <Dialog open={isOpen} className='form-confirm-dialog'>
-      <DialogTitle>{t('common.unsavedChanges')}</DialogTitle>
-      <DialogActions>
+    <Modal title={t('common.unsavedChanges')} opened={isOpen} onClose={handleClose}>
+      <Group justify='flex-end'>
         <Button onClick={handleClose}>{t('common.cancel')}</Button>
         <Button onClick={handleConfirm} color='primary' autoFocus>
           {t('common.apply')}
         </Button>
-      </DialogActions>
-    </Dialog>
+      </Group>
+    </Modal>
   );
 };
 

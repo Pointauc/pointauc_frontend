@@ -6,8 +6,14 @@ namespace Integration {
   type ID = 'donatePay' | 'donatePayEu' | 'da' | 'twitch' | 'tourniquet' | 'ihaq';
   type BidType = 'donate' | 'points';
 
+  interface LoginButtonClasses {
+    icon?: string;
+    button?: string;
+  }
+
   interface LoginButtonProps<Flow extends AuthFlow = AuthFlow> {
     integration: Config<Flow>;
+    classes?: LoginButtonClasses;
   }
 
   interface PubsubComponentProps {
@@ -16,6 +22,8 @@ namespace Integration {
 
   interface Branding {
     icon: Component;
+    partner?: boolean;
+    description?: string;
   }
 
   interface AuthFlowCommon {

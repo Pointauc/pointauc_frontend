@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 
-import SlotsList from '@pages/auction/SlotsColumn/SlotsList';
+import SlotsList from '@pages/auction/SlotsColumn/List/SlotsList';
 import { Slot } from '@models/slot.model';
 import useAutoScroll from '@hooks/useAutoScroll';
 import { updatePercents } from '@services/PercentsRefMap.ts';

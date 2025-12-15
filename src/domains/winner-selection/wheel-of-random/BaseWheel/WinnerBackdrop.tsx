@@ -8,6 +8,7 @@ import BidsManagementDialog from '@components/BidsManagementConfirmation/Dialog'
 import { pointsManagementPresets } from '@components/BidsManagementConfirmation/utils';
 
 import WinnerBackdropName from './WinnerBackdropName';
+import classes from './WinnerBackdrop.module.css';
 
 interface WinnerBackdropProps {
   name: string;
@@ -50,7 +51,7 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
   const pointsAction = useMemo(() => pointsManagementPresets.returnAllExcept(id as string), [id]);
 
   return (
-    <div style={{ pointerEvents: 'all' }} className='wheel-winner'>
+    <div style={{ pointerEvents: 'all' }} className={classes.wheelWinner}>
       <WinnerBackdropName name={name} winnerName={winnerName} dropout={dropOut} />
       <Group gap='sm'>
         {onDelete && (

@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 import { VideoSnippet } from '@models/youtube.ts';
-import './VideoPreview.scss';
+import classes from './VideoPreview.module.css';
 
 interface VideoPreviewProps extends VideoSnippet {
   onSelect: (id: string) => void;
@@ -35,7 +35,7 @@ const VideoPreview: FC<VideoPreviewProps> = ({
 
   return (
     <Card
-      className='video-preview-card'
+      className={classes.videoPreviewCard}
       onClick={handleSelect}
       withBorder
       padding='sm'
@@ -43,9 +43,9 @@ const VideoPreview: FC<VideoPreviewProps> = ({
       style={{ cursor: 'pointer' }}
     >
       <Group align='flex-start' wrap='nowrap'>
-        <div className='thumbnail-container'>
+        <div className={classes.thumbnailContainer}>
           <AspectRatio ratio={16 / 9} w={160}>
-            <Image src={thumbnailUrl} alt={title} className='video-thumbnail' />
+            <Image src={thumbnailUrl} alt={title} className={classes.videoThumbnail} />
           </AspectRatio>
         </div>
         <Stack style={{ flex: 1 }} gap={0}>
@@ -57,7 +57,7 @@ const VideoPreview: FC<VideoPreviewProps> = ({
             <Text size='sm' c='dark.2'>
               {channelTitle}
             </Text>
-            <FiberManualRecordIcon className='video-preview-icon' sx={{ fontSize: 8, color: 'gray' }} />
+            <FiberManualRecordIcon className={classes.videoPreviewIcon} sx={{ fontSize: 8, color: 'gray' }} />
             <Text size='sm' c='dark.2'>
               {formattedDate}
             </Text>
@@ -65,11 +65,11 @@ const VideoPreview: FC<VideoPreviewProps> = ({
 
           <Group gap='xs' wrap='nowrap'>
             <Group gap={4} wrap='nowrap'>
-              <VisibilityIcon className='video-preview-icon' sx={{ fontSize: 16 }} />
+              <VisibilityIcon className={classes.videoPreviewIcon} sx={{ fontSize: 16 }} />
               <Text size='sm'>{formattedViews}</Text>
             </Group>
             <Group gap={4} wrap='nowrap'>
-              <ThumbUpIcon className='video-preview-icon' sx={{ fontSize: 16 }} />
+              <ThumbUpIcon className={classes.videoPreviewIcon} sx={{ fontSize: 16 }} />
               <Text size='sm'>{formattedLikes}</Text>
             </Group>
           </Group>

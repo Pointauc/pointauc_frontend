@@ -1,0 +1,16 @@
+:global([data-integration='donatePay']) {
+  background-color: #44ab4f !important;
+  color: #f1f1f1 !important;
+}
+
+:global([data-integration='donatePay']:hover) {
+  background-color: #3e8648 !important;
+}
+
+:global(.donatePay-icon path) {
+  fill: #8ddc96;
+}
+
+:global(.base-icon.donatePay path) {
+  fill: #f1f1f1;
+}

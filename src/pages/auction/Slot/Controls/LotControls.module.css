@@ -1,0 +1,120 @@
+.input {
+  border: 1px solid transparent;
+  outline: none;
+  background-color: transparent;
+  border-radius: 0;
+  height: 100%;
+  padding: 0 var(--mantine-spacing-xs);
+  font-size: var(--mantine-font-size-xl);
+}
+
+.input:hover,
+.input:focus {
+  background-color: var(--mantine-color-dark-4);
+}
+
+.input:focus {
+  border: 1px solid var(--mantine-primary-color-filled);
+}
+
+.name {
+  flex-grow: 1;
+  margin-right: var(--mantine-spacing-md);
+}
+
+.money {
+  width: 120px;
+}
+
+.extra {
+  width: 7ch;
+}
+
+.chance {
+  color: var(--mantine-color-dark-0);
+}
+
+.moneyWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xxs);
+  height: 100%;
+}
+
+.hash {
+  font-size: var(--mantine-font-size-lg);
+  height: 24px;
+  background-color: color-mix(in srgb, var(--mantine-color-primary-9) 10%, transparent);
+  border-radius: 1000px;
+  padding: 2px var(--mantine-spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mantine-color-primary-6);
+  font-weight: var(--mantine-font-weight-bold);
+  line-height: 1;
+}
+
+.hashContainer {
+  display: flex;
+  min-width: 64px;
+}
+
+.hashIcon {
+  margin-right: 2px;
+  font-size: 14px;
+  color: var(--mantine-color-primary-9);
+}
+
+.iconButton {
+  color: var(--mantine-color-gray-light-color);
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-md);
+}
+
+.iconButton:hover {
+  background-color: var(--mantine-color-gray-light-hover);
+}
+
+.iconButton:active {
+  transform: translateY(calc(0.0625rem * var(--mantine-scale)));
+}
+
+:global(.compact-view) {
+  .input {
+    font-size: var(--mantine-font-size-lg);
+  }
+
+  .iconButton {
+    width: 2.125rem;
+    height: 2.125rem;
+  }
+}
+
+:global(.custom-background) :global(.slot-chance) {
+  color: var(--mantine-color-white);
+}
+
+:global(.custom-background) .input:hover,
+:global(.custom-background) .input:focus {
+  background-color: var(--mantine-color-darkTransparent-8);
+}
+
+:global(.custom-background) {
+  .chance {
+    color: var(--mantine-color-text);
+  }
+}
+
+:global(.liquid-glass) {
+  /* styles for liquid glass ui */
+}

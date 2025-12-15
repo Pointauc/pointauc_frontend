@@ -1,15 +1,5 @@
-import {
-  ReactText,
-  RefObject,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { IconButton, Typography, darken, emphasize } from '@mui/material';
+import { RefObject, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { ActionIcon, Group, Text } from '@mantine/core';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ReplayIcon from '@mui/icons-material/Replay';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -20,10 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { ThunkDispatch } from 'redux-thunk';
 import { useTranslation } from 'react-i18next';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
-import classNames from 'classnames';
+import { IconArrowsSort } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { debounce, throttle } from '@tanstack/react-pacer';
+import { throttle } from '@tanstack/react-pacer';
 
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
@@ -33,7 +22,7 @@ import donatePay from '@components/Integration/DonatePay';
 import da from '@components/Integration/DA';
 import { useHeadroom } from '@shared/lib/scroll';
 
-import './Stopwatch.scss';
+import classes from './Stopwatch.module.css';
 
 export const STOPWATCH = {
   FORMAT: 'mm:ss:SSS',
@@ -54,7 +43,7 @@ export interface StopwatchController {
 }
 
 export interface StopwatchProps {
-  controller?: RefObject<StopwatchController>;
+  controller?: RefObject<StopwatchController | null>;
   showControls?: boolean;
   onPause?: (timeLeft: number) => void;
   onStart?: (timeLeft: number) => void;
@@ -104,11 +93,11 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const previousSlotsLength = useRef(1);
   const timeLeft = useRef<number>(defaultTime);
   const totalTime = useRef<number>(0);
-  const frameId = useRef<number>();
-  const prevTimestamp = useRef<number>();
+  const frameId = useRef<number | undefined>(undefined);
+  const prevTimestamp = useRef<number | undefined>(undefined);
   const stopwatchElement = useRef<HTMLDivElement>(null);
   const totalTimeElement = useRef<HTMLDivElement>(null);
-  const winnerRef = useRef<Slot>();
+  const winnerRef = useRef<Slot | undefined>(undefined);
   const daSettings = useRef(restSettings);
   const [focusedTimer, setFocusedTimer] = useState<TimerType>('stopwatch');
 
@@ -130,7 +119,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
 
     return slots[0];
   }, [slots]);
-  const previousWinnerSlotId = useRef<ReactText>(winnerSlot.id);
+  const previousWinnerSlotId = useRef<string | undefined>(winnerSlot.id);
 
   const updateTimerUIDebounced = useMemo(
     () =>
@@ -196,16 +185,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
       const maxMilliseconds = maxTime * 60 * 1000;
 
       if (isMinTimeActive && timeLeft.current > minTime * 60 * 1000) return;
-
-      // if (isMaxTimeActive) {
-      //   if (timeLeft.current < maxMilliseconds) {
-      //     updateStopwatch(
-      //       timeLeft.current + timeChange > maxMilliseconds ? maxMilliseconds - timeLeft.current : timeChange,
-      //     );
-      //   }
-
-      //   return;
-      // }
 
       updateStopwatch(timeChange);
     },
@@ -305,7 +284,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   }, [autoUpdateTimer, isAutoincrementActive, stopwatchAutoincrement, updateStopwatch, winnerSlot]);
 
   const swapTimers = () => setFocusedTimer((type) => (type === 'stopwatch' ? 'total' : 'stopwatch'));
-  const timerClasses = (type: TimerType) => ({ [focusedTimer === type ? 'timer-primary' : 'timer-secondary']: true });
+  const getTimerClass = (type: TimerType) => (focusedTimer === type ? classes.timerPrimary : classes.timerSecondary);
 
   useImperativeHandle(controller, () => ({
     start: startTimer,
@@ -320,46 +299,97 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   }));
 
   return (
-    <div className={clsx('stopwatch-wrapper', { 'stopwatch-wrapper-compact': controlsCompact })}>
-      <Typography className={classNames('stopwatch', timerClasses('stopwatch'))} ref={stopwatchElement} />
+    <div className={clsx(classes.wrapper, { [classes.wrapperCompact]: controlsCompact })}>
+      <Text className={getTimerClass('stopwatch')} ref={stopwatchElement} />
       {showTotalTime && (
         <>
-          <Typography
-            className={classNames('total-time', timerClasses('total'))}
-            ref={totalTimeElement}
-            sx={(theme) => ({ color: theme.palette.primary.main })}
-          />
-          <div className='swap-timers'>
-            <IconButton size='small' className='swap-timers-button' onClick={swapTimers}>
-              <SwapVertIcon fontSize='medium' />
-            </IconButton>
+          <Text className={getTimerClass('total')} c='primary' ref={totalTimeElement} />
+          <div className={classes.swapTimers}>
+            <ActionIcon
+              size='xs'
+              variant='subtle'
+              c='gray.0'
+              radius='xl'
+              className={classes.swapTimersButton}
+              onClick={swapTimers}
+            >
+              <IconArrowsSort size={18} />
+            </ActionIcon>
           </div>
         </>
       )}
       {showControls && (
-        <div className={clsx('stopwatch-controls')}>
+        <Group className={classes.controls} gap='xs'>
           {isStopped ? (
-            <IconButton onClick={startTimer} title={t('stopwatch.continue')} size='large'>
+            <ActionIcon
+              color='gray.0'
+              onClick={startTimer}
+              title={t('stopwatch.continue')}
+              size='xl'
+              variant='subtle'
+              radius='xl'
+              className={classes.actionIcon}
+            >
               <PlayArrowIcon fontSize='large' />
-            </IconButton>
+            </ActionIcon>
           ) : (
-            <IconButton onClick={stopTimer} title={t('stopwatch.pause')} size='large'>
+            <ActionIcon
+              color='gray.0'
+              onClick={stopTimer}
+              title={t('stopwatch.pause')}
+              size='xl'
+              variant='subtle'
+              radius='xl'
+              className={classes.actionIcon}
+            >
               <PauseIcon fontSize='large' />
-            </IconButton>
+            </ActionIcon>
           )}
-          <IconButton onClick={resetTimer} title={t('stopwatch.reset')} size='large'>
+          <ActionIcon
+            color='gray.0'
+            onClick={resetTimer}
+            title={t('stopwatch.reset')}
+            size='xl'
+            variant='subtle'
+            radius='xl'
+            className={classes.actionIcon}
+          >
             <ReplayIcon fontSize='large' />
-          </IconButton>
-          <IconButton onClick={addTime} title={t('stopwatch.addTime')} size='large'>
+          </ActionIcon>
+          <ActionIcon
+            color='gray.0'
+            onClick={addTime}
+            title={t('stopwatch.addTime')}
+            size='xl'
+            variant='subtle'
+            radius='xl'
+            className={classes.actionIcon}
+          >
             <ExpandLessIcon fontSize='large' />
-          </IconButton>
-          <IconButton onClick={subtractTime} title={t('stopwatch.reduceTime')} size='large'>
+          </ActionIcon>
+          <ActionIcon
+            color='gray.0'
+            onClick={subtractTime}
+            title={t('stopwatch.reduceTime')}
+            size='xl'
+            variant='subtle'
+            radius='xl'
+            className={classes.actionIcon}
+          >
             <ExpandMoreIcon fontSize='large' />
-          </IconButton>
-          <IconButton onClick={addDoubleTime} title={t('stopwatch.addTimex2')} size='large'>
+          </ActionIcon>
+          <ActionIcon
+            color='gray.0'
+            onClick={addDoubleTime}
+            title={t('stopwatch.addTimex2')}
+            size='xl'
+            variant='subtle'
+            radius='xl'
+            className={classes.actionIcon}
+          >
             <KeyboardCapslockIcon fontSize='large' />
-          </IconButton>
-        </div>
+          </ActionIcon>
+        </Group>
       )}
     </div>
   );

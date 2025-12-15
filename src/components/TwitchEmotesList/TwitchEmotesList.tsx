@@ -1,13 +1,13 @@
-import { FC, useCallback, useEffect, useState, memo } from 'react';
-import { CircularProgress, IconButton } from '@mui/material';
+import { Loader, Text } from '@mantine/core';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 // @ts-ignore
-import { EmoteFetcher, Collection, Emote } from '@kozjar/twitch-emoticons';
+import { Collection, Emote, EmoteFetcher } from '@kozjar/twitch-emoticons';
 import { useTranslation } from 'react-i18next';
 
-import { RootState } from '@reducers';
 import { getSevenTVEmotes } from '@api/emotesApi.ts';
-import './TwitchEmotesList..scss';
+import styles from '@components/TwitchEmotesList/TwitchEmotesList.module.css';
+import { RootState } from '@reducers';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const fetcher = new EmoteFetcher();
@@ -67,9 +67,9 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
             const handleClick = (): void => setActiveEmote(emote.toLink(max));
 
             return (
-              <IconButton key={emote.id} className='emote-button' onClick={handleClick} size='large'>
+              <button key={emote.id} onClick={handleClick} type='button' className={styles.emoteButton}>
                 <img alt='emote' src={emote.toLink(min)} />
-              </IconButton>
+              </button>
             );
           })}
         </div>
@@ -79,15 +79,15 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
   );
 
   return (
-    <div className='emotes-container'>
-      {userEmotes ? (
-        <>{userEmotes.map((emotes, index) => crateEmoteList(emotes, emoteLists[index]))}</>
-      ) : (
-        <CircularProgress className='emotes-loading' />
+    <div className={styles.container}>
+      {userEmotes ? <>{userEmotes.map((emotes, index) => crateEmoteList(emotes, emoteLists[index]))}</> : <Loader />}
+      {!userId && (
+        <Text c='dimmed' m='lg' ta='center'>
+          {t('wheel.connectTwitchForMoreEmotes')}
+        </Text>
       )}
-      {!userId && <div className='emote-hint'>{t('wheel.connectTwitchForMoreEmotes')}</div>}
     </div>
   );
 };
 
-export default memo(TwitchEmotesList);
+export default TwitchEmotesList;

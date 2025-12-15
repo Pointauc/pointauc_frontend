@@ -13,7 +13,7 @@ interface Result {
 }
 
 interface Props {
-  wheelCanvas: RefObject<HTMLCanvasElement>;
+  wheelCanvas: RefObject<HTMLCanvasElement | null>;
   onSpin: (rotate: number) => void;
 }
 

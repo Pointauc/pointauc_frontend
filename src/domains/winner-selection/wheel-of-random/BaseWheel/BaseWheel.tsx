@@ -1,4 +1,7 @@
-import React, {
+import { Overlay, Popover, Stack, Text, Title } from '@mantine/core';
+import clsx from 'clsx';
+import gsap from 'gsap';
+import {
   Key,
   MutableRefObject,
   useCallback,
@@ -10,21 +13,18 @@ import React, {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import gsap from 'gsap';
-import { Overlay, Popover, Stack, Text } from '@mantine/core';
-import clsx from 'clsx';
 
-import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
+import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import {
   calculateRandomSpinDistance,
   calculateWinnerSpinDistance,
   getWinnerFromDistance,
 } from '@domains/winner-selection/wheel-of-random/lib/geometry';
-import './BaseWheel.scss';
-import { WheelItemWithAngle, WheelItem } from '@models/wheel.model';
+import { WheelItem, WheelItemWithAngle } from '@models/wheel.model';
 import { RandomPaceConfig } from '@services/SpinPaceService';
 
+import classes from './BaseWheel.module.css';
 import WinnerBackdrop from './WinnerBackdrop';
 import wheelHelpers from './helpers';
 import { defaultWheelDrawer } from './hooks/defaultWheelDrawer';
@@ -340,31 +340,31 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       ref={wrapper}
     >
       <div ref={wheelContent}>
-        <div className='wheel-target' ref={spinTarget}>
+        <Title order={2} className={classes.wheelTarget} ref={spinTarget}>
           {t('wheel.winner')}
-        </div>
-        <div className='wheel-content'>
+        </Title>
+        <div className={classes.wheelContent}>
           <canvas style={{ position: 'absolute', zIndex: 1, top: -32 }} ref={selectorCanvas} />
           {hasEffects && (
             <canvas style={{ position: 'absolute', zIndex: 2, pointerEvents: 'none' }} ref={effectsCanvas} />
           )}
-          <div className='wheel-canvas-wrapper'>
+          <div className={classes.wheelCanvasWrapper}>
             <canvas ref={wheelCanvas} />
           </div>
           {onCoreImageChange && (
             <Popover width={420} withArrow position='right' closeOnClickOutside={isClickOusideAllowed}>
               <Popover.Target>
-                <div className='wheel-core' style={{ backgroundImage: coreBackground }}>
-                  <div className='wheel-core-overlay'>
+                <div className={classes.wheelCore} style={{ backgroundImage: coreBackground }}>
+                  <div className={classes.wheelCoreOverlay}>
                     <Overlay color='black' opacity={0.7} />
-                    <Text className='wheel-core-text' size='xl'>
+                    <Text className={classes.wheelCoreText} size='xl'>
                       {t('wheel.coreImage.wheelOverlay')}
                     </Text>
                   </div>
                 </div>
               </Popover.Target>
-              <Popover.Dropdown mah={430} p={8} className='wheel-core-emotes-list'>
-                <Stack gap={0}>
+              <Popover.Dropdown mah={430} p={8} className={classes.wheelCoreEmotesList}>
+                <Stack gap='sm'>
                   <ImageLinkInput
                     dialogTitle={t('wheel.coreImage.customImageDialogTitle')}
                     buttonTitle={t('wheel.loadCustomMessage')}
@@ -377,7 +377,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
               </Popover.Dropdown>
             </Popover>
           )}
-          {!onCoreImageChange && <div className='wheel-core' style={{ backgroundImage: coreBackground }}></div>}
+          {!onCoreImageChange && <div className={classes.wheelCore} style={{ backgroundImage: coreBackground }}></div>}
           {!!winnerItem && (
             <WinnerBackdrop
               name={winnerItem.name}

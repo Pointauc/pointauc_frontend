@@ -97,7 +97,7 @@ const RewardPresetsForm: React.FunctionComponent = () => {
   );
 
   const confirmationModal = (onClose: () => void, onConfirm: () => void): ReactNode => (
-    <RewardPresetsConfirmation open onCLose={onClose} onConfirm={onConfirm} />
+    <RewardPresetsConfirmation open onClose={onClose} onConfirm={onConfirm} />
   );
 
   return (
@@ -105,7 +105,7 @@ const RewardPresetsForm: React.FunctionComponent = () => {
       <ConfirmFormOnLeave isDirtyForm={isDirty} onSubmit={handleSubmit(savePresets)} content={confirmationModal} />
       <RewardPresetsConfirmation
         open={confirmOpened}
-        onCLose={() => setConfirmOpened(false)}
+        onClose={() => setConfirmOpened(false)}
         onConfirm={handleSubmit(savePresets)}
       />
       <Stack gap='xs'>

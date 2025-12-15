@@ -1,0 +1,22 @@
+.imageInputWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dropZone {
+  min-height: 150px;
+}
+
+.divider {
+  margin: 15px 0;
+  font-weight: 400;
+  font-size: 1.2em;
+  color: #D3D3D3;
+}
+
+.linkInput {
+  width: 100%;
+}
+

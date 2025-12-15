@@ -1,16 +1,23 @@
-import React from 'react';
-import { Chip } from '@mui/material';
+import { Badge } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 interface ActionChipProps {
   type: Bid.Action;
 }
 
-const ActionChip = ({ type }: ActionChipProps) => {
-  const { t } = useTranslation();
-  const color = type === 'accept' ? 'success' : 'warning';
-
-  return <Chip color={color} label={<b>{t(`bidsManagement.action.${type}`)}</b>} />;
+const colorMap = {
+  accept: 'yellow',
+  return: 'green',
 };
+
+function ActionChip({ type }: ActionChipProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Badge color={colorMap[type]} variant='light' size='lg'>
+      {t(`bidsManagement.action.${type}`)}
+    </Badge>
+  );
+}
 
 export default ActionChip;

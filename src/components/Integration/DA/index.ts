@@ -7,7 +7,7 @@ import ENDPOINTS from '@constants/api.constants.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 
 import { store } from '../../../main.tsx';
-import './index.scss';
+import './index.module.css';
 
 const id = 'da';
 

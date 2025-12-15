@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import { isEqual } from 'es-toolkit';
 
 /**
  * Returns a function that calls the callback after the duration has passed.
@@ -48,7 +48,7 @@ interface SkipSameValueCallsResult<TParams extends any[]> {
  * Returns a function that calls the callback only if the arguments are different from the last call.
  * @param callback - The function to call.
  * @param {Object} options - Configuration options:
- * - `compareNested` - Whether to compare nested objects using lodash isEqual or simple equality.
+ * - `compareNested` - Whether to compare nested objects using es-toolkit isEqual or simple equality.
  * @returns {Object} An object with two functions:
  * - `call` - Calls the callback only if the arguments are different from the last call.
  * - `callThrough` - Calls the callback with the arguments regardless of whether they are the same as the last call.

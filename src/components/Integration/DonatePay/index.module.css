@@ -44,3 +44,11 @@
   text-decoration: underline;
 }
 
+.icon {
+  width: 30px;
+  height: 30px;
+
+  path {
+    fill: #f1f1f1;
+  }
+}

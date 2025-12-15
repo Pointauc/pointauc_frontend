@@ -1,13 +1,10 @@
 import { DragEvent } from 'react';
-import { GridValueFormatterParams } from '@mui/x-data-grid';
 import { DeepPartial } from 'redux';
 
-import { Slot } from '../models/slot.model';
 import { COLORS } from '../constants/color.constants';
-import { WheelItem } from '../models/wheel.model';
 import { ATTRIBUTES, TAGS } from '../constants/common.constants';
-
-import { numberUtils } from './common/number';
+import { Slot } from '../models/slot.model';
+import { WheelItem } from '../models/wheel.model';
 
 import type { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
 
@@ -79,7 +76,7 @@ export const getDirtyValues = <T extends FieldValues>(
   Object.keys(dirtyFields).reduce((accum, key) => {
     const getValue = () => (values[key] === undefined ? defaultValues[key] : values[key]);
 
-    return touched[key] ? { ...accum, [key]: getValue() } : accum;
+    return touched[key as keyof typeof touched] ? { ...accum, [key]: getValue() } : accum;
   }, {});
 
 export const shuffle = <T>(_a: T[]): T[] => {
@@ -151,8 +148,6 @@ export const createMapByKey = <TKey, TData>(
 
   return map;
 };
-
-export const percentsFormatter = (params: GridValueFormatterParams): string => `${String(params.value)}%`;
 
 export const getUniqItems = <T>(items: T[], count: number): T[] => {
   if (items.length <= count) {

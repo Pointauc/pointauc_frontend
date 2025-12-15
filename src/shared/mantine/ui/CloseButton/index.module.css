@@ -1,0 +1,3 @@
+.root:hover {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-0) 15%, transparent);
+}

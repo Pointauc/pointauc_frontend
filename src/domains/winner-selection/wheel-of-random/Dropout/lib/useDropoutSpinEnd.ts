@@ -7,11 +7,11 @@ import { interpolate } from '@utils/dataType/function.utils.ts';
 import { WheelController } from '../../BaseWheel/BaseWheel';
 
 interface Props {
-  controller: RefObject<WheelController>;
+  controller: RefObject<WheelController | null>;
   setItems: Dispatch<SetStateAction<WheelItem[] | undefined>>;
 }
 
-export const animateDropout = async (controller: RefObject<WheelController>, id: Key, spinTime: number) => {
+export const animateDropout = async (controller: RefObject<WheelController | null>, id: Key, spinTime: number) => {
   const showAnimation = spinTime >= 3;
 
   if (showAnimation) {

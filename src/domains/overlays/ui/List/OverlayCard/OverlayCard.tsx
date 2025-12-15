@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Overlay } from '../../../model/overlay.types';
 import UrlControls from '../../UrlControls';
-import './OverlayCard.scss';
+import styles from './OverlayCard.module.css';
 
 interface OverlayCardProps {
   overlay: Overlay;
@@ -41,7 +41,7 @@ const OverlayCard: FC<OverlayCardProps> = ({ overlay, onEdit, onDelete }) => {
 
   return (
     <Card
-      className='overlay-card'
+      className={styles.overlayCard}
       withBorder
       padding='md'
       radius='md'

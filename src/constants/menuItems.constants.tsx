@@ -4,6 +4,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LayersIcon from '@mui/icons-material/Layers';
+import ScienceIcon from '@mui/icons-material/Science';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation, useMatches } from 'react-router-dom';
@@ -67,8 +68,9 @@ export const useMenuItems = (): MenuItem[] => {
     //   path: ROUTES.STATISTIC,
     //   navbarFixedState: 'opened',
     // },
-    { title: 'menu.items.history.title', icon: <AssignmentIcon />, path: ROUTES.HISTORY, navbarFixedState: 'opened' },
+    // { title: 'menu.items.history.title', icon: <AssignmentIcon />, path: ROUTES.HISTORY, navbarFixedState: 'opened' },
     // { title: 'menu.items.overlays.title', icon: <LayersIcon />, path: ROUTES.OVERLAYS },
+    // { title: 'menu.items.test.title', icon: <ScienceIcon />, path: ROUTES.TEST, navbarFixedState: 'opened' },
     { title: 'menu.items.guides.title', icon: <HelpIcon />, divide: true, path: docsPath, target: '_blank' },
     ...(userId
       ? [

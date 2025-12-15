@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { OverlayType } from '../../../model/overlay.types';
 
-import './CreateOverlayModal.scss';
+import styles from './CreateOverlayModal.module.css';
 
 interface CreateOverlayModalProps {
   opened: boolean;
@@ -49,7 +49,7 @@ const OverlayTypeCard: FC<OverlayTypeCardProps> = ({ type, onClick }) => {
 
   return (
     <Card
-      className='overlay-type-card'
+      className={styles.overlayTypeCard}
       withBorder
       padding='lg'
       onClick={onClick}
@@ -62,7 +62,7 @@ const OverlayTypeCard: FC<OverlayTypeCardProps> = ({ type, onClick }) => {
 
         {/* Preview Image Placeholder */}
         <Box
-          className='preview-placeholder'
+          className={styles.previewPlaceholder}
           style={{
             height: '120px',
             backgroundColor: '#f8f9fa',
@@ -105,7 +105,7 @@ const CreateOverlayModal: FC<CreateOverlayModalProps> = ({ opened, onClose, onSe
       title={t('overlays.chooseYourOverlay')}
       size='xl'
       centered
-      className='create-overlay-modal'
+      className={styles.createOverlayModal}
     >
       <Grid gutter='md'>
         <Grid.Col span={6}>

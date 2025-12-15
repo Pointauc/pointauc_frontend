@@ -7,3 +7,12 @@
   align-self: center;
   margin: 10px;
 }
+
+.interaction :global(.youtube-container) {
+  pointer-events: none;
+  overflow: visible;
+}
+
+:global(.youtube-container) {
+  overflow: visible;
+}

@@ -3,11 +3,14 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Group, Switch, SwitchProps, Text } from '@mantine/core';
 import classNames from 'classnames';
+import clsx from 'clsx';
 
+import { getActiveRegion } from '@components/Integration/DonatePay/index.tsx';
 import { RootState } from '@reducers';
 import { toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 import { integrationUtils } from '@components/Integration/helpers.ts';
-import { getActiveRegion } from '@components/Integration/DonatePay/index.ts';
+
+import styles from './PubsubSwitch.module.css';
 
 interface Props extends Integration.PubsubComponentProps {
   hideTitle?: boolean;
@@ -52,7 +55,7 @@ const PubsubSwitch: FC<Props> = ({ integration, hideTitle, switchProps }) => {
       checked={actual}
       label={
         <Group align='center' gap='xxs'>
-          <Icon className='base-icon' width={32} height={32} />
+          <Icon className={clsx(styles.integrationIcon, `${id}-icon`)} width={32} height={32} />
           {!hideTitle && <Text fw={500}>{displayName}</Text>}
         </Group>
       }

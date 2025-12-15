@@ -19,7 +19,7 @@ interface AutoScrollOptions {
  *   @property {number} [mouseResumeDelay=5] - The delay (in seconds) before resuming auto-scroll after mouse leave
  */
 const useAutoScroll = (
-  containerRef: RefObject<HTMLDivElement>,
+  containerRef: RefObject<HTMLDivElement | null>,
   itemCount: number,
   isAutoScroll: boolean,
   options?: AutoScrollOptions,
@@ -32,7 +32,7 @@ const useAutoScroll = (
   const mouseResumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resizeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progressRef = useRef(0);
-  const prevContainerRef = useRef<HTMLDivElement | null>();
+  const prevContainerRef = useRef<HTMLDivElement | null>(null);
 
   const cleanup = useCallback(() => {
     tweenRef.current?.kill();

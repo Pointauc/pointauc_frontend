@@ -1,0 +1,24 @@
+.actionIcon {
+  padding: 0 8px;
+  width: auto;
+  min-width: var(--ai-size, 28px);
+  height: var(--rich-text-editor-control-height);
+  border-radius: var(--mantine-radius-sm);
+  transition: background-color 150ms ease;
+}
+
+.colorIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.colorIndicator {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+}

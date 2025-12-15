@@ -11,7 +11,9 @@ interface TextWithHintProps {
 const TextWithHint = ({ children, hint }: TextWithHintProps) => {
   return (
     <Tooltip label={hint} disabled={!hint} position='bottom-start' withArrow multiline w={460}>
-      <Text className={clsx({ [styles.hint]: hint })}>{children}</Text>
+      <Text component='div' className={clsx({ [styles.hint]: hint })}>
+        {children}
+      </Text>
     </Tooltip>
   );
 };

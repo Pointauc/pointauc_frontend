@@ -1,5 +1,4 @@
-import { Group, Tabs, Title, ScrollArea } from '@mantine/core';
-import classNames from 'classnames';
+import { Group, ScrollArea, Tabs, Title } from '@mantine/core';
 import { useCallback, useEffect, useMemo, useTransition } from 'react';
 import { FormProvider, useForm, type FieldNamesMarkedBoolean } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -9,15 +8,14 @@ import { useMatch, useNavigate } from 'react-router-dom';
 import { settingsApi } from '@api/userApi.ts';
 import { integrations } from '@components/Integration/integrations.ts';
 import PageContainer from '@components/PageContainer/PageContainer.tsx';
-import { Option } from '@components/RadioButtonGroup/RadioButtonGroup.tsx';
 import ROUTES from '@constants/routes.constants.ts';
-import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
+import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';
 import WebsiteSettings from '@domains/user-settings/Widgets/General/WebsiteSettings';
+import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import IntegrationsSettings from '@pages/settings/IntegrationsSettings/IntegrationsSettings.tsx';
 import { RootState } from '@reducers';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils.ts';
-import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';
 
 import styles from './UserSettings.module.css';
 
@@ -78,12 +76,12 @@ const UserSettings = () => {
     handleSubmit((data) => onSubmit(data, presetData))();
   };
 
-  const settingsGroupOptions = useMemo<Option<SettingGroup>[]>(() => {
+  const settingsGroupOptions = useMemo<any[]>(() => {
     const integrationsLabel = (
       <Group align='center' gap='xxs'>
         <div style={{ marginRight: 8 }}>{t('settings.groups.integrations')}</div>
         {integrations.all.map((integration) => (
-          <integration.branding.icon key={integration.id} className={classNames('base-icon', integration.id)} />
+          <integration.branding.icon key={integration.id} className={styles.integrationIcon} />
         ))}
       </Group>
     );
@@ -107,6 +105,7 @@ const UserSettings = () => {
           classes={{ content: styles.pageContent }}
         >
           <Tabs
+            keepMounted={false}
             value={initialSettingGroup}
             onChange={changeSettingsGroup}
             classNames={{ tab: styles.tabLabel, root: styles.root, panel: styles.panel, list: styles.list }}

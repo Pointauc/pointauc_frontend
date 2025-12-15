@@ -3,23 +3,21 @@ import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
 import '@styles/index.scss';
 
+import '@assets/i18n/index.ts';
 import { Notifications } from '@mantine/notifications';
-import { Theme } from '@mui/material';
 import { configureStore } from '@reduxjs/toolkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { lazy, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
 
-import '@assets/i18n/index.ts';
 import i18n from '@assets/i18n/index.ts';
-import ChatWheelPage from '@components/ChatWheelPage/ChatWheelPage.tsx';
-import AukusRedirectPage from '@components/Event/Aukus/AukusRedirectPage.tsx';
 import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import INTEGRATIONS from '@components/Integration/integrations.ts';
@@ -32,15 +30,11 @@ import SaveLoadService from '@services/SaveLoadService.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import { sortSlots } from '@utils/common.utils.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
-import { OverlayViewPage } from '@domains/overlays/index.ts';
+import { TutorialProvider } from '@domains/tutorials';
 
-import App from './App.tsx';
-import ThemeWrapper from './ThemeWrapper.tsx';
+import App from './App/entrypoint/App.tsx';
 
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
+const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
 
 i18n.on('languageChanged', (language) => dayjs.locale(language));
 dayjs.extend(relativeTime);
@@ -112,9 +106,7 @@ const redirectRoutes = integrationUtils.filterBy
   }));
 
 const router = createBrowserRouter([
-  { path: ROUTES.CHAT_WHEEL, element: <ChatWheelPage /> },
   { path: `${ROUTES.HOME}*`, element: <App /> },
-  { path: ROUTES.AUKUS.REDIRECT, element: <AukusRedirectPage /> },
   { path: '/overlays/view/:id', element: <OverlayViewPage /> },
   ...redirectRoutes,
 ]);
@@ -131,15 +123,22 @@ const queryClient = new QueryClient({
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
+
+const portalRoot = document.createElement('div');
+portalRoot.id = 'portal-root';
+document.body.appendChild(portalRoot);
+
 root.render(
-  <Provider store={store}>
-    <ThemeWrapper>
+  <StrictMode>
+    <Provider store={store}>
       <MantineProvider>
-        <QueryClientProvider client={queryClient}>
-          <Notifications />
-          <RouterProvider router={router} />
-        </QueryClientProvider>
+        <TutorialProvider>
+          <QueryClientProvider client={queryClient}>
+            <Notifications limit={4} autoClose={3000} />
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </TutorialProvider>
       </MantineProvider>
-    </ThemeWrapper>
-  </Provider>,
+    </Provider>
+  </StrictMode>,
 );

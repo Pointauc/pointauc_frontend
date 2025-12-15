@@ -29,7 +29,6 @@ import { getRandomNumber } from '@api/randomApi';
 import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
 
-import './index.scss';
 import styles from './index.module.css';
 
 export interface SettingElements {
@@ -56,7 +55,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   shouldShuffle?: boolean;
   elements?: Partial<SettingElements>;
   children?: ReactNode;
-  wheelRef?: React.RefObject<RandomWheelController>;
+  wheelRef?: React.RefObject<RandomWheelController | null>;
   // callbacks
   deleteItem?: (id: Key) => void;
   onWin?: (winner: TWheelItem) => void;
@@ -161,6 +160,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
   const onSpinClick = useCallback(
     async ({ useRandomOrg }: Wheel.Settings) => {
+      console.log('submit');
       const { min, max } = randomSpinConfig!;
       const duration = randomSpinEnabled ? random.getInt(min!, max!) : spinTime;
 
@@ -251,7 +251,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 };
 
 interface RandomWheelProviderProps<TWheelItem extends WheelItem = WheelItem> extends RandomWheelProps<TWheelItem> {
-  form?: React.RefObject<UseFormReturn<Wheel.Settings>>;
+  form?: React.RefObject<UseFormReturn<Wheel.Settings> | null>;
 }
 
 const Provider = <TWheelItem extends WheelItem = WheelItem>(

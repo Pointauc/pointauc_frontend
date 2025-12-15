@@ -1,6 +1,7 @@
 {
   "trailerWindow": {
-    "noResults": "No results found or the feature is temporarily unavailable. Please try again later."
+    "noResults": "No results found or the feature is temporarily unavailable. Please try again later.",
+    "playerLoading": "Loading the player..."
   },
   "resizablePanel": {
     "description": "You can move the window around the screen and change its size by dragging the bottom right corner."
@@ -18,9 +19,10 @@
     "lotBids": "Points for the lot - \"{{name}}\"",
     "restBids": "All other points",
     "statistic": {
-      "bidsAmount": "Total bids: <b>{{amount}}</b>",
-      "totalCost": "Total cost: <b>{{amount}}</b>",
-      "largestInvestor": "Contributed the most: <b style=\"color: {{color}}\">{{name}}</b> with <b>{{amount}}</b> points",
+      "bidsAmount": "Total bids:",
+      "totalCost": "Total cost:",
+      "largestInvestor": "Contributed the most:",
+      "investorAmount": "<b style=\"color: {{color}}\">{{name}}</b> with <b>{{amount}}</b> points",
       "noBids": "No bids for this category"
     },
     "requestStatus": {
@@ -134,6 +136,7 @@
   },
   "auc": {
     "defaultRules": "{\"type\":\"doc\",\"content\":[{\"type\":\"heading\",\"attrs\":{\"textAlign\":\"center\",\"level\":1},\"content\":[{\"type\":\"text\",\"text\":\"Sample\"}]},{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"center\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"textStyle\",\"attrs\":{\"color\":\"#ffc657\"}}],\"text\":\"Click on this area to start editing the rules.\"}]},{\"type\":\"heading\",\"attrs\":{\"textAlign\":\"center\",\"level\":2},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"24\"}}],\"text\":\"Editor Features\"}]},{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"16\"}}],\"text\":\"You have many functions to make the rules look exactly how you want:\"}]},{\"type\":\"bulletList\",\"content\":[{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"bold\"}],\"text\":\"Various\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"italic\"}],\"text\":\"text formatting\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" \"},{\"type\":\"text\",\"marks\":[{\"type\":\"underline\"},{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"options\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Change \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":\"30\"}}],\"text\":\"font size\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Text \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}},{\"type\":\"textStyle\",\"attrs\":{\"color\":\"#f8e71c\"}}],\"text\":\"color\"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\" and \"},{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":\"#d14844\",\"fontSize\":null}}],\"text\":\"background\"}]}]},{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"right\"},\"content\":[{\"type\":\"text\",\"text\":\"Text alignment\"}]}]}]},{\"type\":\"orderedList\",\"attrs\":{\"start\":1},\"content\":[{\"type\":\"listItem\",\"attrs\":{\"color\":null},\"content\":[{\"type\":\"paragraph\",\"attrs\":{\"textAlign\":\"left\"},\"content\":[{\"type\":\"text\",\"marks\":[{\"type\":\"highlight\",\"attrs\":{\"color\":null,\"fontSize\":null}}],\"text\":\"Different types of lists and headings\"}]}]}]}]}\n",
+    "defaultRuleName": "Rules",
     "addedToRandomSlot": "Randomly added {{cost}} from {{username}} to \"{{slotName}}\" (\"{{message}}\")!",
     "addPosition": "Add Lot",
     "addToRandomSlot": "Add to Random Slot",
@@ -225,7 +228,8 @@
     "externalLinkDisclaimer": "Please be careful when opening unknown links. Only proceed if you trust this source.",
     "openLink": "Open Link",
     "error": "Error",
-    "noChanges": "Start editing the form to save changes"
+    "noChanges": "Start editing the form to save changes",
+    "default": "Default"
   },
   "history": {
     "addedTo": "Added to",
@@ -360,6 +364,26 @@
   },
   "settings": {
     "pageTitle": "Settings",
+    "twitch": {
+      "rewardPresetsConfirmation": {
+        "title": "Warning",
+        "description": "After updating rewards, current viewer redemptions cannot be refunded!",
+        "confirm": "Update Rewards"
+      },
+      "addReward": "Add Reward",
+      "bindRewardsToTimer": "Bind Reward Activation to Timer",
+      "bindRewardsToTimerDesc": "Rewards will automatically activate when the timer resumes and deactivate when paused or completed.",
+      "closeRewards": "Hide Rewards",
+      "color": "Color",
+      "commonRewardsName": "Common Name for Rewards",
+      "commonRewardsNameDesc": "When integration is enabled, rewards in the format \"Name + Cost\" are automatically created on the channel.",
+      "cost": "Cost",
+      "deleteRewards": "Delete Rewards",
+      "openRewards": "Enable Rewards",
+      "returnCanceledBids": "Return Canceled Rewards",
+      "rewardsList": "Rewards List:",
+      "saveRewards": "Save"
+    },
     "presets": {
       "nameFieldLabel": "Active settings template",
       "defaultTitle": "Template 1",
@@ -472,21 +496,6 @@
       "update": "Generate New",
       "modalTitle": "Your API Token",
       "userIdRequired": "You need to be logged in to generate a token. Use any service below to create an account."
-    },
-    "twitch": {
-      "addReward": "Add Reward",
-      "bindRewardsToTimer": "Bind Reward Activation to Timer",
-      "bindRewardsToTimerDesc": "Rewards will automatically activate when the timer resumes and deactivate when paused or completed.",
-      "closeRewards": "Hide Rewards",
-      "color": "Color",
-      "commonRewardsName": "Common Name for Rewards",
-      "commonRewardsNameDesc": "When integration is enabled, rewards in the format \"Name + Cost\" are automatically created on the channel.",
-      "cost": "Cost",
-      "deleteRewards": "Delete Rewards",
-      "openRewards": "Enable Rewards",
-      "returnCanceledBids": "Return Canceled Rewards",
-      "rewardsList": "Rewards List:",
-      "saveRewards": "Save"
     }
   },
   "stopwatch": {
@@ -541,7 +550,7 @@
       "classic": "Classic"
     },
     "addLotsToAuc": "Save lots in auction",
-    "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel",
+    "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel (7TV, BTTV, FFZ)",
     "deleteLot": "Delete Lot",
     "deleteLotConfirmationModal": {
       "title": "Delete Lot?",
@@ -596,5 +605,40 @@
       "default": "Default",
       "genshinImpact": "???"
     }
+  },
+  "editableSelect": {
+    "placeholder": "Select option",
+    "editOption": "Edit selected option",
+    "addOption": "Add new option",
+    "newOptionPlaceholder": "New option name"
+  },
+  "richTextEditor": {
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "paragraph": "Paragraph",
+    "headingDropdown": "Headings",
+    "alignLeft": "Align left",
+    "alignCenter": "Align center",
+    "alignRight": "Align right",
+    "alignJustify": "Justify",
+    "alignmentDropdown": "Text alignment",
+    "fontSizeSmall": "Small",
+    "fontSizeNormal": "Normal",
+    "fontSizeLarge": "Large",
+    "fontSizeXL": "Extra Large",
+    "fontSizeDropdown": "Font size",
+    "textColor": "Text color",
+    "clearColor": "Clear color",
+    "highlightColor": "Highlight",
+    "clearHighlight": "Clear highlight"
+  },
+  "tutorial": {
+    "startButton": "Start Tutorial",
+    "endButton": "End Tutorial",
+    "nextButton": "Next Step",
+    "stepProgress": "Step {{current}} of {{total}}",
+    "performAction": "To continue:",
+    "notificationMessage": "{{description}} Click here to start the tutorial."
   }
 }

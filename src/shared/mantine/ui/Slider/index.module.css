@@ -1,20 +1,20 @@
-.markWrapper {
-  &:first-child {
-    .markLabel {
-      transform: translate(0, calc(var(--mantine-spacing-xs) / 2));
-    }
-  }
-
-  &:last-child {
-    .markLabel {
-      transform: translate(calc(-100% + var(--slider-size)), calc(var(--mantine-spacing-xs) / 2));
-    }
-  }
-}
-
 .withMarks {
   margin-bottom: 1.45rem;
   /* .markWrapper {
     ...classes.markWrapper,
   } */
+}
+
+.withMarkOffset {
+  .markWrapper:first-child {
+    .markLabel {
+      transform: translate(0, calc(var(--mantine-spacing-xs) / 2));
+    }
+  }
+
+  .markWrapper:last-child {
+    .markLabel {
+      transform: translate(calc(-100% + var(--slider-size)), calc(var(--mantine-spacing-xs) / 2));
+    }
+  }
 }

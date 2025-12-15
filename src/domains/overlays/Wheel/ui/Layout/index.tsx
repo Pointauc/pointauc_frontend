@@ -15,7 +15,7 @@ interface WheelLayoutProps {
   participants: WheelItemWithMetadata[];
   format: WheelFormat;
   coreImage: string | undefined;
-  wheelRef: React.RefObject<WheelController>;
+  wheelRef: React.RefObject<WheelController | null>;
 }
 
 export const WheelLayout: FC<WheelLayoutProps> = ({ overlay, participants, format, coreImage, wheelRef }) => {

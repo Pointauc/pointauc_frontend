@@ -1,0 +1,24 @@
+.rules {
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  width: 370px;
+  gap: var(--mantine-spacing-sm);
+}
+
+.editorWrapper {
+  flex-grow: 0;
+  cursor: pointer;
+}
+
+.rules.active {
+  gap: var(--mantine-spacing-sm);
+}
+
+.rules.active .editorWrapper {
+  cursor: unset;
+}
+
+.rules:not(.active) .editor {
+  border-color: transparent;
+}

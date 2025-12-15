@@ -1,0 +1,20 @@
+.disclaimer {
+  font-size: 0.9rem;
+  color: var(--mantine-color-dimmed);
+  text-align: center;
+
+  a {
+    color: #5b95c4;
+  }
+}
+
+.loadingProgress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.actionStatus {
+  align-self: center;
+}

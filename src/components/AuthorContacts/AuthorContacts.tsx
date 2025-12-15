@@ -3,7 +3,7 @@ import TelegramIcon from '@mui/icons-material/Telegram';
 import { Anchor, Group, Stack, Title } from '@mantine/core';
 import clsx from 'clsx';
 
-import { Boosty } from '@components/Icons/Icons.tsx';
+import Boosty from '@assets/icons/boosty.svg?react';
 
 import classes from './AuthorContacts.module.css';
 

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Divider, Group, Paper, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -9,14 +9,14 @@ import { RootState } from '@reducers';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import ActionStatus from '@components/BidsManagementConfirmation/ActionStatus.tsx';
 import { updateRedemptions } from '@api/twitchApi.ts';
-import LoadingButton from '@components/LoadingButton/LoadingButton.tsx';
 import bidsManagementUtils from '@components/BidsManagementConfirmation/utils.ts';
 import { setHistory } from '@reducers/Purchases/Purchases.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
-import '@components/BidsManagementConfirmation/index.scss';
 
 import { store } from '../../main.tsx';
+
+import classes from './BidsManagementConfirmation.module.css';
 
 export interface BidsManagementConfirmationProps {
   actions: Bid.ActionConfig[];
@@ -24,13 +24,9 @@ export interface BidsManagementConfirmationProps {
   onClose: () => void;
 }
 
-const BidsManagementConfirmation = ({
-  actions: _actions,
-  onLoadingChanged,
-  onClose,
-}: BidsManagementConfirmationProps) => {
+function BidsManagementConfirmation({ actions: _actions, onLoadingChanged, onClose }: BidsManagementConfirmationProps) {
   const { t } = useTranslation();
-  const [actionsStatuses, setActionsStatuses] = React.useState<API.RequestStatus[]>([]);
+  const [actionsStatuses, setActionsStatuses] = useState<API.RequestStatus[]>([]);
   const { history: _history } = useSelector((root: RootState) => root.purchases);
   const [actions] = useState(_actions);
   const [history] = useState(_history);
@@ -58,11 +54,11 @@ const BidsManagementConfirmation = ({
     const Component = action.Title;
 
     return (
-      <Stack spacing={1}>
-        <Stack spacing={1} direction='row' alignItems='center'>
+      <Stack gap='xs'>
+        <Group gap='xs'>
           <ActionChip type={action.type} />
           <Component config={action} />
-        </Stack>
+        </Group>
         <Divider />
         <ActionStatistics data={actionsData[index]} />
         <ActionStatus status={actionsStatuses[index] ?? 'idle'} />
@@ -109,6 +105,7 @@ const BidsManagementConfirmation = ({
         .catch(() => setActionStatus('error', index));
     }
   }, [actions, actionsData, dispatch, t]);
+
   const isLoading = useMemo(() => actionsStatuses.some((status) => status === 'loading'), [actionsStatuses]);
   const isIdling = useMemo(
     () => !actionsStatuses.length || actionsStatuses.some((status) => status === 'idle'),
@@ -119,34 +116,28 @@ const BidsManagementConfirmation = ({
   useEffect(() => onLoadingChanged?.(isLoading), [isLoading, onLoadingChanged]);
 
   return (
-    <Stack className='bids-management-confirmation' spacing={2}>
-      <Typography>{t('bidsManagement.allActions')}</Typography>
-      <Stack spacing={1}>
+    <Stack gap='md'>
+      <Text>{t('bidsManagement.allActions')}</Text>
+      <Stack gap='xs'>
         {actions.map((action, index) => (
-          <Paper className='action-config' key={index}>
+          <Paper key={index} withBorder shadow='md' p='md' bg='dark.6'>
             {renderAction(action, index)}
           </Paper>
         ))}
       </Stack>
-      <div className='disclaimer' dangerouslySetInnerHTML={{ __html: t('bidsManagement.disclaimer') }} />
+      <div className={classes.disclaimer} dangerouslySetInnerHTML={{ __html: t('bidsManagement.disclaimer') }} />
       {canConfirm && (
-        <LoadingButton
-          isLoading={isLoading}
-          onClick={confirmActions}
-          className='confirm'
-          variant='outlined'
-          color='primary'
-        >
+        <Button variant='outline' loading={isLoading} onClick={confirmActions} style={{ alignSelf: 'center' }}>
           {t('bidsManagement.confirm')}
-        </LoadingButton>
+        </Button>
       )}
       {!canConfirm && (
-        <Button onClick={onClose} className='confirm' color='blank' variant='outlined'>
+        <Button onClick={onClose} variant='outline' color='gray' style={{ alignSelf: 'center' }}>
           {t('bidsManagement.close')}
         </Button>
       )}
     </Stack>
   );
-};
+}
 
 export default BidsManagementConfirmation;

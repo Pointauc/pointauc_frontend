@@ -1,31 +1,113 @@
-:global(.compact-view) .card {
-  border-radius: 0;
-  box-shadow: none;
+.root {
+  background-color: var(--mantine-color-dark-6);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-md);
+  padding: 0 var(--mantine-spacing-xxs) 0 var(--mantine-spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xs);
+  height: 50px;
+  overflow: hidden;
+  margin-bottom: 4px;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+  border: 2px solid transparent;
 }
 
-.card {
-  background-color: var(--slot-background-color);
+:global(.compact-view) .root {
+  border-radius: 0;
+  box-shadow: none;
+  height: 41px;
+}
+
+.even {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-6) 50%, var(--mantine-color-dark-5) 50%);
 }
 
 .index {
-  margin-left: var(--mantine-spacing-lg);
-  margin-right: var(--mantine-spacing-xs);
   font-size: 1.1em;
   width: 20px;
 }
 
-.fastIndex {
-  font-size: 1.1em;
+/* Subtle highlight when dragging has started (ready to receive) */
+:global(.dragging) {
+  .root {
+    background-color: color-mix(in srgb, var(--mantine-color-dark-6) 97%, var(--mantine-primary-color-filled) 3%);
+    border-color: color-mix(in srgb, var(--mantine-primary-color-filled) 15%, transparent 85%);
+  }
 
-  padding: 0 8px;
+  .even {
+    background-color: color-mix(in srgb, var(--mantine-color-dark-5) 97%, var(--mantine-primary-color-filled) 3%);
+  }
+
+  /* Strong highlight when hovering over the slot */
+  .dragOver {
+    background-color: color-mix(in srgb, var(--mantine-color-dark-6) 70%, var(--mantine-primary-color-filled) 30%);
+    border-color: var(--mantine-primary-color-filled);
+    box-shadow:
+      var(--mantine-shadow-md),
+      0 0 12px color-mix(in srgb, var(--mantine-primary-color-filled) 50%, transparent 50%);
+  }
 }
 
-.fastIndexIcon {
-  margin-right: 2px;
-  opacity: 0.5;
+/* Remove cost variant (different color) */
+.removeCost {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-6) 70%, var(--mantine-color-red-filled) 30%);
+  border-color: var(--mantine-color-red-filled);
+  box-shadow:
+    var(--mantine-shadow-md),
+    0 0 12px color-mix(in srgb, var(--mantine-color-red-filled) 50%, transparent 50%);
 }
 
-.fastIndexWrapper {
-  min-width: 60px;
-  margin-right: var(--mantine-spacing-xs);
+:global(.custom-background) {
+  .root {
+    background-color: var(--mantine-color-darkTransparent-7);
+    box-shadow: none;
+  }
+
+  .even {
+    background-color: var(--mantine-color-darkTransparent-6);
+  }
+}
+
+:global(.custom-background.dragging) {
+  .root {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-7) 97%,
+      var(--mantine-primary-color-filled) 3%
+    );
+    border-color: color-mix(in srgb, var(--mantine-primary-color-filled) 15%, transparent 85%);
+  }
+
+  .even {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-6) 97%,
+      var(--mantine-primary-color-filled) 3%
+    );
+  }
+
+  .dragOver {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-7) 70%,
+      var(--mantine-primary-color-filled) 30%
+    );
+    border-color: var(--mantine-primary-color-filled);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-primary-color-filled) 50%, transparent 50%);
+  }
+}
+
+:global(.custom-background) .removeCost {
+  background-color: color-mix(in srgb, var(--mantine-color-darkTransparent-7) 70%, var(--mantine-color-red-filled) 30%);
+  border-color: var(--mantine-color-red-filled);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-color-red-filled) 50%, transparent 50%);
+}
+
+:global(.liquid-glass) {
+  /* styles for liquid glass ui */
 }

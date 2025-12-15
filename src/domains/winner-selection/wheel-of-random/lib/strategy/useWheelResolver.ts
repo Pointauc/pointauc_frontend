@@ -11,7 +11,7 @@ import { DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 interface Props {
   format: WheelFormat;
   dropoutVariant: DropoutVariant;
-  controller: RefObject<WheelController>;
+  controller: RefObject<WheelController | null>;
 }
 
 const useWheelResolver = ({ format, dropoutVariant, controller }: Props): Wheel.FormatHook => {

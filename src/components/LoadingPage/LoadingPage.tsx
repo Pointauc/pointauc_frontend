@@ -1,18 +1,17 @@
-import { CSSProperties } from 'react';
-import { CircularProgress } from '@mui/material';
-import './LoadingPage.scss';
+import { Center, Loader, Stack, Text } from '@mantine/core';
 
 interface LoadingPageProps {
   helpText?: string;
-  style?: CSSProperties;
 }
 
-const LoadingPage: React.FC<LoadingPageProps> = ({ helpText, style }) => {
+const LoadingPage: React.FC<LoadingPageProps> = ({ helpText }) => {
   return (
-    <div className='loading-page' style={style}>
-      <CircularProgress className='loading-page-spinner' />
-      {!!helpText && <div style={{ color: '#fff' }}>{helpText}</div>}
-    </div>
+    <Center h='100vh' w='100vw'>
+      <Stack align='center' justify='center'>
+        <Loader size={76} type='dots' />
+        {!!helpText && <Text size='lg'>{helpText}</Text>}
+      </Stack>
+    </Center>
   );
 };
 

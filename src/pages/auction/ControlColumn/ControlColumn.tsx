@@ -7,14 +7,14 @@ import Stopwatch from '../Stopwatch/Stopwatch';
 import PurchaseList from '../PurchaseList/PurchaseList';
 import FastAccessPanel from '../FastAccessPanel/FastAccessPanel';
 
-import './ControlColumn.scss';
+import classes from './ControlColumn.module.css';
 
 const ControlColumn: React.FC = () => {
   const timerProps = useTimerBroadcasting();
   const isMobile = useIsMobile();
 
   return (
-    <div className='control-column'>
+    <div className={classes.controlColumn}>
       <Stopwatch {...timerProps} />
       {!isMobile && (
         <>

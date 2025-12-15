@@ -2,8 +2,6 @@ import { Group, Slider, Text } from '@mantine/core';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import Hint from '@components/Hint';
-
 interface Props {
   maxDepth?: number;
 }

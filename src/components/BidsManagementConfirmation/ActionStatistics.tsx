@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { Divider, Stack, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { Divider, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
@@ -10,7 +10,7 @@ interface ActionStatisticsProps {
   data: PurchaseLog[];
 }
 
-const ActionStatistics = ({ data }: ActionStatisticsProps) => {
+function ActionStatistics({ data }: ActionStatisticsProps) {
   const { t } = useTranslation();
   const totalCost = useMemo(() => data.reduce((acc, cur) => acc + cur.cost, 0), [data]);
   const viewersContribution = useMemo(() => {
@@ -26,33 +26,42 @@ const ActionStatistics = ({ data }: ActionStatisticsProps) => {
   }, [data]);
 
   const mostValuableViewer = useMemo(
-    () => array.maxBy([...Object.entries(viewersContribution)], ([username, cost]) => cost) ?? [],
+    () => array.maxBy([...Object.entries(viewersContribution)], ([, cost]) => cost) ?? [],
     [viewersContribution],
   );
 
   const viewerColor = useMemo(() => COLORS.TWITCH_VIEWER[Math.floor(Math.random() * COLORS.TWITCH_VIEWER.length)], []);
 
   if (!data.length) {
-    return <Typography>{t('bidsManagement.statistic.noBids')}</Typography>;
+    return <Text>{t('bidsManagement.statistic.noBids')}</Text>;
   }
 
   return (
-    <Stack direction='row' spacing={3}>
-      <div dangerouslySetInnerHTML={{ __html: t('bidsManagement.statistic.bidsAmount', { amount: data.length }) }} />
-      <Divider flexItem orientation='vertical' />
-      <div dangerouslySetInnerHTML={{ __html: t('bidsManagement.statistic.totalCost', { amount: totalCost }) }} />
-      <Divider flexItem orientation='vertical' />
-      <div
-        dangerouslySetInnerHTML={{
-          __html: t('bidsManagement.statistic.largestInvestor', {
-            name: mostValuableViewer[0],
-            amount: mostValuableViewer[1],
-            color: viewerColor,
-          }),
-        }}
-      />
-    </Stack>
+    <Group gap='md'>
+      <Group gap='xs'>
+        <Text c='dimmed'>{t('bidsManagement.statistic.bidsAmount')}</Text>
+        <Text fw={500}>{data.length}</Text>
+      </Group>
+      <Divider orientation='vertical' />
+      <Group gap='xs'>
+        <Text c='dimmed'>{t('bidsManagement.statistic.totalCost')}</Text>
+        <Text fw={500}>{totalCost}</Text>
+      </Group>
+      <Divider orientation='vertical' />
+      <Group gap='xs'>
+        <Text c='dimmed'>{t('bidsManagement.statistic.largestInvestor')}</Text>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: t('bidsManagement.statistic.investorAmount', {
+              name: mostValuableViewer[0],
+              amount: mostValuableViewer[1],
+              color: viewerColor,
+            }),
+          }}
+        />
+      </Group>
+    </Group>
   );
-};
+}
 
 export default ActionStatistics;

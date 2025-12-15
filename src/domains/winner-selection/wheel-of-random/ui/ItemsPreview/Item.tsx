@@ -1,12 +1,11 @@
-import React, { useContext, useMemo } from 'react';
-import Grid from '@mui/material/Grid';
+import { Divider, Group, Text } from '@mantine/core';
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { Divider } from '@mui/material';
 import classNames from 'classnames';
+import { useContext, useMemo } from 'react';
 
-import { WheelItemWithMetadata } from '@models/wheel.model.ts';
-import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
 import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
+import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
+import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 
 import classes from './Item.module.css';
 
@@ -34,29 +33,24 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
   };
 
   return (
-    <Grid
-      container
-      alignItems='center'
+    <Group
       className={classNames(classes.item, { [classes.disabled]: disabled })}
-      direction='row'
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
-      <Grid className={classes.name}>{name}</Grid>
-      <Grid className={classes.amount}>{amountToDisplay}</Grid>
+      <Text className={classes.name}>{name}</Text>
+      <Text className={classes.amount}>{amountToDisplay}</Text>
       <Divider orientation='vertical' />
-      <Grid className={classes.chance}>{chance + ' %'}</Grid>
-      <Grid>
-        <div className={classes.color}>
-          {!disabled && (
-            <>
-              {actionable && <HighlightIcon className={classes.findIcon} />}
-              <div style={{ color }} />
-            </>
-          )}
-        </div>
-      </Grid>
-    </Grid>
+      <Text className={classes.chance}>{chance + ' %'}</Text>
+      <div className={classes.color}>
+        {!disabled && (
+          <>
+            {actionable && <HighlightIcon className={classes.findIcon} />}
+            <div style={{ color }} />
+          </>
+        )}
+      </div>
+    </Group>
   );
 };
 

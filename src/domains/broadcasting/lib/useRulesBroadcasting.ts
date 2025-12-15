@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useMutation } from '@tanstack/react-query';
-import { JSONContent } from '@tiptap/react';
 
 import { broadcastingControllerBroadcastRulesMutation } from '@api/openapi/@tanstack/react-query.gen';
 import { RootState } from '@reducers/index';
+
+import type { JSONContent } from '@tiptap/react';
 
 interface RulesBroadcastingHooks {
   broadcastRules: (content: JSONContent) => void;

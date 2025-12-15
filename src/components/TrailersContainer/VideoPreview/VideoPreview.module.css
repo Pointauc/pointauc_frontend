@@ -1,0 +1,28 @@
+.videoPreviewCard {
+  transition: transform 0.2s ease-in-out;
+}
+
+.videoPreviewCard:hover {
+  transform: translateY(-2px);
+}
+
+.videoPreviewCard:hover .videoThumbnail {
+  filter: blur(0);
+}
+
+.thumbnailContainer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.videoThumbnail {
+  transition: filter 0.3s ease-in-out;
+  filter: blur(3px);
+  object-fit: cover;
+}
+
+.videoPreviewIcon {
+  color: var(--mantine-color-dark-2);
+}
+

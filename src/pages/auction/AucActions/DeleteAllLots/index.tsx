@@ -1,15 +1,13 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, Tooltip } from '@mui/material';
+import { Anchor, Button, Tooltip } from '@mantine/core';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { Trans, useTranslation } from 'react-i18next';
-import { Button } from '@mantine/core';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { AlertTypeEnum } from '@models/alert.model.ts';
+import { RootState } from '@reducers';
 import { resetPurchases, setPurchases } from '@reducers/Purchases/Purchases.ts';
 import { resetSlots, setSlots } from '@reducers/Slots/Slots.ts';
 import { addAlert, deleteAlert } from '@reducers/notifications/notifications.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
-import { RootState } from '@reducers';
 
 const DeleteAllLots = () => {
   const dispatch = useDispatch();
@@ -36,9 +34,9 @@ const DeleteAllLots = () => {
         id,
         type: AlertTypeEnum.Info,
         message: (
-          <Link onClick={revertDeletion} style={{ color: 'inherit', fontWeight: 'normal' }} color='inherit'>
+          <Anchor onClick={revertDeletion} c='inherit' fw='normal'>
             <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
-          </Link>
+          </Anchor>
         ),
         duration: 1000 * 18,
         closable: false,
@@ -49,7 +47,7 @@ const DeleteAllLots = () => {
   };
 
   return (
-    <Tooltip title={t('auc.clearAll')}>
+    <Tooltip label={t('auc.clearAll')}>
       <Button onClick={handleResetSlots} size='sm' variant='outline' color='primary.3'>
         <DeleteSweepIcon />
       </Button>

@@ -11,7 +11,7 @@ import ResetButton from '../ui/ResetButton';
 
 import useDropoutSpinEnd from './useDropoutSpinEnd';
 
-const useSimulationDropout = (controller: RefObject<WheelController>): Wheel.FormatHook => {
+const useSimulationDropout = (controller: RefObject<WheelController | null>): Wheel.FormatHook => {
   const [_items, setItems] = useState<WheelItem[] | undefined>();
   const items = useMemo(() => _items || [], [_items]);
   const dropoutQueueRef = useRef<Key[]>([]);

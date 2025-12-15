@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 // @ts-ignore
 import { MapInteractionCSS } from 'react-map-interaction';
-import { Button, Typography } from '@mui/material';
+import { Button, Text } from '@mantine/core';
 
 import { Point } from '@services/SpinPaceService.ts';
 import { Game } from '@components/Bracket/components/model';
@@ -65,7 +65,7 @@ const ResizableBracket: FC<ResizableBracket> = ({ currentGame, rootGame }) => {
           >
             Перейти к текущей игре
           </Button>
-          <Typography className='hint'>можно перемещать и масштабировать</Typography>
+          <Text className='hint'>можно перемещать и масштабировать</Text>
         </div>
         <MapInteractionCSS value={{ scale, translation }} onChange={handleMapChange}>
           {rootGame && <Bracket rootGame={rootGame} currentGame={currentGame?.id || ''} />}

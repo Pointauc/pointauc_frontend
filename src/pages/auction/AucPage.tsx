@@ -1,33 +1,33 @@
+import { Box, Image, Overlay, ScrollArea, Skeleton, Stack } from '@mantine/core';
+import clsx from 'clsx';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Box, Image, Overlay, ScrollArea } from '@mantine/core';
-import classNames from 'classnames';
-import { useHeadroom } from '@mantine/hooks';
 
-import Notification from '@components/Notification/Notification';
+import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import { RootState } from '@reducers';
 import { updatePercents } from '@services/PercentsRefMap.ts';
-import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
-import ChangelogModal from '@components/Changelog/ChangelogModal/ChangelogModal';
-import { getCurrentLanguage } from '@constants/language.constants.ts';
-import { Language } from '@enums/language.enum.ts';
-import { calcBackgroundOpacity } from '@utils/ui/background.ts';
-import { useIsMobile } from '@shared/lib/ui';
 import { ScrollContextProvider, useScrollContext } from '@shared/lib/scroll';
+import { useIsMobile } from '@shared/lib/ui';
+import { calcBackgroundOpacity } from '@utils/ui/background.ts';
 
 import AucActions from './AucActions/AucActions';
 import MobileActions from './AucActions/Mobile';
+import styles from './AucPage.module.css';
 import ControlColumn from './ControlColumn/ControlColumn';
 import SlotsColumn from './SlotsColumn/SlotsColumn';
-import styles from './AucPage.module.css';
 
-import './AucPage.scss';
+const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
+const ChangelogModal = lazy(() => import('@domains/changelog/ui/ChangelogModal'));
 
-const LazyRules = lazy(() => import('./Rules/Rules.tsx'));
+const RulesSkeleton: React.FC = () => (
+  <Stack gap='sm' w={370}>
+    <Skeleton height={200} radius='sm' />
+    <Skeleton height={40} radius='sm' />
+    <Skeleton height={80} radius='sm' />
+  </Stack>
+);
 
 const AucPageContent: React.FC = () => {
-  const { elementRef } = useScrollContext();
   const { background, backgroundOverlayOpacity, backgroundBlur } = useSelector(
     (root: RootState) => root.aucSettings.settings,
   );
@@ -35,9 +35,6 @@ const AucPageContent: React.FC = () => {
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const { slots, searchTerm } = useSelector((root: RootState) => root.slots);
   const { showRules } = useSelector((root: RootState) => root.aucSettings.view);
-
-  const { i18n } = useTranslation();
-  const currentLanguage = getCurrentLanguage(i18n);
 
   useEffect(() => {
     if (showChances && !searchTerm) {
@@ -48,25 +45,24 @@ const AucPageContent: React.FC = () => {
   const imageOpacity = useMemo(() => calcBackgroundOpacity(backgroundOverlayOpacity), [backgroundOverlayOpacity]);
 
   return (
-    <Box className={classNames('auc-container', { 'custom-background': background })}>
+    <Box className={clsx(styles.container, { 'custom-background': background })}>
       {background && (
         <Box className={styles.background}>
           <Image src={background} w='100%' h='100%' />
           <Overlay backgroundOpacity={imageOpacity} color='#242424' blur={backgroundBlur} />
         </Box>
       )}
-      {currentLanguage.key !== Language.EN && <ChangelogModal />}
-      <div className='auc-container-column'>
-        <div className='auc-container-row'>
-          <Box className='auc-container-left-column' visibleFrom='sm'>
-            <Suspense fallback={<></>}>{showRules && <LazyRules />}</Suspense>
+      <ChangelogModal />
+      <div className={styles.column}>
+        <div className={styles.row}>
+          <Box className={styles.leftColumn} visibleFrom='sm'>
+            <Suspense fallback={<RulesSkeleton />}>{showRules && <LazyRules />}</Suspense>
           </Box>
           <SlotsColumn />
           <ControlColumn />
         </div>
         {isMobile ? <MobileActions /> : <AucActions />}
       </div>
-      <Notification />
       <TrailersContainer />
     </Box>
   );

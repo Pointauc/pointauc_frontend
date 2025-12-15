@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { ReactText } from 'react';
 import { Action } from 'redux';
 
 import { Slot } from '@models/slot.model.ts';
@@ -82,7 +81,7 @@ const updateSlotPosition = (slots: Slot[], index: number): void => {
   }
 };
 
-const updateSlotAmount = (slots: Slot[], updatedId: ReactText, transform: (slot: Slot) => Slot): void => {
+const updateSlotAmount = (slots: Slot[], updatedId: string | number, transform: (slot: Slot) => Slot): void => {
   const updatedIndex = slots.findIndex(({ id }) => updatedId === id);
 
   slots[updatedIndex] = transform(slots[updatedIndex]);
@@ -117,19 +116,19 @@ export const slotsSlice = createSlice({
         return slot;
       });
     },
-    addSlotAmount(state, action: PayloadAction<{ id: ReactText; amount: number }>): void {
+    addSlotAmount(state, action: PayloadAction<{ id: string | number; amount: number }>): void {
       const { id, amount } = action.payload;
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount: (slot.amount || 0) + amount }));
     },
-    setSlotAmount(state, action: PayloadAction<{ id: ReactText; amount: number }>): void {
+    setSlotAmount(state, action: PayloadAction<{ id: string | number; amount: number }>): void {
       const { id, amount } = action.payload;
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount }));
     },
-    setSlotExtra(state, action: PayloadAction<{ id: ReactText; extra: number }>): void {
+    setSlotExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
       const { id, extra } = action.payload;
       state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, extra } : slot));
     },
-    addExtra(state, action: PayloadAction<ReactText>): void {
+    addExtra(state, action: PayloadAction<string | number>): void {
       const id = action.payload;
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: getAmountSum(slot) }));
     },

@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, OutlinedInput, Typography } from '@mui/material';
+import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { DropzoneArea } from 'react-mui-dropzone';
 import { useTranslation } from 'react-i18next';
 import readXlsxFile from 'read-excel-file';
 
@@ -15,8 +15,7 @@ import { sortSlots } from '@utils/common.utils.ts';
 import array from '@utils/dataType/array.ts';
 
 import SaveRecord from './SaveRecord/SaveRecord';
-
-import './SaveLoad.scss';
+import classes from './SaveLoad.module.css';
 
 const SaveLoad: FC = () => {
   const { slots } = useSelector((root: RootState) => root.slots);
@@ -43,7 +42,10 @@ const SaveLoad: FC = () => {
   const toggleDialog = (): void => {
     setIsImportOpen((prevOpened) => !prevOpened);
   };
-  const handleImportSave = useCallback(async ([file]: File[]) => {
+  const handleImportSave = useCallback(async (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+
     const reader = new FileReader();
     const extension = /\.([^.]*)$/.exec(file.name);
 
@@ -105,53 +107,61 @@ const SaveLoad: FC = () => {
   };
 
   return (
-    <div className='save-load-wrapper'>
-      <div className='saves-container'>
+    <div className={classes.root}>
+      <div className={classes.savesContainer}>
         {saveConfig.map((info) => (
           <SaveRecord key={info.timestamp} {...info} onConfigChange={setSaveConfig} />
         ))}
       </div>
-      <div className='controls'>
-        <Button style={{ marginRight: 10 }} onClick={toggleDialog} variant='outlined'>
+      <Group className={classes.controls} justify='center'>
+        <Button onClick={toggleDialog} variant='outline'>
           {t('save.fileImport')}
         </Button>
-        <Button onClick={handleNewSave} variant='outlined'>
+        <Button onClick={handleNewSave} variant='outline'>
           {t('save.newSave')}
         </Button>
-      </div>
-      <Dialog open={isImportOpen} onClose={toggleDialog} maxWidth={false}>
-        <DialogContent className='image-input-wrapper'>
-          <DropzoneArea
-            dropzoneClass='drop-zone'
-            dropzoneText={t('common.moveFileOrClick')}
-            onDrop={handleImportSave}
-            filesLimit={1}
-          />
-        </DialogContent>
-      </Dialog>
-      <Dialog open={currentSheet != null} onClose={() => setCurrentSheet(undefined)}>
-        <DialogContent>
+      </Group>
+
+      <Modal opened={isImportOpen} onClose={toggleDialog} title={t('save.fileImport')} size='lg'>
+        <Dropzone className={classes.dropZone} onDrop={handleImportSave} multiple={false}>
+          <Group justify='center' mih={180} style={{ pointerEvents: 'none' }}>
+            <Text size='lg' c='dimmed'>
+              {t('common.moveFileOrClick')}
+            </Text>
+          </Group>
+        </Dropzone>
+      </Modal>
+
+      <Modal
+        opened={currentSheet != null}
+        onClose={() => setCurrentSheet(undefined)}
+        title={t('save.fileImport')}
+        size='sm'
+      >
+        <Stack className={classes.sheetSettings}>
           <div>
-            <Typography>{t('save.nameColumnIndex')}</Typography>
-            <OutlinedInput
+            <Text size='sm' mb='xs'>
+              {t('save.nameColumnIndex')}
+            </Text>
+            <TextInput
               value={nameColumnIndex}
               onChange={(e) => setNameColumnIndex(Number(e.target.value))}
               type='number'
             />
           </div>
           <div>
-            <Typography>{t('save.costColumnIndex')}</Typography>
-            <OutlinedInput
+            <Text size='sm' mb='xs'>
+              {t('save.costColumnIndex')}
+            </Text>
+            <TextInput
               value={costColumnIndex}
               onChange={(e) => setCostColumnIndex(Number(e.target.value))}
               type='number'
             />
           </div>
-        </DialogContent>
-        <DialogActions>
           <Button onClick={importSheet}>{t('common.apply')}</Button>
-        </DialogActions>
-      </Dialog>
+        </Stack>
+      </Modal>
     </div>
   );
 };

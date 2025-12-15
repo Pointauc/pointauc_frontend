@@ -1,0 +1,17 @@
+.resizer {
+  position: absolute;
+  padding: 6px;
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+  user-select: none;
+  outline: none;
+  z-index: 100;
+}
+
+.resizerIcon {
+  border-bottom: 2px solid #808080;
+  border-right: 2px solid #808080;
+  width: 15px;
+  height: 15px;
+}

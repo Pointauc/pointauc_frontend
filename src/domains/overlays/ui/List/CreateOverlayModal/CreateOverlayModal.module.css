@@ -1,0 +1,24 @@
+.createOverlayModal .overlayTypeCard {
+  transition: all 0.2s ease;
+  min-height: 300px;
+}
+
+.createOverlayModal .overlayTypeCard:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--mantine-color-blue-5);
+}
+
+.createOverlayModal .overlayTypeCard .previewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.createOverlayModal .overlayTypeCard .previewPlaceholder::before {
+  content: 'Preview';
+  color: var(--mantine-color-gray-5);
+  font-size: 14px;
+  font-weight: 500;
+}
+

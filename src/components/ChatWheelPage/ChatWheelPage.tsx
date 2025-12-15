@@ -54,7 +54,7 @@ const ChatWheelPage: FC = () => {
     setParticipants((prevState) => prevState.filter((item) => item.id !== id));
   };
 
-  const winner = useRef<WheelItem>();
+  const winner = useRef<WheelItem | undefined>(undefined);
   const handleWinner = (newWinner: WheelItem): void => {
     winner.current = newWinner;
     setWinners((prevWinners) => [...prevWinners, newWinner]);

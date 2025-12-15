@@ -1,13 +1,13 @@
-import React from 'react';
-import { LinearProgress, Typography } from '@mui/material';
+import { Progress, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import '@components/BidsManagementConfirmation/ActionStatus.scss';
+
+import classes from './BidsManagementConfirmation.module.css';
 
 interface ActionStatusProps {
   status: API.RequestStatus;
 }
 
-const ActionStatus = ({ status }: ActionStatusProps) => {
+function ActionStatus({ status }: ActionStatusProps) {
   const { t } = useTranslation();
 
   if (status === 'idle') {
@@ -15,18 +15,14 @@ const ActionStatus = ({ status }: ActionStatusProps) => {
   }
 
   if (status === 'loading') {
-    return (
-      <div>
-        <LinearProgress className='loading-bid-action' />
-      </div>
-    );
+    return <Progress className={classes.loadingProgress} value={100} animated />;
   }
 
   return (
-    <Typography color={status === 'success' ? '#66bb6a' : 'error'} className='bid-action-status'>
+    <Text c={status === 'success' ? 'green' : 'red'} className={classes.actionStatus}>
       {t(`bidsManagement.requestStatus.${status}`)}
-    </Typography>
+    </Text>
   );
-};
+}
 
 export default ActionStatus;

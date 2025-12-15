@@ -1,0 +1,40 @@
+.editor {
+  border-radius: var(--mantine-radius-sm);
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+
+  --mantine-color-selection-background: color-mix(in srgb, #92b8ff 50%, transparent);
+}
+
+:root {
+  --rich-text-editor-control-height: 32px;
+}
+
+.editor .content {
+  background-color: transparent;
+}
+
+.editor .content :global(.ProseMirror) {
+  padding: var(--mantine-spacing-xs);
+}
+
+.content [data-placeholder]::before {
+  content: attr(data-placeholder);
+  color: light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3));
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+.content mark {
+  background-color: transparent;
+  color: inherit;
+}
+
+.editor .control {
+  height: 32px;
+  width: 32px;
+}
+
+.editor::selection {
+  background-color: var(--mantine-color-selection-background);
+}

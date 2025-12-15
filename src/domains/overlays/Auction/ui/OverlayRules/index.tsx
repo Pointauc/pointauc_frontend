@@ -1,11 +1,12 @@
-import React from 'react';
-import { JSONContent } from '@tiptap/react';
-import { generateHTML } from '@tiptap/core';
+import React, { lazy } from 'react';
 
-import editorUtils from '@components/RichTextEditorTipTap/helpers';
-import RichTextEditorTipTap from '@components/RichTextEditorTipTap/RichTextEditorTipTap';
+// import editorUtils from '@components/RichTextEditorTipTap/helpers';
 
 import classes from './index.module.css';
+
+import type { JSONContent } from '@tiptap/react';
+
+// const RichTextEditorTipTap = lazy(() => import('@components/RichTextEditorTipTap/RichTextEditorTipTap'));
 
 interface OverlayRulesProps {
   rules: string; // JSON string containing the JSONContent
@@ -38,9 +39,9 @@ const OverlayRules: React.FC<OverlayRulesProps> = ({ rules }) => {
       const jsonContent: JSONContent = JSON.parse(rules);
 
       // Generate HTML from JSONContent using the same extensions as the editor
-      const html = generateHTML(jsonContent, editorUtils.extensions);
+      // const html = generateHTML(jsonContent, editorUtils.extensions);
 
-      return html;
+      return '';
     } catch (error) {
       console.error('Error parsing rules content:', error);
       return '';
@@ -53,7 +54,7 @@ const OverlayRules: React.FC<OverlayRulesProps> = ({ rules }) => {
 
   return (
     <div className={classes.overlayRulesContainer}>
-      <RichTextEditorTipTap initialValue={jsonContent} onChange={() => {}} showToolbar={false} />
+      {/* <RichTextEditorTipTap initialValue={jsonContent} onChange={() => {}} showToolbar={false} /> */}
     </div>
   );
 };

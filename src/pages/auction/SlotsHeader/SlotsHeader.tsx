@@ -2,17 +2,17 @@ import { FC } from 'react';
 
 import NewSlotForm from './NewSlotForm/NewSlotForm';
 import SlotSearch from './SlotSearch/SlotSearch';
-import './SlotsHeader.scss';
+import classes from './SlotsHeader.module.css';
 
 const SlotsHeader: FC = () => {
   return (
-    <div className='slots-header item'>
-      <div className='new-slot-wrapper item'>
+    <div className={`${classes.slotsHeader} item`}>
+      <div className={`${classes.newSlotWrapper} item`}>
         <NewSlotForm />
       </div>
       {/* <Divider orientation="vertical" /> */}
-      <div className='vertical-divider item' />
-      <div className='slot-search-wrapper item'>
+      <div className={`${classes.verticalDivider} item`} />
+      <div className={`${classes.slotSearchWrapper} item`}>
         <SlotSearch />
       </div>
     </div>

@@ -12,7 +12,7 @@ interface MetadataText {
 const Essentials = () => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const metadata: MetadataText = t(`metadata.${pathname}`, { returnObjects: true, defaultValue: null });
+  const metadata: MetadataText = t(`metadata.${pathname}`, { returnObjects: true, defaultValue: null }) as MetadataText;
 
   if (!isObject(metadata)) {
     return (
