@@ -15,7 +15,8 @@
     "docs": "vitepress dev docs --port 3003",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "api:generate": "openapi-ts"
+    "api:generate": "openapi-ts",
+    "verify:authenticity": "node scripts/verify-authenticity.js"
   },
   "dependencies": {
     "7tv": "^0.1.2",

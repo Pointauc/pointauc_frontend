@@ -26,6 +26,34 @@ jobs:
       - name: Build application
         run: yarn build
 
+      - name: Generate source hashes manifest
+        run: node scripts/generate-source-hashes.js
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          TAG_NAME="deploy-${SHORT_SHA}"
+          RELEASE_TITLE="Deployment - ${SHORT_SHA}"
+
+          # Create release
+          gh release create "${TAG_NAME}" \
+            --title "${RELEASE_TITLE}" \
+            --notes "Automated deployment from commit ${{ github.sha }}" \
+            --target ${{ github.sha }}
+
+      - name: Upload source hashes to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          TAG_NAME="deploy-${SHORT_SHA}"
+
+          # Upload the manifest file as a release asset
+          gh release upload "${TAG_NAME}" dist/source-hashes.json \
+            --clobber
+
       - name: Build documentation
         run: yarn docs:build
 
