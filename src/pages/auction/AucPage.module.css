@@ -46,7 +46,7 @@
     height: 100%;
     min-height: 0;
     min-width: 0;
-    gap: var(--mantine-spacing-md);
+    gap: var(--mantine-spacing-sm);
   }
 }
 

@@ -134,7 +134,7 @@ root.render(
       <MantineProvider>
         <TutorialProvider>
           <QueryClientProvider client={queryClient}>
-            <Notifications />
+            <Notifications limit={4} autoClose={3000} />
             <RouterProvider router={router} />
           </QueryClientProvider>
         </TutorialProvider>

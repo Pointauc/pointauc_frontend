@@ -14,16 +14,21 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStore } from '@tanstack/react-store';
 
+import { updateSettings } from '@api/userApi';
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
 import { LINE_BREAK } from '@constants/common.constants.ts';
-import { updateActiveSettings } from '@domains/user-settings/store/actions';
 import { Slot } from '@models/slot.model.ts';
 import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
 import { RootState } from '@reducers';
+import {
+  saveSettings,
+  setAutoScroll,
+  setCompact,
+  setShowChances,
+  setShowRules,
+} from '@reducers/AucSettings/AucSettings';
 import { loadFile } from '@utils/common.utils.ts';
-import userSettingsStore from '@domains/user-settings/store/store';
 
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 import SaveLoad from '../SaveLoad/SaveLoad';
@@ -39,10 +44,7 @@ const AucActions: React.FC = () => {
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { showChances, isTotalVisible } = useSelector((root: RootState) => root.aucSettings.settings);
-
-  const compact = useStore(userSettingsStore, (state) => state.compact);
-  const showRules = useStore(userSettingsStore, (state) => state.showRules);
-  const autoScroll = useStore(userSettingsStore, (state) => state.autoScroll);
+  const { compact, showRules, autoScroll } = useSelector((root: RootState) => root.aucSettings.view);
 
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
   const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
@@ -94,14 +96,21 @@ const AucActions: React.FC = () => {
     [t],
   );
 
-  const selectOptions = useCallback((options: string[]) => {
-    updateActiveSettings({
-      showChances: options.includes('showChances'),
-      compact: options.includes('compact'),
-      showRules: options.includes('showRules'),
-      autoScroll: options.includes('autoScroll'),
-    });
-  }, []);
+  const selectOptions = useCallback(
+    (options: string[]) => {
+      const showChancesEnabled = options.includes('showChances');
+      const compactEnabled = options.includes('compact');
+      const rulesEnabled = options.includes('showRules');
+      const autoScrollEnabled = options.includes('autoScroll');
+
+      dispatch(setShowChances(showChancesEnabled));
+      dispatch(setCompact(compactEnabled));
+      dispatch(setShowRules(rulesEnabled));
+      dispatch(setAutoScroll(autoScrollEnabled));
+      updateSettings({ settings: { showChances: showChancesEnabled }, id: activeSettingsPresetId });
+    },
+    [activeSettingsPresetId, dispatch],
+  );
 
   const downloadMarbles = (): void => {
     loadFile('marbles.csv', createMarbleConfig(slots));
@@ -118,8 +127,8 @@ const AucActions: React.FC = () => {
   const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
 
   const toggleTotalSumVisability = useCallback(() => {
-    updateActiveSettings({ isTotalVisible: !isTotalVisible });
-  }, [isTotalVisible]);
+    dispatch(saveSettings({ isTotalVisible: !isTotalVisible }));
+  }, [dispatch, isTotalVisible]);
 
   return (
     <Group className={classes.wrapper} justify='center'>

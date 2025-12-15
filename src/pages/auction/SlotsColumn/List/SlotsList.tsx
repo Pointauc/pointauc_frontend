@@ -1,19 +1,16 @@
 import { Box } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import clsx from 'clsx';
 import { FC, memo, RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStore } from '@tanstack/react-store';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import useAutoScroll from '@hooks/useAutoScroll';
-import { AlertTypeEnum } from '@models/alert.model.ts';
 import { Slot } from '@models/slot.model.ts';
 import DroppableSlot from '@pages/auction/Slot/DroppableSlot';
 import AnimatedList from '@pages/auction/SlotsColumn/AnimatedList/AnimatedList';
 import { RootState } from '@reducers';
-import { addAlert } from '@reducers/notifications/notifications.ts';
-import userSettingsStore from '@domains/user-settings/store/store';
 
 import classes from './SlotsList.module.css';
 
@@ -56,8 +53,8 @@ const VirtualLots: FC<VirtualListProps> = ({ slots, height, compact, containerRe
 const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly, isTransparentUi }) => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const compact = useStore(userSettingsStore, (state) => state.compact);
-  const autoScroll = useStore(userSettingsStore, (state) => state.autoScroll);
+  const compact = useSelector((root: RootState) => root.aucSettings.view.compact);
+  const autoScroll = useSelector((root: RootState) => root.aucSettings.view.autoScroll);
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
   const [height, setHeight] = useState<number>();
   const containerVirtualRef = useRef<HTMLDivElement>(null);
@@ -70,13 +67,9 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
 
   useEffect(() => {
     if (optimize && !compact) {
-      dispatch(
-        addAlert({
-          message: t('auc.optimizationEnabled'),
-          duration: 10000,
-          type: AlertTypeEnum.Info,
-        }),
-      );
+      notifications.show({
+        message: t('auc.optimizationEnabled'),
+      });
     }
   }, [compact, dispatch, optimize, t]);
 

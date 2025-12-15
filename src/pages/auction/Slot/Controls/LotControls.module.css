@@ -27,13 +27,11 @@
 }
 
 .extra {
-  margin-right: var(--mantine-spacing-xs);
   width: 7ch;
 }
 
 .chance {
   color: var(--mantine-color-dark-0);
-  margin-right: var(--mantine-spacing-md);
 }
 
 .moneyWrapper {

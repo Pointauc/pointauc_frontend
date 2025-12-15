@@ -1,6 +1,6 @@
 import { Select } from '@mantine/core';
 import LanguageIcon from '@mui/icons-material/Language';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getCurrentLanguage, SupportedLanguages } from '@constants/language.constants.ts';
@@ -11,7 +11,8 @@ import classes from './LanguageDropdown.module.css';
 const LanguageDropdown = () => {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const currentLanguage = getCurrentLanguage(i18n);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const currentLanguage = useMemo(() => getCurrentLanguage(i18n), [i18n, t]);
 
   const handleClick = (event: any): void => {
     setAnchorEl(event.currentTarget);

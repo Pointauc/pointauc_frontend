@@ -7,6 +7,8 @@ import clsx from 'clsx';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import { RootState } from '@reducers';
 
+import styles from './SwitchAllIntegrations.module.css';
+
 interface Props {
   integrations: Integration.Config[];
   showLabel?: boolean;
@@ -30,7 +32,10 @@ const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames }: P
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <span>{t('integration.groups.donations')} (</span>
       {integrations.map((integration) => (
-        <integration.branding.icon key={integration.id} className={clsx('base-icon', integration.id)} />
+        <integration.branding.icon
+          key={integration.id}
+          className={clsx(styles.integrationIcon, `${integration.id}-icon`)}
+        />
       ))}
       <span>)</span>
     </div>

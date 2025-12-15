@@ -1,24 +1,21 @@
-import { Group, Tabs, Title, ScrollArea } from '@mantine/core';
-import classNames from 'classnames';
+import { Group, ScrollArea, Tabs, Title } from '@mantine/core';
 import { useCallback, useEffect, useMemo, useTransition } from 'react';
 import { FormProvider, useForm, type FieldNamesMarkedBoolean } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMatch, useNavigate } from 'react-router-dom';
-import { useStore } from '@tanstack/react-store';
 
 import { settingsApi } from '@api/userApi.ts';
 import { integrations } from '@components/Integration/integrations.ts';
 import PageContainer from '@components/PageContainer/PageContainer.tsx';
 import ROUTES from '@constants/routes.constants.ts';
-import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
+import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';
 import WebsiteSettings from '@domains/user-settings/Widgets/General/WebsiteSettings';
+import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
 import IntegrationsSettings from '@pages/settings/IntegrationsSettings/IntegrationsSettings.tsx';
 import { RootState } from '@reducers';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils.ts';
-import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';
-import userSettingsStore from '@domains/user-settings/store/store';
 
 import styles from './UserSettings.module.css';
 
@@ -31,7 +28,7 @@ const UserSettings = () => {
   const { t } = useTranslation();
 
   const { username } = useSelector((root: RootState) => root.user);
-  const settings = useStore(userSettingsStore);
+  const { settings } = useSelector((root: RootState) => root.aucSettings);
   const formMethods = useForm<SettingsForm>({ defaultValues: settings, mode: 'onBlur' });
 
   const isIntegrationsOpened = useMatch(ROUTES.INTEGRATIONS);
@@ -84,7 +81,7 @@ const UserSettings = () => {
       <Group align='center' gap='xxs'>
         <div style={{ marginRight: 8 }}>{t('settings.groups.integrations')}</div>
         {integrations.all.map((integration) => (
-          <integration.branding.icon key={integration.id} className={classNames('base-icon', integration.id)} />
+          <integration.branding.icon key={integration.id} className={styles.integrationIcon} />
         ))}
       </Group>
     );

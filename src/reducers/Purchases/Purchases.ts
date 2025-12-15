@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
+import { notifications } from '@mantine/notifications';
 
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
@@ -112,7 +113,7 @@ export const fastAddBid =
     const showAlert = (cost: number): void => {
       const name = bidUtils.getName(bid);
       const alertMessage = `${bid.username} добавил ${bidUtils.getDisplayCost(cost)} к "${name}" ("${name}")!`;
-      dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
+      notifications.show({ message: alertMessage, color: 'green', position: 'bottom-left' });
     };
 
     dispatch(addBid(slotId, bid, { removeBid: false, callback: showAlert }));
@@ -134,6 +135,7 @@ export const processRedemption =
 
     const slotName = bidUtils.getName(bid);
     const similarSlotId = slotNamesMap.get(slotName);
+
     if (similarSlotId) {
       dispatch(fastAddBid(bid, similarSlotId));
       return;

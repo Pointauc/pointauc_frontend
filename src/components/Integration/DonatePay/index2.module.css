@@ -7,21 +7,10 @@
   background-color: #3e8648 !important;
 }
 
-:global(.integration-switch.donatePay .base-icon) {
-  width: 30px;
-  height: 30px;
-}
-
-:global(.integration-switch.donatePay .base-icon path) {
+:global(.donatePay-icon path) {
   fill: #8ddc96;
-}
-
-:global(.base-icon.donatePay) {
-  width: 30px;
-  height: 30px;
 }
 
 :global(.base-icon.donatePay path) {
   fill: #f1f1f1;
 }
-
