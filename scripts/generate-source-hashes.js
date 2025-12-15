@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-env node */
+
 /**
  * Generates a SHA-256 hash manifest for all HTML, JS, and CSS files in the dist/ directory.
  * Output: source-hashes.json with format: { "/path/to/file.ext": "sha256hash" }

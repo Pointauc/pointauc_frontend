@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-env node */
+
 /**
  * Verifies that deployed files on pointauc.com match the source-hashes.json
  * from the latest GitHub release.
@@ -29,7 +31,13 @@ const colors = {
 /**
  * Makes an HTTPS GET request and returns the response data
  */
-function httpsGet(url, options = {}) {
+function httpsGet(url, options = {}, redirectCount = 0) {
+  const MAX_REDIRECTS = 5;
+
+  if (redirectCount > MAX_REDIRECTS) {
+    return Promise.reject(new Error('Too many redirects'));
+  }
+
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
     const requestOptions = {
@@ -43,6 +51,12 @@ function httpsGet(url, options = {}) {
     };
 
     const req = https.request(requestOptions, (res) => {
+      // Handle redirects
+      if (res.statusCode >= 301 && res.statusCode <= 308 && res.headers.location) {
+        const redirectUrl = new URL(res.headers.location, url);
+        return resolve(httpsGet(redirectUrl.href, options, redirectCount + 1));
+      }
+
       const chunks = [];
 
       res.on('data', (chunk) => chunks.push(chunk));
@@ -131,17 +145,69 @@ function calculateHash(data) {
 }
 
 /**
+ * Strips Cloudflare beacon injections from HTML content
+ * Only removes script tags with src="https://static.cloudflareinsights.com/beacon.min.js/..."
+ */
+function stripCloudflareInjections(htmlContent) {
+  const html = htmlContent.toString('utf-8');
+
+  // Pattern to match only Cloudflare beacon.min.js scripts
+  const cloudflareBeaconPattern =
+    /[^\S\r\n]*<script\s+[^>]*\bsrc=["']https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js\/[^"']*["'][^>]*><\/script>\n<\/body>/gi;
+
+  const matches = html.match(cloudflareBeaconPattern) || [];
+  let strippedHtml = html;
+
+  // Remove each matched Cloudflare beacon script
+  for (const match of matches) {
+    strippedHtml = strippedHtml.replace(match, '  </body>');
+  }
+
+  return {
+    content: Buffer.from(strippedHtml, 'utf-8'),
+    stripped: matches.length > 0,
+    count: matches.length,
+  };
+}
+
+/**
  * Downloads a file from the website and calculates its hash
+ * For HTML files, strips known Cloudflare injections before hashing
  */
 async function downloadAndHashFile(filePath) {
   const url = `${WEBSITE_URL}${filePath}`;
+  const isHtmlFile = filePath.endsWith('.html');
 
   try {
     const response = await httpsGet(url);
-    const hash = calculateHash(response.data);
-    return { success: true, hash, error: null };
+    let dataToHash = response.data;
+    let cloudflareStripped = false;
+    let strippedCount = 0;
+
+    // For HTML files, strip known Cloudflare injections
+    if (isHtmlFile) {
+      const result = stripCloudflareInjections(response.data);
+      dataToHash = result.content;
+      cloudflareStripped = result.stripped;
+      strippedCount = result.count;
+    }
+
+    const hash = calculateHash(dataToHash);
+    return {
+      success: true,
+      hash,
+      error: null,
+      cloudflareStripped,
+      strippedCount,
+    };
   } catch (error) {
-    return { success: false, hash: null, error: error.message };
+    return {
+      success: false,
+      hash: null,
+      error: error.message,
+      cloudflareStripped: false,
+      strippedCount: 0,
+    };
   }
 }
 
@@ -172,9 +238,20 @@ async function verifyFiles(manifest) {
     if (!result.success) {
       results.errors.push({ filePath, expectedHash, error: result.error });
     } else if (result.hash === expectedHash) {
-      results.matches.push({ filePath, hash: expectedHash });
+      results.matches.push({
+        filePath,
+        hash: expectedHash,
+        cloudflareStripped: result.cloudflareStripped,
+        strippedCount: result.strippedCount,
+      });
     } else {
-      results.mismatches.push({ filePath, expectedHash, actualHash: result.hash });
+      results.mismatches.push({
+        filePath,
+        expectedHash,
+        actualHash: result.hash,
+        cloudflareStripped: result.cloudflareStripped,
+        strippedCount: result.strippedCount,
+      });
     }
   }
 
@@ -197,9 +274,12 @@ function displayResults(results) {
     console.log(`${colors.green}${colors.bold}✓ MATCHES (${results.matches.length}):${colors.reset}`);
     const displayCount = Math.min(5, results.matches.length);
     for (let i = 0; i < displayCount; i++) {
-      const { filePath, hash } = results.matches[i];
+      const { filePath, hash, cloudflareStripped, strippedCount } = results.matches[i];
       console.log(`  ${colors.green}✓${colors.reset} ${filePath}`);
       console.log(`    Hash: ${hash.substring(0, 16)}...`);
+      if (cloudflareStripped) {
+        console.log(`    ${colors.yellow}ℹ${colors.reset} Stripped ${strippedCount} Cloudflare injection(s)`);
+      }
     }
     if (results.matches.length > 5) {
       console.log(`  ${colors.cyan}... and ${results.matches.length - 5} more${colors.reset}`);
@@ -210,10 +290,18 @@ function displayResults(results) {
   // Display mismatches (all of them - this is critical)
   if (results.mismatches.length > 0) {
     console.log(`${colors.red}${colors.bold}✗ MISMATCHES (${results.mismatches.length}):${colors.reset}`);
-    results.mismatches.forEach(({ filePath, expectedHash, actualHash }) => {
+    results.mismatches.forEach(({ filePath, expectedHash, actualHash, cloudflareStripped, strippedCount }) => {
       console.log(`  ${colors.red}✗${colors.reset} ${filePath}`);
       console.log(`    Expected: ${expectedHash.substring(0, 16)}...`);
       console.log(`    Actual:   ${actualHash.substring(0, 16)}...`);
+      if (cloudflareStripped) {
+        console.log(
+          `    ${colors.yellow}ℹ${colors.reset} Note: ${strippedCount} Cloudflare injection(s) were stripped before hashing`,
+        );
+        console.log(
+          `    ${colors.yellow}⚠${colors.reset} Mismatch found even after stripping Cloudflare scripts - may indicate unauthorized modification`,
+        );
+      }
     });
     console.log();
   }
