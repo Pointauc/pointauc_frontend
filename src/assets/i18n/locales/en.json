@@ -640,5 +640,81 @@
     "stepProgress": "Step {{current}} of {{total}}",
     "performAction": "To continue:",
     "notificationMessage": "{{description}} Click here to start the tutorial."
+  },
+  "archive": {
+    "modal": {
+      "title": "Archive Management",
+      "saveButton": "Save Current Auction",
+      "emptyState": "No archives yet",
+      "searchPlaceholder": "Search archives...",
+      "tabs": {
+        "archives": "My Archives",
+        "importExport": "Import/Export"
+      }
+    },
+    "item": {
+      "autosave": "Autosave",
+      "autosaveBadge": "persistent",
+      "overwrite": "Overwrite with current auction",
+      "rename": "Rename",
+      "export": "Export",
+      "delete": "Delete",
+      "lotCount_one": "{{count}} lot",
+      "lotCount_other": "{{count}} lots",
+      "cannotDelete": "Autosave cannot be deleted",
+      "updated": "Updated {{time}}",
+      "created": "Created {{time}}",
+      "namePlaceholder": "Archive name...",
+      "editName": "Edit name",
+      "saveName": "Save name",
+      "cancelEdit": "Cancel"
+    },
+    "clickToLoad": {
+      "message": "Click on any archive to load it into your auction",
+      "dismiss": "Got it"
+    },
+    "confirmLoad": {
+      "title": "Load Archive?",
+      "message": "This will replace your current auction. Are you sure?",
+      "confirm": "Load",
+      "cancel": "Cancel"
+    },
+    "notifications": {
+      "created": "Archive created successfully",
+      "loaded": "Archive loaded successfully",
+      "overwritten": "Archive overwritten successfully",
+      "deleted": "Archive deleted successfully",
+      "exported": "Archive exported successfully",
+      "imported": "Archive imported successfully",
+      "autosaved": "Auction autosaved",
+      "error": {
+        "load": "Failed to load archive",
+        "create": "Failed to create archive",
+        "delete": "Failed to delete archive",
+        "rename": "Failed to rename archive",
+        "overwrite": "Failed to overwrite archive",
+        "export": "Failed to export archive",
+        "import": "Failed to import archive",
+        "invalidFile": "Invalid archive file"
+      }
+    },
+    "loading": {
+      "create": "Creating archive...",
+      "load": "Loading archive...",
+      "delete": "Deleting archive...",
+      "export": "Exporting archive...",
+      "import": "Importing archive..."
+    },
+    "export": {
+      "title": "Export Archive",
+      "selectArchive": "Select archive",
+      "button": "Export as JSON"
+    },
+    "import": {
+      "title": "Import Archive",
+      "dropzone": "Drag & drop JSON file here",
+      "browse": "or click to browse"
+    },
+    "newArchiveName": "Archive {{date}}"
   }
 }

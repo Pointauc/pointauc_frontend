@@ -8,3 +8,5 @@ export interface Slot {
 }
 
 export type SlotResponse = Omit<Slot, 'extra'>;
+
+export type ArchivedLot = Omit<Slot, 'extra' | 'id' | 'fastId'>;

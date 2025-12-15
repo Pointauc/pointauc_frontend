@@ -18,6 +18,7 @@ import { useIsMobile } from '@shared/lib/ui';
 import { userControllerGetUserOptions } from '@api/openapi/@tanstack/react-query.gen';
 import { PortalContextProvider } from '@App/storage/portalContext';
 import { TutorialManager } from '@domains/tutorials';
+import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
@@ -159,6 +160,7 @@ const App: React.FC = () => {
         <AppMain />
       </AppShell>
       <TutorialManager />
+      <AutoloadAutosave />
     </PortalContextProvider>
   );
 };

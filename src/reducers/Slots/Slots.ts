@@ -1,17 +1,14 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 
-import { Slot } from '@models/slot.model.ts';
-import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
-import SaveLoadService from '@services/SaveLoadService.ts';
-import { AUTOSAVE_NAME } from '@constants/slots.constants.ts';
+import { Slot } from '@models/slot.model.ts';
 import bidUtils from '@utils/bid.utils.ts';
-import { BidNameStrategy } from '@enums/bid.enum';
+import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 
+import slotNamesMap from '../../services/SlotNamesMap';
 import { addedBidsMap, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
-import slotNamesMap from '../../services/SlotNamesMap';
 
 import LotQuery = PublicApi.LotQuery;
 
@@ -54,7 +51,8 @@ export const updateFastIdCounter = (slots: Slot[]): void => {
   maxFastId = Math.max(...slots.map(({ fastId }) => fastId));
 };
 
-const savedSlots = SaveLoadService.getSlots(AUTOSAVE_NAME);
+// TODO: Implement saved slots
+const savedSlots: Slot[] = [];
 const slots = savedSlots.length > 0 ? savedSlots : [createSlot()];
 updateFastIdCounter(slots);
 slotNamesMap.setFromList(slots);

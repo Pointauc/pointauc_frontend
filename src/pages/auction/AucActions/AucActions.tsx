@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Group, Modal, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Group, Text, Tooltip } from '@mantine/core';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import CompressIcon from '@mui/icons-material/Compress';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -10,6 +10,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { IconArchive } from '@tabler/icons-react';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,9 +30,9 @@ import {
   setShowRules,
 } from '@reducers/AucSettings/AucSettings';
 import { loadFile } from '@utils/common.utils.ts';
+import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
 
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
-import SaveLoad from '../SaveLoad/SaveLoad';
 
 import classes from './AucActions.module.css';
 
@@ -47,7 +48,7 @@ const AucActions: React.FC = () => {
   const { compact, showRules, autoScroll } = useSelector((root: RootState) => root.aucSettings.view);
 
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
-  const [confirmRestoreOpen, setConfirmRestoreOpen] = useState<boolean>(false);
+  const [archiveModalOpen, setArchiveModalOpen] = useState<boolean>(false);
 
   const selectedOptions = useMemo(() => {
     const map = { showChances, compact, showRules, autoScroll };
@@ -116,12 +117,12 @@ const AucActions: React.FC = () => {
     loadFile('marbles.csv', createMarbleConfig(slots));
   };
 
-  const handleRestoreOpen = useCallback(() => {
-    setConfirmRestoreOpen(true);
+  const handleArchiveOpen = useCallback(() => {
+    setArchiveModalOpen(true);
   }, []);
 
-  const handleRestoreClose = useCallback(() => {
-    setConfirmRestoreOpen(false);
+  const handleArchiveClose = useCallback(() => {
+    setArchiveModalOpen(false);
   }, []);
 
   const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
@@ -168,9 +169,9 @@ const AucActions: React.FC = () => {
               <DownloadIcon />
             </Button>
           </Tooltip>
-          <Tooltip label={t('auc.saveLoad')}>
-            <Button onClick={handleRestoreOpen} size='sm' variant='outline' color='primary.3'>
-              <SaveIcon />
+          <Tooltip label={t('archive.modal.title')}>
+            <Button onClick={handleArchiveOpen} size='sm' variant='outline' color='primary.3'>
+              <IconArchive size={20} />
             </Button>
           </Tooltip>
           <Tooltip label={t('auc.sendBugReport')}>
@@ -192,9 +193,7 @@ const AucActions: React.FC = () => {
         <CheckboxButtonGroup options={availableOptions} onChangeActive={selectOptions} activeKeys={selectedOptions} />
       </Group>
 
-      <Modal opened={confirmRestoreOpen} onClose={handleRestoreClose} title={t('auc.saves')} size='md'>
-        <SaveLoad />
-      </Modal>
+      <ArchiveModal opened={archiveModalOpen} onClose={handleArchiveClose} />
 
       <div className={classes.options}>
         <LanguageDropdown />

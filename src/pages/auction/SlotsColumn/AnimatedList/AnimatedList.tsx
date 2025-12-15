@@ -23,7 +23,7 @@ const AnimatedList: FC<AnimatedListProps> = ({ slots, classNames, readonly }) =>
   }, []);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence initial={false}>
       {slots.map((slot, index) => (
         <motion.div
           className={classNames?.slotWrapper}
