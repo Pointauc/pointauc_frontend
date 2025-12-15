@@ -43,7 +43,7 @@
   height: 100%;
 }
 
-.hashWrapper {
+.hash {
   font-size: var(--mantine-font-size-lg);
   height: 24px;
   background-color: color-mix(in srgb, var(--mantine-color-primary-9) 10%, transparent);
@@ -55,7 +55,11 @@
   color: var(--mantine-color-primary-6);
   font-weight: var(--mantine-font-weight-bold);
   line-height: 1;
-  min-width: 60px;
+}
+
+.hashContainer {
+  display: flex;
+  min-width: 64px;
 }
 
 .hashIcon {

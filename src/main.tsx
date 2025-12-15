@@ -5,7 +5,6 @@ import '@styles/index.scss';
 
 import '@assets/i18n/index.ts';
 import { Notifications } from '@mantine/notifications';
-import { Theme } from '@mui/material';
 import { configureStore } from '@reduxjs/toolkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -31,17 +30,11 @@ import SaveLoadService from '@services/SaveLoadService.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import { sortSlots } from '@utils/common.utils.ts';
 import { timedFunction } from '@utils/dataType/function.utils.ts';
-import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
+import { TutorialProvider } from '@domains/tutorials';
 
 import App from './App/entrypoint/App.tsx';
-import ThemeWrapper from './ThemeWrapper.tsx';
 
 const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
-
-declare module '@mui/styles/defaultTheme' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 i18n.on('languageChanged', (language) => dayjs.locale(language));
 dayjs.extend(relativeTime);
@@ -138,14 +131,14 @@ document.body.appendChild(portalRoot);
 root.render(
   <StrictMode>
     <Provider store={store}>
-      <ThemeWrapper>
-        <MantineProvider>
+      <MantineProvider>
+        <TutorialProvider>
           <QueryClientProvider client={queryClient}>
             <Notifications />
             <RouterProvider router={router} />
           </QueryClientProvider>
-        </MantineProvider>
-      </ThemeWrapper>
+        </TutorialProvider>
+      </MantineProvider>
     </Provider>
   </StrictMode>,
 );

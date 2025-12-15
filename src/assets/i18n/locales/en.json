@@ -616,5 +616,13 @@
     "clearColor": "Clear color",
     "highlightColor": "Highlight",
     "clearHighlight": "Clear highlight"
+  },
+  "tutorial": {
+    "startButton": "Start Tutorial",
+    "endButton": "End Tutorial",
+    "nextButton": "Next Step",
+    "stepProgress": "Step {{current}} of {{total}}",
+    "performAction": "To continue:",
+    "notificationMessage": "{{description}} Click here to start the tutorial."
   }
 }

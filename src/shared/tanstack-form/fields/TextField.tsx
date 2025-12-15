@@ -1,9 +1,10 @@
 import { TextInput, TextInputProps } from '@mantine/core';
+import { ReactNode } from 'react';
 
 import { useFieldContext } from '@shared/tanstack-form/lib/form';
 
 interface TextFieldProps extends Omit<TextInputProps, 'value' | 'onChange' | 'onBlur'> {
-  label?: string;
+  label?: ReactNode;
 }
 
 function TextField({ label, ...props }: TextFieldProps) {
@@ -21,4 +22,3 @@ function TextField({ label, ...props }: TextFieldProps) {
 }
 
 export default TextField;
-

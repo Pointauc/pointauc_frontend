@@ -2,7 +2,6 @@ import { FC, ReactNode, useCallback, useState } from 'react';
 import { Button, Group, Modal, Stack, Text } from '@mantine/core';
 import { useBlocker, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import './ConfirmFormOnLeave.scss';
 
 interface ConfirmFormOnLeaveProps {
   isDirtyForm: boolean;
@@ -40,7 +39,7 @@ const ConfirmFormOnLeave: FC<ConfirmFormOnLeaveProps> = ({ onSubmit, isDirtyForm
   if (content && isOpen) return <>{content(handleClose, handleConfirm)}</>;
 
   return (
-    <Modal title={t('common.unsavedChanges')} opened={isOpen} onClose={handleClose} className='form-confirm-dialog'>
+    <Modal title={t('common.unsavedChanges')} opened={isOpen} onClose={handleClose}>
       <Group justify='flex-end'>
         <Button onClick={handleClose}>{t('common.cancel')}</Button>
         <Button onClick={handleConfirm} color='primary' autoFocus>

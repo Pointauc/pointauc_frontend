@@ -7,3 +7,214 @@
 .withExtraContent {
   width: calc(26rem * var(--mantine-scale) * 2);
 }
+
+:global(.wheel-wrapper) {
+  display: flex !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  flex-direction: column;
+  padding-bottom: 0 !important;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+:global(.wheel-wrapper.padding) {
+  padding-left: 40px !important;
+  padding-right: 20px !important;
+  padding-bottom: 12px !important;
+}
+
+:global(.wheel-content) {
+  display: flex;
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
+  gap: 56px;
+  min-height: 0;
+  z-index: 2;
+}
+
+:global(.wheel-content .description-link) {
+  background-color: transparent;
+  border: none;
+  color: #D3D3D3;
+  display: inline-block;
+  width: fit-content;
+  cursor: pointer;
+  font-size: 20px;
+  text-decoration: underline;
+  padding: 0;
+  margin-top: 5px;
+  text-align: start;
+}
+
+:global(.wheel-content .description-link:hover) {
+  color: #f0f0f0;
+}
+
+:global(.wheel-content .wheel-info-wrapper) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+  height: 100%;
+  overflow: visible;
+  gap: var(--mantine-spacing-md);
+}
+
+:global(.wheel-content .wheel-info-wrapper.shrink) {
+  max-width: 850px;
+}
+
+:global(.wheel-content .wheel-info-wrapper.shrink .wheel-controls) {
+  height: 40%;
+  max-height: 40%;
+}
+
+:global(.wheel-content .wheel-info-wrapper.shrink .emotes-container) {
+  max-height: calc(var(--vh, 1vh) * 40);
+}
+
+:global(.wheel-content .wheel-content-negative-space) {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+:global(.wheel-content .bracket-wrapper) {
+  width: 100%;
+  flex-basis: 56%;
+  max-height: 56%;
+  flex-grow: 1;
+}
+
+:global(.wheel-content .bracket-sub-wrapper) {
+  position: relative;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  border: 2px solid #C0C0C0;
+  background-color: #343434;
+  overflow: hidden;
+}
+
+:global(.wheel-content .bracket-sub-wrapper .bracket-controls) {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  display: flex;
+  align-items: flex-end;
+  z-index: 10;
+}
+
+:global(.wheel-content .bracket-sub-wrapper .bracket-controls .hint) {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+:global(.wheel-content .bracket-sub-wrapper .bracket-controls .fullscreen-button) {
+  background-color: #343434;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+:global(.wheel-content .bracket-sub-wrapper .bracket-controls .current-game-button) {
+  background-color: #343434;
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+:global(.wheel-content .bracket-sub-wrapper.fullscreen) {
+  position: absolute;
+  height: 98%;
+  width: 100%;
+  max-height: 98%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+:global(.wheel-content .wheel-controls) {
+  color: #DCDCDC;
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  overflow: visible;
+  height: 100%;
+}
+
+:global(.wheel-content .wheel-controls .upload-wheel-image) {
+  align-self: center;
+  margin-top: 15px;
+}
+
+:global(.wheel-content .wheel-controls-button) {
+  height: 40px;
+  flex-shrink: 0;
+}
+
+:global(.wheel-content .wheel-controls-row) {
+  display: flex;
+  align-items: center;
+}
+
+:global(.wheel-content .wheel-controls-input) {
+  width: 110px;
+}
+
+:global(.wheel-content .wheel-controls-input.small) {
+  width: 60px;
+}
+
+:global(.wheel-content .wheel-controls-input-delimiter) {
+  align-self: center;
+}
+
+:global(.wheel-content .wheel-controls-tip) {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 1.1rem !important;
+}
+
+:global(.wheel-content .wheel-controls-tip.hint) {
+  width: 100%;
+  font-size: 14px !important;
+  top: 0;
+}
+
+:global(.wheel-content .wheel-controls-tip.md) {
+  flex-shrink: 0;
+  min-width: 160px;
+  font-size: 16px;
+  align-self: start;
+}
+
+:global(.wheel-content .wheel-controls-tip.lg) {
+  width: 330px;
+  font-size: 16px;
+  align-self: start;
+  margin-bottom: 10px;
+}
+
+:global(.wheel-content .wheel-controls-tip.low) {
+  font-size: 16px;
+  display: block;
+}
+
+:global(.wheel-content .wheel-controls .MuiSlider-valueLabel) {
+  font-weight: 400;
+}
+
+:global(.wheel-content .wheel-controls-checkbox) {
+  display: flex;
+  align-items: center !important;
+}
+
+:global(.wheel-content .wheel-controls-checkbox .MuiFormControlLabel-label) {
+  margin-top: 3px;
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: normal;
+}

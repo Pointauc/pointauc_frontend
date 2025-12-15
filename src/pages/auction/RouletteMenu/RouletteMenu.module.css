@@ -1,0 +1,11 @@
+.rouletteMenuPresets {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rouletteMenuPresets :global(.MuiButton-label) {
+  text-transform: none !important;
+  letter-spacing: .05em;
+}
+

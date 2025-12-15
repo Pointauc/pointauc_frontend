@@ -1,0 +1,22 @@
+.slotsHeader {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  flex-shrink: 0;
+  padding-bottom: 1.5em;
+}
+
+.verticalDivider {
+  height: 75%;
+  border: 1px solid #616161;
+}
+
+.newSlotWrapper {
+  flex-grow: 7;
+}
+
+.slotSearchWrapper {
+  flex-grow: 3;
+  flex-basis: 320px;
+}
+

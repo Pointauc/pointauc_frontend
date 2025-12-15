@@ -11,7 +11,7 @@ import { store } from '../../../main.tsx';
 
 const id = 'tourniquet';
 
-import '@components/Integration/Tourniquet/index.scss';
+import '@components/Integration/Tourniquet/index.module.css';
 
 const authFlow: Integration.RedirectFlow = {
   type: 'redirect',

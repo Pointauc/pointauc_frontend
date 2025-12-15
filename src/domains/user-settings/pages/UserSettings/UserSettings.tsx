@@ -5,6 +5,7 @@ import { FormProvider, useForm, type FieldNamesMarkedBoolean } from 'react-hook-
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMatch, useNavigate } from 'react-router-dom';
+import { useStore } from '@tanstack/react-store';
 
 import { settingsApi } from '@api/userApi.ts';
 import { integrations } from '@components/Integration/integrations.ts';
@@ -17,6 +18,7 @@ import { RootState } from '@reducers';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils.ts';
 import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';
+import userSettingsStore from '@domains/user-settings/store/store';
 
 import styles from './UserSettings.module.css';
 
@@ -29,7 +31,7 @@ const UserSettings = () => {
   const { t } = useTranslation();
 
   const { username } = useSelector((root: RootState) => root.user);
-  const { settings } = useSelector((root: RootState) => root.aucSettings);
+  const settings = useStore(userSettingsStore);
   const formMethods = useForm<SettingsForm>({ defaultValues: settings, mode: 'onBlur' });
 
   const isIntegrationsOpened = useMatch(ROUTES.INTEGRATIONS);

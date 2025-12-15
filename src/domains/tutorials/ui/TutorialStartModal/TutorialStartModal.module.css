@@ -1,0 +1,10 @@
+.content {
+  padding: 8px 0;
+}
+
+.description {
+  line-height: 1.6;
+  color: var(--mantine-color-text);
+  margin-bottom: 20px;
+}
+

@@ -5,7 +5,7 @@ import { SegmentedControl, SegmentedControlItem } from '@mantine/core';
 
 import { WheelFormat } from '@constants/wheel.ts';
 
-import '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat.scss';
+import classes from './WheelFormat.module.css';
 
 const WheelFormatField = () => {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ const WheelFormatField = () => {
       render={({ field: { onChange, value }, formState: { isSubmitting } }) => {
         return (
           <SegmentedControl
-            className='wheel-format-field'
+            className={classes.wheelFormatField}
             fullWidth
             color='primary'
             data={wheelOptions}

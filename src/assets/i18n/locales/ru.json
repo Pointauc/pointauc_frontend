@@ -597,5 +597,13 @@
     "clearColor": "Сбросить цвет",
     "highlightColor": "Выделение",
     "clearHighlight": "Сбросить выделение"
+  },
+  "tutorial": {
+    "startButton": "Начать обучение",
+    "endButton": "Завершить обучение",
+    "nextButton": "Следующий шаг",
+    "stepProgress": "Шаг {{current}} из {{total}}",
+    "performAction": "Для продолжения:",
+    "notificationMessage": "{{description}} Нажмите здесь, чтобы начать обучение."
   }
 }

@@ -3,7 +3,6 @@ import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import classNames from 'classnames';
 import { FC, MouseEvent, ReactNode, RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import './ResizablePanel.scss';
 
 import { DragPosition, Size } from '@models/common.model.ts';
 

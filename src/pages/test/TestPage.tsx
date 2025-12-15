@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Button, Stack } from '@mui/material';
 import { shuffle } from 'es-toolkit';
+import { Button, Stack } from '@mantine/core';
 
 const TestPage = () => {
   'use no memo';

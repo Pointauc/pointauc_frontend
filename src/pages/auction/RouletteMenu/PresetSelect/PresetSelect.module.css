@@ -1,0 +1,12 @@
+.roulettePresetSelect {
+  max-width: 650px;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.roulettePresetSelectWarning {
+  color: #ff3c3c;
+  margin-bottom: 12px !important;
+}
+

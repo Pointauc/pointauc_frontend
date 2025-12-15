@@ -1,5 +1,4 @@
 import { Center, Loader, Stack, Text } from '@mantine/core';
-import './LoadingPage.scss';
 
 interface LoadingPageProps {
   helpText?: string;

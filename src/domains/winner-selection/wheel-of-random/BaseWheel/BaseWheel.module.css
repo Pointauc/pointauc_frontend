@@ -1,0 +1,83 @@
+.wheelContent {
+  position: relative;
+  overflow: visible;
+}
+
+.wheelCanvasWrapper {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.wheelCore {
+  background-color: transparent;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  border-radius: 100%;
+  border: 3px solid #eee;
+  pointer-events: all;
+  overflow: hidden;
+  width: 20%;
+  height: 20%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wheelCoreOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  cursor: pointer;
+}
+
+.wheelCoreText {
+  position: absolute;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+.wheelCoreEmotesList {
+  overflow: auto;
+  z-index: 150 !important;
+}
+
+.wheelCoreEmotesList :global(.emotes-container) {
+  border: none;
+}
+
+.wheelCore:hover .wheelCoreOverlay {
+  display: block;
+}
+
+.wheelWinner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wheelTarget {
+  width: 100%;
+  font-size: 32px;
+  line-height: 36px;
+  height: 36px;
+  max-height: 36px;
+  margin-bottom: 22px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

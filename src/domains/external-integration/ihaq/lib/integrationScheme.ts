@@ -4,7 +4,7 @@ import ROUTES from '@constants/routes.constants';
 import { ihaqControllerAuthorize } from '@api/openapi';
 import { IhaqIcon } from '@domains/external-integration/ihaq/ui/Icon';
 
-import './ihaqStyles.scss';
+import './ihaqStyles.module.css';
 
 const id = 'ihaq';
 

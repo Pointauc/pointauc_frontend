@@ -1,0 +1,6 @@
+:global(.wheel-content) .wheelFormatField :global(.MuiButton-root) {
+  flex-grow: 1;
+  flex-shrink: 0;
+  width: auto;
+}
+

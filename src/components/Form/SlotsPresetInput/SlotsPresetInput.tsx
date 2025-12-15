@@ -22,7 +22,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { Slot } from '@models/slot.model.ts';
 import { parseSlotsPreset } from '@utils/slots.utils.ts';
-import './SlotsPresetInput.scss';
+import classes from './SlotsPresetInput.module.css';
 
 interface SlotsPresetInputProps {
   buttonTitle: string;
@@ -72,7 +72,7 @@ const SlotsPresetInput: FC<SlotsPresetInputProps> = ({ onChange, buttonTitle, bu
   const docsUrl = useDocsUrl(DOCS_PAGES.wheel.settings.chapters.import);
 
   return (
-    <div className='slots-preset-input'>
+    <div>
       <Modal
         opened={isInputOpened}
         onClose={toggleDialog}

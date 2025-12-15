@@ -1,0 +1,60 @@
+.newOverlayCard {
+  border: 2px dashed #dee2e6;
+  background-color: #f8f9fa;
+  transition: all 0.2s ease;
+  height: 12rem;
+}
+
+.newOverlayCard:hover {
+  border-color: #339af0;
+  background-color: #e7f5ff;
+  transform: translateY(-2px);
+}
+
+.newOverlayCard:hover .plusIcon {
+  color: #339af0;
+}
+
+.newOverlayCard:hover .newOverlayText {
+  color: #339af0;
+}
+
+.plusIcon {
+  color: #868e96;
+  transition: color 0.2s ease;
+}
+
+.newOverlayText {
+  color: #495057;
+  transition: color 0.2s ease;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .newOverlayCard {
+    border-color: #495057;
+    background-color: #25262b;
+  }
+
+  .newOverlayCard:hover {
+    border-color: #74c0fc;
+    background-color: #1c1e22;
+  }
+
+  .newOverlayCard:hover .plusIcon {
+    color: #74c0fc;
+  }
+
+  .newOverlayCard:hover .newOverlayText {
+    color: #74c0fc;
+  }
+
+  .plusIcon {
+    color: #adb5bd;
+  }
+
+  .newOverlayText {
+    color: #c1c2c5;
+  }
+}
+

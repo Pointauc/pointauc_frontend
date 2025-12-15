@@ -12,7 +12,7 @@ import array from '@utils/dataType/array.ts';
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
 import { RoulettePreset } from '../PresetSelect/PresetSelect';
 import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
-import './Roulette.scss';
+import classes from './Roulette.module.css';
 
 interface RouletteProps {
   presets: RoulettePreset[];
@@ -67,16 +67,16 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
   };
 
   return (
-    <div className='roulette'>
-      <div className='roulette-wheel'>
+    <div className={classes.roulette}>
+      <div className={classes.rouletteWheel}>
         <RandomWheel items={rawItems} onWin={handleWin} elements={wheelElements} initialSpinTime={5}>
           {settings.luckyWheelSelectBet && selectedPreset && (
-            <div className='roulette-preset-wrapper'>
+            <div className={classes.roulettePresetWrapper}>
               <Text>{t('auc.casino.yourLot')}</Text>
               <RoulettePresetView preset={selectedPreset} />
             </div>
           )}
-          <div className='roulette-wheel-extra'>
+          <div className={classes.rouletteWheelExtra}>
             <div>
               <Text>{t('auc.casino.yourBid')}</Text>
               <PurchaseComponent {...bid} hideActions disabled />

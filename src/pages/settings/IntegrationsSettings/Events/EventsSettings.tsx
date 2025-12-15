@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@reducers';
 import SettingsGroup from '@domains/user-settings/ui/SettingsGroup/SettingsGroup';
 import { aukus } from '@components/Event/events.ts';
-import './EventsSettings.scss';
+import classes from './EventsSettings.module.css';
 
 const EventsSettings = () => {
   const isValid = useSelector((state: RootState) => state.user.events.aukus.isValid);
@@ -16,7 +16,7 @@ const EventsSettings = () => {
 
   if (!isValid) return null;
 
-  return <SettingsGroup className='event-group' controlName='events.aukus.enabled' title='Аукус' open={false} />;
+  return <SettingsGroup className={classes.eventGroup} controlName='events.aukus.enabled' title='Аукус' open={false} />;
 };
 
 export default EventsSettings;

@@ -1,0 +1,48 @@
+.roulette {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rouletteWheelExtra {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.rouletteWheelExtra .purchase {
+  border-radius: 12px;
+}
+
+.roulettePresetWrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.roulettePreset {
+  flex-grow: 1;
+}
+
+.rouletteWheel {
+  position: relative;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+}
+
+.rouletteWheel .wheelControls {
+  flex-direction: column;
+}
+
+.rouletteWheel .wheelControls .settings {
+  align-self: center;
+}
+
+.rouletteWheel > * {
+  overflow: hidden;
+  margin-right: 0 !important;
+}
+

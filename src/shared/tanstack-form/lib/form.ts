@@ -1,3 +1,5 @@
+/* Deprecated: this code is not used anymore */
+
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 
 import { TextField, NumberField, SwitchField } from '@shared/tanstack-form/fields';

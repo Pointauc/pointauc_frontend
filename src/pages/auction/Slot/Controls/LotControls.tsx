@@ -131,9 +131,11 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
 
   return (
     <>
-      <div className={styles.hashWrapper}>
-        <IconHash className={styles.hashIcon} size={18} />
-        <div>{`${lot.fastId}`}</div>
+      <div className={styles.hashContainer}>
+        <div className={styles.hash}>
+          <IconHash className={styles.hashIcon} size={18} />
+          <div>{`${lot.fastId}`}</div>
+        </div>
       </div>
       <input
         className={clsx(styles.input, styles.name)}

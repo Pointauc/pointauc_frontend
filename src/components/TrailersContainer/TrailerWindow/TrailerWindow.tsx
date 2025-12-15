@@ -17,8 +17,6 @@ import { timedFunction } from '@utils/dataType/function.utils';
 import VideoPreview from '../VideoPreview/VideoPreview';
 import ResizablePanel from '../../ResizablePanel/ResizablePanel';
 
-import './TrailerWindow.scss';
-
 import styles from './TrailerWindow.module.css';
 
 const initialSize = { width: 1000, height: 650 };

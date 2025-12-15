@@ -1,5 +1,4 @@
 @import './colors';
-@import './common';
 
 body {
   margin: 0;
@@ -24,21 +23,29 @@ input[type='number'] {
 }
 
 ::-webkit-scrollbar-track {
-  background: $grey-8;
+  background: transparent;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: var(--mantine-color-dark-8);
   border-radius: 20px;
   border: 6px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $grey-11;
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 20px;
   border: 6px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: $grey-12;
+  background: #ffffff80;
+  border-radius: 20px;
   border: 6px solid transparent;
   background-clip: padding-box;
 }

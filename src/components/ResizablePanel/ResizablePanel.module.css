@@ -20,3 +20,10 @@
   background-color: var(--mantine-color-gray-8);
   border-bottom: 2px solid var(--mantine-color-dark-4);
 }
+
+:global(.resizable-panel-content) {
+  position: relative;
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+}

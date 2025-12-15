@@ -5,7 +5,7 @@ import { Dropzone } from '@mantine/dropzone';
 import ImageIcon from '@mui/icons-material/Image';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import BlockIcon from '@mui/icons-material/Block';
-import './ImageLinkInput.scss';
+import classes from './ImageLinkInput.module.css';
 
 interface ImageLinkInputProps {
   buttonTitle: string;

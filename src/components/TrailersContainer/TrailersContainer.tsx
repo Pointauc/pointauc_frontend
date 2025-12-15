@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@reducers';
 
 import TrailerWindow from './TrailerWindow/TrailerWindow';
-import './TrailersContainer.scss';
+import classes from './TrailersContainer.module.css';
 
 const TrailersContainer: FC = () => {
   const { trailers } = useSelector((root: RootState) => root.extraWindows);
   return (
-    <div className='trailers-container'>
+    <div className={classes.trailersContainer}>
       {trailers.map((trailer) => (
         <TrailerWindow {...trailer} key={trailer.id} />
       ))}

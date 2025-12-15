@@ -6,7 +6,7 @@ import { RootState } from '@reducers';
 
 import PresetSelect, { RoulettePreset } from './PresetSelect/PresetSelect';
 import Roulette from './Roulette/Roulette';
-import './RouletteMenu.scss';
+import classes from './RouletteMenu.module.css';
 
 const roulettePresets: RoulettePreset[] = [
   {

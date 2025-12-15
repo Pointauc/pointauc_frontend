@@ -6,7 +6,9 @@
 }
 
 .boostyIcon {
-  font-size: 28px;
+  overflow: visible;
+  width: 28px;
+  height: 28px;
 
   path {
     fill: #ff9b7a;
@@ -24,8 +26,8 @@
 
 .icon {
   position: relative;
-  left: 0;
-  transition: all 0.2s;
+  left: 0 !important;
+  transition: all 0.2s !important;
 }
 
 .compact {
@@ -34,7 +36,7 @@
   }
 
   .icon {
-    left: -24px;
+    left: -24px !important;
     scale: 1.3;
   }
 }

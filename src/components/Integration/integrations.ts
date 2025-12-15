@@ -3,9 +3,9 @@ import da from '@components/Integration/DA';
 import twitch from '@components/Integration/Twitch';
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme.ts';
-// import tourniquet from '@components/Integration/Tourniquet';
+import tourniquet from '@components/Integration/Tourniquet';
 
-const INTEGRATIONS = [twitch, da, donatePay, ihaq];
+const INTEGRATIONS = [twitch, da, donatePay, ihaq, tourniquet];
 
 export default INTEGRATIONS;
 

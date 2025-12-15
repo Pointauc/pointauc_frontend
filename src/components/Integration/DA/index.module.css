@@ -1,0 +1,21 @@
+:global(.integration-switch.da .base-icon path) {
+  fill: #f5aa6c;
+}
+
+:global(.base-icon.da path) {
+  fill: #f5aa6c;
+}
+
+:global([data-integration='da']) {
+  background-color: #F57D07 !important;
+  color: #F1F1F1 !important;
+}
+
+:global([data-integration='da']:hover) {
+  background-color: #cb6a0a !important;
+}
+
+:global([data-integration='da']:disabled) {
+  background-color: #746d67 !important;
+}
+

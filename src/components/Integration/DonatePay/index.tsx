@@ -4,7 +4,7 @@ import donatePayApi from '@api/donatePayApi.ts';
 import { buildCentrifugeFlow } from '@components/Integration/PubsubFlow/Centrifuge/centrifugeFlow.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 
-import './index.scss';
+import './index2.module.css';
 
 import styles from './index.module.css';
 

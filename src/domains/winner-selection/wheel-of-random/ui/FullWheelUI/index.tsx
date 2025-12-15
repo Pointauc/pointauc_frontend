@@ -29,7 +29,6 @@ import { getRandomNumber } from '@api/randomApi';
 import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
 
-import './index.scss';
 import styles from './index.module.css';
 
 export interface SettingElements {
