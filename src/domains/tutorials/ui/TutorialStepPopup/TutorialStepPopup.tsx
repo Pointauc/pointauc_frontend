@@ -64,16 +64,17 @@ function TutorialStepPopup({
   // Handle action-based progression
   useEffect(() => {
     if (step.progression.type === 'action' && targetElementRef) {
-      const actionType = step.progression.action.type || 'click';
-      
+      const action = step.progression.action;
+      const actionType = action.type || 'click';
+
       if (actionType === 'click') {
-        actionDetectionManager.attachClickListener(step.progression.action.actionId, targetElementRef, onNext);
+        actionDetectionManager.attachClickListener(action.actionId, targetElementRef, onNext);
       } else if (actionType === 'input') {
-        actionDetectionManager.attachInputListener(step.progression.action.actionId, targetElementRef, onNext);
+        actionDetectionManager.attachInputListener(action.actionId, targetElementRef, onNext);
       }
 
       return () => {
-        actionDetectionManager.removeListener(step.progression.action.actionId);
+        actionDetectionManager.removeListener(action.actionId);
       };
     }
   }, [step.progression, targetElementRef, onNext]);
@@ -130,4 +131,3 @@ function TutorialStepPopup({
 }
 
 export default TutorialStepPopup;
-

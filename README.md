@@ -44,10 +44,10 @@ git clone https://github.com/Pointauc/pointauc_frontend.git
 cd pointauc_frontend
 
 # Install dependencies
-yarn install
+pnpm install
 
 # Verify the deployed files
-yarn verify:authenticity
+pnpm verify:authenticity
 ```
 
 This script downloads the hash manifest from the latest release, fetches each file from the live site, compares hashes, and shows which files match or differ
@@ -56,6 +56,12 @@ This script downloads the hash manifest from the latest release, fetches each fi
 
 - **Transparency**: Anyone can independently verify that the deployed website matches the source code
 - **Security**: Even if our server is compromised, you can detect unauthorized modifications
+
+### Important Note
+
+Pointeauc uses claudflare which may inject a script into the HTML files. The Cloudflare script provides DDoS protection and bot mitigation and doesn't affect the website functionality.
+
+If you want to verify the integrity of HTML files manually, you need to strip the claudflare script tag. This process is done AUTOMATICALLY by the verification script.
 
 ## 📝 Contribution guidelines
 

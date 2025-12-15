@@ -1,6 +1,5 @@
-import { Button, Group, Text } from '@mantine/core';
+import { Button, Group, Modal, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import Modal from '@shared/mantine/ui/Modal';
 
 import { Tutorial } from '@domains/tutorials/models/tutorial.model';
 
@@ -38,4 +37,3 @@ function TutorialStartModal({ tutorial, opened, onStart, onClose }: TutorialStar
 }
 
 export default TutorialStartModal;
-
