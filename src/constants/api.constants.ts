@@ -15,6 +15,9 @@ const ENDPOINTS = {
     AUTH: '/api/donatePay/auth',
     TOKEN: 'https://donatepay.ru/api/v2/socket/token',
   },
+  DONATE_PAY_EU: {
+    TOKEN: 'https://donatepay.eu/api/v2/socket/token',
+  },
   TOURNIQUET: {
     AUTH: '/api/tourniquet/auth',
   },

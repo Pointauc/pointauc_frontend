@@ -12,6 +12,7 @@ export interface UserState extends UserInfo {
   authData: {
     ihaq?: IntegrationDataDto;
     donatePay?: IntegrationDataDto;
+    donatePayEu?: IntegrationDataDto;
     da?: IntegrationDataDto;
     twitch?: IntegrationDataDto;
     tourniquet?: IntegrationDataDto;

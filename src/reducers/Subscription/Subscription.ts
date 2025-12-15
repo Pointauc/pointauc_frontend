@@ -15,6 +15,9 @@ export interface SubscribeState {
   loading: boolean;
 }
 
+/** Integration IDs that have subscription state. donatePayEu uses donatePay's state. */
+export type SubscriptionID = Exclude<Integration.ID, 'donatePayEu'>;
+
 interface SubscriptionStoreState {
   twitch: SubscribeState;
   da: SubscribeState;
@@ -22,6 +25,11 @@ interface SubscriptionStoreState {
   tourniquet: SubscribeState;
   ihaq: SubscribeState;
 }
+
+/** Normalizes integration ID to subscription ID (donatePayEu -> donatePay) */
+export const toSubscriptionId = (id: Integration.ID): SubscriptionID => {
+  return id === 'donatePayEu' ? 'donatePay' : id;
+};
 
 const initialSubscribeState = {
   actual: false,
@@ -37,7 +45,7 @@ export const initialState: SubscriptionStoreState = {
 };
 
 interface SetSubscribeProps {
-  id: Integration.ID;
+  id: SubscriptionID;
   state: Partial<SubscribeState>;
 }
 
@@ -93,6 +101,14 @@ export const validateIntegrations = async (
   const validity = await getIntegrationsValidity();
   const nextAuthData = integrations.all.reduce((acc, { authFlow, id }) => {
     const data = validity[`${id}Auth`] && authFlow.validate() ? authData[id] : undefined;
+
+    if (id === 'donatePay') {
+      return {
+        ...acc,
+        donatePayEu: validity.donatePayEuAuth && authFlow.validate() ? authData.donatePayEu : undefined,
+        donatePay: data,
+      };
+    }
 
     return { ...acc, [id]: data };
   }, {});

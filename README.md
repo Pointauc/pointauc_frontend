@@ -32,6 +32,31 @@ yarn install
 yarn dev
 ```
 
+## 🔐 Authenticity Verification
+
+The code running on [pointauc.com](https://pointauc.com) can be verified against this repository. Each deployment generates SHA-256 hashes of all HTML, JS, and CSS files, published as an immutable [GitHub release](https://github.com/Pointauc/pointauc_frontend/releases) with the tag format `deploy-<commit-sha>`.
+
+### Verify Deployed Files
+
+```bash
+# Clone the repository
+git clone https://github.com/Pointauc/pointauc_frontend.git
+cd pointauc_frontend
+
+# Install dependencies
+yarn install
+
+# Verify the deployed files
+yarn verify:authenticity
+```
+
+This script downloads the hash manifest from the latest release, fetches each file from the live site, compares hashes, and shows which files match or differ
+
+### Why This Matters
+
+- **Transparency**: Anyone can independently verify that the deployed website matches the source code
+- **Security**: Even if our server is compromised, you can detect unauthorized modifications
+
 ## 📝 Contribution guidelines
 
 TBD
