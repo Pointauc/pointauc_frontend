@@ -5,10 +5,10 @@ import { Group, Switch, SwitchProps, Text } from '@mantine/core';
 import classNames from 'classnames';
 import clsx from 'clsx';
 
+import { getActiveRegion } from '@components/Integration/DonatePay/index.tsx';
 import { RootState } from '@reducers';
 import { toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 import { integrationUtils } from '@components/Integration/helpers.ts';
-import { getActiveRegion } from '@components/Integration/DonatePay/index.ts';
 
 import styles from './PubsubSwitch.module.css';
 
