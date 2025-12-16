@@ -10,7 +10,7 @@ import SwapVertIcon from '@mui/icons-material/SwapVert';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { IconArchive } from '@tabler/icons-react';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +44,7 @@ const AucActions: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { showChances, isTotalVisible } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { showChances, isTotalVisible, marblesAuc } = useSelector((root: RootState) => root.aucSettings.settings);
   const { compact, showRules, autoScroll } = useSelector((root: RootState) => root.aucSettings.view);
 
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
@@ -164,14 +164,16 @@ const AucActions: React.FC = () => {
         </Button.Group>
 
         <Button.Group>
-          <Tooltip label={t('auc.downloadMarbles')}>
-            <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary.3'>
-              <DownloadIcon />
-            </Button>
-          </Tooltip>
+          {marblesAuc && (
+            <Tooltip label={t('auc.downloadMarbles')}>
+              <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary.3'>
+                <DownloadIcon />
+              </Button>
+            </Tooltip>
+          )}
           <Tooltip label={t('archive.modal.title')}>
             <Button onClick={handleArchiveOpen} size='sm' variant='outline' color='primary.3'>
-              <IconArchive size={20} />
+              <IconDeviceFloppy size={20} />
             </Button>
           </Tooltip>
           <Tooltip label={t('auc.sendBugReport')}>

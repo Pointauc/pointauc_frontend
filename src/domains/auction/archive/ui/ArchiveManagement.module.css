@@ -1,0 +1,14 @@
+.searchAndSort {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+}
+
+.listContainer {
+  max-height: 50vh;
+  height: 50vh;
+  display: flex;
+  overflow: hidden;
+}
+

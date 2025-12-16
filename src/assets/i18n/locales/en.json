@@ -667,7 +667,8 @@
       "namePlaceholder": "Archive name...",
       "editName": "Edit name",
       "saveName": "Save name",
-      "cancelEdit": "Cancel"
+      "cancelEdit": "Cancel",
+      "sortByName": "Name"
     },
     "clickToLoad": {
       "message": "Click on any archive to load it into your auction",
@@ -712,8 +713,26 @@
     },
     "import": {
       "title": "Import Archive",
-      "dropzone": "Drag & drop JSON file here",
-      "browse": "or click to browse"
+      "dropzone": "Drag & drop file here (JSON or CSV)",
+      "browse": "or click to browse",
+      "manual": "Enter manually",
+      "formats": {
+        "title": "Supported Formats:",
+        "csv": {
+          "tab": "CSV",
+          "description": "Simple text format where each line represents one lot. The lot name and cost are separated by a pipe symbol (|). If no cost is specified, it defaults to 1.",
+          "exampleTitle": "Example:",
+          "example": "Game A|150\nGame B|75\nGame C|200\nGame D"
+        },
+        "json": {
+          "tab": "JSON",
+          "description": "<a href='https://www.w3schools.com/whatis/whatis_json.asp'>JSON</a> format",
+          "structureTitle": "Required Structure:",
+          "structure": "{\n  \"lots\": [\n    {\n      \"name\": string | null,\n      \"amount\": number | null,\n      \"investors\": string[] (optional)\n    }\n  ]\n}",
+          "exampleTitle": "Example:",
+          "example": "{\n  \"lots\": [\n    { \"name\": \"Game A\", \"amount\": 150 },\n    { \"name\": \"Game B\", \"amount\": 75 },\n    { \"name\": \"Game C\", \"amount\": 200, \"investors\": [\"user1\", \"user2\"] }\n  ]\n}"
+        }
+      }
     },
     "newArchiveName": "Archive {{date}}"
   }

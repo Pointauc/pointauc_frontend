@@ -1,6 +1,9 @@
 import { Key } from 'react';
 
-import { Slot } from '../models/slot.model';
+import { parseCSV } from '@domains/auction/archive/lib/csvParser';
+import { ArchiveData } from '@domains/auction/archive/model/types';
+
+import { ArchivedLot, Slot } from '../models/slot.model';
 import { Purchase } from '../reducers/Purchases/Purchases';
 import { Game, Side, SideInfo } from '../components/Bracket/components/model';
 import { WheelItem } from '../models/wheel.model';
@@ -24,6 +27,29 @@ export const parseSlotsPreset = (text: string): Slot[] => {
 
     return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, investors: [] };
   });
+};
+
+export const parseLotsImportFile = async (file: File): Promise<ArchivedLot[]> => {
+  const text = await file.text();
+  const fileName = file.name.toLowerCase();
+
+  if (fileName.endsWith('.json')) {
+    const parsed = JSON.parse(text) as ArchivedLot[] | { lots: ArchivedLot[] };
+
+    if (!parsed) {
+      throw new Error('Invalid archive file format. Expected { lots: [...] } in JSON');
+    }
+
+    if (Array.isArray(parsed)) {
+      return parsed;
+    } else if (parsed.lots && Array.isArray(parsed.lots)) {
+      return parsed.lots;
+    } else {
+      throw new Error('Invalid archive file format. Expected { lots: [...] } in JSON');
+    }
+  } else {
+    return parseCSV(text);
+  }
 };
 
 export const slotToWheel = ({ id, name, amount }: Slot): WheelItem => ({

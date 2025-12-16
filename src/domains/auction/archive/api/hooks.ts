@@ -1,9 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
 import { notifications } from '@mantine/notifications';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
 import { setSlots } from '@reducers/Slots/Slots';
+import { loadFile } from '@utils/common.utils';
 
 import { archivedLotsToSlots } from '../lib/converters';
 import { QUERY_KEYS } from '../model/constants';
@@ -210,17 +211,7 @@ export function useExportArchive() {
       return archive;
     },
     onSuccess: (archive) => {
-      const blob = new Blob([JSON.stringify(archive, null, 2)], {
-        type: 'application/json',
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${archive.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${Date.now()}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      loadFile(`pointauc_${archive.name}.json`, archive.data);
 
       notifications.show({
         title: t('archive.notifications.exported'),
@@ -238,27 +229,20 @@ export function useExportArchive() {
   });
 }
 
-/**
- * Hook to import an archive from JSON file
- */
+interface ImportArchiveProps {
+  data: ArchiveData;
+  name: string;
+}
+
 export function useImportArchive() {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
-
   return useMutation({
-    mutationFn: async (file: File) => {
-      const text = await file.text();
-      const archive = JSON.parse(text) as ArchiveRecord;
-
-      // Validate the imported data
-      if (!archive.name || !archive.data || typeof archive.isAutosave !== 'boolean') {
-        throw new Error('Invalid archive file');
-      }
-
+    mutationFn: async ({ data, name }: ImportArchiveProps) => {
       // Create new archive with imported data
       return archiveApi.create({
-        name: archive.name,
-        data: archive.data,
+        name,
+        data: JSON.stringify(data),
         isAutosave: false,
       });
     },

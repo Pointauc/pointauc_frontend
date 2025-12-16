@@ -1,0 +1,17 @@
+.exportSection {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.importSection {
+  margin-top: 1rem;
+}
+
+.rulesList li {
+  margin-bottom: 0.5rem;
+}
+
+.rulesList li:last-child {
+  margin-bottom: 0;
+}

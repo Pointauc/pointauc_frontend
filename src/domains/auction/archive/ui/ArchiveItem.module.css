@@ -12,7 +12,7 @@
   box-shadow: var(--mantine-shadow-md);
   background-color: color-mix(in srgb, var(--mantine-color-blue-3) 10%, transparent);
   border-color: color-mix(in srgb, var(--mantine-color-blue-2) 30%, transparent);
-  transform: translateY(-1px);
+  /* transform: translateY(-1px); */
 }
 
 .item.loading {

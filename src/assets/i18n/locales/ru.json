@@ -439,7 +439,7 @@
   "wheel": {
     "hideInactive": "Скрыть выбывшие лоты",
     "totalItems": "Участников в колесе - {{amount}}",
-    "typeParticipants": "Или введите участников вручную",
+    "typeParticipants": "Или введите участников  (CSV)",
     "import": {
       "title": "Импорт участников",
       "rulesTitle": "Правила импорта",
@@ -624,7 +624,7 @@
   },
   "archive": {
     "modal": {
-      "title": "Управление архивами",
+      "title": "Архив",
       "saveButton": "Сохранить текущий аукцион",
       "emptyState": "Пока нет архивов",
       "searchPlaceholder": "Поиск архивов...",
@@ -650,7 +650,8 @@
       "namePlaceholder": "Название архива...",
       "editName": "Редактировать название",
       "saveName": "Сохранить название",
-      "cancelEdit": "Отмена"
+      "cancelEdit": "Отмена",
+      "sortByName": "Название"
     },
     "clickToLoad": {
       "message": "Нажмите на любой архив, чтобы загрузить его в аукцион",
@@ -695,8 +696,26 @@
     },
     "import": {
       "title": "Импорт архива",
-      "dropzone": "Перетащите JSON файл сюда",
-      "browse": "или нажмите для выбора"
+      "dropzone": "Перетащите файл сюда (JSON или CSV)",
+      "browse": "или нажмите для выбора",
+      "manual": "Ввести вручную",
+      "formats": {
+        "title": "Поддерживаемые форматы:",
+        "csv": {
+          "tab": "CSV",
+          "description": "<ul><li>Простой текстовый формат, где каждая строка представляет один лот.</li><li>Название лота и стоимость разделяются символом вертикальной черты \"|\".</li><li>Если стоимость не указана, используется значение по умолчанию 1.</li></ul>",
+          "exampleTitle": "Пример:",
+          "example": "Игра А|150\nИгра Б|75\nИгра В|200\nИгра Г"
+        },
+        "json": {
+          "tab": "JSON",
+          "description": "Формат <a href='https://www.w3schools.com/whatis/whatis_json.asp'>JSON</a>",
+          "structureTitle": "Требуемая структура:",
+          "structure": "{\n  \"lots\": [\n    {\n      \"name\": string | null,\n      \"amount\": number | null,\n      \"investors\": string[] (необязательно)\n    }\n  ]\n}",
+          "exampleTitle": "Пример:",
+          "example": "{\n  \"lots\": [\n    { \"name\": \"Игра А\", \"amount\": 150 },\n    { \"name\": \"Игра Б\", \"amount\": 75 },\n    { \"name\": \"Игра В\", \"amount\": 200, \"investors\": [\"user1\", \"user2\"] }\n  ]\n}"
+        }
+      }
     },
     "newArchiveName": "Архив {{date}}"
   }

@@ -34,9 +34,7 @@ export const IntegrationLoginButton = ({ integration, onClick, classes }: Integr
             {t(`integration.${id}.name`)}
           </Text>
         </Group>
-        <Text size='xs' opacity={0.85}>
-          {description}
-        </Text>
+        <Text size='xs'>{description}</Text>
       </Button>
     );
   }
