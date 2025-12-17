@@ -19,8 +19,7 @@ const OverlayCard: FC<OverlayCardProps> = ({ overlay, onEdit, onDelete }) => {
 
   const handleCardClick = useCallback(
     (e: React.MouseEvent) => {
-      console.log('handleCardClick', overlay, e);
-      // onEdit(overlay);
+      onEdit(overlay);
     },
     [overlay, onEdit],
   );

@@ -134,7 +134,7 @@ const UrlControls: FC<UrlControlsProps> = ({ overlayId }) => {
         centered
         size='lg'
       >
-        <Stack gap='md' onClick={(e) => e.stopPropagation()}>
+        <Stack gap='md'>
           <Alert icon={<IconAlertTriangle size={20} />} color='red' variant='light'>
             <Text fw={600}>{t('overlays.securityWarning.description')}</Text>
           </Alert>
