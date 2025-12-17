@@ -1,6 +1,6 @@
 import { FC, useCallback, useMemo } from 'react';
 import { Box, Grid, Group, Paper } from '@mantine/core';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { Overlay } from '../../../model/overlay.types';
 import PreviewSection from '../Preview/PreviewSection';
@@ -30,7 +30,7 @@ export const OverlayForm: FC<OverlayFormProps> = ({ overlay, onUpdate, onDelete 
     mode: 'onChange',
   });
 
-  const { reset, handleSubmit, watch, setValue } = form;
+  const { reset, handleSubmit, setValue, control } = form;
 
   const onSubmit = useCallback(
     (data: OverlayFormData) => {
@@ -47,9 +47,9 @@ export const OverlayForm: FC<OverlayFormProps> = ({ overlay, onUpdate, onDelete 
     [overlay, onUpdate, reset],
   );
 
-  const settings = watch('settings');
-  const canvasResolution = watch('canvasResolution');
-  const transform = watch('transform');
+  const settings = useWatch({ control, name: 'settings' });
+  const canvasResolution = useWatch({ control, name: 'canvasResolution' });
+  const transform = useWatch({ control, name: 'transform' });
 
   const previewOverlay = useMemo(
     () =>

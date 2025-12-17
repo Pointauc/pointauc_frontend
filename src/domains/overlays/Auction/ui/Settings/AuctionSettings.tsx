@@ -1,6 +1,6 @@
 import { Card, Collapse, Divider, Slider, Stack, Switch, Text } from '@mantine/core';
 import { FC } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import CardSwitchLabel from '../../../ui/Edit/Settings/CardSwitchLabel';
@@ -8,6 +8,7 @@ import CardSwitchLabel from '../../../ui/Edit/Settings/CardSwitchLabel';
 const AuctionSettings: FC = () => {
   const { t } = useTranslation();
   const { control } = useFormContext();
+  const autoscroll = useWatch({ control, name: 'settings.autoscroll' });
 
   return (
     <Stack gap='md'>
@@ -64,31 +65,32 @@ const AuctionSettings: FC = () => {
                     )}
                   />
 
-                  {/* Autoscroll speed slider (only when autoscroll enabled) */}
-                  <Stack gap='xs' mt='xs'>
-                    <Text size='xs' c='dimmed'>
-                      {t('overlays.settings.autoscrollSpeed')}
-                    </Text>
-                    <Controller
-                      name='settings.autoscrollSpeed'
-                      control={control}
-                      render={({ field }) => (
-                        <Slider
-                          mb='md'
-                          value={field.value ?? 50}
-                          onChange={field.onChange}
-                          min={0}
-                          max={100}
-                          step={5}
-                          marks={[
-                            { value: 0, label: t('overlays.settings.speedSlow') },
-                            { value: 50, label: t('overlays.settings.speedMedium') },
-                            { value: 100, label: t('overlays.settings.speedFast') },
-                          ]}
-                        />
-                      )}
-                    />
-                  </Stack>
+                  {autoscroll && (
+                    <Stack gap='xs' mt='xs'>
+                      <Text size='xs' c='dimmed'>
+                        {t('overlays.settings.autoscrollSpeed')}
+                      </Text>
+                      <Controller
+                        name='settings.autoscrollSpeed'
+                        control={control}
+                        render={({ field }) => (
+                          <Slider
+                            mb='md'
+                            value={field.value ?? 50}
+                            onChange={field.onChange}
+                            min={0}
+                            max={100}
+                            step={5}
+                            marks={[
+                              { value: 0, label: t('overlays.settings.speedSlow') },
+                              { value: 50, label: t('overlays.settings.speedMedium') },
+                              { value: 100, label: t('overlays.settings.speedFast') },
+                            ]}
+                          />
+                        )}
+                      />
+                    </Stack>
+                  )}
                 </Stack>
               </Collapse>
             )}

@@ -7,6 +7,19 @@ class IndexedDBAdapter extends ArchiveApi {
   private dbPromise: Promise<IDBDatabase> | null = null;
 
   /**
+   * Wraps an IDBRequest in a Promise
+   */
+  private requestToPromise<T>(request: IDBRequest<T>, errorMessage: string, transform?: (result: T) => T): Promise<T> {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => {
+        const result = transform ? transform(request.result) : request.result;
+        resolve(result);
+      };
+      request.onerror = () => reject(new Error(errorMessage));
+    });
+  }
+
+  /**
    * Opens or creates the IndexedDB database
    */
   private async openDB(): Promise<IDBDatabase> {
@@ -58,19 +71,14 @@ class IndexedDBAdapter extends ArchiveApi {
       const store = await this.getTransaction('readonly');
       const request = store.getAll();
 
-      return new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-          const records = request.result as ArchiveRecord[];
-          // Sort: autosave first, then by updatedAt descending
-          records.sort((a, b) => {
-            if (a.isAutosave) return -1;
-            if (b.isAutosave) return 1;
-            return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-          });
-          console.log('Archives retrieved:', records);
-          resolve(records);
-        };
-        request.onerror = () => reject(new Error('Failed to retrieve archives'));
+      return this.requestToPromise(request, 'Failed to retrieve archives', (records) => {
+        // Sort: autosave first, then by updatedAt descending
+        records.sort((a, b) => {
+          if (a.isAutosave) return -1;
+          if (b.isAutosave) return 1;
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        });
+        return records as ArchiveRecord[];
       });
     } catch (error) {
       console.error('Error retrieving archives:', error);
@@ -86,12 +94,7 @@ class IndexedDBAdapter extends ArchiveApi {
       const store = await this.getTransaction('readonly');
       const request = store.get(id);
 
-      return new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-          resolve(request.result || null);
-        };
-        request.onerror = () => reject(new Error('Failed to retrieve archive'));
-      });
+      return this.requestToPromise(request, 'Failed to retrieve archive', (result) => result || null);
     } catch (error) {
       console.error('Error retrieving archive:', error);
       throw error;
@@ -121,13 +124,8 @@ class IndexedDBAdapter extends ArchiveApi {
       const store = await this.getTransaction('readwrite');
       const request = store.add(record);
 
-      return new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-          console.log('Archive created:', record.name);
-          resolve(record);
-        };
-        request.onerror = () => reject(new Error('Failed to create archive'));
-      });
+      await this.requestToPromise(request, 'Failed to create archive');
+      return record;
     } catch (error) {
       console.error('Error creating archive:', error);
       throw error;
@@ -159,13 +157,8 @@ class IndexedDBAdapter extends ArchiveApi {
       const store = await this.getTransaction('readwrite');
       const request = store.put(updated);
 
-      return new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-          console.log('Archive updated:', updated.name);
-          resolve(updated);
-        };
-        request.onerror = () => reject(new Error('Failed to update archive'));
-      });
+      await this.requestToPromise(request, 'Failed to update archive');
+      return updated;
     } catch (error) {
       console.error('Error updating archive:', error);
       throw error;
@@ -189,13 +182,7 @@ class IndexedDBAdapter extends ArchiveApi {
       const store = await this.getTransaction('readwrite');
       const request = store.delete(id);
 
-      return new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-          console.log('Archive deleted:', existing.name);
-          resolve();
-        };
-        request.onerror = () => reject(new Error('Failed to delete archive'));
-      });
+      return this.requestToPromise(request, 'Failed to delete archive');
     } catch (error) {
       console.error('Error deleting archive:', error);
       throw error;
@@ -222,13 +209,8 @@ class IndexedDBAdapter extends ArchiveApi {
       const store = await this.getTransaction('readwrite');
       const request = store.put(record);
 
-      return new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-          console.log('Autosave updated');
-          resolve(record);
-        };
-        request.onerror = () => reject(new Error('Failed to save autosave'));
-      });
+      await this.requestToPromise(request, 'Failed to save autosave');
+      return record;
     } catch (error) {
       console.error('Error saving autosave:', error);
       throw error;
