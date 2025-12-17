@@ -18,6 +18,8 @@ export interface MenuItem {
    * @default false
    */
   shouldTakePageSpace?: boolean;
+  /** Shows a beta badge next to the menu item */
+  isBeta?: boolean;
 }
 
 export interface Size {

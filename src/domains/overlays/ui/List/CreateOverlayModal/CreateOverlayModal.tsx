@@ -2,6 +2,9 @@ import { Box, Card, Grid, Modal, Stack, Text } from '@mantine/core';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AuctionOverlayPreview from '@assets/img/auction-overlay-preview.png';
+import WheelOverlayPreview from '@assets/img/wheel-overlay-preview.png';
+
 import { OverlayType } from '../../../model/overlay.types';
 
 import styles from './CreateOverlayModal.module.css';
@@ -24,21 +27,25 @@ const OverlayTypeCard: FC<OverlayTypeCardProps> = ({ type, onClick }) => {
     switch (overlayType) {
       case 'Auction':
         return {
+          title: t('overlays.overlayTypes.Auction'),
           description: t('overlays.auction.description'),
           sections: [
             t('overlays.auction.sections.bidTable'),
             t('overlays.auction.sections.timer'),
             t('overlays.auction.sections.rules'),
           ],
+          preview: AuctionOverlayPreview,
         };
       case 'Wheel':
         return {
+          title: t('overlays.overlayTypes.Wheel'),
           description: t('overlays.wheel.description'),
           sections: [
             t('overlays.wheel.sections.wheelDisplay'),
             t('overlays.wheel.sections.participants'),
             t('overlays.wheel.sections.results'),
           ],
+          preview: WheelOverlayPreview,
         };
       default:
         return { description: '', sections: [] };
@@ -57,19 +64,11 @@ const OverlayTypeCard: FC<OverlayTypeCardProps> = ({ type, onClick }) => {
     >
       <Stack gap='md'>
         <Text size='xl' fw={600} ta='center'>
-          {type}
+          {config.title}
         </Text>
 
         {/* Preview Image Placeholder */}
-        <Box
-          className={styles.previewPlaceholder}
-          style={{
-            height: '120px',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '8px',
-            border: '2px dashed #dee2e6',
-          }}
-        />
+        <Box className={styles.previewPlaceholder} style={{ backgroundImage: `url(${config.preview})` }} />
 
         <Text size='sm' c='dimmed' ta='center'>
           {config.description}

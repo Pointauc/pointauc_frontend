@@ -60,6 +60,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   deleteItem?: (id: Key) => void;
   onWin?: (winner: TWheelItem) => void;
   onWheelItemsChanged?: (items: TWheelItem[]) => void;
+  onSettingsChanged?: (settings: Wheel.Settings) => void;
   onSpinStart?: (params: SpinParams) => void;
 }
 
@@ -262,6 +263,20 @@ const Provider = <TWheelItem extends WheelItem = WheelItem>(
     [props.initialSpinTime],
   );
   const form = useForm<Wheel.Settings>({ defaultValues: initial });
+  const { onSettingsChanged } = props;
+
+  useEffect(() => {
+    const unsubscribe = form.subscribe({
+      formState: {
+        values: true,
+      },
+      callback: (data) => {
+        onSettingsChanged?.(data.values as Wheel.Settings);
+      },
+    });
+
+    return () => unsubscribe();
+  }, [form, onSettingsChanged]);
 
   useImperativeHandle<UseFormReturn<Wheel.Settings>, UseFormReturn<Wheel.Settings>>(props.form, () => form);
 

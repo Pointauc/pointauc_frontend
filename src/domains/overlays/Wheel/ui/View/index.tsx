@@ -95,12 +95,7 @@ const WheelOverlayPage: FC<WheelOverlayPageProps> = ({ socket, overlay }) => {
 
   // Show status message if we're supposed to show wheel/participants but haven't received data yet
   if ((overlay.settings.showWheel || overlay.settings.showParticipants) && !hasReceivedParticipantsData) {
-    return (
-      <OverlayStatusMessage
-        type='info'
-        message='Overlay is waiting for data... Please open the Wheel page on the main website to initialize the overlay.'
-      />
-    );
+    return <OverlayStatusMessage type='info' messageKey='waitingForWheelData' />;
   }
 
   return (

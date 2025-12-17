@@ -50,9 +50,38 @@ export const createRandomSlots = (count: number, max: number, min = 1): Slot[] =
 export const updateFastIdCounter = (slots: Slot[]): void => {
   maxFastId = Math.max(...slots.map(({ fastId }) => fastId));
 };
+const lotNames = [
+  'The Legend of Zelda: Breath of the Wild',
+  'Red Dead Redemption 2',
+  'The Witcher 3: Wild Hunt',
+  'Cyberpunk 2077',
+  'Minecraft',
+  'Grand Theft Auto V',
+  'Elden Ring',
+  'God of War',
+  'Super Mario Odyssey',
+  'Hades',
+  'Among Us',
+  'Fall Guys',
+  'Fortnite',
+  'Call of Duty: Modern Warfare',
+  'Overwatch 2',
+  'Apex Legends',
+  'Valorant',
+  'Counter-Strike 2',
+  'League of Legends',
+  'Dota 2',
+  'World of Warcraft',
+  'Final Fantasy XIV',
+  'Stardew Valley',
+  'Animal Crossing: New Horizons',
+  'The Elder Scrolls V: Skyrim',
+];
 
 // TODO: Implement saved slots
-const savedSlots: Slot[] = [];
+const savedSlots: Slot[] = lotNames.map((name, index) =>
+  createSlot({ name, amount: Math.floor(Math.random() * 1000) + 100, fastId: index + 1 }),
+);
 const slots = savedSlots.length > 0 ? savedSlots : [createSlot()];
 updateFastIdCounter(slots);
 slotNamesMap.setFromList(slots);

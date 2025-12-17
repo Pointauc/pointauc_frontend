@@ -24,7 +24,6 @@ export const AppNavbar = ({
   isMobile,
   closeNavbar,
   isNavbarExpanded,
-  t,
   showDrawer,
   hideDrawer,
 }: AppNavbarProps) => {

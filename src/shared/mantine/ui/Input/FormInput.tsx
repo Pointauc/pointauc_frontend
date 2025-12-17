@@ -8,9 +8,10 @@ interface FormInputProps extends TextInputProps {
   name: string;
   control: Control<any>;
   inputWidth?: 'sm';
+  lablePlacement?: 'left' | 'top';
 }
 
-const FormInput = ({ name, control, inputWidth, ...props }: FormInputProps) => {
+const FormInput = ({ name, control, inputWidth, lablePlacement = 'left', ...props }: FormInputProps) => {
   return (
     <Controller
       control={control}
@@ -19,8 +20,10 @@ const FormInput = ({ name, control, inputWidth, ...props }: FormInputProps) => {
         <TextInput
           {...field}
           classNames={{
-            root: classes.root,
-            label: classes.label,
+            root: clsx(classes.root, {
+              [classes.labelLeft]: lablePlacement === 'left',
+            }),
+            label: clsx(classes.label),
             input: clsx(classes.input, inputWidth && classes[inputWidth]),
           }}
           {...props}

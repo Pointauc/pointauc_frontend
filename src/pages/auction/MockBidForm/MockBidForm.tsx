@@ -44,7 +44,7 @@ export function useMockBidForm() {
           }),
         );
       } else {
-        dispatch(processRedemption({ ...rest, id: Math.random().toString() }));
+        dispatch(processRedemption({ source: 'Mock', id: Math.random().toString(), cost: 100 } as any));
       }
     },
   });

@@ -17,7 +17,7 @@ export interface Purchase {
   timestamp: string;
   cost: number;
   username: string;
-  message: string;
+  message?: string;
   color: string;
   id: string;
   source: Bid.Source;

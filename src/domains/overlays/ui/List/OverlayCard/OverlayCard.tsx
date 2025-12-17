@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Overlay } from '../../../model/overlay.types';
 import UrlControls from '../../UrlControls';
+
 import styles from './OverlayCard.module.css';
 
 interface OverlayCardProps {
@@ -16,9 +17,13 @@ interface OverlayCardProps {
 const OverlayCard: FC<OverlayCardProps> = ({ overlay, onEdit, onDelete }) => {
   const { t } = useTranslation();
 
-  const handleCardClick = useCallback(() => {
-    onEdit(overlay);
-  }, [overlay, onEdit]);
+  const handleCardClick = useCallback(
+    (e: React.MouseEvent) => {
+      console.log('handleCardClick', overlay, e);
+      // onEdit(overlay);
+    },
+    [overlay, onEdit],
+  );
 
   const handleDeleteClick = useCallback(
     (e: React.MouseEvent) => {

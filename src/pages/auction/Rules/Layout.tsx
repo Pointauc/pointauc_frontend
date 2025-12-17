@@ -30,7 +30,6 @@ interface RulesLayoutProps {
 
 const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayoutProps) => {
   const { t } = useTranslation();
-  const { broadcastRules } = useRulesBroadcasting();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const activeRuleId = useSelector((state: RootState) => state.aucSettings.settings.activeRuleId ?? rules[0]?.id);
@@ -53,6 +52,9 @@ const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayo
 
   const getRule = useCallback((id: string) => rules.find((rule) => rule.id === id), [rules]);
   const currentRule = useMemo(() => (activeRuleId ? getRule(activeRuleId) : null), [activeRuleId, getRule]);
+  const currentRuleContent = useMemo(() => (currentRule ? JSON.parse(currentRule.data) : null), [currentRule]);
+
+  useRulesBroadcasting({ currentRuleContent });
 
   /**
    * Initial content of the active rule.
@@ -63,8 +65,7 @@ const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayo
 
   if (currentRule && activeRuleId !== previousActiveRuleId.current) {
     try {
-      const content = JSON.parse(currentRule.data);
-      setInitialContent(content);
+      setInitialContent(currentRuleContent);
       previousActiveRuleId.current = activeRuleId;
     } catch (error) {
       console.error('Failed to parse rule content:', error);
@@ -100,17 +101,6 @@ const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayo
   const onRulesChanged = (content: JSONContent) => {
     updateRuleContent(content);
   };
-
-  useEffect(() => {
-    if (currentRule) {
-      try {
-        const content = JSON.parse(currentRule.data);
-        broadcastRules(content);
-      } catch (error) {
-        console.error('Failed to parse rule content for broadcasting:', error);
-      }
-    }
-  }, [currentRule, broadcastRules]);
 
   const createNewRule = (label?: string) => {
     const newRule = buildDefaultRule(t, rules, label);

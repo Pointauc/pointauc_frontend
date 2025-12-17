@@ -1,0 +1,9 @@
+.helpButton {
+  color: var(--mantine-color-gray-6);
+  transition: color 0.2s ease;
+}
+
+.helpButton:hover {
+  color: var(--mantine-color-blue-5);
+}
+

@@ -3,7 +3,7 @@ import { WheelParticipantsChangedDto, WheelSettingsChangedDto, WheelSpinDto } fr
 export namespace Broadcasting {
   export type DataType = 'lots' | 'timer' | 'rules' | 'wheel';
 
-  interface DataRequestPayload {
+  export interface DataRequestPayload {
     dataType: DataType;
     timestamp: string;
   }

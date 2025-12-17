@@ -14,6 +14,7 @@ i18n
 
     detection: {
       order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'subdomain', 'navigator', 'htmlTag', 'path'],
+      lookupQuerystring: 'locale',
     },
 
     interpolation: {
