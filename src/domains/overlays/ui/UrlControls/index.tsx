@@ -129,6 +129,7 @@ const UrlControls: FC<UrlControlsProps> = ({ overlayId }) => {
 
       <Modal
         opened={isWarningModalOpen}
+        onClick={(e) => e.stopPropagation()}
         onClose={() => setIsWarningModalOpen(false)}
         title={t('overlays.securityWarning.title')}
         centered
