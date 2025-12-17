@@ -6,7 +6,7 @@ import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 
 export const ChangesEN: UpdateData[] = [
   {
-    date: '2025-12-17T19:35:09.850Z',
+    date: '2025-12-17T19:39:09.850Z',
     newFeatures: [
       <>
         <strong>Overlays</strong> — A new major feature that allows you to display your auction or wheel directly on

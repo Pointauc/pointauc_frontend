@@ -6,7 +6,7 @@ import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 
 export const ChangesRU: UpdateData[] = [
   {
-    date: '2025-12-17T19:35:09.850Z',
+    date: '2025-12-17T19:39:09.850Z',
     newFeatures: [
       <>
         <strong>Оверлеи</strong> — Новая большая функция, которая позволяет отображать ваш аукцион или колесо прямо на
