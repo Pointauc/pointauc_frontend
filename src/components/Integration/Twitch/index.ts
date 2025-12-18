@@ -6,7 +6,7 @@ import { authenticateTwitch } from '@api/twitchApi.ts';
 
 import { store } from '../../../main.tsx';
 
-import './index.module.css';
+import './index.css';
 
 const id = 'twitch';
 const authParams = {

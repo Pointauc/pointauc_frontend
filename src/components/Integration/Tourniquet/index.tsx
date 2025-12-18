@@ -9,9 +9,9 @@ import { sendTourniquetSubscribedState } from '@reducers/Subscription/Subscripti
 
 import { store } from '../../../main.tsx';
 
-const id = 'tourniquet';
+import './index.css';
 
-import '@components/Integration/Tourniquet/index.module.css';
+const id = 'tourniquet';
 
 const authFlow: Integration.RedirectFlow = {
   type: 'redirect',
