@@ -640,7 +640,12 @@
     "addAmount": "Прибавить стоимость",
     "delete": "Удалить слот",
     "extra": "Дополнительно",
-    "trailer": "Трейлер (YouTube)"
+    "trailer": "Трейлер (YouTube)",
+    "lockPercentage": "Зафиксировать процент",
+    "changePercentage": "Изменить процент",
+    "lockedTooltip": "Этот лот зафиксирован на {{percentage}}% от общей стоимости аукциона",
+    "cannotLock": "Общая сумма всех зафиксированных лотов не может превышать 100%",
+    "applyPercentage": "Применить"
   },
   "bid": {
     "totalBids": "Всего заказов:",

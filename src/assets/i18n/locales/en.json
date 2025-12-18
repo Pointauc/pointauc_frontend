@@ -247,7 +247,12 @@
     "addAmount": "Add Cost",
     "delete": "Delete Slot",
     "extra": "Extra",
-    "trailer": "Trailer (YouTube)"
+    "trailer": "Trailer (YouTube)",
+    "lockPercentage": "Lock Percentage",
+    "changePercentage": "Change Percentage",
+    "lockedTooltip": "This lot is locked to {{percentage}}% of total auction",
+    "cannotLock": "Total sum of all locked lots cannot exceed 100%",
+    "applyPercentage": "Apply"
   },
   "menu": {
     "items": {

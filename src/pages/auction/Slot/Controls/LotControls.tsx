@@ -16,6 +16,7 @@ import { animateValue } from '@utils/common.utils.ts';
 import { numberUtils } from '@utils/common/number';
 
 import styles from './LotControls.module.css';
+import WinningChance from './WinningChance';
 
 interface LotControlsProps {
   lot: Slot;
@@ -92,8 +93,12 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     const inputAmount = Number(amountInput.current?.value) || null;
     const isAmountChanged = amount !== inputAmount;
 
-    if (e.key === 'Enter' && !isAmountChanged) {
-      dispatch(addSlot({}));
+    if (e.key === 'Enter') {
+      if (!isAmountChanged) {
+        dispatch(addSlot({}));
+      } else {
+        dispatch(setSlotAmount({ id, amount: inputAmount || 0 }));
+      }
     }
   };
 
@@ -119,6 +124,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
 
   useEffect(() => {
     if (name !== currentName) setCurrentName(name);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   const handleDelete = (): void => {
@@ -129,6 +135,8 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     dispatch(openTrailer(name || ''));
   }, [dispatch, name]);
 
+  const isLocked = !!lot.lockedPercentage;
+
   return (
     <>
       <div className={styles.hashContainer}>
@@ -138,14 +146,16 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
         </div>
       </div>
       <input
-        className={clsx(styles.input, styles.name)}
+        className={clsx(styles.input, styles.name, { [styles.lockedLot]: isLocked })}
         placeholder={t('auc.lotName')}
         onBlur={handleNameBlur}
         onChange={handleNameChange}
         onKeyPress={createNewSlotOnEnter}
         value={currentName ?? ''}
       />
-      {showChances && <span className={styles.chance} title={t('auc.chanceTooltip')} ref={percentsRef} />}
+      {showChances && (
+        <WinningChance slotId={id} ref={percentsRef} isLocked={isLocked} lockedPercentage={lot.lockedPercentage} />
+      )}
       <div className={styles.moneyWrapper}>
         <input
           className={clsx(styles.input, styles.money)}

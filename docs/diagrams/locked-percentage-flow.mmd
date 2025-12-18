@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant User
+    participant WinningChance
+    participant Popover
+    participant Reducer
+    participant Utils
+    
+    User->>WinningChance: Click percentage
+    WinningChance->>Popover: Open with current %
+    User->>Popover: Enter percentage & toggle lock
+    Popover->>Utils: "Validate can lock"
+    Utils-->>Popover: Validation result
+    alt Can lock
+        Popover->>Reducer: setLockedPercentage
+        Reducer->>Reducer: Update slot
+    else Cannot lock (sum >= 100%)
+        Popover-->>User: "Disable lock button, show tooltip"
+    end
+    
+    Note over Reducer: Later, when other lot changes
+    User->>Reducer: Change other lot amount
+    Reducer->>Utils: recalculateAllLockedSlots
+    Utils-->>Reducer: Updated slots with recalculated amounts
+    Reducer->>Reducer: Update all slots
+

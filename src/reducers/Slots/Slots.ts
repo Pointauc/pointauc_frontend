@@ -5,6 +5,7 @@ import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { Slot } from '@models/slot.model.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
+import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
 
 import slotNamesMap from '../../services/SlotNamesMap';
 import { addedBidsMap, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
@@ -28,6 +29,7 @@ export const createSlot = (props: Partial<Slot> = {}): Slot => {
     amount: null,
     name: '',
     investors: [],
+    lockedPercentage: null,
     ...props,
   };
 
@@ -122,6 +124,10 @@ export const slotsSlice = createSlice({
       const { id, amount } = action.payload;
       updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount }));
     },
+    setLotPercentage(state, action: PayloadAction<{ id: string | number; percentage: number }>): void {
+      const { id, percentage } = action.payload;
+      state.slots = sortSlots(recalculateAllLockedSlots(state.slots, { id, percentage }));
+    },
     setSlotExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
       const { id, extra } = action.payload;
       state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, extra } : slot));
@@ -157,6 +163,14 @@ export const slotsSlice = createSlice({
     setSearchTerm(state, action: PayloadAction<string>): void {
       state.searchTerm = action.payload;
     },
+    setLockedPercentage(state, action: PayloadAction<{ id: string; percentage: number }>): void {
+      const { id, percentage } = action.payload;
+      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, lockedPercentage: percentage } : slot));
+    },
+    unlockPercentage(state, action: PayloadAction<string>): void {
+      const id = action.payload;
+      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, lockedPercentage: null } : slot));
+    },
     mergeLot(state, action: PayloadAction<PublicApi.LotUpdateRequest>): void {
       const { query, lot: requestLot } = action.payload;
       const compare: TestLot = Object.entries(query).reduce<TestLot>(
@@ -174,6 +188,7 @@ export const slotsSlice = createSlice({
       });
 
       state.slots = state.slots.map((lot) => (compare(lot) ? updateLot(lot) : lot));
+      state.slots = recalculateAllLockedSlots(state.slots);
     },
   },
 });
@@ -189,8 +204,11 @@ export const {
   resetSlots,
   setSlots,
   addSlotAmount,
+  setLotPercentage,
   setSearchTerm,
   mergeLot,
+  setLockedPercentage,
+  unlockPercentage,
 } = slotsSlice.actions;
 
 export const createSlotFromPurchase =
@@ -215,7 +233,7 @@ export const createSlotFromPurchase =
     slotNamesMap.set(`#${maxFastId}`, newSlot.id);
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
-    dispatch(setSlots(sortSlots(updatedSlots)));
+    dispatch(setSlots(sortSlots(recalculateAllLockedSlots(updatedSlots))));
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: newSlot.id, cost: bid.cost }, true));
   };
 
@@ -225,7 +243,7 @@ interface BidHandleOptions {
 }
 
 export const addBid =
-  (slotId: string, bid: Purchase, options: BidHandleOptions = {}) =>
+  (slotId: string | Slot, bid: Purchase, options: BidHandleOptions = {}) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const { removeBid = true, callback } = options;
     const {
@@ -233,7 +251,7 @@ export const addBid =
       slots: { slots },
     } = getState();
 
-    const lot = slots.find(({ id }) => id === slotId);
+    const lot = typeof slotId === 'string' ? slots.find(({ id }) => id === slotId) : slotId;
 
     if (!lot) {
       return;
@@ -243,12 +261,12 @@ export const addBid =
     const amount = bidUtils.parseCost(bid, settings, false);
     const bidName = bidUtils.getName(bid);
 
-    slotNamesMap.set(bidName, slotId);
+    slotNamesMap.set(bidName, lot.id);
 
     const newLotName = !lot.name || lot.name === '' ? bidName : lot.name;
 
-    dispatch(setSlotData({ id: slotId, amount: amount + (lot.amount ?? 0), name: newLotName }));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: slotId }, false));
+    dispatch(setSlotData({ id: lot.id, amount: amount + (lot.amount ?? 0), name: newLotName }));
+    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: lot.id }, false));
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);
   };

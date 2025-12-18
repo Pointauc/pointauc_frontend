@@ -56,7 +56,6 @@ const Rules = () => {
   });
 
   if (isMigrationComplete && !isFetching && rules.length === 0 && !createMutation.isPending) {
-    console.log('Creating default rule');
     const defaultRule = buildDefaultRule(t);
     createMutation.mutate({
       name: defaultRule.name,
