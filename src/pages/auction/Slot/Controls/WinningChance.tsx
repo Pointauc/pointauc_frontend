@@ -12,14 +12,12 @@ import styles from './WinningChance.module.css';
 
 interface WinningChanceProps {
   slotId: string;
-  amount: number;
   isLocked?: boolean;
   lockedPercentage?: number | null;
-  onClick?: () => void;
   ref: React.RefObject<HTMLSpanElement | null>;
 }
 
-const WinningChance: FC<WinningChanceProps> = ({ slotId, isLocked = false, lockedPercentage = null, onClick, ref }) => {
+const WinningChance: FC<WinningChanceProps> = ({ slotId, isLocked = false, lockedPercentage = null, ref }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
