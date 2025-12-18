@@ -71,7 +71,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   };
 
   const handleAddExtra = (): void => {
-    dispatch(addExtra(id));
+    dispatch(addExtra({ id, extra: Number(currentExtra) }));
     updateExtraAmount(null);
   };
 
@@ -82,8 +82,6 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
 
   const addExtraAmountOnEnter = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === 'Enter') {
-      dispatch(setSlotExtra({ id, extra: Number(currentExtra) }));
-      updateExtraAmount(null);
       handleAddExtra();
       e.preventDefault();
     }

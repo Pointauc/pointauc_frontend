@@ -82,9 +82,9 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
               </Group>
             </Modal>
 
-            <Button onClick={() => setBidManagementOpen(true)} variant='outline' color='blue'>
+            {/* <Button onClick={() => setBidManagementOpen(true)} variant='outline' color='blue'>
               {t('wheel.returnPointsToTheRest')}
-            </Button>
+            </Button> */}
 
             <BidsManagementDialog
               open={bidManagementOpen}

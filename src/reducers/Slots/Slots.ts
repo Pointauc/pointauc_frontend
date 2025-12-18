@@ -130,9 +130,9 @@ export const slotsSlice = createSlice({
       const { id, extra } = action.payload;
       state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, extra } : slot));
     },
-    addExtra(state, action: PayloadAction<string | number>): void {
-      const id = action.payload;
-      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: getAmountSum(slot) }));
+    addExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
+      const { id, extra } = action.payload;
+      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: Number(slot.amount ?? 0) + extra }));
     },
     deleteSlot(state, action: PayloadAction<string>): void {
       const deletedId = action.payload;

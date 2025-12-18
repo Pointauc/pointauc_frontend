@@ -153,66 +153,58 @@ export const updateFromCamilleBot =
 export const addRequest =
   ({ listId, data }: ListData<UserRequest>): any =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const state = getState();
-    const index = getListIndex(state.requests, listId || state.requests.currentList);
-    const { allData, isSyncWithAuc } = state.requests.lists[index];
-    const dataIndex = allData.findIndex(({ id }) => id === data.id);
-    const { id, request, username } = data;
-    const name = `${username}: ${request}`;
-
-    if (dataIndex === -1) {
-      dispatch(setAllData({ listId, data: [...allData, data] }));
-
-      if (isSyncWithAuc) {
-        dispatch(addSlot({ id, amount: 1, name }));
-      }
-    } else {
-      const arr = [...allData];
-
-      arr[dataIndex] = data;
-      dispatch(setAllData({ listId, data: arr }));
-      const { slots } = state.slots;
-      const slot = getSlot(slots, id);
-
-      if (isSyncWithAuc && slot?.amount === 1) {
-        dispatch(setSlotName({ id, name }));
-      }
-    }
+    // const state = getState();
+    // const index = getListIndex(state.requests, listId || state.requests.currentList);
+    // const { allData, isSyncWithAuc } = state.requests.lists[index];
+    // const dataIndex = allData.findIndex(({ id }) => id === data.id);
+    // const { id, request, username } = data;
+    // const name = `${username}: ${request}`;
+    // if (dataIndex === -1) {
+    //   dispatch(setAllData({ listId, data: [...allData, data] }));
+    //   if (isSyncWithAuc) {
+    //     dispatch(addSlot({ id, amount: 1, name }));
+    //   }
+    // } else {
+    //   const arr = [...allData];
+    //   arr[dataIndex] = data;
+    //   dispatch(setAllData({ listId, data: arr }));
+    //   const { slots } = state.slots;
+    //   const slot = getSlot(slots, id);
+    //   if (isSyncWithAuc && slot?.amount === 1) {
+    //     dispatch(setSlotName({ id, name }));
+    //   }
+    // }
   };
 
 export const deleteRequest =
   ({ listId, data }: ListData<string>): any =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const state = getState();
-    const index = getListIndex(state.requests, listId || state.requests.currentList);
-    const { allData, isSyncWithAuc } = state.requests.lists[index];
-    dispatch(setAllData({ listId, data: allData.filter(({ id }) => data !== id) }));
-
-    if (isSyncWithAuc) {
-      dispatch(deleteSlot(data));
-    }
+    // const state = getState();
+    // const index = getListIndex(state.requests, listId || state.requests.currentList);
+    // const { allData, isSyncWithAuc } = state.requests.lists[index];
+    // dispatch(setAllData({ listId, data: allData.filter(({ id }) => data !== id) }));
+    // if (isSyncWithAuc) {
+    //   dispatch(deleteSlot(data));
+    // }
   };
 
 export const syncWithAuc =
   (listId?: string): any =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const state = getState();
-    const index = getListIndex(state.requests, listId || state.requests.currentList);
-    const { slots } = state.slots;
-    const { allData } = state.requests.lists[index];
-
-    allData.forEach(({ id, request, username }) => {
-      const slot = getSlot(slots, id);
-      const name = `${username}: ${request}`;
-
-      if (!slot) {
-        dispatch(addSlot({ id, amount: 1, name }));
-      } else if (slot.name !== name && slot.amount === 1) {
-        dispatch(setSlotName({ id, name }));
-      }
-    });
-
-    dispatch(setSyncState({ listId, data: true }));
+    // const state = getState();
+    // const index = getListIndex(state.requests, listId || state.requests.currentList);
+    // const { slots } = state.slots;
+    // const { allData } = state.requests.lists[index];
+    // allData.forEach(({ id, request, username }) => {
+    //   const slot = getSlot(slots, id);
+    //   const name = `${username}: ${request}`;
+    //   if (!slot) {
+    //     dispatch(addSlot({ id, amount: 1, name }));
+    //   } else if (slot.name !== name && slot.amount === 1) {
+    //     dispatch(setSlotName({ id, name }));
+    //   }
+    // });
+    // dispatch(setSyncState({ listId, data: true }));
   };
 
 export default requestsSlice.reducer;
