@@ -53,11 +53,9 @@ export const updateFastIdCounter = (slots: Slot[]): void => {
   maxFastId = Math.max(...slots.map(({ fastId }) => fastId));
 };
 
-// TODO: Implement saved slots
-const savedSlots: Slot[] = [];
-const slots = savedSlots.length > 0 ? savedSlots : [createSlot()];
-updateFastIdCounter(slots);
-slotNamesMap.setFromList(slots);
+export const initialSlots = [createSlot()];
+updateFastIdCounter(initialSlots);
+slotNamesMap.setFromList(initialSlots);
 
 const initialState: SlotsState = {
   // slots: [createSlot()],
@@ -70,7 +68,7 @@ const initialState: SlotsState = {
   // ],
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
   // slots: [...new Array(100).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
-  slots,
+  slots: initialSlots,
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);

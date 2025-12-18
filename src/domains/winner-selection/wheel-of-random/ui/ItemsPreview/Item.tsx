@@ -39,7 +39,7 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
       onMouseLeave={onLeave}
     >
       <Text className={classes.name}>{name}</Text>
-      <Text className={classes.amount}>{amountToDisplay}</Text>
+      <Text className={classes.amount}>{Number(amountToDisplay.toFixed(2))}</Text>
       <Divider orientation='vertical' />
       <Text className={classes.chance}>{chance + ' %'}</Text>
       <div className={classes.color}>

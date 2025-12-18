@@ -52,12 +52,37 @@ export const parseLotsImportFile = async (file: File): Promise<ArchivedLot[]> =>
   }
 };
 
-export const slotToWheel = ({ id, name, amount }: Slot): WheelItem => ({
+const slotToWheel = ({ id, name, amount }: Slot, excludeColors: string[] = []): WheelItem => ({
   id: id.toString(),
   name: name || '',
   amount: Number(amount),
-  color: getWheelColor(),
+  color: getWheelColor(excludeColors),
 });
+
+export const SlotListToWheelList = (slots: Slot[]): WheelItem[] => {
+  let previousColor: string | null = null;
+  let firstColor: string | null = null;
+
+  return slots.map((slot, index) => {
+    const excludeColors = [];
+
+    if (previousColor) {
+      excludeColors.push(previousColor);
+    }
+
+    if (index === slots.length - 1 && firstColor) {
+      excludeColors.push(firstColor);
+    }
+
+    const wheelItem = slotToWheel(slot, excludeColors);
+    previousColor = wheelItem.color;
+    if (index === 0) {
+      firstColor = wheelItem.color;
+    }
+
+    return wheelItem;
+  });
+};
 
 export const getTotalSize = (slots: { amount?: number | null }[]): number =>
   slots.reduce((accum, { amount }) => accum + Number(amount), 0);

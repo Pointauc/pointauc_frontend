@@ -1,21 +1,19 @@
 import { Group, Title } from '@mantine/core';
-import { FC, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, Key, useCallback, useMemo, useRef, useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { UseFormReturn } from 'react-hook-form';
 
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
 import PageContainer from '@components/PageContainer/PageContainer';
+import { useBroadcastSpin, useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
+import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 import RandomWheel, { RandomWheelController } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import { Slot } from '@models/slot.model';
 import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
-import { deleteSlot, setSlots } from '@reducers/Slots/Slots';
-import { slotToWheel } from '@utils/slots.utils';
-import { useBroadcastSpin, useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
-import { WheelFormat } from '@constants/wheel';
-import { skipSameValueCalls } from '@utils/dataType/function.utils';
-import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+import { deleteSlot, initialSlots, setSlots } from '@reducers/Slots/Slots';
+import { SlotListToWheelList } from '@utils/slots.utils';
 
 import styles from './WheelPage.module.css';
 
@@ -32,11 +30,17 @@ const WheelPage: FC = () => {
   const broadcastSpin = useBroadcastSpin();
   useWheelBroadcasting({ settings: wheelSettings, participants: participants });
 
-  const wheelItems = useMemo(() => slots.map<WheelItem>(slotToWheel), [slots]);
+  const previousWheelItems = useRef<Slot[]>(initialSlots);
+  const wheelItems = useMemo(() => SlotListToWheelList(slots), [slots]);
+
+  if (previousWheelItems.current === initialSlots) {
+    previousWheelItems.current = slots;
+    wheelController.current?.setItems(wheelItems);
+  }
 
   const setCustomWheelItems = useCallback(
     (customItems: Slot[], saveSlots: boolean) => {
-      wheelController.current?.setItems(customItems.map(slotToWheel) as any);
+      wheelController.current?.setItems(SlotListToWheelList(customItems));
 
       if (saveSlots) {
         dispatch(setSlots(customItems));
