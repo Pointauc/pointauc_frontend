@@ -167,9 +167,10 @@
     "sendBugReport": "Send bug report",
     "showChances": "Show Winning Chances",
     "supportCreator": "Support Creator",
-    "total": "Total: {{totalSum}} ₽",
+    "total": "<1>Total:</1> {{totalSum}} <1>$</1>",
     "rules": "Rules",
-    "revertClearAll": "Click here to <b>cancel</b> the clearing of all lots (<b>{{count}}</b>)"
+    "revertClearAll": "Click here to <b>cancel</b> the clearing of all lots (<b>{{count}}</b>)",
+    "totalTooltip": "Toggle the total amount"
   },
   "bid": {
     "close": "Close",

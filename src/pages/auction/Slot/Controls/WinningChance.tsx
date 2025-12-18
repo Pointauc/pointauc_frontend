@@ -7,11 +7,12 @@ import { useDispatch } from 'react-redux';
 
 import { setLockedPercentage, setLotPercentage, unlockPercentage } from '@reducers/Slots/Slots';
 
-import PercentageForm, { PercentageFormData } from './PercentageLockPopover';
+import PercentageForm, { PercentageFormData } from './PercentageForm';
 import styles from './WinningChance.module.css';
 
 interface WinningChanceProps {
   slotId: string;
+  amount: number;
   isLocked?: boolean;
   lockedPercentage?: number | null;
   onClick?: () => void;
@@ -47,10 +48,6 @@ const WinningChance: FC<WinningChanceProps> = ({ slotId, isLocked = false, locke
     }
   };
 
-  const getCurrentPercentage = (): number => {
-    return ref.current?.textContent ? Number(ref.current.textContent.replace('%', '')) : 0;
-  };
-
   const handlePopoverChange = (opened: boolean): void => {
     setPopoverOpened(opened);
   };
@@ -75,12 +72,7 @@ const WinningChance: FC<WinningChanceProps> = ({ slotId, isLocked = false, locke
         </div>
       </Popover.Target>
       <Popover.Dropdown>
-        <PercentageForm
-          slotId={slotId}
-          onSubmit={handleSubmit}
-          isLockedInitial={isLocked}
-          getCurrentPercentage={getCurrentPercentage}
-        />
+        <PercentageForm slotId={slotId} onSubmit={handleSubmit} />
       </Popover.Dropdown>
     </Popover>
   );

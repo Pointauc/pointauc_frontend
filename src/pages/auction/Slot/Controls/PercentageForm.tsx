@@ -1,11 +1,13 @@
 import { ActionIcon, Button, Group, NumberInput, Text, Tooltip } from '@mantine/core';
 import { IconCheck, IconLock, IconLockOpen } from '@tabler/icons-react';
-import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { RootState } from '@reducers';
 import { calculateTotalLockedPercentage } from '@utils/lockedPercentage.utils';
+import { calculateLotPercentage, getValidAmount } from '@services/PercentsRefMap';
 
 export interface PercentageFormData {
   percentage: number;
@@ -15,56 +17,85 @@ export interface PercentageFormData {
 interface PercentageFormProps {
   slotId: string;
   onSubmit: (data: PercentageFormData) => void;
-  isLockedInitial: boolean;
-  getCurrentPercentage: () => number;
 }
 
-const PercentageForm: FC<PercentageFormProps> = ({ slotId, onSubmit, isLockedInitial, getCurrentPercentage }) => {
+const PercentageForm: FC<PercentageFormProps> = ({ slotId, onSubmit }) => {
   const { t } = useTranslation();
   const slots = useSelector((root: RootState) => root.slots.slots);
-  const [percentage, setPercentage] = useState<number>(getCurrentPercentage());
-  const [isLocked, setIsLocked] = useState<boolean>(isLockedInitial);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const initiaTruePercentage = useMemo(() => {
+    const slot = slots.find((slot) => slot.id === slotId);
+    const total = slots.reduce((accum, { amount }) => accum + getValidAmount(amount), 0) || 1;
+    return calculateLotPercentage(slot?.amount ?? 0, total);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const initialFormData = useMemo(() => {
+    return {
+      percentage: Number(initiaTruePercentage.toFixed(1)) || 0,
+      isLocked: false,
+    };
+  }, [initiaTruePercentage]);
+
+  const { control, handleSubmit, watch, setValue, formState } = useForm<PercentageFormData>({
+    defaultValues: initialFormData,
+  });
+
+  const percentage = watch('percentage');
+  const isLocked = watch('isLocked');
+
   const totalLockedPercentage = calculateTotalLockedPercentage(slots);
-  const otherLockedPercentage = isLockedInitial ? totalLockedPercentage - percentage : totalLockedPercentage;
+  const otherLockedPercentage = initialFormData.isLocked
+    ? totalLockedPercentage - initialFormData.percentage
+    : totalLockedPercentage;
   const wouldExceed100 = otherLockedPercentage + percentage >= 100;
 
-  const handleApply = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    onSubmit({ percentage, isLocked });
-  };
-
   const handleToggleLock = (): void => {
-    setIsLocked(!isLocked);
+    setValue('isLocked', !isLocked);
   };
 
   useEffect(() => {
     if (wouldExceed100) {
-      setIsLocked(false);
+      setValue('isLocked', false);
     }
-  }, [wouldExceed100]);
+  }, [wouldExceed100, setValue]);
 
   useLayoutEffect(() => {
     if (inputRef.current) {
       inputRef.current.select();
     }
-  }, [percentage]);
+  }, []);
+
+  const submit = (e: React.FormEvent<HTMLFormElement>): void => {
+    handleSubmit((data) => {
+      return onSubmit({
+        ...data,
+        percentage: formState.dirtyFields.percentage ? data.percentage : initiaTruePercentage,
+      });
+    })(e);
+  };
 
   return (
-    <form onSubmit={handleApply}>
+    <form onSubmit={submit}>
       <Text fw={600} fz={14} c='dark.0' mb='xs'>
         {t('lot.changePercentage')}
       </Text>
       <Group gap='xs' wrap='nowrap'>
-        <NumberInput
-          ref={inputRef}
-          value={percentage}
-          onChange={(value) => setPercentage(Number(value) || 0)}
-          min={0}
-          max={100}
-          w={80}
-          rightSection={<Text>{'%'}</Text>}
+        <Controller
+          control={control}
+          name='percentage'
+          render={({ field }) => (
+            <NumberInput
+              ref={inputRef}
+              value={field.value}
+              onChange={(value) => field.onChange(typeof value === 'number' ? value : 0)}
+              min={0}
+              max={100}
+              w={80}
+              rightSection={<Text>{'%'}</Text>}
+            />
+          )}
         />
         <Tooltip label={wouldExceed100 ? t('lot.cannotLock') : t('lot.lockPercentage')} position='bottom' withArrow>
           <div>
