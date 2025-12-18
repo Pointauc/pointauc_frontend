@@ -17,7 +17,7 @@ import ControlColumn from './ControlColumn/ControlColumn';
 import RulesSkeleton from './Rules/Skeleton';
 import SlotsColumn from './SlotsColumn/SlotsColumn';
 
-// const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
+const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
 const ChangelogModal = lazy(() => import('@domains/changelog/ui/ChangelogModal'));
 
 const AucPageContent: React.FC = () => {
@@ -49,7 +49,7 @@ const AucPageContent: React.FC = () => {
       <div className={styles.column}>
         <div className={styles.row}>
           <Box className={styles.leftColumn} visibleFrom='sm'>
-            {/* <Suspense fallback={<RulesSkeleton />}>{showRules && <LazyRules />}</Suspense> */}
+            <Suspense fallback={<RulesSkeleton />}>{showRules && <LazyRules />}</Suspense>
           </Box>
           <SlotsColumn />
           <ControlColumn />
