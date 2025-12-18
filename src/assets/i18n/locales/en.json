@@ -661,6 +661,13 @@
     "importToWheel": "Import participants",
     "loadCustomMessage": "Upload your image",
     "lotWasDeleted": "lot was deleted",
+    "winnerStats": {
+      "title": "Interesting Facts",
+      "winChance": "Lot chance",
+      "winChanceDesc": "Final chance of the lot to win in the wheel",
+      "amountCategoryChance": "Price category chance",
+      "amountCategoryChanceDesc": "Winning chance of any lot with a cost less than or equal to the winner"
+    },
     "nesting": "Nesting",
     "nestingDesc": "Groups cheap lots to reduce the number of spins",
     "nextDuel": "next duel",

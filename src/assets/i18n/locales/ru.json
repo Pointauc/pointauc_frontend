@@ -587,6 +587,13 @@
     "returnPointsToTheRest": "Вернуть баллы остальным",
     "winner": "Победитель",
     "lotWasDeleted": "лот был удален",
+    "winnerStats": {
+      "title": "Интересные факты",
+      "winChance": "Шанс лота",
+      "winChanceDesc": "Шанс победы лота в колесе",
+      "amountCategoryChance": "Шанс ценовой категории",
+      "amountCategoryChanceDesc": "Шанс выпадения любого лота с ценой меньше или равной выигравшему"
+    },
     "lotDeleteWarning": "Это действие удалит лот не только из колеса, но и из самого аукциона.",
     "spicyFinal": "Финал с перчинкой",
     "connectTwitchForMoreEmotes": "Подключите Twitch, чтобы выбрать больше изображений в колесе (7TV, BTTV, FFZ)",

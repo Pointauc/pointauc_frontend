@@ -385,9 +385,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
           {!onCoreImageChange && <div className={classes.wheelCore} style={{ backgroundImage: coreBackground }}></div>}
           {!!winnerItem && (
             <WinnerBackdrop
-              name={winnerItem.name}
+              currentSpinWinner={winnerItem}
               id={winnerItem.id}
-              winnerName={dropOut && items.length === 1 ? items[0]?.name : undefined}
+              finalWinner={dropOut && items.length === 1 ? items[0] : null}
               onDelete={
                 deleteItem ? (showConfirmation?: boolean) => deleteItem(winnerItem.id, showConfirmation) : undefined
               }
