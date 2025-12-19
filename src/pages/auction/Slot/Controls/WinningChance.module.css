@@ -1,0 +1,27 @@
+.chanceContainer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover .chance {
+  text-decoration: underline;
+}
+
+.chance {
+  color: var(--mantine-color-dark-0);
+}
+
+.chance.locked {
+  color: #ffc657;
+  font-weight: 600;
+}
+
+.lockIcon {
+  color: #ffc657;
+  flex-shrink: 0;
+}

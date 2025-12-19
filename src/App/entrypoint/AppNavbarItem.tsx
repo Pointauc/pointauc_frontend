@@ -1,4 +1,4 @@
-import { Divider, NavLink, Text, Tooltip } from '@mantine/core';
+import { Badge, Divider, Group, NavLink, Text, Tooltip } from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons-react';
 import { Fragment, useRef } from 'react';
 import { Link } from 'react-router-dom';
@@ -17,7 +17,7 @@ interface AppNavbarItemProps {
 
 export function AppNavbarItem({ menuItem, isActive, showTooltip, onClick }: AppNavbarItemProps) {
   const { t } = useTranslation();
-  const { icon, title, path, disabled, divide, target } = menuItem;
+  const { icon, title, path, disabled, divide, target, isBeta } = menuItem;
   const isExternal = target === '_blank';
   const linkRef = useRef<HTMLAnchorElement>(null);
 
@@ -34,7 +34,16 @@ export function AppNavbarItem({ menuItem, isActive, showTooltip, onClick }: AppN
         target={target}
         disabled={disabled}
         onClick={onClick}
-        label={<Text className={classes.navText}>{t(title)}</Text>}
+        label={
+          <Group gap='xs' wrap='nowrap'>
+            <Text className={classes.navText}>{t(title)}</Text>
+            {isBeta && (
+              <Badge size='xs' variant='filled' color='yellow' className={classes.betaBadge}>
+                BETA
+              </Badge>
+            )}
+          </Group>
+        }
         leftSection={<div className={classes.navIcon}>{icon}</div>}
         rightSection={isExternal ? <IconExternalLink size={24} className={classes.navIconRight} /> : undefined}
         className={classes.navLink}

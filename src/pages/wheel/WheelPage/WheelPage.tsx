@@ -1,21 +1,19 @@
 import { Group, Title } from '@mantine/core';
-import { FC, Key, useCallback, useEffect, useMemo, useRef } from 'react';
+import { FC, Key, useCallback, useMemo, useRef, useState } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { UseFormReturn } from 'react-hook-form';
 
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
 import PageContainer from '@components/PageContainer/PageContainer';
+import { useBroadcastSpin, useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
+import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 import RandomWheel, { RandomWheelController } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import { Slot } from '@models/slot.model';
 import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
-import { deleteSlot, setSlots } from '@reducers/Slots/Slots';
-import { slotToWheel } from '@utils/slots.utils';
-import { useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
-import { WheelFormat } from '@constants/wheel';
-import { skipSameValueCalls } from '@utils/dataType/function.utils';
-import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+import { deleteSlot, initialSlots, setSlots } from '@reducers/Slots/Slots';
+import { SlotListToWheelList } from '@utils/slots.utils';
 
 import styles from './WheelPage.module.css';
 
@@ -25,15 +23,24 @@ const WheelPage: FC = () => {
   const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const wheelController = useRef<RandomWheelController | null>(null);
   const wheelForm = useRef<UseFormReturn<Wheel.Settings> | null>(null);
-  const { broadcastParticipantsChanged, broadcastSpin, broadcastSettingsChanged } = useWheelBroadcasting();
 
-  const isBroadcastEnabled = useSelector((state: RootState) => state.broadcasting.broadcastingData.wheel);
+  const [wheelSettings, setWheelSettings] = useState<Wheel.Settings>();
+  const [participants, setParticipants] = useState<WheelItem[]>();
 
-  const wheelItems = useMemo(() => slots.map<WheelItem>(slotToWheel), [slots]);
+  const broadcastSpin = useBroadcastSpin();
+  useWheelBroadcasting({ settings: wheelSettings, participants: participants });
+
+  const previousWheelItems = useRef<Slot[]>(initialSlots);
+  const wheelItems = useMemo(() => SlotListToWheelList(slots), [slots]);
+
+  if (previousWheelItems.current === initialSlots) {
+    previousWheelItems.current = slots;
+    wheelController.current?.setItems(wheelItems);
+  }
 
   const setCustomWheelItems = useCallback(
     (customItems: Slot[], saveSlots: boolean) => {
-      wheelController.current?.setItems(customItems.map(slotToWheel) as any);
+      wheelController.current?.setItems(SlotListToWheelList(customItems));
 
       if (saveSlots) {
         dispatch(setSlots(customItems));
@@ -53,29 +60,6 @@ const WheelPage: FC = () => {
     </Group>
   );
 
-  const parseSettingsForBroadcast = useCallback((settings: Partial<Wheel.Settings>) => {
-    return {
-      format: settings.format ?? WheelFormat.Default,
-      coreImage: settings.coreImage ?? undefined,
-    };
-  }, []);
-
-  const broadcastSettings = useMemo(() => {
-    return skipSameValueCalls(broadcastSettingsChanged, { compareNested: true });
-  }, [broadcastSettingsChanged]);
-
-  useEffect(() => {
-    if (wheelForm.current && isBroadcastEnabled) {
-      broadcastSettings.callThrough(parseSettingsForBroadcast(wheelForm.current.getValues()));
-
-      const { unsubscribe } = wheelForm.current.watch((values) => {
-        broadcastSettings.call(parseSettingsForBroadcast(values as Partial<Wheel.Settings>));
-      });
-
-      return () => unsubscribe();
-    }
-  }, [wheelForm, broadcastSettings, isBroadcastEnabled, parseSettingsForBroadcast]);
-
   const handleSpinStart = useCallback(
     (params: SpinParams) => {
       broadcastSpin(params.distance ?? 0, params.duration ?? 0, params.winner?.toString() ?? '');
@@ -93,7 +77,8 @@ const WheelPage: FC = () => {
         items={wheelItems}
         deleteItem={deleteItem}
         wheelRef={wheelController}
-        onWheelItemsChanged={broadcastParticipantsChanged}
+        onWheelItemsChanged={setParticipants}
+        onSettingsChanged={setWheelSettings}
         form={wheelForm}
         onSpinStart={handleSpinStart}
       />

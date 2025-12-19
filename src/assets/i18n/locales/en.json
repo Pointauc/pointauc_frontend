@@ -170,9 +170,10 @@
     "sendBugReport": "Send bug report",
     "showChances": "Show Winning Chances",
     "supportCreator": "Support Creator",
-    "total": "Total: {{totalSum}} ₽",
+    "total": "<1>Total:</1> {{totalSum}} <1>$</1>",
     "rules": "Rules",
-    "revertClearAll": "Click here to <b>cancel</b> the clearing of all lots (<b>{{count}}</b>)"
+    "revertClearAll": "Click here to <b>cancel</b> the clearing of all lots (<b>{{count}}</b>)",
+    "totalTooltip": "Toggle the total amount"
   },
   "bid": {
     "close": "Close",
@@ -250,7 +251,12 @@
     "addAmount": "Add Cost",
     "delete": "Delete Slot",
     "extra": "Extra",
-    "trailer": "Trailer (YouTube)"
+    "trailer": "Trailer (YouTube)",
+    "lockPercentage": "Lock Percentage",
+    "changePercentage": "Change Percentage",
+    "lockedTooltip": "This lot is locked to {{percentage}}% of total auction",
+    "cannotLock": "Total sum of all locked lots cannot exceed 100%",
+    "applyPercentage": "Apply"
   },
   "menu": {
     "items": {
@@ -292,6 +298,16 @@
     "copyLink": "Copy Link",
     "openPage": "Open Page",
     "clickToEdit": "Click to edit",
+    "securityWarning": {
+      "title": "⚠️ Important Security Warning",
+      "description": "You absolutely should NOT show or share the overlay link with anyone!",
+      "issues": "Sharing the overlay link may lead to:",
+      "issue1": "Other people will be able to see spin outcome before the wheel spin is finished",
+      "issue2": "People will be able to track auction lots and rules changes anytime",
+      "issue3": "However, other people WON'T have WRITE access to your settings (only READ)",
+      "noShowAgain": "This warning won't appear again.",
+      "confirm": "I will remember"
+    },
     "chooseYourOverlay": "Choose your overlay",
     "sections": "Sections",
     "createSuccess": "Overlay created successfully",
@@ -301,8 +317,22 @@
     "updateError": "Failed to update overlay",
     "deleteSuccess": "Overlay deleted successfully",
     "deleteError": "Failed to delete overlay",
+    "betaWarning": {
+      "title": "Beta Feature",
+      "description": "This feature is brand new and actively being developed. You may encounter bugs or unexpected behavior. We recommend checking back regularly for updates and improvements.",
+      "reportIssue": "If you find any issues, please",
+      "createGithubIssue": "create an issue on GitHub",
+      "or": "or",
+      "contactTelegram": "message me on Telegram"
+    },
     "overlayLink": "OBS Link",
     "displaySettings": "Display Settings",
+    "statusMessages": {
+      "loading": "Loading overlay...",
+      "error": "Error loading overlay. Please check your connection and try again.",
+      "waitingForWheelData": "Overlay is waiting for data... Please open the Wheel page on the main website to initialize the overlay.",
+      "waitingForAuctionData": "Overlay is waiting for data... Please open the Auction page on the main website to initialize the overlay."
+    },
     "overlayTypes": {
       "Auction": "Auction",
       "Wheel": "Wheel"
@@ -349,6 +379,60 @@
       "comingSoon": "Preview Coming Soon",
       "description": "This section will show a live preview of how your {{type}} overlay will appear on your stream with the current settings.",
       "urlLabel": "URL: /overlay/{{pathname}}"
+    },
+    "welcome": {
+      "title": "Welcome to Overlays!",
+      "description": "This feature allows you to add transparent auction UI inside your broadcasting software for better control over the look and feeling of your stream.",
+      "demoAlt": "Overlay demo animation",
+      "benefitsTitle": "Main features:",
+      "benefit1": "• <b>Real-time updates:</b> lots and wheel spins automatically synchronize with what happens on the website.",
+      "benefit2": "• <b>More control:</b> you can hide unnecessary sections and arrange elements however you like.",
+      "continue": "Get Started"
+    },
+    "instructions": {
+      "title": "Overlays Setup Guide",
+      "step1Title": "Creating & Editing Overlays",
+      "step2Title": "OBS Setup",
+      "helpButtonTooltip": "View Instructions",
+      "helpButtonHint": "You can reopen these instructions anytime by clicking the help button (?) near the page title at the top of the screen.",
+      "screenshotPlaceholder": "Screenshot placeholder",
+      "important": "Important",
+      "listPageTitle": "Overlays List Page",
+      "listPageDescription": "On the main overlays page, you'll see all your created overlays. Click the \"New Overlay\" button to create a new one.",
+      "createOverlayTitle": "Creating a New Overlay",
+      "createOverlayDescription": "Select the type of overlay you want to create: Auction (shows your auction bids and timer) or Wheel (displays the spinning wheel). Each overlay is created with sensible defaults that you can customize later.",
+      "editPageTitle": "Overlay Editor",
+      "editPageDescription": "After creating an overlay, you'll be taken to the editor page with two main sections:",
+      "settingsPanelTitle": "Settings Panel (Left)",
+      "settingsPanelDescription": "Configure overlay-specific options like which elements to display, background transparency, canvas resolution, and more.",
+      "previewPanelTitle": "Preview Panel (Right)",
+      "previewPanelDescription": "Adjust the overlay position and size by dragging and resizing. Changes are saved automatically and will be reflected in OBS.",
+      "moreDetails": "Additional Tips",
+      "detailsContent1": "After saving changes, your active overlay will be updated automatically.",
+      "detailsContent2": "Canvas Resolution should match your streaming resolution (typically 1920x1080 for 1080p or 1280x720 for 720p).",
+      "detailsContent3": "You can create multiple overlays with different settings for different scenes in your streaming software.",
+      "obsWarning": "Stretch the overlay to the entire screen and do not move it. All positioning is controlled through the preview panel on the website.",
+      "obsStep1Title": "Step 1: Get Your Overlay URL",
+      "obsStep1Description": "On the overlay edit page, find the \"OBS Link\" section and click \"Copy Link\" to copy your unique overlay URL.",
+      "obsStep2Title": "Step 2: Add Browser Source in OBS",
+      "obsStep2Description": "In OBS, right-click in your Sources panel, select \"Add\" → \"Browser\", and paste the overlay URL.",
+      "obsSettingsTitle": "Recommended OBS Settings",
+      "obsSettingsDescription": "Use these settings when adding the Browser source:",
+      "settingName": "Setting",
+      "settingValue": "Value",
+      "yourOverlayLink": "Your copied overlay link",
+      "orStreamWidth": "or your stream width",
+      "orStreamHeight": "or your stream height",
+      "shutdownWhenNotVisible": "Shutdown source when not visible",
+      "refreshWhenActive": "Refresh browser when scene becomes active",
+      "advancedTips": "Advanced Tips",
+      "advancedTip1": "Match the Width and Height in OBS to your Canvas Resolution setting on the website for pixel-perfect alignment.",
+      "advancedTip2": "If the overlay doesn't appear immediately, make sure you have the auction or wheel page open on the website to initialize the data.",
+      "finalStepTitle": "Done!",
+      "finalStepDescription": "Your overlay is now set up! Any changes you make on the website (bids, settings, positioning) will automatically update in OBS.",
+      "back": "Back",
+      "next": "Next",
+      "finish": "Finish"
     },
     "loading": "Loading...",
     "backToOverlays": "Back to Overlays",
@@ -580,6 +664,13 @@
     "importToWheel": "Import participants",
     "loadCustomMessage": "Upload your image",
     "lotWasDeleted": "lot was deleted",
+    "winnerStats": {
+      "title": "Interesting Facts",
+      "winChance": "Lot chance",
+      "winChanceDesc": "Final chance of the lot to win in the wheel",
+      "amountCategoryChance": "Price category chance",
+      "amountCategoryChanceDesc": "Winning chance of any lot with a cost less than or equal to the winner"
+    },
     "nesting": "Nesting",
     "nestingDesc": "Groups cheap lots to reduce the number of spins",
     "nextDuel": "next duel",
@@ -606,7 +697,7 @@
     "style": {
       "label": "Wheel Style",
       "default": "Default",
-      "genshinImpact": "???"
+      "genshinImpact": "Deep Space"
     }
   },
   "editableSelect": {

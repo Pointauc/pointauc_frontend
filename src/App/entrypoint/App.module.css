@@ -25,6 +25,13 @@
   }
 }
 
+.betaBadge {
+  @media (min-width: 48em) {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+}
+
 .navLink {
   padding-left: 17px;
   height: 48px;
@@ -62,6 +69,10 @@
   .app {
     &.expanded {
       .navText {
+        opacity: 1;
+      }
+
+      .betaBadge {
         opacity: 1;
       }
 

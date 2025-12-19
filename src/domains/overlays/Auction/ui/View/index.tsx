@@ -42,7 +42,7 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
   }, [overlay.settings.showTable, overlay.settings.showRules, overlay.settings.showTimer]);
 
   useEffect(() => {
-    socket.on('dataUpdate', (data: Broadcasting.DataUpdatePayload) => {
+    const handleDataUpdate = (data: Broadcasting.DataUpdatePayload) => {
       switch (data.dataType) {
         case 'lots':
           setLots(
@@ -63,10 +63,11 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
           setRules(data.data.text);
           break;
       }
-    });
+    };
+    socket.on('dataUpdate', handleDataUpdate);
 
     return () => {
-      socket.off('dataUpdate');
+      socket.off('dataUpdate', handleDataUpdate);
     };
   }, [socket]);
 
@@ -87,12 +88,7 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
 
   // Show status message if we're supposed to show the table but haven't received lots data yet
   if (overlay.settings.showTable && !hasReceivedLotsData) {
-    return (
-      <OverlayStatusMessage
-        type='info'
-        message='Overlay is waiting for data... Please open the Auction page on the main website to initialize the overlay.'
-      />
-    );
+    return <OverlayStatusMessage type='info' messageKey='waitingForAuctionData' />;
   }
 
   return (

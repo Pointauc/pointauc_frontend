@@ -1,12 +1,12 @@
-import React, { useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
-import { Slot } from '@models/slot.model.ts';
-import { slotToWheel } from '@utils/slots.utils.ts';
-import { setSlots } from '@reducers/Slots/Slots.ts';
 import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
+import { Slot } from '@models/slot.model.ts';
+import { setSlots } from '@reducers/Slots/Slots.ts';
+import { SlotListToWheelList } from '@utils/slots.utils.ts';
 
 const ParticipantsImportField = () => {
   const { t } = useTranslation();
@@ -14,7 +14,7 @@ const ParticipantsImportField = () => {
   const { changeInitialItems } = useContext(WheelContext);
   const handleCustomWheel = useCallback(
     (customItems: Slot[], saveSlots: boolean) => {
-      changeInitialItems(customItems.map(slotToWheel) as any);
+      changeInitialItems(SlotListToWheelList(customItems));
 
       if (saveSlots) {
         dispatch(setSlots(customItems));

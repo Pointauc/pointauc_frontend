@@ -1,6 +1,6 @@
 ---
 title: Overlays
-order: 3
+order: 4
 ---
 
 Welcome! This section helps you add and manage overlays for your stream.

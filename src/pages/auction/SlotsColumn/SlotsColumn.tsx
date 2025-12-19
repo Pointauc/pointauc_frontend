@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -16,7 +15,6 @@ const SlotsColumn: React.FC = () => {
   const {
     settings: { isBuyoutVisible, isTotalVisible },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
-  const { draggedRedemption } = useSelector((root: RootState) => root.purchases);
   const [, setBuyout] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -39,11 +37,6 @@ const SlotsColumn: React.FC = () => {
     }
   }, [buyoutInput]);
 
-  const slotsColumnClasses = useMemo(
-    () => clsx(classes.column, { dragging: !!draggedRedemption }),
-    [draggedRedemption],
-  );
-
   const filteredSlots = useMemo(
     () => (searchTerm ? slots.filter(({ name }) => name?.toLowerCase().includes(searchTerm.toLowerCase())) : slots),
     [searchTerm, slots],
@@ -56,7 +49,7 @@ const SlotsColumn: React.FC = () => {
     <div className={classes.root}>
       {!isMobile && <SlotsHeader />}
       <div className={classes.wrapper}>
-        <div className={slotsColumnClasses} ref={containerRef}>
+        <div className={classes.column} ref={containerRef}>
           <SlotsList containerRef={containerRef} slots={filteredSlots} optimize={optimize} />
         </div>
       </div>

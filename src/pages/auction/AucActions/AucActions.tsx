@@ -35,6 +35,7 @@ import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 
 import classes from './AucActions.module.css';
+import TotalAmount from './TotalAmount/TotalAmount';
 
 const getSlotNamesByCount = ({ name, amount }: Slot): string =>
   new Array<string>(Number(amount)).fill(name || '').join(LINE_BREAK);
@@ -44,7 +45,7 @@ const AucActions: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const { showChances, isTotalVisible, marblesAuc } = useSelector((root: RootState) => root.aucSettings.settings);
+  const { showChances, marblesAuc } = useSelector((root: RootState) => root.aucSettings.settings);
   const { compact, showRules, autoScroll } = useSelector((root: RootState) => root.aucSettings.view);
 
   const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
@@ -125,12 +126,6 @@ const AucActions: React.FC = () => {
     setArchiveModalOpen(false);
   }, []);
 
-  const totalSum = useMemo(() => slots.reduce((sum, slot) => (slot.amount ? sum + slot.amount : sum), 0), [slots]);
-
-  const toggleTotalSumVisability = useCallback(() => {
-    dispatch(saveSettings({ isTotalVisible: !isTotalVisible }));
-  }, [dispatch, isTotalVisible]);
-
   return (
     <Group className={classes.wrapper} justify='center'>
       <Group gap='lg'>
@@ -201,12 +196,7 @@ const AucActions: React.FC = () => {
         <LanguageDropdown />
       </div>
 
-      <div className={classes.totalSumWrapper}>
-        {isTotalVisible && <Text>{t('auc.total', { totalSum })}</Text>}
-        <ActionIcon onClick={toggleTotalSumVisability} variant='subtle' className={classes.hideSum} size='lg'>
-          {isTotalVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
-        </ActionIcon>
-      </div>
+      <TotalAmount />
     </Group>
   );
 };

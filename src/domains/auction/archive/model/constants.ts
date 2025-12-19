@@ -7,4 +7,3 @@ export const QUERY_KEYS = {
   archive: (id: string) => ['archives', id] as const,
   autosave: ['archives', 'autosave'] as const,
 };
-

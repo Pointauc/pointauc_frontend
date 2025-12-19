@@ -1,8 +1,8 @@
-import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
 import '@styles/index.scss';
 
+import './index.css';
 import '@assets/i18n/index.ts';
 import { Notifications } from '@mantine/notifications';
 import { configureStore } from '@reduxjs/toolkit';
@@ -36,6 +36,7 @@ import { timedFunction } from '@utils/dataType/function.utils.ts';
 import { Slot } from '@models/slot.model.ts';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
+import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
 
 import App from './App/entrypoint/App.tsx';
 
@@ -63,6 +64,7 @@ const SORTABLE_SLOT_EVENTS = [
   'slots/addSlot',
   'slots/addSlotAmount',
   'slots/mergeLot',
+  'slots/setLockedPercentage',
 ];
 
 const sortSlotsMiddleware: Middleware<{}, RootState> =
@@ -71,7 +73,9 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
   (action): AnyAction => {
     const result = next(action);
     if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
-      const sortedSlots = sortSlots(store.getState().slots.slots);
+      const { slots } = store.getState().slots;
+      const updatedSlots = recalculateAllLockedSlots(slots);
+      const sortedSlots = sortSlots(updatedSlots);
 
       return next(setSlots(sortedSlots));
     }

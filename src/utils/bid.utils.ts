@@ -47,11 +47,11 @@ const getDisplayCost = (cost: number): number | string => {
 // ToDo: Implement as a class propeerty
 const getName = (bid: Purchase): string => {
   const { bidNameStrategy } = store.getState().aucSettings.settings;
-  const { message, username } = bid;
+  const { message = '', username = 'Anonymous' } = bid;
 
   switch (bidNameStrategy) {
     case BidNameStrategy.Username:
-      return username || 'Anonymous';
+      return username;
     case BidNameStrategy.Message:
       return message;
     default:

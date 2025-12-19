@@ -56,6 +56,7 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     console.log('Overlay socket connecting...');
 
     socket.on('dataUpdate', (data: Broadcasting.DataUpdatePayload) => {
+      console.log('data', data);
       if (data.dataType === `overlays:${id}`) {
         queryClient.setQueryData(overlaysControllerGetQueryKey({ path: { id: id! } }), data.data);
       }
@@ -90,14 +91,12 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
 
   // Show loading state while fetching overlay data
   if (overlayQuery.isLoading || socketLoading) {
-    return <OverlayStatusMessage type='loading' message='Loading overlay...' />;
+    return <OverlayStatusMessage type='loading' messageKey='loading' />;
   }
 
   // Show error state if overlay fetch failed
   if (overlayQuery.isError || !overlay || !socket) {
-    return (
-      <OverlayStatusMessage type='error' message='Error loading overlay. Please check your connection and try again.' />
-    );
+    return <OverlayStatusMessage type='error' messageKey='error' />;
   }
 
   const { origin, size } = overlay.transform ?? { origin: { X: 0, Y: 0 }, size: { width: '100%', height: '100%' } };

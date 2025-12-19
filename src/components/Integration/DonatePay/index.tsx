@@ -12,7 +12,7 @@ import { store } from '../../../main.tsx';
 import DonatePayLoginButton from './DonatePayLoginButton.tsx';
 import { DonatePayRegion, DONATE_PAY_REGIONS } from './types.ts';
 import styles from './index.module.css';
-import './index2.module.css';
+import './index2.css';
 
 import TokenFlow = Integration.TokenFlow;
 

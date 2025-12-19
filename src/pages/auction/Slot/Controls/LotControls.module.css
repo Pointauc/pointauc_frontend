@@ -30,10 +30,6 @@
   width: 7ch;
 }
 
-.chance {
-  color: var(--mantine-color-dark-0);
-}
-
 .moneyWrapper {
   display: flex;
   align-items: center;
@@ -58,6 +54,11 @@
 .hashContainer {
   display: flex;
   min-width: 64px;
+}
+
+.lockedLot {
+  background-color: rgba(255, 198, 87, 0.1);
+  border-left: 3px solid #ffc657;
 }
 
 .hashIcon {

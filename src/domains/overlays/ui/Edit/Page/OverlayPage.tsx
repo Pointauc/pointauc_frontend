@@ -2,7 +2,7 @@ import { Button, Container, Group, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FC, useCallback } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -16,6 +16,8 @@ import {
 import PageContainer from '@components/PageContainer/PageContainer';
 
 import { Overlay } from '../../../model/overlay.types';
+import OverlaysHelpButton from '../../components/OverlaysHelpButton/OverlaysHelpButton';
+import InstructionsModal from '../../Modals/InstructionsModal/InstructionsModal';
 import { OverlayForm } from '../Form';
 
 import type { UpdateAuctionOverlayDto, UpdateWheelOverlayDto } from '@api/openapi/types.gen';
@@ -43,6 +45,7 @@ const OverlayPage: FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [instructionsModalOpened, setInstructionsModalOpened] = useState(false);
 
   const { data: overlay, isLoading } = useQuery({
     ...overlaysControllerGetOptions({ path: { id: id! } }),
@@ -51,12 +54,12 @@ const OverlayPage: FC = () => {
 
   const { mutate: updateOverlay } = useMutation({
     ...overlaysControllerUpdateMutation(),
-    onSuccess: () => {
+    onSuccess: (data) => {
       notifications.show({
         message: t('overlays.updateSuccess'),
         color: 'green',
       });
-      queryClient.invalidateQueries({ queryKey: overlaysControllerGetQueryKey({ path: { id: id! } }) });
+      queryClient.setQueryData(overlaysControllerGetQueryKey({ path: { id: id! } }), data);
       queryClient.invalidateQueries({ queryKey: overlaysControllerListQueryKey() });
     },
     onError: () => {
@@ -101,6 +104,10 @@ const OverlayPage: FC = () => {
     deleteOverlay({ path: { id: id! } });
   }, [deleteOverlay, id]);
 
+  const handleOpenInstructions = useCallback(() => {
+    setInstructionsModalOpened(true);
+  }, []);
+
   if (isLoading) {
     return (
       <Container size='xl' py='xl'>
@@ -133,12 +140,14 @@ const OverlayPage: FC = () => {
               {t('overlays.title')}
             </Button>
             <Title order={2}>{overlay.name}</Title>
+            <OverlaysHelpButton onClick={handleOpenInstructions} />
           </Group>
         </>
       }
       fixedHeight
     >
       <OverlayForm overlay={overlay} onUpdate={handleOverlayUpdate} onDelete={handleOverlayDelete} />
+      <InstructionsModal opened={instructionsModalOpened} onClose={() => setInstructionsModalOpened(false)} />
     </PageContainer>
   );
 };

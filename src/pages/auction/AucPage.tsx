@@ -1,4 +1,4 @@
-import { Box, Image, Overlay, ScrollArea, Skeleton, Stack } from '@mantine/core';
+import { Box, Image, Overlay, ScrollArea } from '@mantine/core';
 import clsx from 'clsx';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -14,18 +14,11 @@ import AucActions from './AucActions/AucActions';
 import MobileActions from './AucActions/Mobile';
 import styles from './AucPage.module.css';
 import ControlColumn from './ControlColumn/ControlColumn';
+import RulesSkeleton from './Rules/Skeleton';
 import SlotsColumn from './SlotsColumn/SlotsColumn';
 
 const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
 const ChangelogModal = lazy(() => import('@domains/changelog/ui/ChangelogModal'));
-
-const RulesSkeleton: React.FC = () => (
-  <Stack gap='sm' w={370}>
-    <Skeleton height={200} radius='sm' />
-    <Skeleton height={40} radius='sm' />
-    <Skeleton height={80} radius='sm' />
-  </Stack>
-);
 
 const AucPageContent: React.FC = () => {
   const { background, backgroundOverlayOpacity, backgroundBlur } = useSelector(

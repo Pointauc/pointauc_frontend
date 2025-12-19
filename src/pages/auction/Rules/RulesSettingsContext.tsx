@@ -55,14 +55,26 @@ export const RulesSettingsProvider = ({ children }: { children: ReactNode }): Re
 
     const isLegacy = parsedSettings.background.opacity !== undefined;
 
+    if (!isLegacy && parsedSettings.background.color.length === 7) {
+      const normalizedSettings: RulesSettings = {
+        size: parsedSettings.size,
+        position: parsedSettings.position,
+        background: {
+          color: tinycolor2('#000000').setAlpha(0).toHex8String(),
+        },
+      };
+      localStorage.setItem('rulesLayout', JSON.stringify(normalizedSettings));
+      return normalizedSettings;
+    }
+
     if (isLegacy) {
       const normalizedSettings: RulesSettings = {
         size: parsedSettings.size,
         position: parsedSettings.position,
         background: {
           color: tinycolor2(parsedSettings.background.color ?? '#000000')
-            .setAlpha(1 - (parsedSettings.background.opacity ?? 0))
-            .toHexString(),
+            .setAlpha(parsedSettings.background.opacity ?? 0)
+            .toHex8String(),
         },
       };
       localStorage.setItem('rulesLayout', JSON.stringify(normalizedSettings));

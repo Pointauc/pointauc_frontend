@@ -1,0 +1,52 @@
+.screenshotPlaceholder {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mantine-color-dark-6);
+  border: 2px dashed var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-md);
+  padding: 2rem;
+  margin-top: 0.5rem;
+}
+
+.screenshotContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--mantine-color-dark-4);
+}
+
+.screenshot {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.settingsTable {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.settingsTable td:first-child {
+  font-weight: 500;
+}
+
+.instructionsContent {
+  overflow: auto;
+  padding-bottom: 1px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.modalBody {
+  display: flex;
+  min-height: 0;
+}

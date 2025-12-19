@@ -1,0 +1,22 @@
+.title {
+  text-align: center;
+}
+
+.gifContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--mantine-color-dark-6);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.demoGif {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--mantine-radius-sm);
+  display: block;
+}
+

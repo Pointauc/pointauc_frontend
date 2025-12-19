@@ -1,37 +1,16 @@
-import React, { lazy } from 'react';
+import { generateHTML, type JSONContent } from '@tiptap/react';
+import { FC, useMemo } from 'react';
 
-// import editorUtils from '@components/RichTextEditorTipTap/helpers';
+import { buildRichTextEditorExtensions } from '@shared/ui/RichTextEditor/hooks/useRichTextEditor';
 
 import classes from './index.module.css';
-
-import type { JSONContent } from '@tiptap/react';
-
-// const RichTextEditorTipTap = lazy(() => import('@components/RichTextEditorTipTap/RichTextEditorTipTap'));
 
 interface OverlayRulesProps {
   rules: string; // JSON string containing the JSONContent
 }
 
-const OverlayRules: React.FC<OverlayRulesProps> = ({ rules }) => {
-  const jsonContent = React.useMemo<JSONContent>(() => {
-    try {
-      if (!rules)
-        return {
-          type: 'doc',
-          content: [],
-        };
-
-      return JSON.parse(rules);
-    } catch (error) {
-      console.error('Error parsing rules content:', error);
-      return {
-        type: 'doc',
-        content: [],
-      };
-    }
-  }, [rules]);
-
-  const htmlContent = React.useMemo(() => {
+const OverlayRules: FC<OverlayRulesProps> = ({ rules }) => {
+  const htmlContent = useMemo(() => {
     try {
       if (!rules) return '';
 
@@ -39,9 +18,9 @@ const OverlayRules: React.FC<OverlayRulesProps> = ({ rules }) => {
       const jsonContent: JSONContent = JSON.parse(rules);
 
       // Generate HTML from JSONContent using the same extensions as the editor
-      // const html = generateHTML(jsonContent, editorUtils.extensions);
+      const html = generateHTML(jsonContent, buildRichTextEditorExtensions());
 
-      return '';
+      return html;
     } catch (error) {
       console.error('Error parsing rules content:', error);
       return '';
@@ -54,7 +33,7 @@ const OverlayRules: React.FC<OverlayRulesProps> = ({ rules }) => {
 
   return (
     <div className={classes.overlayRulesContainer}>
-      {/* <RichTextEditorTipTap initialValue={jsonContent} onChange={() => {}} showToolbar={false} /> */}
+      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
     </div>
   );
 };

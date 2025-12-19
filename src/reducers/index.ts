@@ -9,7 +9,6 @@ import notifications from './notifications/notifications';
 import aucSettings from './AucSettings/AucSettings';
 import subscription from './Subscription/Subscription';
 import extraWindows from './ExtraWindows/ExtraWindows';
-import requests from './Requests/Requests';
 import socketIo from './socketIo/socketIo';
 import overlay from './Overlay/Overlay';
 
@@ -21,7 +20,6 @@ const rootReducer = combineReducers({
   aucSettings,
   subscription,
   extraWindows,
-  requests,
   socketIo,
   overlay,
   broadcasting,

@@ -2,9 +2,11 @@ import { FC, useCallback } from 'react';
 import { Card, Badge, Group, Text, Stack, ActionIcon } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { Overlay } from '../../../model/overlay.types';
 import UrlControls from '../../UrlControls';
+
 import styles from './OverlayCard.module.css';
 
 interface OverlayCardProps {
@@ -16,9 +18,12 @@ interface OverlayCardProps {
 const OverlayCard: FC<OverlayCardProps> = ({ overlay, onEdit, onDelete }) => {
   const { t } = useTranslation();
 
-  const handleCardClick = useCallback(() => {
-    onEdit(overlay);
-  }, [overlay, onEdit]);
+  const handleCardClick = useCallback(
+    (e: React.MouseEvent) => {
+      onEdit(overlay);
+    },
+    [overlay, onEdit],
+  );
 
   const handleDeleteClick = useCallback(
     (e: React.MouseEvent) => {
@@ -45,7 +50,9 @@ const OverlayCard: FC<OverlayCardProps> = ({ overlay, onEdit, onDelete }) => {
       withBorder
       padding='md'
       radius='md'
-      onClick={handleCardClick}
+      component={Link}
+      to={`/overlays/edit/${overlay.id}`}
+      // onClick={handleCardClick}
       style={{ cursor: 'pointer' }}
     >
       <Stack gap='sm' style={{ height: '100%' }}>

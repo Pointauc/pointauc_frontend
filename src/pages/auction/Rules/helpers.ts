@@ -1,3 +1,5 @@
+import { RuleRecord } from '@domains/auction/rules';
+
 import type { TFunction } from 'i18next';
 import type { JSONContent } from '@tiptap/react';
 
@@ -19,7 +21,7 @@ const getAvailableName = (prefix: string, names: string[]) => {
   return name;
 };
 
-export const buildDefaultRule = (t: TFunction, rules: RulesPreset[] = [], newName?: string): RulesPreset => {
+export const buildDefaultRule = (t: TFunction, rules: RuleRecord[] = [], newName?: string): RulesPreset => {
   const name = getAvailableName(
     newName || t('auc.defaultRuleName'),
     rules.map((rule) => rule.name),

@@ -1,0 +1,8 @@
+[data-integration='tourniquet'] {
+  background-color: #b2af47 !important;
+  color: #f1f1f1 !important;
+}
+
+[data-integration='tourniquet']:hover {
+  background-color: #9f9847 !important;
+}

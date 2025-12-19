@@ -1,0 +1,11 @@
+.title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--mantine-color-dark-0);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}

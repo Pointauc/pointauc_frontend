@@ -25,6 +25,7 @@ import { WheelItem } from '@models/wheel.model.ts';
 import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
 import array from '@utils/dataType/array.ts';
 import { getRandomNumber } from '@api/randomApi';
+import { useSyncEffect } from '@shared/lib/react';
 
 import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
@@ -60,6 +61,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   deleteItem?: (id: Key) => void;
   onWin?: (winner: TWheelItem) => void;
   onWheelItemsChanged?: (items: TWheelItem[]) => void;
+  onSettingsChanged?: (settings: Wheel.Settings) => void;
   onSpinStart?: (params: SpinParams) => void;
 }
 
@@ -146,7 +148,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     [itemsFromProps],
   );
 
-  useEffect(() => {
+  useSyncEffect(() => {
     init?.(filteredItems);
   }, [init, filteredItems]);
 
@@ -160,7 +162,6 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
   const onSpinClick = useCallback(
     async ({ useRandomOrg }: Wheel.Settings) => {
-      console.log('submit');
       const { min, max } = randomSpinConfig!;
       const duration = randomSpinEnabled ? random.getInt(min!, max!) : spinTime;
 
@@ -262,6 +263,20 @@ const Provider = <TWheelItem extends WheelItem = WheelItem>(
     [props.initialSpinTime],
   );
   const form = useForm<Wheel.Settings>({ defaultValues: initial });
+  const { onSettingsChanged } = props;
+
+  useEffect(() => {
+    const unsubscribe = form.subscribe({
+      formState: {
+        values: true,
+      },
+      callback: (data) => {
+        onSettingsChanged?.(data.values as Wheel.Settings);
+      },
+    });
+
+    return () => unsubscribe();
+  }, [form, onSettingsChanged]);
 
   useImperativeHandle<UseFormReturn<Wheel.Settings>, UseFormReturn<Wheel.Settings>>(props.form, () => form);
 

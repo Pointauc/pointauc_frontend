@@ -44,7 +44,7 @@ export function useMockBidForm() {
           }),
         );
       } else {
-        dispatch(processRedemption({ ...rest, id: Math.random().toString() }));
+        dispatch(processRedemption({ source: 'Mock', id: Math.random().toString(), cost: 100 } as any));
       }
     },
   });
@@ -99,7 +99,7 @@ const MockBidForm: FC<MockBidFormProps> = ({ form }) => {
                 <Box w={100}>
                   <form.AppField
                     name='cost'
-                    children={(field) => <field.NumberField label='Cost' size='sm' min={0} disabled={isRandomMode} />}
+                    children={(field) => <field.NumberField label='Cost' size='sm' disabled={isRandomMode} />}
                   />
                 </Box>
                 <Box style={{ flex: 1 }}>

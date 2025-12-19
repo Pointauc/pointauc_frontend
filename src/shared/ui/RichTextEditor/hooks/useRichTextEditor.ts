@@ -18,6 +18,27 @@ export interface UseRichTextEditorOptions {
   editable?: boolean;
 }
 
+export const buildRichTextEditorExtensions = (placeholder?: string) => {
+  return [
+    StarterKit.configure({
+      link: false,
+    }),
+    Underline,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
+    }),
+    TextStyle,
+    FontSize,
+    Color,
+    Highlight.configure({
+      multicolor: true,
+    }),
+    Placeholder.configure({
+      placeholder: placeholder ?? '',
+    }),
+  ];
+};
+
 /**
  * Hook that creates and configures a TipTap editor instance with all necessary extensions.
  * Handles content updates and provides a fully configured editor for the RichTextEditor component.
@@ -28,24 +49,7 @@ export function useRichTextEditor({ content, onChange, placeholder, editable = t
       // Required for React 19 compatibility
       immediatelyRender: true,
       shouldRerenderOnTransaction: true,
-      extensions: [
-        StarterKit.configure({
-          link: false,
-        }),
-        Underline,
-        TextAlign.configure({
-          types: ['heading', 'paragraph'],
-        }),
-        TextStyle,
-        FontSize,
-        Color,
-        Highlight.configure({
-          multicolor: true,
-        }),
-        Placeholder.configure({
-          placeholder: placeholder ?? '',
-        }),
-      ],
+      extensions: buildRichTextEditorExtensions(placeholder),
       content,
       editable,
       onUpdate: ({ editor }) => {

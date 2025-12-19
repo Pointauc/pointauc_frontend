@@ -77,8 +77,8 @@
   .root {
     background-color: color-mix(
       in srgb,
-      var(--mantine-color-darkTransparent-7) 97%,
-      var(--mantine-primary-color-filled) 3%
+      var(--mantine-color-darkTransparent-7) 90%,
+      var(--mantine-primary-color-filled) 10%
     );
     border-color: color-mix(in srgb, var(--mantine-primary-color-filled) 15%, transparent 85%);
   }
@@ -86,8 +86,8 @@
   .even {
     background-color: color-mix(
       in srgb,
-      var(--mantine-color-darkTransparent-6) 97%,
-      var(--mantine-primary-color-filled) 3%
+      var(--mantine-color-darkTransparent-6) 90%,
+      var(--mantine-primary-color-filled) 10%
     );
   }
 
@@ -100,14 +100,103 @@
     border-color: var(--mantine-primary-color-filled);
     box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-primary-color-filled) 50%, transparent 50%);
   }
-}
 
-:global(.custom-background) .removeCost {
-  background-color: color-mix(in srgb, var(--mantine-color-darkTransparent-7) 70%, var(--mantine-color-red-filled) 30%);
-  border-color: var(--mantine-color-red-filled);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-color-red-filled) 50%, transparent 50%);
+  .removeCost {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-color-darkTransparent-7) 70%,
+      var(--mantine-color-red-filled) 30%
+    );
+    border-color: var(--mantine-color-red-filled);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--mantine-color-red-filled) 50%, transparent 50%);
+  }
 }
 
 :global(.liquid-glass) {
-  /* styles for liquid glass ui */
+  .root {
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-bg-even: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-border-highlight: rgba(255, 255, 255, 0.25);
+    --glass-shadow: rgba(0, 0, 0, 0.2);
+    --glass-blur: 12px;
+    --glass-inner-glow: rgba(255, 255, 255, 0.1);
+
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-radius: 12px;
+
+    /* Glass edge border - mimics light refraction */
+    border: 1px solid var(--glass-border);
+    border-top-color: var(--glass-border-highlight);
+    border-left-color: rgba(255, 255, 255, 0.15);
+
+    /* Layered shadows for depth */
+    box-shadow:
+      0 4px 24px -4px var(--glass-shadow),
+      0 1px 2px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 var(--glass-inner-glow),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+
+    /* Smooth transitions */
+    transition:
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.2s ease;
+  }
+
+  /* Glass shimmer overlay */
+  .root::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(255, 255, 255, 0.03) 100%
+    );
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Subtle edge highlight on bottom-right */
+  .root::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(to bottom right, transparent 50%, rgba(255, 255, 255, 0.02) 100%);
+    pointer-events: none;
+  }
+
+  .root:hover::before {
+    opacity: 1.2;
+  }
+
+  /* Alternating row style - slightly more opaque glass */
+  .even {
+    background: var(--glass-bg-even);
+  }
+}
+
+:global(.custom-background.liquid-glass) {
+  .root {
+    --glass-bg: rgba(20, 20, 25, 0.35);
+    --glass-bg-even: rgba(25, 25, 30, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-border-highlight: rgba(255, 255, 255, 0.5);
+    --glass-blur: 8px;
+    --glass-shadow: rgba(0, 0, 0, 0.35);
+
+    box-shadow:
+      0 4px 30px -4px var(--glass-shadow),
+      0 1px 3px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 var(--glass-inner-glow),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
 }

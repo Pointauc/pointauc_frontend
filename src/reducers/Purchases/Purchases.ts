@@ -4,6 +4,7 @@ import { notifications } from '@mantine/notifications';
 
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
+import { Slot } from '@models/slot.model.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
@@ -17,7 +18,7 @@ export interface Purchase {
   timestamp: string;
   cost: number;
   username: string;
-  message: string;
+  message?: string;
   color: string;
   id: string;
   source: Bid.Source;
@@ -104,12 +105,8 @@ export const logPurchase =
   };
 
 export const fastAddBid =
-  (bid: Purchase, slotId: string) =>
+  (bid: Purchase, slotId: string | Slot) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const {
-      aucSettings: { settings },
-    } = getState();
-
     const showAlert = (cost: number): void => {
       const name = bidUtils.getName(bid);
       const alertMessage = `${bid.username} добавил ${bidUtils.getDisplayCost(cost)} к "${name}" ("${name}")!`;
@@ -118,6 +115,15 @@ export const fastAddBid =
 
     dispatch(addBid(slotId, bid, { removeBid: false, callback: showAlert }));
   };
+
+const findSimilarLot = (slotName: string, lots: Slot[]): Slot | undefined => {
+  const similarSlotId = slotNamesMap.get(slotName);
+  const similarLot = lots.find(({ id }) => id === similarSlotId);
+  if (similarLot && !similarLot.lockedPercentage) {
+    return similarLot;
+  }
+  return undefined;
+};
 
 export const processRedemption =
   (bid: Purchase) =>
@@ -134,10 +140,10 @@ export const processRedemption =
     }
 
     const slotName = bidUtils.getName(bid);
-    const similarSlotId = slotNamesMap.get(slotName);
+    const similarSlot = findSimilarLot(slotName, getState().slots.slots);
 
-    if (similarSlotId) {
-      dispatch(fastAddBid(bid, similarSlotId));
+    if (similarSlot) {
+      dispatch(fastAddBid(bid, similarSlot));
       return;
     }
 
@@ -158,10 +164,10 @@ export const updateExistBids = (dispatch: ThunkDispatch<RootState, {}, Action>, 
   } = getState();
 
   purchases.forEach((bid) => {
-    const similarSlotId = slotNamesMap.get(bidUtils.getName(bid));
+    const similarSlot = findSimilarLot(bidUtils.getName(bid), getState().slots.slots);
 
-    if (similarSlotId && !luckyWheelEnabled) {
-      dispatch(fastAddBid(bid, similarSlotId));
+    if (similarSlot && !luckyWheelEnabled) {
+      dispatch(fastAddBid(bid, similarSlot));
       dispatch(removePurchase(bid.id));
     }
   });

@@ -1,25 +1,14 @@
-import { FC, useCallback } from 'react';
+import { ActionIcon, Badge, Button, Divider, Group, ScrollArea, Stack, TextInput, Title, Tooltip } from '@mantine/core';
+import { IconArrowBackUp, IconDeviceFloppy, IconTrash } from '@tabler/icons-react';
+import { FC } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useForm, FormProvider, useFormContext } from 'react-hook-form';
-import {
-  Title,
-  TextInput,
-  Button,
-  Group,
-  Stack,
-  Divider,
-  Badge,
-  Text,
-  Tooltip,
-  ActionIcon,
-  ScrollArea,
-} from '@mantine/core';
-import { IconDeviceFloppy, IconTrash, IconEdit, IconArrowBackUp } from '@tabler/icons-react';
 
-import { Overlay } from '../../../model/overlay.types';
-import UrlControls from '../../UrlControls';
+import FormInput from '@shared/mantine/ui/Input/FormInput';
+
 import AuctionSettings from '../../../Auction/ui/Settings/AuctionSettings';
 import WheelSettings from '../../../Wheel/ui/Settings/WheelSettings';
+import UrlControls from '../../UrlControls';
 
 interface SettingsSectionProps {
   onDelete: () => void;
@@ -34,6 +23,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ onDelete, id, type }) => {
     register,
     formState: { isDirty },
     reset,
+    control,
   } = useFormContext();
 
   const getBadgeColor = (type: string) => {
@@ -65,7 +55,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ onDelete, id, type }) => {
         <Stack gap='sm'>
           {/* Overlay Name */}
           <Stack gap='sm'>
-            <TextInput label={t('overlays.settings.overlayName')} {...register('name', { required: true })} />
+            <FormInput name='name' lablePlacement='top' control={control} label={t('overlays.settings.overlayName')} />
           </Stack>
 
           {/* Overlay Links */}
@@ -93,7 +83,7 @@ const SettingsSection: FC<SettingsSectionProps> = ({ onDelete, id, type }) => {
         <Button
           variant='default'
           color='gray'
-          onClick={reset}
+          onClick={() => reset()}
           disabled={!isDirty}
           leftSection={<IconArrowBackUp size={16} />}
         >

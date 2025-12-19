@@ -29,6 +29,7 @@ interface SettingsMissingOnBackend {
   showTotalTime: boolean;
   backgroundOverlayOpacity: number;
   backgroundBlur: number;
+  activeRuleId: string | null;
 }
 
 export interface AucSettingsState {
@@ -76,6 +77,7 @@ const defaultSettings: AucSettingsState['settings'] = {
   backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   hideAmounts: false,
   showTotalTime: false,
+  activeRuleId: null,
   events: {
     aukus: {
       enabled: aukus.enabled.get(),
@@ -124,7 +126,7 @@ const aucSettingsSlice = createSlice({
 export const { setAucSettings, setCompact, setShowRules, setShowChances, setAutoScroll } = aucSettingsSlice.actions;
 
 export const saveSettings =
-  (settings: SettingsForm) =>
+  (settings: Partial<AucSettingsState['settings']>) =>
   async (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): Promise<void> => {
     dispatch(setAucSettings(settings));
     const {

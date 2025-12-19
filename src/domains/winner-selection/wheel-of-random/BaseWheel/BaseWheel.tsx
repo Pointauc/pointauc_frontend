@@ -13,6 +13,7 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
+import { throttle } from '@tanstack/react-pacer';
 
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
 import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
@@ -160,6 +161,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     }
   }, []);
 
+  const firstResizeDrawRef = useRef(false);
+
   const resizeWheel = useCallback(() => {
     if (!wrapper.current || !spinTarget.current || !wheelCanvas.current || !wheelContent.current) return;
 
@@ -179,19 +182,21 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     onOptimalSizeChange?.(canvasSize);
 
     if (wheelCanvas.current && selectorCanvas.current) {
-      wheelDrawer.drawWheel({
-        items: normalizedRef.current,
-        wheelCanvas: wheelCanvas.current,
-        pointerCanvas: selectorCanvas.current,
-      });
+      resetStyles();
+      firstResizeDrawRef.current = true;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wheelDrawer]);
 
   useLayoutEffect(() => {
-    const resizeObserver = new ResizeObserver(() => {
-      resizeWheel();
-    });
+    const resizeObserver = new ResizeObserver(
+      throttle(
+        () => {
+          resizeWheel();
+        },
+        { wait: 30, trailing: true },
+      ),
+    );
 
     if (wrapper.current) {
       resizeWheel();
@@ -266,7 +271,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   );
 
   useEffect(() => {
-    if (wheelCanvas.current && selectorCanvas.current) {
+    if (wheelCanvas.current && selectorCanvas.current && firstResizeDrawRef.current) {
       resetPosition();
       resetStyles();
     }
@@ -276,7 +281,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   // Redraw wheel when wheelStyle changes
   useEffect(() => {
     if (previousStyle.current !== wheelStyle) {
-      if (wheelCanvas.current && selectorCanvas.current) {
+      if (wheelCanvas.current && selectorCanvas.current && firstResizeDrawRef.current) {
         resetStyles();
       }
     }
@@ -380,9 +385,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
           {!onCoreImageChange && <div className={classes.wheelCore} style={{ backgroundImage: coreBackground }}></div>}
           {!!winnerItem && (
             <WinnerBackdrop
-              name={winnerItem.name}
+              currentSpinWinner={winnerItem}
               id={winnerItem.id}
-              winnerName={dropOut && items.length === 1 ? items[0]?.name : undefined}
+              finalWinner={dropOut && items.length === 1 ? items[0] : null}
               onDelete={
                 deleteItem ? (showConfirmation?: boolean) => deleteItem(winnerItem.id, showConfirmation) : undefined
               }

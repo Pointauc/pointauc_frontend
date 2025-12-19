@@ -1,6 +1,7 @@
+import { Group, Stack, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +15,12 @@ import PageContainer from '@components/PageContainer/PageContainer';
 import ROUTES from '@constants/routes.constants';
 
 import { buildTransform, detectDefaultResolution } from '../../../lib/canvas';
+import { hasSeenWelcome, markWelcomeSeen } from '../../../lib/overlaysOnboarding';
 import { Overlay, OverlayType } from '../../../model/overlay.types';
+import BetaWarning from '../../components/BetaWarning/BetaWarning';
+import OverlaysHelpButton from '../../components/OverlaysHelpButton/OverlaysHelpButton';
+import InstructionsModal from '../../Modals/InstructionsModal/InstructionsModal';
+import WelcomeModal from '../../Modals/WelcomeModal/WelcomeModal';
 import CreateOverlayModal from '../CreateOverlayModal/CreateOverlayModal';
 import OverlaysGrid from '../OverlaysGrid/OverlaysGrid';
 
@@ -24,7 +30,6 @@ import type { CreateAuctionOverlayDto, CreateWheelOverlayDto } from '@api/openap
 
 const createDefaultOverlayDto = (type: OverlayType): CreateAuctionOverlayDto | CreateWheelOverlayDto => {
   const canvasResolution = detectDefaultResolution();
-  console.log('canvasResolution', canvasResolution);
   const transform = buildTransform({ canvasResolution });
 
   if (type === 'Auction') {
@@ -62,8 +67,17 @@ const OverlaysPage: FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [createModalOpened, setCreateModalOpened] = useState(false);
+  const [welcomeModalOpened, setWelcomeModalOpened] = useState(false);
+  const [instructionsModalOpened, setInstructionsModalOpened] = useState(false);
 
   const { data: overlays = [] } = useQuery(overlaysControllerListOptions());
+
+  // Show welcome modal on first visit
+  useEffect(() => {
+    if (!hasSeenWelcome()) {
+      setWelcomeModalOpened(true);
+    }
+  }, []);
 
   const createOverlayMutation = useMutation({
     ...overlaysControllerCreateMutation(),
@@ -128,19 +142,48 @@ const OverlaysPage: FC = () => {
     [deleteOverlayMutation],
   );
 
+  const handleWelcomeContinue = useCallback(() => {
+    setWelcomeModalOpened(false);
+    markWelcomeSeen();
+    setInstructionsModalOpened(true);
+  }, []);
+
+  const handleWelcomeClose = useCallback(() => {
+    setWelcomeModalOpened(false);
+    markWelcomeSeen();
+    setInstructionsModalOpened(true);
+  }, []);
+
+  const handleOpenInstructions = useCallback(() => {
+    setInstructionsModalOpened(true);
+  }, []);
+
   return (
-    <PageContainer title={t('overlays.title')} classes={{ content: classes.pageContent }}>
-      <OverlaysGrid
-        overlays={overlays}
-        onEditOverlay={handleEditOverlay}
-        onCreateOverlay={handleCreateOverlay}
-        onDeleteOverlay={handleDeleteOverlay}
-      />
+    <PageContainer
+      title={
+        <Group gap='sm' align='center'>
+          <Title order={1}>{t('overlays.title')}</Title>
+          <OverlaysHelpButton onClick={handleOpenInstructions} />
+        </Group>
+      }
+      classes={{ content: classes.pageContent }}
+    >
+      <Stack gap='md'>
+        <BetaWarning />
+        <OverlaysGrid
+          overlays={overlays}
+          onEditOverlay={handleEditOverlay}
+          onCreateOverlay={handleCreateOverlay}
+          onDeleteOverlay={handleDeleteOverlay}
+        />
+      </Stack>
       <CreateOverlayModal
         opened={createModalOpened}
         onClose={() => setCreateModalOpened(false)}
         onSelectType={handleSelectOverlayType}
       />
+      <WelcomeModal opened={welcomeModalOpened} onClose={handleWelcomeClose} onContinue={handleWelcomeContinue} />
+      <InstructionsModal opened={instructionsModalOpened} onClose={() => setInstructionsModalOpened(false)} />
     </PageContainer>
   );
 };

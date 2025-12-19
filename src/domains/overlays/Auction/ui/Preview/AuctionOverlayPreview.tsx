@@ -1,9 +1,13 @@
 import { FC, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
 import { Slot } from '@models/slot.model';
 import { buildDefaultRule } from '@pages/auction/Rules/helpers';
+import { rulesActiveApi, rulesQueryKeys } from '@domains/auction/rules';
+import { RootState } from '@reducers/index';
 
 import Layout from '../Layout/Layout';
 
@@ -57,11 +61,37 @@ const mockLots = generateMockLots();
 
 const AuctionOverlayPreview: FC<AuctionOverlayPreviewProps> = ({ overlay }) => {
   const { t } = useTranslation();
+  const activeRuleId = useSelector((state: RootState) => state.aucSettings.settings.activeRuleId);
+
+  // Fetch active rule
+  const { data: activeRule } = useQuery({
+    queryKey: rulesQueryKeys.rule(activeRuleId),
+    queryFn: () => rulesActiveApi.getById(activeRuleId!),
+    enabled: !!activeRuleId,
+  });
+
+  // Fetch all rules as fallback
+  const { data: allRules = [] } = useQuery({
+    queryKey: rulesQueryKeys.all,
+    queryFn: () => rulesActiveApi.getAll(),
+    enabled: !activeRuleId || !activeRule,
+  });
+
   const mockRules = useMemo<string>(() => {
-    const savedRules = localStorage.getItem('rules');
-    const jsonContent = savedRules == null ? buildDefaultRule(t).content : JSON.parse(savedRules)[0].content;
-    return JSON.stringify(jsonContent);
-  }, [t]);
+    // Priority 1: Use active rule if available
+    if (activeRule) {
+      return activeRule.data;
+    }
+
+    // Priority 2: Use first available rule
+    if (allRules.length > 0) {
+      return allRules[0].data;
+    }
+
+    // Priority 3: Use default rule
+    const defaultRule = buildDefaultRule(t);
+    return JSON.stringify(defaultRule.content);
+  }, [activeRule, allRules, t]);
 
   return (
     <Layout

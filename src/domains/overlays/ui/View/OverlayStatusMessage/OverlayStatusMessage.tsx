@@ -1,14 +1,16 @@
 import { FC, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import classes from './OverlayStatusMessage.module.css';
 
 interface OverlayStatusMessageProps {
-  message: string;
+  messageKey: 'loading' | 'error' | 'waitingForWheelData' | 'waitingForAuctionData';
   type?: 'loading' | 'error' | 'info';
   delay?: number;
 }
 
-const OverlayStatusMessage: FC<OverlayStatusMessageProps> = ({ message, type = 'info', delay = 400 }) => {
+const OverlayStatusMessage: FC<OverlayStatusMessageProps> = ({ messageKey, type = 'info', delay = 400 }) => {
+  const { t } = useTranslation();
   const [shouldShow, setShouldShow] = useState(false);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ const OverlayStatusMessage: FC<OverlayStatusMessageProps> = ({ message, type = '
 
   return (
     <div className={classes.container}>
-      <div className={`${classes.message} ${classes[type]}`}>{message}</div>
+      <div className={`${classes.message} ${classes[type]}`}>{t(`overlays.statusMessages.${messageKey}`)}</div>
     </div>
   );
 };

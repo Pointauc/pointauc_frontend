@@ -5,6 +5,7 @@ export interface Slot {
   amount: number | null;
   extra: number | null;
   investors?: string[];
+  lockedPercentage?: number | null;
 }
 
 export type SlotResponse = Omit<Slot, 'extra'>;

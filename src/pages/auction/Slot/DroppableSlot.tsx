@@ -74,7 +74,7 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
       }
       resetOverStyle();
     },
-    [dispatch, id, name, resetOverStyle],
+    [dispatch, id, resetOverStyle],
   );
 
   const handleDragEnter = useCallback(

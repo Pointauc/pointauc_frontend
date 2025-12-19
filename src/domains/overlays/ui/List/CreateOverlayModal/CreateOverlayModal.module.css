@@ -20,5 +20,15 @@
   color: var(--mantine-color-gray-5);
   font-size: 14px;
   font-weight: 500;
+  background-color: #00000080;
+  padding: var(--mantine-spacing-xxs) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
 }
 
+.previewPlaceholder {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: var(--mantine-radius-md);
+}
