@@ -110,6 +110,9 @@
     },
     "twitch": {
       "name": "Twitch"
+    },
+    "donatex": {
+      "name": "DonateX"
     }
   },
   "serverNotifications": {

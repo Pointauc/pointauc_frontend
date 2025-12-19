@@ -5,6 +5,7 @@ import { Socket } from 'socket.io-client';
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { getIntegrationsValidity } from '@api/userApi.ts';
 import { integrations } from '@components/Integration/integrations.ts';
+import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
 
 import { RootState } from '../index';
 import { addAlert } from '../notifications/notifications';
@@ -24,6 +25,7 @@ interface SubscriptionStoreState {
   donatePay: SubscribeState;
   tourniquet: SubscribeState;
   ihaq: SubscribeState;
+  donatex: SubscribeState;
 }
 
 /** Normalizes integration ID to subscription ID (donatePayEu -> donatePay) */
@@ -42,6 +44,7 @@ export const initialState: SubscriptionStoreState = {
   donatePay: initialSubscribeState,
   tourniquet: initialSubscribeState,
   ihaq: initialSubscribeState,
+  donatex: initialSubscribeState,
 };
 
 interface SetSubscribeProps {
@@ -72,6 +75,7 @@ const subscriptionSlice = createSlice({
       state.twitch = { ...state.twitch, ...action.payload };
       state.da = { ...state.da, ...action.payload };
       state.donatePay = { ...state.donatePay, ...action.payload };
+      state.donatex = { ...state.donatex, ...action.payload };
     },
     setIhaqSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.ihaq = { ...state.ihaq, ...action.payload };
@@ -100,7 +104,16 @@ export const validateIntegrations = async (
 
   const validity = await getIntegrationsValidity();
   const nextAuthData = integrations.all.reduce((acc, { authFlow, id }) => {
-    const data = validity[`${id}Auth`] && authFlow.validate() ? authData[id] : undefined;
+    const validityKey = `${id}Auth` as keyof typeof validity;
+    const isValidFromBackend = validityKey in validity ? validity[validityKey] : undefined;
+    const isFlowValid = authFlow.validate();
+
+    if (id === 'donatex') {
+      const donatexData = getDonateXAuthData() ?? authData.donatex;
+      return { ...acc, donatex: (isValidFromBackend ?? true) && isFlowValid ? donatexData : undefined };
+    }
+
+    const data = (isValidFromBackend ?? authData[id]?.isValid) && isFlowValid ? authData[id] : undefined;
 
     if (id === 'donatePay') {
       return {

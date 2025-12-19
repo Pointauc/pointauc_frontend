@@ -16,6 +16,7 @@ export interface UserState extends UserInfo {
     da?: IntegrationDataDto;
     twitch?: IntegrationDataDto;
     tourniquet?: IntegrationDataDto;
+    donatex?: IntegrationDataDto;
   };
   events: {
     aukus: IntegrationAvailability;

@@ -9,6 +9,7 @@ import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
+import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -138,6 +139,7 @@ export const saveSettings =
 export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action>): Promise<GetUserDto> => {
   const user = await getUserData();
   const { twitchAuth, activeSettings, daAuth, tourniquetAuth, donatePayAuth, donatePayEuAuth, activeSettingsPresetId, ihaqAuth } = user;
+  const donatexAuth = getDonateXAuthData();
 
   if (activeSettings) {
     const { startTime, timeStep, ...settings } = activeSettings;
@@ -150,8 +152,8 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     );
   }
   dispatch(
-    setUserState({
-      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? 'Empty',
+      setUserState({
+      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? donatexAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
       activeSettingsPresetId,
       authData: {
@@ -161,6 +163,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         twitch: twitchAuth,
         tourniquet: tourniquetAuth,
         ihaq: ihaqAuth,
+        donatex: donatexAuth,
       },
     }),
   );

@@ -26,6 +26,7 @@
     "@emotion/styled": "^11.14.0",
     "@hookform/error-message": "^2.0.1",
     "@kozjar/twitch-emoticons": "^2.3.3",
+    "@microsoft/signalr": "^8.0.7",
     "@mantine/colors-generator": "^8.3.9",
     "@mantine/core": "^8.3.9",
     "@mantine/dropzone": "^8.3.9",
