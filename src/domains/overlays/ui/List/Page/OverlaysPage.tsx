@@ -1,8 +1,9 @@
 import { Group, Stack, Title } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -13,6 +14,7 @@ import {
 } from '@api/openapi/@tanstack/react-query.gen';
 import PageContainer from '@components/PageContainer/PageContainer';
 import ROUTES from '@constants/routes.constants';
+import { RootState } from '@reducers';
 
 import { buildTransform, detectDefaultResolution } from '../../../lib/canvas';
 import { hasSeenWelcome, markWelcomeSeen } from '../../../lib/overlaysOnboarding';
@@ -20,6 +22,7 @@ import { Overlay, OverlayType } from '../../../model/overlay.types';
 import BetaWarning from '../../components/BetaWarning/BetaWarning';
 import OverlaysHelpButton from '../../components/OverlaysHelpButton/OverlaysHelpButton';
 import InstructionsModal from '../../Modals/InstructionsModal/InstructionsModal';
+import UnauthorizedModal from '../../Modals/UnauthorizedModal/UnauthorizedModal';
 import WelcomeModal from '../../Modals/WelcomeModal/WelcomeModal';
 import CreateOverlayModal from '../CreateOverlayModal/CreateOverlayModal';
 import OverlaysGrid from '../OverlaysGrid/OverlaysGrid';
@@ -67,10 +70,16 @@ const OverlaysPage: FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [createModalOpened, setCreateModalOpened] = useState(false);
+  const [unauthorizedModalOpened, setUnauthorizedModalOpened] = useState(false);
   const [welcomeModalOpened, setWelcomeModalOpened] = useState(false);
   const [instructionsModalOpened, setInstructionsModalOpened] = useState(false);
 
   const { data: overlays = [] } = useQuery(overlaysControllerListOptions());
+  const user = useSelector((root: RootState) => root.user);
+
+  const isAuthenticated = useMemo(() => {
+    return !!user.username;
+  }, [user.username]);
 
   // Show welcome modal on first visit
   useEffect(() => {
@@ -124,8 +133,12 @@ const OverlaysPage: FC = () => {
   );
 
   const handleCreateOverlay = useCallback(() => {
+    if (!isAuthenticated) {
+      setUnauthorizedModalOpened(true);
+      return;
+    }
     setCreateModalOpened(true);
-  }, []);
+  }, [isAuthenticated]);
 
   const handleSelectOverlayType = useCallback(
     (type: OverlayType) => {
@@ -182,6 +195,7 @@ const OverlaysPage: FC = () => {
         onClose={() => setCreateModalOpened(false)}
         onSelectType={handleSelectOverlayType}
       />
+      <UnauthorizedModal opened={unauthorizedModalOpened} onClose={() => setUnauthorizedModalOpened(false)} />
       <WelcomeModal opened={welcomeModalOpened} onClose={handleWelcomeClose} onContinue={handleWelcomeContinue} />
       <InstructionsModal opened={instructionsModalOpened} onClose={() => setInstructionsModalOpened(false)} />
     </PageContainer>

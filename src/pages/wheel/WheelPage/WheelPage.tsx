@@ -41,6 +41,7 @@ const WheelPage: FC = () => {
   const setCustomWheelItems = useCallback(
     (customItems: Slot[], saveSlots: boolean) => {
       wheelController.current?.setItems(SlotListToWheelList(customItems));
+      previousWheelItems.current = [];
 
       if (saveSlots) {
         dispatch(setSlots(customItems));

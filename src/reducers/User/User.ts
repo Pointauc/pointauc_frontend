@@ -5,6 +5,7 @@ import { IntegrationAvailability, IntegrationDataDto } from '@models/user.model.
 export interface UserInfo {
   username?: string | null;
   userId?: string | null;
+  pointaucUserId?: string | null;
 }
 
 export interface UserState extends UserInfo {
@@ -25,6 +26,7 @@ export interface UserState extends UserInfo {
 const initialState: UserState = {
   username: null,
   userId: null,
+  pointaucUserId: null,
   activeSettingsPresetId: '',
   authData: {},
   events: { aukus: { isValid: false } },

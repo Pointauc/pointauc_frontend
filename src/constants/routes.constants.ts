@@ -23,6 +23,7 @@ const ROUTES = {
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
   TEST: '/test',
+  DEBUG: '/debug',
   REDIRECT: {
     DEFAULT: '/redirect',
   },

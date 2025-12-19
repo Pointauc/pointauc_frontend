@@ -17,6 +17,7 @@ import classes from './App.module.css';
 
 const OverlaysPage = lazy(() => import('@domains/overlays/ui/List/Page/OverlaysPage'));
 const OverlayPage = lazy(() => import('@domains/overlays/ui/Edit/Page/OverlayPage'));
+const DebugPage = lazy(() => import('@domains/debug/ui/Page/DebugPage'));
 
 export const AppMain = () => {
   const isHomePage = useMatch(ROUTES.HOME);
@@ -37,6 +38,7 @@ export const AppMain = () => {
         <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
         <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         <Route path={ROUTES.TEST} element={<TestPage />} />
+        <Route path={ROUTES.DEBUG} element={<DebugPage />} />
       </Routes>
     </AppShell.Main>
   );

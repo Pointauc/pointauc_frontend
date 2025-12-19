@@ -295,6 +295,12 @@
     "copyLink": "Copy Link",
     "openPage": "Open Page",
     "clickToEdit": "Click to edit",
+    "unauthorized": {
+      "title": "Authentication Required",
+      "description": "The Overlays feature is only available for authenticated users with an account.",
+      "hint": "Please connect one of the supported services below to start working with overlays.",
+      "authMethodsTitle": "Available Authentication Methods:"
+    },
     "securityWarning": {
       "title": "⚠️ Important Security Warning",
       "description": "You absolutely should NOT show or share the overlay link with anyone!",
@@ -731,6 +737,18 @@
     "stepProgress": "Step {{current}} of {{total}}",
     "performAction": "To continue:",
     "notificationMessage": "{{description}} Click here to start the tutorial."
+  },
+  "debug": {
+    "title": "Debug Information",
+    "step1": "<strong>Step 1:</strong> Click the button below to copy the debugging information",
+    "step2": "<strong>Step 2:</strong> Send the copied text to the PointAuc developer for debugging assistance",
+    "copyButton": "Copy Debug Information",
+    "copiedTitle": "Copied to clipboard!",
+    "copiedMessage": "Debug information has been copied",
+    "pasteInstructions": "You can now paste this information in your support request",
+    "noUserId": "No User ID",
+    "noUserIdMessage": "User ID is not available. Please make sure you are logged in.",
+    "user": "User: {{username}}"
   },
   "archive": {
     "modal": {

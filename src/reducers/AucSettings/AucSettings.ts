@@ -148,6 +148,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     donatePayEuAuth,
     activeSettingsPresetId,
     ihaqAuth,
+    userId,
   } = user;
 
   if (activeSettings) {
@@ -164,6 +165,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     setUserState({
       username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
+      pointaucUserId: userId,
       activeSettingsPresetId,
       authData: {
         donatePay: donatePayAuth,
