@@ -10,6 +10,7 @@ import { PURCHASE_SORT_OPTIONS } from '@constants/purchase.constants.ts';
 import donatePay from '@components/Integration/DonatePay';
 import da from '@components/Integration/DA';
 import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
+import donatex from '@components/Integration/DonateX/index.tsx';
 
 import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 import DragBidContext from '../DragBidContext/DragBidContext';
@@ -58,11 +59,15 @@ const PurchaseList: React.FC = () => {
     );
 
     const daUnsub = da.pubsubFlow.events?.on('bid', handleRedemption);
+    const donatexUnsub = donatex.pubsubFlow.events?.on('bid', (bid: Purchase) =>
+      handleRedemption({ ...bid, source: 'donatex' }),
+    );
     const ihaqUnsub = ihaq.pubsubFlow.events?.on('bid', handleRedemption);
 
     return () => {
       donatePayUnsub();
       daUnsub();
+      donatexUnsub?.();
       ihaqUnsub();
       tourniquetSocket?.off('Bid', handleTourniquetBid);
     };

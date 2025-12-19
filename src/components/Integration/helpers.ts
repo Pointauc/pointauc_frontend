@@ -3,7 +3,7 @@ import { setSubscribeState, toSubscriptionId } from '@reducers/Subscription/Subs
 
 import { store } from '../../main.tsx';
 
-type StorageKey = 'authToken' | 'pubsubToken2';
+type StorageKey = 'authToken' | 'pubsubToken2' | 'refreshToken';
 
 export const getStorageKey = (id: Integration.Config['id'], key: StorageKey): string => `${id}_${key}`;
 

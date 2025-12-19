@@ -116,6 +116,9 @@
     },
     "ihaq": {
       "name": "IHAQ Donate"
+    },
+    "donatex": {
+      "name": "DonateX"
     }
   },
   "textEditor": {
