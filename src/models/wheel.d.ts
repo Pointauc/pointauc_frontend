@@ -1,5 +1,6 @@
 namespace Wheel {
   import { ReactNode } from 'react';
+  import { ButtonProps } from '@mantine/core';
 
   import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel.tsx';
   import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel.tsx';
@@ -37,9 +38,18 @@ namespace Wheel {
     import: boolean;
   }
 
+  export interface GetNextWinnerIdParams {
+    generateSeed: () => Promise<number> | number;
+    items: WheelItemWithAngle[];
+  }
+
+  export interface GetNextWinnerIdResult {
+    id: string | number;
+  }
+
   interface FormatHook {
     init?: (items: WheelItem[]) => void;
-    onSpinStart?: (initialSpinParams: SpinParams, wheelItems: WheelItemWithAngle[]) => Partial<SpinParams> | undefined;
+    getNextWinnerId: (spinParams: GetNextWinnerIdParams) => Promise<GetNextWinnerIdResult> | GetNextWinnerIdResult;
     onSpinEnd?: (winner: WheelItem) => void | Promise<void>;
     calculateSpinDistance?: (seed?: number | null, duration?: number) => number;
     items: ItemWithLabel[];

@@ -7,10 +7,11 @@ import classes from './WinnerStats.module.css';
 interface WinnerStatsProps {
   winChance: number;
   amountCategoryChance?: number | null;
+  winnerAmount?: number | null;
 }
 
 const WinnerStats = (props: WinnerStatsProps) => {
-  const { winChance, amountCategoryChance } = props;
+  const { winChance, amountCategoryChance, winnerAmount } = props;
   return (
     <Paper className={classes.statsSection} withBorder p='xs' mt='md'>
       <Group gap='md' justify='center'>
@@ -43,7 +44,7 @@ const WinnerStats = (props: WinnerStatsProps) => {
               </div>
               <div className={classes.statContent}>
                 <Text className={classes.statLabel} size='xs' c='dimmed'>
-                  {t('wheel.winnerStats.amountCategoryChance')}
+                  {t('wheel.winnerStats.amountCategoryChance', { amount: Number(winnerAmount?.toFixed(2)) })}
                 </Text>
                 <Text className={classes.statValue} size='lg' fw={700}>
                   {(amountCategoryChance * 100).toFixed(2)}%

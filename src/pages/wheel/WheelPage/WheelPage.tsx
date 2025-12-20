@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
 import PageContainer from '@components/PageContainer/PageContainer';
 import { useBroadcastSpin, useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
-import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+import { SpinStartCallbackParams } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI/index';
 import RandomWheel, { RandomWheelController } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import { Slot } from '@models/slot.model';
 import { WheelItem } from '@models/wheel.model';
@@ -62,8 +62,8 @@ const WheelPage: FC = () => {
   );
 
   const handleSpinStart = useCallback(
-    (params: SpinParams) => {
-      broadcastSpin(params.distance ?? 0, params.duration ?? 0, params.winner?.toString() ?? '');
+    (params: SpinStartCallbackParams) => {
+      broadcastSpin(params.changedDistance ?? 0, params.duration ?? 0, params.winnerItem?.id?.toString() ?? '');
     },
     [broadcastSpin],
   );

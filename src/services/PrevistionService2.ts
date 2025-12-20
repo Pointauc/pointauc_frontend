@@ -20,6 +20,8 @@ export interface SlotChanceDifference {
 
 interface SlotLike {
   amount?: number | null;
+  id: string;
+  name?: string | null;
 }
 
 export const getSlotFromSeed = (slots: SlotLike[], distance: number): number => {
@@ -34,84 +36,29 @@ export const getSlotFromSeed = (slots: SlotLike[], distance: number): number => 
   return index >= 0 ? index : slots.length - 1;
 };
 
-export const getSlotFromDistance = (slots: SlotLike[], distance: number): number => {
-  let restAmount = distance * getTotalSize(slots);
-
-  return slots.findIndex(({ amount }) => {
-    restAmount -= Number(amount);
-
-    return restAmount <= 0;
-  });
-};
-
 class PredictionService {
-  initialSlots: Slot[];
-  slots: Slot[];
+  initialSlots: SlotLike[];
   initialChances: SlotChance[];
-  dropoutRate: number;
   preserveLogs: boolean;
+  getWinnerId: (slots: SlotLike[]) => Promise<string>;
 
-  constructor(slots: Slot[], preserveLogs = false, dropoutRate = 1) {
+  constructor(slots: SlotLike[], getWinnerId: (slots: SlotLike[]) => Promise<string>, preserveLogs = false) {
     this.initialChances = this.normalizeSlotsChances([...slots]);
-    this.slots = [...slots];
     this.initialSlots = [...slots];
-    this.dropoutRate = dropoutRate;
     this.preserveLogs = preserveLogs;
+    this.getWinnerId = getWinnerId;
     // console.log(sortSlots(this.getReverseSlots([...slots])));
   }
 
-  private getReverseSlots = (slots: Slot[]): Slot[] => {
-    const totalSize = getTotalSize(slots);
-
-    return slots.map(({ amount, ...props }) => {
-      return {
-        ...props,
-        amount: PredictionService.getReverseSize(Number(amount), totalSize, slots.length),
-      };
-    });
-  };
-
-  static getReverseSize = (size: number, totalSize: number, length: number): number => {
-    const safeLength = Math.max(length, 2);
-    return (1 - size / totalSize) / (safeLength - 1) || 1;
-  };
-
-  private getWinner = (slots: Slot[]): number => {
-    const seed = Math.random();
-    let restAmount = seed * getTotalSize(slots);
-
-    if (this.preserveLogs) {
-      console.log('оставшиеся лоты:');
-      console.log(slots);
-      console.log(`рандом - ${restAmount}`);
-    }
-
-    return slots.findIndex(({ amount }) => {
-      restAmount -= Number(amount);
-
-      return restAmount <= 0;
-    });
-  };
-
-  private performIteration = (slots: Slot[]): string => {
-    const updatedSlots = [...slots];
-    while (updatedSlots.length > 1) {
-      const winner = this.getWinner(this.getReverseSlots(updatedSlots));
-
-      if (this.preserveLogs) {
-        console.log(`${updatedSlots[winner]?.name} вылетел`);
-      }
-
-      updatedSlots.splice(winner, 1);
-    }
-
-    return updatedSlots[0].id;
+  private getWinner = async (slots: SlotLike[]): Promise<SlotLike> => {
+    const winnerId = await this.getWinnerId(slots);
+    return slots.find((slot) => slot.id === winnerId) as SlotLike;
   };
 
   normalizeWinnersData = (data: Map<string, number>, iterations: number): SlotChance[] => {
     return Array.from(data)
       .map(([id, wins]) => ({
-        name: getSlot(this.slots, id)?.name || '',
+        name: getSlot(this.initialSlots as Slot[], id)?.name || '',
         chance: (wins / iterations) * 100,
         id,
         winsCount: wins,
@@ -119,7 +66,7 @@ class PredictionService {
       .sort(({ chance: a }, { chance: b }) => b - a);
   };
 
-  normalizeSlotsChances = (slots: Slot[]): SlotChance[] => {
+  normalizeSlotsChances = (slots: SlotLike[]): SlotChance[] => {
     const total = getTotalSize(slots);
     return slots
       .map<SlotChance>(({ amount, name, id }) => ({ id, chance: (Number(amount) / total) * 100, name: name || '' }))
@@ -132,32 +79,36 @@ class PredictionService {
     return a.map(({ name, chance, id }) => ({ id, name, chance: chance - this.getChance(b, id) }));
   };
 
-  predictChances = (count: number): Map<string, number> => {
+  predictChances = async (count: number): Promise<Map<string, number>> => {
     const winningMap = new Map<string, number>();
-    const slots = [...this.slots];
+    const slots = [...this.initialSlots];
     // console.log([...this.slots]);
 
-    new Array(count).fill(null).forEach((_, i) => {
+    const promises = new Array(count).fill(null).map(async (_, i) => {
       if (this.preserveLogs) {
         console.log(`итерация - ${i}`);
       }
 
-      const winner = this.performIteration([...slots]);
-      const previousWins = winningMap.get(winner);
+      const winner = await this.getWinner(slots);
+      // console.log('winner', winner);
+      const previousWins = winningMap.get(winner.id);
 
-      previousWins ? winningMap.set(winner, previousWins + 1) : winningMap.set(winner, 1);
+      previousWins ? winningMap.set(winner.id, previousWins + 1) : winningMap.set(winner.id, 1);
     });
+
+    await Promise.all(promises);
 
     // console.log(testMap);
 
     return winningMap;
   };
 
-  researchDifference = (count: number): SlotChanceDifference[] => {
-    const winners = this.predictChances(count);
+  researchDifference = async (count: number): Promise<SlotChanceDifference[]> => {
+    const winners = await this.predictChances(count);
+    // console.log('winners', winners);
 
     return this.initialSlots.map<SlotChanceDifference>(({ name, id, amount }) => {
-      const winsCount = winners.get(id) || 0;
+      const winsCount = winners.get(id) ?? 0;
       const dropoutChance = winsCount ? (winsCount / count) * 100 : 0;
       const originalChance = this.initialChances.find(({ id: slotId }) => id === slotId)?.chance || 0;
       const chanceDifference = dropoutChance - originalChance;
@@ -175,13 +126,13 @@ class PredictionService {
   };
 
   updateAmount = (slotId: string, diff: number): void => {
-    const index = this.slots.findIndex(({ id }) => slotId === id);
+    const index = this.initialSlots.findIndex(({ id }) => slotId === id);
 
     if (index >= 0) {
-      const { amount } = this.slots[index];
+      const { amount } = this.initialSlots[index];
       const amountChange = (Number(amount) * diff) / 50;
       // console.log(`${name} - ${diff} - ${amountChange}`);
-      this.slots[index] = { ...this.slots[index], amount: Number(amount) - amountChange };
+      this.initialSlots[index] = { ...this.initialSlots[index], amount: Number(amount) - amountChange };
     }
   };
 }

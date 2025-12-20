@@ -1,6 +1,6 @@
 import { Anchor, Button, Checkbox, Group, SimpleGrid, Stack } from '@mantine/core';
 import { ReactNode } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
@@ -32,21 +32,14 @@ interface WheelSettingsProps {
 const WheelSettings = (props: WheelSettingsProps) => {
   const { isLoadingSeed, direction = 'column', controls, children, renderSubmitButton } = props;
   const { t } = useTranslation();
-  const {
-    formState: { isSubmitting },
-  } = useFormContext<Wheel.Settings>();
+  const { control } = useFormContext<Wheel.Settings>();
+  const { isSubmitting } = useFormState<Wheel.Settings>({ control });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
   const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
 
   const submitButton = (
-    <Button
-      loading={isLoadingSeed}
-      disabled={isSubmitting}
-      variant='contained'
-      type='submit'
-      onClick={() => console.log('submit click')}
-    >
+    <Button loading={isLoadingSeed} disabled={isSubmitting} variant='contained' type='submit'>
       {isSubmitting ? t('wheel.spinning') : t('wheel.spin')}
     </Button>
   );

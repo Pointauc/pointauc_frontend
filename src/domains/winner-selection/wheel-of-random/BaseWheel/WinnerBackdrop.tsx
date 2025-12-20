@@ -36,7 +36,7 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
   const [isLotDeleted, setIsLotDeleted] = useState<boolean>(false);
 
   const finalWinnerLot = useMemo(
-    () => finalWinner?.id && getSlot(lots, finalWinner?.id.toString()),
+    () => (finalWinner?.id ? getSlot(lots, finalWinner?.id.toString()) : null),
     [finalWinner, lots],
   );
 
@@ -128,7 +128,13 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
         )}
       </Group>
 
-      {winChance && <WinnerStats winChance={winChance} amountCategoryChance={amountCategoryChance} />}
+      {winChance && (
+        <WinnerStats
+          winChance={winChance}
+          amountCategoryChance={amountCategoryChance}
+          winnerAmount={finalWinnerLot?.amount}
+        />
+      )}
     </div>
   );
 };

@@ -61,11 +61,13 @@ const WheelOverlayPage: FC<WheelOverlayPageProps> = ({ socket, overlay }) => {
             break;
           case 'spin':
             eventsQueue.addEvent(async () => {
-              await wheelRef.current?.spin?.({
-                distance: data.angle,
-                duration: data.duration,
-                winner: data.winner === '' ? undefined : data.winner,
-              });
+              await wheelRef.current
+                ?.spin?.({
+                  winnerId: data.winner,
+                  duration: data.duration,
+                  distance: data.angle,
+                })
+                ?.animate();
             });
             break;
           case 'settings':

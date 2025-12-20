@@ -20,7 +20,6 @@ import useWheelResolver from '@domains/winner-selection/wheel-of-random/lib/stra
 import wheelUtils from '@domains/winner-selection/wheel-of-random/lib/wheelUtils';
 import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
 import withLoading from '@decorators/withLoading';
-import { calculateRandomSpinDistance } from '@domains/winner-selection/wheel-of-random/lib/geometry';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
 import array from '@utils/dataType/array.ts';
@@ -50,6 +49,13 @@ const initialAvailableSettings: SettingElements = {
   preview: true,
 };
 
+export interface SpinStartCallbackParams {
+  changedDistance: number;
+  initialDistance: number;
+  winnerItem: WheelItem;
+  duration: number;
+}
+
 interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   items: TWheelItem[];
   initialSpinTime?: number;
@@ -62,7 +68,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   onWin?: (winner: TWheelItem) => void;
   onWheelItemsChanged?: (items: TWheelItem[]) => void;
   onSettingsChanged?: (settings: Wheel.Settings) => void;
-  onSpinStart?: (params: SpinParams) => void;
+  onSpinStart?: (params: SpinStartCallbackParams) => void;
 }
 
 const defaultSettings: Wheel.Settings = {
@@ -118,7 +124,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       setItems: (items: WheelItem[]) => {
         setItemsFromProps(items);
       },
-      spin: wheelController.current ? (params?: SpinParams) => wheelController.current!.spin(params) : undefined,
+      spin: wheelController.current ? (params: SpinParams) => wheelController.current!.spin(params) : undefined,
     }),
     [],
   );
@@ -154,7 +160,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
   const getSeed = useCallback(async () => {
     const totalSize = getTotalSize(items);
-    const size = totalSize > 5000 ? totalSize : totalSize + 10000;
+    const size = totalSize * 100;
     const seed = await withLoading(setIsLoadingSeed, getRandomNumber)(1, size).catch(() => undefined);
 
     return seed && seed / size;
@@ -163,26 +169,48 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const onSpinClick = useCallback(
     async ({ useRandomOrg }: Wheel.Settings) => {
       const { min, max } = randomSpinConfig!;
-      const duration = randomSpinEnabled ? random.getInt(min!, max!) : spinTime;
+      const duration = (randomSpinEnabled ? random.getInt(min!, max!) : spinTime) ?? 20;
 
-      const initialSpinParams = {
+      const generateSeed = async (): Promise<number> => {
+        const seed = useRandomOrg ? await getSeed() : undefined;
+        return seed ?? random.value();
+      };
+
+      const winnerResult = await wheelStrategy.getNextWinnerId({
+        generateSeed,
+        items: wheelController.current?.getItems() ?? [],
+      });
+      const winnerItem = itemsFromProps.find((item) => item.id === winnerResult.id);
+
+      const config: SpinParams = {
         duration,
-        distance: calculateRandomSpinDistance({ duration, seed: useRandomOrg ? await getSeed() : undefined }),
+        winnerId: winnerResult.id,
       };
 
-      const spinConfig = wheelStrategy.onSpinStart?.(initialSpinParams, wheelController.current?.getItems() ?? []);
+      const spinResult = wheelController.current?.spin(config);
 
-      const config = {
-        ...initialSpinParams,
-        ...spinConfig,
-      };
+      onSpinStart?.({
+        changedDistance: spinResult?.changedDistance ?? 0,
+        initialDistance: spinResult?.initialDistance ?? 0,
+        winnerItem: winnerItem as TWheelItem,
+        duration,
+      });
 
-      onSpinStart?.(config);
-      const winner = await wheelController.current?.spin(config);
-      await onSpinEnd?.(winner);
-      winner && onWin?.(winner as TWheelItem);
+      await spinResult?.animate();
+      await onSpinEnd?.(winnerItem);
+      winnerItem && onWin?.(winnerItem as TWheelItem);
     },
-    [getSeed, onSpinEnd, wheelStrategy, onSpinStart, onWin, randomSpinConfig, randomSpinEnabled, spinTime],
+    [
+      randomSpinConfig,
+      randomSpinEnabled,
+      spinTime,
+      wheelStrategy,
+      itemsFromProps,
+      onSpinStart,
+      onSpinEnd,
+      onWin,
+      getSeed,
+    ],
   );
 
   const split = useWatch<Wheel.Settings>({ name: 'split' });

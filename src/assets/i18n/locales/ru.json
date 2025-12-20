@@ -597,7 +597,7 @@
       "title": "Интересные факты",
       "winChance": "Шанс лота",
       "winChanceDesc": "Шанс победы лота в колесе",
-      "amountCategoryChance": "Шанс ценовой категории",
+      "amountCategoryChance": "Лотов стоимостью <= {{amount}}",
       "amountCategoryChanceDesc": "Шанс выпадения любого лота с ценой меньше или равной выигравшему"
     },
     "lotDeleteWarning": "Это действие удалит лот не только из колеса, но и из самого аукциона.",

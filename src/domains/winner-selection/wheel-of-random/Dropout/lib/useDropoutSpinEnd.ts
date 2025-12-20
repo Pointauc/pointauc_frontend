@@ -3,6 +3,7 @@ import { useWatch } from 'react-hook-form';
 
 import { WheelItem } from '@models/wheel.model';
 import { interpolate } from '@utils/dataType/function.utils.ts';
+import { ID } from '@components/Bracket/components/model';
 
 import { WheelController } from '../../BaseWheel/BaseWheel';
 
@@ -11,7 +12,7 @@ interface Props {
   setItems: Dispatch<SetStateAction<WheelItem[] | undefined>>;
 }
 
-export const animateDropout = async (controller: RefObject<WheelController | null>, id: Key, spinTime: number) => {
+export const animateDropout = async (controller: RefObject<WheelController | null>, id: ID, spinTime: number) => {
   const showAnimation = spinTime >= 3;
 
   if (showAnimation) {

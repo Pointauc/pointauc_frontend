@@ -1,19 +1,17 @@
-import { Key } from 'react';
-
 export enum Side {
   VISITOR,
   HOME,
 }
 
-export type ID = Key;
+export type ID = string | number;
 
 export interface SideInfo {
   amount: number;
   name: string;
   sourceGame?: Game | null;
   sourcePool?: object;
-  id: Key;
-  gameId?: Key;
+  id: ID;
+  gameId?: ID;
   side: Side;
 }
 

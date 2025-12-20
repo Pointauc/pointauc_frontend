@@ -1,12 +1,12 @@
-import { FC, Key, useEffect, useRef, useState, memo } from 'react';
+import { FC, memo } from 'react';
 
 import Bracket from '@components/Bracket/components/Bracket';
-import { Game } from '@components/Bracket/components/model';
+import { Game, ID } from '@components/Bracket/components/model';
 import { createGame, setOffsets } from '@utils/slots.utils.ts';
 import { WheelItem } from '@models/wheel.model.ts';
 
 export interface SlotsBracketProps {
-  currentGame: Key;
+  currentGame: ID;
   rootGame: Game;
 }
 
