@@ -24,7 +24,7 @@ const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
       fixes: [
         <Stack gap='xs'>
           <Title order={5}>Исправлена ошибка с некорректным выбором победителя в колесе на выбывание</Title>
-          <Text>Ошибка была на сайте ровно с 12:00 до 21:00 по МСК (UTC +3)</Text>
+          <Text>Ошибка была на сайте 2025-12-20 ровно с 14:00 до 21:00 по МСК (UTC +3)</Text>
           <Text>Приношу извенения за неудобства, впредь будут приняты меры чтобы такого не повторилось.</Text>
         </Stack>,
       ],
@@ -55,7 +55,7 @@ export const getUpdates = (date: string, locale: Language): UpdateData[] => {
 
   const lastVisitDate = dayjs(date);
   const now = dayjs('2025-12-20 14:00 +03:00');
-  const today12 = now.startOf('day').hour(12);
+  const today12 = now.startOf('day').hour(10);
   const today21 = now.startOf('day').hour(21);
 
   const shouldShowExtra =
