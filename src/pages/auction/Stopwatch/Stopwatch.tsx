@@ -21,6 +21,7 @@ import twitch from '@components/Integration/Twitch';
 import donatePay from '@components/Integration/DonatePay';
 import da from '@components/Integration/DA';
 import { useHeadroom } from '@shared/lib/scroll';
+import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
 
 import classes from './Stopwatch.module.css';
 
@@ -74,14 +75,14 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     isAutoincrementActive,
     autoincrementTime,
     maxTime = 15,
-    isMaxTimeActive,
     minTime,
     isMinTimeActive,
     isNewSlotIncrement,
     newSlotIncrement,
     dynamicRewards,
     showTotalTime,
-    ...restSettings
+    isIncrementActive,
+    incrementTime,
   } = settings;
   const defaultTime = Number(startTime) * 60 * 1000;
   const stopwatchStep = Number(timeStep) * 1000;
@@ -98,12 +99,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const stopwatchElement = useRef<HTMLDivElement>(null);
   const totalTimeElement = useRef<HTMLDivElement>(null);
   const winnerRef = useRef<Slot | undefined>(undefined);
-  const daSettings = useRef(restSettings);
   const [focusedTimer, setFocusedTimer] = useState<TimerType>('stopwatch');
-
-  useEffect(() => {
-    daSettings.current = restSettings;
-  }, [restSettings]);
 
   useEffect(() => {
     if (!dynamicRewards || loadingTwitchSub || !isStopwatchChanged || isStopped !== actualTwitchSub) {
@@ -192,20 +188,20 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   );
 
   const handleDonation = useCallback(() => {
-    const { isIncrementActive, incrementTime } = daSettings.current;
-
     if (isIncrementActive) {
       autoUpdateTimer(incrementTime * 1000);
     }
-  }, [autoUpdateTimer]);
+  }, [autoUpdateTimer, isIncrementActive, incrementTime]);
 
   useEffect(() => {
     const unsubDonatePay = donatePay.pubsubFlow.events.on('bid', handleDonation);
     const unsubDa = da.pubsubFlow.events.on('bid', handleDonation);
+    const unsubIhaq = ihaq.pubsubFlow.events.on('bid', handleDonation);
 
     return () => {
       unsubDa();
       unsubDonatePay();
+      unsubIhaq();
     };
   }, [handleDonation]);
 
