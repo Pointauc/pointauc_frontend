@@ -580,7 +580,21 @@
     "readBeforeUsage": "ПРОЧТИТЕ ПЕРЕД ИСПОЛЬЗОВАНИЕМ!",
     "dividing": "Разделение",
     "dividingDesc": "делит дорогие лоты на несколько позиций.",
-    "useRandomOrg": "Использовать сервис random.org",
+    "randomnessSource": {
+      "label": "Источник случайности",
+      "localBasic": "Локальный (Базовый)",
+      "randomOrg": "Random.org (Простой)",
+      "randomOrgSigned": "Random.org (Подписанный и проверяемый)",
+      "disabledTooltip": "Продвинутые источники случайности недоступны для этого типа колеса"
+    },
+    "ticket": {
+      "title": "Билет Random.org",
+      "id": "ID билета",
+      "createdAt": "Создан",
+      "revealedAt": "Раскрыт",
+      "randomNumber": "Случайное число",
+      "pending": "Ожидание..."
+    },
     "loadCustomMessage": "Загрузить свое изображение",
     "importToWheel": "Импортировать своих участников",
     "deleteLot": "Удалить лот",

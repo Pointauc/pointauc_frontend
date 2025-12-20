@@ -1,7 +1,9 @@
-import { Anchor, Button, Checkbox, Group, SimpleGrid, Stack } from '@mantine/core';
-import { ReactNode } from 'react';
+import { Alert, Anchor, Button, Group, Select, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
+import { ReactNode, useEffect, useMemo } from 'react';
 import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
+import { AxiosError } from 'axios';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
@@ -9,6 +11,7 @@ import { WheelFormat } from '@constants/wheel.ts';
 import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ClassicDropoutDescription';
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
 import WheelFormatField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat';
+import TicketCard from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/TicketCard/TicketCard';
 
 import { DropoutVariant } from '../../../BaseWheel/BaseWheel';
 import { DropoutHelp } from '../../../Dropout/ui/DropoutHelp';
@@ -19,6 +22,7 @@ import RandomSpinConfig from '../Fields/RandomSpinConfig';
 import RandomSpinSwitch from '../Fields/RandomSpinSwitch';
 import SpinTimeField from '../Fields/SpinTime';
 import WheelStyleSelect from '../Fields/StyleSelect/StyleSelect';
+import { RevealedData } from '../../../lib/hooks/useTicketManagement';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -27,24 +31,71 @@ interface WheelSettingsProps {
   children: ReactNode;
   renderSubmitButton?: (defaultButton: ReactNode) => ReactNode;
   direction?: 'row' | 'column';
+  ticketData?: RevealedData | null;
+  availableQuota?: number | null;
+  isCreatingTicket?: boolean;
+  ticketError?: Error | null;
 }
 
 const WheelSettings = (props: WheelSettingsProps) => {
-  const { isLoadingSeed, direction = 'column', controls, children, renderSubmitButton } = props;
+  const {
+    isLoadingSeed,
+    direction = 'column',
+    controls,
+    children,
+    renderSubmitButton,
+    ticketData,
+    isCreatingTicket,
+    availableQuota,
+    ticketError,
+  } = props;
   const { t } = useTranslation();
-  const { control } = useFormContext<Wheel.Settings>();
+  const { control, setValue } = useFormContext<Wheel.Settings>();
   const { isSubmitting } = useFormState<Wheel.Settings>({ control });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
   const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
+  const randomnessSource = useWatch<Wheel.Settings>({ name: 'randomnessSource' });
+
+  // Auto-reset randomnessSource to 'local-basic' for restricted wheel types
+  useEffect(() => {
+    const isRestrictedWheel =
+      format === WheelFormat.BattleRoyal ||
+      (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
+
+    if (isRestrictedWheel && randomnessSource !== 'local-basic') {
+      setValue('randomnessSource', 'local-basic');
+    }
+  }, [format, dropoutVariant, randomnessSource, setValue]);
 
   const submitButton = (
-    <Button loading={isLoadingSeed} disabled={isSubmitting} variant='contained' type='submit'>
+    <Button loading={isLoadingSeed || isCreatingTicket} disabled={isSubmitting} variant='contained' type='submit'>
       {isSubmitting ? t('wheel.spinning') : t('wheel.spin')}
     </Button>
   );
 
+  const isRestrictedWheel =
+    format === WheelFormat.BattleRoyal || (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
+
+  const randomnessOptions = [
+    { value: 'local-basic', label: t('wheel.randomnessSource.localBasic') },
+    { value: 'random-org', label: t('wheel.randomnessSource.randomOrg'), disabled: isRestrictedWheel },
+    {
+      value: 'random-org-signed',
+      label: t('wheel.randomnessSource.randomOrgSigned'),
+      disabled: isRestrictedWheel,
+    },
+  ];
+
   const docsUrl = useDocsUrl(DOCS_PAGES.wheel.settings.page);
+
+  const ticketErrorMessage = useMemo(() => {
+    if (randomnessSource !== 'random-org-signed' || !ticketError) return null;
+    if (randomnessSource === 'random-org-signed' && (ticketError as AxiosError)?.status === 403) {
+      return t('wheel.ticket.unauthorizedError');
+    }
+    return t('wheel.ticket.unknownError');
+  }, [ticketError, randomnessSource, t]);
 
   return (
     <>
@@ -86,17 +137,41 @@ const WheelSettings = (props: WheelSettingsProps) => {
             {children}
             {controls.split && <SplitField />}
             {controls.randomOrg && (
-              <Controller
-                name='useRandomOrg'
-                render={({ field: { value, onChange }, formState: { isSubmitting } }) => (
-                  <Checkbox
-                    checked={value}
-                    label={t('wheel.useRandomOrg')}
-                    onChange={(e) => onChange(e.target.checked)}
-                    disabled={isSubmitting}
+              <>
+                <Controller
+                  name='randomnessSource'
+                  render={({ field: { value, onChange } }) => (
+                    <Tooltip
+                      label={t('wheel.randomnessSource.disabledTooltip')}
+                      disabled={!isRestrictedWheel}
+                      withArrow
+                    >
+                      <Select
+                        label={t('wheel.randomnessSource.label')}
+                        value={value}
+                        onChange={(val) => onChange(val)}
+                        data={randomnessOptions}
+                        disabled={isSubmitting}
+                        allowDeselect={false}
+                      />
+                    </Tooltip>
+                  )}
+                />
+                {randomnessSource === 'random-org-signed' && ticketData && (
+                  <TicketCard
+                    ticketId={ticketData.ticketId}
+                    createdAt={ticketData.createdAt}
+                    revealedAt={ticketData?.revealedAt}
+                    randomNumber={ticketData?.randomNumber}
+                    availableQuota={availableQuota}
                   />
                 )}
-              />
+                {ticketErrorMessage && (
+                  <Alert icon={<IconAlertCircle size={20} />} title={t('wheel.ticket.errorTitle')} color='red'>
+                    {ticketErrorMessage}
+                  </Alert>
+                )}
+              </>
             )}
             {/*{elements.randomPace && (*/}
             {/*  <>*/}

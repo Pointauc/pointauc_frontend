@@ -16,7 +16,14 @@ const updates: Record<Language, UpdateData[] | null> = {
 const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
   [Language.EN]: [
     {
-      fixes: [<>Fixed an issue with dropout spin</>],
+      fixes: [
+        <Stack gap='xs'>
+          <Title order={5}>Fixed an issue with dropout spin</Title>
+          <Text>The winner was not chosen correctly during the dropout spin.</Text>
+          <Text>This issue was present on the site from 12:00 to 21:00 (UTC +3) on December 20, 2025.</Text>
+          <Text>I apologize for the inconvenience, and I will take measures to prevent this from happening again.</Text>
+        </Stack>,
+      ],
     },
   ],
   [Language.RU]: [
