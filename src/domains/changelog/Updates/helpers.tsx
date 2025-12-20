@@ -53,7 +53,7 @@ const getUpdatesFromDate = (updates: UpdateData[], from: string): UpdateData[] =
 export const getUpdates = (date: string, locale: Language): UpdateData[] => {
   if (date === '') return [];
 
-  const lastVisitDate = dayjs('2025-12-20 13:00');
+  const lastVisitDate = dayjs(date);
   const now = dayjs('2025-12-20 14:00 +03:00');
   const today12 = now.startOf('day').hour(12);
   const today21 = now.startOf('day').hour(21);
