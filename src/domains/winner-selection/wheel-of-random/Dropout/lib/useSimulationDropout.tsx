@@ -54,7 +54,7 @@ const useSimulationDropout = (controller: RefObject<WheelController | null>): Wh
       const isInitialSpin = dropoutQueueRef.current.length === 0;
       if (isInitialSpin) {
         const seed = await generateSeed();
-        buildDropoutQueue(items, seed);
+        buildDropoutQueue(initialItems, seed);
       }
 
       const winner = dropoutQueueRef.current.shift() as string;
