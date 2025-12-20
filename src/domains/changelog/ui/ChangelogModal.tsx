@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import useStorageState from '@hooks/useStorageState.ts';
 import { getCookie } from '@utils/common.utils.ts';
-import { getUpdates } from '@domains/changelog/Updates/helpers.ts';
+import { getUpdates } from '@domains/changelog/Updates/helpers.tsx';
 import Changelog from '@domains/changelog/ui/Changelog';
 import { getCurrentLanguage } from '@constants/language.constants';
 
