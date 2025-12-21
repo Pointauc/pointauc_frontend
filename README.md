@@ -8,28 +8,28 @@ https://pointauc.com/docs/
 
 ## 🛠️ Tech Stack (at a glance)
 
-- **React 18 + Vite + TypeScript**
+- **React 19 + Vite + TypeScript**
 - **Redux Toolkit** – global state management
-- **Mantine & Material-UI (MUI)** – component libraries (gradually migrating to Mantine)
+- **Mantine** – component library
 - **Socket.IO & Centrifuge** – real-time communication with the backend and external services
 - **i18next** – internationalisation
-- **Sass / CSS-Modules** – styling (CSS-Modules preferred)
+- **Tailwind / CSS-Modules** – styling
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Node.js >= 18** (LTS recommended)
-- **yarn**
+- **Node.js >= 22**
+- **pnpm**
 
 ### Installation & Development Server
 
 ```bash
 # install dependencies
-yarn install
+pnpm install
 
 # start the dev server (Vite)
-yarn dev
+pnpm dev
 ```
 
 ## 🔐 Authenticity Verification
