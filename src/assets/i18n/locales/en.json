@@ -847,10 +847,12 @@
   "tickets": {
     "revealed": {
       "title": "Revealed Ticket Details",
+      "verificationSection": "Verification",
       "checkInstruction": "Link to verification instructions",
       "warning": "If you checked the ticket/streamer and found a discrepancy, please do not immediately accuse anyone of cheating. Write to me in Telegram and I will review it all giving you an official answer with an explanation for a specific case.",
       "loading": "Loading ticket information...",
       "verified": "Verified",
+      "participantIndex": "№",
       "ticketId": "Ticket ID",
       "createdAt": "Created At",
       "revealedAt": "Revealed At",
@@ -891,9 +893,9 @@
       "flow": {
         "step1": "Streamer selects 'Random.org+ (Verifiable)' as the RNG method",
         "step2": "The system requests an unrevealed ticket from Random.org",
-        "step3": "Streamer shows ticket details to everyone and starts the wheel spin",
+        "step3": "Streamer shows ticket details to everyone and starts the wheel spin (ticket ID is partially visible to prevent viewers from guessing the winner before the spin is finished)",
         "step4": "Random.org generates the random number and signs it specifically for this ticket",
-        "step5": "The random number determines the winner, and all data is recorded for verification"
+        "step5": "The random number determines the winner, and all data is recorded for verification, the full ticket data is displayed on the screen"
       },
       "verificationStepsTitle": "How to Verify a Winner",
       "verificationStepsIntro": "Anyone can verify the fairness of the winner selection by checking two things:",

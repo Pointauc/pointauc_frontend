@@ -2,13 +2,8 @@
 @layer theme, base, mantine, components, utilities;
 
 /* Import Tailwind CSS */
-@import 'tailwindcss';
+/* Disabled because it overrides list styles globally */
+/* @import 'tailwindcss'; */
 
 /* Import Mantine styles in the mantine layer */
 @import '@mantine/core/styles.layer.css';
-
-ol,
-ul,
-menu {
-  list-style: disc;
-}

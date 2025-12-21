@@ -1,30 +1,14 @@
-import {
-  Alert,
-  Badge,
-  Box,
-  Card,
-  Container,
-  Group,
-  Loader,
-  Paper,
-  Stack,
-  Table,
-  Text,
-  Title,
-  Anchor,
-  Button,
-} from '@mantine/core';
 import { CodeHighlight } from '@mantine/code-highlight';
-import { IconAlertCircle, IconCheck, IconExternalLink } from '@tabler/icons-react';
+import { Alert, Box, Button, Card, Container, Group, Loader, Paper, Stack, Table, Text, Title } from '@mantine/core';
+import { IconAlertCircle, IconExternalLink } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 
 import { signedRandomControllerGetWinnerRecordByTicketOptions } from '@api/openapi/@tanstack/react-query.gen';
 import PageContainer from '@components/PageContainer/PageContainer';
-import { getWinnerFromDistance } from '@domains/winner-selection/wheel-of-random/lib/geometry';
 import { getSlotFromSeed } from '@services/PredictionService';
 
 import WinnerSelectionVisualizer from './WinnerSelectionVisualizer';
@@ -54,11 +38,13 @@ const RevealedTicketPage = () => {
     data: record,
     isLoading,
     error,
-  } = useQuery(
-    signedRandomControllerGetWinnerRecordByTicketOptions({
+  } = useQuery({
+    ...signedRandomControllerGetWinnerRecordByTicketOptions({
       path: { ticketId: ticketId! },
     }),
-  );
+    enabled: !!ticketId,
+    staleTime: 1000 * 60 * 60,
+  });
 
   const randomOrgTicketQuery = useQuery({
     queryKey: ['random-org-ticket', ticketId],
@@ -121,7 +107,7 @@ const RevealedTicketPage = () => {
           <Group justify='space-between' align='center'>
             <Title order={1}>{t('tickets.revealed.title')}</Title>
           </Group>
-          <Button variant='outline' component='a' href='/tickets/verification-instructions' target='_blank'>
+          <Button variant='outline' component='a' href='/tickets/info' target='_blank'>
             {t('tickets.revealed.checkInstruction')}
           </Button>
 
@@ -159,18 +145,8 @@ const RevealedTicketPage = () => {
 
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>
-              <Title order={3}>{t('tickets.revealed.signature')}</Title>
-              <CodeHighlight
-                code={record.signature ?? ''}
-                language='text'
-                withCopyButton
-                copyLabel={t('common.copy')}
-                copiedLabel={t('common.copied')}
-              />
               <Group justify='space-between' align='center'>
-                <Text size='sm' c='dimmed'>
-                  {t('tickets.revealed.signatureDescription')}
-                </Text>
+                <Title order={3}>{t('tickets.revealed.verificationSection')}</Title>
                 <Button
                   component='a'
                   href='https://api.random.org/signatures/form'
@@ -197,6 +173,18 @@ const RevealedTicketPage = () => {
               />
               <Text size='sm' c='dimmed'>
                 {t('tickets.revealed.randomDataDescription')}
+              </Text>
+
+              <Title order={4}>{t('tickets.revealed.signature')}</Title>
+              <CodeHighlight
+                code={record.signature ?? ''}
+                language='text'
+                withCopyButton
+                copyLabel={t('common.copy')}
+                copiedLabel={t('common.copied')}
+              />
+              <Text size='sm' c='dimmed'>
+                {t('tickets.revealed.signatureDescription')}
               </Text>
             </Stack>
           </Card>
@@ -262,6 +250,7 @@ const RevealedTicketPage = () => {
               <Table striped highlightOnHover>
                 <Table.Thead>
                   <Table.Tr>
+                    <Table.Th>{t('tickets.revealed.participantIndex')}</Table.Th>
                     <Table.Th>{t('tickets.revealed.participantName')}</Table.Th>
                     <Table.Th>{t('tickets.revealed.participantAmount')}</Table.Th>
                   </Table.Tr>
@@ -269,6 +258,7 @@ const RevealedTicketPage = () => {
                 <Table.Tbody>
                   {sortedParticipants?.map((participant, index) => (
                     <Table.Tr key={index} bg={winnerIndex === index ? 'primary.7' : undefined}>
+                      <Table.Td>{index + 1}</Table.Td>
                       <Table.Td>
                         <Text fw={winnerIndex === index ? 700 : 400}>
                           {participant.name || t('tickets.revealed.anonymousParticipant')}

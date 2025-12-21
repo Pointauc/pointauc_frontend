@@ -61,28 +61,13 @@ const TicketVerificationInstructionsPage = () => {
               <Title order={2}>{t('tickets.verification.flowTitle')}</Title>
               <Text>{t('tickets.verification.flowDescription')}</Text>
               <Paper bg='gray' p='md' radius='md'>
-                <Stack gap='xs'>
-                  <Group gap='xs'>
-                    <Text fw={700}>1.</Text>
-                    <Text>{t('tickets.verification.flow.step1')}</Text>
-                  </Group>
-                  <Group gap='xs'>
-                    <Text fw={700}>2.</Text>
-                    <Text>{t('tickets.verification.flow.step2')}</Text>
-                  </Group>
-                  <Group gap='xs'>
-                    <Text fw={700}>3.</Text>
-                    <Text>{t('tickets.verification.flow.step3')}</Text>
-                  </Group>
-                  <Group gap='xs'>
-                    <Text fw={700}>4.</Text>
-                    <Text>{t('tickets.verification.flow.step4')}</Text>
-                  </Group>
-                  <Group gap='xs'>
-                    <Text fw={700}>5.</Text>
-                    <Text>{t('tickets.verification.flow.step5')}</Text>
-                  </Group>
-                </Stack>
+                <List spacing='xs' type='ordered'>
+                  <List.Item>{t('tickets.verification.flow.step1')}</List.Item>
+                  <List.Item>{t('tickets.verification.flow.step2')}</List.Item>
+                  <List.Item>{t('tickets.verification.flow.step3')}</List.Item>
+                  <List.Item>{t('tickets.verification.flow.step4')}</List.Item>
+                  <List.Item>{t('tickets.verification.flow.step5')}</List.Item>
+                </List>
               </Paper>
             </Stack>
           </Card>

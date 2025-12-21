@@ -27,6 +27,7 @@ const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQu
   const { t } = useTranslation();
 
   const verificationUrl = `${location.origin}/tickets/${ticketId}`;
+  const visibleTicketId = randomNumber ? ticketId : ticketId.slice(0, 9) + '...';
 
   return (
     <Card withBorder padding='sm' radius='md' className={styles.card}>
@@ -48,7 +49,7 @@ const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQu
       </Group>
       <div className={styles.grid}>
         <Text className={styles.label}>{t('wheel.ticket.id')}:</Text>
-        <Text className={styles.value}>{ticketId}</Text>
+        <Text className={styles.value}>{visibleTicketId}</Text>
 
         <Text className={styles.label}>{t('wheel.ticket.createdAt')}:</Text>
         <Text className={styles.value}>{`${createdAt} (UTC)`}</Text>
@@ -80,25 +81,33 @@ const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQu
         <Text size='sm' c='dimmed'>
           {t('wheel.ticket.verifyAt')}
         </Text>
-        <Group align='center'>
-          <Anchor href={verificationUrl} target='_blank'>
-            {verificationUrl.replace(/http(s)?:\/\//, '')}
-          </Anchor>
-          <ActionIcon
-            variant='default'
-            size='sm'
-            onClick={() => {
-              navigator.clipboard.writeText(verificationUrl);
-              notifications.show({
-                message: t('common.linkCopied'),
-                color: 'green',
-              });
-            }}
-            title={t('common.copy')}
-          >
-            <IconCopy size={16} />
-          </ActionIcon>
-        </Group>
+        {randomNumber && (
+          <Group align='center'>
+            <Anchor href={verificationUrl} target='_blank'>
+              {verificationUrl.replace(/http(s)?:\/\//, '')}
+            </Anchor>
+            <ActionIcon
+              variant='default'
+              size='sm'
+              onClick={() => {
+                navigator.clipboard.writeText(verificationUrl);
+                notifications.show({
+                  message: t('common.linkCopied'),
+                  color: 'green',
+                });
+              }}
+              title={t('common.copy')}
+            >
+              <IconCopy size={16} />
+            </ActionIcon>
+          </Group>
+        )}
+        {!randomNumber && (
+          <div className={styles.pendingIndicator}>
+            <IconClock size={12} />
+            <Text className={styles.placeholder}>{t('wheel.ticket.waitingForWheelSpinEnd')}</Text>
+          </div>
+        )}
       </Stack>
     </Card>
   );
