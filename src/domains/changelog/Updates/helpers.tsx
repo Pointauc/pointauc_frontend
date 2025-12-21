@@ -20,7 +20,7 @@ const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
         <Stack gap='xs'>
           <Title order={5}>Fixed an issue with dropout spin</Title>
           <Text>The winner was not chosen correctly during the dropout spin.</Text>
-          <Text>This issue was present on the site from 12:00 to 21:00 (UTC +3) on December 20, 2025.</Text>
+          <Text>This issue was present on the site from 14:00 to 21:00 (UTC +3) on December 20, 2025.</Text>
           <Text>I apologize for the inconvenience, and I will take measures to prevent this from happening again.</Text>
         </Stack>,
       ],
@@ -31,8 +31,8 @@ const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
       fixes: [
         <Stack gap='xs'>
           <Title order={5}>Исправлена ошибка с некорректным выбором победителя в колесе на выбывание</Title>
-          <Text>Ошибка была на сайте ровно с 12:00 до 21:00 по МСК (UTC +3)</Text>
-          <Text>Приношу извенения за неудобства, впредь будут приняты меры чтобы такого не повторилось.</Text>
+          <Text>Ошибка была на сайте 2025-12-20 ровно с 14:00 до 21:00 по МСК (UTC +3). Рекомендуется отменить результат аукционов на выбывание, которые произошли в этом промежутке.</Text>
+          <Text>Приношу извинения за неудобства, впредь будут приняты меры чтобы такого не повторилось.</Text>
         </Stack>,
       ],
     },
@@ -62,7 +62,7 @@ export const getUpdates = (date: string, locale: Language): UpdateData[] => {
 
   const lastVisitDate = dayjs(date);
   const now = dayjs('2025-12-20 14:00 +03:00');
-  const today12 = now.startOf('day').hour(12);
+  const today12 = now.startOf('day').hour(10);
   const today21 = now.startOf('day').hour(21);
 
   const shouldShowExtra =
