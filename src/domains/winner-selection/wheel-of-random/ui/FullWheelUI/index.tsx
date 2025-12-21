@@ -230,6 +230,8 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     const size = totalSize * 100;
     const seed = await withLoading(setIsLoadingSeed, getRandomNumber)(1, size).catch(() => undefined);
 
+    if (seed == null) return null;
+
     return seed && seed / size;
   }, [items]);
 

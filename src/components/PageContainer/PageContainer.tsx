@@ -5,7 +5,7 @@ import { Title } from '@mantine/core';
 import styles from './PageContainer.module.css';
 
 interface PageContainerProps {
-  title: string | ReactNode;
+  title?: string | ReactNode;
   className?: string;
   children: ReactNode;
   fixedHeight?: boolean;

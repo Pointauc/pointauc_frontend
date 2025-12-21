@@ -1,5 +1,5 @@
 import { Alert, Anchor, Button, Group, Select, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
@@ -12,6 +12,7 @@ import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
 import WheelFormatField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat';
 import TicketCard from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/TicketCard/TicketCard';
+import RandomnessExplanationModal from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/RandomnessExplanationModal';
 
 import { DropoutVariant } from '../../../BaseWheel/BaseWheel';
 import { DropoutHelp } from '../../../Dropout/ui/DropoutHelp';
@@ -56,6 +57,22 @@ const WheelSettings = (props: WheelSettingsProps) => {
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
   const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
   const randomnessSource = useWatch<Wheel.Settings>({ name: 'randomnessSource' });
+  const [randomnessModalOpened, setRandomnessModalOpened] = useState(false);
+  const [initialModalTab, setInitialModalTab] = useState<'local-basic' | 'random-org' | 'random-org-signed'>();
+
+  const MODAL_OPENED_KEY = 'randomnessModalHasBeenOpened';
+
+  // Auto-open modal for random-org-signed if it hasn't been opened before
+  useEffect(() => {
+    if (randomnessSource === 'random-org-signed') {
+      const hasBeenOpened = localStorage.getItem(MODAL_OPENED_KEY);
+      if (!hasBeenOpened) {
+        setInitialModalTab('random-org-signed');
+        setRandomnessModalOpened(true);
+        localStorage.setItem(MODAL_OPENED_KEY, 'true');
+      }
+    }
+  }, [randomnessSource]);
 
   // Auto-reset randomnessSource to 'local-basic' for restricted wheel types
   useEffect(() => {
@@ -96,6 +113,18 @@ const WheelSettings = (props: WheelSettingsProps) => {
     }
     return t('wheel.ticket.unknownError');
   }, [ticketError, randomnessSource, t]);
+
+  const handleOpenRandomnessModal = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setInitialModalTab(undefined);
+    setRandomnessModalOpened(true);
+  };
+
+  const handleCloseModal = () => {
+    setRandomnessModalOpened(false);
+    setInitialModalTab(undefined);
+  };
 
   return (
     <>
@@ -147,7 +176,14 @@ const WheelSettings = (props: WheelSettingsProps) => {
                       withArrow
                     >
                       <Select
-                        label={t('wheel.randomnessSource.label')}
+                        label={
+                          <Group gap='xs' justify='space-between' wrap='nowrap' w={'100%'}>
+                            <Text>{t('wheel.randomnessSource.label')}</Text>
+                            <Anchor size='sm' onClick={handleOpenRandomnessModal} style={{ whiteSpace: 'nowrap' }}>
+                              {t('wheel.randomnessSource.learnMore')}
+                            </Anchor>
+                          </Group>
+                        }
                         value={value}
                         onChange={(val) => onChange(val)}
                         data={randomnessOptions}
@@ -190,6 +226,11 @@ const WheelSettings = (props: WheelSettingsProps) => {
           <CoreImageField />
         </div>
       </SimpleGrid>
+      <RandomnessExplanationModal
+        opened={randomnessModalOpened}
+        onClose={handleCloseModal}
+        initialTab={initialModalTab}
+      />
     </>
   );
 };

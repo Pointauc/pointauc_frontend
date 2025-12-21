@@ -1,10 +1,12 @@
-import { Card, Group, Text, Title } from '@mantine/core';
-import { IconClock } from '@tabler/icons-react';
-import { useTranslation } from 'react-i18next';
+import { ActionIcon, Anchor, Card, Divider, Group, Text, Title } from '@mantine/core';
+import { IconClock, IconCopy } from '@tabler/icons-react';
+import { Trans, useTranslation } from 'react-i18next';
 
 import TextWithHint from '@domains/user-settings/ui/TextWithHint';
+import { config } from '@constants/config';
 
 import styles from './TicketCard.module.css';
+import { notifications } from '@mantine/notifications';
 
 interface TicketCardProps {
   ticketId: string;
@@ -24,6 +26,8 @@ export const MAX_QUOTA = 6;
  */
 const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQuota }: TicketCardProps) => {
   const { t } = useTranslation();
+
+  const verificationUrl = `${location.origin}/tickets/${ticketId}`;
 
   return (
     <Card withBorder padding='sm' radius='md' className={styles.card}>
@@ -70,6 +74,32 @@ const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQu
           </div>
         )}
       </div>
+
+      <Divider my='xs' />
+
+      <Group justify='space-between' align='center'>
+        <Text size='sm' c='dimmed'>
+          <Trans
+            i18nKey='wheel.ticket.verifyAt'
+            values={{ url: verificationUrl.replace(/http(s)?:\/\//, '') }}
+            components={{ 1: <Anchor href={verificationUrl} target='_blank' /> }}
+          />
+        </Text>
+        <ActionIcon
+          variant='default'
+          size='sm'
+          onClick={() => {
+            navigator.clipboard.writeText(verificationUrl);
+            notifications.show({
+              message: t('common.linkCopied'),
+              color: 'green',
+            });
+          }}
+          title={t('common.copy')}
+        >
+          <IconCopy size={16} />
+        </ActionIcon>
+      </Group>
     </Card>
   );
 };

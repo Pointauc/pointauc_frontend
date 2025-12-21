@@ -5,6 +5,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LayersIcon from '@mui/icons-material/Layers';
 import ScienceIcon from '@mui/icons-material/Science';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation, useMatches } from 'react-router-dom';
@@ -72,6 +73,11 @@ export const useMenuItems = (): MenuItem[] => {
     { title: 'menu.items.overlays.title', icon: <LayersIcon />, path: ROUTES.OVERLAYS, isBeta: true },
     // { title: 'menu.items.test.title', icon: <ScienceIcon />, path: ROUTES.TEST, navbarFixedState: 'opened' },
     { title: 'menu.items.guides.title', icon: <HelpIcon />, divide: true, path: docsPath, target: '_blank' },
+    {
+      title: 'menu.items.ticketVerification.title',
+      icon: <VerifiedUserIcon />,
+      path: ROUTES.TICKET_VERIFICATION_INFO,
+    },
     ...(userId
       ? [
           {

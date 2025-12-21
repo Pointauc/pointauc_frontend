@@ -112,6 +112,7 @@ export const loadFile = (filename: string, data: string): void => {
   document.body.removeChild(element);
 };
 
+// generates random number in range [0, 1)
 const getRandomValue = (): number => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
 
 export const getRandomIntInclusive = (min: number, max: number): number => {
