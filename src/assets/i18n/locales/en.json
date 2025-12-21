@@ -753,6 +753,11 @@
         "randomOrgSigned": {
           "tldr": "TLDR",
           "tldrText": "Use this when you need maximum security and transparency. Anyone can independently verify that neither the streamer nor the website could affect the outcome.",
+          "shortDescriptionTitle": "How it works",
+          "shortDescription1": "Random.org generates a new \"ticket\".",
+          "shortDescription2": "All parties can see the ticket serial number before the spin and accept that this ticket will decide the winner.",
+          "shortDescription3": "During the spin random.org assign a random number to this ticket.",
+          "shortDescription4": "Anyone can verify which number was generated for this ticket and the exact time when this ticket was revealed.",
           "analogy": "Real-World Analogy: The Lottery Ticket",
           "analogyIntro": "Imagine you're buying a scratch-off lottery ticket. Here's how it works:",
           "analogyStep1Title": "The Lottery Company (Random.org)",

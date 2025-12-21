@@ -1,4 +1,4 @@
-import { Alert, Button, Divider, Group, Stack, Table, Text, Title } from '@mantine/core';
+import { Alert, Button, Divider, Group, List, Stack, Table, Text, Title } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -51,7 +51,15 @@ const RandomOrgSignedTab = ({ onViewTechnicalDetails }: RandomOrgSignedTabProps)
       </Alert>
 
       <div>
-        <LotteryAnalogy />
+        <Title order={3} mb='sm'>
+          {t('wheel.randomnessModal.sources.randomOrgSigned.shortDescriptionTitle')}
+        </Title>
+        <List spacing='xs'>
+          <List.Item>{t('wheel.randomnessModal.sources.randomOrgSigned.shortDescription1')}</List.Item>
+          <List.Item>{t('wheel.randomnessModal.sources.randomOrgSigned.shortDescription2')}</List.Item>
+          <List.Item>{t('wheel.randomnessModal.sources.randomOrgSigned.shortDescription3')}</List.Item>
+          <List.Item>{t('wheel.randomnessModal.sources.randomOrgSigned.shortDescription4')}</List.Item>
+        </List>
       </div>
 
       <div>
