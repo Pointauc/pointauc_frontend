@@ -9,13 +9,13 @@ const LocalBasicTab = () => {
     <Table striped>
       <Table.Thead>
         <Table.Tr>
-          <Table.Th>
+          <Table.Th w='50%'>
             <Group gap='xs'>
               <IconCheck size={16} color='var(--mantine-color-green-6)' />
               <Text fw={600}>{t('wheel.randomnessModal.pros')}</Text>
             </Group>
           </Table.Th>
-          <Table.Th>
+          <Table.Th w='50%'>
             <Group gap='xs'>
               <IconX size={16} color='var(--mantine-color-red-6)' />
               <Text fw={600}>{t('wheel.randomnessModal.cons')}</Text>
@@ -122,4 +122,3 @@ const getRandomValue = (): number => crypto.getRandomValues(new Uint32Array(1))[
 };
 
 export default LocalBasicTab;
-

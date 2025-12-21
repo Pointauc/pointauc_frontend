@@ -81,8 +81,6 @@ const RevealedTicketPage = () => {
     return record?.participantsJson.sort((a, b) => b.amount - a.amount || (a.name ?? '').localeCompare(b.name ?? ''));
   }, [record?.participantsJson]);
 
-  console.log(sortedParticipants, record?.participantsJson);
-
   if (isLoading || randomOrgTicketQuery.isLoading) {
     return (
       <PageContainer>
@@ -123,6 +121,9 @@ const RevealedTicketPage = () => {
           <Group justify='space-between' align='center'>
             <Title order={1}>{t('tickets.revealed.title')}</Title>
           </Group>
+          <Button variant='outline' component='a' href='/tickets/verification-instructions' target='_blank'>
+            {t('tickets.revealed.checkInstruction')}
+          </Button>
 
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>

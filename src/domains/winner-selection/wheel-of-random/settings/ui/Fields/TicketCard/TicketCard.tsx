@@ -1,4 +1,4 @@
-import { ActionIcon, Anchor, Card, Divider, Group, Text, Title } from '@mantine/core';
+import { ActionIcon, Anchor, Card, Divider, Group, Stack, Text, Title } from '@mantine/core';
 import { IconClock, IconCopy } from '@tabler/icons-react';
 import { Trans, useTranslation } from 'react-i18next';
 import { notifications } from '@mantine/notifications';
@@ -76,29 +76,30 @@ const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQu
 
       <Divider my='xs' />
 
-      <Group justify='space-between' align='center'>
+      <Stack gap={0}>
         <Text size='sm' c='dimmed'>
-          <Trans
-            i18nKey='wheel.ticket.verifyAt'
-            values={{ url: verificationUrl.replace(/http(s)?:\/\//, '') }}
-            components={{ 1: <Anchor href={verificationUrl} target='_blank' /> }}
-          />
+          {t('wheel.ticket.verifyAt')}
         </Text>
-        <ActionIcon
-          variant='default'
-          size='sm'
-          onClick={() => {
-            navigator.clipboard.writeText(verificationUrl);
-            notifications.show({
-              message: t('common.linkCopied'),
-              color: 'green',
-            });
-          }}
-          title={t('common.copy')}
-        >
-          <IconCopy size={16} />
-        </ActionIcon>
-      </Group>
+        <Group align='center'>
+          <Anchor href={verificationUrl} target='_blank'>
+            {verificationUrl.replace(/http(s)?:\/\//, '')}
+          </Anchor>
+          <ActionIcon
+            variant='default'
+            size='sm'
+            onClick={() => {
+              navigator.clipboard.writeText(verificationUrl);
+              notifications.show({
+                message: t('common.linkCopied'),
+                color: 'green',
+              });
+            }}
+            title={t('common.copy')}
+          >
+            <IconCopy size={16} />
+          </ActionIcon>
+        </Group>
+      </Stack>
     </Card>
   );
 };

@@ -71,6 +71,7 @@ const RandomnessExplanationModal = ({ opened, onClose, initialTab }: RandomnessE
       title={t('wheel.randomnessModal.title')}
       size='xl'
       centered
+      padding='lg'
       className={classes.modal}
     >
       {view === 'intro' ? (

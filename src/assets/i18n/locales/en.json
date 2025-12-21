@@ -739,7 +739,7 @@
           "tldr": "TLDR",
           "tldrText": "Use this if you need true randomness and want to emphasize fairness but don't need cryptographic proof.",
           "whatIsIt": "What is Random.org?",
-          "whatIsItText": "Random.org is a trusted third-party service that generates true random numbers based on atmospheric noise captured by radio receivers.",
+          "whatIsItText": "Random.org is a trusted third-party service that generates true random numbers based on atmospheric noise.",
           "howItGenerates": "Learn more about <1>how Random.org generates randomness</1>.",
           "implementation": "Implementation",
           "implementationText": "The website makes an API call to Random.org during the spin to get a random number.",
@@ -792,7 +792,7 @@
       "quotaExceededMessage": "You have exceeded your daily quota of {{totalQuota}} spins. Please try again tomorrow.",
       "drawNewTicket": "New Ticket",
       "unauthorizedError": "This feature is only available for authorized users.",
-      "verifyAt": "Verify at <1>{{url}}</1>"
+      "verifyAt": "Verify at"
     },
     "wheel": "Wheel",
     "winner": "Winner",
@@ -845,6 +845,7 @@
   "tickets": {
     "revealed": {
       "title": "Revealed Ticket Details",
+      "checkInstruction": "Link to verification instructions",
       "loading": "Loading ticket information...",
       "verified": "Verified",
       "ticketId": "Ticket ID",
