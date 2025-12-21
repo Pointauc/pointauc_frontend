@@ -3,6 +3,7 @@ import { IconCheck, IconX } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
 import ROUTES from '@constants/routes.constants';
+import PrerequisitesAlert from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/PrerequisitesAlert/PrerequisitesAlert';
 
 import LotteryAnalogy from './LotteryAnalogy';
 
@@ -62,6 +63,10 @@ const RandomOrgSignedTab = ({ onViewTechnicalDetails }: RandomOrgSignedTabProps)
           {t('wheel.randomnessModal.sources.randomOrgSigned.viewTechnicalButton')}
         </Button>
       </div>
+
+      <Divider />
+
+      <PrerequisitesAlert />
 
       <Divider />
 

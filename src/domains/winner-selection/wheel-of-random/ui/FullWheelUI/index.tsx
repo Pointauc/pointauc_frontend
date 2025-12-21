@@ -201,7 +201,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       ? itemsFromProps.filter(({ amount }) => amount && amount > 0)
       : itemsFromProps.map((item) => ({ ...item, amount: 1 }));
 
-    return filtered.sort((a, b) => a.amount - b.amount || a.name.localeCompare(b.name));
+    return filtered.sort((a, b) => b.amount - a.amount || a.name.localeCompare(b.name));
   }, [itemsFromProps]);
 
   useSyncEffect(() => {

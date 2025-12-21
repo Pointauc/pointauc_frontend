@@ -1,11 +1,50 @@
-import { Alert, Badge, Card, Container, Group, Loader, Paper, Stack, Table, Text, Title } from '@mantine/core';
-import { IconAlertCircle, IconCheck } from '@tabler/icons-react';
+import {
+  Alert,
+  Badge,
+  Box,
+  Card,
+  Container,
+  Group,
+  Loader,
+  Paper,
+  Stack,
+  Table,
+  Text,
+  Title,
+  Anchor,
+  Button,
+} from '@mantine/core';
+import { CodeHighlight } from '@mantine/code-highlight';
+import { IconAlertCircle, IconCheck, IconExternalLink } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { useMemo } from 'react';
 
 import { signedRandomControllerGetWinnerRecordByTicketOptions } from '@api/openapi/@tanstack/react-query.gen';
 import PageContainer from '@components/PageContainer/PageContainer';
+import { getWinnerFromDistance } from '@domains/winner-selection/wheel-of-random/lib/geometry';
+import { getSlotFromSeed } from '@services/PredictionService';
+
+import WinnerSelectionVisualizer from './WinnerSelectionVisualizer';
+
+interface RandomOrgTicketResponse {
+  jsonrpc: string;
+  id: number;
+  result: {
+    ticketId: string;
+    creationTime: string;
+    usedTime: string | null;
+    result: {
+      random: {
+        data: number[];
+        completionTime: string;
+        [key: string]: unknown;
+      };
+    };
+  };
+}
 
 const RevealedTicketPage = () => {
   const { t } = useTranslation();
@@ -21,7 +60,30 @@ const RevealedTicketPage = () => {
     }),
   );
 
-  if (isLoading) {
+  const randomOrgTicketQuery = useQuery({
+    queryKey: ['random-org-ticket', ticketId],
+    queryFn: () =>
+      axios
+        .post<RandomOrgTicketResponse>('https://api.random.org/json-rpc/4/invoke', {
+          jsonrpc: '2.0',
+          method: 'getTicket',
+          params: {
+            ticketId: ticketId,
+          },
+          id: Math.floor(Math.random() * 10000),
+        })
+        .then((res) => res.data),
+    enabled: !!ticketId,
+    staleTime: 1000 * 60 * 60,
+  });
+
+  const sortedParticipants = useMemo(() => {
+    return record?.participantsJson.sort((a, b) => b.amount - a.amount || (a.name ?? '').localeCompare(b.name ?? ''));
+  }, [record?.participantsJson]);
+
+  console.log(sortedParticipants, record?.participantsJson);
+
+  if (isLoading || randomOrgTicketQuery.isLoading) {
     return (
       <PageContainer>
         <Container size='md' py='xl'>
@@ -34,7 +96,7 @@ const RevealedTicketPage = () => {
     );
   }
 
-  if (error || !record) {
+  if (error || !record || randomOrgTicketQuery.error || !randomOrgTicketQuery.data) {
     return (
       <PageContainer>
         <Container size='md' py='xl'>
@@ -46,9 +108,13 @@ const RevealedTicketPage = () => {
     );
   }
 
+  const randomOrgData = randomOrgTicketQuery.data.result;
+
   const formatTimestamp = (timestamp: string) => {
-    return new Date(timestamp).toLocaleString();
+    return `${timestamp} (UTC)`;
   };
+
+  const winnerIndex = getSlotFromSeed(record.participantsJson, randomOrgData.result.random.data[0]);
 
   return (
     <PageContainer>
@@ -74,13 +140,13 @@ const RevealedTicketPage = () => {
                   <Text size='sm' c='dimmed' mb={4}>
                     {t('tickets.revealed.createdAt')}
                   </Text>
-                  <Text size='sm'>{formatTimestamp(record.randomData.completionTime)}</Text>
+                  <Text size='sm'>{formatTimestamp(randomOrgData.creationTime)}</Text>
                 </div>
                 <div>
                   <Text size='sm' c='dimmed' mb={4}>
-                    {t('tickets.revealed.revealedAt')}
+                    {t('tickets.revealed.usedTime')}
                   </Text>
-                  <Text size='sm'>{formatTimestamp(record.createdAt)}</Text>
+                  <Text size='sm'>{randomOrgData.usedTime ? formatTimestamp(randomOrgData.usedTime) : '-'}</Text>
                 </div>
               </Group>
             </Stack>
@@ -88,28 +154,58 @@ const RevealedTicketPage = () => {
 
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>
-              <Title order={3}>{t('tickets.revealed.randomNumber')}</Title>
-              <Paper bg='gray' p='md' radius='md'>
-                <Text size='xl' fw={700} ta='center' ff='monospace'>
-                  {record.randomData.data[0]}
+              <Title order={3}>{t('tickets.revealed.signature')}</Title>
+              <CodeHighlight
+                code={record.signature ?? ''}
+                language='text'
+                withCopyButton
+                copyLabel={t('common.copy')}
+                copiedLabel={t('common.copied')}
+              />
+              <Group justify='space-between' align='center'>
+                <Text size='sm' c='dimmed'>
+                  {t('tickets.revealed.signatureDescription')}
                 </Text>
-              </Paper>
+                <Button
+                  component='a'
+                  href='https://api.random.org/signatures/form'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  variant='light'
+                  size='sm'
+                  rightSection={<IconExternalLink size={16} />}
+                >
+                  {t('tickets.revealed.verifySignature')}
+                </Button>
+              </Group>
+
+              <Title order={4} mt='md'>
+                {t('tickets.revealed.randomData')}
+              </Title>
+              <CodeHighlight
+                code={JSON.stringify(randomOrgData.result.random ?? {}, null, 2)}
+                language='json'
+                withCopyButton
+                copyLabel={t('common.copy')}
+                copiedLabel={t('common.copied')}
+                style={{ maxHeight: '200px', overflow: 'auto' }}
+              />
               <Text size='sm' c='dimmed'>
-                {t('tickets.revealed.randomNumberDescription')}
+                {t('tickets.revealed.randomDataDescription')}
               </Text>
             </Stack>
           </Card>
 
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>
-              <Title order={3}>{t('tickets.revealed.signature')}</Title>
-              <Paper bg='gray' p='md' radius='md'>
-                <Text size='xs' ff='monospace' style={{ wordBreak: 'break-all' }}>
-                  {record.signature}
+              <Title order={3}>{t('tickets.revealed.randomNumber')}</Title>
+              <Paper bg='dark.8' p='md' radius='md' shadow='none'>
+                <Text size='xl' fw={700} ta='center' ff='monospace'>
+                  {record.randomData.data[0]}
                 </Text>
               </Paper>
               <Text size='sm' c='dimmed'>
-                {t('tickets.revealed.signatureDescription')}
+                {t('tickets.revealed.randomNumberDescription')}
               </Text>
             </Stack>
           </Card>
@@ -140,6 +236,18 @@ const RevealedTicketPage = () => {
                   </Text>
                 </div>
               </Group>
+
+              <Box mt='md'>
+                <Text size='sm' fw={500} mb='sm'>
+                  {t('tickets.revealed.visualRepresentation')}
+                </Text>
+                <WinnerSelectionVisualizer
+                  participants={sortedParticipants || []}
+                  randomNumber={record.randomData.data[0]}
+                  totalAmount={record.metadata.totalAmount}
+                  winnerIndex={winnerIndex}
+                />
+              </Box>
             </Stack>
           </Card>
 
@@ -154,17 +262,15 @@ const RevealedTicketPage = () => {
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {record.participantsJson.map((participant, index) => (
-                    <Table.Tr key={index}>
+                  {sortedParticipants?.map((participant, index) => (
+                    <Table.Tr key={index} bg={winnerIndex === index ? 'primary.7' : undefined}>
                       <Table.Td>
-                        <Text fw={participant.name === record.metadata.winnerName ? 700 : 400}>
+                        <Text fw={winnerIndex === index ? 700 : 400}>
                           {participant.name || t('tickets.revealed.anonymousParticipant')}
                         </Text>
                       </Table.Td>
                       <Table.Td>
-                        <Text fw={participant.name === record.metadata.winnerName ? 700 : 400}>
-                          {participant.amount}
-                        </Text>
+                        <Text fw={winnerIndex === index ? 700 : 400}>{participant.amount}</Text>
                       </Table.Td>
                     </Table.Tr>
                   ))}

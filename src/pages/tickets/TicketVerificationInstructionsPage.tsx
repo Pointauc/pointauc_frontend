@@ -20,6 +20,7 @@ import { Trans } from 'react-i18next';
 
 import PageContainer from '@components/PageContainer/PageContainer';
 import LotteryAnalogy from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/LotteryAnalogy';
+import PrerequisitesAlert from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/PrerequisitesAlert/PrerequisitesAlert';
 
 const TicketVerificationInstructionsPage = () => {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ const TicketVerificationInstructionsPage = () => {
   return (
     <PageContainer>
       <Container size='md' py='xl'>
-        <Stack gap='xl' pb='md'>
+        <Stack gap='lg' pb='md'>
           <Group justify='space-between' align='center'>
             <Title order={1}>{t('tickets.verification.title')}</Title>
             <IconShieldCheck size={48} color='var(--mantine-color-blue-6)' />
@@ -37,6 +38,8 @@ const TicketVerificationInstructionsPage = () => {
           <Alert icon={<IconInfoCircle size={20} />} color='blue' variant='light'>
             {t('tickets.verification.introduction')}
           </Alert>
+
+          <PrerequisitesAlert />
 
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>
@@ -164,6 +167,9 @@ const TicketVerificationInstructionsPage = () => {
                     {t('tickets.verification.step2Title')}
                   </Title>
                   <Text mb='sm'>{t('tickets.verification.step2Description')}</Text>
+                  <Text c='red.3' mb='sm'>
+                    {t('tickets.verification.step2Description2')}
+                  </Text>
                   <Paper bg='gray' p='md' radius='md' mb='sm'>
                     <Text size='sm' fw={600} mb='xs'>
                       {t('tickets.verification.algorithmTitle')}
@@ -225,34 +231,6 @@ const TicketVerificationInstructionsPage = () => {
                       1: (
                         <Anchor
                           href='https://api.random.org/signatures/form'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        />
-                      ),
-                    }}
-                  />
-                </List.Item>
-                <List.Item>
-                  <Trans
-                    i18nKey='tickets.verification.resource3'
-                    components={{
-                      1: (
-                        <Anchor
-                          href='https://github.com/Pointauc/pointauc_frontend/blob/master/src/services/PredictionService.ts'
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        />
-                      ),
-                    }}
-                  />
-                </List.Item>
-                <List.Item>
-                  <Trans
-                    i18nKey='tickets.verification.resource4'
-                    components={{
-                      1: (
-                        <Anchor
-                          href='https://github.com/Pointauc/pointauc_frontend?tab=readme-ov-file#-authenticity-verification'
                           target='_blank'
                           rel='noopener noreferrer'
                         />

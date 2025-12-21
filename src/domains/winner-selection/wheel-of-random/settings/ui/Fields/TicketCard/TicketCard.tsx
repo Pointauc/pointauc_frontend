@@ -1,12 +1,11 @@
 import { ActionIcon, Anchor, Card, Divider, Group, Text, Title } from '@mantine/core';
 import { IconClock, IconCopy } from '@tabler/icons-react';
 import { Trans, useTranslation } from 'react-i18next';
+import { notifications } from '@mantine/notifications';
 
 import TextWithHint from '@domains/user-settings/ui/TextWithHint';
-import { config } from '@constants/config';
 
 import styles from './TicketCard.module.css';
-import { notifications } from '@mantine/notifications';
 
 interface TicketCardProps {
   ticketId: string;
