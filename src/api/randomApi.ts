@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import ENDPOINTS from '../constants/api.constants';
-
 export const getRandomNumber = async (min: number, max: number): Promise<number | null> => {
   const params = {
     num: 1,
@@ -10,11 +8,12 @@ export const getRandomNumber = async (min: number, max: number): Promise<number 
     col: 1,
     base: 10,
     format: 'plain',
-    md: 'new',
-    cl: 'w',
+    rnd: 'new',
   };
-  const { data: randomOrgResponse } = await axios.get<string>('https://www.random.org/integers', { params });
-  const numberMatch = randomOrgResponse?.match(/<span.*>(\d+)\s+<\/span>/)?.[1];
+  const { data: randomOrgResponse } = await axios.get<string>('https://www.random.org/integers/', { params });
 
-  return numberMatch ? parseInt(numberMatch) : null;
+  // With format=plain, response is just the number as plain text
+  const number = parseInt(randomOrgResponse.trim());
+
+  return isNaN(number) ? null : number;
 };

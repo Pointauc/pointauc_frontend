@@ -51,11 +51,11 @@ const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, availableQu
         <Text className={styles.value}>{ticketId}</Text>
 
         <Text className={styles.label}>{t('wheel.ticket.createdAt')}:</Text>
-        <Text className={styles.value}>{createdAt}</Text>
+        <Text className={styles.value}>{`${createdAt} (UTC)`}</Text>
 
         <Text className={styles.label}>{t('wheel.ticket.revealedAt')}:</Text>
         {revealedAt ? (
-          <Text className={styles.value}>{revealedAt}</Text>
+          <Text className={styles.value}>{`${revealedAt} (UTC)`}</Text>
         ) : (
           <div className={styles.pendingIndicator}>
             <IconClock size={12} />

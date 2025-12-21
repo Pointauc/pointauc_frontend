@@ -779,6 +779,8 @@
     "ticket": {
       "errorTitle": "Random generation cannot be verified",
       "unknownError": "An unknown error occurred. Random generation cannot be verified. Please try again later or contact me through github or telegram.",
+      "spinUnknownErrorTitle": "Unknown Error",
+      "spinUnknownErrorMessage": "An unknown error occurred. Cannot generate random number. Please try again later or contact me through github or telegram. raw error: {{error}}",
       "title": "Random.org Ticket",
       "id": "Ticket ID",
       "createdAt": "Created",
@@ -846,6 +848,7 @@
     "revealed": {
       "title": "Revealed Ticket Details",
       "checkInstruction": "Link to verification instructions",
+      "warning": "If you checked the ticket/streamer and found a discrepancy, please do not immediately accuse anyone of cheating. Write to me in Telegram and I will review it all giving you an official answer with an explanation for a specific case.",
       "loading": "Loading ticket information...",
       "verified": "Verified",
       "ticketId": "Ticket ID",
@@ -930,7 +933,10 @@
       "resource2": "<1>Random.org Signature Verification Form</1>",
       "resource3": "<1>Pointauc Winner Selection Algorithm (GitHub)</1>",
       "resource4": "<1>Pointauc Code Authenticity Verification (GitHub)</1>",
-      "conclusion": "By verifying both the random number generation and the winner selection algorithm, you can be confident that the outcome was fair and that neither the streamer nor the website could have influenced the result."
+      "conclusion": "By verifying both the random number generation and the winner selection algorithm, you can be confident that the outcome was fair and that neither the streamer nor the website could have influenced the result.",
+      "tbdTitle": "Planned Additions",
+      "tbdDescription": "This section will be expanded with additional information.",
+      "tbdItem1": "Describing potential attack vectors and how to catch them"
     }
   },
   "debug": {

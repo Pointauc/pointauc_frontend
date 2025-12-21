@@ -245,6 +245,31 @@ const TicketVerificationInstructionsPage = () => {
           <Alert color='green' variant='light'>
             <Text size='sm'>{t('tickets.verification.conclusion')}</Text>
           </Alert>
+
+          <Divider />
+
+          <Card
+            shadow='sm'
+            padding='lg'
+            radius='md'
+            withBorder
+            style={{ borderColor: 'var(--mantine-color-yellow-6)' }}
+          >
+            <Stack gap='md'>
+              <Group gap='xs'>
+                <Title order={2}>{t('tickets.verification.tbdTitle')}</Title>
+                <Text c='yellow' fw={600} size='sm'>
+                  (TBD)
+                </Text>
+              </Group>
+              <Text c='dimmed'>{t('tickets.verification.tbdDescription')}</Text>
+              <List spacing='sm'>
+                <List.Item>
+                  <Text>{t('tickets.verification.tbdItem1')}</Text>
+                </List.Item>
+              </List>
+            </Stack>
+          </Card>
         </Stack>
       </Container>
     </PageContainer>

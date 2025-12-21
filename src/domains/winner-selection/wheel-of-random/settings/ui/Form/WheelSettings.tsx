@@ -67,7 +67,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
     if (randomnessSource === 'random-org-signed') {
       const hasBeenOpened = localStorage.getItem(MODAL_OPENED_KEY);
       if (!hasBeenOpened) {
-        setInitialModalTab('random-org-signed');
+        // setInitialModalTab('random-org-signed');
         setRandomnessModalOpened(true);
         localStorage.setItem(MODAL_OPENED_KEY, 'true');
       }

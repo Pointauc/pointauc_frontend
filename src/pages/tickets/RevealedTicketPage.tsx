@@ -125,6 +125,10 @@ const RevealedTicketPage = () => {
             {t('tickets.revealed.checkInstruction')}
           </Button>
 
+          <Alert color='orange' icon={<IconAlertCircle size={20} />} variant='light'>
+            {t('tickets.revealed.warning')}
+          </Alert>
+
           <Card shadow='sm' padding='lg' radius='md' withBorder>
             <Stack gap='md'>
               <div>

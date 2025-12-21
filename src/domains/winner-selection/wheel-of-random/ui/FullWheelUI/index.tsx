@@ -170,7 +170,15 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
           title: t('wheel.ticket.quotaExceeded'),
           message: t('wheel.ticket.quotaExceededMessage', { totalQuota: MAX_QUOTA }),
           color: 'red',
-          autoClose: 8000,
+          autoClose: 10000,
+          withCloseButton: true,
+        });
+      } else {
+        notifications.show({
+          title: t('wheel.ticket.spinUnknownErrorTitle'),
+          message: t('wheel.ticket.spinUnknownErrorMessage', { error: error.response?.data?.message }),
+          color: 'red',
+          autoClose: 10000,
           withCloseButton: true,
         });
       }
@@ -226,14 +234,14 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   });
 
   const getSeed = useCallback(async () => {
-    const totalSize = getTotalSize(items);
+    const totalSize = getTotalSize(filteredItems);
     const size = totalSize * 100;
     const seed = await withLoading(setIsLoadingSeed, getRandomNumber)(1, size).catch(() => undefined);
 
     if (seed == null) return null;
 
     return seed && seed / size;
-  }, [items]);
+  }, [filteredItems]);
 
   const onSpinClick = useCallback(
     async ({ randomnessSource }: Wheel.Settings) => {
