@@ -31,7 +31,7 @@ export const getSlotFromSeed = (slots: SlotLike[], distance: number): number => 
     return restAmount <= 0;
   });
 
-  return index >= 0 ? index : slots.length - 1;
+  return index;
 };
 
 export const getSlotFromDistance = (slots: SlotLike[], distance: number): number => {

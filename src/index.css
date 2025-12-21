@@ -6,3 +6,9 @@
 
 /* Import Mantine styles in the mantine layer */
 @import '@mantine/core/styles.layer.css';
+
+ol,
+ul,
+menu {
+  list-style: disc;
+}

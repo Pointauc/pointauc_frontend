@@ -62,6 +62,7 @@ const useSimulationDropout = (controller: RefObject<WheelController | null>): Wh
       const winner = dropoutQueueRef.current.shift() as string;
       return {
         id: winner,
+        isFinalSpin: dropoutQueueRef.current.length === 1,
       };
     },
     [initialItems],

@@ -13,7 +13,7 @@ namespace Wheel {
     randomSpinConfig: { min: number; max: number };
     randomSpinEnabled: boolean;
 
-    useRandomOrg: boolean;
+    randomnessSource: 'local-basic' | 'random-org' | 'random-org-signed';
     format: WheelFormat;
     paceConfig: RandomPaceConfig;
     split: number;
@@ -45,6 +45,7 @@ namespace Wheel {
 
   export interface GetNextWinnerIdResult {
     id: string | number;
+    isFinalSpin: boolean;
   }
 
   interface FormatHook {

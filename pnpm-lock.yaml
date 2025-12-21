@@ -26,6 +26,9 @@ importers:
       '@kozjar/twitch-emoticons':
         specifier: ^2.3.3
         version: 2.3.3
+      '@mantine/code-highlight':
+        specifier: ^8.3.9
+        version: 8.3.9(@mantine/core@8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.9(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@mantine/colors-generator':
         specifier: ^8.3.9
         version: 8.3.9(chroma-js@3.1.2)
@@ -1041,6 +1044,14 @@ packages:
 
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
+
+  '@mantine/code-highlight@8.3.9':
+    resolution: {integrity: sha512-wST9JbpodGJyRFC2bHLObukkcx39w8Uk5bznxr4DvErtiHhbDxvn7kHK7BXWM31hiRPYFZ9nouhqv8YPWkNf2A==}
+    peerDependencies:
+      '@mantine/core': 8.3.9
+      '@mantine/hooks': 8.3.9
+      react: ^18.x || ^19.x
+      react-dom: ^18.x || ^19.x
 
   '@mantine/colors-generator@8.3.9':
     resolution: {integrity: sha512-WWBbJj4t0KHyTyeBt/3E3TUwuZETIB7MYG0zNU+pXFMTmRKACoYxBqEPZNMATKp5z7JzCg4a4NLecGEJk56mlg==}
@@ -5982,6 +5993,14 @@ snapshots:
       - debug
 
   '@kurkle/color@0.3.4': {}
+
+  '@mantine/code-highlight@8.3.9(@mantine/core@8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@mantine/hooks@8.3.9(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      '@mantine/core': 8.3.9(@mantine/hooks@8.3.9(react@19.2.0))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@mantine/hooks': 8.3.9(react@19.2.0)
+      clsx: 2.1.1
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   '@mantine/colors-generator@8.3.9(chroma-js@3.1.2)':
     dependencies:

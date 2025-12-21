@@ -9,6 +9,7 @@ import {
   VariantColorsResolver,
   defaultVariantColorsResolver,
 } from '@mantine/core';
+import { CodeHighlightAdapterProvider, plainTextAdapter } from '@mantine/code-highlight';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { DEFAULT_THEME } from '@mantine/core';
@@ -126,7 +127,7 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <MantineBaseProvider defaultColorScheme='dark' cssVariablesResolver={cssResolver} theme={theme}>
-      {children}
+      <CodeHighlightAdapterProvider adapter={plainTextAdapter}>{children}</CodeHighlightAdapterProvider>
     </MantineBaseProvider>
   );
 };
