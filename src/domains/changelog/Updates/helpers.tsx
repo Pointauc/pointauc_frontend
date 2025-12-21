@@ -31,7 +31,10 @@ const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
       fixes: [
         <Stack gap='xs'>
           <Title order={5}>Исправлена ошибка с некорректным выбором победителя в колесе на выбывание</Title>
-          <Text>Ошибка была на сайте 2025-12-20 ровно с 14:00 до 21:00 по МСК (UTC +3). Рекомендуется отменить результат аукционов на выбывание, которые произошли в этом промежутке.</Text>
+          <Text>
+            Ошибка была на сайте 2025-12-20 ровно с 14:00 до 21:00 по МСК (UTC +3). Рекомендуется отменить результат
+            аукционов на выбывание, которые произошли в этом промежутке.
+          </Text>
           <Text>Приношу извинения за неудобства, впредь будут приняты меры чтобы такого не повторилось.</Text>
         </Stack>,
       ],
@@ -76,7 +79,7 @@ export const getUpdates = (date: string, locale: Language): UpdateData[] => {
       ...update,
       date: todayDate,
     }));
-    return [...extra, ...baseUpdates];
+    return [...baseUpdates, ...extra];
   }
 
   return baseUpdates;
