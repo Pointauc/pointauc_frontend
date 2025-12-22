@@ -38,6 +38,7 @@ import { useSyncEffect } from '@shared/lib/react';
 import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
 import { MAX_QUOTA } from '../../settings/ui/Fields/TicketCard/TicketCard';
+import { defaultWheelSettings } from '../../lib/hooks/useSavedWheelSettings';
 
 import styles from './index.module.css';
 
@@ -80,27 +81,6 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   onSettingsChanged?: (settings: Wheel.Settings) => void;
   onSpinStart?: (params: SpinStartCallbackParams) => void;
 }
-
-const defaultSettings: Wheel.Settings = {
-  spinTime: 20,
-  randomSpinConfig: { min: 20, max: 100 },
-  randomSpinEnabled: false,
-
-  randomnessSource: 'local-basic',
-  format: WheelFormat.Default,
-  paceConfig: PACE_PRESETS.suddenFinal,
-  split: 1,
-  coreImage: localStorage.getItem('wheelEmote'),
-
-  maxDepth: null,
-  depthRestriction: null,
-
-  dropoutVariant: DropoutVariant.New,
-  wheelStyles: 'default',
-  showDeleteConfirmation: true,
-};
-const savedSettings = JSON.parse(localStorage.getItem('wheelSettings') ?? '{}');
-const initialSettings = { ...defaultSettings, ...savedSettings };
 
 export interface RandomWheelController {
   setItems: (items: WheelItem[]) => void;
@@ -439,17 +419,14 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
 interface RandomWheelProviderProps<TWheelItem extends WheelItem = WheelItem> extends RandomWheelProps<TWheelItem> {
   form?: React.RefObject<UseFormReturn<Wheel.Settings> | null>;
+  initialSettings?: Wheel.Settings;
 }
 
 const Provider = <TWheelItem extends WheelItem = WheelItem>(
   props: RandomWheelProviderProps<TWheelItem>,
 ): ReactElement => {
-  const initial = useMemo(
-    () => ({ ...initialSettings, spinTime: props.initialSpinTime || initialSettings.spinTime }),
-    [props.initialSpinTime],
-  );
-  const form = useForm<Wheel.Settings>({ defaultValues: initial });
-  const { onSettingsChanged } = props;
+  const { onSettingsChanged, initialSettings } = props;
+  const form = useForm<Wheel.Settings>({ defaultValues: initialSettings ?? defaultWheelSettings });
 
   useEffect(() => {
     const unsubscribe = form.subscribe({
@@ -458,12 +435,6 @@ const Provider = <TWheelItem extends WheelItem = WheelItem>(
       },
       callback: (data) => {
         onSettingsChanged?.(data.values as Wheel.Settings);
-
-        try {
-          localStorage.setItem('wheelSettings', JSON.stringify(data.values));
-        } catch (error) {
-          console.error(error);
-        }
       },
     });
 

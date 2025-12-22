@@ -14,6 +14,7 @@ import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
 import { deleteSlot, initialSlots, setSlots } from '@reducers/Slots/Slots';
 import { SlotListToWheelList } from '@utils/slots.utils';
+import { useSavedWheelSettings } from '@domains/winner-selection/wheel-of-random/lib/hooks/useSavedWheelSettings';
 
 import styles from './WheelPage.module.css';
 
@@ -68,6 +69,13 @@ const WheelPage: FC = () => {
     [broadcastSpin],
   );
 
+  const handleSettingsChanged = (settings: Wheel.Settings) => {
+    setWheelSettings(settings);
+    localStorage.setItem('wheelSettings', JSON.stringify(settings));
+  };
+
+  const initialSettings = useSavedWheelSettings();
+
   return (
     <PageContainer
       className={`${styles.container} wheel-wrapper padding`}
@@ -75,11 +83,12 @@ const WheelPage: FC = () => {
       title={title}
     >
       <RandomWheel
+        initialSettings={initialSettings}
         items={wheelItems}
         deleteItem={deleteItem}
         wheelRef={wheelController}
         onWheelItemsChanged={setParticipants}
-        onSettingsChanged={setWheelSettings}
+        onSettingsChanged={handleSettingsChanged}
         form={wheelForm}
         onSpinStart={handleSpinStart}
       />
