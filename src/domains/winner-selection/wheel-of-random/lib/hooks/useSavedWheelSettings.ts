@@ -22,10 +22,3 @@ export const defaultWheelSettings: Wheel.Settings = {
   wheelStyles: 'default',
   showDeleteConfirmation: true,
 };
-
-export const useSavedWheelSettings = () => {
-  return useMemo((): Wheel.Settings => {
-    const savedSettings = JSON.parse(localStorage.getItem('wheelSettings') ?? '{}');
-    return { ...defaultWheelSettings, ...savedSettings };
-  }, []);
-};

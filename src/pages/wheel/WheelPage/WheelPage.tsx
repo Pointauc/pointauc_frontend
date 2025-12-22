@@ -1,4 +1,4 @@
-import { Group, Title } from '@mantine/core';
+import { Group, Loader, Title } from '@mantine/core';
 import { FC, Key, useCallback, useMemo, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,10 @@ import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
 import { deleteSlot, initialSlots, setSlots } from '@reducers/Slots/Slots';
 import { SlotListToWheelList } from '@utils/slots.utils';
-import { useSavedWheelSettings } from '@domains/winner-selection/wheel-of-random/lib/hooks/useSavedWheelSettings';
+import {
+  useSaveWheelSettings,
+  useWheelSettings,
+} from '@domains/winner-selection/wheel-of-random/lib/hooks/useWheelSettings';
 
 import styles from './WheelPage.module.css';
 
@@ -27,6 +30,10 @@ const WheelPage: FC = () => {
 
   const [wheelSettings, setWheelSettings] = useState<Wheel.Settings>();
   const [participants, setParticipants] = useState<WheelItem[]>();
+
+  // Load settings from IndexedDB
+  const { data: initialSettings, isLoading: isLoadingSettings } = useWheelSettings();
+  const { mutate: saveSettings } = useSaveWheelSettings();
 
   const broadcastSpin = useBroadcastSpin();
   useWheelBroadcasting({ settings: wheelSettings, participants: participants });
@@ -69,12 +76,13 @@ const WheelPage: FC = () => {
     [broadcastSpin],
   );
 
-  const handleSettingsChanged = (settings: Wheel.Settings) => {
-    setWheelSettings(settings);
-    localStorage.setItem('wheelSettings', JSON.stringify(settings));
-  };
-
-  const initialSettings = useSavedWheelSettings();
+  const handleSettingsChanged = useCallback(
+    (settings: Wheel.Settings) => {
+      setWheelSettings(settings);
+      saveSettings({ id: initialSettings?.id, data: settings });
+    },
+    [saveSettings, initialSettings?.id],
+  );
 
   return (
     <PageContainer
@@ -82,16 +90,18 @@ const WheelPage: FC = () => {
       classes={{ content: styles.content }}
       title={title}
     >
-      <RandomWheel
-        initialSettings={initialSettings}
-        items={wheelItems}
-        deleteItem={deleteItem}
-        wheelRef={wheelController}
-        onWheelItemsChanged={setParticipants}
-        onSettingsChanged={handleSettingsChanged}
-        form={wheelForm}
-        onSpinStart={handleSpinStart}
-      />
+      {!isLoadingSettings && (
+        <RandomWheel
+          initialSettings={initialSettings?.data}
+          items={wheelItems}
+          deleteItem={deleteItem}
+          wheelRef={wheelController}
+          onWheelItemsChanged={setParticipants}
+          onSettingsChanged={handleSettingsChanged}
+          form={wheelForm}
+          onSpinStart={handleSpinStart}
+        />
+      )}
     </PageContainer>
   );
 };

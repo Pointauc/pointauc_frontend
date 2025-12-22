@@ -61,6 +61,7 @@
     "cloudinary-react": "^1.8.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.10",
+    "dexie": "^4.2.1",
     "es-toolkit": "^1.42.0",
     "eventemitter3": "^5.0.1",
     "framer-motion": "^12.23.25",

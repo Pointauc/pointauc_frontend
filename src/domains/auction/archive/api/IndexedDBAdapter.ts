@@ -1,104 +1,54 @@
+import Dexie, { type EntityTable } from 'dexie';
+
 import { ArchiveData, ArchiveRecord, CreateArchiveInput } from '../model/types';
-import { ARCHIVE_DB_NAME, ARCHIVE_STORE_NAME, AUTOSAVE_ID } from '../model/constants';
+import { ARCHIVE_DB_NAME, AUTOSAVE_ID } from '../model/constants';
 
 import ArchiveApi from './ArchiveApi';
 
+/**
+ * Dexie database instance for archive management
+ */
+class ArchiveDatabase extends Dexie {
+  archives!: EntityTable<ArchiveRecord, 'id'>;
+
+  constructor() {
+    super(ARCHIVE_DB_NAME);
+    this.version(1).stores({
+      archives: 'id, name, createdAt, isAutosave',
+    });
+  }
+}
+
 class IndexedDBAdapter extends ArchiveApi {
-  private dbPromise: Promise<IDBDatabase> | null = null;
+  private db: ArchiveDatabase;
 
-  /**
-   * Wraps an IDBRequest in a Promise
-   */
-  private requestToPromise<T>(request: IDBRequest<T>, errorMessage: string, transform?: (result: T) => T): Promise<T> {
-    return new Promise((resolve, reject) => {
-      request.onsuccess = () => {
-        const result = transform ? transform(request.result) : request.result;
-        resolve(result);
-      };
-      request.onerror = () => reject(new Error(errorMessage));
-    });
-  }
-
-  /**
-   * Opens or creates the IndexedDB database
-   */
-  private async openDB(): Promise<IDBDatabase> {
-    if (this.dbPromise) {
-      return this.dbPromise;
-    }
-
-    this.dbPromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open(ARCHIVE_DB_NAME, 1);
-
-      request.onerror = () => {
-        console.error('IndexedDB error:', request.error);
-        reject(new Error('Failed to open database'));
-      };
-
-      request.onsuccess = () => {
-        resolve(request.result);
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result;
-
-        if (!db.objectStoreNames.contains(ARCHIVE_STORE_NAME)) {
-          const store = db.createObjectStore(ARCHIVE_STORE_NAME, { keyPath: 'id' });
-          store.createIndex('name', 'name', { unique: false });
-          store.createIndex('createdAt', 'createdAt', { unique: false });
-          store.createIndex('isAutosave', 'isAutosave', { unique: false });
-        }
-      };
-    });
-
-    return this.dbPromise;
-  }
-
-  /**
-   * Gets a transaction for the archive store
-   */
-  private async getTransaction(mode: IDBTransactionMode): Promise<IDBObjectStore> {
-    const db = await this.openDB();
-    const transaction = db.transaction(ARCHIVE_STORE_NAME, mode);
-    return transaction.objectStore(ARCHIVE_STORE_NAME);
+  constructor() {
+    super();
+    this.db = new ArchiveDatabase();
   }
 
   /**
    * Retrieves all archive records
    */
   async getAll(): Promise<ArchiveRecord[]> {
-    try {
-      const store = await this.getTransaction('readonly');
-      const request = store.getAll();
+    const records = await this.db.archives.toArray();
 
-      return this.requestToPromise(request, 'Failed to retrieve archives', (records) => {
-        // Sort: autosave first, then by updatedAt descending
-        records.sort((a, b) => {
-          if (a.isAutosave) return -1;
-          if (b.isAutosave) return 1;
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-        });
-        return records as ArchiveRecord[];
-      });
-    } catch (error) {
-      console.error('Error retrieving archives:', error);
-      throw error;
-    }
+    // Sort: autosave first, then by updatedAt descending
+    records.sort((a, b) => {
+      if (a.isAutosave) return -1;
+      if (b.isAutosave) return 1;
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+
+    return records;
   }
 
   /**
    * Retrieves a single archive by ID
    */
   async getById(id: string): Promise<ArchiveRecord | null> {
-    try {
-      const store = await this.getTransaction('readonly');
-      const request = store.get(id);
-
-      return this.requestToPromise(request, 'Failed to retrieve archive', (result) => result || null);
-    } catch (error) {
-      console.error('Error retrieving archive:', error);
-      throw error;
-    }
+    const result = await this.db.archives.get(id);
+    return result || null;
   }
 
   /**
@@ -112,24 +62,16 @@ class IndexedDBAdapter extends ArchiveApi {
    * Creates a new archive record
    */
   async create(input: CreateArchiveInput): Promise<ArchiveRecord> {
-    try {
-      const now = new Date().toISOString();
-      const record: ArchiveRecord = {
-        id: crypto.randomUUID(),
-        createdAt: now,
-        updatedAt: now,
-        ...input,
-      };
+    const now = new Date().toISOString();
+    const record: ArchiveRecord = {
+      id: crypto.randomUUID(),
+      createdAt: now,
+      updatedAt: now,
+      ...input,
+    };
 
-      const store = await this.getTransaction('readwrite');
-      const request = store.add(record);
-
-      await this.requestToPromise(request, 'Failed to create archive');
-      return record;
-    } catch (error) {
-      console.error('Error creating archive:', error);
-      throw error;
-    }
+    await this.db.archives.add(record);
+    return record;
   }
 
   /**
@@ -137,84 +79,60 @@ class IndexedDBAdapter extends ArchiveApi {
    * Only updates updatedAt if data is being changed (overwrite action)
    */
   async update(id: string, updates: Partial<ArchiveRecord>): Promise<ArchiveRecord> {
-    try {
-      const existing = await this.getById(id);
-      if (!existing) {
-        throw new Error('Archive not found');
-      }
-
-      // Only update updatedAt if data is being changed (overwrite action)
-      const shouldUpdateTimestamp = updates.data !== undefined;
-
-      const updated: ArchiveRecord = {
-        ...existing,
-        ...updates,
-        id: existing.id,
-        createdAt: existing.createdAt,
-        updatedAt: shouldUpdateTimestamp ? new Date().toISOString() : existing.updatedAt,
-      };
-
-      const store = await this.getTransaction('readwrite');
-      const request = store.put(updated);
-
-      await this.requestToPromise(request, 'Failed to update archive');
-      return updated;
-    } catch (error) {
-      console.error('Error updating archive:', error);
-      throw error;
+    const existing = await this.getById(id);
+    if (!existing) {
+      throw new Error('Archive not found');
     }
+
+    // Only update updatedAt if data is being changed (overwrite action)
+    const shouldUpdateTimestamp = updates.data !== undefined;
+
+    const updated: ArchiveRecord = {
+      ...existing,
+      ...updates,
+      id: existing.id,
+      createdAt: existing.createdAt,
+      updatedAt: shouldUpdateTimestamp ? new Date().toISOString() : existing.updatedAt,
+    };
+
+    await this.db.archives.put(updated);
+    return updated;
   }
 
   /**
    * Deletes an archive record (rejects if it's autosave)
    */
   async delete(id: string): Promise<void> {
-    try {
-      const existing = await this.getById(id);
-      if (!existing) {
-        throw new Error('Archive not found');
-      }
-
-      if (existing.isAutosave) {
-        throw new Error('Cannot delete autosave');
-      }
-
-      const store = await this.getTransaction('readwrite');
-      const request = store.delete(id);
-
-      return this.requestToPromise(request, 'Failed to delete archive');
-    } catch (error) {
-      console.error('Error deleting archive:', error);
-      throw error;
+    const existing = await this.getById(id);
+    if (!existing) {
+      throw new Error('Archive not found');
     }
+
+    if (existing.isAutosave) {
+      throw new Error('Cannot delete autosave');
+    }
+
+    await this.db.archives.delete(id);
   }
 
   /**
    * Creates or updates the autosave record
    */
   async upsertAutosave(data: ArchiveData): Promise<ArchiveRecord> {
-    try {
-      const existing = await this.getAutosave();
-      const now = new Date().toISOString();
+    const existing = await this.getAutosave();
+    const now = new Date().toISOString();
 
-      const record: ArchiveRecord = {
-        id: AUTOSAVE_ID,
-        name: 'Autosave',
-        data: JSON.stringify(data),
-        isAutosave: true,
-        createdAt: existing?.createdAt || now,
-        updatedAt: now,
-      };
+    const record: ArchiveRecord = {
+      id: AUTOSAVE_ID,
+      name: 'Autosave',
+      data: JSON.stringify(data),
+      isAutosave: true,
+      createdAt: existing?.createdAt || now,
+      updatedAt: now,
+    };
 
-      const store = await this.getTransaction('readwrite');
-      const request = store.put(record);
-
-      await this.requestToPromise(request, 'Failed to save autosave');
-      return record;
-    } catch (error) {
-      console.error('Error saving autosave:', error);
-      throw error;
-    }
+    await this.db.archives.put(record);
+    return record;
   }
 }
 
