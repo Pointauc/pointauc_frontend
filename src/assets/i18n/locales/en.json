@@ -697,6 +697,7 @@
       "localBasic": "Standard",
       "randomOrg": "Random.org",
       "randomOrgSigned": "Random.org+ (Verifiable)",
+      "verifiableDescription": "Any viewer can verify the result of the wheel spin",
       "disabledTooltip": "Advanced randomness sources are not available for this wheel type",
       "learnMore": "Learn more"
     },

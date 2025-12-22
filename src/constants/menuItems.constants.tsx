@@ -1,22 +1,19 @@
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
 import HelpIcon from '@mui/icons-material/Help';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
 import LayersIcon from '@mui/icons-material/Layers';
-import ScienceIcon from '@mui/icons-material/Science';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { matchPath, useLocation, useMatches } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { matchPath, useLocation } from 'react-router-dom';
 
 import AuctionSvg from '@assets/icons/auction.svg?react';
 import WheelSvg from '@assets/icons/wheel.svg?react';
 import { MenuItem } from '@models/common.model';
 import { RootState } from '@reducers';
 
-import ROUTES from './routes.constants';
 import { config } from './config';
+import ROUTES from './routes.constants';
 
 const MENU_ITEMS: MenuItem[] = [
   // { title: 'menu.items.auction.title', icon: AuctionSvg, path: ROUTES.HOME },
