@@ -79,7 +79,7 @@ export const getUpdates = (date: string, locale: Language): UpdateData[] => {
       ...update,
       date: todayDate,
     }));
-    return [...baseUpdates, ...extra];
+    return [...baseUpdates];
   }
 
   return baseUpdates;
