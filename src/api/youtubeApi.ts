@@ -100,3 +100,59 @@ export const searchYoutubeVideos = async (query: string): Promise<VideoSnippet[]
     return combinedResults;
   });
 };
+
+interface VideoDetails {
+  videoId: string;
+  title: string;
+  channelTitle: string;
+  duration: number;
+  thumbnailUrl: string;
+}
+
+/**
+ * Parses ISO 8601 duration format (PT#H#M#S) to seconds
+ */
+const parseDuration = (duration: string): number => {
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+
+  const hours = parseInt(match[1] || '0', 10);
+  const minutes = parseInt(match[2] || '0', 10);
+  const seconds = parseInt(match[3] || '0', 10);
+
+  return hours * 3600 + minutes * 60 + seconds;
+};
+
+/**
+ * Fetches detailed information for a single YouTube video by ID
+ */
+export const fetchYoutubeVideoById = async (videoId: string): Promise<VideoDetails | null> => {
+  const result = await withApiKeyRotation(async (keyId) => {
+    const { data } = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+      params: {
+        id: videoId,
+        part: 'snippet,contentDetails',
+        key: YOUTUBE_API_KEYS[keyId],
+      },
+    });
+
+    if (!data?.items?.length) {
+      return null;
+    }
+
+    const video = data.items[0];
+    const snippet = video.snippet;
+    const contentDetails = video.contentDetails;
+
+    return {
+      videoId,
+      title: snippet.title,
+      channelTitle: snippet.channelTitle,
+      duration: parseDuration(contentDetails.duration),
+      thumbnailUrl:
+        snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url || snippet.thumbnails.default?.url || '',
+    };
+  });
+
+  return result ?? null;
+};

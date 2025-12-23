@@ -2,7 +2,7 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.videoPreviewCard:hover {
+.videoPreviewCard.clickable:hover {
   transform: translateY(-2px);
 }
 
@@ -18,11 +18,13 @@
 
 .videoThumbnail {
   transition: filter 0.3s ease-in-out;
-  filter: blur(3px);
   object-fit: cover;
+}
+
+.videoThumbnail.blurred {
+  filter: blur(3px);
 }
 
 .videoPreviewIcon {
   color: var(--mantine-color-dark-2);
 }
-

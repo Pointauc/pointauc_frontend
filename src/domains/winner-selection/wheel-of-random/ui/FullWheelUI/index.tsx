@@ -34,6 +34,7 @@ import array from '@utils/dataType/array.ts';
 import { getRandomNumber } from '@api/randomApi';
 import { signedRandomControllerGenerateWinnerMutation } from '@api/openapi/@tanstack/react-query.gen';
 import { useSyncEffect } from '@shared/lib/react';
+import { useAudioPlayback } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/useAudioPlayback';
 
 import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
@@ -123,8 +124,14 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const randomnessSource = useWatch({ name: 'randomnessSource', control });
   const format = useWatch({ name: 'format', control });
   const dropoutVariant = useWatch({ name: 'dropoutVariant', control });
+  const soundtrack = useWatch({ name: 'soundtrack', control });
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+
+  // Soundtrack audio playback
+  const { play: playSoundtrack, stop: stopSoundtrack } = useAudioPlayback(
+    soundtrack?.enabled && soundtrack?.source ? soundtrack.source : null,
+  );
 
   // Ticket management for signed random.org flow
   const {
@@ -286,6 +293,11 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
       const spinResult = wheelController.current?.spin(config);
 
+      // Start soundtrack playback
+      if (soundtrack?.enabled && soundtrack?.source) {
+        playSoundtrack(soundtrack.offset, soundtrack.volume);
+      }
+
       onSpinStart?.({
         changedDistance: spinResult?.changedDistance ?? 0,
         initialDistance: spinResult?.initialDistance ?? 0,
@@ -294,6 +306,10 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       });
 
       await spinResult?.animate();
+
+      // Stop soundtrack after spin completes
+      stopSoundtrack();
+
       await onSpinEnd?.(winnerItem);
 
       if (randomnessSource === 'random-org-signed' && winnerResult.isFinalSpin) {
@@ -322,6 +338,9 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       setRevealedTicketId,
       setValue,
       setShouldRevealNumber,
+      soundtrack,
+      playSoundtrack,
+      stopSoundtrack,
     ],
   );
 

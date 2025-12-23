@@ -1,0 +1,27 @@
+.modalContent {
+  min-height: 400px;
+}
+
+.infoBanner {
+  background: var(--mantine-color-blue-light);
+  border-left: 4px solid var(--mantine-color-blue-6);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.spinDurationSection {
+  background: var(--mantine-color-dark-6);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mantine-color-dark-4);
+}
+
