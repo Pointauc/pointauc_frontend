@@ -5,6 +5,8 @@
   max-height: 60vh;
   overflow-y: auto;
   padding-right: 8px;
+  padding-left: 10px;
+  margin-left: -10px;
 }
 
 .updateEntry {
