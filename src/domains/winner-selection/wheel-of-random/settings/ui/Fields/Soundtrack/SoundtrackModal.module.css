@@ -1,0 +1,28 @@
+.modalContent {
+  min-height: 400px;
+}
+
+.infoBanner {
+  background: var(--mantine-color-blue-light);
+  border-left: 4px solid var(--mantine-color-blue-6);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.spinDurationSection {
+  background: var(--mantine-color-dark-6);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.enabledSwitch {
+  background: var(--mantine-color-dark-7);
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-sm);
+  border: 1px solid var(--mantine-color-dark-4);
+}
+
+.enabledSwitch.enabled {
+  background: var(--mantine-color-dark-6);
+}

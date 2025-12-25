@@ -8,7 +8,7 @@ const RandomSpinConfig = () => {
   const { t } = useTranslation();
 
   return (
-    <Group align='end' gap='xs'>
+    <Group align='center' gap='xs'>
       <Controller
         name='randomSpinConfig.min'
         render={({ field: { onChange, value } }) => (

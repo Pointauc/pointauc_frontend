@@ -3,6 +3,7 @@ import { FC, Key, useCallback, useMemo, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useDebouncedCallback } from '@tanstack/react-pacer';
 
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
 import PageContainer from '@components/PageContainer/PageContainer';
@@ -84,6 +85,8 @@ const WheelPage: FC = () => {
     [saveSettings, initialSettings?.id],
   );
 
+  const handleSettingsChangedDebounced = useDebouncedCallback(handleSettingsChanged, { wait: 2000 });
+
   return (
     <PageContainer
       className={`${styles.container} wheel-wrapper padding`}
@@ -97,7 +100,7 @@ const WheelPage: FC = () => {
           deleteItem={deleteItem}
           wheelRef={wheelController}
           onWheelItemsChanged={setParticipants}
-          onSettingsChanged={handleSettingsChanged}
+          onSettingsChanged={handleSettingsChangedDebounced}
           form={wheelForm}
           onSpinStart={handleSpinStart}
         />

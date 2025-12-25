@@ -8,6 +8,20 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesEN: UpdateData[] = [
   {
+    date: '2025-12-25T13:45:23.597Z',
+    newFeatures: [
+      <>
+        <strong>🎵 Wheel Soundtrack</strong>
+        <Space h='sm' />
+        <div>You can set up music that will play during the wheel spin.</div>
+        <Space h='xs' />
+        <div style={{ paddingLeft: '16px' }}>
+          <strong>How to use:</strong> Wheel Page → Click the note button right next to the spin time
+        </div>
+      </>,
+    ],
+  },
+  {
     date: '2025-12-21T14:18:56.195Z',
     newFeatures: [
       <>

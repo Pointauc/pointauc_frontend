@@ -21,6 +21,8 @@ import RandomSpinSwitch from '../Fields/RandomSpinSwitch';
 import SpinTimeField from '../Fields/SpinTime';
 import WheelStyleSelect from '../Fields/StyleSelect/StyleSelect';
 import { RevealedData } from '../../../lib/hooks/useTicketManagement';
+import WheelSoundtrackField from '../Fields/Soundtrack';
+import SpinTimeComposed from '../Fields/Soundtrack/SpinTimeComposed';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -52,7 +54,6 @@ const WheelSettings = (props: WheelSettingsProps) => {
   const { isSubmitting } = useFormState<Wheel.Settings>({ control });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
-  const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
 
   const submitButton = (
     <Button loading={isLoadingSeed || isCreatingTicket} disabled={isSubmitting} variant='contained' type='submit'>
@@ -76,15 +77,12 @@ const WheelSettings = (props: WheelSettingsProps) => {
       />
       <SimpleGrid cols={direction === 'row' ? 2 : 1} spacing='md' style={{ minHeight: 0 }}>
         <Stack gap='sm' mih={0}>
-          <Group align='center' justify='space-between'>
-            <Group gap='xs'>
-              {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-              <Group>
-                {!randomSpinEnabled && <SpinTimeField />}
-                {randomSpinEnabled && <RandomSpinConfig />}
-              </Group>
-            </Group>
-            <RandomSpinSwitch />
+          <Group align='center' gap='xs'>
+            {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
+            <div className='flex-1 flex-shrink-0'>
+              <SpinTimeComposed disabled={isSubmitting} />
+            </div>
+            <WheelSoundtrackField />
           </Group>
           <Stack gap='sm' style={{ overflowY: 'auto', overflowX: 'hidden' }}>
             <WheelStyleSelect />

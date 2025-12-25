@@ -1,7 +1,7 @@
 .rightSide {
   /* flex-basis: calc(28rem * var(--mantine-scale)); */
-  min-width: calc(26rem * var(--mantine-scale));
-  width: calc(26rem * var(--mantine-scale));
+  min-width: calc(26.5rem * var(--mantine-scale));
+  width: calc(26.5rem * var(--mantine-scale));
 }
 
 .withExtraContent {
@@ -38,7 +38,7 @@
 :global(.wheel-content .description-link) {
   background-color: transparent;
   border: none;
-  color: #D3D3D3;
+  color: #d3d3d3;
   display: inline-block;
   width: fit-content;
   cursor: pointer;
@@ -93,7 +93,7 @@
   max-width: 100%;
   max-height: 100%;
   border-radius: 10px;
-  border: 2px solid #C0C0C0;
+  border: 2px solid #c0c0c0;
   background-color: #343434;
   overflow: hidden;
 }
@@ -135,7 +135,7 @@
 }
 
 :global(.wheel-content .wheel-controls) {
-  color: #DCDCDC;
+  color: #dcdcdc;
   display: flex;
   align-items: stretch;
   flex-direction: column;
