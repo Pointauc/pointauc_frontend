@@ -5,12 +5,13 @@ import VideoPreview from '@components/TrailersContainer/VideoPreview/VideoPrevie
 
 interface YouTubePreviewProps {
   source: Wheel.SoundtrackSourceYoutube;
+  thumbnailContent?: React.ReactNode;
 }
 
 /**
  * Displays YouTube video preview using existing VideoPreview component
  */
-const YouTubePreview: FC<YouTubePreviewProps> = ({ source }) => {
+const YouTubePreview: FC<YouTubePreviewProps> = ({ source, thumbnailContent }) => {
   // Convert to VideoSnippet format
   const videoSnippet: VideoSnippet = {
     id: {
@@ -26,7 +27,7 @@ const YouTubePreview: FC<YouTubePreviewProps> = ({ source }) => {
     },
   };
 
-  return <VideoPreview {...videoSnippet} blurred={false} />;
+  return <VideoPreview {...videoSnippet} blurred={false} thumbnailContent={thumbnailContent} />;
 };
 
 export default YouTubePreview;

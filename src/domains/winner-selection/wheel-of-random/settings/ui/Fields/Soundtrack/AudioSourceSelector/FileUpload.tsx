@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { notifications } from '@mantine/notifications';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import type { Wheel } from '@models/wheel.d.ts';
-import { MAX_AUDIO_FILE_SIZE, SUPPORTED_AUDIO_TYPES } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/constants';
+import {
+  MAX_AUDIO_FILE_SIZE,
+  SUPPORTED_AUDIO_TYPES,
+} from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/constants';
 
 interface FileUploadProps {
   onSelect: (source: Wheel.SoundtrackSourceFile) => void;
@@ -35,7 +37,7 @@ const FileUpload: FC<FileUploadProps> = ({ onSelect }) => {
       if (file.size > MAX_AUDIO_FILE_SIZE) {
         notifications.show({
           title: t('wheel.soundtrack.errors.fileTooLarge'),
-          message: t('wheel.soundtrack.errors.fileTooLargeMessage', { maxSize: '10MB' }),
+          message: t('wheel.soundtrack.errors.fileTooLargeMessage', { maxSize: '50MB' }),
           color: 'red',
         });
         return;
@@ -108,10 +110,10 @@ const FileUpload: FC<FileUploadProps> = ({ onSelect }) => {
   }, []);
 
   return (
-    <Stack gap="sm">
+    <Stack gap='sm'>
       <input
         ref={fileInputRef}
-        type="file"
+        type='file'
         accept={SUPPORTED_AUDIO_TYPES.join(',')}
         style={{ display: 'none' }}
         onChange={handleFileSelect}
@@ -119,8 +121,8 @@ const FileUpload: FC<FileUploadProps> = ({ onSelect }) => {
 
       <Paper
         withBorder
-        p="xl"
-        radius="md"
+        p='xl'
+        radius='md'
         style={{
           cursor: 'pointer',
           borderStyle: 'dashed',
@@ -131,13 +133,13 @@ const FileUpload: FC<FileUploadProps> = ({ onSelect }) => {
         onDragOver={handleDragOver}
         onClick={handleClick}
       >
-        <Group justify="center" gap="xs" mb="xs">
+        <Group justify='center' gap='xs' mb='xs'>
           <CloudUploadIcon style={{ fontSize: 48, opacity: 0.5 }} />
         </Group>
-        <Text size="lg" fw={500} mb="xs">
+        <Text size='lg' fw={500} mb='xs'>
           {t('wheel.soundtrack.sourceSelector.fileUpload')}
         </Text>
-        <Text size="sm" c="dimmed">
+        <Text size='sm' c='dimmed'>
           {t('wheel.soundtrack.sourceSelector.fileFormats')}
         </Text>
       </Paper>
@@ -146,4 +148,3 @@ const FileUpload: FC<FileUploadProps> = ({ onSelect }) => {
 };
 
 export default FileUpload;
-

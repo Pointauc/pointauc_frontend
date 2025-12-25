@@ -13,6 +13,7 @@ import classes from './VideoPreview.module.css';
 interface VideoPreviewProps extends VideoSnippet {
   onSelect?: (id: string) => void;
   blurred?: boolean;
+  thumbnailContent?: React.ReactNode;
 }
 
 const VideoPreview: FC<VideoPreviewProps> = ({
@@ -20,6 +21,7 @@ const VideoPreview: FC<VideoPreviewProps> = ({
   id: { videoId },
   snippet: { title, channelTitle, publishedAt, thumbnails, viewCount, likeCount },
   blurred = true,
+  thumbnailContent,
 }) => {
   const handleSelect = useCallback(() => {
     onSelect?.(videoId);
@@ -48,12 +50,15 @@ const VideoPreview: FC<VideoPreviewProps> = ({
     >
       <Group align='flex-start' wrap='nowrap'>
         <div className={classes.thumbnailContainer}>
-          <AspectRatio ratio={16 / 9} w={160}>
-            <Image
-              src={thumbnailUrl}
-              alt={title}
-              className={clsx(classes.videoThumbnail, { [classes.blurred]: blurred })}
-            />
+          <AspectRatio ratio={16 / 9} w={160} h={90}>
+            {!thumbnailContent && (
+              <Image
+                src={thumbnailUrl}
+                alt={title}
+                className={clsx(classes.videoThumbnail, { [classes.blurred]: blurred })}
+              />
+            )}
+            {thumbnailContent}
           </AspectRatio>
         </div>
         <Stack style={{ flex: 1 }} gap={0}>

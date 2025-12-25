@@ -5,7 +5,11 @@ import RandomSpinConfig from '../../RandomSpinConfig';
 import RandomSpinSwitch from '../../RandomSpinSwitch';
 import SpinTimeField from '../../SpinTime';
 
-const SpinTimeComposed = () => {
+interface SpinTimeComposedProps {
+  disabled?: boolean;
+}
+
+const SpinTimeComposed = ({ disabled }: SpinTimeComposedProps) => {
   const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
 
   return (
@@ -14,7 +18,7 @@ const SpinTimeComposed = () => {
         {!randomSpinEnabled && <SpinTimeField />}
         {randomSpinEnabled && <RandomSpinConfig />}
       </Group>
-      <RandomSpinSwitch />
+      {!disabled && <RandomSpinSwitch />}
     </Group>
   );
 };

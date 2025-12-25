@@ -37,13 +37,22 @@ const SoundtrackModal: FC<SoundtrackModalProps> = ({ opened, onClose }) => {
         source,
         offset: 0,
         waveformData: undefined,
+        volume: DEFAULT_SOUNDTRACK_CONFIG.volume,
       });
     },
     [getValues, setValue],
   );
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('wheel.soundtrack.title')} size='xl' centered padding='lg'>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={t('wheel.soundtrack.title')}
+      size='xl'
+      centered
+      padding='lg'
+      classNames={{ content: 'overflow-x-hidden' }}
+    >
       <Stack gap='md' className={classes.modalContent}>
         {!hasShownHint && (
           <Alert
@@ -59,7 +68,7 @@ const SoundtrackModal: FC<SoundtrackModalProps> = ({ opened, onClose }) => {
 
         {!source && <AudioSourceSelector onSourceSelect={handleSourceSelect} />}
 
-        {source && <SoundtrackSourceConfig />}
+        {source && <SoundtrackSourceConfig onClose={onClose} />}
       </Stack>
     </Modal>
   );

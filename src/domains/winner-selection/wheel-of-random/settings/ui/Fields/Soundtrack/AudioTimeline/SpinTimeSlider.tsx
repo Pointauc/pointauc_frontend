@@ -1,5 +1,5 @@
-import { FC, useCallback, useRef, useState, useEffect } from 'react';
-import classNames from 'classnames';
+import { FC, useCallback, useEffect, useState } from 'react';
+import clsx from 'clsx';
 
 import classes from './AudioTimeline.module.css';
 import CurrentTimeIndicator from './CurrentTimeIndicator';
@@ -18,6 +18,7 @@ interface SpinTimeSliderProps {
   onSpinTimeChange: (spinTime: number, minSpinTime?: number) => void;
   formatTime: (seconds: number) => string;
   onCurrentTimeChange: (time: number) => void;
+  isPlaying: boolean;
 }
 
 const minSpinTimeAllowed = 5;
@@ -40,6 +41,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
   formatTime,
   currentPlayTime,
   onCurrentTimeChange,
+  isPlaying,
 }) => {
   const [isDragging, setIsDragging] = useState<'region' | 'left' | 'middle' | 'right' | null>(null);
   const [dragStart, setDragStart] = useState({ x: 0, initialOffset: 0, initialSpinTime: 0, initialMinSpinTime: 0 });
@@ -84,14 +86,16 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
         if (isRandomSpin && minSpinTime !== undefined) {
           const newOffset = Math.max(0, dragStart.initialOffset + deltaTime);
           const newMinSpinTime = Math.max(minSpinTimeAllowed, dragStart.initialMinSpinTime - deltaTime);
-          console.log('deltaTime', deltaTime, 'newMinSpinTime', newMinSpinTime);
+
           onOffsetChange(newOffset);
           onSpinTimeChange(dragStart.initialSpinTime - deltaTime, newMinSpinTime);
         } else {
           const newOffset = Math.max(0, dragStart.initialOffset + deltaTime);
           const newSpinTime = Math.max(minSpinTimeAllowed, dragStart.initialSpinTime - deltaTime);
 
-          onOffsetChange(newOffset);
+          if (newSpinTime < audioDuration) {
+            onOffsetChange(newOffset);
+          }
           onSpinTimeChange(newSpinTime);
         }
       } else if (isDragging === 'middle' && isRandomSpin && minSpinTime !== undefined) {
@@ -155,7 +159,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
   return (
     <>
       <div
-        className={classNames(classes.sliderRegion)}
+        className={clsx(classes.sliderRegion)}
         style={{
           left: `${leftPos}px`,
           width: `${width}px`,
@@ -163,7 +167,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
         onMouseDown={(e) => handleMouseDown(e, 'region')}
       >
         {/* filled areas */}
-        <div className={classes.sliderStaticRegionFilled} style={{ left: `0px`, width: `${width || width}px` }} />
+        <div className={classes.sliderStaticRegionFilled} style={{ left: `0px`, width: `${width}px` }} />
         {isRandomSpin && minSpinTime !== undefined && (
           <div
             className={classes.sliderRandomRegionFilled}
@@ -178,7 +182,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
         timelineWidth={timelineWidth}
         containerWidth={containerWidth}
         formatTime={formatTime}
-        onCurrentTimeChange={onCurrentTimeChange}
+        isPlaying={isPlaying}
       />
       <div
         style={{
@@ -192,7 +196,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
       >
         {/* Left thumb */}
         <div
-          className={classNames(classes.sliderThumb, classes.sliderThumbLeft)}
+          className={clsx(classes.sliderThumb, classes.sliderThumbLeft)}
           onMouseDown={(e) => handleMouseDown(e, 'left')}
         >
           <div className={classes.thumbLabel}>{formatTime(offset)}</div>
@@ -201,7 +205,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
         {/* Middle thumb (only for random spin) */}
         {isRandomSpin && minSpinTime !== undefined && (
           <div
-            className={classNames(classes.sliderThumb, classes.sliderThumbMiddle)}
+            className={clsx(classes.sliderThumb, classes.sliderThumbMiddle)}
             style={{ left: `${minWidth}px` }}
             onMouseDown={(e) => handleMouseDown(e, 'middle')}
           >
@@ -211,7 +215,7 @@ const SpinTimeSlider: FC<SpinTimeSliderProps> = ({
 
         {/* Right thumb */}
         <div
-          className={classNames(classes.sliderThumb, classes.sliderThumbRight)}
+          className={clsx(classes.sliderThumb, classes.sliderThumbRight)}
           onMouseDown={(e) => handleMouseDown(e, 'right')}
         >
           <div className={classes.thumbLabel}>

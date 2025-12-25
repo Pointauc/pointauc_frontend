@@ -28,21 +28,17 @@ export interface AudioSourceAdapter<T extends Wheel.SoundtrackSource = Wheel.Sou
   dispose(): void;
 }
 
-export interface AudioSourceAdapterProps {
-  onPlaybackProgress?: (progress: number) => void;
-}
-
-export interface AudioSourceAdaperFactory extends AudioSourceAdapterProps {
-  source: Wheel.SoundtrackSourceYoutube;
+export interface AudioSourceAdaperFactory {
+  source: Wheel.SoundtrackSourceYoutube | Wheel.SoundtrackSourceFile | null;
 }
 
 /**
  * Factory function to create appropriate adapter based on source type
  */
-export function createAudioAdapter({ source, ...props }: AudioSourceAdaperFactory): AudioSourceAdapter {
-  if (source.type === 'youtube') {
+export function createAudioAdapter({ source }: AudioSourceAdaperFactory): AudioSourceAdapter {
+  if (source?.type === 'youtube') {
     // Dynamic import to avoid circular dependencies
-    return new YouTubeAudioAdapter(props);
+    return new YouTubeAudioAdapter();
   } else {
     return new FileAudioAdapter();
   }

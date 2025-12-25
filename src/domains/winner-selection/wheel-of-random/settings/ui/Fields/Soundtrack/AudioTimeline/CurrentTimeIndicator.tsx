@@ -1,5 +1,6 @@
 import { FC, useCallback, useRef, useState, useEffect } from 'react';
 import classNames from 'classnames';
+import { Transition } from '@mantine/core';
 
 import classes from './AudioTimeline.module.css';
 
@@ -9,7 +10,7 @@ interface CurrentTimeIndicatorProps {
   timelineWidth: number;
   containerWidth: number;
   formatTime: (seconds: number) => string;
-  onCurrentTimeChange: (time: number) => void;
+  onCurrentTimeChange?: (time: number) => void;
   isPlaying?: boolean;
 }
 
@@ -29,15 +30,14 @@ const CurrentTimeIndicator: FC<CurrentTimeIndicatorProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragStartTime, setDragStartTime] = useState(0);
+  const [showTimeLabel, setShowTimeLabel] = useState(false);
 
   const pixelsPerSecond = containerWidth / timelineWidth;
   const leftPos = currentTime * pixelsPerSecond;
-
-  console.log('currentTime', currentTime, 'leftPos', leftPos);
+  const isEditable = onCurrentTimeChange != null;
 
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
-      console.log('handleMouseDown', e);
       e.stopPropagation();
       setIsDragging(true);
       setDragStartX(e.clientX);
@@ -54,7 +54,7 @@ const CurrentTimeIndicator: FC<CurrentTimeIndicatorProps> = ({
       const deltaTime = deltaX / pixelsPerSecond;
       const newTime = Math.max(0, Math.min(timelineWidth, dragStartTime + deltaTime));
 
-      onCurrentTimeChange(newTime);
+      onCurrentTimeChange?.(newTime);
     },
     [isDragging, dragStartX, dragStartTime, pixelsPerSecond, timelineWidth, onCurrentTimeChange],
   );
@@ -74,15 +74,35 @@ const CurrentTimeIndicator: FC<CurrentTimeIndicatorProps> = ({
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
+  if (!isPlaying && !isEditable) {
+    return null;
+  }
+
   return (
     <div
-      className={classNames(classes.currentTimeIndicator, { [classes.dragging]: isDragging })}
+      className={classNames(classes.currentTimeIndicator, {
+        [classes.dragging]: isDragging,
+        [classes.editable]: isEditable,
+      })}
       style={{ left: `${leftPos}px` }}
-      onMouseDown={handleMouseDown}
+      onMouseDown={isEditable ? handleMouseDown : undefined}
+      onMouseEnter={() => setShowTimeLabel(true)}
+      onMouseLeave={() => setShowTimeLabel(false)}
     >
       <div className={classes.currentTimeLine} />
-      <div className={classes.currentTimeThumb} onMouseDown={handleMouseDown} />
-      {isPlaying && <div className={classes.currentTimeLabel}>{formatTime(currentTime)}</div>}
+      <div className={classes.currentTimeThumb} />
+      <Transition
+        transition='fade-down'
+        duration={200}
+        exitDelay={200}
+        mounted={isPlaying || showTimeLabel || isDragging}
+      >
+        {(styles) => (
+          <div style={styles} className={classes.currentTimeLabel}>
+            {formatTime(currentTime)}
+          </div>
+        )}
+      </Transition>
     </div>
   );
 };

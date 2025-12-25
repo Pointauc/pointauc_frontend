@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef, useEffect, useState, useCallback } from 'react';
+import { FC, useMemo, useRef, useEffect, useState, useCallback, useLayoutEffect } from 'react';
 import { Stack, Text, Group, Tooltip, ActionIcon } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -7,7 +7,6 @@ import { clamp } from 'es-toolkit';
 import WaveformCanvas from './WaveformCanvas';
 import SpinTimeSlider from './SpinTimeSlider';
 import LoopMarkers from './LoopMarkers';
-import CurrentTimeIndicator from './CurrentTimeIndicator';
 import classes from './AudioTimeline.module.css';
 
 interface AudioTimelineProps {
@@ -22,6 +21,7 @@ interface AudioTimelineProps {
   onOffsetChange: (offset: number) => void;
   onSpinTimeChange: (spinTime: number, minSpinTime?: number) => void;
   onCurrentTimeChange: (time: number) => void;
+  isPlaying: boolean;
 }
 
 /**
@@ -40,6 +40,7 @@ const AudioTimeline: FC<AudioTimelineProps> = ({
   onOffsetChange,
   onSpinTimeChange,
   onCurrentTimeChange,
+  isPlaying,
 }) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,10 +51,10 @@ const AudioTimeline: FC<AudioTimelineProps> = ({
   const timelineWidth = Math.max(audioDuration, effectiveSpinTime);
 
   // Update container width on resize
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateWidth = () => {
       if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
+        setContainerWidth(containerRef.current.getBoundingClientRect().width);
       }
     };
 
@@ -98,6 +99,7 @@ const AudioTimeline: FC<AudioTimelineProps> = ({
         <div className={classes.sliderOverlay}>
           <LoopMarkers audioDuration={audioDuration} timelineWidth={timelineWidth} containerWidth={containerWidth} />
           <SpinTimeSlider
+            isPlaying={isPlaying}
             offset={offset}
             spinTime={spinTime}
             minSpinTime={minSpinTime}
@@ -119,13 +121,6 @@ const AudioTimeline: FC<AudioTimelineProps> = ({
           <Text size='xs'>{formatTime(timelineWidth)}</Text>
         </div>
       </div>
-
-      <Text size='xs' c='dimmed' ta='center'>
-        {t('wheel.soundtrack.audioSegment.selectedRange', {
-          start: formatTime(offset),
-          end: formatTime(offset + effectiveSpinTime),
-        })}
-      </Text>
     </Stack>
   );
 };

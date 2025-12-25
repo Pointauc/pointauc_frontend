@@ -1,9 +1,8 @@
-import PlayerFactory from 'youtube-player';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { WAVEFORM_SAMPLES } from '../constants';
 
-import type { AudioSourceAdapter, AudioSourceAdapterProps } from './AudioSourceAdapter';
+import type { AudioSourceAdapter } from './AudioSourceAdapter';
 
 /**
  * Audio adapter for YouTube videos
@@ -13,11 +12,6 @@ export class YouTubeAudioAdapter implements AudioSourceAdapter<Wheel.SoundtrackS
   private player: YouTubePlayer | null = null;
   private container: HTMLDivElement | null = null;
   private source: Wheel.SoundtrackSourceYoutube | null = null;
-  private onPlaybackProgress?: (progress: number) => void;
-
-  constructor(props: AudioSourceAdapterProps) {
-    this.onPlaybackProgress = props.onPlaybackProgress;
-  }
 
   async load(source: Wheel.SoundtrackSourceYoutube): Promise<void> {
     this.source = source;

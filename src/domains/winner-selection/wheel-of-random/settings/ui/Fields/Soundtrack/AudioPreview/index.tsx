@@ -6,15 +6,16 @@ import YouTubePreview from './YouTubePreview';
 
 interface AudioPreviewProps {
   source: Wheel.SoundtrackSource;
+  thumbnailContent?: React.ReactNode;
 }
 
 /**
  * Displays preview of selected audio source
  * Shows YouTube video card or file info depending on source type
  */
-const AudioPreview: FC<AudioPreviewProps> = ({ source }) => {
+const AudioPreview: FC<AudioPreviewProps> = ({ source, thumbnailContent }) => {
   if (source.type === 'youtube') {
-    return <YouTubePreview source={source} />;
+    return <YouTubePreview source={source} thumbnailContent={thumbnailContent} />;
   }
 
   // File preview
@@ -28,6 +29,7 @@ const AudioPreview: FC<AudioPreviewProps> = ({ source }) => {
   return (
     <Card withBorder padding='md' radius='md'>
       <Group align='flex-start' wrap='nowrap'>
+        {thumbnailContent}
         <AudioFileIcon style={{ fontSize: 48, opacity: 0.7 }} />
         <Stack gap={0} style={{ flex: 1 }}>
           <Text fw={500} size='md' lineClamp={1}>

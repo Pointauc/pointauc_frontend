@@ -79,8 +79,8 @@ const WheelSettings = (props: WheelSettingsProps) => {
         <Stack gap='sm' mih={0}>
           <Group align='center' gap='xs'>
             {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-            <div className='flex-1'>
-              <SpinTimeComposed />
+            <div className='flex-1 flex-shrink-0'>
+              <SpinTimeComposed disabled={isSubmitting} />
             </div>
             <WheelSoundtrackField />
           </Group>

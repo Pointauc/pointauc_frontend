@@ -129,7 +129,7 @@ const AudioSourceSelector: FC<AudioSourceSelectorProps> = ({ onSourceSelect }) =
             onKeyPress={(e) => e.key === 'Enter' && handleYoutubeSubmit()}
           />
           <Button onClick={handleYoutubeSubmit} loading={isLoading} disabled={!youtubeUrl.trim()}>
-            {t('common.submit')}
+            {t('common.apply')}
           </Button>
         </Group>
       )}

@@ -821,6 +821,9 @@
     "soundtrack": {
       "title": "Wheel Soundtrack",
       "description": "Add music that plays during the wheel spin. The audio will automatically start when you spin and stop when the winner is revealed.",
+      "offset": "Offset",
+      "enabledSwitchLabel": "Enabled",
+      "configure": "Configure Soundtrack",
       "spinDuration": {
         "tooltip": "Controls how long the wheel animation runs. Audio playback is synchronized to this duration.",
         "randomLabel": "Random duration"
@@ -829,15 +832,16 @@
         "label": "Audio Segment",
         "tooltip": "Select which portion of the track to play. Drag the selection or its edges to adjust.",
         "dragHint": "Drag the highlighted area to choose which part plays, or drag edges to resize",
-        "loopTooltip": "Audio will loop here to fill the spin duration",
-        "selectedRange": "Selected: {{start}} - {{end}}"
+        "loopTooltip": "Audio will loop here to fill the spin duration"
       },
       "volume": {
         "label": "Volume"
       },
       "actions": {
-        "testPlay": "Test Play",
-        "removeAudio": "Remove Audio"
+        "testPlay": "Play",
+        "lastSection": "Last 3 sec",
+        "removeAudio": "Remove Audio",
+        "closeModal": "Close"
       },
       "sourceSelector": {
         "sourceType": "Source Type",
@@ -848,7 +852,8 @@
         "youtubeSearch": "Search YouTube for music or paste a video URL",
         "fileUpload": "Drop an audio file here or click to browse",
         "fileFormats": "Supports MP3, WAV, OGG (max 10MB)",
-        "suggestedTracks": "Recommended Soundtracks"
+        "suggestedTracks": "Recommended Tracks",
+        "suggestedTracksTBD": "Recommended soundtracks are coming soon. For now, you can select your own option from the menu above."
       },
       "errors": {
         "invalidUrl": "Please enter a valid YouTube URL",

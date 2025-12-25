@@ -40,6 +40,8 @@ import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/Bas
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
 import { MAX_QUOTA } from '../../settings/ui/Fields/TicketCard/TicketCard';
 import { defaultWheelSettings } from '../../lib/hooks/useSavedWheelSettings';
+import PlayerFactory from '../../settings/ui/Fields/Soundtrack/PlayerFactory';
+import { PlayerRef } from '../../settings/ui/Fields/Soundtrack/PlayerFactory/types';
 
 import styles from './index.module.css';
 
@@ -124,14 +126,13 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const randomnessSource = useWatch({ name: 'randomnessSource', control });
   const format = useWatch({ name: 'format', control });
   const dropoutVariant = useWatch({ name: 'dropoutVariant', control });
-  const soundtrack = useWatch({ name: 'soundtrack', control });
+  const soundtrackEnabled = useWatch({ name: 'soundtrack.enabled', control });
+  const soundtrackSource = useWatch({ name: 'soundtrack.source', control });
+  const soundtrackOffset = useWatch({ name: 'soundtrack.offset', control });
+  const soundtrackVolume = useWatch({ name: 'soundtrack.volume', control });
+  const soundtrackPlayerRef = useRef<PlayerRef | null>(null);
   const queryClient = useQueryClient();
   const { t } = useTranslation();
-
-  // Soundtrack audio playback
-  const { play: playSoundtrack, stop: stopSoundtrack } = useAudioPlayback(
-    soundtrack?.enabled && soundtrack?.source ? soundtrack.source : null,
-  );
 
   // Ticket management for signed random.org flow
   const {
@@ -294,8 +295,9 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       const spinResult = wheelController.current?.spin(config);
 
       // Start soundtrack playback
-      if (soundtrack?.enabled && soundtrack?.source) {
-        playSoundtrack(soundtrack.offset, soundtrack.volume);
+      if (soundtrackEnabled && soundtrackSource) {
+        console.log('playing soundtrack', soundtrackOffset, soundtrackVolume);
+        soundtrackPlayerRef.current?.play(soundtrackOffset ?? 0, soundtrackVolume ?? 0.5);
       }
 
       onSpinStart?.({
@@ -308,7 +310,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       await spinResult?.animate();
 
       // Stop soundtrack after spin completes
-      stopSoundtrack();
+      soundtrackPlayerRef.current?.stop();
 
       await onSpinEnd?.(winnerItem);
 
@@ -324,6 +326,8 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       spinTime,
       wheelStrategy,
       itemsFromProps,
+      soundtrackEnabled,
+      soundtrackSource,
       onSpinStart,
       onSpinEnd,
       onWin,
@@ -337,10 +341,9 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       refreshActiveTicket,
       setRevealedTicketId,
       setValue,
+      soundtrackOffset,
+      soundtrackVolume,
       setShouldRevealNumber,
-      soundtrack,
-      playSoundtrack,
-      stopSoundtrack,
     ],
   );
 
@@ -394,6 +397,9 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   return (
     <WheelContextProvider controller={wheelController} changeInitialItems={setItemsFromProps}>
       <form className='wheel-content' onSubmit={handleSubmit(onSpinClick)}>
+        {soundtrackEnabled && soundtrackSource != null && (
+          <PlayerFactory source={soundtrackSource} ref={soundtrackPlayerRef} displayAs='hidden' />
+        )}
         {!content && elements.preview && <ItemsPreview allItems={filteredItems} activeItems={items} format={format} />}
         {content && <div className='wheel-content-negative-space' />}
         <WheelFlexboxAutosizer>

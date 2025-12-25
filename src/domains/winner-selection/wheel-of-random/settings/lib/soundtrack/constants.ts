@@ -29,19 +29,19 @@ export const DEFAULT_SUGGESTED_TRACKS: Wheel.SoundtrackSourceYoutube[] = [
   },
 ];
 
-/** Maximum file size for audio uploads (10MB) */
-export const MAX_AUDIO_FILE_SIZE = 10 * 1024 * 1024;
+/** Maximum file size for audio uploads (50MB) */
+export const MAX_AUDIO_FILE_SIZE = 50 * 1024 * 1024;
 
 /** Supported audio MIME types */
 export const SUPPORTED_AUDIO_TYPES = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/webm'];
 
 /** Number of waveform samples to extract for visualization */
-export const WAVEFORM_SAMPLES = 100;
+export const WAVEFORM_SAMPLES = 110;
 
 /** Default soundtrack config */
 export const DEFAULT_SOUNDTRACK_CONFIG: Wheel.SoundtrackConfig = {
   enabled: false,
   source: null,
   offset: 0,
-  volume: 0.7,
+  volume: 0.5,
 };

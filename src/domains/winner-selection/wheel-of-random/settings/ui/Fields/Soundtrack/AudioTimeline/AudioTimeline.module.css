@@ -1,7 +1,7 @@
 .timelineContainer {
   position: relative;
   width: 100%;
-  min-height: 120px;
+  min-height: 110px;
   margin: 1rem 0;
   user-select: none;
 }
@@ -41,10 +41,10 @@
 
 .sliderRegion {
   position: absolute;
-  top: 10px;
-  height: 60px;
+  top: 12px;
+  height: 56px;
   /* background: rgba(34, 139, 230, 0.3); */
-  border: 2px solid var(--mantine-color-blue-6);
+  outline: 2px solid var(--mantine-color-blue-6);
   border-radius: 4px;
   pointer-events: auto;
   cursor: move;
@@ -87,7 +87,7 @@
   margin-bottom: 20px;
   padding: 2px 6px;
   background: transparent;
-  color: var(--mantine-color-dimmed);
+  color: var(--mantine-color-blue-6);
   white-space: nowrap;
   pointer-events: none;
   font-size: var(--mantine-font-size-xs);
@@ -130,8 +130,6 @@
   bottom: 0;
   width: 16px;
   transform: translateX(-8px);
-  /* pointer-events: auto; */
-  cursor: ew-resize;
 }
 
 .currentTimeIndicator.dragging {
@@ -164,7 +162,8 @@
   position: absolute;
   top: calc(100% + 16px);
   left: 50%;
-  transform: translateX(-50%);
+  translate: -50% 0;
+  /* transform: translateX(-50%); */
   padding: 2px 6px;
   background: var(--mantine-color-red-6);
   color: white;
@@ -173,4 +172,8 @@
   font-size: var(--mantine-font-size-xs);
   border-radius: 4px;
   font-weight: 500;
+}
+
+.currentTimeIndicator.editable {
+  cursor: ew-resize;
 }

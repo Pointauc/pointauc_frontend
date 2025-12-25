@@ -41,7 +41,7 @@ const WaveformCanvas: FC<WaveformCanvasProps> = ({ waveform, width, height }) =>
 
     waveform.forEach((amplitude, index) => {
       const x = index * barWidth;
-      const barHeight = amplitude * halfHeight;
+      const barHeight = Math.max(1, amplitude * halfHeight);
 
       // Draw bar from center
       ctx.fillRect(x, halfHeight - barHeight / 2, barWidth - 1, barHeight);

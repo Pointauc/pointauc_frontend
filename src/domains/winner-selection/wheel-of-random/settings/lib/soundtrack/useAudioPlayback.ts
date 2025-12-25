@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import {
-  AudioSourceAdaperFactory,
-  AudioSourceAdapter,
-  AudioSourceAdapterProps,
-  createAudioAdapter,
-} from './adapters/AudioSourceAdapter';
+import { AudioSourceAdaperFactory, AudioSourceAdapter, createAudioAdapter } from './adapters/AudioSourceAdapter';
 
 /**
  * Hook for managing audio playback for wheel soundtrack

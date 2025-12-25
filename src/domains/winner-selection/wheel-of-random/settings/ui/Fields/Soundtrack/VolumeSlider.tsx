@@ -15,28 +15,23 @@ const VolumeSlider: FC<VolumeSliderProps> = ({ value, onChange }) => {
   const { t } = useTranslation();
 
   return (
-    <Group gap="md" style={{ flex: 1 }}>
-      <Text size="sm" fw={500} style={{ minWidth: 60 }}>
-        {t('wheel.soundtrack.volume.label')}
-      </Text>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <VolumeUpIcon fontSize="small" />
-        <Slider
-          value={value * 100}
-          onChange={(val) => onChange(val / 100)}
-          min={0}
-          max={100}
-          step={1}
-          style={{ flex: 1 }}
-          label={(val) => `${val}%`}
-        />
-        <Text size="sm" c="dimmed" style={{ minWidth: 40 }}>
-          {Math.round(value * 100)}%
-        </Text>
-      </div>
+    <Group gap='md' style={{ flex: 1 }} align='start' maw={250}>
+      <VolumeUpIcon fontSize='small' />
+      <Slider
+        value={value}
+        onChange={(val) => onChange(val)}
+        min={0}
+        max={1}
+        step={0.01}
+        style={{ flex: 1 }}
+        label={(val) => `${Math.round(val * 100)}%`}
+        marks={[
+          { value: 0, label: '0%' },
+          { value: 1, label: '100%' },
+        ]}
+      />
     </Group>
   );
 };
 
 export default VolumeSlider;
-
