@@ -3,7 +3,6 @@ import { Stack, TextInput, Button, Loader, Center, Text, Card } from '@mantine/c
 import { useTranslation } from 'react-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 
-import type { Wheel } from '@models/wheel.d.ts';
 import { VideoSnippet } from '@models/youtube.ts';
 import { searchYoutubeVideos } from '@api/youtubeApi.ts';
 import VideoPreview from '@components/TrailersContainer/VideoPreview/VideoPreview';
@@ -65,7 +64,7 @@ const YouTubeSearch: FC<YouTubeSearchProps> = ({ onSelect }) => {
   );
 
   return (
-    <Stack gap="md">
+    <Stack gap='md'>
       <TextInput
         placeholder={t('wheel.soundtrack.sourceSelector.youtubeSearch')}
         value={searchQuery}
@@ -73,7 +72,7 @@ const YouTubeSearch: FC<YouTubeSearchProps> = ({ onSelect }) => {
         onKeyPress={(e) => e.key === 'Enter' && onSubmit()}
         leftSection={<SearchIcon />}
         rightSection={
-          <Button size="xs" onClick={onSubmit} disabled={!searchQuery.trim()}>
+          <Button size='xs' onClick={onSubmit} disabled={!searchQuery.trim()}>
             {t('common.search')}
           </Button>
         }
@@ -81,26 +80,24 @@ const YouTubeSearch: FC<YouTubeSearchProps> = ({ onSelect }) => {
       />
 
       {isLoading && (
-        <Center py="xl">
-          <Loader size="lg" />
+        <Center py='xl'>
+          <Loader size='lg' />
         </Center>
       )}
 
       {!isLoading && videos.length > 0 && (
-        <Stack gap="xs">
+        <Stack gap='xs'>
           {videos.map((video) => (
             <VideoPreview key={video.id.videoId} {...video} onSelect={handleVideoSelect} />
           ))}
         </Stack>
       )}
 
-      {!isLoading && videos.length === 0 && !searchQuery && (
-        <SuggestedTracks onSelect={handleSuggestedTrackSelect} />
-      )}
+      {!isLoading && videos.length === 0 && !searchQuery && <SuggestedTracks onSelect={handleSuggestedTrackSelect} />}
 
       {!isLoading && videos.length === 0 && searchQuery && (
-        <Card withBorder padding="md">
-          <Text c="dimmed">{t('trailerWindow.noResults')}</Text>
+        <Card withBorder padding='md'>
+          <Text c='dimmed'>{t('trailerWindow.noResults')}</Text>
         </Card>
       )}
     </Stack>
@@ -108,4 +105,3 @@ const YouTubeSearch: FC<YouTubeSearchProps> = ({ onSelect }) => {
 };
 
 export default YouTubeSearch;
-

@@ -8,7 +8,7 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesRU: UpdateData[] = [
   {
-    date: '2025-12-26T00:00:00.000Z',
+    date: '2025-12-25T13:45:23.597Z',
     newFeatures: [
       <>
         <strong>🎵 Саундтрек для колеса</strong>

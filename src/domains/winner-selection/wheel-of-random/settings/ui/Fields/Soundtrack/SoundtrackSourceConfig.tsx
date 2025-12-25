@@ -1,25 +1,24 @@
-import { FC, useCallback, useState, useEffect, useRef } from 'react';
-import { Divider, Text, Group, Button, CloseIcon, Switch, Paper } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Button, Divider, Group, Switch, Text } from '@mantine/core';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
 import { IconPlayerSkipForwardFilled } from '@tabler/icons-react';
 import clsx from 'clsx';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
-import { useAudioPlayback } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/useAudioPlayback';
-import { useWaveformExtractor } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/useWaveformExtractor';
 import { DEFAULT_SOUNDTRACK_CONFIG } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/constants';
+import { useAudioPlayback } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/useAudioPlayback';
 import OutlineInput from '@shared/mantine/ui/Input/Outline/OutlineInput';
 
 import AudioPreview from './AudioPreview';
 import AudioTimeline from './AudioTimeline';
-import VolumeSlider from './VolumeSlider';
-import classes from './SoundtrackModal.module.css';
-import SpinTimeComposed from './SpinTimeComposed';
 import PlayerFactory from './PlayerFactory';
 import { PlayerRef } from './PlayerFactory/types';
+import classes from './SoundtrackModal.module.css';
+import SpinTimeComposed from './SpinTimeComposed';
+import VolumeSlider from './VolumeSlider';
 
 interface SoundtrackSourceConfigProps {
   onClose: () => void;

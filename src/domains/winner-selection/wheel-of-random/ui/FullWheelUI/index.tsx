@@ -296,7 +296,6 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
       // Start soundtrack playback
       if (soundtrackEnabled && soundtrackSource) {
-        console.log('playing soundtrack', soundtrackOffset, soundtrackVolume);
         soundtrackPlayerRef.current?.play(soundtrackOffset ?? 0, soundtrackVolume ?? 0.5);
       }
 
