@@ -49,6 +49,12 @@ const RandomnessSourceField = ({ ticketData, availableQuota, ticketError }: Rand
     }
   }, [randomnessSource]);
 
+  useEffect(() => {
+    if (!['local-basic', 'random-org', 'random-org-signed'].includes(randomnessSource)) {
+      setValue('randomnessSource', 'local-basic');
+    }
+  }, [randomnessSource, setValue]);
+
   // Auto-reset randomnessSource to 'local-basic' for restricted wheel types
   useEffect(() => {
     const isRestrictedWheel =
