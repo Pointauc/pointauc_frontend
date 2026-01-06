@@ -1,0 +1,57 @@
+---
+description: This rule should be used for writing project documentation inside the /docs folder. These rules are only applied to the user manual markdown files which would be consumed by non-technical users.
+alwaysApply: false
+---
+
+# End-User Documentation Guidelines
+
+When working with files in the docs folder, focus on creating user-friendly documentation that helps end users understand and use the application effectively.
+
+## Purpose
+
+Write clear, accessible user guides that help end users:
+
+- Understand what the application does and its key capabilities
+- Learn how to use features
+- Troubleshoot common issues
+
+## Target Audience
+
+- End users with no technical background
+- Streamers and content creators
+- People who want to use the application's features without understanding the code
+
+## Writing Style
+
+- **Simple Language**: Use plain, non-technical language that anyone can understand
+- **User-Focused**: Frame everything from the user's perspective ("You can..." instead of "The system...")
+- **Authentic Tone**: Avoid corporate buzzwords, marketing jargon, and fishy catchphrases - write naturally and conversationally
+- Be direct and clear. Users should be able to quickly parse the information and find what they want.
+
+## Visual Formatting & Layout
+
+Create visually appealing documentation that's easy to scan and read:
+
+- **Break Up Text**: Avoid long walls of text - use short paragraphs (2-3 sentences max)
+- **Use Headers Effectively**: Structure content with clear H2, H3, H4 headings for easy navigation
+- **Lists & Bullets**: Use numbered lists for steps, bullet points for features/benefits
+- **Emphasis**: Use **bold** for important terms, _italics_ for UI elements or emphasis
+- **Code Blocks**: Format any technical terms, settings, or examples in `code blocks`
+- **Callout Boxes**: Use blockquotes (>) for important tips, warnings, or key information
+- **Custom Containers**: Use custom container syntax for enhanced visual impact when context requires it:
+  - `::: info Title` - General information and explanations
+  - `::: tip Title` - Helpful suggestions and best practices
+  - `::: warning Title` - Important cautions and potential issues
+  - `::: danger Title` - Critical warnings and serious risks
+  - `::: details Title` - Expandable sections with additional details
+- **Emojis**: Use sparingly and appropriately to add personality (🎯 for goals, ⚠️ for warnings, 💡 for tips, ✅ for completed steps)
+- **Tables**: Use tables for comparing options or listing settings
+- **Divider Lines**: Don't add divider lines between headers (`---`), our theme handles this automatically
+
+## Documentation Focus Areas
+
+- Application capabilities and what users can achieve
+- User interface walkthroughs
+- Configuration options that matter to end users
+- Integration setup from user perspective
+- Creative ways to use features

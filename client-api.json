@@ -397,6 +397,63 @@
         ]
       }
     },
+    "/donateHelper/auth": {
+      "post": {
+        "description": "Processes Donate Helper API key and links the Donate Helper account to the user session. Returns whether this is a new user registration.",
+        "operationId": "DonateHelperController_authorize",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Donate Helper API key",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonateHelperAuthBodyDto"
+              },
+              "examples": {
+                "example1": {
+                  "value": {
+                    "accessToken": "dh_api_key_here"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully authorized with Donate Helper",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonateHelperAuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authorize user with Donate Helper",
+        "tags": [
+          "Donate Helper Integration"
+        ]
+      }
+    },
+    "/donateHelper/revoke": {
+      "post": {
+        "description": "Invalidates and removes Donate Helper integration for the authenticated user. Requires authentication via cookie.",
+        "operationId": "DonateHelperController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successfully revoked Donate Helper integration"
+          }
+        },
+        "summary": "Revoke Donate Helper integration",
+        "tags": [
+          "Donate Helper Integration"
+        ]
+      }
+    },
     "/random/integer": {
       "get": {
         "operationId": "RandomController_getRandomInteger",
@@ -1353,6 +1410,32 @@
         ]
       },
       "IhaqAuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "isNew": {
+            "type": "boolean",
+            "description": "Indicates whether this authorization resulted in a new user registration",
+            "example": false
+          }
+        },
+        "required": [
+          "isNew"
+        ]
+      },
+      "DonateHelperAuthBodyDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "API key from Donate Helper service",
+            "example": "dh_abc123xyz"
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "DonateHelperAuthResponseDto": {
         "type": "object",
         "properties": {
           "isNew": {

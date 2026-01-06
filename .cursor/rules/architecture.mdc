@@ -1,0 +1,120 @@
+---
+alwaysApply: false
+description: Description of the project architecture and files organization, as well as the rules for importing the code and navigating the project. Should be used when building a new feature or as a reference for refactoring.
+---
+
+### Architecture Overview (FSD-inspired, AI-first)
+
+- **Layers** (top → bottom):
+  - **app**: App entry, providers, routing, global error boundaries, configuration bootstrapping.
+  - **pages**: Route-level compositions. Pages wire domain slices and shared UI, but contain no business logic.
+  - **domains**: The single consolidated layer for what is typically widgets/features/entities. Contains business logic, UI, state, and API by slice.
+  - **shared**: Cross-cutting utilities, base UI, styles, constants, and adapters reusable by any layer.
+
+This project currently does not fully follow best practices. The structure below defines the target organization and how to navigate/locate items going forward.
+
+### Domains Layer: Slices and Internal Segments
+
+Each domain is a slice. Slices can be nested. Inner slices may import directly from their parent slice to reuse shared logic/components.
+
+Recommended slice skeleton:
+
+```
+src/domains/
+  <slice>/
+    api/            # HTTP clients, DTO mappers, queries
+    model/          # business logic, state, types, selectors
+      state/        # store modules
+      types.ts
+    ui/             # React components for this domain
+    lib/            # helpers strictly scoped to this slice
+    config/         # constants, feature flags, runtime config
+    index.ts        # public API of the slice (re-export controlled surface)
+```
+
+Deeply nested slices follow the same pattern. Inner slices can import from parent slice paths for reuse.
+
+### Where to find things (AI-first)
+
+- **Route/page** for a URL: `src/pages/<PageName>`; composition only (no domain logic).
+- **Business logic/state** for a feature: `src/domains/<slice>/model`.
+- **Network calls** for a feature: `src/domains/<slice>/api`.
+- **UI components** for a feature: `src/domains/<slice>/ui`.
+- **Helpers and services** for a feature: `src/domains/<slice>/lib`.
+- **Inner-slice reuse**: import shared code from the parent slice directory (`src/domains/<parentSlice>/**`).
+- **Global utilities/constants/base UI**: `src/shared/**` and `src/constants/**`.
+- **App-wide providers/routing**: `src/app/**` and entry points (see [src/App.tsx](mdc:src/App.tsx)).
+- **i18n keys**: `src/assets/i18n/locales/*.json` (see [en.json](mdc:src/assets/i18n/locales/en.json)).
+
+### Import Rules (simple and permissive, with boundaries)
+
+- **pages → domains, shared**: Allowed. Pages compose slices; no business logic in pages.
+- **domains → domains**: Allowed. Features can communicate. Prefer importing via another slice's `index.ts` to avoid deep coupling.
+- **domains → shared**: Allowed. Use cross-cutting tools from shared.
+- **shared → domains**: Not allowed. Shared must remain independent.
+
+Public API convention:
+
+- Each slice exposes a curated surface from `src/domains/<slice>/index.ts` (components, hooks, selectors, types).
+- Cross-slice imports should target only that `index.ts` where possible, not internal paths.
+- Segments like `ui/`, `model/`, `config/` do not need their own `index.ts`. Import files directly inside a slice.
+
+### Path Aliases
+
+Current aliases are defined in [tsconfig.json](mdc:tsconfig.json). We will add the following as we migrate to the new structure:
+
+- `@domains/*` → `./src/domains/*`
+- `@app/*` → `./src/app/*` (optional if we split `App.tsx` responsibilities)
+
+Existing aliases like `@components/*`, `@pages/*`, `@shared/*`, `@api/*`, etc., will continue to work during migration. Prefer the new `@domains/*` imports for new slices.
+
+### API Organization
+
+- **App backend API (generated)**: All generated API types/clients based on OpenAPI reside in `src/shared/api/openApi`. Treat this as the single source of truth for backend interactions.
+- **Slice `api/` directories**: Use primarily for external/third-party APIs, adapters, and slice-specific request helpers. Avoid duplicating backend client logic here; import from `shared/api/openApi` instead.
+
+### Legacy → New Mapping (incremental migration)
+
+- `src/components/**` → move into `src/domains/<slice>/ui/**` or `src/shared/ui/**` if cross-cutting.
+- `src/features/**` → `src/domains/<slice>/**` (preserve feature boundaries inside `model/api/ui/lib`).
+- `src/models/**` → types/selectors/services to `src/domains/<slice>/model/**` or `src/shared/model/**` if global.
+- `src/reducers/**` → `src/domains/<slice>/model/state/**` (slice-local) or `src/app/store/**` if app-wide infra.
+- `src/services/**` → for backend: `src/shared/api/openApi/**`; for external APIs: `src/domains/<slice>/api/**`.
+- `src/utils/**` → `src/shared/lib/**`.
+- `src/pages/**` → stays as route compositions. Replace deep imports with slice `index.ts`.
+
+Keep a façade export in old locations temporarily if needed, but prefer updating imports to the new alias immediately in touched files.
+
+### File Placement Checklist (fast decisions)
+
+- Is it UI for a specific feature? → `domains/<slice>/ui`.
+- Is it business logic/state for a feature? → `domains/<slice>/model`.
+- Is it API for a feature? → `domains/<slice>/api`.
+- Is it reused across many slices? → `shared/**`.
+- Is it page composition or routing? → `pages/**`.
+
+### Example Imports (target state)
+
+```ts
+// Page composes slices
+import { AuctionPanel } from '@domains/auction/ui';
+import { useLotsBroadcasting } from '@domains/broadcasting';
+
+// Cross-slice usage via public API
+import { selectUser } from '@domains/user';
+
+// Shared utilities
+import { formatCurrency } from '@shared/lib/format';
+```
+
+### Notes for AI agents
+
+- Prefer `@domains/<slice>` entry points to minimize tokens and avoid deep internal paths.
+- If a symbol is not found via the slice root, search inside the slice directory in the order: `model` → `ui` → `api` → `lib`.
+- Pages should rarely define new logic. If you see logic inside pages, consider extracting to a slice under `domains/`.
+
+### References
+
+- FSD overview: `https://feature-sliced.design/docs/get-started/overview`
+- Current entry: [src/App.tsx](mdc:src/App.tsx)
+- Path aliases: [tsconfig.json](mdc:tsconfig.json)

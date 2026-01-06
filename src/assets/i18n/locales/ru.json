@@ -110,6 +110,22 @@
     },
     "twitch": {
       "name": "Twitch"
+    },
+    "donateHelper": {
+      "name": "Donate Helper",
+      "authModal": {
+        "title": "Интеграция с Donate Helper",
+        "steps": {
+          "navigate": "Перейдите в настройки Donate Helper",
+          "createToken": "Нажмите 'Создать токен'",
+          "copyToken": "Скопируйте токен и вставьте ниже"
+        },
+        "instructions": {
+          "navigate": "<1>https://donatehelper.com/dashboard/account?tab=api</1>"
+        },
+        "tokenPlaceholder": "Вставьте ваш API токен сюда",
+        "submit": "Подключить"
+      }
     }
   },
   "serverNotifications": {

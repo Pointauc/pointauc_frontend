@@ -23,6 +23,7 @@ export interface IntegrationData {
   donatePayEuAuth: IntegrationDataDto;
   tourniquetAuth: IntegrationDataDto;
   ihaqAuth: IntegrationDataDto;
+  donateHelperAuth: IntegrationDataDto;
 }
 
 export interface GetUserDto extends IntegrationData {
