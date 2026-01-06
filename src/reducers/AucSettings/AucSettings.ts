@@ -149,6 +149,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     activeSettingsPresetId,
     ihaqAuth,
     userId,
+    donateHelperAuth,
   } = user;
 
   if (activeSettings) {
@@ -174,6 +175,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         twitch: twitchAuth,
         tourniquet: tourniquetAuth,
         ihaq: ihaqAuth,
+        donateHelper: donateHelperAuth,
       },
     }),
   );

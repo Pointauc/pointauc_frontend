@@ -32,6 +32,20 @@ export type IhaqAuthResponseDto = {
     isNew: boolean;
 };
 
+export type DonateHelperAuthBodyDto = {
+    /**
+     * API key from Donate Helper service
+     */
+    accessToken: string;
+};
+
+export type DonateHelperAuthResponseDto = {
+    /**
+     * Indicates whether this authorization resulted in a new user registration
+     */
+    isNew: boolean;
+};
+
 export type ExistingActiveTicketResponseDto = {
     /**
      * Random.org ticket ID
@@ -935,6 +949,39 @@ export type IhaqControllerRevokeData = {
 export type IhaqControllerRevokeResponses = {
     /**
      * Successfully revoked IHAQ integration
+     */
+    201: unknown;
+};
+
+export type DonateHelperControllerAuthorizeData = {
+    /**
+     * Donate Helper API key
+     */
+    body: DonateHelperAuthBodyDto;
+    path?: never;
+    query?: never;
+    url: '/donateHelper/auth';
+};
+
+export type DonateHelperControllerAuthorizeResponses = {
+    /**
+     * Successfully authorized with Donate Helper
+     */
+    201: DonateHelperAuthResponseDto;
+};
+
+export type DonateHelperControllerAuthorizeResponse = DonateHelperControllerAuthorizeResponses[keyof DonateHelperControllerAuthorizeResponses];
+
+export type DonateHelperControllerRevokeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/donateHelper/revoke';
+};
+
+export type DonateHelperControllerRevokeResponses = {
+    /**
+     * Successfully revoked Donate Helper integration
      */
     201: unknown;
 };

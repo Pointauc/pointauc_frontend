@@ -1,0 +1,64 @@
+---
+alwaysApply: true
+description: 'This is the default rules for the project. It is used to guide the AI in writing code for the project.'
+---
+
+Please reply in a concise style. Avoid unnecessary repetition or filler language.
+
+General rules for new functionality:
+
+- Begin with step-by-step planning.
+- Consider performance implications, efficient error handling, and edge cases to ensure that the code is not only functional but also robust and optimized.
+- Document component architecture and data flow in the form of JSDoc comments.
+- Avoid creating example usage of the newly added functionality unless it's requested by the developer.
+- Ignore unit tests for new functionality unless it's requested by the developer.
+- Avoid using barrel export files like index.ts. Import directly from the source file.
+- Use Dexie library for operations with indexedDB.
+
+Code Style and Structure:
+
+- Keep code SOLID but simple - separation of concerns without over-engineering
+- Aim to keep files under 300 lines - split when it improves clarity
+- Prefer iteration and modularization over code duplication. The code should be highly reusable and modular.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoaded, hasError).
+- Use absolute paths like @components/... for file imports. Existing absolute path shortcuts - @assets, @components, @pages, @api, @constants, @decorators, @enums, @hooks, @models, @reducers, @services, @styles, @utils, @features, @shared, @types, @domains, @App.
+
+Library and tools usage:
+
+- Use tailwindcss for styling.
+- Use mantine library for basic UI components.
+
+Specific Naming Patterns:
+
+- Prefix boolean variables with verbs: isLoading, hasError, canSubmit. Prefix function which return boolean with 'check': checkIsLoading.
+- Use complete words over abbreviations except for:
+  - err (error)
+  - req (request)
+  - res (response)
+  - props (properties)
+  - ref (reference)
+
+React Best Practices:
+
+- Use functional components with TypeScript interfaces.
+- Extract reusable logic into custom hooks.
+- Implement efficient component composition.
+
+Internationalization (i18n):
+
+- Always use translations for any user-visible tex
+- Use `react-i18next` APIs:
+  - `useTranslation()` for simple strings: `const { t } = useTranslation()` and `t('key')`
+  - `Trans` for strings containing inline markup/components
+- Avoid concatenation (`'Hello ' + name`). Use i18n interpolation.
+- Ensure new keys exist for all supported locales. Add to English first, then add stubs to others during the same change to avoid missing key fallbacks.
+- Translations are located at `/src/assets/i18n/locales` (e.g., `en.json`, `ru.json`).
+- Keep keys consistent across locales: if a key is added/renamed/removed, update `en.json`, `ru.json` together (only update these 2 locales automatically unless requested by developer).
+
+Documentation
+
+- Use JSDoc to document large and/or complex functions, classes, etc.
+- Only add comments to block of codes that are not self-explanatory.
+- Keep descriptions clear and concise, so the developer can quickly grab an idea by a glance.
+- omit examples and code snippets from comments and jsdocs. Keep jsdocs short and clean unless there is a specifically complex and unintuitive logic.
+- DO NOT WRITE DOCS UNLESS EXPLICITLY ASKED TO
