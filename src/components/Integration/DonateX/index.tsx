@@ -1,14 +1,15 @@
 import { HubConnectionBuilder, HubConnectionState, LogLevel, type HubConnection } from '@microsoft/signalr';
 
-import DonateXSvg from '@assets/icons/donatex.svg?react';
+import DonateXSvg from '@assets/icons/donatex.svg';
 import { IntegrationLoginButton } from '@components/Integration/AuthFlow/Redirect/LoginButton/LoginButton.tsx';
 import { InvalidTokenError } from '@components/Integration/helpers.ts';
 import { mergeAuthData } from '@reducers/User/User.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import EventEmitter from '@utils/EventEmitter.ts';
-import styles from './index.module.css';
 
 import { store } from '../../../main.tsx';
+
+import styles from './index.module.css';
 import {
   BASE_URL,
   buildAuthorizeUrl,
@@ -64,9 +65,7 @@ const DonateXLoginButton = ({ integration, classes }: Integration.LoginButtonPro
     }
   };
 
-  return (
-    <IntegrationLoginButton integration={integration} onClick={() => void handleAuth()} classes={classes} />
-  );
+  return <IntegrationLoginButton integration={integration} onClick={() => void handleAuth()} classes={classes} />;
 };
 
 const authFlow: Integration.RedirectFlow = {
@@ -152,7 +151,7 @@ const donatex: Integration.Config = {
   authFlow,
   pubsubFlow: buildSignalRFlow(),
   branding: {
-    icon: () => <DonateXSvg className={styles.icon} />,
+    icon: () => <img src={DonateXSvg} alt='DonateX' className={styles.icon} />,
   },
 };
 

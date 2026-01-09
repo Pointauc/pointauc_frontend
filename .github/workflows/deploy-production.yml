@@ -27,6 +27,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
+        env:
+          VITE_DONATEX_CLIENT_ID: ${{ secrets.VITE_DONATEX_CLIENT_ID_PRODUCTION }}
         run: pnpm build
 
       - name: Generate source hashes manifest
