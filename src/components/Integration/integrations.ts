@@ -6,7 +6,7 @@ import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme.ts';
 import tourniquet from '@components/Integration/Tourniquet';
 import donatex from '@components/Integration/DonateX/index.tsx';
 
-const INTEGRATIONS = [twitch, da, donatePay, donatex, ihaq, tourniquet];
+const INTEGRATIONS = [twitch, donatex, da, donatePay, ihaq, tourniquet];
 
 export default INTEGRATIONS;
 
