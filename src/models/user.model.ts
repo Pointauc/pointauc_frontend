@@ -23,6 +23,7 @@ export interface IntegrationData {
   donatePayEuAuth: IntegrationDataDto;
   tourniquetAuth: IntegrationDataDto;
   ihaqAuth: IntegrationDataDto;
+  donatexAuth: IntegrationDataDto;
 }
 
 export interface GetUserDto extends IntegrationData {
@@ -32,7 +33,7 @@ export interface GetUserDto extends IntegrationData {
 }
 
 export type IntegrationValidity = {
-  [key in keyof IntegrationData]: boolean;
+  [key in keyof IntegrationData]?: boolean;
 };
 
 export interface TwitchRewardPresetsRequest {

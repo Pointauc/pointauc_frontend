@@ -9,6 +9,7 @@ import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
+import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -150,6 +151,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     ihaqAuth,
     userId,
   } = user;
+  const donatexAuth = getDonateXAuthData();
 
   if (activeSettings) {
     const { startTime, timeStep, ...settings } = activeSettings;
@@ -162,8 +164,8 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     );
   }
   dispatch(
-    setUserState({
-      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? 'Empty',
+      setUserState({
+      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? donatexAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
       pointaucUserId: userId,
       activeSettingsPresetId,
@@ -174,6 +176,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         twitch: twitchAuth,
         tourniquet: tourniquetAuth,
         ihaq: ihaqAuth,
+        donatex: donatexAuth,
       },
     }),
   );

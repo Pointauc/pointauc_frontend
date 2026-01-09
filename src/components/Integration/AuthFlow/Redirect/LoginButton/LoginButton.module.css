@@ -1,5 +1,11 @@
 .loginButton {
   height: 40px;
+  background-color: #0d0114 !important;
+  color: #f1f1f1 !important;
+}
+
+.loginButton:hover {
+  background-color: #000000 !important;
 }
 
 .partnerButton {

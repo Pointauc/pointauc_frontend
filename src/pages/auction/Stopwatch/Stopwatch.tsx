@@ -20,6 +20,7 @@ import { integrationUtils } from '@components/Integration/helpers.ts';
 import twitch from '@components/Integration/Twitch';
 import donatePay from '@components/Integration/DonatePay';
 import da from '@components/Integration/DA';
+import donatex from '@components/Integration/DonateX/index.tsx';
 import { useHeadroom } from '@shared/lib/scroll';
 import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
 
@@ -197,11 +198,13 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     const unsubDonatePay = donatePay.pubsubFlow.events.on('bid', handleDonation);
     const unsubDa = da.pubsubFlow.events.on('bid', handleDonation);
     const unsubIhaq = ihaq.pubsubFlow.events.on('bid', handleDonation);
+    const unsubDonateX = donatex.pubsubFlow.events.on('bid', handleDonation);
 
     return () => {
       unsubDa();
       unsubDonatePay();
       unsubIhaq();
+      unsubDonateX();
     };
   }, [handleDonation]);
 
