@@ -29,6 +29,7 @@ export interface IntegrationData {
 export interface GetUserDto extends IntegrationData {
   activeSettings: AucSettingsDto;
   activeSettingsPresetId: string;
+  userId: string;
 }
 
 export type IntegrationValidity = {

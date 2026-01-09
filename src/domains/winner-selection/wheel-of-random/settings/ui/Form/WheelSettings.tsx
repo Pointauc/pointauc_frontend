@@ -1,6 +1,6 @@
-import { Anchor, Button, Checkbox, Group, SimpleGrid, Stack } from '@mantine/core';
+import { Anchor, Button, Group, SimpleGrid, Stack } from '@mantine/core';
 import { ReactNode } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
@@ -9,6 +9,7 @@ import { WheelFormat } from '@constants/wheel.ts';
 import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ClassicDropoutDescription';
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
 import WheelFormatField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat';
+import RandomnessSourceField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/RandomnessSourceField/RandomnessSourceField';
 
 import { DropoutVariant } from '../../../BaseWheel/BaseWheel';
 import { DropoutHelp } from '../../../Dropout/ui/DropoutHelp';
@@ -19,6 +20,9 @@ import RandomSpinConfig from '../Fields/RandomSpinConfig';
 import RandomSpinSwitch from '../Fields/RandomSpinSwitch';
 import SpinTimeField from '../Fields/SpinTime';
 import WheelStyleSelect from '../Fields/StyleSelect/StyleSelect';
+import { RevealedData } from '../../../lib/hooks/useTicketManagement';
+import WheelSoundtrackField from '../Fields/Soundtrack';
+import SpinTimeComposed from '../Fields/Soundtrack/SpinTimeComposed';
 
 interface WheelSettingsProps {
   nextWinner?: string;
@@ -27,26 +31,32 @@ interface WheelSettingsProps {
   children: ReactNode;
   renderSubmitButton?: (defaultButton: ReactNode) => ReactNode;
   direction?: 'row' | 'column';
+  ticketData?: RevealedData | null;
+  availableQuota?: number | null;
+  isCreatingTicket?: boolean;
+  ticketError?: Error | null;
 }
 
 const WheelSettings = (props: WheelSettingsProps) => {
-  const { isLoadingSeed, direction = 'column', controls, children, renderSubmitButton } = props;
-  const { t } = useTranslation();
   const {
-    formState: { isSubmitting },
-  } = useFormContext<Wheel.Settings>();
+    isLoadingSeed,
+    direction = 'column',
+    controls,
+    children,
+    renderSubmitButton,
+    ticketData,
+    isCreatingTicket,
+    availableQuota,
+    ticketError,
+  } = props;
+  const { t } = useTranslation();
+  const { control } = useFormContext<Wheel.Settings>();
+  const { isSubmitting } = useFormState<Wheel.Settings>({ control });
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
-  const randomSpinEnabled = useWatch<Wheel.Settings>({ name: 'randomSpinEnabled' });
 
   const submitButton = (
-    <Button
-      loading={isLoadingSeed}
-      disabled={isSubmitting}
-      variant='contained'
-      type='submit'
-      onClick={() => console.log('submit click')}
-    >
+    <Button loading={isLoadingSeed || isCreatingTicket} disabled={isSubmitting} variant='contained' type='submit'>
       {isSubmitting ? t('wheel.spinning') : t('wheel.spin')}
     </Button>
   );
@@ -67,15 +77,12 @@ const WheelSettings = (props: WheelSettingsProps) => {
       />
       <SimpleGrid cols={direction === 'row' ? 2 : 1} spacing='md' style={{ minHeight: 0 }}>
         <Stack gap='sm' mih={0}>
-          <Group align='center' justify='space-between'>
-            <Group gap='xs'>
-              {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-              <Group>
-                {!randomSpinEnabled && <SpinTimeField />}
-                {randomSpinEnabled && <RandomSpinConfig />}
-              </Group>
-            </Group>
-            <RandomSpinSwitch />
+          <Group align='center' gap='xs'>
+            {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
+            <div className='flex-1 flex-shrink-0'>
+              <SpinTimeComposed disabled={isSubmitting} />
+            </div>
+            <WheelSoundtrackField />
           </Group>
           <Stack gap='sm' style={{ overflowY: 'auto', overflowX: 'hidden' }}>
             <WheelStyleSelect />
@@ -93,16 +100,10 @@ const WheelSettings = (props: WheelSettingsProps) => {
             {children}
             {controls.split && <SplitField />}
             {controls.randomOrg && (
-              <Controller
-                name='useRandomOrg'
-                render={({ field: { value, onChange }, formState: { isSubmitting } }) => (
-                  <Checkbox
-                    checked={value}
-                    label={t('wheel.useRandomOrg')}
-                    onChange={(e) => onChange(e.target.checked)}
-                    disabled={isSubmitting}
-                  />
-                )}
+              <RandomnessSourceField
+                ticketData={ticketData}
+                availableQuota={availableQuota}
+                ticketError={ticketError}
               />
             )}
             {/*{elements.randomPace && (*/}

@@ -32,6 +32,261 @@ export type IhaqAuthResponseDto = {
     isNew: boolean;
 };
 
+export type ExistingActiveTicketResponseDto = {
+    /**
+     * Random.org ticket ID
+     */
+    ticketId: string;
+    /**
+     * Timestamp when ticket was created
+     */
+    createdAt: string;
+    /**
+     * Remaining quota for today (out of 6)
+     */
+    quotaLeft: number;
+};
+
+export type NoActiveTicketResponseDto = {
+    /**
+     * Random.org ticket ID - null when no active ticket
+     */
+    ticketId: unknown;
+    /**
+     * Timestamp when ticket was created - null when no active ticket
+     */
+    createdAt: unknown;
+    /**
+     * Remaining quota for today (out of 6) - null when no active ticket
+     */
+    quotaLeft: unknown;
+};
+
+export type CreateTicketResponseDto = {
+    /**
+     * Random.org ticket ID
+     */
+    ticketId: string;
+    /**
+     * Timestamp when ticket was created
+     */
+    createdAt: string;
+    /**
+     * Remaining quota for today (out of 6)
+     */
+    quotaLeft: number;
+};
+
+export type ParticipantDto = {
+    /**
+     * Participant name
+     */
+    name?: string | null;
+    /**
+     * Bid amount for this participant
+     */
+    amount: number;
+};
+
+export type GenerateWinnerRequestDto = {
+    /**
+     * List of auction participants with their bid amounts
+     */
+    participants: Array<ParticipantDto>;
+};
+
+export type RandomOrgLicenseDto = {
+    /**
+     * License type
+     */
+    type: string;
+    /**
+     * License description text
+     */
+    text: string;
+    /**
+     * URL with more information about the license
+     */
+    infoUrl?: string | null;
+};
+
+export type RandomOrgTicketDataDto = {
+    /**
+     * Current ticket ID
+     */
+    ticketId: string;
+    /**
+     * Previous ticket ID in the chain
+     */
+    previousTicketId?: string | null;
+    /**
+     * Next ticket ID in the chain
+     */
+    nextTicketId?: string | null;
+};
+
+export type RandomOrgRandomDataDto = {
+    /**
+     * Random.org API method used
+     */
+    method: string;
+    /**
+     * Hashed API key for verification
+     */
+    hashedApiKey: string;
+    /**
+     * Number of random values generated
+     */
+    n: number;
+    /**
+     * Number of decimal places in the generated values
+     */
+    decimalPlaces: number;
+    /**
+     * Whether values are generated with replacement
+     */
+    replacement: boolean;
+    /**
+     * Pregenerated randomization data
+     */
+    pregeneratedRandomization?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Array of generated random decimal fractions
+     */
+    data: Array<number>;
+    /**
+     * License information for the random values
+     */
+    license: RandomOrgLicenseDto;
+    /**
+     * Additional license data
+     */
+    licenseData?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * User-provided data returned with the response
+     */
+    userData?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Ticket data for verification chain
+     */
+    ticketData: RandomOrgTicketDataDto;
+    /**
+     * Timestamp when the random generation was completed
+     */
+    completionTime: string;
+    /**
+     * Serial number of the random generation
+     */
+    serialNumber: number;
+};
+
+export type GenerateWinnerResponseDto = {
+    /**
+     * Random data object from Random.org
+     */
+    random: RandomOrgRandomDataDto;
+    /**
+     * Digital signature from Random.org proving authenticity
+     */
+    signature: string;
+    /**
+     * Remaining quota for today (out of 6)
+     */
+    quotaLeft: number;
+};
+
+export type WinnerMetadataDto = {
+    /**
+     * Total amount from all participants
+     */
+    totalAmount: number;
+    /**
+     * Name of the selected winner
+     */
+    winnerName: string;
+    /**
+     * Number of lots (participants)
+     */
+    lotsCount: number;
+};
+
+export type WinnerRecordDto = {
+    /**
+     * Winner record ID
+     */
+    id: number;
+    /**
+     * User ID who generated this winner
+     */
+    userId: number;
+    /**
+     * Random.org ticket ID
+     */
+    ticketId: string;
+    /**
+     * Participants list as JSON array
+     */
+    participantsJson: Array<ParticipantDto>;
+    /**
+     * Random data object from Random.org
+     */
+    randomData: RandomOrgRandomDataDto;
+    /**
+     * Digital signature from Random.org
+     */
+    signature: string;
+    /**
+     * Metadata about the winner selection
+     */
+    metadata: WinnerMetadataDto;
+    /**
+     * Timestamp when winner was generated
+     */
+    createdAt: string;
+};
+
+export type RevealedTicketItemDto = {
+    /**
+     * Random.org ticket ID
+     */
+    ticketId: string;
+    /**
+     * Metadata about the winner selection
+     */
+    metadata: {
+        [key: string]: unknown;
+    };
+    /**
+     * Timestamp when winner was generated
+     */
+    createdAt: string;
+};
+
+export type RevealedTicketsResponseDto = {
+    /**
+     * List of revealed ticket records
+     */
+    items: Array<RevealedTicketItemDto>;
+    /**
+     * Total number of records available
+     */
+    total: number;
+    /**
+     * Current offset
+     */
+    offset: number;
+    /**
+     * Current limit
+     */
+    limit: number;
+};
+
 export type LotDto = {
     /**
      * Fast ID for quick lot identification
@@ -697,6 +952,155 @@ export type RandomControllerGetRandomIntegerData = {
 export type RandomControllerGetRandomIntegerResponses = {
     200: unknown;
 };
+
+export type SignedRandomControllerCreateTicketData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/random/signed/tickets';
+};
+
+export type SignedRandomControllerCreateTicketErrors = {
+    /**
+     * Active ticket already exists
+     */
+    400: {
+        statusCode?: number;
+        message?: string;
+        code?: string;
+    };
+};
+
+export type SignedRandomControllerCreateTicketError = SignedRandomControllerCreateTicketErrors[keyof SignedRandomControllerCreateTicketErrors];
+
+export type SignedRandomControllerCreateTicketResponses = {
+    /**
+     * Ticket created successfully
+     */
+    201: CreateTicketResponseDto;
+};
+
+export type SignedRandomControllerCreateTicketResponse = SignedRandomControllerCreateTicketResponses[keyof SignedRandomControllerCreateTicketResponses];
+
+export type SignedRandomControllerGetActiveTicketData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/random/signed/tickets/active';
+};
+
+export type SignedRandomControllerGetActiveTicketResponses = {
+    /**
+     * Active ticket or empty response with null values
+     */
+    200: ExistingActiveTicketResponseDto | NoActiveTicketResponseDto;
+};
+
+export type SignedRandomControllerGetActiveTicketResponse = SignedRandomControllerGetActiveTicketResponses[keyof SignedRandomControllerGetActiveTicketResponses];
+
+export type SignedRandomControllerGenerateWinnerData = {
+    body: GenerateWinnerRequestDto;
+    path?: never;
+    query?: never;
+    url: '/random/signed/winner';
+};
+
+export type SignedRandomControllerGenerateWinnerErrors = {
+    /**
+     * Daily quota exceeded
+     */
+    400: {
+        statusCode?: number;
+        message?: string;
+        code?: string;
+    };
+    /**
+     * Ticket has been used
+     */
+    422: {
+        statusCode?: number;
+        message?: string;
+        code?: string;
+    };
+};
+
+export type SignedRandomControllerGenerateWinnerError = SignedRandomControllerGenerateWinnerErrors[keyof SignedRandomControllerGenerateWinnerErrors];
+
+export type SignedRandomControllerGenerateWinnerResponses = {
+    /**
+     * Winner generated successfully
+     */
+    201: GenerateWinnerResponseDto;
+};
+
+export type SignedRandomControllerGenerateWinnerResponse = SignedRandomControllerGenerateWinnerResponses[keyof SignedRandomControllerGenerateWinnerResponses];
+
+export type SignedRandomControllerGetWinnerRecordByTicketData = {
+    body?: never;
+    path: {
+        /**
+         * Random.org ticket ID
+         */
+        ticketId: string;
+    };
+    query?: never;
+    url: '/random/signed/records/ticket/{ticketId}';
+};
+
+export type SignedRandomControllerGetWinnerRecordByTicketErrors = {
+    /**
+     * Ticket is not revealed yet
+     */
+    400: {
+        statusCode?: number;
+        message?: string;
+        code?: string;
+    };
+    /**
+     * Winner record not found
+     */
+    404: unknown;
+};
+
+export type SignedRandomControllerGetWinnerRecordByTicketError = SignedRandomControllerGetWinnerRecordByTicketErrors[keyof SignedRandomControllerGetWinnerRecordByTicketErrors];
+
+export type SignedRandomControllerGetWinnerRecordByTicketResponses = {
+    /**
+     * Winner record retrieved successfully
+     */
+    200: WinnerRecordDto;
+};
+
+export type SignedRandomControllerGetWinnerRecordByTicketResponse = SignedRandomControllerGetWinnerRecordByTicketResponses[keyof SignedRandomControllerGetWinnerRecordByTicketResponses];
+
+export type SignedRandomControllerGetRevealedTicketsData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * User ID to fetch records for
+         */
+        userId: number;
+        /**
+         * Pagination offset
+         */
+        offset?: number;
+        /**
+         * Maximum records per page (max 20)
+         */
+        limit?: number;
+    };
+    url: '/random/signed/records/revealed';
+};
+
+export type SignedRandomControllerGetRevealedTicketsResponses = {
+    /**
+     * Revealed tickets retrieved successfully
+     */
+    200: RevealedTicketsResponseDto;
+};
+
+export type SignedRandomControllerGetRevealedTicketsResponse = SignedRandomControllerGetRevealedTicketsResponses[keyof SignedRandomControllerGetRevealedTicketsResponses];
 
 export type BroadcastingControllerBroadcastLotsData = {
     body: LotsBroadcastDto;

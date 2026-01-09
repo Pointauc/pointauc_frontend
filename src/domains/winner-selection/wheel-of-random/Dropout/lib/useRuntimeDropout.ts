@@ -1,9 +1,10 @@
 import { RefObject, useMemo, useState } from 'react';
 
-import { WheelItem } from '@models/wheel.model';
-import PredictionService from '@services/PredictionService';
-import useInitWrapper from '@domains/winner-selection/wheel-of-random/lib/strategy/useInitWrapper';
 import { WheelController } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+import useInitWrapper from '@domains/winner-selection/wheel-of-random/lib/strategy/useInitWrapper';
+import { WheelItem } from '@models/wheel.model';
+import PredictionService, { getSlotFromSeed } from '@services/PredictionService';
+import { random } from '@utils/common.utils.ts';
 
 import useDropoutSpinEnd from './useDropoutSpinEnd';
 
@@ -24,9 +25,16 @@ const useRuntimeDropout = (controller: RefObject<WheelController | null>): Wheel
   }, [items]);
   const onSpinEnd = useDropoutSpinEnd({ controller, setItems });
 
+  const getNextWinnerId = ({ items }: Wheel.GetNextWinnerIdParams): Wheel.GetNextWinnerIdResult => {
+    // ToDo: async seed is not supported for strategy with multiple steps
+    const seed = random.value();
+    return { id: items[getSlotFromSeed(items, seed)].id, isFinalSpin: false };
+  };
+
   return {
     items: invertedItems,
     init,
+    getNextWinnerId,
     onSpinEnd,
   };
 };

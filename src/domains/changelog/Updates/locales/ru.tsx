@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Space } from '@mantine/core';
+import { Anchor, Space } from '@mantine/core';
 
 import { UpdateData } from '@domains/changelog/model/types';
 import ROUTES from '@constants/routes.constants';
@@ -7,6 +7,50 @@ import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesRU: UpdateData[] = [
+  {
+    date: '2025-12-25T13:45:23.597Z',
+    newFeatures: [
+      <>
+        <strong>🎵 Саундтрек для колеса</strong>
+        <Space h='sm' />
+        <div>Вы можете настроить музыку, которая будет проигрываться при вращении колеса.</div>
+        <Space h='xs' />
+        <div style={{ paddingLeft: '16px' }}>
+          <strong>Как использовать:</strong> Страница колеса → Нажмите кнопку с нотой справа от времени прокрута
+        </div>
+      </>,
+    ],
+  },
+  {
+    date: '2025-12-21T14:18:56.195Z',
+    newFeatures: [
+      <>
+        <strong>Доказуемо честное вращение колеса</strong>
+        <Space h='sm' />
+        <div>Эта новая функция защищает как стримера так и зрителя от подтасовки результатов кем либо.</div>
+        <Space h='xs' />
+        <div>
+          Больше не нужно доверять честности сайта или стримера - любой человек может проверить результат прокрута
+          колеса напрямую и получить доказательство непредвзятости.
+        </div>
+        <Space h='sm' />
+        <div style={{ paddingLeft: '16px' }}>
+          <strong>Как включить:</strong> Откройте страницу колеса → Выберите "Random.org+ (цифровая подпись)" в
+          выпадающем списке метода генерации случайных чисел
+        </div>
+        <Space h='xs' />
+        <div style={{ paddingLeft: '16px' }}>
+          <Anchor
+            component={Link}
+            to={ROUTES.TICKET_VERIFICATION_INFO}
+            style={{ color: '#228be6', textDecoration: 'underline' }}
+          >
+            Узнайте, как проверить результат вращения →
+          </Anchor>
+        </div>
+      </>,
+    ],
+  },
   {
     date: '2025-12-18T11:25:39.694Z',
     newFeatures: [

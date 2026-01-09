@@ -1,0 +1,36 @@
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--mantine-color-dimmed);
+  font-size: 0.875rem;
+}
+
+.value {
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+.placeholder {
+  color: var(--mantine-color-gray-5);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.pendingIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--mantine-color-blue-6);
+  font-size: 0.75rem;
+}

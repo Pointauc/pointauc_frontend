@@ -22,6 +22,18 @@ interface SlotLike {
   amount?: number | null;
 }
 
+export const getSlotFromSeed = (slots: SlotLike[], distance: number): number => {
+  let restAmount = distance * getTotalSize(slots);
+
+  const index = slots.findIndex(({ amount }) => {
+    restAmount -= Number(amount ?? 0);
+
+    return restAmount <= 0;
+  });
+
+  return index;
+};
+
 export const getSlotFromDistance = (slots: SlotLike[], distance: number): number => {
   let restAmount = distance * getTotalSize(slots);
 

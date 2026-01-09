@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { WheelItem } from '@models/wheel.model.ts';
+import { getSlotFromSeed } from '@services/PredictionService';
 
 const useNormalWheel = (): Wheel.FormatHook => {
   const [items, setItems] = useState<WheelItem[]>([]);
@@ -9,9 +10,18 @@ const useNormalWheel = (): Wheel.FormatHook => {
     setItems(items);
   };
 
+  const getNextWinnerId = async ({
+    generateSeed,
+  }: Wheel.GetNextWinnerIdParams): Promise<Wheel.GetNextWinnerIdResult> => {
+    const seed = await generateSeed();
+
+    return { id: items[getSlotFromSeed(items, seed)].id, isFinalSpin: true };
+  };
+
   return {
     items,
     init,
+    getNextWinnerId,
   };
 };
 

@@ -1,8 +1,6 @@
-import { Key } from 'react';
-
 export interface WheelItem {
   name: string;
-  id: Key;
+  id: string | number;
   color: string;
   amount: number;
 }

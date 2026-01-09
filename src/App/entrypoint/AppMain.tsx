@@ -17,6 +17,9 @@ import classes from './App.module.css';
 
 const OverlaysPage = lazy(() => import('@domains/overlays/ui/List/Page/OverlaysPage'));
 const OverlayPage = lazy(() => import('@domains/overlays/ui/Edit/Page/OverlayPage'));
+const DebugPage = lazy(() => import('@domains/debug/ui/Page/DebugPage'));
+const TicketVerificationInstructionsPage = lazy(() => import('@pages/tickets/TicketVerificationInstructionsPage'));
+const RevealedTicketPage = lazy(() => import('@pages/tickets/RevealedTicketPage'));
 
 export const AppMain = () => {
   const isHomePage = useMatch(ROUTES.HOME);
@@ -35,8 +38,11 @@ export const AppMain = () => {
         {/* <Route path={ROUTES.STATISTIC} element={<Statistic />} /> */}
         <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
         <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
+        <Route path={ROUTES.TICKET_VERIFICATION_INFO} element={<TicketVerificationInstructionsPage />} />
+        <Route path={ROUTES.TICKET_DETAILS} element={<RevealedTicketPage />} />
         <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         <Route path={ROUTES.TEST} element={<TestPage />} />
+        <Route path={ROUTES.DEBUG} element={<DebugPage />} />
       </Routes>
     </AppShell.Main>
   );

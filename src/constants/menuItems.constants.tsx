@@ -1,21 +1,19 @@
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
 import HelpIcon from '@mui/icons-material/Help';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
 import LayersIcon from '@mui/icons-material/Layers';
-import ScienceIcon from '@mui/icons-material/Science';
-import { useSelector } from 'react-redux';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { useTranslation } from 'react-i18next';
-import { matchPath, useLocation, useMatches } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { matchPath, useLocation } from 'react-router-dom';
 
 import AuctionSvg from '@assets/icons/auction.svg?react';
 import WheelSvg from '@assets/icons/wheel.svg?react';
 import { MenuItem } from '@models/common.model';
 import { RootState } from '@reducers';
 
-import ROUTES from './routes.constants';
 import { config } from './config';
+import ROUTES from './routes.constants';
 
 const MENU_ITEMS: MenuItem[] = [
   // { title: 'menu.items.auction.title', icon: AuctionSvg, path: ROUTES.HOME },
@@ -72,6 +70,11 @@ export const useMenuItems = (): MenuItem[] => {
     { title: 'menu.items.overlays.title', icon: <LayersIcon />, path: ROUTES.OVERLAYS, isBeta: true },
     // { title: 'menu.items.test.title', icon: <ScienceIcon />, path: ROUTES.TEST, navbarFixedState: 'opened' },
     { title: 'menu.items.guides.title', icon: <HelpIcon />, divide: true, path: docsPath, target: '_blank' },
+    {
+      title: 'menu.items.ticketVerification.title',
+      icon: <VerifiedUserIcon />,
+      path: ROUTES.TICKET_VERIFICATION_INFO,
+    },
     ...(userId
       ? [
           {

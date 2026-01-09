@@ -23,6 +23,9 @@ const ROUTES = {
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
   TEST: '/test',
+  DEBUG: '/debug',
+  TICKET_VERIFICATION_INFO: '/tickets/info',
+  TICKET_DETAILS: '/tickets/:ticketId',
   REDIRECT: {
     DEFAULT: '/redirect',
   },

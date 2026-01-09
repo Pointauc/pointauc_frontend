@@ -1,8 +1,8 @@
 import { Overlay, Popover, Stack, Text, Title } from '@mantine/core';
+import { throttle } from '@tanstack/react-pacer';
 import clsx from 'clsx';
 import gsap from 'gsap';
 import {
-  Key,
   MutableRefObject,
   useCallback,
   useEffect,
@@ -13,17 +13,16 @@ import {
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { throttle } from '@tanstack/react-pacer';
 
 import ImageLinkInput from '@components/Form/ImageLinkInput/ImageLinkInput';
 import TwitchEmotesList from '@components/TwitchEmotesList/TwitchEmotesList';
 import {
-  calculateRandomSpinDistance,
   calculateWinnerSpinDistance,
   getWinnerFromDistance,
 } from '@domains/winner-selection/wheel-of-random/lib/geometry';
 import { WheelItem, WheelItemWithAngle } from '@models/wheel.model';
 import { RandomPaceConfig } from '@services/SpinPaceService';
+import { ID } from '@components/Bracket/components/model';
 
 import classes from './BaseWheel.module.css';
 import WinnerBackdrop from './WinnerBackdrop';
@@ -38,29 +37,34 @@ export enum DropoutVariant {
 }
 
 export interface SpinParams {
-  seed?: number | null;
-  duration?: number;
-  paceConfig?: RandomPaceConfig;
-  winner?: Key;
+  duration: number;
   distance?: number;
+  paceConfig?: RandomPaceConfig;
+  winnerId: ID;
+}
+
+export interface SpinResult {
+  changedDistance: number;
+  initialDistance: number;
+  animate: () => Promise<void>;
 }
 
 export interface WheelController {
   getItems: () => WheelItemWithAngle[];
 
   clearWinner: () => void;
-  spin: (params?: SpinParams) => Promise<WheelItem>;
+  spin: (params: SpinParams) => SpinResult;
   resetPosition: () => void;
 
-  highlight: (id: Key) => void;
+  highlight: (id: ID) => void;
   resetStyles: () => void;
-  eatAnimation: (id: Key, duration?: number) => Promise<void>;
+  eatAnimation: (id: ID, duration?: number) => Promise<void>;
 }
 
 export interface BaseWheelProps<T extends WheelItem> {
   items: T[];
   showDeleteConfirmation?: boolean;
-  deleteItem?: (id: Key, showConfirmation?: boolean) => void;
+  deleteItem?: (id: ID, showConfirmation?: boolean) => void;
   controller: MutableRefObject<WheelController | null>;
   coreImage?: string | null;
   onCoreImageChange?: (image: string) => void;
@@ -238,36 +242,38 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     [resetPosition, resetWheel],
   );
 
-  const { animate } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick });
-
-  const generateSpinDistance = useCallback((winner?: Key, duration = 20, seed?: number | null) => {
-    return winner
-      ? calculateWinnerSpinDistance({ duration, winnerId: winner, items: normalizedRef.current })
-      : calculateRandomSpinDistance({ duration, seed });
-  }, []);
+  const { animate, getCurrentRotation } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick });
 
   const spin: WheelController['spin'] = useCallback(
-    async (params = {}) => {
-      const { seed, winner, distance, duration = 20 } = params;
+    ({ winnerId, duration, distance }: SpinParams): SpinResult => {
       setWinnerItem(undefined);
 
       effectsManager.current?.setSpeedMultiplier(5);
 
-      const spinDistance = distance ?? generateSpinDistance(winner, duration, seed);
+      const initialDistance = getCurrentRotation();
+      const spinDistance =
+        distance ?? calculateWinnerSpinDistance({ duration, winnerId, items: normalizedRef.current });
+      const distanceOffset = initialDistance % 360;
 
-      const endAngle = await animate(spinDistance, duration);
+      const changedDistance = spinDistance - distanceOffset;
 
-      const winnerItem = winner
-        ? normalizedRef.current.find(({ id }) => id === winner)
-        : getWinnerFromDistance({ distance: endAngle, items: normalizedRef.current });
+      const animateWheel: SpinResult['animate'] = async () => {
+        await animate(changedDistance, duration);
 
-      const finalized = await finalizeSpin(winnerItem);
+        const winnerItem = normalizedRef.current.find(({ id }) => id === winnerId);
 
-      effectsManager.current?.setSpeedMultiplier(1);
+        await finalizeSpin(winnerItem);
 
-      return finalized ? finalized : Promise.reject(new Error('No winner'));
+        effectsManager.current?.setSpeedMultiplier(1);
+      };
+
+      return {
+        changedDistance,
+        initialDistance,
+        animate: animateWheel,
+      };
     },
-    [finalizeSpin, animate, generateSpinDistance],
+    [getCurrentRotation, animate, finalizeSpin],
   );
 
   useEffect(() => {
@@ -310,13 +316,13 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   useImperativeHandle(
     controller,
     () => {
-      const highlight = (id: Key) => {
+      const highlight = (id: ID) => {
         if (wheelCanvas.current && selectorCanvas.current) {
           wheelDrawer.highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
         }
       };
 
-      const _eatAnimation = async (id: Key, duration?: number) => {
+      const _eatAnimation = async (id: ID, duration?: number) => {
         if (wheelCanvas.current && selectorCanvas.current) {
           await wheelDrawer.eatAnimation(id, normalizedItems, wheelCanvas.current, selectorCanvas.current, duration);
         }

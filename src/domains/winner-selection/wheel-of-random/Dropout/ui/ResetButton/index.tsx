@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mantine/core';
+import { Button, ButtonProps } from '@mantine/core';
 import { IconRefresh } from '@tabler/icons-react';
 import { Group, Modal, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
 
-interface ResetButtonProps {
+interface ResetButtonProps extends ButtonProps {
   onClick: () => void;
 }
 

@@ -1,16 +1,12 @@
-import { Key } from 'react';
-
 import { parseCSV } from '@domains/auction/archive/lib/csvParser';
-import { ArchiveData } from '@domains/auction/archive/model/types';
 
+import { Game, ID, Side, SideInfo } from '../components/Bracket/components/model';
 import { ArchivedLot, Slot } from '../models/slot.model';
-import { Purchase } from '../reducers/Purchases/Purchases';
-import { Game, Side, SideInfo } from '../components/Bracket/components/model';
 import { WheelItem } from '../models/wheel.model';
 
 import { getWheelColor } from './common.utils';
 
-type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: Key) => SideInfo;
+type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: ID) => SideInfo;
 
 export const getWinnerSlot = (slots: Slot[]): Slot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
@@ -109,7 +105,7 @@ export const splitSlotsWitchMostSimilarValues = (items: WheelItem[]): [WheelItem
   return [a, b];
 };
 
-const getDuelSides = (items: WheelItem[], gameId: Key, createSide: CreateSideFunc): SideInfo[] => {
+const getDuelSides = (items: WheelItem[], gameId: ID, createSide: CreateSideFunc): SideInfo[] => {
   const [a, b] = splitSlotsWitchMostSimilarValues(items);
   return [createSide(b, Side.VISITOR, gameId), createSide(a, Side.HOME, gameId)];
 };
@@ -125,7 +121,7 @@ export const createGame = (
     return null;
   }
 
-  const createSide = (restItems: WheelItem[], side: Side, gameId: Key): SideInfo => {
+  const createSide = (restItems: WheelItem[], side: Side, gameId: ID): SideInfo => {
     const createdSide: SideInfo =
       restItems.length === 1
         ? {

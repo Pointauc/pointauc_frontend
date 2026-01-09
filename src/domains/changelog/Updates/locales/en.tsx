@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Space } from '@mantine/core';
+import { Anchor, Space } from '@mantine/core';
 
 import { UpdateData } from '@domains/changelog/model/types';
 import ROUTES from '@constants/routes.constants';
@@ -7,6 +7,50 @@ import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesEN: UpdateData[] = [
+  {
+    date: '2025-12-25T13:45:23.597Z',
+    newFeatures: [
+      <>
+        <strong>🎵 Wheel Soundtrack</strong>
+        <Space h='sm' />
+        <div>You can set up music that will play during the wheel spin.</div>
+        <Space h='xs' />
+        <div style={{ paddingLeft: '16px' }}>
+          <strong>How to use:</strong> Wheel Page → Click the note button right next to the spin time
+        </div>
+      </>,
+    ],
+  },
+  {
+    date: '2025-12-21T14:18:56.195Z',
+    newFeatures: [
+      <>
+        <strong>Provably Fair Wheel Spins</strong>
+        <Space h='sm' />
+        <div>This new feature protects both the streamer and viewers from rigging results by anyone.</div>
+        <Space h='sm' />
+        <div>
+          No longer need to trust the website or streamer - anyone can verify the result directly and get proof of
+          fairness.
+        </div>
+        <Space h='sm' />
+        <div style={{ paddingLeft: '16px' }}>
+          <strong>How to enable:</strong> Open Wheel Page → Select "Random.org+ (verifiable)" from random generation
+          method dropdown on the wheel page
+        </div>
+        <Space h='xs' />
+        <div style={{ paddingLeft: '16px' }}>
+          <Anchor
+            component={Link}
+            to={ROUTES.TICKET_VERIFICATION_INFO}
+            style={{ color: '#228be6', textDecoration: 'underline' }}
+          >
+            Learn how to verify the result of the spin →
+          </Anchor>
+        </div>
+      </>,
+    ],
+  },
   {
     date: '2025-12-18T11:25:39.694Z',
     newFeatures: [

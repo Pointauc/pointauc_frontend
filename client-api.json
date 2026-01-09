@@ -428,6 +428,279 @@
         ]
       }
     },
+    "/random/signed/tickets": {
+      "post": {
+        "description": "Creates a single unrevealed ticket for the authenticated user. Only one active ticket per user is allowed. Does not consume quota.",
+        "operationId": "SignedRandomController_createTicket",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Ticket created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTicketResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Active ticket already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Active ticket already exists"
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "TICKET_EXISTS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a Random.org ticket",
+        "tags": [
+          "Random - Signed API"
+        ]
+      }
+    },
+    "/random/signed/tickets/active": {
+      "get": {
+        "description": "Returns the current unrevealed ticket for the authenticated user. Returns an object with all null values if no active ticket exists.",
+        "operationId": "SignedRandomController_getActiveTicket",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Active ticket or empty response with null values",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ExistingActiveTicketResponseDto"
+                    },
+                    {
+                      "$ref": "#/components/schemas/NoActiveTicketResponseDto"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get active ticket",
+        "tags": [
+          "Random - Signed API"
+        ]
+      }
+    },
+    "/random/signed/winner": {
+      "post": {
+        "description": "Generates a random decimal number using Random.org to determine the winner from participants. Consumes daily quota (6/day). Quota is only consumed if Random.org request succeeds. Uses currently active ticket.",
+        "operationId": "SignedRandomController_generateWinner",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateWinnerRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Winner generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateWinnerResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Daily quota exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Daily quota exceeded (6/day)"
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "QUOTA_EXCEEDED"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ticket has been used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 422
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Ticket has been used"
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "TICKET_HAS_BEEN_USED"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Generate winner seed",
+        "tags": [
+          "Random - Signed API"
+        ]
+      }
+    },
+    "/random/signed/records/ticket/{ticketId}": {
+      "get": {
+        "description": "Public endpoint that returns the complete winner record for a specific ticket ID.",
+        "operationId": "SignedRandomController_getWinnerRecordByTicket",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "required": true,
+            "in": "path",
+            "description": "Random.org ticket ID",
+            "schema": {
+              "example": "6a6c3f7e-1234-5678-9abc-def012345678",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Winner record retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WinnerRecordDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Ticket is not revealed yet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Ticket is not revealed yet"
+                    },
+                    "code": {
+                      "type": "string",
+                      "example": "TICKET_NOT_REVEALED"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Winner record not found"
+          }
+        },
+        "summary": "Get winner record by ticket ID",
+        "tags": [
+          "Random - Signed API"
+        ]
+      }
+    },
+    "/random/signed/records/revealed": {
+      "get": {
+        "description": "Public endpoint that returns a paginated list of revealed tickets for a specific user. Returns only ticketId, metadata, and createdAt.",
+        "operationId": "SignedRandomController_getRevealedTickets",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "description": "User ID to fetch records for",
+            "schema": {
+              "example": 123,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Pagination offset",
+            "schema": {
+              "example": 0,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum records per page (max 20)",
+            "schema": {
+              "example": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Revealed tickets retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevealedTicketsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get revealed tickets for a user",
+        "tags": [
+          "Random - Signed API"
+        ]
+      }
+    },
     "/api/broadcast/lots": {
       "post": {
         "operationId": "BroadcastingController_broadcastLots",
@@ -1090,6 +1363,454 @@
         },
         "required": [
           "isNew"
+        ]
+      },
+      "ExistingActiveTicketResponseDto": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "string",
+            "description": "Random.org ticket ID",
+            "example": "6a6c3f7e-1234-5678-9abc-def012345678"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when ticket was created",
+            "example": "2024-01-15T10:30:00.000Z"
+          },
+          "quotaLeft": {
+            "type": "number",
+            "description": "Remaining quota for today (out of 6)",
+            "example": 5
+          }
+        },
+        "required": [
+          "ticketId",
+          "createdAt",
+          "quotaLeft"
+        ]
+      },
+      "NoActiveTicketResponseDto": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "null",
+            "description": "Random.org ticket ID - null when no active ticket",
+            "example": null
+          },
+          "createdAt": {
+            "type": "null",
+            "description": "Timestamp when ticket was created - null when no active ticket",
+            "example": null
+          },
+          "quotaLeft": {
+            "type": "null",
+            "description": "Remaining quota for today (out of 6) - null when no active ticket",
+            "example": null
+          }
+        },
+        "required": [
+          "ticketId",
+          "createdAt",
+          "quotaLeft"
+        ]
+      },
+      "CreateTicketResponseDto": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "string",
+            "description": "Random.org ticket ID"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when ticket was created"
+          },
+          "quotaLeft": {
+            "type": "number",
+            "description": "Remaining quota for today (out of 6)",
+            "example": 5
+          }
+        },
+        "required": [
+          "ticketId",
+          "createdAt",
+          "quotaLeft"
+        ]
+      },
+      "ParticipantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Participant name",
+            "nullable": true,
+            "example": "Alice"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Bid amount for this participant",
+            "example": 100
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      },
+      "GenerateWinnerRequestDto": {
+        "type": "object",
+        "properties": {
+          "participants": {
+            "description": "List of auction participants with their bid amounts",
+            "example": [
+              {
+                "name": "Alice",
+                "amount": 100
+              },
+              {
+                "name": "Bob",
+                "amount": 50
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDto"
+            }
+          }
+        },
+        "required": [
+          "participants"
+        ]
+      },
+      "RandomOrgLicenseDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "License type",
+            "example": "developer"
+          },
+          "text": {
+            "type": "string",
+            "description": "License description text",
+            "example": "Random values licensed strictly for development and testing only"
+          },
+          "infoUrl": {
+            "type": "string",
+            "description": "URL with more information about the license",
+            "nullable": true,
+            "example": null
+          }
+        },
+        "required": [
+          "type",
+          "text"
+        ]
+      },
+      "RandomOrgTicketDataDto": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "string",
+            "description": "Current ticket ID",
+            "example": "4d93b41ee5a6798a"
+          },
+          "previousTicketId": {
+            "type": "string",
+            "description": "Previous ticket ID in the chain",
+            "nullable": true,
+            "example": null
+          },
+          "nextTicketId": {
+            "type": "string",
+            "description": "Next ticket ID in the chain",
+            "nullable": true,
+            "example": "5de4a8d21eac6191"
+          }
+        },
+        "required": [
+          "ticketId"
+        ]
+      },
+      "RandomOrgRandomDataDto": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "description": "Random.org API method used",
+            "example": "generateSignedDecimalFractions"
+          },
+          "hashedApiKey": {
+            "type": "string",
+            "description": "Hashed API key for verification",
+            "example": "lpNs8aLxiyKNdwf8tjQmKlR6IxB6ExkMHBdCYxfN8rbPNPqrgvceWuETsJ7JZdAAHwErfBYLkAXiY57gAW7bqQ=="
+          },
+          "n": {
+            "type": "number",
+            "description": "Number of random values generated",
+            "example": 1
+          },
+          "decimalPlaces": {
+            "type": "number",
+            "description": "Number of decimal places in the generated values",
+            "example": 14
+          },
+          "replacement": {
+            "type": "boolean",
+            "description": "Whether values are generated with replacement",
+            "example": true
+          },
+          "pregeneratedRandomization": {
+            "type": "object",
+            "description": "Pregenerated randomization data",
+            "nullable": true,
+            "example": null
+          },
+          "data": {
+            "description": "Array of generated random decimal fractions",
+            "example": [
+              0.30775094920849
+            ],
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "license": {
+            "description": "License information for the random values",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RandomOrgLicenseDto"
+              }
+            ]
+          },
+          "licenseData": {
+            "type": "object",
+            "description": "Additional license data",
+            "nullable": true,
+            "example": null
+          },
+          "userData": {
+            "type": "object",
+            "description": "User-provided data returned with the response",
+            "nullable": true,
+            "example": null
+          },
+          "ticketData": {
+            "description": "Ticket data for verification chain",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RandomOrgTicketDataDto"
+              }
+            ]
+          },
+          "completionTime": {
+            "type": "string",
+            "description": "Timestamp when the random generation was completed",
+            "example": "2025-12-20 13:38:24Z"
+          },
+          "serialNumber": {
+            "type": "number",
+            "description": "Serial number of the random generation",
+            "example": 287412
+          }
+        },
+        "required": [
+          "method",
+          "hashedApiKey",
+          "n",
+          "decimalPlaces",
+          "replacement",
+          "data",
+          "license",
+          "ticketData",
+          "completionTime",
+          "serialNumber"
+        ]
+      },
+      "GenerateWinnerResponseDto": {
+        "type": "object",
+        "properties": {
+          "random": {
+            "description": "Random data object from Random.org",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RandomOrgRandomDataDto"
+              }
+            ]
+          },
+          "signature": {
+            "type": "string",
+            "description": "Digital signature from Random.org proving authenticity",
+            "example": "hprai35Zc95uAM47o..."
+          },
+          "quotaLeft": {
+            "type": "number",
+            "description": "Remaining quota for today (out of 6)",
+            "example": 4
+          }
+        },
+        "required": [
+          "random",
+          "signature",
+          "quotaLeft"
+        ]
+      },
+      "WinnerMetadataDto": {
+        "type": "object",
+        "properties": {
+          "totalAmount": {
+            "type": "number",
+            "description": "Total amount from all participants",
+            "example": 150
+          },
+          "winnerName": {
+            "type": "string",
+            "description": "Name of the selected winner",
+            "example": "Alice"
+          },
+          "lotsCount": {
+            "type": "number",
+            "description": "Number of lots (participants)",
+            "example": 5
+          }
+        },
+        "required": [
+          "totalAmount",
+          "winnerName",
+          "lotsCount"
+        ]
+      },
+      "WinnerRecordDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Winner record ID"
+          },
+          "userId": {
+            "type": "number",
+            "description": "User ID who generated this winner"
+          },
+          "ticketId": {
+            "type": "string",
+            "description": "Random.org ticket ID",
+            "example": "6a6c3f7e-1234-5678-9abc-def012345678"
+          },
+          "participantsJson": {
+            "description": "Participants list as JSON array",
+            "example": [
+              {
+                "name": "Alice",
+                "amount": 100
+              },
+              {
+                "name": "Bob",
+                "amount": 50
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantDto"
+            }
+          },
+          "randomData": {
+            "description": "Random data object from Random.org",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RandomOrgRandomDataDto"
+              }
+            ]
+          },
+          "signature": {
+            "type": "string",
+            "description": "Digital signature from Random.org",
+            "example": "hprai35Zc95uAM47o..."
+          },
+          "metadata": {
+            "description": "Metadata about the winner selection",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WinnerMetadataDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when winner was generated"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "ticketId",
+          "participantsJson",
+          "randomData",
+          "signature",
+          "metadata",
+          "createdAt"
+        ]
+      },
+      "RevealedTicketItemDto": {
+        "type": "object",
+        "properties": {
+          "ticketId": {
+            "type": "string",
+            "description": "Random.org ticket ID",
+            "example": "6a6c3f7e-1234-5678-9abc-def012345678"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata about the winner selection",
+            "example": {
+              "totalAmount": 150,
+              "winnerName": "Alice",
+              "lotsCount": 5
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Timestamp when winner was generated",
+            "example": "2025-12-20T10:30:45.123Z"
+          }
+        },
+        "required": [
+          "ticketId",
+          "metadata",
+          "createdAt"
+        ]
+      },
+      "RevealedTicketsResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "List of revealed ticket records",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RevealedTicketItemDto"
+            }
+          },
+          "total": {
+            "type": "number",
+            "description": "Total number of records available",
+            "example": 42
+          },
+          "offset": {
+            "type": "number",
+            "description": "Current offset",
+            "example": 0
+          },
+          "limit": {
+            "type": "number",
+            "description": "Current limit",
+            "example": 20
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "offset",
+          "limit"
         ]
       },
       "LotDto": {

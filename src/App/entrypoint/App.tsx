@@ -4,21 +4,19 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { useQuery } from '@tanstack/react-query';
 
 import classes from '@App/entrypoint/App.module.css';
 import { AppHeader } from '@App/entrypoint/AppHeader';
 import { AppMain } from '@App/entrypoint/AppMain';
 import { AppNavbar } from '@App/entrypoint/AppNavbar';
+import { PortalContextProvider } from '@App/storage/portalContext';
 import donatePay from '@components/Integration/DonatePay';
 import { COLORS } from '@constants/color.constants';
+import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
+import { TutorialManager } from '@domains/tutorials';
 import { RootState } from '@reducers';
 import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
 import { useIsMobile } from '@shared/lib/ui';
-import { userControllerGetUserOptions } from '@api/openapi/@tanstack/react-query.gen';
-import { PortalContextProvider } from '@App/storage/portalContext';
-import { TutorialManager } from '@domains/tutorials';
-import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
@@ -89,24 +87,13 @@ const App: React.FC = () => {
     };
   }, [username]);
 
-  const userQuery = useQuery({
-    ...userControllerGetUserOptions({}),
-  });
+  // const userQuery = useQuery({
+  //   ...userControllerGetUserOptions({}),
+  // });
 
   useEffect(() => {
     const loadUser = async () => {
-      const loadingAlert: AlertType = {
-        message: t('common.accountProgress'),
-        type: AlertTypeEnum.Info,
-        id: Math.random(),
-      };
-
-      dispatch(addAlert(loadingAlert));
-      try {
-        await loadUserData(dispatch);
-      } finally {
-        dispatch(deleteAlert(loadingAlert.id));
-      }
+      await loadUserData(dispatch);
     };
 
     if (hasToken) {

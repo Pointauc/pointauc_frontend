@@ -10,6 +10,7 @@ window.gsap = gsap;
 
 interface Result {
   animate: (rotation: number, duration: number) => Promise<number>;
+  getCurrentRotation: () => number;
 }
 
 interface Props {
@@ -30,12 +31,19 @@ const buildRandomCurve = (): string => {
 };
 
 export const useWheelAnimator = ({ wheelCanvas, onSpin }: Props): Result => {
+  const getCurrentRotation = useCallback(() => {
+    if (wheelCanvas.current) {
+      const rotationMatch = /rotate\((.*)deg\)/.exec(wheelCanvas.current.style.transform);
+      return rotationMatch ? Number(rotationMatch[1]) : 0;
+    }
+    return 0;
+  }, [wheelCanvas]);
+
   const animate = useCallback<Result['animate']>(
     (rotation, duration) => {
       return new Promise<number>((resolve) => {
         if (wheelCanvas.current) {
-          const rotationMatch = /rotate\((.*)deg\)/.exec(wheelCanvas.current.style.transform);
-          const startRotation = rotationMatch ? Number(rotationMatch[1]) : 0;
+          const startRotation = getCurrentRotation();
           const endPosition = rotation + startRotation;
 
           gsap.to(wheelCanvas.current, {
@@ -53,8 +61,8 @@ export const useWheelAnimator = ({ wheelCanvas, onSpin }: Props): Result => {
         }
       });
     },
-    [onSpin, wheelCanvas],
+    [onSpin, wheelCanvas, getCurrentRotation],
   );
 
-  return { animate };
+  return { animate, getCurrentRotation };
 };

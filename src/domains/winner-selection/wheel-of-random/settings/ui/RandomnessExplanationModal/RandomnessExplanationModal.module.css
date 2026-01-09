@@ -1,0 +1,16 @@
+.sourceCard {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 180px;
+}
+
+.sourceCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--mantine-shadow-md);
+}
+
+.modal :global(.mantine-Modal-body) {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+

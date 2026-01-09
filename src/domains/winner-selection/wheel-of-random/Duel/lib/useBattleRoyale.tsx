@@ -7,6 +7,8 @@ import { buildGame } from '@components/SlotsBracket/SlotsBracket';
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getWheelColor } from '@utils/common.utils.ts';
+import { random } from '@utils/common.utils.ts';
+import { getSlotFromSeed } from '@services/PredictionService';
 
 import { WheelController } from '../../BaseWheel/BaseWheel';
 import ResizableBracket from '../../Duel/ui/ResizableBracket/ResizableBracket';
@@ -101,6 +103,12 @@ const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.Fo
     </>
   );
 
+  const getNextWinnerId = ({ items }: Wheel.GetNextWinnerIdParams): Wheel.GetNextWinnerIdResult => {
+    // ToDo: async seed is not supported for strategy with multiple steps
+    const seed = random.value();
+    return { id: items[getSlotFromSeed(items, seed)].id, isFinalSpin: false };
+  };
+
   return {
     items: duelItems,
     init,
@@ -108,6 +116,7 @@ const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.Fo
     renderSubmitButton,
     onSpinEnd,
     extraSettings,
+    getNextWinnerId,
   };
 };
 

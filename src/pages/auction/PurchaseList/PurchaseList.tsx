@@ -48,8 +48,10 @@ const PurchaseList: React.FC = () => {
   }, [purchaseSort, purchases]);
 
   useEffect(() => {
-    globalSocket?.on('Bid', (bid) => handleRedemption({ ...bid, source: 'API' }));
-    twitchSocket?.on('Bid', (bid) => handleRedemption({ ...bid, source: 'twitch' }));
+    const handleGlobalBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'API' });
+    globalSocket?.on('Bid', handleGlobalBid);
+    const handleTwitchBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'twitch' });
+    twitchSocket?.on('Bid', handleTwitchBid);
 
     const handleTourniquetBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'tourniquet' });
     tourniquetSocket?.on('Bid', handleTourniquetBid);
@@ -70,6 +72,8 @@ const PurchaseList: React.FC = () => {
       donatexUnsub?.();
       ihaqUnsub();
       tourniquetSocket?.off('Bid', handleTourniquetBid);
+      twitchSocket?.off('Bid', handleTwitchBid);
+      globalSocket?.off('Bid', handleGlobalBid);
     };
   }, [handleRedemption, twitchSocket, globalSocket, tourniquetSocket]);
 
