@@ -3,7 +3,7 @@ namespace Integration {
 
   import EventEmitter from '@utils/EventEmitter.ts';
 
-  type ID = 'donatePay' | 'donatePayEu' | 'da' | 'twitch' | 'tourniquet' | 'ihaq' | 'donateHelper';
+  type ID = 'donatePay' | 'donatePayEu' | 'da' | 'twitch' | 'tourniquet' | 'ihaq' | 'donatex' | 'donateHelper';
   type BidType = 'donate' | 'points';
 
   interface LoginButtonClasses {

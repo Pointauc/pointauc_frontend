@@ -111,6 +111,9 @@
     "twitch": {
       "name": "Twitch"
     },
+    "donatex": {
+      "name": "DonateX"
+    },
     "donateHelper": {
       "name": "Donate Helper",
       "authModal": {

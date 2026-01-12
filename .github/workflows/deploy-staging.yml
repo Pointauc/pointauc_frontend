@@ -32,6 +32,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
+        env:
+          VITE_DONATEX_CLIENT_ID: ${{ secrets.VITE_DONATEX_CLIENT_ID_STAGING }}
         run: pnpm build
 
       - name: Build documentation

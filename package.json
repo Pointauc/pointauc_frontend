@@ -33,6 +33,7 @@
     "@mantine/hooks": "^8.3.9",
     "@mantine/notifications": "^8.3.9",
     "@mantine/tiptap": "^8.3.9",
+    "@microsoft/signalr": "^8.0.7",
     "@mui/icons-material": "^7.1.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@tabler/icons-react": "^3.34.1",

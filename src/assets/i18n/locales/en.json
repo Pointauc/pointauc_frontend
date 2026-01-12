@@ -117,6 +117,9 @@
     "ihaq": {
       "name": "IHAQ Donate"
     },
+    "donatex": {
+      "name": "DonateX"
+    },
     "donateHelper": {
       "name": "Donate Helper",
       "authModal": {
