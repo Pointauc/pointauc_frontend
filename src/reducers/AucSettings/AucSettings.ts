@@ -9,7 +9,7 @@ import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
-import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
+import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -164,7 +164,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     );
   }
   dispatch(
-      setUserState({
+    setUserState({
       username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? donatexAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
       pointaucUserId: userId,

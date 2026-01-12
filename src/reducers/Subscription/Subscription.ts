@@ -1,103 +1,17 @@
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
-import { Socket } from 'socket.io-client';
 
-import { AlertTypeEnum } from '@models/alert.model.ts';
 import { getIntegrationsValidity } from '@api/userApi.ts';
-import { integrations } from '@components/Integration/integrations.ts';
-import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
+import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 
 import { RootState } from '../index';
-import { addAlert } from '../notifications/notifications';
 import { setUserState } from '../User/User';
-
-export interface SubscribeState {
-  actual: boolean;
-  loading: boolean;
-}
-
-/** Integration IDs that have subscription state. donatePayEu uses donatePay's state. */
-export type SubscriptionID = Exclude<Integration.ID, 'donatePayEu'>;
-
-interface SubscriptionStoreState {
-  twitch: SubscribeState;
-  da: SubscribeState;
-  donatePay: SubscribeState;
-  tourniquet: SubscribeState;
-  ihaq: SubscribeState;
-  donatex: SubscribeState;
-}
-
-/** Normalizes integration ID to subscription ID (donatePayEu -> donatePay) */
-export const toSubscriptionId = (id: Integration.ID): SubscriptionID => {
-  return id === 'donatePayEu' ? 'donatePay' : id;
-};
-
-const initialSubscribeState = {
-  actual: false,
-  loading: false,
-};
-
-export const initialState: SubscriptionStoreState = {
-  twitch: initialSubscribeState,
-  da: initialSubscribeState,
-  donatePay: initialSubscribeState,
-  tourniquet: initialSubscribeState,
-  ihaq: initialSubscribeState,
-  donatex: initialSubscribeState,
-};
-
-interface SetSubscribeProps {
-  id: SubscriptionID;
-  state: Partial<SubscribeState>;
-}
-
-const subscriptionSlice = createSlice({
-  name: 'subscription',
-  initialState,
-  reducers: {
-    setTwitchSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
-      state.twitch = { ...state.twitch, ...action.payload };
-    },
-    setDaSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
-      state.da = { ...state.da, ...action.payload };
-    },
-    setTourniquetSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
-      state.tourniquet = { ...state.tourniquet, ...action.payload };
-    },
-    setDonatePaySubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
-      state.donatePay = { ...state.donatePay, ...action.payload };
-    },
-    setSubscribeState(state, action: PayloadAction<SetSubscribeProps>): void {
-      state[action.payload.id] = { ...state[action.payload.id], ...action.payload.state };
-    },
-    setSubscribeStateAll(state, action: PayloadAction<Partial<SubscribeState>>): void {
-      state.twitch = { ...state.twitch, ...action.payload };
-      state.da = { ...state.da, ...action.payload };
-      state.donatePay = { ...state.donatePay, ...action.payload };
-      state.donatex = { ...state.donatex, ...action.payload };
-    },
-    setIhaqSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
-      state.ihaq = { ...state.ihaq, ...action.payload };
-    },
-  },
-});
-
-export const {
-  setSubscribeStateAll,
-  setDaSubscribeState,
-  setSubscribeState,
-  setTwitchSubscribeState,
-  setDonatePaySubscribeState,
-  setTourniquetSubscribeState,
-  setIhaqSubscribeState,
-} = subscriptionSlice.actions;
 
 export const validateIntegrations = async (
   dispatch: ThunkDispatch<{}, {}, Action>,
   getState: () => RootState,
 ): Promise<void> => {
-  dispatch(setSubscribeStateAll({ loading: true }));
   const {
     user: { authData },
   } = getState();
@@ -131,56 +45,4 @@ export const validateIntegrations = async (
       authData: nextAuthData,
     }),
   );
-
-  dispatch(setSubscribeStateAll({ loading: false }));
 };
-
-const sendSubscribeState = async (
-  socket: Socket,
-  isSubscribed: boolean,
-  dispatch: ThunkDispatch<{}, {}, Action>,
-  // stateChangeActionCreator: ActionCreatorWithPayload<Partial<SubscribeState>>,
-) => {
-  const event = isSubscribed ? 'bidsSubscribe' : 'bidsUnsubscribe';
-
-  if (!socket) {
-    return;
-  }
-
-  return new Promise<void>((resolve, reject) => {
-    socket.once('bidsStateChange', ({ state, error }) => {
-      // dispatch(stateChangeActionCreator({ actual: state, loading: false }));
-
-      if (error) {
-        dispatch(addAlert({ type: AlertTypeEnum.Error, message: error }));
-        reject();
-      } else {
-        resolve();
-      }
-    });
-    socket.emit(event);
-
-    // dispatch(stateChangeActionCreator({ loading: true }));
-  });
-};
-
-export const sendCpSubscribedState =
-  (isSubscribed: boolean) => async (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState) => {
-    const { twitchSocket } = getState().socketIo;
-
-    if (twitchSocket) {
-      await sendSubscribeState(twitchSocket, isSubscribed, dispatch);
-    }
-  };
-
-export const sendTourniquetSubscribedState =
-  (isSubscribed: boolean) => async (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState) => {
-    const { tourniquetSocket } = getState().socketIo;
-    console.log(tourniquetSocket);
-
-    if (tourniquetSocket) {
-      await sendSubscribeState(tourniquetSocket, isSubscribed, dispatch);
-    }
-  };
-
-export default subscriptionSlice.reducer;

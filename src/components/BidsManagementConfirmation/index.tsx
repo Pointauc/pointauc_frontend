@@ -13,8 +13,7 @@ import bidsManagementUtils from '@components/BidsManagementConfirmation/utils.ts
 import { setHistory } from '@reducers/Purchases/Purchases.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import { AlertTypeEnum } from '@models/alert.model.ts';
-
-import { store } from '../../main.tsx';
+import { store } from '@reducers/store.ts';
 
 import classes from './BidsManagementConfirmation.module.css';
 

@@ -1,6 +1,7 @@
 namespace CentrifugeFlow {
   import EventEmitter from '@utils/EventEmitter.ts';
   import { Purchase } from '@reducers/Purchases/Purchases.ts';
+  import * as Integration from '@models/integration';
 
   type Version = '2' | 'websocketV2';
 

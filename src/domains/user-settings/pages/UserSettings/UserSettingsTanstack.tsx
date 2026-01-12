@@ -8,7 +8,7 @@ import { useMatch, useNavigate } from 'react-router-dom';
 import { useStore } from '@tanstack/react-store';
 
 import { settingsApi } from '@api/userApi.ts';
-import { integrations } from '@components/Integration/integrations.ts';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import PageContainer from '@components/PageContainer/PageContainer.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
@@ -90,7 +90,7 @@ const UserSettingsTanstack = () => {
       <Group align='center' gap='xxs'>
         <div style={{ marginRight: 8 }}>Integrations</div>
         {integrations.all.map((integration) => (
-          <integration.branding.icon key={integration.id} className={classNames('base-icon', integration.id)} />
+          <integration.branding.icon key={integration.id} size={22} />
         ))}
       </Group>
     );

@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
 import { Divider, Group, Stack, Text } from '@mantine/core';
 
+import PubsubSwitch from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitch.tsx';
 import SettingsGroup from '@domains/user-settings/ui/SettingsGroup/SettingsGroup';
 import { RootState } from '@reducers';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import { integrations } from '@components/Integration/integrations.ts';
-import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import ExchangeRate from '@pages/settings/IntegrationsSettings/Donations/ExchangeRate';
 import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
 import FormSwitch from '@shared/mantine/ui/Switch/FormSwitch';

@@ -1,12 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import { Switch } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import { RootState } from '@reducers';
-import { toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
+import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
+import * as Integration from '@models/integration';
 
 import styles from './SwitchAllIntegrations.module.css';
 
@@ -17,26 +15,32 @@ interface Props {
 }
 
 const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames }: Props) => {
-  const subscriptions = useSelector((root: RootState) => root.subscription);
   const { t } = useTranslation();
   const onSwitchAll = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.stopPropagation();
     integrations.forEach((integration) => {
-      integrationUtils.setSubscribeState(integration, e.target.checked);
+      if (e.target.checked) {
+        integration.pubsubFlow.connect();
+      } else {
+        integration.pubsubFlow.disconnect();
+      }
     });
   };
+  const subscriptions = useMergedSubscriptionsState(integrations);
 
-  const isAllSelected = integrations.every((integration) => subscriptions[toSubscriptionId(integration.id)]?.actual);
-  const selectAllDisabled = integrations.some((integration) => subscriptions[toSubscriptionId(integration.id)]?.loading);
+  const selectAllDisabled = useMemo(() => {
+    return integrations.some((integration) => subscriptions?.[integration.id]?.loading);
+  }, [integrations, subscriptions]);
+
+  const isAllSelected = useMemo(() => {
+    return integrations.every((integration) => subscriptions?.[integration.id]?.subscribed);
+  }, [integrations, subscriptions]);
 
   const label = (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <span>{t('integration.groups.donations')} (</span>
       {integrations.map((integration) => (
-        <integration.branding.icon
-          key={integration.id}
-          className={clsx(styles.integrationIcon, `${integration.id}-icon`)}
-        />
+        <integration.branding.icon key={integration.id} size={32} />
       ))}
       <span>)</span>
     </div>

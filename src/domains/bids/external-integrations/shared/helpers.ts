@@ -1,0 +1,91 @@
+import * as Integration from '@models/integration';
+import { UserState } from '@reducers/User/User.ts';
+
+type StorageKey = 'authToken' | 'pubsubToken2' | 'refreshToken';
+
+export const getStorageKey = (id: Integration.Config['id'], key: StorageKey): string => `${id}_${key}`;
+
+const getStorageValue = (id: Integration.Config['id'], key: StorageKey): string | null => {
+  return localStorage.getItem(getStorageKey(id, key));
+};
+
+const setStorageValue = (id: Integration.Config['id'], key: StorageKey, value: string): void => {
+  localStorage.setItem(getStorageKey(id, key), value);
+};
+
+const isAvailable = (integration: Integration.Config, authData: UserState['authData']): boolean => {
+  // For DonatePay, check both region auth data (EU has priority)
+  if (integration.id === 'donatePay') {
+    const hasValidAuth = !!authData.donatePayEu?.isValid || !!authData.donatePay?.isValid;
+    return hasValidAuth && integration.authFlow.validate();
+  }
+
+  return !!authData[integration.id]?.isValid && integration.authFlow.validate();
+};
+
+interface AvailabilityMap {
+  available: Integration.Config[];
+  unavailable: Integration.Config[];
+}
+
+export class InvalidTokenError extends Error {
+  constructor() {
+    super('Invalid token');
+  }
+}
+
+export const integrationUtils = {
+  storage: {
+    get: getStorageValue,
+    set: setStorageValue,
+    remove: (id: Integration.Config['id'], key: StorageKey) => localStorage.removeItem(getStorageKey(id, key)),
+  },
+  session: {
+    get: (id: Integration.Config['id'], key: StorageKey): string | null =>
+      sessionStorage.getItem(getStorageKey(id, key)),
+    set: (id: Integration.Config['id'], key: StorageKey, value: string): void =>
+      sessionStorage.setItem(getStorageKey(id, key), value),
+    remove: (id: Integration.Config['id'], key: StorageKey) => sessionStorage.removeItem(getStorageKey(id, key)),
+  },
+  filterBy: {
+    authFlow: <T extends Integration.AuthFlow>(
+      integrations: Integration.Config[],
+      type: Integration.AuthFlow['type'],
+    ): Integration.Config<T>[] =>
+      integrations.filter((integration) => integration.authFlow.type === type) as Integration.Config<T>[],
+  },
+  groupBy: {
+    availability: (integrations: Integration.Config[], authData: UserState['authData']) =>
+      integrations.reduce<AvailabilityMap>(
+        (acc, item) => {
+          if (isAvailable(item, authData)) {
+            acc.available.push(item);
+          } else {
+            acc.unavailable.push(item);
+          }
+          return acc;
+        },
+        { available: [], unavailable: [] },
+      ),
+    type: (integrations: Integration.Config[]) =>
+      integrations.reduce<Record<Integration.Config['type'], Integration.Config[]>>(
+        (acc, item) => {
+          acc[item.type].push(item);
+          return acc;
+        },
+        { donate: [], points: [] },
+      ),
+    partner: (integrations: Integration.Config[]) =>
+      integrations.reduce<{ partner: Integration.Config[]; regular: Integration.Config[] }>(
+        (acc, item) => {
+          if (item.branding.partner) {
+            acc.partner.push(item);
+          } else {
+            acc.regular.push(item);
+          }
+          return acc;
+        },
+        { partner: [], regular: [] },
+      ),
+  },
+};

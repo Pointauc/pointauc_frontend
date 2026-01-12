@@ -1,6 +1,5 @@
+import { Button, Card, CloseButton, Menu, Modal, Stack, Text } from '@mantine/core';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CloseIcon from '@mui/icons-material/Close';
-import { ActionIcon, Button, Card, CloseButton, Menu, Modal, Stack, Text, Title } from '@mantine/core';
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -26,9 +25,9 @@ import {
   updateExistBids,
 } from '@reducers/Purchases/Purchases.ts';
 import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
+import { store } from '@reducers/store.ts';
 import bidUtils from '@utils/bid.utils.ts';
 
-import { store } from '../../../main.tsx';
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
 import classes from './PurchaseComponent.module.css';

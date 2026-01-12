@@ -16,13 +16,9 @@ import { throttle } from '@tanstack/react-pacer';
 
 import { RootState } from '@reducers';
 import { Slot } from '@models/slot.model.ts';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import twitch from '@components/Integration/Twitch';
-import donatePay from '@components/Integration/DonatePay';
-import da from '@components/Integration/DA';
-import donatex from '@components/Integration/DonateX/index.tsx';
 import { useHeadroom } from '@shared/lib/scroll';
-import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
+import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
+import { Purchase } from '@reducers/Purchases/Purchases';
 
 import classes from './Stopwatch.module.css';
 
@@ -66,9 +62,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
-  const {
-    twitch: { actual: actualTwitchSub, loading: loadingTwitchSub },
-  } = useSelector((root: RootState) => root.subscription);
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const {
     startTime,
@@ -91,7 +84,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const controlsCompact = useHeadroom({ fixedAt: 60 });
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
-  const [isStopwatchChanged, setIsStopwatchChanged] = useState<boolean>(false);
   const previousSlotsLength = useRef(1);
   const timeLeft = useRef<number>(defaultTime);
   const totalTime = useRef<number>(0);
@@ -101,15 +93,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const totalTimeElement = useRef<HTMLDivElement>(null);
   const winnerRef = useRef<Slot | undefined>(undefined);
   const [focusedTimer, setFocusedTimer] = useState<TimerType>('stopwatch');
-
-  useEffect(() => {
-    if (!dynamicRewards || loadingTwitchSub || !isStopwatchChanged || isStopped !== actualTwitchSub) {
-      return;
-    }
-
-    setIsStopwatchChanged(false);
-    integrationUtils.setSubscribeState(twitch, !isStopped);
-  }, [actualTwitchSub, dispatch, dynamicRewards, isStopped, isStopwatchChanged, loadingTwitchSub]);
 
   const winnerSlot = useMemo(() => {
     [winnerRef.current] = slots;
@@ -143,7 +126,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
         if (timeLeft.current < 0) {
           timeLeft.current = 0;
           setIsStopped(true);
-          setIsStopwatchChanged(true);
           onEnd?.();
         }
         updateTimerUIDebounced(timeLeft.current);
@@ -188,25 +170,19 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     [isMinTimeActive, maxTime, minTime, updateStopwatch],
   );
 
-  const handleDonation = useCallback(() => {
-    if (isIncrementActive) {
-      autoUpdateTimer(incrementTime * 1000);
-    }
-  }, [autoUpdateTimer, isIncrementActive, incrementTime]);
-
   useEffect(() => {
-    const unsubDonatePay = donatePay.pubsubFlow.events.on('bid', handleDonation);
-    const unsubDa = da.pubsubFlow.events.on('bid', handleDonation);
-    const unsubIhaq = ihaq.pubsubFlow.events.on('bid', handleDonation);
-    const unsubDonateX = donatex.pubsubFlow.events.on('bid', handleDonation);
+    const handleBid = (bid: Purchase) => {
+      if (isIncrementActive && bid.isDonation) {
+        autoUpdateTimer(incrementTime * 1000);
+      }
+    };
+
+    globalBidsEventBus.on('bid', handleBid);
 
     return () => {
-      unsubDa();
-      unsubDonatePay();
-      unsubIhaq();
-      unsubDonateX();
+      globalBidsEventBus.off('bid', handleBid);
     };
-  }, [handleDonation]);
+  }, [autoUpdateTimer, isIncrementActive, incrementTime]);
 
   useEffect(() => {
     updateStopwatch();
@@ -235,7 +211,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
       frameId.current = undefined;
     }
     setIsStopped(true);
-    setIsStopwatchChanged(true);
     onPause?.(timeLeft.current);
   };
 
@@ -255,7 +230,6 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const startTimer = (): void => {
     if (timeLeft.current) {
       setIsStopped(false);
-      setIsStopwatchChanged(true);
       prevTimestamp.current = undefined;
       frameId.current = requestAnimationFrame(updateTimeOnFrame);
       onStart?.(timeLeft.current);

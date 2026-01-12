@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMatch, useNavigate } from 'react-router-dom';
 
 import { settingsApi } from '@api/userApi.ts';
-import { integrations } from '@components/Integration/integrations.ts';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import PageContainer from '@components/PageContainer/PageContainer.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import SettingsPresetField from '@domains/user-settings/ui/SettingsPresetField';

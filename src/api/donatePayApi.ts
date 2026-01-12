@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { InvalidTokenError } from '@components/Integration/helpers.ts';
+import { InvalidTokenError } from '@domains/bids/external-integrations/shared/helpers.ts';
 
 import ENDPOINTS from '../constants/api.constants';
 

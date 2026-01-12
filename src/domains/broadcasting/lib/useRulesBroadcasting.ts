@@ -6,7 +6,7 @@ import { broadcastingControllerBroadcastRulesMutation } from '@api/openapi/@tans
 import { RootState } from '@reducers/index';
 
 import { Broadcasting } from '../model/types';
-import { store } from '../../../main';
+import { store } from '@reducers/store.ts';
 
 import type { JSONContent } from '@tiptap/react';
 

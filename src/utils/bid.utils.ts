@@ -2,8 +2,7 @@ import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { Settings } from '@models/settings.model.ts';
 import { numberUtils } from '@utils/common/number.ts';
 import { BidNameStrategy } from '@enums/bid.enum.ts';
-
-import { store } from '../main.tsx';
+import { store } from '@reducers/store.ts';
 
 type CostSettings = Pick<Settings, 'marblesAuc' | 'marbleRate' | 'pointsRate' | 'marbleCategory' | 'reversePointsRate'>;
 
