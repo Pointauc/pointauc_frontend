@@ -119,6 +119,22 @@
     },
     "donatex": {
       "name": "DonateX"
+    },
+    "donateHelper": {
+      "name": "Donate Helper",
+      "authModal": {
+        "title": "Donate Helper Integration",
+        "steps": {
+          "navigate": "Navigate to Donate Helper settings",
+          "createToken": "Click 'Create token'",
+          "copyToken": "Copy token and paste below"
+        },
+        "instructions": {
+          "navigate": "<1>https://donatehelper.com/dashboard/account?tab=api</1>"
+        },
+        "tokenPlaceholder": "Paste your API token here",
+        "submit": "Connect"
+      }
     }
   },
   "textEditor": {

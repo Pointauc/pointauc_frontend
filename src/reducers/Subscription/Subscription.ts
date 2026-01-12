@@ -26,6 +26,7 @@ interface SubscriptionStoreState {
   tourniquet: SubscribeState;
   ihaq: SubscribeState;
   donatex: SubscribeState;
+  donateHelper: SubscribeState;
 }
 
 /** Normalizes integration ID to subscription ID (donatePayEu -> donatePay) */
@@ -45,6 +46,7 @@ export const initialState: SubscriptionStoreState = {
   tourniquet: initialSubscribeState,
   ihaq: initialSubscribeState,
   donatex: initialSubscribeState,
+  donateHelper: initialSubscribeState,
 };
 
 interface SetSubscribeProps {
@@ -80,6 +82,9 @@ const subscriptionSlice = createSlice({
     setIhaqSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
       state.ihaq = { ...state.ihaq, ...action.payload };
     },
+    setDonateHelperSubscribeState(state, action: PayloadAction<Partial<SubscribeState>>): void {
+      state.donateHelper = { ...state.donateHelper, ...action.payload };
+    },
   },
 });
 
@@ -91,6 +96,7 @@ export const {
   setDonatePaySubscribeState,
   setTourniquetSubscribeState,
   setIhaqSubscribeState,
+  setDonateHelperSubscribeState,
 } = subscriptionSlice.actions;
 
 export const validateIntegrations = async (

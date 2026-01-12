@@ -150,6 +150,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     activeSettingsPresetId,
     ihaqAuth,
     userId,
+    donateHelperAuth,
   } = user;
   const donatexAuth = getDonateXAuthData();
 
@@ -177,6 +178,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         tourniquet: tourniquetAuth,
         ihaq: ihaqAuth,
         donatex: donatexAuth,
+        donateHelper: donateHelperAuth,
       },
     }),
   );
