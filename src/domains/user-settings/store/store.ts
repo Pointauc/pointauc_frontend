@@ -66,6 +66,7 @@ const defaultState: AucSettingsStore = {
       enabled: false,
     },
   },
+  favoritesIsEnable: false
 };
 
 const settingsFromStorage = localStorage.getItem('userSettings')

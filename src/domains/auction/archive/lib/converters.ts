@@ -9,6 +9,7 @@ export function slotsToArchivedLots(slots: Slot[]): ArchivedLot[] {
     name: slot.name,
     amount: slot.amount,
     investors: slot.investors,
+    isFavorite: slot.isFavorite
   }));
 }
 
@@ -21,6 +22,7 @@ export function archivedLotsToSlots(lots: ArchivedLot[]): Slot[] {
       name: lot.name,
       amount: lot.amount,
       investors: lot.investors,
+      isFavorite: lot.isFavorite
     }),
   );
 }

@@ -13,7 +13,7 @@ const SlotsColumn: React.FC = () => {
   const buyoutInput = useRef<HTMLInputElement>(null);
   const { slots, searchTerm } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
-    settings: { isBuyoutVisible, isTotalVisible },
+    settings: { isBuyoutVisible, favoritesIsEnable },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const [, setBuyout] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,6 +42,23 @@ const SlotsColumn: React.FC = () => {
     [searchTerm, slots],
   );
 
+  const preparedSlots = useMemo(
+    () => {
+      if (favoritesIsEnable) {
+        return [...filteredSlots].sort((a, b) => {
+          if (a.isFavorite !== b.isFavorite) {
+            return a.isFavorite ? -1 : 1;
+          }
+
+          return 0;
+        });
+      }
+
+      return filteredSlots;
+    },
+    [filteredSlots, favoritesIsEnable]
+  )
+
   const optimize = useMemo(() => slots.length > 50, [slots.length]);
   const isMobile = useIsMobile();
 
@@ -50,7 +67,7 @@ const SlotsColumn: React.FC = () => {
       {!isMobile && <SlotsHeader />}
       <div className={classes.wrapper}>
         <div className={classes.column} ref={containerRef}>
-          <SlotsList containerRef={containerRef} slots={filteredSlots} optimize={optimize} />
+          <SlotsList containerRef={containerRef} slots={preparedSlots} optimize={optimize} />
         </div>
       </div>
     </div>

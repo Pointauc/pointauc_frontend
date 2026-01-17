@@ -30,6 +30,7 @@ export const createSlot = (props: Partial<Slot> = {}): Slot => {
     name: '',
     investors: [],
     lockedPercentage: null,
+    isFavorite: false,
     ...props,
   };
 
@@ -86,6 +87,16 @@ const updateSlotAmount = (slots: Slot[], updatedId: string | number, transform: 
   updateSlotPosition(slots, updatedIndex);
 };
 
+const updateSlotIsFavorite = (slots: Slot[], slotId: string | number, state: boolean) => {
+  const index = slots.findIndex(({id}) => slotId === id);
+
+  if (index === -1) {
+    return;
+  }
+
+  slots[index].isFavorite = state;
+}
+
 type TestLot = (lot: Slot) => boolean;
 
 const slotsQueryComparator = {
@@ -129,6 +140,10 @@ export const slotsSlice = createSlice({
     setSlotExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
       const { id, extra } = action.payload;
       state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, extra } : slot));
+    },
+    setSlotIsFavorite(state, action: PayloadAction<{id: string | number, state: boolean}>): void {
+      const { id, state: favoriteState } = action.payload;
+      updateSlotIsFavorite(state.slots, id, favoriteState);
     },
     addExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
       const { id, extra } = action.payload;
@@ -196,6 +211,7 @@ export const {
   setSlotAmount,
   setSlotExtra,
   setSlotName,
+  setSlotIsFavorite,
   addExtra,
   addSlot,
   deleteSlot,
@@ -225,7 +241,9 @@ export const createSlotFromPurchase =
       extra: null,
       fastId: ++maxFastId,
       investors: bid.investorId ? [bid.investorId] : [],
+      isFavorite: false
     };
+
     const updatedSlots = [...slots, newSlot];
     slotNamesMap.set(slotName, newSlot.id);
     slotNamesMap.set(`#${maxFastId}`, newSlot.id);
