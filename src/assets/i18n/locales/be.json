@@ -106,7 +106,8 @@
       "selectFromList": "Абраць са сьпісу",
       "sortBids": "Сартаваць набытае за пойнты",
       "dateSort": "Дата",
-      "costSort": "Кошты"
+      "costSort": "Кошты",
+      "favoritesIsEnable": "Уключыць замацаванне лотаў"
     },
     "marbles": {
       "marbles": "Шары",
@@ -180,7 +181,9 @@
     "addAmount": "Павялічыць кошт",
     "delete": "Выдаліць слот",
     "extra": "Дадаткова",
-    "trailer": "Трэйлер"
+    "trailer": "Трэйлер",
+    "pin": "Замацаваць",
+    "unpin": "Адмацаваць"
   },
   "bid": {
     "totalBids": "Усяго замоваў:",

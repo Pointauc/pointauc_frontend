@@ -276,7 +276,9 @@
     "changePercentage": "Change Percentage",
     "lockedTooltip": "This lot is locked to {{percentage}}% of total auction",
     "cannotLock": "Total sum of all locked lots cannot exceed 100%",
-    "applyPercentage": "Apply"
+    "applyPercentage": "Apply",
+    "pin": "Pin",
+    "unpin": "Unpin"
   },
   "menu": {
     "items": {
@@ -552,7 +554,8 @@
       "backgroundOverlayOpacity": "Overlay opacity",
       "backgroundBlur": "Blur",
       "resetBackground": "Remove custom background",
-      "backgroundAlt": "Background unavailable. Please upload new image."
+      "backgroundAlt": "Background unavailable. Please upload new image.",
+      "favoritesIsEnable": "Enable lot pinning"
     },
     "donations": {
       "donations": "Donations",
