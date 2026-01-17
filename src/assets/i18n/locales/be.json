@@ -109,6 +109,9 @@
       "costSort": "Кошты",
       "favoritesIsEnable": "Уключыць замацаванне лотаў"
     },
+    "changelog": {
+      "contributors": "Дзякуй {{contributors}} за ўнёсак"
+    },
     "marbles": {
       "marbles": "Шары",
       "marbleAuc": "Шаравы аўкцыён",

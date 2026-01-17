@@ -51,6 +51,9 @@
       "yourBid": "Ваша ставка на аукціоні:"
     }
   },
+  "changelog": {
+    "contributors": "Дякуємо {{contributors}} за внесок"
+  },
   "settings": {
     "settings": "Налаштування",
     "integrations": "Інтеграції",

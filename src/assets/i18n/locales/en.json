@@ -212,7 +212,8 @@
       "fixes": "Fixes",
       "functionality": "New functionality",
       "improvements": "Improvements"
-    }
+    },
+    "contributors": "Thanks to {{contributors}} for the contribution"
   },
   "common": {
     "copy": "Copy",

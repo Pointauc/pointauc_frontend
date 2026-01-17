@@ -238,3 +238,8 @@
 .emptyText {
   font-size: 14px;
 }
+
+.contributors {
+  color: #fff5;
+  font-size: 12px;
+}
