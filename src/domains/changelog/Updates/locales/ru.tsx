@@ -8,7 +8,7 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesRU: UpdateData[] = [
   {
-    date: '2026-01-20T10:06:41.045Z',
+    date: '2026-01-19T20:40:00.757Z',
     newFeatures: [
       <>
         <strong>⭐️ Закрепление лотов</strong>
@@ -16,12 +16,8 @@ export const ChangesRU: UpdateData[] = [
         <div>Вы можете закреплять некоторые лоты для отображения их сверху списка.</div>
         <Space h='xs' />
         <div style={{ paddingLeft: '16px' }}>
-          <strong>Как включить:</strong> Страница Настройки → Таблица → Возможность закреплять лоты
-        </div>
-        <Space h='xs' />
-        <div style={{ paddingLeft: '16px' }}>
-          <strong>Как использовать:</strong> Нажмите на звездочку в левой части лота. Лот закрепится
-          в верхней части списка
+          <strong>Как использовать:</strong> Нажмите на три точки справа от лота → выберите "Закрепить" или "Открепить".
+          Закрепленные лоты отображаются со звездочкой слева от номера.
         </div>
       </>,
     ],
