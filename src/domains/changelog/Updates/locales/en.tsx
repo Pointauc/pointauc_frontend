@@ -8,7 +8,7 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesEN: UpdateData[] = [
   {
-    date: '2026-01-19T20:40:00.757Z',
+    date: '2026-01-19T20:50:00.757Z',
     newFeatures: [
       <>
         <strong>⭐️ Pin Lots</strong>

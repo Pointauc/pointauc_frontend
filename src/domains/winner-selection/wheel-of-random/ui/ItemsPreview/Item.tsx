@@ -3,12 +3,10 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import StarIcon from '@mui/icons-material/Star';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
 import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
 import { WheelItemWithMetadata } from '@models/wheel.model.ts';
-import { RootState } from '@reducers';
 
 import classes from './Item.module.css';
 
@@ -20,12 +18,10 @@ interface Props {
 }
 
 const Item = ({ item, disabled, total, actionable }: Props) => {
-  const { name, color, isFavorite } = item;
+  const { name, color } = item;
   const amountToDisplay = wheelItem.getAmount(item);
   const chance = useMemo(() => ((amountToDisplay / total) * 100).toFixed(1), [amountToDisplay, total]);
   const { controller } = useContext(WheelContext);
-
-  const favoritesIsEnable = useSelector((root: RootState) => root.aucSettings.settings.favoritesIsEnable);
 
   const onHover = () => {
     if (disabled || !actionable) return;
@@ -43,7 +39,7 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
-      { favoritesIsEnable && isFavorite && <StarIcon /> }
+      { item.isFavorite && <StarIcon /> }
       <Text className={classes.name}>{name}</Text>
       <Text className={classes.amount}>{Number(amountToDisplay.toFixed(2))}</Text>
       <Divider orientation='vertical' />

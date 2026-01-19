@@ -3,7 +3,7 @@ export interface WheelItem {
   id: string | number;
   color: string;
   amount: number;
-  isFavorite: boolean;
+  isFavorite?: boolean;
 }
 
 export interface WheelItemWithMetadata extends WheelItem {

@@ -1,19 +1,17 @@
-import { useMemo, useRef, useState } from 'react';
-import { Checkbox, Grid, ActionIcon, Text, Group, Stack } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { ActionIcon, Checkbox, Grid, Group, Stack, Text } from '@mantine/core';
 import { IconChevronsLeft } from '@tabler/icons-react';
 import classNames from 'classnames';
+import { useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
-import { useSelector } from 'react-redux';
 
+import { WheelFormat } from '@constants/wheel.ts';
+import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
+import Item from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview/Item';
+import useStorageState from '@hooks/useStorageState.ts';
 import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 import { createMapByKey } from '@utils/common.utils.ts';
-import Item from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview/Item';
-import { WheelFormat } from '@constants/wheel.ts';
-import useStorageState from '@hooks/useStorageState.ts';
-import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
-import { RootState } from '@reducers';
 
 import classes from './index.module.css';
 
@@ -37,7 +35,6 @@ const ItemsPreview = ({
   const [hideInactive, setHideInactive] = useState(false);
   const [collapsed, setCollapsed] = useStorageState('wheel.itemsPreview.collapsed', false);
   const listContainer = useRef<HTMLDivElement>(null);
-  const favoritesIsEnable = useSelector((root: RootState) => root.aucSettings.settings.favoritesIsEnable);
 
   const { t } = useTranslation();
 
@@ -58,14 +55,14 @@ const ItemsPreview = ({
   const allSorted = useMemo(
     () => {
       return [...visibleItems].sort((a, b) => {
-        if (favoritesIsEnable && a.isFavorite !== b.isFavorite) {
+        if (a.isFavorite !== b.isFavorite) {
           return a.isFavorite ? -1 : 1;
         }
 
         return wheelItem.getAmount(b) - wheelItem.getAmount(a)
       });
     },
-    [visibleItems, favoritesIsEnable]
+    [visibleItems]
   );
 
   return (
