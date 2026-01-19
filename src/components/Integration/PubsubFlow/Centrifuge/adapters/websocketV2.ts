@@ -25,7 +25,9 @@ export default class CentrifugeWebsocketV2 implements CentrifugeFlow.Adapter {
 
   private handleDonation = (message: any) => {
     if (!this.listening) return;
-    this.events.emit('bid', this.parseMessage(message));
+    const bid = this.parseMessage(message);
+    if (!bid) return;
+    this.events.emit('bid', bid);
   };
 
   private sendTwoWayMessage(message: any, responseHandler?: (data: any) => void): Promise<any> {

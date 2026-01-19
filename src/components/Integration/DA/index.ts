@@ -27,7 +27,9 @@ const authenticate = async (code: string) => {
 
 const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
 
-const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase => {
+const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase | null => {
+  if (!amount_in_user_currency) return null;
+
   return {
     id: id.toString(),
     username,

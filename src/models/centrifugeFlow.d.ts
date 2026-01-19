@@ -7,7 +7,7 @@ namespace CentrifugeFlow {
   interface AdapterParams {
     url: string;
     events: EventEmitter<Integration.PubsubEvents>;
-    parseMessage: (data: any) => Purchase;
+    parseMessage: (data: any) => (Purchase | null);
     userId: string;
     subscribeEndpoint: string;
     channel: string;
