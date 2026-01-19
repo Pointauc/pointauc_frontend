@@ -66,6 +66,7 @@ const SORTABLE_SLOT_EVENTS = [
   'slots/addSlotAmount',
   'slots/mergeLot',
   'slots/setLockedPercentage',
+  'slots/setSlotIsFavorite',
 ];
 
 const sortSlotsMiddleware: Middleware<{}, RootState> =

@@ -5,6 +5,7 @@ import { IconChevronsLeft } from '@tabler/icons-react';
 import classNames from 'classnames';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
+import { useSelector } from 'react-redux';
 
 import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 import { createMapByKey } from '@utils/common.utils.ts';
@@ -12,6 +13,7 @@ import Item from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview/Item
 import { WheelFormat } from '@constants/wheel.ts';
 import useStorageState from '@hooks/useStorageState.ts';
 import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
+import { RootState } from '@reducers';
 
 import classes from './index.module.css';
 
@@ -35,6 +37,7 @@ const ItemsPreview = ({
   const [hideInactive, setHideInactive] = useState(false);
   const [collapsed, setCollapsed] = useStorageState('wheel.itemsPreview.collapsed', false);
   const listContainer = useRef<HTMLDivElement>(null);
+  const favoritesIsEnable = useSelector((root: RootState) => root.aucSettings.settings.favoritesIsEnable);
 
   const { t } = useTranslation();
 
@@ -53,8 +56,16 @@ const ItemsPreview = ({
     [hideInactive, allItems, activeMap],
   );
   const allSorted = useMemo(
-    () => [...visibleItems].sort((a, b) => wheelItem.getAmount(b) - wheelItem.getAmount(a)),
-    [visibleItems],
+    () => {
+      return [...visibleItems].sort((a, b) => {
+        if (favoritesIsEnable && a.isFavorite !== b.isFavorite) {
+          return a.isFavorite ? -1 : 1;
+        }
+
+        return wheelItem.getAmount(b) - wheelItem.getAmount(a)
+      });
+    },
+    [visibleItems, favoritesIsEnable]
   );
 
   return (

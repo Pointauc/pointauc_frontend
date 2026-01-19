@@ -8,6 +8,22 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesEN: UpdateData[] = [
   {
+    date: '2026-01-19T20:40:00.757Z',
+    newFeatures: [
+      <>
+        <strong>⭐️ Pin Lots</strong>
+        <Space h='sm' />
+        <div>You can pin specific lots to keep them at the top of the list.</div>
+        <Space h='xs' />
+        <div style={{ paddingLeft: '16px' }}>
+          <strong>How to use:</strong> Click the three dots on the right side of a lot → select "Pin" or "Unpin".
+          Pinned lots are displayed with a star icon next to their number.
+        </div>
+      </>,
+    ],
+    contributors: ['ahaha_classic_']
+  },
+  {
     date: '2025-12-25T13:45:23.597Z',
     newFeatures: [
       <>

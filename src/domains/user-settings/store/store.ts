@@ -65,7 +65,7 @@ const defaultState: AucSettingsStore = {
     aukus: {
       enabled: false,
     },
-  },
+  }
 };
 
 const settingsFromStorage = localStorage.getItem('userSettings')

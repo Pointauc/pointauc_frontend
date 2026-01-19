@@ -34,6 +34,10 @@ function UpdateEntry({ update }: UpdateEntryProps) {
       />
 
       <ChangeSection type='fix' items={update.fixes ?? []} label={t('changelog.types.fixes')} icon={<WrenchIcon />} />
+
+      { update.contributors?.length && (
+        <div className={styles.contributors}>{t('changelog.contributors', { contributors: update.contributors.join(', ') })}</div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Menu, TextInputProps } from '@mantine/core';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { IconHash, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconHash, IconPlus, IconTrash, IconStar, IconStarFilled } from '@tabler/icons-react';
 import clsx from 'clsx';
 import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Slot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
 import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows';
-import { addExtra, addSlot, deleteSlot, setSlotAmount, setSlotExtra, setSlotName } from '@reducers/Slots/Slots.ts';
+import {
+  addExtra,
+  addSlot,
+  deleteSlot,
+  setSlotAmount,
+  setSlotIsFavorite,
+  setSlotName
+} from '@reducers/Slots/Slots.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { animateValue } from '@utils/common.utils.ts';
@@ -29,7 +36,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   const hideAmounts = useSelector((root: RootState) => root.aucSettings.settings.hideAmounts);
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { id, extra, amount, name } = lot;
+  const { id, extra, amount, name, isFavorite } = lot;
   const [currentName, setCurrentName] = useState(name);
   const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
@@ -135,9 +142,16 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
 
   const isLocked = !!lot.lockedPercentage;
 
+  function toggleFavorite() {
+    dispatch(setSlotIsFavorite({ id, state: !isFavorite }));
+  }
+
   return (
     <>
       <div className={styles.hashContainer}>
+        {isFavorite && (
+          <IconStarFilled color={'orange'} size={20} />
+        )}
         <div className={styles.hash}>
           <IconHash className={styles.hashIcon} size={18} />
           <div>{`${lot.fastId}`}</div>
@@ -186,13 +200,19 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
             <IconTrash />
           </button>
         )}
-        <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow>
+        <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow transitionProps={{ duration: 0 }}>
           <Menu.Target>
             <button className={styles.iconButton} title={t('lot.extra')} aria-controls='extra'>
               <MoreHorizIcon />
             </button>
           </Menu.Target>
           <Menu.Dropdown id='extra'>
+            <Menu.Item
+              onClick={toggleFavorite}
+              leftSection={isFavorite ? <IconStarFilled size={16} /> : <IconStar size={16} />}
+            >
+              {t(isFavorite ? 'lot.unpin' : 'lot.pin')}
+            </Menu.Item>
             {isMobile && <Menu.Item onClick={handleDelete}>{t('lot.delete')}</Menu.Item>}
             <Menu.Item onClick={handleOpenTrailer}>{t('lot.trailer')}</Menu.Item>
           </Menu.Dropdown>

@@ -7,4 +7,5 @@ export interface UpdateData {
   newFeatures?: ReactNode[];
   improvements?: ReactNode[];
   fixes?: ReactNode[];
+  contributors?: string[];
 }

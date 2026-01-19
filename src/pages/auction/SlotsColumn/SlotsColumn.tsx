@@ -13,7 +13,7 @@ const SlotsColumn: React.FC = () => {
   const buyoutInput = useRef<HTMLInputElement>(null);
   const { slots, searchTerm } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const {
-    settings: { isBuyoutVisible, isTotalVisible },
+    settings: { isBuyoutVisible },
   } = useSelector((rootReducer: RootState) => rootReducer.aucSettings);
   const [, setBuyout] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
