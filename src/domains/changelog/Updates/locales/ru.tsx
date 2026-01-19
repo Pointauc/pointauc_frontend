@@ -8,7 +8,7 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesRU: UpdateData[] = [
   {
-    date: '2026-01-17T10:06:41.045Z',
+    date: '2026-01-20T10:06:41.045Z',
     newFeatures: [
       <>
         <strong>⭐️ Закрепление лотов</strong>

@@ -34,7 +34,6 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   const marblesAuc = useSelector((root: RootState) => root.aucSettings.settings.marblesAuc);
   const showChances = useSelector((root: RootState) => root.aucSettings.settings.showChances);
   const hideAmounts = useSelector((root: RootState) => root.aucSettings.settings.hideAmounts);
-  const favoritesIsEnable = useSelector((root: RootState) => root.aucSettings.settings.favoritesIsEnable);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { id, extra, amount, name, isFavorite } = lot;
@@ -149,16 +148,10 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
 
   return (
     <>
-      {favoritesIsEnable && (
-        <button
-          onClick={toggleFavorite}
-          className={styles.iconButton}
-          title={t(isFavorite ? 'lot.unpin' : 'lot.pin')}
-        >
-          { isFavorite ? <IconStarFilled color={'orange'} /> : <IconStar color={'#fff2'} /> }
-        </button>
-      )}
       <div className={styles.hashContainer}>
+        {isFavorite && (
+          <IconStarFilled color={'orange'} size={20} />
+        )}
         <div className={styles.hash}>
           <IconHash className={styles.hashIcon} size={18} />
           <div>{`${lot.fastId}`}</div>
@@ -207,13 +200,19 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
             <IconTrash />
           </button>
         )}
-        <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow>
+        <Menu width={200} shadow='lg' offset={-2} position='bottom-start' withArrow transitionProps={{ duration: 0 }}>
           <Menu.Target>
             <button className={styles.iconButton} title={t('lot.extra')} aria-controls='extra'>
               <MoreHorizIcon />
             </button>
           </Menu.Target>
           <Menu.Dropdown id='extra'>
+            <Menu.Item
+              onClick={toggleFavorite}
+              leftSection={isFavorite ? <IconStarFilled size={16} /> : <IconStar size={16} />}
+            >
+              {t(isFavorite ? 'lot.unpin' : 'lot.pin')}
+            </Menu.Item>
             {isMobile && <Menu.Item onClick={handleDelete}>{t('lot.delete')}</Menu.Item>}
             <Menu.Item onClick={handleOpenTrailer}>{t('lot.trailer')}</Menu.Item>
           </Menu.Dropdown>

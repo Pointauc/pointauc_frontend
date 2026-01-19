@@ -78,7 +78,6 @@ const defaultSettings: AucSettingsState['settings'] = {
   hideAmounts: false,
   showTotalTime: false,
   activeRuleId: null,
-  favoritesIsEnable: false,
   events: {
     aukus: {
       enabled: aukus.enabled.get(),

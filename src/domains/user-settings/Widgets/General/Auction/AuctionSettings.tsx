@@ -35,13 +35,6 @@ const AuctionSettings = () => {
             label={<SettingLabel text={t('settings.auc.hideAmounts')} />}
           />
         </Group>
-        <Group>
-          <FormSwitch
-            name='favoritesIsEnable'
-            control={control}
-            label={<SettingLabel text={t('settings.auc.favoritesIsEnable')} />}
-          />
-        </Group>
       </Stack>
     </SettingsGroup>
   );

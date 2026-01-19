@@ -54,6 +54,8 @@
 .hashContainer {
   display: flex;
   min-width: 64px;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
 }
 
 .lockedLot {
