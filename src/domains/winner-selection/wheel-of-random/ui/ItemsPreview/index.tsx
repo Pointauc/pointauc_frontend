@@ -55,7 +55,7 @@ const ItemsPreview = ({
   const allSorted = useMemo(
     () => {
       return [...visibleItems].sort((a, b) => {
-        if (a.isFavorite !== b.isFavorite) {
+        if (!!a.isFavorite !== !!b.isFavorite) {
           return a.isFavorite ? -1 : 1;
         }
 

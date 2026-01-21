@@ -49,7 +49,7 @@ export const sortSlots = (slots: Slot[]): Slot[] => {
       return 1;
     }
 
-    if (a.isFavorite !== b.isFavorite) {
+    if (!!a.isFavorite !== !!b.isFavorite) {
       return a.isFavorite ? -1 : 1;
     }
 
