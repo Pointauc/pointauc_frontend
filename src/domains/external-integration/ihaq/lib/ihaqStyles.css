@@ -6,3 +6,8 @@
 [data-integration='ihaq']:hover {
   background-color: rgb(38, 118, 158);
 }
+
+button[data-integration='ihaq'] {
+  padding-left: 0;
+  padding-right: 0;
+}
