@@ -32,7 +32,7 @@ const ihaq: Integration.Config = {
   pubsubFlow: new BackendFlow({ id }),
   branding: {
     icon: IhaqIcon,
-    description: 'Виджеты — ИИ-персонаж, Батарейка, Пульт',
+    description: 'Комиссия – 3,5%. Уникальные виджеты!',
     partner: true,
   },
 };
