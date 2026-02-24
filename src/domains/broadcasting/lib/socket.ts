@@ -14,11 +14,9 @@ export const connectToBroadcastingSocket: ThunkAction<void, RootState, {}, Actio
     Broadcasting.EmitEvents
   >;
   socket.on('updatesRequested', (data) => {
-    console.log('updatesRequested', data);
     dispatch(updateDataState({ dataType: data.dataType, value: true }));
   });
   socket.on('updatesSilenced', (data) => {
-    console.log('updatesSilenced', data);
     dispatch(updateDataState({ dataType: data.dataType, value: false }));
   });
   socket.on('connect', () => {

@@ -182,7 +182,6 @@ export const sendCpSubscribedState =
 export const sendTourniquetSubscribedState =
   (isSubscribed: boolean) => async (dispatch: ThunkDispatch<{}, {}, Action>, getState: () => RootState) => {
     const { tourniquetSocket } = getState().socketIo;
-    console.log(tourniquetSocket);
 
     if (tourniquetSocket) {
       await sendSubscribeState(tourniquetSocket, isSubscribed, dispatch);

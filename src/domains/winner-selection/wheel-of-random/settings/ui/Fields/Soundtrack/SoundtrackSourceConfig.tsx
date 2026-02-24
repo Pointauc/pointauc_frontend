@@ -117,7 +117,6 @@ const SoundtrackSourceConfig: FC<SoundtrackSourceConfigProps> = ({ onClose }) =>
 
   const handleTimeUpdate = useCallback(
     (progress: number) => {
-      // console.log('handleTimeUpdate', progress, effectiveSpinTime);
       if (isPlaying) {
         setCurrentPlayTime(progress);
 

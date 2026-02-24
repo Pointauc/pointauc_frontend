@@ -701,7 +701,6 @@ export const genshinWheelDrawer = (): Result => {
 
   const destroy = () => {
     if (pointerAnimationFrame) {
-      console.log('destroy pointer animation');
       cancelAnimationFrame(pointerAnimationFrame);
     }
     pointerAnimationFrame = null;

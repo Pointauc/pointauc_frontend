@@ -10,7 +10,7 @@ i18n
   .init({
     fallbackLng: 'en',
     load: 'languageOnly',
-    debug: !import.meta.env.NODE_ENV || import.meta.env.NODE_ENV === 'development',
+    debug: false,
 
     detection: {
       order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'subdomain', 'navigator', 'htmlTag', 'path'],

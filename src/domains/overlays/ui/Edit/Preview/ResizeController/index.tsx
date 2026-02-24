@@ -243,7 +243,6 @@ const ResizeController: FC<ResizeControllerProps> = ({
 
   useEffect(() => {
     if (dragState) {
-      // console.log('dragState', dragState);
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
 

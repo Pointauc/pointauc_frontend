@@ -6,7 +6,6 @@ type FilePlayerProps = PlayerProps<Wheel.SoundtrackSourceFile>;
 
 const FilePlayer = ({ source, ref, onTimeUpdate, onReady }: FilePlayerProps) => {
   const audio = useMemo(() => {
-    // console.log('source.dataUrl', source.dataUrl);
     const audio = new Audio(source.dataUrl);
     audio.preload = 'auto';
     audio.loop = true;
@@ -16,14 +15,12 @@ const FilePlayer = ({ source, ref, onTimeUpdate, onReady }: FilePlayerProps) => 
   useEffect(() => {
     const handleTimeUpdate = () => {
       onTimeUpdate?.(audio.currentTime);
-      console.log(audio.currentTime, audio.duration);
     };
     const handleCanPlay = () => {
       onReady?.();
     };
     const handleEnded = () => {
       audio.currentTime = 0;
-      console.log('audio ended');
     };
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('canplay', handleCanPlay);

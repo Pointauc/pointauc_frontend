@@ -79,7 +79,6 @@ export const buildCentrifugeFlow = (params: Params): CentrifugeFlow => {
       }
 
       const token = await getPubsubToken(params);
-      console.log(token);
       if (!token) throw new InvalidTokenError();
 
       return centrifuge.connect(token);
