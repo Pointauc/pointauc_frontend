@@ -1,7 +1,7 @@
 import { UserState } from '@reducers/User/User.ts';
 import { setSubscribeState, toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 
-import { store } from '../../main.tsx';
+import { store } from '@store';
 
 type StorageKey = 'authToken' | 'pubsubToken2' | 'refreshToken';
 

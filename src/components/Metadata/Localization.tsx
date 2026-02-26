@@ -1,13 +1,17 @@
 import React, { useMemo } from 'react';
 
+const isRealDom = typeof HTMLElement !== 'undefined';
+
 const locales = ['ru'];
 
 const Localization = () => {
   const defaultHost = useMemo(() => {
+    if (!isRealDom) return null;
     const regex = new RegExp(`^(?:(?:${locales.join('|')})\\.)?(.*)`);
-
     return regex.exec(window.location.host)?.[1];
   }, []);
+
+  if (!isRealDom || !defaultHost) return null;
 
   return (
     <>

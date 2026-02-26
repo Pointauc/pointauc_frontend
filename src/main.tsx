@@ -2,11 +2,10 @@ import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/code-highlight/styles.css';
 import '@styles/index.scss';
-
 import './index.css';
 import '@assets/i18n/index.ts';
+
 import { Notifications } from '@mantine/notifications';
-import { configureStore } from '@reduxjs/toolkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -19,9 +18,6 @@ import { lazy, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AnyAction, Middleware } from 'redux';
-import thunk from 'redux-thunk';
-import { throttle } from '@tanstack/react-pacer';
 
 import i18n from '@assets/i18n/index.ts';
 import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
@@ -29,90 +25,30 @@ import { integrationUtils } from '@components/Integration/helpers.ts';
 import INTEGRATIONS from '@components/Integration/integrations.ts';
 import ROUTES from '@constants/routes.constants.ts';
 import { TutorialProvider } from '@domains/tutorials';
-import rootReducer, { RootState } from '@reducers/index.ts';
-import { setSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
+import rootReducer from '@reducers/index.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
-import { sortSlots } from '@utils/common.utils.ts';
-import { timedFunction } from '@utils/dataType/function.utils.ts';
-import { Slot } from '@models/slot.model.ts';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
-import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
-
 import App from './App/entrypoint/App.tsx';
+import { initStore, store } from './store.ts';
+
+// All static imports are hoisted; by the time this line executes, rootReducer
+// is fully initialized, so initStore() can safely create the Redux store.
+initStore(rootReducer);
+
+export { store };
 
 const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-// Set initial dayjs locale based on i18n language
 const initialLanguage = i18n.language === 'ua' ? 'uk' : i18n.language;
 dayjs.locale(initialLanguage);
 
-// Update dayjs locale when i18n language changes
 i18n.on('languageChanged', (language) => {
-  // Map i18n locale to dayjs locale (ua -> uk for Ukrainian)
   const dayjsLocale = language === 'ua' ? 'uk' : language;
   dayjs.locale(dayjsLocale);
-});
-
-const SORTABLE_SLOT_EVENTS = [
-  'slots/setSlotData',
-  'slots/setSlotAmount',
-  'slots/addExtra',
-  'slots/deleteSlot',
-  'slots/addSlot',
-  'slots/addSlotAmount',
-  'slots/mergeLot',
-  'slots/setLockedPercentage',
-  'slots/setSlotIsFavorite',
-];
-
-const sortSlotsMiddleware: Middleware<{}, RootState> =
-  (store) =>
-  (next) =>
-  (action): AnyAction => {
-    const result = next(action);
-    if (SORTABLE_SLOT_EVENTS.includes(action.type)) {
-      const { slots } = store.getState().slots;
-      const updatedSlots = recalculateAllLockedSlots(slots);
-      const sortedSlots = sortSlots(updatedSlots);
-
-      return next(setSlots(sortedSlots));
-    }
-    return result;
-  };
-
-const SLOTS_UPDATE_EVENTS = Object.keys(slotsSlice.actions).map((actionName) => `${slotsSlice.name}/${actionName}`);
-
-const saveSlotsWithCooldown = throttle(
-  (slots: Slot[]) => {
-    const lots = slotsToArchivedLots(slots);
-    archiveApi
-      .upsertAutosave({ lots })
-      .then(() => console.log('Autosave updated', lots))
-      .catch((err) => console.error('Autosave failed:', err));
-  },
-  { wait: 2000, trailing: true, leading: false },
-);
-
-const saveSlotsMiddleware: Middleware<{}, RootState> =
-  (store) =>
-  (next) =>
-  (action): AnyAction => {
-    const result = next(action);
-    if (SLOTS_UPDATE_EVENTS.includes(action.type)) {
-      const { slots } = store.getState().slots;
-
-      saveSlotsWithCooldown(slots);
-    }
-    return result;
-  };
-
-export const store = configureStore({
-  reducer: rootReducer,
-  middleware: [thunk, sortSlotsMiddleware, saveSlotsMiddleware],
 });
 
 window.onbeforeunload = (): undefined => {

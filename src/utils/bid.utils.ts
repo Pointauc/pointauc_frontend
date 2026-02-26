@@ -3,7 +3,7 @@ import { Settings } from '@models/settings.model.ts';
 import { numberUtils } from '@utils/common/number.ts';
 import { BidNameStrategy } from '@enums/bid.enum.ts';
 
-import { store } from '../main.tsx';
+import { store } from '@store';
 
 type CostSettings = Pick<Settings, 'marblesAuc' | 'marbleRate' | 'pointsRate' | 'marbleCategory' | 'reversePointsRate'>;
 

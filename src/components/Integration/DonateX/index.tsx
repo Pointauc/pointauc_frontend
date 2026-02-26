@@ -7,7 +7,7 @@ import { mergeAuthData } from '@reducers/User/User.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import EventEmitter from '@utils/EventEmitter.ts';
 
-import { store } from '../../../main.tsx';
+import { store } from '@store';
 
 import styles from './index.module.css';
 import {

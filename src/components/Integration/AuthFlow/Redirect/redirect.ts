@@ -1,7 +1,7 @@
 import RedirectLoginButton from '@components/Integration/AuthFlow/Redirect/LoginButton/LoginButton.tsx';
 import { mergeAuthData } from '@reducers/User/User.ts';
 
-import { store } from '../../../../main.tsx';
+import { store } from '@store';
 
 interface Params {
   id: Integration.ID;

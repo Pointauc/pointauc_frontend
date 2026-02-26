@@ -27,10 +27,11 @@ import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSett
 import { addAlert, deleteAlert } from '../../reducers/notifications/notifications';
 import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
 import { getCookie } from '../../utils/common.utils';
+import { isBrowser } from '../../utils/ssr.ts';
 
 import type { ThunkDispatch } from 'redux-thunk';
 
-const hasToken = !!getCookie('userSession');
+const hasToken = isBrowser && !!getCookie('userSession');
 
 let openDriverTimeout: any;
 

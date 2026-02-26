@@ -4,7 +4,7 @@ import { IntegrationDataDto } from '@models/user.model.ts';
 
 export const BASE_URL = 'https://donatex.gg/api';
 export const CLIENT_ID = import.meta.env.VITE_DONATEX_CLIENT_ID ?? 'DONATEX CLIENT ID NOT FOUND';
-export const REDIRECT_URI = `${window.location.origin}/donatex/redirect`;
+export const REDIRECT_URI = typeof window !== 'undefined' ? `${window.location.origin}/donatex/redirect` : '';
 export const PKCE_VERIFIER_KEY = 'donatex_pkce_verifier';
 const PROFILE_STORAGE_KEY = 'donatex_profile';
 const ACCESS_TOKEN_KEY = 'donatex_authToken';

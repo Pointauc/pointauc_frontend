@@ -10,6 +10,7 @@ import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
 import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
+import { isBrowser } from '@utils/ssr.ts';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -36,7 +37,7 @@ export interface AucSettingsState {
   view: ViewSettings;
   settings: AucSettingsDto & { events: EventsSettings } & SettingsMissingOnBackend;
 }
-const showRules = localStorage.getItem('showRules');
+const showRules = isBrowser ? localStorage.getItem('showRules') : null;
 
 const defaultSettings: AucSettingsState['settings'] = {
   startTime: 10,
@@ -80,7 +81,7 @@ const defaultSettings: AucSettingsState['settings'] = {
   activeRuleId: null,
   events: {
     aukus: {
-      enabled: aukus.enabled.get(),
+      enabled: isBrowser ? aukus.enabled.get() : true,
     },
   },
 };
@@ -91,9 +92,10 @@ export const initialState: AucSettingsState = {
     showRules: showRules === 'true',
     autoScroll: false,
   },
-  settings: localStorage.getItem('settings')
-    ? { ...defaultSettings, ...JSON.parse(localStorage.getItem('settings') as string) }
-    : defaultSettings,
+  settings:
+    isBrowser && localStorage.getItem('settings')
+      ? { ...defaultSettings, ...JSON.parse(localStorage.getItem('settings') as string) }
+      : defaultSettings,
 };
 
 const mergeCheck = <T>(obj: T, src: T): T => (src === undefined ? obj : src);
@@ -165,7 +167,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     );
   }
   dispatch(
-      setUserState({
+    setUserState({
       username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? donatexAuth?.username ?? 'Empty',
       userId: twitchAuth?.id,
       pointaucUserId: userId,

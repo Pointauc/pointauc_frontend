@@ -7,7 +7,7 @@ import { QUERIES } from '@constants/common.constants.ts';
 import { buildHeadlessFlow } from '@components/Integration/PubsubFlow/Headless/headlessFlow.ts';
 import { sendTourniquetSubscribedState } from '@reducers/Subscription/Subscription.ts';
 
-import { store } from '../../../main.tsx';
+import { store } from '@store';
 
 import './index.css';
 

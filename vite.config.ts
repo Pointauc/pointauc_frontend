@@ -44,4 +44,10 @@ export default defineConfig({
       '^/api.*': 'http://localhost:8000',
     },
   },
+  ssr: {
+    // Bundle all dependencies into the SSR bundle so Vite handles CJS→ESM
+    // conversion for each package. This is appropriate for a build-time
+    // prerender script (not a production server), where bundle size doesn't matter.
+    noExternal: true,
+  },
 });

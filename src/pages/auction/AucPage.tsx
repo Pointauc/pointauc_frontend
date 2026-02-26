@@ -45,7 +45,9 @@ const AucPageContent: React.FC = () => {
           <Overlay backgroundOpacity={imageOpacity} color='#242424' blur={backgroundBlur} />
         </Box>
       )}
-      <ChangelogModal />
+      <Suspense fallback={null}>
+        <ChangelogModal />
+      </Suspense>
       <div className={styles.column}>
         <div className={styles.row}>
           <Box className={styles.leftColumn} visibleFrom='sm'>
