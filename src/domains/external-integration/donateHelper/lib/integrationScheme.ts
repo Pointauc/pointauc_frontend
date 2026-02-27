@@ -5,7 +5,7 @@ import { mergeAuthData } from '@reducers/User/User.ts';
 import { DonateHelperIcon } from '@domains/external-integration/donateHelper/ui/Icon';
 import DonateHelperLoginButton from '@domains/external-integration/donateHelper/ui/LoginButton';
 
-import { store } from '../../../../main.tsx';
+import { store } from '@store';
 
 const id = 'donateHelper';
 

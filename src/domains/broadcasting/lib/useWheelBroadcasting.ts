@@ -9,7 +9,7 @@ import { WheelParticipantDto, WheelSettingsChangedDto } from '@api/openapi/types
 import { skipSameValueCalls } from '@utils/dataType/function.utils';
 import { WheelFormat } from '@constants/wheel';
 
-import { store } from '../../../main';
+import { store } from '@store';
 import { Broadcasting } from '../model/types';
 
 export type WheelBroadcastSettings = Omit<WheelSettingsChangedDto, 'type'>;

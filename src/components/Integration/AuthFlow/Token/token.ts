@@ -2,7 +2,7 @@ import TokenLoginButton from '@components/Integration/AuthFlow/Token/TokenLoginB
 import { integrationUtils } from '@components/Integration/helpers.ts';
 import { mergeAuthData } from '@reducers/User/User.ts';
 
-import { store } from '../../../../main.tsx';
+import { store } from '@store';
 
 interface Params {
   authenticate: Integration.TokenFlow['authenticate'];

@@ -41,9 +41,7 @@ export const detectDefaultResolution = (): CanvasResolutionDto => {
 
   // Find the closest resolution that fits the user's screen
   for (const resolution of CANVAS_RESOLUTIONS) {
-    console.log('resolution', resolution.value.width, resolution.value.height, screenWidth, screenHeight);
     if (resolution.value.width === screenWidth && resolution.value.height === screenHeight) {
-      console.log('resolution selected', resolution.value);
       return resolution.value;
     }
   }

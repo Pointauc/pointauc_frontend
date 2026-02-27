@@ -1,7 +1,7 @@
 import { UserState } from '@reducers/User/User.ts';
 import { setSubscribeState, toSubscriptionId } from '@reducers/Subscription/Subscription.ts';
 
-import { store } from '../../main.tsx';
+import { store } from '@store';
 
 type StorageKey = 'authToken' | 'pubsubToken2' | 'refreshToken';
 
@@ -102,7 +102,6 @@ export const integrationUtils = {
         // For DonatePay, check both region auth data
         const userId =
           id === 'donatePay' ? user.authData.donatePayEu?.id ?? user.authData.donatePay?.id : user.authData[id]?.id;
-        console.log(userId);
         if (!userId) throw new Error('User not found');
 
         await pubsubFlow.connect(userId);
@@ -112,7 +111,7 @@ export const integrationUtils = {
 
       store.dispatch(setSubscribeState({ state: { loading: false }, id: subscriptionId }));
     } catch (e) {
-      console.log(e);
+      console.error(e);
       store.dispatch(setSubscribeState({ state: previous, id: subscriptionId }));
     }
   },

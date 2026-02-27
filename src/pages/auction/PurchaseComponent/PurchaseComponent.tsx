@@ -28,7 +28,7 @@ import {
 import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
 import bidUtils from '@utils/bid.utils.ts';
 
-import { store } from '../../../main.tsx';
+import { store } from '@store';
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
 import classes from './PurchaseComponent.module.css';
@@ -65,7 +65,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
       return null;
     }
 
-    const { slots } = store.getState().slots;
+    const { slots } = (store.getState() as RootState).slots;
     const slotNames = slots.map(({ name }) => name || '');
     const {
       bestMatch: { rating },

@@ -6,14 +6,15 @@ import { buildCentrifugeFlow } from '@components/Integration/PubsubFlow/Centrifu
 import ENDPOINTS from '@constants/api.constants.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 
-import { store } from '../../../main.tsx';
+import { isBrowser } from '@utils/ssr.ts';
+import { store } from '@store';
 import './index.css';
 
 const id = 'da';
 
 const authParams = {
   client_id: '6727',
-  redirect_uri: `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}`,
+  redirect_uri: isBrowser ? `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}` : '',
   response_type: 'code',
   scope: 'oauth-donation-subscribe oauth-user-show',
   // force_verify: 'true',
@@ -52,7 +53,7 @@ const pubsubFlow = buildCentrifugeFlow({
   id,
   authFlow,
   getToken: async () => store.getState().user.authData.da?.socketConnectionToken,
-  subscribeEndpoint: location.origin + ENDPOINTS.DA.SUBSCRIBE,
+  subscribeEndpoint: isBrowser ? location.origin + ENDPOINTS.DA.SUBSCRIBE : '',
   getChannel: (id) => `$alerts:donation_${id}`,
 });
 

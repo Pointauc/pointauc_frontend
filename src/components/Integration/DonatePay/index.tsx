@@ -7,7 +7,7 @@ import { mergeAuthData } from '@reducers/User/User.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { donatePayRuControllerRevoke, donatePayEuControllerRevoke } from '@api/openapi/sdk.gen.ts';
 
-import { store } from '../../../main.tsx';
+import { store } from '@store';
 
 import DonatePayLoginButton from './DonatePayLoginButton.tsx';
 import { DonatePayRegion, DONATE_PAY_REGIONS } from './types.ts';

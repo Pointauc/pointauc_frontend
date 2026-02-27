@@ -23,7 +23,6 @@ const useSimulationDropout = (controller: RefObject<WheelController | null>): Wh
 
     // The winner of the whole wheel is decided based on external seed (generated securely)
     const finalWinnerIndex = getSlotFromSeed(remainingSlots, firstWinnerSeed);
-    console.log([...remainingSlots], getSlotFromSeed(remainingSlots, firstWinnerSeed), firstWinnerSeed);
     dropoutQueue.push(remainingSlots[finalWinnerIndex].id);
     remainingSlots.splice(finalWinnerIndex, 1);
 
