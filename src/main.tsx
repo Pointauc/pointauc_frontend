@@ -29,6 +29,7 @@ import rootReducer from '@reducers/index.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
+
 import App from './App/entrypoint/App.tsx';
 import { initStore, store } from './store.ts';
 

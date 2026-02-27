@@ -53,7 +53,16 @@ if (typeof window === 'undefined') {
   define('addEventListener', noop);
   define('removeEventListener', noop);
   define('dispatchEvent', noop);
-  define('location', { origin: 'http://localhost', href: 'http://localhost/', pathname: '/', search: '', hash: '', host: 'localhost', hostname: 'localhost', protocol: 'http:' });
+  define('location', {
+    origin: 'http://localhost',
+    href: 'http://localhost/',
+    pathname: '/',
+    search: '',
+    hash: '',
+    host: 'localhost',
+    hostname: 'localhost',
+    protocol: 'http:',
+  });
   define('history', { pushState: noop, replaceState: noop });
   define('screen', { width: 1920, height: 1080 });
   define('localStorage', stubStorage);
@@ -139,7 +148,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '../dist');
 
 /** Routes to prerender as static HTML. Add more as the app grows. */
-const PRERENDER_ROUTES = ['/'];
+const PRERENDER_ROUTES = ['/', '/settings', '/wheel', '/overlays', '/tickets/info'];
 
 const template = readFileSync(resolve(distDir, 'index.html'), 'utf-8');
 
@@ -187,9 +196,7 @@ for (const route of PRERENDER_ROUTES) {
       headInjections.push(`    <meta name="robots" content="noindex"/>`);
     }
     if (headData.structuredData) {
-      headInjections.push(
-        `    <script type="application/ld+json">${headData.structuredData}</script>`,
-      );
+      headInjections.push(`    <script type="application/ld+json">${headData.structuredData}</script>`);
     }
     if (headData.localeLinks?.length) {
       headInjections.push(...headData.localeLinks.map((link) => `    ${link}`));
@@ -206,3 +213,5 @@ for (const route of PRERENDER_ROUTES) {
 
   console.log(`  Done → ${resolve(routeDir, 'index.html')}`);
 }
+
+process.exit(0);

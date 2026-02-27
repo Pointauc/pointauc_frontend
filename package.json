@@ -14,7 +14,7 @@
     "build:client": "tsc && vite build --mode production",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server --mode production",
     "prerender": "node scripts/prerender.js",
-    "build:ssg": "pnpm run build:client && pnpm run build:server && pnpm run prerender",
+    "build:ssg": "pnpm run build:client && pnpm run build:server && pnpm run prerender && node -e \"import('fs').then(f=>f.rmSync('dist/server',{recursive:true,force:true}))\"",
     "analyze": "cross-env ANALYZE=true npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -22,7 +22,10 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "api:generate": "openapi-ts",
-    "verify:authenticity": "node scripts/verify-authenticity.js"
+    "verify:authenticity": "node scripts/verify-authenticity.js",
+    "docker:build": "docker build -t pointauc-frontend .",
+    "docker:run": "docker run --rm -p 3000:80 pointauc-frontend",
+    "docker:up": "pnpm run docker:build && pnpm run docker:run"
   },
   "dependencies": {
     "7tv": "^0.1.2",

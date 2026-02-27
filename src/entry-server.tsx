@@ -18,6 +18,7 @@ import rootReducer from '@reducers/index.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import { TutorialProvider } from '@domains/tutorials';
 import { isObject } from '@utils/common.utils.ts';
+
 import App from './App/entrypoint/App.tsx';
 
 const BASE_DOMAIN = 'pointauc.com';

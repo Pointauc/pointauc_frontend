@@ -41,28 +41,36 @@
   },
   "metadata": {
     "/": {
-      "title": "Pointauc | Live Auction for Streamers",
-      "description": "Host interactive auctions where your viewers can bid on games, videos, and more using Twitch channel points or donations."
+      "title": "Pointauc – Live Auctions, Lotteries & Contests",
+      "description": "Run interactive auctions and lotteries where participants bid using channel points or donations — built for Twitch streamers, community events, and more."
     },
     "/settings": {
-      "title": "Settings & Integrations | Customize Your Experience",
-      "description": "Configure your auction settings and integrations with Twitch, Donation Alerts, and DonatePay. Personalize your auction with automated timers, custom appearance, alternative auction types and more."
+      "title": "Settings & Integrations – Pointauc",
+      "description": "Connect Twitch, Donation Alerts, or DonatePay and fine-tune your setup. Configure timers, customize the look, and pick the format that works for you."
     },
     "/wheel": {
-      "title": "Wheel of Random | Spin to Decide Auction Winners",
-      "description": "Use the Wheel of Random to decide auction winners with a fun and engaging spin. Choose from various types of wheels to add excitement and suspense to your live stream auctions."
+      "title": "Wheel of Random – Pointauc",
+      "description": "Spin the Wheel of Random to pick a winner from your entries. Multiple modes and customizable settings to keep things exciting and fair."
     },
     "/statistic": {
-      "title": "Statistics | Track Viewer Participation & Bidding Activity",
-      "description": "Monitor real-time statistics for your current auction, including viewer participation and bids."
+      "title": "Live Statistics – Track Bids & Participation",
+      "description": "Track real-time stats for your current session — who's participating, how much they've bid, and how the standings are shifting."
     },
     "/history": {
-      "title": "Auction History & Channel Points Management | Review Past Bids",
-      "description": "Access a complete history of all previous bids. Easily manage channel points redemptions."
+      "title": "History & Channel Points – Pointauc",
+      "description": "Browse your full event history and review every past bid. Manage Twitch channel point redemptions and track participation across sessions."
     },
     "/help": {
-      "title": "About the website Pointauc",
-      "description": "Discover how the Pointauc transforms your live streams by enabling interactive auctions, lotteries, and contests. Learn about our features, integrations, and customization options."
+      "title": "About Pointauc – Auctions, Lotteries & More",
+      "description": "Learn what Pointauc can do — from live auctions and lotteries to Twitch and donation integrations. Built for streamers, great for any community event."
+    },
+    "/overlays": {
+      "title": "Live Overlays for Streamers – Pointauc",
+      "description": "Add a live overlay to your stream showing bids, item names, and timers on screen — fully customizable to fit your style."
+    },
+    "/tickets/info": {
+      "title": "Verify Tickets – Fair Winner Selection",
+      "description": "Verify tickets quickly and transparently. Confirm who holds winning entries and ensure a fair outcome for any auction."
     }
   },
   "author": {
