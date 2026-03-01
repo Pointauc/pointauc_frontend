@@ -25,7 +25,7 @@ import styles from './WheelPage.module.css';
 const WheelPage: FC = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { slots } = useSelector((rootReducer: RootState) => rootReducer.slots);
+  const { slots, isInitialized } = useSelector((rootReducer: RootState) => rootReducer.slots);
   const wheelController = useRef<RandomWheelController | null>(null);
   const wheelForm = useRef<UseFormReturn<Wheel.Settings> | null>(null);
 
@@ -93,7 +93,7 @@ const WheelPage: FC = () => {
       classes={{ content: styles.content }}
       title={title}
     >
-      {!isLoadingSettings && (
+      {!isLoadingSettings && isInitialized && (
         <RandomWheel
           initialSettings={initialSettings?.data}
           items={wheelItems}

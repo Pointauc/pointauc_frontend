@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@reducers/index';
-import { setSlots } from '@reducers/Slots/Slots';
+import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
 import { LocalStorage } from '@constants/common.constants';
 import { SaveInfo } from '@models/save.model';
 import { Slot } from '@models/slot.model';
@@ -91,11 +91,8 @@ function AutoloadAutosave() {
   const slots = useSelector((state: RootState) => state.slots.slots);
   const hasLoaded = useRef(false);
 
-  useEffect(() => {
-    // Only run once on mount
-    if (hasLoaded.current) return;
+  if (!hasLoaded.current) {
     hasLoaded.current = true;
-
     // Run migration first, then load autosave
     const initializeArchive = async () => {
       // Step 1: Migrate old saves
@@ -110,7 +107,6 @@ function AutoloadAutosave() {
             if (data.lots.length > 0) {
               const loadedSlots = archivedLotsToSlots(data.lots);
               dispatch(setSlots(loadedSlots));
-              console.log('Autosave loaded on startup');
             }
           }
         } catch (err) {
@@ -119,9 +115,8 @@ function AutoloadAutosave() {
       }
     };
 
-    initializeArchive();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty deps - run only once on mount
+    initializeArchive().finally(() => dispatch(setSlotsInitialized()));
+  }
 
   return null;
 }

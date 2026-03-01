@@ -16,6 +16,7 @@ import LotQuery = PublicApi.LotQuery;
 interface SlotsState {
   slots: Slot[];
   searchTerm: string;
+  isInitialized: boolean;
 }
 
 let maxFastId = 0;
@@ -70,6 +71,7 @@ const initialState: SlotsState = {
   // slots: [createSlot({ amount: 50, name: '1' }), createSlot({ amount: 50, name: '2' })],
   // slots: [...new Array(100).fill(null).map(() => createSlot({ amount: getRandomIntInclusive(10, 100), name: '100' }))],
   slots: initialSlots,
+  isInitialized: false,
 };
 
 const getAmountSum = (slot: Slot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);
@@ -173,6 +175,9 @@ export const slotsSlice = createSlice({
     setSlots(state, action: PayloadAction<Slot[]>): void {
       state.slots = action.payload;
     },
+    setSlotsInitialized(state): void {
+      state.isInitialized = true;
+    },
     setSearchTerm(state, action: PayloadAction<string>): void {
       state.searchTerm = action.payload;
     },
@@ -217,6 +222,7 @@ export const {
   deleteSlot,
   resetSlots,
   setSlots,
+  setSlotsInitialized,
   addSlotAmount,
   setLotPercentage,
   setSearchTerm,
