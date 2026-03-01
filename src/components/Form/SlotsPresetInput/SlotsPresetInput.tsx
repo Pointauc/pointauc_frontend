@@ -18,7 +18,7 @@ interface SlotsPresetInputProps {
 const SlotsPresetInput: FC<SlotsPresetInputProps> = ({ onChange, buttonTitle, buttonClass, dialogTitle, hint }) => {
   const { t } = useTranslation();
   const [isInputOpened, setIsInputOpened] = useState<boolean>(false);
-  const [saveSlots, setSaveSlots] = useState<boolean>(false);
+  const [saveSlots, setSaveSlots] = useState<boolean>(() => localStorage.getItem('wheelImport.saveSlots') === 'true');
   const toggleDialog = (): void => {
     setIsInputOpened((prevOpened) => !prevOpened);
   };
@@ -29,6 +29,7 @@ const SlotsPresetInput: FC<SlotsPresetInputProps> = ({ onChange, buttonTitle, bu
 
   const handleSaveSlotsChange = (event: any): void => {
     setSaveSlots(event.target.checked);
+    localStorage.setItem('wheelImport.saveSlots', event.target.checked.toString());
   };
 
   const submit = (data: ArchiveData) => {

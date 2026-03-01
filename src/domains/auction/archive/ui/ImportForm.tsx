@@ -127,7 +127,9 @@ const ImportForm = ({ onImport, extraControls, layout = 'vertical' }: ImportForm
               </div>
             </Group>
           </Dropzone>
-          {layout === 'horizontal' && <ManualImport onSubmit={handleManualImportSubmit} />}
+          {layout === 'horizontal' && (
+            <ManualImport onSubmit={handleManualImportSubmit} extraControls={extraControls} />
+          )}
           {layout === 'vertical' && (
             <>
               <Button size='sm' variant='transparent' onClick={() => setShowManualImport(!showManualImport)}>
