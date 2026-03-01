@@ -6,12 +6,10 @@ import DonateXSvg from '@assets/icons/donatex.svg';
 import { InvalidTokenError } from '@domains/bids/external-integrations/shared/helpers.ts';
 import { mergeAuthData } from '@reducers/User/User.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
-import { store } from '@reducers/store.ts';
 import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton/index.tsx';
 import * as Integration from '@models/integration';
 import { store } from '@store';
 
-import styles from './index.module.css';
 import {
   BASE_URL,
   buildAuthorizeUrl,
@@ -25,6 +23,7 @@ import {
   storeTokens,
   validateDonateX,
 } from './auth.ts';
+import styles from './index.module.css';
 
 const authenticate = async (code: string) => {
   const verifier = sessionStorage.getItem(PKCE_VERIFIER_KEY);

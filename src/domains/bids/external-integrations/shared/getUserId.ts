@@ -1,5 +1,5 @@
 import * as Integration from '@models/integration';
-import { store } from '@reducers/store.ts';
+import { store } from '@store';
 
 export const getUserId = (integrationId: Integration.ID): string | undefined => {
   const { user } = store.getState();

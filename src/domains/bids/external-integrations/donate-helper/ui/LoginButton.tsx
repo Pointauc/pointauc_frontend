@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 
-import { IntegrationLoginButton } from '@components/Integration/AuthFlow/Redirect/LoginButton/LoginButton.tsx';
+import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton';
+import * as Integration from '@models/integration';
 
 import AuthModal from './AuthModal.tsx';
 import styles from './LoginButton.module.css';

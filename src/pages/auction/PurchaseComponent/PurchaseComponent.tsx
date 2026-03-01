@@ -25,10 +25,9 @@ import {
   updateExistBids,
 } from '@reducers/Purchases/Purchases.ts';
 import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
-import { store } from '@reducers/store.ts';
 import bidUtils from '@utils/bid.utils.ts';
-
 import { store } from '@store';
+
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
 import classes from './PurchaseComponent.module.css';

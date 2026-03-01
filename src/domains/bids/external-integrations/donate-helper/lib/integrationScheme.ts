@@ -1,11 +1,11 @@
-import { BackendFlow } from '@components/Integration/PubsubFlow/Backend/backendFlow';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers';
 import { donateHelperControllerRevoke } from '@api/openapi/sdk.gen.ts';
-import { integrationUtils } from '@components/Integration/helpers.ts';
 import { mergeAuthData } from '@reducers/User/User.ts';
-import { DonateHelperIcon } from '@domains/external-integration/donateHelper/ui/Icon';
-import DonateHelperLoginButton from '@domains/external-integration/donateHelper/ui/LoginButton';
-
+import * as Integration from '@models/integration';
 import { store } from '@store';
+import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow';
+import { DonateHelperIcon } from '@domains/bids/external-integrations/donate-helper/ui/Icon';
+import DonateHelperLoginButton from '@domains/bids/external-integrations/donate-helper/ui/LoginButton';
 
 const id = 'donateHelper';
 

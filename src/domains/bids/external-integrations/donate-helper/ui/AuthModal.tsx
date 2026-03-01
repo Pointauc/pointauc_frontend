@@ -5,7 +5,7 @@ import { Anchor, Button, Group, Image, Modal, PasswordInput, Stack, Stepper, Tex
 
 import withLoading from '@decorators/withLoading.ts';
 import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
-import { integrationUtils } from '@components/Integration/helpers.ts';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers';
 import { donateHelperControllerAuthorize } from '@api/openapi/sdk.gen.ts';
 import authGuide1 from '@assets/img/donate-helper-auth-guide-1.jpg';
 import authGuide2 from '@assets/img/donate-helper-auth-guide-2.jpg';

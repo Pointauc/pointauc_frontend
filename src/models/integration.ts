@@ -4,7 +4,7 @@ import EventEmitter from 'eventemitter3';
 
 import { Purchase } from '@reducers/Purchases/Purchases';
 
-export type ID = 'donatePay' | 'da' | 'twitch' | 'tourniquet' | 'ihaq' | 'donatex' | 'donatePayEu';
+export type ID = 'donatePay' | 'da' | 'twitch' | 'tourniquet' | 'ihaq' | 'donatex' | 'donatePayEu' | 'donateHelper';
 export type BidType = 'donate' | 'points';
 
 export interface LoginButtonClasses {

@@ -77,9 +77,13 @@ const App: React.FC = () => {
 
       // Subscribe to all integration bid events and redirect to global bus
       const unsubscribers = integrations.all.map((integration) => {
-        return integration.pubsubFlow.events.on('bid', (bid: Purchase) => {
+        const callback = (bid: Purchase) => {
           globalBidsEventBus.emit('bid', bid);
-        });
+        };
+        integration.pubsubFlow.events.on('bid', callback);
+        return () => {
+          integration.pubsubFlow.events.off('bid', callback);
+        };
       });
 
       return () => {
