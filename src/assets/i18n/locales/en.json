@@ -229,6 +229,8 @@
     "accountProgress": "Account loading...",
     "apply": "Apply",
     "authProgress": "Authorization...",
+    "authError": "Authorization failed",
+    "authErrorMessage": "Something went wrong. Please try again later or reach out via Telegram.",
     "cancel": "Cancel",
     "reset": "Reset",
     "revert": "Revert",

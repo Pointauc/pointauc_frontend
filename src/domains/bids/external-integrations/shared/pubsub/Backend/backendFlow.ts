@@ -60,6 +60,7 @@ export class BackendFlow implements Integration.PubsubFlow {
     this.socket?.emit('bidsSubscribe');
     await new Promise<void>((resolve, reject) => {
       this.socket?.once('bidsStateChange', ({ state, error }) => {
+        this.store.setState({ subscribed: state, loading: false });
         if (error) {
           reject(error);
         } else {
@@ -67,7 +68,6 @@ export class BackendFlow implements Integration.PubsubFlow {
         }
       });
     });
-    this.store.setState({ subscribed: true, loading: false });
   }
 
   async disconnect(): Promise<void> {
@@ -77,6 +77,7 @@ export class BackendFlow implements Integration.PubsubFlow {
     this.socket.emit('bidsUnsubscribe');
     await new Promise<void>((resolve, reject) => {
       this.socket?.once('bidsStateChange', ({ state, error }) => {
+        this.store.setState({ subscribed: state, loading: false });
         if (error) {
           reject(error);
         } else {
@@ -84,6 +85,5 @@ export class BackendFlow implements Integration.PubsubFlow {
         }
       });
     });
-    this.store.setState({ subscribed: false, loading: false });
   }
 }

@@ -356,6 +356,8 @@
     "insertImageLink": "Вставьте ссылку на изображение...",
     "incorrectLink": "Неверная ссылка",
     "authProgress": "Авторизация...",
+    "authError": "Ошибка авторизации",
+    "authErrorMessage": "Что-то пошло не так. Попробуйте позже или напишите в Telegram.",
     "accountProgress": "Загрузка аккаунта...",
     "reset": "Сбросить",
     "revert": "Вернуть",
