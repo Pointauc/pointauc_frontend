@@ -1,6 +1,9 @@
+import clsx from 'clsx';
+
 import { buildCentrifugeFlow } from '@domains/bids/external-integrations/shared/pubsub/Centrifuge/centrifugeFlow.ts';
 import DASvg from '@assets/icons/DAAlert.svg?react';
 import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow.ts';
+import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth/redirect/LoginButton';
 import { authenticateDA } from '@api/daApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
 import ENDPOINTS from '@constants/api.constants.ts';
@@ -9,7 +12,7 @@ import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { isBrowser } from '@utils/ssr.ts';
 import { store } from '@store';
 import * as Integration from '@models/integration';
-import './index.css';
+import styles from '@domains/bids/external-integrations/DA/index.module.css';
 
 const id = 'da';
 
@@ -27,7 +30,10 @@ const authenticate = async (code: string) => {
   await authenticateDA(code);
 };
 
-const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
+const authFlow: Integration.RedirectFlow = {
+  ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
+  loginComponent: ({ ...props }) => <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />,
+};
 
 const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase | null => {
   if (!amount_in_user_currency) return null;
@@ -64,7 +70,7 @@ const da: Integration.Config = {
   authFlow,
   pubsubFlow: pubsubFlow,
   branding: {
-    icon: ({ size = 32 }) => <DASvg width={size} height={size} />,
+    icon: ({ size = 32, classes }) => <DASvg width={size} height={size} className={clsx(classes, styles.icon)} />,
   },
 };
 

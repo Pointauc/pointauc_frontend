@@ -1,16 +1,20 @@
-.da-icon path {
+.icon path {
   fill: #f5aa6c;
 }
 
-[data-integration='da'] {
+.buttonIcon path {
+  fill: #f1f1f1;
+}
+
+.button {
   background-color: #f57d07 !important;
   color: #f1f1f1 !important;
 }
 
-[data-integration='da']:hover {
+.button:hover {
   background-color: #cb6a0a !important;
 }
 
-[data-integration='da']:disabled {
+.button:disabled {
   background-color: #746d67 !important;
 }

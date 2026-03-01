@@ -1,11 +1,13 @@
+import clsx from 'clsx';
+
 import TwitchSvg from '@assets/icons/twitch.svg?react';
 import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow.ts';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
 import { authenticateTwitch } from '@api/twitchApi.ts';
 import * as Integration from '@models/integration';
 import { isBrowser } from '@utils/ssr.ts';
-
-import './index.css';
+import styles from '@domains/bids/external-integrations/Twitch/index.module.css';
+import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth/redirect/LoginButton';
 
 const id = 'twitch';
 const authParams = {
@@ -22,7 +24,10 @@ const authenticate = async (code: string) => {
   await authenticateTwitch(code);
 };
 
-const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
+const authFlow: Integration.RedirectFlow = {
+  ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
+  loginComponent: ({ ...props }) => <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />,
+};
 
 const twitch: Integration.Config<Integration.RedirectFlow, BackendFlow> = {
   id,
@@ -30,7 +35,7 @@ const twitch: Integration.Config<Integration.RedirectFlow, BackendFlow> = {
   authFlow,
   pubsubFlow: new BackendFlow({ id }),
   branding: {
-    icon: ({ size = 32 }) => <TwitchSvg width={size} height={size} />,
+    icon: ({ size = 32, classes }) => <TwitchSvg width={size} height={size} className={clsx(classes, styles.icon)} />,
   },
 };
 

@@ -9,6 +9,7 @@ export type BidType = 'donate' | 'points';
 
 export interface LoginButtonClasses {
   button?: string;
+  icon?: string;
 }
 
 export interface LoginButtonProps<Flow extends AuthFlow = AuthFlow> {
@@ -30,6 +31,10 @@ interface IconProps {
    * Size of the icon in pixels. Possible values are 22px and 32px.
    */
   size?: IconSize;
+  /**
+   * CSS classes to be applied to the icon.
+   */
+  classes?: string;
 }
 
 export interface Branding {
@@ -127,6 +132,9 @@ export interface PubsubFlow {
  * You don't need to learn the codebase - just implement this interface and you're good to go.
  */
 export interface Config<TAuth extends AuthFlow = AuthFlow, TPubsub extends PubsubFlow = PubsubFlow> {
+  /**
+   * Unique identifier.
+   */
   id: ID;
   /**
    * `donate` - if the service works with real money
@@ -135,15 +143,15 @@ export interface Config<TAuth extends AuthFlow = AuthFlow, TPubsub extends Pubsu
    */
   type: BidType;
   /**
-   * Describes how the service authenticates the user.
+   * How the service authenticates the user.
    */
   authFlow: TAuth;
   /**
-   * Describes how this App receives real-time updates from the service.
+   * How this App receives real-time updates from the service.
    */
   pubsubFlow: TPubsub;
   /**
-   * Describes how the service is displayed across the app.
+   * How the service is displayed across the app.
    */
   branding: Branding;
 }

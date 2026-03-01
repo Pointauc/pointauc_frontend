@@ -29,7 +29,7 @@ const IntegrationLoginButton = ({ integration, onClick, classes }: IntegrationLo
         data-integration={id}
       >
         <Group w='100%' justify='center' gap='xs'>
-          <Icon size={22} />
+          <Icon size={22} classes={classes?.icon} />
           <Text size='lg' fw={600}>
             {t(`integration.${id}.name`)}
           </Text>
@@ -43,7 +43,7 @@ const IntegrationLoginButton = ({ integration, onClick, classes }: IntegrationLo
     <Button
       className={clsx('h-10 text-[#f1f1f1]', classes?.button)}
       variant='filled'
-      leftSection={<Icon size={22} />}
+      leftSection={<Icon size={22} classes={classes?.icon} />}
       onClick={onClick}
       data-integration={id}
     >

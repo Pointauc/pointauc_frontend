@@ -66,7 +66,13 @@ const DonateXLoginButton = ({ integration, classes }: Integration.LoginButtonPro
     }
   };
 
-  return <IntegrationLoginButton integration={integration} onClick={() => void handleAuth()} classes={classes} />;
+  return (
+    <IntegrationLoginButton
+      integration={integration}
+      onClick={() => void handleAuth()}
+      classes={{ ...classes, button: styles.loginButton }}
+    />
+  );
 };
 
 const authFlow: Integration.RedirectFlow = {

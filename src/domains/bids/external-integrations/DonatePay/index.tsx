@@ -8,7 +8,7 @@ import { donatePayRuControllerRevoke, donatePayEuControllerRevoke } from '@api/o
 import { store } from '@store';
 import * as Integration from '@models/integration';
 
-import DonatePayLoginButton from './DonatePayLoginButton.tsx';
+import DonatePayLoginButton from './ui/LoginButton/DonatePayLoginButton.tsx';
 import { DonatePayRegion, DONATE_PAY_REGIONS } from './types.ts';
 import './index2.css';
 
@@ -168,7 +168,7 @@ const donatePay: Integration.Config<TokenFlow> = {
   authFlow,
   pubsubFlow,
   branding: {
-    icon: ({ size = 32 }) => <DonatePaySvg width={size} height={size} />,
+    icon: ({ size = 32, classes }) => <DonatePaySvg width={size} height={size} className={classes} />,
   },
 };
 
