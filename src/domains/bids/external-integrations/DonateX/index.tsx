@@ -9,6 +9,7 @@ import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { store } from '@reducers/store.ts';
 import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton/index.tsx';
 import * as Integration from '@models/integration';
+import { store } from '@store';
 
 import styles from './index.module.css';
 import {

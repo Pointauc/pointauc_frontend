@@ -1,5 +1,6 @@
 import { Divider, Group, Text } from '@mantine/core';
 import HighlightIcon from '@mui/icons-material/Highlight';
+import StarIcon from '@mui/icons-material/Star';
 import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
@@ -38,6 +39,7 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
     >
+      { item.isFavorite && <StarIcon /> }
       <Text className={classes.name}>{name}</Text>
       <Text className={classes.amount}>{Number(amountToDisplay.toFixed(2))}</Text>
       <Divider orientation='vertical' />

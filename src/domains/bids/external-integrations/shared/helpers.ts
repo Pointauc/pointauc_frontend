@@ -1,5 +1,6 @@
 import * as Integration from '@models/integration';
 import { UserState } from '@reducers/User/User.ts';
+import { store } from '@store';
 
 type StorageKey = 'authToken' | 'pubsubToken2' | 'refreshToken';
 

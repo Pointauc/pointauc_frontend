@@ -5,7 +5,7 @@ import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth
 import { authenticateTourniquet } from '@api/tourniquetApi.ts';
 import { QUERIES } from '@constants/common.constants.ts';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
-import { store } from '@reducers/store.ts';
+import { store } from '@store';
 import * as Integration from '@models/integration';
 
 import './index.css';

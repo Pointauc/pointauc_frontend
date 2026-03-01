@@ -9,7 +9,7 @@ import './ihaqStyles.css';
 
 const id = 'ihaq';
 
-const redirectUri = `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}`;
+const redirectUri = typeof window !== 'undefined' ? `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}` : '';
 const authParams = {
   client_id: '97045f2d-e0c1-416a-9b8f-d9de09d67775',
   redirect_uri: redirectUri,

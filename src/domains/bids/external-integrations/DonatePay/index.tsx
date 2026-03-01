@@ -5,7 +5,7 @@ import { integrationUtils } from '@domains/bids/external-integrations/shared/hel
 import { mergeAuthData } from '@reducers/User/User.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { donatePayRuControllerRevoke, donatePayEuControllerRevoke } from '@api/openapi/sdk.gen.ts';
-import { store } from '@reducers/store.ts';
+import { store } from '@store';
 import * as Integration from '@models/integration';
 
 import DonatePayLoginButton from './DonatePayLoginButton.tsx';

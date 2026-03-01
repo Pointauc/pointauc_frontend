@@ -1,7 +1,7 @@
 import { mergeAuthData } from '@reducers/User/User.ts';
 import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth/redirect/LoginButton.tsx';
-import { store } from '@reducers/store.ts';
 import * as Integration from '@models/integration';
+import { store } from '@store';
 
 interface Params {
   id: Integration.ID;

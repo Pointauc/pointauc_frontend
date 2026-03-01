@@ -102,7 +102,6 @@ const PreviewSection: FC<PreviewSectionProps> = ({ overlay, onTransformUpdate })
   useLayoutEffect(() => {
     if (containerRef.current && canvasResolution) {
       const containerRect = containerRef.current.getBoundingClientRect();
-      // console.log('containerRect', containerRect);
       const containerWidth = containerRect.width;
       const containerHeight = containerRect.height;
 

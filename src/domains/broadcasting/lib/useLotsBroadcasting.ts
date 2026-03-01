@@ -8,7 +8,7 @@ import { Slot } from '@models/slot.model';
 import { RootState } from '@reducers/index';
 
 import { Broadcasting } from '../model/types';
-import { store } from '@reducers/store.ts';
+import { store } from '@store';
 
 export const useLotsBroadcasting = () => {
   const lots = useSelector((state: RootState) => state.slots.slots);

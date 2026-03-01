@@ -2,9 +2,9 @@ import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/code-highlight/styles.css';
 import '@styles/index.scss';
-
 import './index.css';
 import '@assets/i18n/index.ts';
+
 import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -25,27 +25,44 @@ import i18n from '@assets/i18n/index.ts';
 import RedirectPage from '@domains/bids/external-integrations/shared/auth/redirect/RedirectPage.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import { TutorialProvider } from '@domains/tutorials';
-import { store } from '@reducers/store.ts';
+import rootReducer from '@reducers/index.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
+import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
+import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import * as Integration from '@models/integration';
 
 import App from './App/entrypoint/App.tsx';
+import { initStore, store } from './store.ts';
+
+// All static imports are hoisted; by the time this line executes, rootReducer
+// is fully initialized, so initStore() can safely create the Redux store.
+initStore(rootReducer);
+
+export { store };
 
 const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
 
-// Set initial dayjs locale based on i18n language
 const initialLanguage = i18n.language === 'ua' ? 'uk' : i18n.language;
 dayjs.locale(initialLanguage);
 
-// Update dayjs locale when i18n language changes
 i18n.on('languageChanged', (language) => {
-  // Map i18n locale to dayjs locale (ua -> uk for Ukrainian)
   const dayjsLocale = language === 'ua' ? 'uk' : language;
   dayjs.locale(dayjsLocale);
 });
+
+window.onbeforeunload = (): undefined => {
+  const { slots } = store.getState().slots;
+
+  if (slots.length > 1) {
+    const lots = slotsToArchivedLots(slots);
+    archiveApi.upsertAutosave({ lots }).catch((err) => console.error('Final autosave failed:', err));
+  }
+
+  return undefined;
+};
 
 const redirectRoutes = integrationUtils.filterBy
   .authFlow<Integration.RedirectFlow>(INTEGRATIONS, 'redirect')

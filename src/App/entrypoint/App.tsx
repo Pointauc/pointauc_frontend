@@ -27,10 +27,11 @@ import { connectToBroadcastingSocket } from '../../domains/broadcasting/lib/sock
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
 import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
 import { getCookie } from '../../utils/common.utils';
+import { isBrowser } from '../../utils/ssr.ts';
 
 import type { ThunkDispatch } from 'redux-thunk';
 
-const hasToken = !!getCookie('userSession');
+const hasToken = isBrowser && !!getCookie('userSession');
 
 let openDriverTimeout: any;
 

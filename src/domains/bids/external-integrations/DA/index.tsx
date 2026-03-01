@@ -5,7 +5,9 @@ import { authenticateDA } from '@api/daApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
 import ENDPOINTS from '@constants/api.constants.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
-import { store } from '@reducers/store.ts';
+
+import { isBrowser } from '@utils/ssr.ts';
+import { store } from '@store';
 import * as Integration from '@models/integration';
 import './index.css';
 
@@ -13,7 +15,7 @@ const id = 'da';
 
 const authParams = {
   client_id: '6727',
-  redirect_uri: `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}`,
+  redirect_uri: isBrowser ? `${window.location.origin}/${id}${ROUTES.REDIRECT.DEFAULT}` : '',
   response_type: 'code',
   scope: 'oauth-donation-subscribe oauth-user-show',
   // force_verify: 'true',
@@ -27,7 +29,9 @@ const authenticate = async (code: string) => {
 
 const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
 
-const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase => {
+const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase | null => {
+  if (!amount_in_user_currency) return null;
+
   return {
     id: id.toString(),
     username,
@@ -50,7 +54,7 @@ const pubsubFlow = buildCentrifugeFlow({
   id,
   authFlow,
   getToken: async () => store.getState().user.authData.da?.socketConnectionToken,
-  subscribeEndpoint: location.origin + ENDPOINTS.DA.SUBSCRIBE,
+  subscribeEndpoint: isBrowser ? location.origin + ENDPOINTS.DA.SUBSCRIBE : '',
   getChannel: (id) => `$alerts:donation_${id}`,
 });
 

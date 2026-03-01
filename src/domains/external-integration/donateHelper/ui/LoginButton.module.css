@@ -1,0 +1,7 @@
+.loginButton {
+  background-color: #2b356e !important;
+
+  &:hover {
+    background-color: rgb(31, 44, 82) !important;
+  }
+}

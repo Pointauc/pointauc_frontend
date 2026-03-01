@@ -3,13 +3,14 @@ import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/share
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
 import { authenticateTwitch } from '@api/twitchApi.ts';
 import * as Integration from '@models/integration';
+import { isBrowser } from '@utils/ssr.ts';
 
 import './index.css';
 
 const id = 'twitch';
 const authParams = {
   client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
-  redirect_uri: `${window.location.origin}/twitch/redirect`,
+  redirect_uri: isBrowser ? `${window.location.origin}/twitch/redirect` : '',
   response_type: 'code',
   scope: 'channel:read:redemptions channel:manage:redemptions',
   force_verify: 'true',
