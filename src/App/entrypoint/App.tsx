@@ -1,5 +1,6 @@
-import { AppShell } from '@mantine/core';
+import { Alert, Anchor, AppShell, Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,9 +23,7 @@ import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
 import { connectToBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
-import { AlertType, AlertTypeEnum } from '../../models/alert.model';
 import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
-import { addAlert, deleteAlert } from '../../reducers/notifications/notifications';
 import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
 import { getCookie } from '../../utils/common.utils';
 import { isBrowser } from '../../utils/ssr.ts';
@@ -35,10 +34,15 @@ const hasToken = isBrowser && !!getCookie('userSession');
 
 let openDriverTimeout: any;
 
+const productionUrl = 'https://pointauc.com/';
+
 const App: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [isHovered, setIsDrawerOpen] = useState(false);
+  const [isTestEnvironmentModalOpened, setIsTestEnvironmentModalOpened] = useState(
+    () => isBrowser && window.location.hostname === 'test.pointauc.com',
+  );
   const { username } = useSelector((root: RootState) => root.user);
   const menuItems = useMenuItems();
   const activeMenu = useActiveMenu(menuItems);
@@ -149,6 +153,29 @@ const App: React.FC = () => {
       </AppShell>
       <TutorialManager />
       <AutoloadAutosave />
+      <Modal
+        opened={isTestEnvironmentModalOpened}
+        onClose={() => setIsTestEnvironmentModalOpened(false)}
+        withCloseButton={false}
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        title={t('testEnvironmentModal.title')}
+      >
+        <Alert icon={<IconAlertTriangle size={20} />} color='yellow' variant='light' mb='md'>
+          <Text size='sm'>{t('testEnvironmentModal.description')}</Text>
+          <Group gap='xxs' align='center' mt='xs'>
+            <Text size='sm' fw={600}>
+              {t('testEnvironmentModal.productionUrl')}
+            </Text>
+            <Anchor href={productionUrl} target='_blank' rel='noreferrer' size='sm' fw={600}>
+              {productionUrl}
+            </Anchor>
+          </Group>
+        </Alert>
+        <Button fullWidth onClick={() => setIsTestEnvironmentModalOpened(false)}>
+          {t('testEnvironmentModal.confirm')}
+        </Button>
+      </Modal>
     </PortalContextProvider>
   );
 };

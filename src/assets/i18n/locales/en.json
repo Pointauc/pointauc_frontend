@@ -1138,5 +1138,11 @@
       }
     },
     "newArchiveName": "Archive {{date}}"
+  },
+  "testEnvironmentModal": {
+    "title": "Testing Environment",
+    "description": "You are currently using the testing environment. This version may be unstable compared to the original website.",
+    "productionUrl": "Please use: ",
+    "confirm": "I understand"
   }
 }
