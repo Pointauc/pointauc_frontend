@@ -1,7 +1,7 @@
 import { ActionIcon, Badge, Group, Paper, Text, TextInput, Tooltip } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconCheck, IconDownload, IconPencil, IconReplace, IconTrash, IconX } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
@@ -23,13 +23,16 @@ interface ArchiveItemProps {
   onLoad: () => void;
   isLoading?: boolean;
   sortBy: 'name' | 'createdAt' | 'updatedAt';
+  shouldHighlight?: boolean;
 }
 
-function ArchiveItem({ archive, onLoad, isLoading = false, sortBy }: ArchiveItemProps) {
+function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlight = false }: ArchiveItemProps) {
   const { t } = useTranslation();
   const [name, setName] = useState(archive.name);
   const [isEditingName, setIsEditingName] = useState(false);
+  const [isHighlightActive, setIsHighlightActive] = useState(false);
   const [debouncedName] = useDebouncedValue(name, 500);
+  const itemRef = useRef<HTMLDivElement | null>(null);
 
   const slots = useSelector((state: RootState) => state.slots.slots);
   const updateMutation = useUpdateArchive();
@@ -51,6 +54,23 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy }: ArchiveItem
   useEffect(() => {
     setName(archive.name);
   }, [archive.name]);
+
+  useEffect(() => {
+    if (!shouldHighlight) {
+      return;
+    }
+
+    itemRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setIsHighlightActive(true);
+
+    const timer = window.setTimeout(() => {
+      setIsHighlightActive(false);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [shouldHighlight]);
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -100,7 +120,13 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy }: ArchiveItem
     : t('archive.item.created', { time: dayjs(archive.createdAt).fromNow() });
 
   return (
-    <Paper className={`${styles.item} ${isLoading ? styles.loading : ''}`} p='md' withBorder onClick={onLoad}>
+    <Paper
+      ref={itemRef}
+      className={`${styles.item} ${isLoading ? styles.loading : ''} ${isHighlightActive ? styles.highlighted : ''}`}
+      p='md'
+      withBorder
+      onClick={onLoad}
+    >
       <div className={styles.content}>
         <div className={styles.header}>
           <Group gap='xs' style={{ flex: 1, minWidth: 0 }}>

@@ -404,6 +404,7 @@
     "sendBugReport": "Сообщить об ошибке",
     "lotSearch": "Поиск среди лотов...",
     "newLotName": "Название нового лота",
+    "pasteImportConfirm": "Импортировать {{count}} лотов с общей стоимостью {{totalCost}}?",
     "lotName": "Название",
     "integrations": "Интеграции",
     "addToRandomSlot": "Добавить к случайному слоту",
@@ -564,7 +565,7 @@
   "wheel": {
     "hideInactive": "Скрыть выбывшие лоты",
     "totalItems": "Участников в колесе - {{amount}}",
-    "typeParticipants": "Или введите участников  (CSV)",
+    "typeParticipants": "Или вставьте текст сюда",
     "import": {
       "title": "Импорт участников",
       "rulesTitle": "Правила импорта",
@@ -1028,8 +1029,10 @@
     "modal": {
       "title": "Архив",
       "saveButton": "Сохранить текущий аукцион",
+      "importButton": "Импорт",
       "emptyState": "Пока нет архивов",
       "searchPlaceholder": "Поиск архивов...",
+      "sortBy": "Сортировка",
       "tabs": {
         "archives": "Мои архивы",
         "importExport": "Импорт/Экспорт"

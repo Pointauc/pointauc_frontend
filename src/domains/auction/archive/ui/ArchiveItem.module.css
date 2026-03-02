@@ -20,6 +20,12 @@
   pointer-events: none;
 }
 
+.item.highlighted {
+  animation: highlightPulse 3s ease-out;
+  border-color: color-mix(in srgb, var(--mantine-color-yellow-6) 70%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--mantine-color-yellow-5) 45%, transparent);
+}
+
 .content {
   flex: 1;
   min-width: 0;
@@ -49,4 +55,13 @@
 .nameInput {
   flex: 1;
   min-width: 0;
+}
+
+@keyframes highlightPulse {
+  0% {
+    background-color: color-mix(in srgb, var(--mantine-color-yellow-3) 55%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
 }

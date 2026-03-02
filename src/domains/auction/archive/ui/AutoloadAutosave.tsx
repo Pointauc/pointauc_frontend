@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from '@reducers/index';
-import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
 import { LocalStorage } from '@constants/common.constants';
 import { SaveInfo } from '@models/save.model';
 import { Slot } from '@models/slot.model';
+import { RootState } from '@reducers/index';
+import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
 
 import archiveApi from '../api/IndexedDBAdapter';
 import { archivedLotsToSlots, slotsToArchivedLots } from '../lib/converters';

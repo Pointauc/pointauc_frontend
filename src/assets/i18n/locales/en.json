@@ -188,6 +188,7 @@
     "lotName": "Name",
     "lotSearch": "Search among lots...",
     "newLotName": "New Lot Name",
+    "pasteImportConfirm": "Import {{count}} lots with a total cost of {{totalCost}}?",
     "optimizationEnabled": "Lot animations are disabled to improve performance (lots > 100)",
     "saveLoad": "Save/Load",
     "saves": "Your Saves",
@@ -637,7 +638,7 @@
   "wheel": {
     "hideInactive": "Hide dropped lots",
     "totalItems": "Participants in the wheel - {{amount}}",
-    "typeParticipants": "Or enter participants manually",
+    "typeParticipants": "Or paste text here",
     "import": {
       "title": "Import participants",
       "rulesTitle": "Import rules",
@@ -1045,8 +1046,10 @@
     "modal": {
       "title": "Archive Management",
       "saveButton": "Save Current Auction",
+      "importButton": "Import",
       "emptyState": "No archives yet",
       "searchPlaceholder": "Search archives...",
+      "sortBy": "Sort by",
       "tabs": {
         "archives": "My Archives",
         "importExport": "Import/Export"

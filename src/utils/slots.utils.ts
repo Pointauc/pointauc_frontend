@@ -1,4 +1,5 @@
-import { parseCSV } from '@domains/auction/archive/lib/csvParser';
+import { parseCSV } from '@domains/auction/archive/lib/parsers/csvParser';
+import { parseJSON } from '@domains/auction/archive/lib/parsers/jsonParser';
 
 import { Game, ID, Side, SideInfo } from '../components/Bracket/components/model';
 import { ArchivedLot, Slot } from '../models/slot.model';
@@ -30,19 +31,9 @@ export const parseLotsImportFile = async (file: File): Promise<ArchivedLot[]> =>
   const fileName = file.name.toLowerCase();
 
   if (fileName.endsWith('.json')) {
-    const parsed = JSON.parse(text) as ArchivedLot[] | { lots: ArchivedLot[] };
-
-    if (!parsed) {
-      throw new Error('Invalid archive file format. Expected { lots: [...] } in JSON');
-    }
-
-    if (Array.isArray(parsed)) {
-      return parsed;
-    } else if (parsed.lots && Array.isArray(parsed.lots)) {
-      return parsed.lots;
-    } else {
-      throw new Error('Invalid archive file format. Expected { lots: [...] } in JSON');
-    }
+    const lots = parseJSON(text);
+    if (!lots) throw new Error('Invalid archive file format. Expected { lots: [...] } in JSON');
+    return lots;
   } else {
     return parseCSV(text);
   }

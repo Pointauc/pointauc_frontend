@@ -1,7 +1,6 @@
-import { Alert, Loader, Stack, Text } from '@mantine/core';
-import { IconArchive, IconInfoCircle } from '@tabler/icons-react';
+import { Loader, Stack, Text } from '@mantine/core';
+import { IconArchive } from '@tabler/icons-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ArchiveRecord } from '../model/types';
@@ -15,9 +14,17 @@ interface ArchiveListProps {
   loadingArchiveId?: string;
   isLoading?: boolean;
   sortBy: 'name' | 'createdAt' | 'updatedAt';
+  highlightedArchiveId?: string | null;
 }
 
-function ArchiveList({ archives, onLoadArchive, loadingArchiveId, isLoading, sortBy }: ArchiveListProps) {
+function ArchiveList({
+  archives,
+  onLoadArchive,
+  loadingArchiveId,
+  isLoading,
+  sortBy,
+  highlightedArchiveId,
+}: ArchiveListProps) {
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -56,6 +63,7 @@ function ArchiveList({ archives, onLoadArchive, loadingArchiveId, isLoading, sor
               onLoad={() => onLoadArchive(archive.id)}
               isLoading={loadingArchiveId === archive.id}
               sortBy={sortBy}
+              shouldHighlight={highlightedArchiveId === archive.id}
             />
           </motion.div>
         ))}
