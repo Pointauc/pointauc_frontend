@@ -5,7 +5,6 @@ import ROUTES from '@constants/routes.constants.ts';
 import { buildCentrifugeFlow } from '@components/Integration/PubsubFlow/Centrifuge/centrifugeFlow.ts';
 import ENDPOINTS from '@constants/api.constants.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
-
 import { isBrowser } from '@utils/ssr.ts';
 import { store } from '@store';
 import './index.css';
@@ -29,7 +28,10 @@ const authenticate = async (code: string) => {
 const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
 
 const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase | null => {
-  if (!amount_in_user_currency) return null;
+  const amount = Number(amount_in_user_currency);
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return null;
+  }
 
   return {
     id: id.toString(),
