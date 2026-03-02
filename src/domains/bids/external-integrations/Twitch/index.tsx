@@ -11,7 +11,7 @@ import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth
 
 const id = 'twitch';
 const authParams = {
-  client_id: '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
+  client_id: import.meta.env.VITE_TWITCH_CLIENT_ID ?? 'TWITCH CLIENT ID NOT FOUND',
   redirect_uri: isBrowser ? `${window.location.origin}/twitch/redirect` : '',
   response_type: 'code',
   scope: 'channel:read:redemptions channel:manage:redemptions',
@@ -26,7 +26,9 @@ const authenticate = async (code: string) => {
 
 const authFlow: Integration.RedirectFlow = {
   ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
-  loginComponent: ({ ...props }) => <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />,
+  loginComponent: ({ ...props }) => (
+    <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />
+  ),
 };
 
 const twitch: Integration.Config<Integration.RedirectFlow, BackendFlow> = {
