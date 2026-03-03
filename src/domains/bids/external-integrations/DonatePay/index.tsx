@@ -34,7 +34,7 @@ interface DonatePayBidMessage {
 }
 
 const parseMessage = ({ data: { notification } }: DonatePayBidMessage): Purchase | null => {
-  if (!bidUtils.isValidCost(notification.vars.sum)) {
+  if (notification.type !== 'donation' || !bidUtils.isValidCost(notification.vars.sum)) {
     return null;
   }
 

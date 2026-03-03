@@ -31,12 +31,14 @@ const authenticate = async (code: string) => {
   await authenticateDA(code);
 };
 
+const redirectFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
+
 const authFlow: Integration.RedirectFlow = {
-  ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
+  ...redirectFlow,
   loginComponent: ({ ...props }) => (
     <RedirectLoginButton
       {...props}
-      buildUrl={() => authUrl}
+      buildUrl={redirectFlow.url}
       classes={{ button: styles.button, icon: styles.buttonIcon }}
     />
   ),
