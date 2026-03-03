@@ -81,7 +81,7 @@ const UserSettings = () => {
       <Group align='center' gap='xxs'>
         <div style={{ marginRight: 8 }}>{t('settings.groups.integrations')}</div>
         {integrations.all.map((integration) => (
-          <integration.branding.icon key={integration.id} className={styles.integrationIcon} />
+          <integration.branding.icon key={integration.id} size={22} />
         ))}
       </Group>
     );

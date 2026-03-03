@@ -56,7 +56,7 @@ const revoke = () => {
   store.dispatch(mergeAuthData({ donatex: undefined }));
 };
 
-const DonateXLoginButton = ({ integration, classes }: Integration.LoginButtonProps<Integration.RedirectFlow>) => {
+const DonateXLoginButton = ({ id, branding, classes }: Integration.LoginButtonProps) => {
   const handleAuth = async (): Promise<void> => {
     try {
       const url = await buildAuthorizeUrl();
@@ -68,7 +68,8 @@ const DonateXLoginButton = ({ integration, classes }: Integration.LoginButtonPro
 
   return (
     <IntegrationLoginButton
-      integration={integration}
+      id={id}
+      branding={branding}
       onClick={() => void handleAuth()}
       classes={{ ...classes, button: styles.loginButton }}
     />

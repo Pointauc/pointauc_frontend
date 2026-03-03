@@ -12,8 +12,9 @@ export interface LoginButtonClasses {
   icon?: string;
 }
 
-export interface LoginButtonProps<Flow extends AuthFlow = AuthFlow> {
-  integration: Config<Flow>;
+export interface LoginButtonProps {
+  id: ID;
+  branding: Branding;
   classes?: LoginButtonClasses;
 }
 
@@ -52,7 +53,7 @@ export interface Branding {
   description?: string;
 }
 
-export interface AuthFlowCommon<ButtonProps> {
+export interface AuthFlowCommon {
   /**
    * Checks if the user is authenticated and the authentication is valid.
    *
@@ -64,21 +65,21 @@ export interface AuthFlowCommon<ButtonProps> {
   /**
    * The component that will be displayed for unauthenticated users. Clicking on this button should start authentication flow.
    */
-  loginComponent: FunctionComponent<ButtonProps>;
+  loginComponent: FunctionComponent<LoginButtonProps>;
   /**
    * Called when the user wants to revoke the authentication. This should clear the service data from the app.
    */
   revoke: () => Promise<void> | void;
 }
 
-export interface RedirectFlow extends AuthFlowCommon<LoginButtonProps<RedirectFlow>> {
+export interface RedirectFlow extends AuthFlowCommon {
   type: 'redirect';
   authenticate: (code: string) => Promise<unknown>;
   url: () => string;
   redirectCodeQueryKey?: string;
 }
 
-export interface TokenFlow extends AuthFlowCommon<LoginButtonProps<TokenFlow>> {
+export interface TokenFlow extends AuthFlowCommon {
   type: 'token';
   authenticate: (accessToken: string) => Promise<unknown>;
   getAccessToken: () => string;

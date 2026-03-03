@@ -66,7 +66,11 @@ const IntegrationModal: FC<IntegrationModalProps> = ({ opened, onClose }) => {
           <PubsubSwitch key={integration.id} switchProps={{ classNames: labelClassNames }} integration={integration} />
         ))}
         {unavailable.map((integration) => (
-          <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+          <integration.authFlow.loginComponent
+            key={integration.id}
+            id={integration.id}
+            branding={integration.branding}
+          />
         ))}
         {!isProduction() && (
           <>

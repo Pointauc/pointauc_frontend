@@ -5,18 +5,15 @@ import { useTranslation } from 'react-i18next';
 import * as Integration from '@models/integration';
 
 interface IntegrationLoginButtonProps {
-  integration: Integration.Config;
+  branding: Integration.Branding;
+  id: Integration.ID;
   onClick: () => void;
   classes?: Integration.LoginButtonClasses;
 }
 
-const IntegrationLoginButton = ({ integration, onClick, classes }: IntegrationLoginButtonProps) => {
-  const {
-    branding: { icon: Icon, partner, description },
-    id,
-  } = integration;
+const IntegrationLoginButton = ({ branding, id, onClick, classes }: IntegrationLoginButtonProps) => {
   const { t } = useTranslation();
-
+  const { icon: Icon, partner, description } = branding;
   const isPartner = partner && description;
 
   if (isPartner) {

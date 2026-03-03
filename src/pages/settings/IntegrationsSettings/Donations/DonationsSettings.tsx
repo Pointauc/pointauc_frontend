@@ -43,7 +43,11 @@ const DonationsSettings = () => {
         {partnerIntegrations.length > 0 && (
           <Group gap='sm'>
             {partnerIntegrations.map((integration) => (
-              <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+              <integration.authFlow.loginComponent
+                key={integration.id}
+                id={integration.id}
+                branding={integration.branding}
+              />
             ))}
           </Group>
         )}
@@ -51,7 +55,11 @@ const DonationsSettings = () => {
         {regularIntegrations.length > 0 && (
           <Group gap='md'>
             {regularIntegrations.map((integration) => (
-              <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+              <integration.authFlow.loginComponent
+                key={integration.id}
+                id={integration.id}
+                branding={integration.branding}
+              />
             ))}
           </Group>
         )}

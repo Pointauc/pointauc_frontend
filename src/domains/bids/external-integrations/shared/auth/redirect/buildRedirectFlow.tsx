@@ -28,7 +28,9 @@ export const buildRedirectAuthFlow = ({
     authenticate,
     url: () => authUrl.toString(),
     validate: () => true,
-    loginComponent: RedirectLoginButton,
+    loginComponent: ({ id, branding, classes }: Integration.LoginButtonProps) => (
+      <RedirectLoginButton id={id} branding={branding} buildUrl={() => authUrl.toString()} classes={classes} />
+    ),
     revoke: () => {
       store.dispatch(mergeAuthData({ [id]: undefined }));
     },

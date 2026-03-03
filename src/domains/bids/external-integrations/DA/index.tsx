@@ -2,7 +2,6 @@ import clsx from 'clsx';
 
 import { buildCentrifugeFlow } from '@domains/bids/external-integrations/shared/pubsub/Centrifuge/centrifugeFlow.ts';
 import DASvg from '@assets/icons/DAAlert.svg?react';
-import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow.ts';
 import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth/redirect/LoginButton';
 import { authenticateDA } from '@api/daApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
@@ -13,6 +12,8 @@ import { store } from '@store';
 import * as Integration from '@models/integration';
 import styles from '@domains/bids/external-integrations/DA/index.module.css';
 import bidUtils from '@utils/bid.utils.ts';
+
+import { buildRedirectAuthFlow } from '../shared/auth/redirect/buildRedirectFlow';
 
 const id = 'da';
 
@@ -33,7 +34,11 @@ const authenticate = async (code: string) => {
 const authFlow: Integration.RedirectFlow = {
   ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
   loginComponent: ({ ...props }) => (
-    <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />
+    <RedirectLoginButton
+      {...props}
+      buildUrl={() => authUrl}
+      classes={{ button: styles.button, icon: styles.buttonIcon }}
+    />
   ),
 };
 

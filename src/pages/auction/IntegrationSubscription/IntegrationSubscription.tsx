@@ -70,11 +70,19 @@ const IntegrationSubscription: FC = () => {
               />
             ))}
             {partnerIntegrations.map((integration) => (
-              <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+              <integration.authFlow.loginComponent
+                key={integration.id}
+                id={integration.id}
+                branding={integration.branding}
+              />
             ))}
             {hasPartnerAndRegular && <Divider />}
             {regularIntegrations.map((integration) => (
-              <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+              <integration.authFlow.loginComponent
+                key={integration.id}
+                id={integration.id}
+                branding={integration.branding}
+              />
             ))}
             {!isProduction() && <MockBidButton />}
           </Stack>

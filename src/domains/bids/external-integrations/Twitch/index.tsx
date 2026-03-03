@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 
 import TwitchSvg from '@assets/icons/twitch.svg?react';
-import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow.ts';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
 import { openTwitchRewardErrorModal } from '@domains/bids/external-integrations/Twitch/rewardErrorModal.tsx';
 import { authenticateTwitch } from '@api/twitchApi.ts';
@@ -9,6 +8,7 @@ import * as Integration from '@models/integration';
 import { isBrowser } from '@utils/ssr.ts';
 import styles from '@domains/bids/external-integrations/Twitch/index.module.css';
 import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth/redirect/LoginButton';
+import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow';
 
 const id = 'twitch';
 const authParams = {
@@ -28,7 +28,11 @@ const authenticate = async (code: string) => {
 const authFlow: Integration.RedirectFlow = {
   ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
   loginComponent: ({ ...props }) => (
-    <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />
+    <RedirectLoginButton
+      {...props}
+      buildUrl={() => authUrl}
+      classes={{ button: styles.button, icon: styles.buttonIcon }}
+    />
   ),
 };
 

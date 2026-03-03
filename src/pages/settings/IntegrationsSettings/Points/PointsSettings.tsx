@@ -38,7 +38,7 @@ const PointsSettings = () => {
   return (
     <SettingsGroup title={t('settings.points.points')}>
       {unavailable.map((integration) => (
-        <integration.authFlow.loginComponent key={integration.id} integration={integration} />
+        <integration.authFlow.loginComponent key={integration.id} id={integration.id} branding={integration.branding} />
       ))}
       {available.length > 0 && (
         <Stack gap='sm'>

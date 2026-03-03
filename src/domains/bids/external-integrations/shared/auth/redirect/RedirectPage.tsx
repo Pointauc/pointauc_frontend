@@ -12,7 +12,11 @@ import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import * as Integration from '@models/integration';
 
-const RedirectPage = ({ integration }: Integration.LoginButtonProps<Integration.RedirectFlow>) => {
+interface RedirectPageProps {
+  integration: Integration.Config<Integration.RedirectFlow>;
+}
+
+const RedirectPage = ({ integration }: RedirectPageProps) => {
   const { t } = useTranslation();
   const { authFlow } = integration;
   const dispatch = useDispatch();
