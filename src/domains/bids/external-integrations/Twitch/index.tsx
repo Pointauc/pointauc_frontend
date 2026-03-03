@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import TwitchSvg from '@assets/icons/twitch.svg?react';
 import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow.ts';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
+import { openTwitchRewardErrorModal } from '@domains/bids/external-integrations/Twitch/rewardErrorModal.tsx';
 import { authenticateTwitch } from '@api/twitchApi.ts';
 import * as Integration from '@models/integration';
 import { isBrowser } from '@utils/ssr.ts';
@@ -35,7 +36,7 @@ const twitch: Integration.Config<Integration.RedirectFlow, BackendFlow> = {
   id,
   type: 'points',
   authFlow,
-  pubsubFlow: new BackendFlow({ id }),
+  pubsubFlow: new BackendFlow({ id, connectErrorHandler: openTwitchRewardErrorModal }),
   branding: {
     icon: ({ size = 32, classes }) => <TwitchSvg width={size} height={size} className={clsx(classes, styles.icon)} />,
   },

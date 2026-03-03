@@ -38,6 +38,7 @@
     "@mantine/core": "^8.3.9",
     "@mantine/dropzone": "^8.3.9",
     "@mantine/hooks": "^8.3.9",
+    "@mantine/modals": "^8.3.15",
     "@mantine/notifications": "^8.3.9",
     "@mantine/tiptap": "^8.3.9",
     "@microsoft/signalr": "^8.0.7",

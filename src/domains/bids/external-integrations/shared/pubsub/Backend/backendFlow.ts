@@ -7,6 +7,7 @@ import * as Integration from '@models/integration';
 
 interface Config {
   id: Integration.ID;
+  connectErrorHandler?: (error: Error) => void;
 }
 
 export class BackendFlow implements Integration.PubsubFlow {
@@ -18,9 +19,18 @@ export class BackendFlow implements Integration.PubsubFlow {
   socket: Socket | null = null;
   id: Integration.ID;
   wasSubscribedBeforeDisconnect: boolean = false;
+  connectErrorHandler?: (error: Error) => void;
 
   constructor(params: Config) {
     this.id = params.id;
+    this.connectErrorHandler = params.connectErrorHandler;
+  }
+
+  restorePreviousState(): void {
+    if (this.wasSubscribedBeforeDisconnect) {
+      this.connect();
+      this.wasSubscribedBeforeDisconnect = false;
+    }
   }
 
   async createSocketConnection(): Promise<void> {
@@ -28,21 +38,20 @@ export class BackendFlow implements Integration.PubsubFlow {
       this.socket = io(`${getSocketIOUrl()}/${this.id}`, { query: { cookie: document.cookie } });
 
       this.socket.on('connect', () => {
+        this.store.setState((state) => ({ ...state, loading: false }));
+        this.restorePreviousState();
         resolve();
       });
 
       this.socket.on('disconnect', () => {
         this.socket = null;
         this.wasSubscribedBeforeDisconnect = this.store.state.subscribed;
-        this.store.setState((state) => ({ ...state, subscribed: false, loading: false }));
+        this.store.setState((state) => ({ ...state, loading: true }));
         reject();
       });
 
       this.socket.on('reconnect', () => {
-        if (this.wasSubscribedBeforeDisconnect) {
-          this.connect();
-          this.wasSubscribedBeforeDisconnect = false;
-        }
+        this.restorePreviousState();
       });
 
       this.socket.on('Bid', (bid: Bid.Item) => {
@@ -62,6 +71,7 @@ export class BackendFlow implements Integration.PubsubFlow {
       this.socket?.once('bidsStateChange', ({ state, error }) => {
         this.store.setState({ subscribed: state, loading: false });
         if (error) {
+          this.connectErrorHandler?.(error);
           reject(error);
         } else {
           resolve();
