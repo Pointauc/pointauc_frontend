@@ -23,12 +23,12 @@ const ManualImport = ({ extraControls, onSubmit }: ManualImportProps) => {
         onChange={(e) => setManualInput(e.target.value)}
       />
       <Group justify='space-between' align='center'>
-        {extraControls}
         <Tooltip label={t('wheel.import.submitDisabled')} disabled={!!manualInput}>
           <Button onClick={handleSubmitClick} disabled={!manualInput}>
             {t('common.apply')}
           </Button>
         </Tooltip>
+        {extraControls}
       </Group>
     </Stack>
   );

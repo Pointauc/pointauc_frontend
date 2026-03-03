@@ -9,7 +9,7 @@ import { Trans } from 'react-i18next';
 
 import { parseLotsImportFile } from '@utils/slots.utils';
 
-import { parseCSV } from '../lib/csvParser';
+import { parseRawInput } from '../lib/parsers';
 import { ArchiveData } from '../model/types';
 
 import styles from './ImportForm.module.css';
@@ -34,7 +34,7 @@ const ImportForm = ({ onImport, extraControls, layout = 'vertical' }: ImportForm
   };
 
   const handleManualImportSubmit = (manualInput: string) => {
-    onImport({ lots: parseCSV(manualInput) });
+    onImport({ lots: parseRawInput(manualInput) });
   };
 
   return (
@@ -127,7 +127,9 @@ const ImportForm = ({ onImport, extraControls, layout = 'vertical' }: ImportForm
               </div>
             </Group>
           </Dropzone>
-          {layout === 'horizontal' && <ManualImport onSubmit={handleManualImportSubmit} />}
+          {layout === 'horizontal' && (
+            <ManualImport onSubmit={handleManualImportSubmit} extraControls={extraControls} />
+          )}
           {layout === 'vertical' && (
             <>
               <Button size='sm' variant='transparent' onClick={() => setShowManualImport(!showManualImport)}>

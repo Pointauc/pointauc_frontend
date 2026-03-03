@@ -1,4 +1,4 @@
-import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { ClipboardEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import { useTranslation } from 'react-i18next';
@@ -6,10 +6,12 @@ import { Button, Text } from '@mantine/core';
 import clsx from 'clsx';
 
 import { RootState } from '@reducers';
-import { addSlot } from '@reducers/Slots/Slots.ts';
+import { addSlot, setSlots } from '@reducers/Slots/Slots.ts';
 import { Slot } from '@models/slot.model.ts';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 import { OutlineInput } from '@shared/mantine/ui/Input';
+import { parseRawInput } from '@domains/auction/archive/lib/parsers';
+import { archivedLotsToSlots } from '@domains/auction/archive/lib/converters';
 
 import classes from './NewSlotForm.module.css';
 
@@ -76,6 +78,26 @@ const NewSlotForm = () => {
     [createNewSlot],
   );
 
+  const handleNamePaste = useCallback(
+    (e: ClipboardEvent<HTMLInputElement>) => {
+      const text = e.clipboardData.getData('text');
+      if (!text.includes('\n')) return;
+
+      const lots = parseRawInput(text);
+      if (lots.length < 2) return;
+
+      const totalCost = lots.reduce((sum, lot) => sum + (lot.amount ?? 0), 0);
+      const confirmed = window.confirm(t('auc.pasteImportConfirm', { count: lots.length, totalCost }));
+
+      if (confirmed) {
+        e.preventDefault();
+        dispatch(setSlots(archivedLotsToSlots(lots)));
+        resetForm();
+      }
+    },
+    [dispatch, resetForm, t],
+  );
+
   return (
     <div className={classes.root}>
       <OutlineInput
@@ -83,6 +105,7 @@ const NewSlotForm = () => {
         placeholder={t('auc.newLotName')}
         ref={nameInput}
         onKeyDown={createSlotOnEnter}
+        onPaste={handleNamePaste}
         onFocus={showEnterIcon}
         onBlur={hideEnterIcon}
         classNames={{ input: classes.slotInput }}
