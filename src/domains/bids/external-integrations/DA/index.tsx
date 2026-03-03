@@ -45,7 +45,7 @@ const parseMessage = ({ id, username, message, created_at, amount_in_user_curren
     username,
     message,
     timestamp: created_at,
-    cost: Math.round(amount_in_user_currency),
+    cost: Number(amount_in_user_currency),
     color: '#000000',
     isDonation: true,
     source: 'da',

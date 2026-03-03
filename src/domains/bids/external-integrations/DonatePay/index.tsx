@@ -40,7 +40,7 @@ const parseMessage = ({ data: { notification } }: DonatePayBidMessage): Purchase
 
   return {
     timestamp: notification.created_at,
-    cost: notification.vars.sum,
+    cost: Number(notification.vars.sum),
     username: notification.vars.name,
     message: notification.vars.comment,
     id: String(notification.id),
