@@ -12,7 +12,7 @@ import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/share
 
 const id = 'twitch';
 const authParams = {
-  client_id: import.meta.env.VITE_TWITCH_CLIENT_ID ?? 'TWITCH CLIENT ID NOT FOUND',
+  client_id: import.meta.env.VITE_TWITCH_CLIENT_ID ?? '83xjs5k4yvqo0yn2cxu1v5lan2eeam',
   redirect_uri: isBrowser ? `${window.location.origin}/twitch/redirect` : '',
   response_type: 'code',
   scope: 'channel:read:redemptions channel:manage:redemptions',
