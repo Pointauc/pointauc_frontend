@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Accordion, Divider, Group, Stack, Title } from '@mantine/core';
 
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import INTEGRATIONS from '@components/Integration/integrations.ts';
-import PubsubSwitch from '@components/Integration/PubsubFlow/components/PubsubSwitch.tsx';
-import PubsubSwitchGroup from '@components/Integration/PubsubFlow/components/PubsubSwitchGroup.tsx';
+import PubsubSwitch from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitch.tsx';
+import PubsubSwitchGroup from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitchGroup.tsx';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
+import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
 import SwitchAllIntegrations from '@components/SwitchAllIntegrations/SwitchAllIntegrations.tsx';
 import { RootState } from '@reducers';
 import { isProduction } from '@utils/common.utils';

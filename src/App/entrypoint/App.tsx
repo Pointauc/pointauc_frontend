@@ -5,26 +5,28 @@ import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
 
 import classes from '@App/entrypoint/App.module.css';
 import { AppHeader } from '@App/entrypoint/AppHeader';
 import { AppMain } from '@App/entrypoint/AppMain';
 import { AppNavbar } from '@App/entrypoint/AppNavbar';
 import { PortalContextProvider } from '@App/storage/portalContext';
-import donatePay from '@components/Integration/DonatePay';
 import { COLORS } from '@constants/color.constants';
 import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
+import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
 import { TutorialManager } from '@domains/tutorials';
 import { RootState } from '@reducers';
-import { setDonatePaySubscribeState } from '@reducers/Subscription/Subscription.ts';
+import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { useIsMobile } from '@shared/lib/ui';
+import { getSocketIOUrl } from '@utils/url.utils.ts';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
 import { connectToBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
 import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
-import { connectToSocketIo } from '../../reducers/socketIo/socketIo';
 import { getCookie } from '../../utils/common.utils';
 import { isBrowser } from '../../utils/ssr.ts';
 
@@ -67,12 +69,46 @@ const App: React.FC = () => {
 
   useLotsBroadcasting();
 
+  // Redirect all bids to the global event bus
   useEffect(() => {
     if (username) {
-      dispatch(connectToSocketIo);
       dispatch(connectToBroadcastingSocket);
+
+      // Connect to global socket
+      const globalSocket = io(`${getSocketIOUrl()}`, { query: { cookie: document.cookie } });
+
+      globalSocket.on('Bid', (bid: Purchase) => {
+        globalBidsEventBus.emit('bid', { ...bid, source: 'API' });
+      });
+
+      // Subscribe to all integration bid events and redirect to global bus
+      const unsubscribers = integrations.all.map((integration) => {
+        const callback = (bid: Purchase) => {
+          globalBidsEventBus.emit('bid', bid);
+        };
+        integration.pubsubFlow.events.on('bid', callback);
+        return () => {
+          integration.pubsubFlow.events.off('bid', callback);
+        };
+      });
+
+      return () => {
+        globalSocket.disconnect();
+        unsubscribers.forEach((unsubscribe) => unsubscribe());
+      };
     }
   }, [dispatch, username]);
+
+  // Handle new bids
+  useEffect(() => {
+    const handleBid = (bid: Purchase) => {
+      dispatch(processRedemption(bid));
+    };
+    globalBidsEventBus.on('bid', handleBid);
+    return () => {
+      globalBidsEventBus.off('bid', handleBid);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     let interval: any;
@@ -106,20 +142,6 @@ const App: React.FC = () => {
     }
     // do not add t function to the deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
-
-  useEffect(() => {
-    const unsub = donatePay.pubsubFlow.events.on('subscribed', () =>
-      dispatch(setDonatePaySubscribeState({ actual: true })),
-    );
-    const unsub2 = donatePay.pubsubFlow.events.on('unsubscribed', () =>
-      dispatch(setDonatePaySubscribeState({ actual: false })),
-    );
-
-    return () => {
-      unsub();
-      unsub2();
-    };
   }, [dispatch]);
 
   const isNavbarExpanded = useMemo(() => {

@@ -1,0 +1,7 @@
+.icon path {
+  fill: #befec4;
+}
+
+.button:hover .icon path {
+  fill: #9be9a3;
+}

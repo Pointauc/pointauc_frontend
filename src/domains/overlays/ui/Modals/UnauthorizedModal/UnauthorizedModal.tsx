@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Divider, Modal, Stack, Text, Title } from '@mantine/core';
 
-import { integrationUtils } from '@components/Integration/helpers';
-import INTEGRATIONS from '@components/Integration/integrations';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
+import INTEGRATIONS from '@domains/bids/external-integrations/integrations';
 import { RootState } from '@reducers';
 
 import classes from './UnauthorizedModal.module.css';

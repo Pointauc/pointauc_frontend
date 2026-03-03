@@ -9,7 +9,7 @@ import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
-import { getDonateXAuthData } from '@components/Integration/DonateX/auth.ts';
+import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
 import { isBrowser } from '@utils/ssr.ts';
 
 import { setUserState } from '../User/User';

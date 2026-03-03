@@ -3,7 +3,6 @@ import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
 import { throttle } from '@tanstack/react-pacer';
 
-import type { RootState } from '@reducers/index.ts';
 import { setSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
 import { sortSlots } from '@utils/common.utils.ts';
@@ -11,6 +10,8 @@ import { isBrowser } from '@utils/ssr.ts';
 import { Slot } from '@models/slot.model.ts';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
+
+import type { RootState } from '@reducers/index.ts';
 
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotData',

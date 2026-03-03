@@ -1,0 +1,41 @@
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import SwitchAllIntegrations from '@components/SwitchAllIntegrations/SwitchAllIntegrations.tsx';
+import PubsubSwitch from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitch.tsx';
+import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
+import * as Integration from '@models/integration';
+
+interface Props {
+  integrations: Integration.Config[];
+  classNames?: any;
+}
+
+const PubsubSwitchGroup = ({ integrations, classNames }: Props) => {
+  const { t } = useTranslation();
+  const [discrepancy, setDiscrepancy] = React.useState(false);
+  const subscriptions = useMergedSubscriptionsState(integrations);
+
+  useEffect(() => {
+    const targetValue = subscriptions[integrations[0].id]?.subscribed;
+    const loaded = integrations.every(({ id }) => subscriptions[id]?.loading === false);
+    if (!loaded) return;
+
+    setDiscrepancy(integrations.some(({ id }) => subscriptions[id]?.subscribed !== targetValue));
+  }, [integrations, subscriptions]);
+
+  return (
+    <>
+      <SwitchAllIntegrations integrations={integrations} classNames={classNames} />
+      {discrepancy && (
+        <div className='available-integrations'>
+          {integrations.map((integration) => (
+            <PubsubSwitch hideTitle key={integration.id} integration={integration} switchProps={{ classNames }} />
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
+
+export default PubsubSwitchGroup;

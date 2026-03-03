@@ -117,7 +117,30 @@
       "name": "Donation Alerts"
     },
     "twitch": {
-      "name": "Twitch"
+      "name": "Twitch",
+      "connectionError": {
+        "title": "Twitch Connection Error",
+        "maxRewards": {
+          "description": "The channel has reached the maximum number of custom rewards allowed by Twitch.",
+          "fix": "Remove some existing rewards from your <1>Twitch rewards dashboard</1> before reconnecting."
+        },
+        "invalidTitle": {
+          "description": "One of the reward titles is empty or exceeds 45 characters.",
+          "fix": "Make sure all reward titles are between 1 and 45 characters long."
+        },
+        "duplicateTitle": {
+          "description": "A reward with this title already exists on your channel.",
+          "fix": "Rename or delete the duplicate reward in your <1>Twitch rewards dashboard</1>."
+        },
+        "invalidCost": {
+          "description": "One of the rewards has an invalid cost — it must be at least 1 point.",
+          "fix": "Update the reward cost to be at least 1 channel point."
+        },
+        "unknown": {
+          "description": "An unexpected error occurred while creating Twitch rewards.",
+          "fix": "Check the browser console for the exact error code and report it if the issue persists."
+        }
+      }
     },
     "tourniquet": {
       "name": "Tourniquet"
@@ -230,6 +253,8 @@
     "accountProgress": "Account loading...",
     "apply": "Apply",
     "authProgress": "Authorization...",
+    "authError": "Authorization failed",
+    "authErrorMessage": "Something went wrong. Please try again later or reach out via Telegram.",
     "cancel": "Cancel",
     "reset": "Reset",
     "revert": "Revert",

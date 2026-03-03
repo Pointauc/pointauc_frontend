@@ -1,18 +1,15 @@
+import { notifications } from '@mantine/notifications';
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
-import { notifications } from '@mantine/notifications';
 
-import { AlertTypeEnum } from '@models/alert.model.ts';
+import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { Slot } from '@models/slot.model.ts';
-import bidUtils from '@utils/bid.utils.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
-import { InsertStrategy } from '@enums/insertStrategy.enum';
-import { BidNameStrategy } from '@enums/bid.enum';
+import bidUtils from '@utils/bid.utils.ts';
 
 import { RootState } from '../index';
 import { addBid, createSlotFromPurchase } from '../Slots/Slots';
-import { addAlert } from '../notifications/notifications';
 
 export interface Purchase {
   timestamp: string;

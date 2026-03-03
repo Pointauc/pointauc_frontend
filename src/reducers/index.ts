@@ -7,9 +7,7 @@ import user from './User/User';
 import purchases from './Purchases/Purchases';
 import notifications from './notifications/notifications';
 import aucSettings from './AucSettings/AucSettings';
-import subscription from './Subscription/Subscription';
 import extraWindows from './ExtraWindows/ExtraWindows';
-import socketIo from './socketIo/socketIo';
 import overlay from './Overlay/Overlay';
 
 const rootReducer = combineReducers({
@@ -18,9 +16,7 @@ const rootReducer = combineReducers({
   purchases,
   notifications,
   aucSettings,
-  subscription,
   extraWindows,
-  socketIo,
   overlay,
   broadcasting,
 });

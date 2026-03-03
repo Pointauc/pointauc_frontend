@@ -32,8 +32,3 @@
   /* overflow: clip; */
   padding-bottom: var(--mantine-spacing-md);
 }
-
-.integrationIcon {
-  width: 20px;
-  height: 20px;
-}

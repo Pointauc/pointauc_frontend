@@ -19,16 +19,17 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
+import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
 import i18n from '@assets/i18n/index.ts';
-import RedirectPage from '@components/Integration/AuthFlow/Redirect/Page/RedirectPage.tsx';
-import { integrationUtils } from '@components/Integration/helpers.ts';
-import INTEGRATIONS from '@components/Integration/integrations.ts';
+import RedirectPage from '@domains/bids/external-integrations/shared/auth/redirect/RedirectPage.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import { TutorialProvider } from '@domains/tutorials';
 import rootReducer from '@reducers/index.ts';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
+import * as Integration from '@models/integration';
 
 import App from './App/entrypoint/App.tsx';
 import { initStore, store } from './store.ts';

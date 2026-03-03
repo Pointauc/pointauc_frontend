@@ -1,0 +1,12 @@
+.icon {
+  width: 30px;
+  height: 30px;
+}
+
+.loginButton {
+  background-color: #0d0114 !important;
+}
+
+.loginButton:hover {
+  background-color: #000000 !important;
+}

@@ -1,37 +1,23 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Group, Text } from '@mantine/core';
-import { ThunkDispatch } from 'redux-thunk';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import { RootState } from '@reducers';
-import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { PURCHASE_SORT_OPTIONS } from '@constants/purchase.constants.ts';
-import donatePay from '@components/Integration/DonatePay';
-import da from '@components/Integration/DA';
-import ihaq from '@domains/external-integration/ihaq/lib/integrationScheme';
-import donatex from '@components/Integration/DonateX/index.tsx';
+import { RootState } from '@reducers';
+import { Purchase } from '@reducers/Purchases/Purchases.ts';
 
-import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 import DragBidContext from '../DragBidContext/DragBidContext';
+import DraggableRedemption from '../DraggableRedemption/DraggableRedemption';
 
 import classes from './PurchaseList.module.css';
 
 const PurchaseList: React.FC = () => {
   const { t } = useTranslation();
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { purchases } = useSelector((root: RootState) => root.purchases);
-  const { globalSocket, twitchSocket, tourniquetSocket } = useSelector((root: RootState) => root.socketIo);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
-
-  const handleRedemption = useCallback(
-    (redemption: Purchase): void => {
-      dispatch(processRedemption(redemption));
-    },
-    [dispatch],
-  );
 
   const compareValues = (a: string | number, b: string | number): number => {
     if (a === b) {
@@ -46,36 +32,6 @@ const PurchaseList: React.FC = () => {
 
     return [...purchases].sort((a: Purchase, b: Purchase) => compareValues(a[key], b[key]) * orderModifier);
   }, [purchaseSort, purchases]);
-
-  useEffect(() => {
-    const handleGlobalBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'API' });
-    globalSocket?.on('Bid', handleGlobalBid);
-    const handleTwitchBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'twitch' });
-    twitchSocket?.on('Bid', handleTwitchBid);
-
-    const handleTourniquetBid = (bid: Purchase) => handleRedemption({ ...bid, source: 'tourniquet' });
-    tourniquetSocket?.on('Bid', handleTourniquetBid);
-
-    const donatePayUnsub = donatePay.pubsubFlow.events.on('bid', (bid: Bid.Item) =>
-      handleRedemption({ ...bid, source: 'donatePay' }),
-    );
-
-    const daUnsub = da.pubsubFlow.events?.on('bid', handleRedemption);
-    const donatexUnsub = donatex.pubsubFlow.events?.on('bid', (bid: Purchase) =>
-      handleRedemption({ ...bid, source: 'donatex' }),
-    );
-    const ihaqUnsub = ihaq.pubsubFlow.events?.on('bid', handleRedemption);
-
-    return () => {
-      donatePayUnsub();
-      daUnsub();
-      donatexUnsub?.();
-      ihaqUnsub();
-      tourniquetSocket?.off('Bid', handleTourniquetBid);
-      twitchSocket?.off('Bid', handleTwitchBid);
-      globalSocket?.off('Bid', handleGlobalBid);
-    };
-  }, [handleRedemption, twitchSocket, globalSocket, tourniquetSocket]);
 
   return (
     <div className={classes.container}>
