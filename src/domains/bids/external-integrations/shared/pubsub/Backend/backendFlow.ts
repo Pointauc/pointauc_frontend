@@ -35,7 +35,10 @@ export class BackendFlow implements Integration.PubsubFlow {
 
   async createSocketConnection(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.socket = io(`${getSocketIOUrl()}/${this.id}`, { query: { cookie: document.cookie } });
+      this.socket = io(`${getSocketIOUrl()}/${this.id}`, {
+        query: { cookie: document.cookie },
+        transports: ['websocket'],
+      });
 
       this.socket.on('connect', () => {
         this.store.setState((state) => ({ ...state, loading: false }));

@@ -9,10 +9,10 @@ import { setSocket, updateDataState } from '../model/store';
 import { Broadcasting } from '../model/types';
 
 export const connectToBroadcastingSocket: ThunkAction<void, RootState, {}, Action> = (dispatch, getState) => {
-  const socket = io(`${getSocketIOUrl()}/broadcasting`, { query: { cookie: document.cookie } }) as Socket<
-    Broadcasting.ListenEvents,
-    Broadcasting.EmitEvents
-  >;
+  const socket = io(`${getSocketIOUrl()}/broadcasting`, {
+    query: { cookie: document.cookie },
+    transports: ['websocket'],
+  }) as Socket<Broadcasting.ListenEvents, Broadcasting.EmitEvents>;
   socket.on('updatesRequested', (data) => {
     dispatch(updateDataState({ dataType: data.dataType, value: true }));
   });

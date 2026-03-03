@@ -75,7 +75,7 @@ const App: React.FC = () => {
       dispatch(connectToBroadcastingSocket);
 
       // Connect to global socket
-      const globalSocket = io(`${getSocketIOUrl()}`, { query: { cookie: document.cookie } });
+      const globalSocket = io(`${getSocketIOUrl()}`, { query: { cookie: document.cookie }, transports: ['websocket'] });
 
       globalSocket.on('Bid', (bid: Purchase) => {
         globalBidsEventBus.emit('bid', { ...bid, source: 'API' });

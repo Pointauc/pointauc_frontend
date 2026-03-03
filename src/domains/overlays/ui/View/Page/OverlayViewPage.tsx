@@ -51,7 +51,7 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     }
 
     setSocketLoading(true);
-    const socket = io(`${getSocketIOUrl()}/broadcasting`, { auth: { token } });
+    const socket = io(`${getSocketIOUrl()}/broadcasting`, { auth: { token }, transports: ['websocket'] });
 
     console.log('Overlay socket connecting...');
 
