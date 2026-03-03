@@ -1,6 +1,6 @@
 import axios from 'axios';
+import EventEmitter from 'eventemitter3';
 
-import EventEmitter from '@utils/EventEmitter.ts';
 import * as Integration from '@models/integration';
 
 interface SubscribeResponse {
@@ -87,7 +87,7 @@ export default class CentrifugeWebsocketV2 implements CentrifugeFlow.Adapter {
           this.ready = true;
           const client = await this.sendConnectToken(token);
           await this.subscribeToChannel(client);
-          this.events.emit('subscribed');
+          // this.events.emit('subscribed');
           resolve();
         },
         { once: true },
@@ -95,7 +95,7 @@ export default class CentrifugeWebsocketV2 implements CentrifugeFlow.Adapter {
 
       this.centrifuge.addEventListener('close', () => {
         this.ready = false;
-        this.events.emit('unsubscribed');
+        // this.events.emit('unsubscribed');
         reject();
       });
     });
@@ -105,7 +105,7 @@ export default class CentrifugeWebsocketV2 implements CentrifugeFlow.Adapter {
     if (!this.ready) {
       await this.createNewConnection(token);
     } else {
-      this.events.emit('subscribed');
+      // this.events.emit('subscribed');
     }
 
     this.listening = true;
@@ -114,6 +114,6 @@ export default class CentrifugeWebsocketV2 implements CentrifugeFlow.Adapter {
   async disconnect(): Promise<void> {
     this.listening = false;
     this.centrifuge?.close();
-    this.events.emit('unsubscribed');
+    // this.events.emit('unsubscribed');
   }
 }

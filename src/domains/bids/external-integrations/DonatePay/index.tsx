@@ -7,6 +7,7 @@ import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { donatePayRuControllerRevoke, donatePayEuControllerRevoke } from '@api/openapi/sdk.gen.ts';
 import { store } from '@store';
 import * as Integration from '@models/integration';
+import bidUtils from '@utils/bid.utils.ts';
 
 import DonatePayLoginButton from './ui/LoginButton/DonatePayLoginButton.tsx';
 import { DonatePayRegion, DONATE_PAY_REGIONS } from './types.ts';
@@ -32,16 +33,22 @@ interface DonatePayBidMessage {
   };
 }
 
-const parseMessage = ({ data: { notification } }: DonatePayBidMessage): Purchase => ({
-  timestamp: notification.created_at,
-  cost: notification.vars.sum,
-  username: notification.vars.name,
-  message: notification.vars.comment,
-  id: String(notification.id),
-  isDonation: true,
-  color: '#000000',
-  source: 'donatePay',
-});
+const parseMessage = ({ data: { notification } }: DonatePayBidMessage): Purchase | null => {
+  if (!bidUtils.isValidCost(notification.vars.sum)) {
+    return null;
+  }
+
+  return {
+    timestamp: notification.created_at,
+    cost: notification.vars.sum,
+    username: notification.vars.name,
+    message: notification.vars.comment,
+    id: String(notification.id),
+    isDonation: true,
+    color: '#000000',
+    source: 'donatePay',
+  };
+};
 
 /**
  * Determines the active DonatePay region based on authData.

@@ -1,6 +1,6 @@
 import Centrifuge from 'centrifuge2';
+import EventEmitter from 'eventemitter3';
 
-import EventEmitter from '@utils/EventEmitter.ts';
 import * as Integration from '@models/integration';
 
 export default class CentrifugeV2 implements CentrifugeFlow.Adapter {
@@ -24,12 +24,12 @@ export default class CentrifugeV2 implements CentrifugeFlow.Adapter {
 
     this.centrifuge.on('connect', () => {
       this.ready = true;
-      this.events.emit('subscribed');
+      // this.events.emit('subscribed');
     });
 
     this.centrifuge.on('disconnect', () => {
       this.ready = false;
-      this.events.emit('unsubscribed');
+      // this.events.emit('unsubscribed');
     });
   }
 
@@ -59,8 +59,6 @@ export default class CentrifugeV2 implements CentrifugeFlow.Adapter {
   async connect(token: string): Promise<void> {
     if (!this.ready) {
       await this.createNewConnection(token);
-    } else {
-      this.events.emit('subscribed');
     }
 
     this.listening = true;
@@ -68,6 +66,5 @@ export default class CentrifugeV2 implements CentrifugeFlow.Adapter {
 
   async disconnect(): Promise<void> {
     this.listening = false;
-    this.events.emit('unsubscribed');
   }
 }

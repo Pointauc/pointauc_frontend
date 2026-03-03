@@ -8,11 +8,11 @@ import { authenticateDA } from '@api/daApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
 import ENDPOINTS from '@constants/api.constants.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
-
 import { isBrowser } from '@utils/ssr.ts';
 import { store } from '@store';
 import * as Integration from '@models/integration';
 import styles from '@domains/bids/external-integrations/DA/index.module.css';
+import bidUtils from '@utils/bid.utils.ts';
 
 const id = 'da';
 
@@ -32,11 +32,13 @@ const authenticate = async (code: string) => {
 
 const authFlow: Integration.RedirectFlow = {
   ...buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id }),
-  loginComponent: ({ ...props }) => <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />,
+  loginComponent: ({ ...props }) => (
+    <RedirectLoginButton {...props} classes={{ button: styles.button, icon: styles.buttonIcon }} />
+  ),
 };
 
 const parseMessage = ({ id, username, message, created_at, amount_in_user_currency }: any): Purchase | null => {
-  if (!amount_in_user_currency) return null;
+  if (!bidUtils.isValidCost(amount_in_user_currency)) return null;
 
   return {
     id: id.toString(),
