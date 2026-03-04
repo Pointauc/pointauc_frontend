@@ -69,7 +69,6 @@ const App: React.FC = () => {
 
   useLotsBroadcasting();
 
-  // Redirect all bids to the global event bus
   useEffect(() => {
     if (username) {
       dispatch(connectToBroadcastingSocket);
@@ -81,23 +80,29 @@ const App: React.FC = () => {
         globalBidsEventBus.emit('bid', { ...bid, source: 'API' });
       });
 
-      // Subscribe to all integration bid events and redirect to global bus
-      const unsubscribers = integrations.all.map((integration) => {
-        const callback = (bid: Purchase) => {
-          globalBidsEventBus.emit('bid', bid);
-        };
-        integration.pubsubFlow.events.on('bid', callback);
-        return () => {
-          integration.pubsubFlow.events.off('bid', callback);
-        };
-      });
-
       return () => {
         globalSocket.disconnect();
-        unsubscribers.forEach((unsubscribe) => unsubscribe());
       };
     }
   }, [dispatch, username]);
+
+  // Redirect all bids to the global event bus
+  useEffect(() => {
+    // Subscribe to all integration bid events and redirect to global bus
+    const unsubscribers = integrations.all.map((integration) => {
+      const callback = (bid: Purchase) => {
+        globalBidsEventBus.emit('bid', bid);
+      };
+      integration.pubsubFlow.events.on('bid', callback);
+      return () => {
+        integration.pubsubFlow.events.off('bid', callback);
+      };
+    });
+
+    return () => {
+      unsubscribers.forEach((unsubscribe) => unsubscribe());
+    };
+  }, []);
 
   // Handle new bids
   useEffect(() => {

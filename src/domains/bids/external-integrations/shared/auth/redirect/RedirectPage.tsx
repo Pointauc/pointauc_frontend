@@ -28,7 +28,9 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
     queryKey: ['auth-redirect', code],
     queryFn: async () => {
       await authFlow.authenticate(code!);
-      await loadUserData(dispatch);
+      if (integration.id !== 'donatex') {
+        await loadUserData(dispatch);
+      }
       return true;
     },
     enabled: !!code,
