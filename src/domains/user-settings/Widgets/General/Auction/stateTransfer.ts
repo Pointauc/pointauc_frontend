@@ -5,6 +5,9 @@ import { wheelSettingsStore } from '@domains/winner-selection/wheel-of-random/li
 import { setAucSettings } from '@reducers/AucSettings/AucSettings';
 import { setHistory, setPurchases } from '@reducers/Purchases/Purchases';
 import { setSlots } from '@reducers/Slots/Slots';
+import { queryClient } from '@shared/lib/react-query/client.ts';
+import { WHEEL_SETTINGS_QUERY_KEY } from '@domains/winner-selection/wheel-of-random/lib/hooks/useWheelSettings';
+import { QUERY_KEYS } from '@domains/auction/archive/model/constants';
 
 import type { ArchiveRecord } from '@domains/auction/archive/model/types';
 import type { Purchase } from '@reducers/Purchases/Purchases';
@@ -86,10 +89,11 @@ export const applyStateTransfer = async (payload: StateTransferPayload): Promise
     mergedArchiveById.set(record.id, record);
   });
   await archiveApi.replaceAll(Array.from(mergedArchiveById.values()));
+  queryClient.invalidateQueries({ queryKey: QUERY_KEYS.archives });
+  queryClient.invalidateQueries({ queryKey: QUERY_KEYS.autosave });
 
   if (payload.wheelSettings) {
     await wheelSettingsStore.save({ data: payload.wheelSettings });
-  } else {
-    await wheelSettingsStore.delete();
+    queryClient.invalidateQueries({ queryKey: WHEEL_SETTINGS_QUERY_KEY });
   }
 };

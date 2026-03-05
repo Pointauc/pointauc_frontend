@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Group, Paper, Stack, Table, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import { ReactNode, useCallback, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,6 +20,15 @@ import RewardPresetsConfirmation from './RewardPresetsConfirmation';
 import classes from './RewardPresetsForm.module.css';
 
 type PresetsForm = Pick<SettingsForm, 'rewardPresets' | 'rewardsPrefix'>;
+const MAX_REWARD_TITLE_LENGTH = 45;
+
+const checkIsRewardsPrefixValid = (rewardsPrefix: string, rewardPresets: PresetsForm['rewardPresets']): boolean => {
+  if (!rewardPresets?.length) {
+    return true;
+  }
+
+  return rewardPresets.every(({ cost }) => `${rewardsPrefix} ${cost}`.length <= MAX_REWARD_TITLE_LENGTH);
+};
 
 const RewardPresetsForm: React.FunctionComponent = () => {
   const { t } = useTranslation();
@@ -34,8 +43,12 @@ const RewardPresetsForm: React.FunctionComponent = () => {
     control,
     handleSubmit,
     reset,
-    formState: { isDirty },
+    clearErrors,
+    setError,
+    formState: { isDirty, errors },
   } = useForm<PresetsForm>({ defaultValues: { rewardPresets, rewardsPrefix } });
+  const currentRewardsPrefix = useWatch({ control, name: 'rewardsPrefix' });
+  const currentRewardPresets = useWatch({ control, name: 'rewardPresets' });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -79,6 +92,15 @@ const RewardPresetsForm: React.FunctionComponent = () => {
 
   const savePresets = useCallback(
     (data: PresetsForm) => {
+      if (!checkIsRewardsPrefixValid(data.rewardsPrefix ?? '', data.rewardPresets)) {
+        setError('rewardsPrefix', {
+          type: 'validate',
+          message: t('settings.twitch.rewardsPrefixLengthError', { maxLength: MAX_REWARD_TITLE_LENGTH }),
+        });
+        return;
+      }
+
+      clearErrors('rewardsPrefix');
       dispatch(setAucSettings(data));
       reset(data);
 
@@ -93,12 +115,24 @@ const RewardPresetsForm: React.FunctionComponent = () => {
         });
       }
     },
-    [reset, activeSettingsPresetId, dispatch],
+    [reset, activeSettingsPresetId, dispatch, clearErrors, setError, t],
   );
 
   const confirmationModal = (onClose: () => void, onConfirm: () => void): ReactNode => (
     <RewardPresetsConfirmation open onClose={onClose} onConfirm={onConfirm} />
   );
+  
+  useEffect(() => {
+    if (!checkIsRewardsPrefixValid(currentRewardsPrefix ?? '', currentRewardPresets)) {
+      setError('rewardsPrefix', {
+        type: 'validate',
+        message: t('settings.twitch.rewardsPrefixLengthError', { maxLength: MAX_REWARD_TITLE_LENGTH }),
+      });
+      return;
+    }
+
+    clearErrors('rewardsPrefix');
+  }, [clearErrors, currentRewardPresets, currentRewardsPrefix, setError, t]);
 
   return (
     <>
@@ -112,6 +146,7 @@ const RewardPresetsForm: React.FunctionComponent = () => {
         <FormInput
           name='rewardsPrefix'
           control={control}
+          error={errors.rewardsPrefix?.message}
           size='sm'
           label={
             <SettingLabel

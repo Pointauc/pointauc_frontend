@@ -80,13 +80,12 @@ const WheelPage: FC = () => {
   const handleSettingsChanged = useCallback(
     (settings: Wheel.Settings) => {
       setWheelSettings(settings);
-      console.log('settings changed', settings);
       saveSettings({ id: initialSettings?.id, data: settings });
     },
     [saveSettings, initialSettings?.id],
   );
 
-  const handleSettingsChangedDebounced = useDebouncedCallback(handleSettingsChanged, { wait: 2000 });
+  const handleSettingsChangedDebounced = useDebouncedCallback(handleSettingsChanged, { wait: 2000, leading: true });
 
   return (
     <PageContainer

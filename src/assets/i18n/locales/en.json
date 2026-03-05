@@ -126,7 +126,8 @@
         },
         "invalidTitle": {
           "description": "One of the reward titles is empty or exceeds 45 characters.",
-          "fix": "Make sure all reward titles are between 1 and 45 characters long."
+          "fix": "Make sure all reward titles are between 1 and 45 characters long.",
+          "openRewardSettings": "Open reward settings"
         },
         "duplicateTitle": {
           "description": "A reward with this title already exists on your channel.",
@@ -531,6 +532,7 @@
       "color": "Color",
       "commonRewardsName": "Common Name for Rewards",
       "commonRewardsNameDesc": "When integration is enabled, rewards in the format \"Name + Cost\" are automatically created on the channel.",
+      "rewardsPrefixLengthError": "Reward title (prefix + cost) must be at most {{maxLength}} characters.",
       "cost": "Cost",
       "deleteRewards": "Delete Rewards",
       "openRewards": "Enable Rewards",

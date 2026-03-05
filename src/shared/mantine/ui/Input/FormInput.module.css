@@ -1,9 +1,5 @@
-.input.sm {
+.root.sm {
   width: 80px;
-}
-
-.label {
-  padding-right: var(--mantine-spacing-md);
 }
 
 .root.labelLeft {

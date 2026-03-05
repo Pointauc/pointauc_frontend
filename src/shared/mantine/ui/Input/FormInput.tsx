@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps } from '@mantine/core';
+import { Group, TextInput, TextInputProps, Text } from '@mantine/core';
 import { Control, Controller } from 'react-hook-form';
 import clsx from 'clsx';
 
@@ -11,23 +11,27 @@ interface FormInputProps extends TextInputProps {
   lablePlacement?: 'left' | 'top';
 }
 
-const FormInput = ({ name, control, inputWidth, lablePlacement = 'left', ...props }: FormInputProps) => {
+const FormInput = ({ name, control, inputWidth, lablePlacement = 'left', label, ...props }: FormInputProps) => {
   return (
     <Controller
       control={control}
       name={name}
       render={({ field }) => (
-        <TextInput
-          {...field}
-          classNames={{
-            root: clsx(classes.root, {
-              [classes.labelLeft]: lablePlacement === 'left',
-            }),
-            label: clsx(classes.label),
-            input: clsx(classes.input, inputWidth && classes[inputWidth]),
-          }}
-          {...props}
-        />
+        <Group wrap='nowrap'>
+          {label && lablePlacement === 'left' && (
+            <Text component='label' htmlFor={name} className={classes.label}>
+              {label}
+            </Text>
+          )}
+          <TextInput
+            id={name}
+            {...field}
+            classNames={{
+              root: clsx(classes.root, inputWidth && classes[inputWidth]),
+            }}
+            {...props}
+          />
+        </Group>
       )}
     />
   );

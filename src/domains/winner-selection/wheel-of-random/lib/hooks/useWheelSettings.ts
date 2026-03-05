@@ -4,7 +4,7 @@ import { WheelSettingsParsedRecord } from '@shared/lib/database/userSettingsDb';
 
 import { WheelSettingsSavedRecord, wheelSettingsStore } from '../indexedDbSettingsStore';
 
-const WHEEL_SETTINGS_QUERY_KEY = ['wheelSettings'];
+export const WHEEL_SETTINGS_QUERY_KEY = ['wheelSettings'];
 const LOCALSTORAGE_KEY = 'wheelSettings';
 
 /**
@@ -14,6 +14,7 @@ async function migrateFromLocalStorage(): Promise<Wheel.Settings | null> {
   const localStorageData = localStorage.getItem(LOCALSTORAGE_KEY);
 
   if (!localStorageData) {
+    console.log('No wheel settings found in localStorage');
     return null;
   }
 
@@ -47,7 +48,8 @@ export function useWheelSettings() {
       await migrateFromLocalStorage();
 
       // Then fetch from IndexedDB (which now includes migrated data if any)
-      return wheelSettingsStore.get();
+      const settings = await wheelSettingsStore.get();
+      return settings;
     },
     staleTime: Infinity, // Settings don't change unless we update them
   });

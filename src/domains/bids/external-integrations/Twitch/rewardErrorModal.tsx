@@ -1,12 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Anchor, Button, Stack, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { notifications } from '@mantine/notifications';
-import { Trans, useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import i18next from 'i18next';
 
-import { RootState } from '@reducers';
+import DuplicateTitleErrorModalContent from '@domains/bids/external-integrations/Twitch/rewardErrorModals/DuplicateTitleErrorModalContent';
+import InvalidCostErrorModalContent from '@domains/bids/external-integrations/Twitch/rewardErrorModals/InvalidCostErrorModalContent';
+import InvalidTitleErrorModalContent from '@domains/bids/external-integrations/Twitch/rewardErrorModals/InvalidTitleErrorModalContent';
+import MaxRewardsErrorModalContent from '@domains/bids/external-integrations/Twitch/rewardErrorModals/MaxRewardsErrorModalContent';
+import UnknownErrorModalContent from '@domains/bids/external-integrations/Twitch/rewardErrorModals/UnknownErrorModalContent';
 import { store } from '@store';
 
 /**
@@ -17,7 +17,7 @@ import { store } from '@store';
  */
 const TWITCH_ERROR_CODE_MAP: Record<string, string> = {
   CREATE_CUSTOM_REWARD_MAX_REWARDS: 'maxRewards', // unconfirmed
-  CREATE_CUSTOM_REWARD_INVALID_TITLE: 'invalidTitle', // unconfirmed
+  ['The parameter "title" was malformed: the value must be less than or equal to 45']: 'invalidTitle', // unconfirmed
   CREATE_CUSTOM_REWARD_DUPLICATE_REWARD: 'duplicateTitle', // confirmed
   CREATE_CUSTOM_REWARD_INVALID_COST: 'invalidCost', // unconfirmed
 };
@@ -82,53 +82,19 @@ const buildErrorDetails = (error: unknown): string => {
   ].join('\n');
 };
 
-interface ErrorContentProps {
-  errorKey: string;
-  errorDetails: string;
-}
-
-const ERRORS_WITH_DASHBOARD_LINK = new Set(['maxRewards', 'duplicateTitle']);
-
-const TwitchRewardErrorContent = ({ errorKey, errorDetails }: ErrorContentProps) => {
-  const { t } = useTranslation();
-  const twitchUsername = useSelector((state: RootState) => state.user.authData.twitch?.username);
-  const checkIsUnknownError = errorKey === 'unknown';
-
-  const dashboardUrl = twitchUsername
-    ? `https://dashboard.twitch.tv/u/${twitchUsername}/viewer-rewards/channel-points/rewards`
-    : 'https://dashboard.twitch.tv/viewer-rewards/channel-points/rewards';
-
-  const handleCopyError = async (): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(errorDetails);
-      notifications.show({ message: t('common.copied'), color: 'green' });
-    } catch {
-      notifications.show({ message: t('common.copyFailed'), color: 'red' });
-    }
-  };
-
-  return (
-    <Stack gap='sm'>
-      <Text>{t(`integration.twitch.connectionError.${errorKey}.description`)}</Text>
-      <Text c='dimmed' size='sm'>
-        {ERRORS_WITH_DASHBOARD_LINK.has(errorKey) ? (
-          <Trans
-            i18nKey={`integration.twitch.connectionError.${errorKey}.fix`}
-            components={{
-              1: <Anchor href={dashboardUrl} target='_blank' rel='noopener noreferrer' />,
-            }}
-          />
-        ) : (
-          t(`integration.twitch.connectionError.${errorKey}.fix`)
-        )}
-      </Text>
-      {checkIsUnknownError && (
-        <Button variant='light' onClick={handleCopyError}>
-          {t('integration.twitch.connectionError.unknown.copyErrorMessage')}
-        </Button>
-      )}
-    </Stack>
-  );
+const getErrorModalContent = (errorKey: string, errorDetails: string) => {
+  switch (errorKey) {
+    case 'maxRewards':
+      return <MaxRewardsErrorModalContent />;
+    case 'invalidTitle':
+      return <InvalidTitleErrorModalContent />;
+    case 'duplicateTitle':
+      return <DuplicateTitleErrorModalContent />;
+    case 'invalidCost':
+      return <InvalidCostErrorModalContent />;
+    default:
+      return <UnknownErrorModalContent errorDetails={errorDetails} />;
+  }
 };
 
 export const openTwitchRewardErrorModal = (error: unknown): void => {
@@ -138,6 +104,6 @@ export const openTwitchRewardErrorModal = (error: unknown): void => {
 
   modals.open({
     title: i18next.t('integration.twitch.connectionError.title'),
-    children: <TwitchRewardErrorContent errorKey={errorKey} errorDetails={errorDetails} />,
+    children: getErrorModalContent(errorKey, errorDetails),
   });
 };

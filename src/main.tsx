@@ -17,7 +17,7 @@ import 'dayjs/locale/uk';
 import { lazy, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
@@ -30,10 +30,10 @@ import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import * as Integration from '@models/integration';
+import { queryClient } from '@shared/lib/react-query/client.ts';
 
 import App from './App/entrypoint/App.tsx';
 import { initStore, store } from './store.ts';
-
 // All static imports are hoisted; by the time this line executes, rootReducer
 // is fully initialized, so initStore() can safely create the Redux store.
 initStore(rootReducer);
@@ -72,20 +72,24 @@ const redirectRoutes = integrationUtils.filterBy
   }));
 
 const router = createBrowserRouter([
-  { path: `${ROUTES.HOME}*`, element: <App /> },
-  { path: '/overlays/view/:id', element: <OverlayViewPage /> },
-  ...redirectRoutes,
-]);
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      gcTime: 1000 * 60 * 5,
-      staleTime: 1000 * 60 * 5,
-    },
+  {
+    element: (
+      <MantineProvider>
+        <TutorialProvider>
+          <QueryClientProvider client={queryClient}>
+            <Notifications limit={4} autoClose={3000} />
+            <Outlet />
+          </QueryClientProvider>
+        </TutorialProvider>
+      </MantineProvider>
+    ),
+    children: [
+      { path: `${ROUTES.HOME}*`, element: <App /> },
+      { path: '/overlays/view/:id', element: <OverlayViewPage /> },
+      ...redirectRoutes,
+    ],
   },
-});
+]);
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
@@ -97,14 +101,7 @@ document.body.appendChild(portalRoot);
 root.render(
   <StrictMode>
     <Provider store={store}>
-      <MantineProvider>
-        <TutorialProvider>
-          <QueryClientProvider client={queryClient}>
-            <Notifications limit={4} autoClose={3000} />
-            <RouterProvider router={router} />
-          </QueryClientProvider>
-        </TutorialProvider>
-      </MantineProvider>
+      <RouterProvider router={router} />
     </Provider>
   </StrictMode>,
 );

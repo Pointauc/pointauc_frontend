@@ -36,11 +36,7 @@ const base64UrlEncode = (buffer: ArrayBuffer | Uint8Array): string => {
   bytes.forEach((b) => {
     binary += String.fromCharCode(b);
   });
-  return window
-    .btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+  return window.btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 };
 
 const createVerifier = (): string => {
