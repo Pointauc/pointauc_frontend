@@ -12,6 +12,7 @@ abstract class ArchiveApi {
   abstract update(id: string, updates: Partial<ArchiveRecord>): Promise<ArchiveRecord>;
   abstract delete(id: string): Promise<void>;
   abstract upsertAutosave(data: ArchiveData): Promise<ArchiveRecord>;
+  abstract replaceAll(records: ArchiveRecord[]): Promise<void>;
 }
 
 export default ArchiveApi;

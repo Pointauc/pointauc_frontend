@@ -1,10 +1,11 @@
 import { Alert, Anchor, AppShell, Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconAlertTriangle } from '@tabler/icons-react';
+import { IconAlertTriangle, IconInfoCircle } from '@tabler/icons-react';
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
 import classes from '@App/entrypoint/App.module.css';
@@ -24,6 +25,7 @@ import { getSocketIOUrl } from '@utils/url.utils.ts';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import { useActiveMenu, useMenuItems } from '../../constants/menuItems.constants';
+import ROUTES from '../../constants/routes.constants';
 import { connectToBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
 import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
@@ -196,6 +198,14 @@ const App: React.FC = () => {
             </Text>
             <Anchor href={productionUrl} target='_blank' rel='noreferrer' size='sm' fw={600}>
               {productionUrl}
+            </Anchor>
+          </Group>
+        </Alert>
+        <Alert icon={<IconInfoCircle size={20} />} color='blue' variant='light' mb='md'>
+          <Group gap='xxs' align='center'>
+            <Text size='sm'>{t('testEnvironmentModal.stateExport')}</Text>
+            <Anchor component={Link} to={ROUTES.SETTINGS} size='sm' fw={600}>
+              {t('testEnvironmentModal.settingsLink')}
             </Anchor>
           </Group>
         </Alert>

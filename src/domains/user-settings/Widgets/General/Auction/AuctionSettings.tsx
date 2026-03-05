@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import SettingsGroup from '@domains/user-settings/ui/SettingsGroup/SettingsGroup';
 import FormSwitch from '@shared/mantine/ui/Switch/FormSwitch.tsx';
 import SettingLabel from '@domains/user-settings/ui/SettingLabel';
+import AuctionStateTransferRow from '@domains/user-settings/Widgets/General/Auction/AuctionStateTransferRow';
 
 const AuctionSettings = () => {
   const { t } = useTranslation();
@@ -35,6 +36,7 @@ const AuctionSettings = () => {
             label={<SettingLabel text={t('settings.auc.hideAmounts')} />}
           />
         </Group>
+        <AuctionStateTransferRow />
       </Stack>
     </SettingsGroup>
   );

@@ -138,7 +138,8 @@
         },
         "unknown": {
           "description": "An unexpected error occurred while creating Twitch rewards.",
-          "fix": "Check the browser console for the exact error code and report it if the issue persists."
+          "fix": "Check the browser console for the exact error code and report it if the issue persists.",
+          "copyErrorMessage": "Copy error message"
         }
       }
     },
@@ -590,7 +591,27 @@
       "backgroundBlur": "Blur",
       "resetBackground": "Remove custom background",
       "backgroundAlt": "Background unavailable. Please upload new image.",
-      "favoritesIsEnable": "Enable lot pinning"
+      "favoritesIsEnable": "Enable lot pinning",
+      "stateTransfer": {
+        "title": "Settings transfer",
+        "hintIntro": "Transfer FULL website state, including:",
+        "hintItems": {
+          "auctionTable": "Auction table",
+          "pendingPurchases": "Pending bids",
+          "archive": "Archive",
+          "appSettings": "App settings",
+          "wheelSettings": "Wheel settings"
+        },
+        "import": "Import",
+        "export": "Export",
+        "notifications": {
+          "exportSuccess": "Settings exported",
+          "exportError": "Failed to export settings",
+          "importSuccess": "Settings imported",
+          "importError": "Failed to import settings",
+          "invalidFile": "Invalid state transfer file"
+        }
+      }
     },
     "donations": {
       "donations": "Donations",
@@ -1168,6 +1189,8 @@
     "title": "Testing Environment",
     "description": "You are currently using the testing environment. This version may be unstable compared to the original website.",
     "productionUrl": "Please use: ",
+    "stateExport": "You can export the full app state on the",
+    "settingsLink": "settings page",
     "confirm": "I understand"
   }
 }

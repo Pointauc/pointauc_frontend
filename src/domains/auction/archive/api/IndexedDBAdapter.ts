@@ -134,6 +134,15 @@ class IndexedDBAdapter extends ArchiveApi {
     await this.db.archives.put(record);
     return record;
   }
+
+  async replaceAll(records: ArchiveRecord[]): Promise<void> {
+    await this.db.transaction('rw', this.db.archives, async () => {
+      await this.db.archives.clear();
+      if (records.length > 0) {
+        await this.db.archives.bulkPut(records);
+      }
+    });
+  }
 }
 
 // Export singleton instance

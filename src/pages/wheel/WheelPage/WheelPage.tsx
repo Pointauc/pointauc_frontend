@@ -80,6 +80,7 @@ const WheelPage: FC = () => {
   const handleSettingsChanged = useCallback(
     (settings: Wheel.Settings) => {
       setWheelSettings(settings);
+      console.log('settings changed', settings);
       saveSettings({ id: initialSettings?.id, data: settings });
     },
     [saveSettings, initialSettings?.id],
