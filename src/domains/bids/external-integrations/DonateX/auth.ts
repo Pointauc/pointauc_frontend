@@ -9,10 +9,12 @@ export const PKCE_VERIFIER_KEY = 'donatex_pkce_verifier';
 const PROFILE_STORAGE_KEY = 'donatex_profile';
 const ACCESS_TOKEN_KEY = 'donatex_authToken';
 const REFRESH_TOKEN_KEY = 'donatex_refreshToken';
+const EXPIRES_AT_KEY = 'donatex_expires_at';
 
 export interface TokenResponse {
   access_token: string;
   refresh_token?: string;
+  expires_in: number;
 }
 
 export interface DonateXProfile {
@@ -53,16 +55,20 @@ const createChallenge = async (verifier: string): Promise<string> => {
   return base64UrlEncode(digest);
 };
 
-export const storeTokens = ({ access_token, refresh_token }: TokenResponse): void => {
+export const storeTokens = ({ access_token, refresh_token, expires_in }: TokenResponse): void => {
   localStorage.setItem(ACCESS_TOKEN_KEY, access_token);
   if (refresh_token) {
     localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token);
   }
+
+  const expiresAt = Date.now() + expires_in * 1000;
+  localStorage.setItem(EXPIRES_AT_KEY, String(expiresAt));
 };
 
 export const loadTokens = () => ({
   accessToken: localStorage.getItem(ACCESS_TOKEN_KEY) ?? '',
   refreshToken: localStorage.getItem(REFRESH_TOKEN_KEY) ?? '',
+  expiresAt: Number(localStorage.getItem(EXPIRES_AT_KEY) ?? 0),
 });
 
 export const storeProfile = (profile: DonateXProfile): void => {
@@ -118,20 +124,11 @@ export const refreshToken = async (refreshTokenValue: string): Promise<TokenResp
   return data;
 };
 
-export const parseJwt = (token: string): { exp?: number } | null => {
-  try {
-    return JSON.parse(window.atob(token.split('.')[1]));
-  } catch (e) {
-    console.warn('Failed to parse token', e);
-    return null;
-  }
-};
-
 export const isTokenExpired = (token: string): boolean => {
-  const parsed = parseJwt(token);
-  if (!parsed?.exp) return false;
+  const expiresAt = Number(localStorage.getItem(EXPIRES_AT_KEY) ?? 0);
+  if (!expiresAt) return true;
 
-  return parsed.exp * 1000 < Date.now() + 60 * 1000;
+  return expiresAt < Date.now() + 60 * 1000;
 };
 
 export const buildAuthorizeUrl = async (): Promise<string> => {
