@@ -45,7 +45,7 @@ const RewardPresetsForm: React.FunctionComponent = () => {
     reset,
     clearErrors,
     setError,
-    formState: { isDirty, errors },
+    formState: { isDirty, errors, isValid },
   } = useForm<PresetsForm>({ defaultValues: { rewardPresets, rewardsPrefix } });
   const currentRewardsPrefix = useWatch({ control, name: 'rewardsPrefix' });
   const currentRewardPresets = useWatch({ control, name: 'rewardPresets' });
@@ -121,7 +121,7 @@ const RewardPresetsForm: React.FunctionComponent = () => {
   const confirmationModal = (onClose: () => void, onConfirm: () => void): ReactNode => (
     <RewardPresetsConfirmation open onClose={onClose} onConfirm={onConfirm} />
   );
-  
+
   useEffect(() => {
     if (!checkIsRewardsPrefixValid(currentRewardsPrefix ?? '', currentRewardPresets)) {
       setError('rewardsPrefix', {
@@ -200,7 +200,7 @@ const RewardPresetsForm: React.FunctionComponent = () => {
             onClick={() => setConfirmOpened(true)}
             variant='filled'
             size='sm'
-            disabled={!isDirty}
+            disabled={!isDirty || !isValid}
           >
             {t('settings.twitch.saveRewards')}
           </Button>

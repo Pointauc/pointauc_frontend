@@ -24,7 +24,7 @@
     "api:generate": "openapi-ts",
     "verify:authenticity": "node scripts/verify-authenticity.js",
     "docker:build": "docker build -t pointauc-frontend .",
-    "docker:run": "docker run --rm -p 3000:80 pointauc-frontend",
+    "docker:run": "docker run --rm --name pointauc-frontend -p 3000:80 pointauc-frontend",
     "docker:up": "pnpm run docker:build && pnpm run docker:run"
   },
   "dependencies": {

@@ -20,9 +20,11 @@ export default defineConfig({
     tsconfigPaths(),
     {
       name: 'full-reload',
-      handleHotUpdate({ server }) {
-        server.ws.send({ type: 'full-reload' });
-        return [];
+      handleHotUpdate({ file, server }) {
+        if (/\.(scss|css)$/.test(file)) {
+          server.ws.send({ type: 'full-reload' });
+          return [];
+        }
       },
     },
     // Bundle analyzer - only runs when ANALYZE env variable is set
@@ -42,6 +44,28 @@ export default defineConfig({
     open: true,
     proxy: {
       '^/api.*': 'http://localhost:8000',
+      '/socket.io': {
+        target: 'http://localhost:8000',
+        ws: true,
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router', 'react-router-dom', 'react-redux'],
+          'vendor-mantine': [
+            '@mantine/core',
+            '@mantine/hooks',
+            '@mantine/notifications',
+            '@mantine/modals',
+            '@mantine/dropzone',
+          ],
+          'vendor-animation': ['framer-motion', 'gsap'],
+          'vendor-mui-icons': ['@mui/icons-material'],
+        },
+      },
     },
   },
   ssr: {

@@ -3,6 +3,7 @@ import { Settings } from '@models/settings.model.ts';
 import { numberUtils } from '@utils/common/number.ts';
 import { BidNameStrategy } from '@enums/bid.enum.ts';
 import { store } from '@store';
+import { getDisplayCost as getDisplayCostFormatter } from '@domains/bids/lib/formatters.ts';
 
 type CostSettings = Pick<Settings, 'marblesAuc' | 'marbleRate' | 'pointsRate' | 'marbleCategory' | 'reversePointsRate'>;
 
@@ -34,7 +35,9 @@ const parseCost = (bid: Purchase, settings: CostSettings, newLot: boolean): numb
     convertedCost = cost * pointsRate;
   }
 
-  return marblesAuc ? convertToMarble({ cost: convertedCost, newLot, marbleCategory, marbleRate }) : convertedCost;
+  return marblesAuc
+    ? convertToMarble({ cost: convertedCost, newLot, marbleCategory, marbleRate })
+    : getDisplayCostFormatter(convertedCost);
 };
 
 const getDisplayCost = (cost: number): number | string => {

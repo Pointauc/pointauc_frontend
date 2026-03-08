@@ -135,6 +135,8 @@ if (typeof window === 'undefined') {
   define('cancelAnimationFrame', clearTimeout);
   define('matchMedia', () => ({ matches: false, addListener: noop, removeListener: noop, addEventListener: noop }));
   define('getComputedStyle', () => ({ getPropertyValue: () => '' }));
+  define('navigator', { userAgent: '', language: 'en', languages: ['en'] });
+  define('fetch', () => Promise.resolve({ json: () => Promise.resolve({}), text: () => Promise.resolve('') }));
   define('innerWidth', 1920);
   define('innerHeight', 1080);
   define('pageXOffset', 0);
@@ -155,63 +157,64 @@ const template = readFileSync(resolve(distDir, 'index.html'), 'utf-8');
 const serverEntryPath = pathToFileURL(resolve(distDir, 'server/entry-server.js')).href;
 const { render } = await import(serverEntryPath);
 
-for (const route of PRERENDER_ROUTES) {
-  console.log(`Prerendering: ${route}`);
+await Promise.all(
+  PRERENDER_ROUTES.map(async (route) => {
+    console.log(`Prerendering: ${route}`);
 
-  let appHtml = '';
-  let headData = null;
-  try {
-    const result = await render(route);
-    appHtml = result.html;
-    headData = result.head;
+    let appHtml = '';
+    let headData = null;
+    try {
+      const result = await render(route);
+      appHtml = result.html;
+      headData = result.head;
 
-    // React 19 embeds <!--$!--> markers for Suspense boundaries with lazy components.
-    // These are expected and will be hydrated client-side. Warn about unexpected failures.
-    const hasUnexpectedError = appHtml.includes('data-msg=') && !appHtml.includes('renderToString');
-    if (hasUnexpectedError) {
-      console.warn(`  Warning: render produced unexpected server-rendering errors for ${route}.`);
-    }
-  } catch (err) {
-    console.warn(`  Warning: render failed for ${route} — writing shell only.`, err?.message ?? err);
-  }
-
-  // Inject rendered content into the root div.
-  // Uses regex instead of a comment placeholder because Vite strips HTML comments in production.
-  let html = template.replace(/(<div id="root">)(<\/div>)/, `$1${appHtml}$2`);
-
-  if (headData) {
-    // Replace static initial meta tags with SSR-computed values from translations.
-    html = html.replace(
-      /<title[^>]*class="initial-meta-to-be-removed"[^>]*>[\s\S]*?<\/title>/,
-      `<title>${headData.title}</title>`,
-    );
-    html = html.replace(
-      /<meta[^>]*name="description"[^>]*class="initial-meta-to-be-removed"[^>]*\/?>/,
-      `<meta name="description" content="${headData.description}"/>`,
-    );
-
-    const headInjections = [];
-
-    if (!headData.isIndexed) {
-      headInjections.push(`    <meta name="robots" content="noindex"/>`);
-    }
-    if (headData.structuredData) {
-      headInjections.push(`    <script type="application/ld+json">${headData.structuredData}</script>`);
-    }
-    if (headData.localeLinks?.length) {
-      headInjections.push(...headData.localeLinks.map((link) => `    ${link}`));
+      // React 19 embeds <!--$!--> markers for Suspense error boundaries.
+      // These are expected and will be hydrated client-side. Warn about unexpected failures.
+      if (appHtml.includes('<!--$!-->')) {
+        console.warn(`  Warning: render produced Suspense error boundary markers for ${route}.`);
+      }
+    } catch (err) {
+      console.warn(`  Warning: render failed for ${route} — writing shell only.`, err?.message ?? err);
     }
 
-    if (headInjections.length) {
-      html = html.replace('</head>', `${headInjections.join('\n')}\n  </head>`);
+    // Inject rendered content into the root div.
+    // Uses regex instead of a comment placeholder because Vite strips HTML comments in production.
+    let html = template.replace(/(<div id="root">)(<\/div>)/, `$1${appHtml}$2`);
+
+    if (headData) {
+      // Replace static initial meta tags with SSR-computed values from translations.
+      html = html.replace(
+        /<title[^>]*class="initial-meta-to-be-removed"[^>]*>[\s\S]*?<\/title>/,
+        `<title>${headData.title}</title>`,
+      );
+      html = html.replace(
+        /<meta[^>]*name="description"[^>]*class="initial-meta-to-be-removed"[^>]*\/?>/,
+        `<meta name="description" content="${headData.description}"/>`,
+      );
+
+      const headInjections = [];
+
+      if (!headData.isIndexed) {
+        headInjections.push(`    <meta name="robots" content="noindex"/>`);
+      }
+      if (headData.structuredData) {
+        headInjections.push(`    <script type="application/ld+json">${headData.structuredData}</script>`);
+      }
+      if (headData.localeLinks?.length) {
+        headInjections.push(...headData.localeLinks.map((link) => `    ${link}`));
+      }
+
+      if (headInjections.length) {
+        html = html.replace('</head>', `${headInjections.join('\n')}\n  </head>`);
+      }
     }
-  }
 
-  const routeDir = route === '/' ? distDir : resolve(distDir, route.slice(1));
-  mkdirSync(routeDir, { recursive: true });
-  writeFileSync(resolve(routeDir, 'index.html'), html);
+    const routeDir = route === '/' ? distDir : resolve(distDir, route.slice(1));
+    mkdirSync(routeDir, { recursive: true });
+    writeFileSync(resolve(routeDir, 'index.html'), html);
 
-  console.log(`  Done → ${resolve(routeDir, 'index.html')}`);
-}
+    console.log(`  Done → ${resolve(routeDir, 'index.html')}`);
+  }),
+);
 
 process.exit(0);
