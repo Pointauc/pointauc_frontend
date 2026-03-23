@@ -1,6 +1,6 @@
 import { ActionIcon, Badge, Group, Paper, Text, TextInput, Tooltip } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { IconCheck, IconDownload, IconPencil, IconReplace, IconTrash, IconX } from '@tabler/icons-react';
+import { IconArchive, IconCheck, IconDownload, IconPencil, IconTrash, IconX } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -196,7 +196,7 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
         {!archive.isAutosave && (
           <Tooltip label={t('archive.item.overwrite')}>
             <ActionIcon variant='subtle' size='input-sm' onClick={handleOverwrite} loading={updateMutation.isPending}>
-              <IconReplace size={20} />
+              <IconArchive size={20} />
             </ActionIcon>
           </Tooltip>
         )}

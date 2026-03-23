@@ -167,6 +167,11 @@
   "serverNotifications": {
     "deployIncoming": "Обновление сервера начнется {{remainingEstimation}} ({{remainingTime}}). После этого донаты и награды перестанут приходить на 1-5 мин."
   },
+  "globalErrorBoundary": {
+    "title": "Что-то пошло не так",
+    "description": "Произошла непредвиденная ошибка. Пожалуйста, перезагрузите страницу и попробуйте снова.",
+    "reload": "Перезагрузить страницу"
+  },
   "menu": {
     "items": {
       "auction": {

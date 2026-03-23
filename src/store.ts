@@ -66,8 +66,8 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
   (next) =>
   (action): AnyAction => {
     const result = next(action);
-    if (getSlotsUpdateEvents().includes(action.type)) {
-      const { slots } = storeApi.getState().slots;
+    const { slots, isInitialized } = storeApi.getState().slots;
+    if (isInitialized && getSlotsUpdateEvents().includes(action.type)) {
       saveSlotsWithCooldown(slots);
     }
     return result;

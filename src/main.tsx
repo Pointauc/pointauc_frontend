@@ -19,6 +19,8 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
+import { AppErrorBoundary } from '@App/error-tracking/AppErrorBoundary';
+import { RouteErrorBoundary } from '@App/error-tracking/RouteErrorBoundary';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
 import i18n from '@assets/i18n/index.ts';
@@ -26,6 +28,8 @@ import RedirectPage from '@domains/bids/external-integrations/shared/auth/redire
 import ROUTES from '@constants/routes.constants.ts';
 import { TutorialProvider } from '@domains/tutorials';
 import rootReducer from '@reducers/index.ts';
+import { createConfiguredErrorTrackingProvider } from '@shared/lib/error-tracking/providers';
+import { initErrorTracking } from '@shared/lib/error-tracking/service';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
@@ -36,6 +40,7 @@ import App from './App/entrypoint/App.tsx';
 import { initStore, store } from './store.ts';
 // All static imports are hoisted; by the time this line executes, rootReducer
 // is fully initialized, so initStore() can safely create the Redux store.
+initErrorTracking(createConfiguredErrorTrackingProvider());
 initStore(rootReducer);
 
 export { store };
@@ -73,6 +78,7 @@ const redirectRoutes = integrationUtils.filterBy
 
 const router = createBrowserRouter([
   {
+    errorElement: <RouteErrorBoundary />,
     element: (
       <MantineProvider>
         <TutorialProvider>
@@ -101,7 +107,9 @@ document.body.appendChild(portalRoot);
 root.render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <AppErrorBoundary>
+        <RouterProvider router={router} />
+      </AppErrorBoundary>
     </Provider>
   </StrictMode>,
 );

@@ -17,15 +17,15 @@ General rules for new functionality:
 
 Code Style and Structure:
 
-- Keep code SOLID but simple - separation of concerns without over-engineering
 - Aim to keep files under 300 lines - split when it improves clarity
 - Prefer iteration and modularization over code duplication. The code should be highly reusable and modular.
 - Use descriptive variable names with auxiliary verbs (e.g., isLoaded, hasError).
 - Use absolute paths like @components/... for file imports. Existing absolute path shortcuts - @assets, @components, @pages, @api, @constants, @decorators, @enums, @hooks, @models, @reducers, @services, @styles, @utils, @features, @shared, @types, @domains, @App.
+- Always prefer arrow functions (() => {}). Only use function declaration in classes.
 
 Library and tools usage:
 
-- Use tailwindcss for styling.
+- Use tailwindcss for styling components.
 - Use mantine library for basic UI components.
 
 Specific Naming Patterns:

@@ -6,10 +6,17 @@ import { SaveInfo } from '@models/save.model';
 import { Slot } from '@models/slot.model';
 import { RootState } from '@reducers/index';
 import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
+import { captureError } from '@shared/lib/error-tracking/service';
 
 import archiveApi from '../api/IndexedDBAdapter';
 import { archivedLotsToSlots, slotsToArchivedLots } from '../lib/converters';
 import { ArchiveData } from '../model/types';
+
+interface ArchiveMigrationError extends Error {
+  cause?: unknown;
+  saveName?: string;
+  slotsLocation?: string;
+}
 
 /**
  * Migrates old LocalStorage saves to new IndexedDB archive system
@@ -70,7 +77,12 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
         // Remove old LocalStorage entry
         localStorage.removeItem(saveInfo.slotsLocation);
       } catch (err) {
-        console.error(`Failed to migrate save: ${saveInfo.name}`, err);
+        const migrationError = new Error(`Failed to migrate save "${saveInfo.name}"`) as ArchiveMigrationError;
+        migrationError.cause = err;
+        migrationError.saveName = saveInfo.name;
+        migrationError.slotsLocation = saveInfo.slotsLocation;
+
+        throw migrationError;
       }
     }
 
@@ -78,7 +90,16 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
     localStorage.removeItem(LocalStorage.SaveConfig);
     console.log('Migration completed successfully');
   } catch (err) {
-    console.error('Failed to migrate old saves:', err);
+    const migrationError = err as ArchiveMigrationError;
+    captureError(migrationError, {
+      tags: {
+        feature: 'auction-archive-migration',
+      },
+      extra: {
+        saveName: migrationError.saveName,
+        slotsLocation: migrationError.slotsLocation,
+      },
+    });
   }
 }
 

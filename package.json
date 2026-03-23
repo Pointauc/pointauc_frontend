@@ -44,6 +44,7 @@
     "@microsoft/signalr": "^8.0.7",
     "@mui/icons-material": "^7.1.0",
     "@reduxjs/toolkit": "^1.9.7",
+    "@sentry/react": "^10.45.0",
     "@tabler/icons-react": "^3.34.1",
     "@tanstack/react-form": "^1.25.0",
     "@tanstack/react-pacer": "^0.17.3",
