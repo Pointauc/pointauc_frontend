@@ -2,7 +2,6 @@ import { CometSystem } from './particles/comets';
 import { RuneSystem } from './particles/runes';
 import { MagicalParticleSystem } from './particles/magical-particles';
 import { CanvasUtils, CanvasConfig } from './utils/canvas-utils';
-import { AnimationManager, AnimationCallback } from './utils/animation-utils';
 
 export interface EffectsManagerConfig {
   centerX: number;
@@ -18,12 +17,9 @@ export class EffectsManager {
   private magicalParticleSystem: MagicalParticleSystem;
   private config: EffectsManagerConfig;
   private ctx: CanvasRenderingContext2D;
-  private animationManager: AnimationManager;
-  private animationCallback: AnimationCallback;
 
-  constructor(canvas: HTMLCanvasElement, config: EffectsManagerConfig, animationManager: AnimationManager) {
+  constructor(canvas: HTMLCanvasElement, config: EffectsManagerConfig) {
     this.config = config;
-    this.animationManager = animationManager;
 
     const context = canvas.getContext('2d');
     if (!context) {
@@ -38,29 +34,12 @@ export class EffectsManager {
     this.cometSystem = new CometSystem(config.centerX, config.centerY, config.wheelRadius);
     this.runeSystem = new RuneSystem(config.centerX, config.centerY, config.wheelRadius);
     this.magicalParticleSystem = new MagicalParticleSystem(config.centerX, config.centerY, config.wheelRadius);
-
-    // Create animation callback
-    this.animationCallback = this.animate.bind(this);
   }
 
   setSpeedMultiplier(speedMultiplier: number): void {
     this.cometSystem.speedMultiplier = speedMultiplier;
     this.runeSystem.speedMultiplier = speedMultiplier;
     this.magicalParticleSystem.speedMultiplier = speedMultiplier;
-  }
-
-  /**
-   * Start the effects animation
-   */
-  start(): void {
-    this.animationManager.addCallback(this.animationCallback);
-  }
-
-  /**
-   * Stop the effects animation
-   */
-  stop(): void {
-    this.animationManager.removeCallback(this.animationCallback);
   }
 
   /**
@@ -75,13 +54,7 @@ export class EffectsManager {
     this.magicalParticleSystem.updateCenter(config.centerX, config.centerY, config.wheelRadius);
   }
 
-  /**
-   * Main animation loop
-   */
-  private animate(deltaTime: number, timestamp: number): void {
-    // Clear canvas
-    CanvasUtils.clearCanvas(this.ctx, this.config.canvasWidth, this.config.canvasHeight);
-
+  renderFrame(deltaTime: number, timestamp: number): void {
     // Draw static background aura ring
     this.drawBackgroundAura();
 
@@ -146,12 +119,7 @@ export class EffectsManager {
     };
   }
 
-  /**
-   * Clean up resources
-   */
-  destroy(): void {
-    this.stop();
-  }
+  destroy(): void {}
 }
 
 // Export all particle systems and utilities
@@ -161,4 +129,3 @@ export { MagicalParticleSystem } from './particles/magical-particles';
 export { CanvasUtils } from './utils/canvas-utils';
 export { AnimationManager, Easing, Interpolator } from './utils/animation-utils';
 export type { CanvasConfig } from './utils/canvas-utils';
-export type { AnimationCallback } from './utils/animation-utils';

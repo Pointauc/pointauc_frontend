@@ -6,7 +6,7 @@ namespace Wheel {
   import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel.tsx';
   import { WheelFormat } from '@constants/wheel.ts';
   import { RandomPaceConfig } from '@services/SpinPaceService.ts';
-  import { WheelItem, ItemWithLabel, WheelItemWithAngle } from '@models/wheel.model.ts';
+  import { WheelItem, ItemWithLabel, WheelItemWithAngle, WheelStyle } from '@models/wheel.model.ts';
 
   /** YouTube video as audio source */
   interface SoundtrackSourceYoutube {
@@ -62,7 +62,7 @@ namespace Wheel {
 
     coreImage?: string | null;
 
-    wheelStyles?: 'default' | 'genshinImpact' | null;
+    wheelStyles?: WheelStyle | null;
 
     showDeleteConfirmation?: boolean;
 

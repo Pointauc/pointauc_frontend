@@ -1,7 +1,6 @@
 import { Overlay, Popover, Stack, Text, Title } from '@mantine/core';
 import { throttle } from '@tanstack/react-pacer';
 import clsx from 'clsx';
-import gsap from 'gsap';
 import {
   MutableRefObject,
   useCallback,
@@ -20,16 +19,16 @@ import {
   calculateWinnerSpinDistance,
   getWinnerFromDistance,
 } from '@domains/winner-selection/wheel-of-random/lib/geometry';
-import { WheelItem, WheelItemWithAngle } from '@models/wheel.model';
+import { WheelItem, WheelItemWithAngle, WheelStyle } from '@models/wheel.model';
 import { RandomPaceConfig } from '@services/SpinPaceService';
 import { ID } from '@components/Bracket/components/model';
 
 import classes from './BaseWheel.module.css';
 import WinnerBackdrop from './WinnerBackdrop';
-import wheelHelpers from './helpers';
-import { defaultWheelDrawer } from './hooks/defaultWheelDrawer';
-import { genshinWheelDrawer } from './hooks/genshinWheelDrawer';
 import { useWheelAnimator } from './hooks/useWheelAnimator';
+import { createWheelRenderer } from './renderers/createWheelRenderer';
+
+import type { WheelRenderer } from './renderers/types';
 
 export enum DropoutVariant {
   Classic,
@@ -73,10 +72,8 @@ export interface BaseWheelProps<T extends WheelItem> {
   delay?: number;
   dropOut?: boolean;
   className?: string;
-  wheelStyle?: 'default' | 'genshinImpact' | null;
+  wheelStyle?: WheelStyle | null;
 }
-
-// Wheel drawer instances will be created dynamically based on wheelStyle
 
 const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const {
@@ -95,102 +92,89 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   const { t } = useTranslation();
 
   const [winnerItem, setWinnerItem] = useState<WheelItem | undefined>();
+  const [coreSize, setCoreSize] = useState(160);
+  const [coreBorderWidth, setCoreBorderWidth] = useState(3);
 
   const wheelCanvas = useRef<HTMLCanvasElement>(null);
-  const selectorCanvas = useRef<HTMLCanvasElement>(null);
-  const effectsCanvas = useRef<HTMLCanvasElement>(null);
+  const foregroundCanvas = useRef<HTMLCanvasElement>(null);
+  const coreElement = useRef<HTMLDivElement>(null);
   const spinTarget = useRef<HTMLDivElement>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const wheelContent = useRef<HTMLDivElement>(null);
-  const effectsManager = useRef<any>(null); // EffectsManager type
+  const rendererRef = useRef<WheelRenderer | null>(null);
+  const normalizedRef = useRef<WheelItemWithAngle[]>([]);
+  const latestItemsRef = useRef(items);
 
   const coreBackground = useMemo(() => `url(${coreImage})`, [coreImage]);
-  const normalizedItems = useMemo(() => wheelHelpers.defineAngle(items), [items]);
-  const normalizedRef = useRef(normalizedItems);
-  const previousStyle = useRef<string | null>(wheelStyle ?? null);
-
-  // Select wheel drawer based on wheelStyle
-  const wheelDrawer = useMemo(() => {
-    switch (wheelStyle) {
-      case 'genshinImpact':
-        return genshinWheelDrawer();
-      case 'default':
-      case null:
-      case undefined:
-      default:
-        return defaultWheelDrawer();
-    }
-  }, [wheelStyle]);
-
-  const hasEffects = useMemo(() => {
-    return 'initializeEffects' in wheelDrawer && 'updateEffects' in wheelDrawer;
-  }, [wheelDrawer]);
 
   useEffect(() => {
-    normalizedRef.current = normalizedItems;
-  }, [normalizedItems]);
+    latestItemsRef.current = items;
+  }, [items]);
 
-  const onSpinTick = useCallback((rotation: number): void => {
-    const winner = getWinnerFromDistance({ distance: rotation, items: normalizedRef.current });
-
-    if (winner && spinTarget.current) {
-      spinTarget.current.textContent = winner.name;
+  const setCoreFillColor = useCallback((color?: string | null) => {
+    if (coreElement.current) {
+      coreElement.current.style.backgroundColor = color || 'transparent';
     }
   }, []);
 
-  const resetStyles = useCallback(() => {
-    if (wheelCanvas.current && selectorCanvas.current) {
-      wheelDrawer.drawWheel({
-        items: normalizedItems,
-        wheelCanvas: wheelCanvas.current,
-        pointerCanvas: selectorCanvas.current,
-      });
+  const onSpinTick = useCallback(
+    (rotation: number): void => {
+      const winner = getWinnerFromDistance({ distance: rotation, items: normalizedRef.current });
 
-      // Initialize or update effects if effects canvas is available and drawer supports it
-      if (effectsCanvas.current && hasEffects) {
-        const drawerWithEffects = wheelDrawer as any;
-        if (effectsManager.current) {
-          drawerWithEffects.updateEffects(effectsManager.current, wheelCanvas.current);
-        } else {
-          effectsManager.current = drawerWithEffects.initializeEffects(effectsCanvas.current, wheelCanvas.current);
-        }
+      if (winner && spinTarget.current) {
+        spinTarget.current.textContent = winner.name;
       }
-    }
-  }, [wheelDrawer, normalizedItems, hasEffects]);
+      setCoreFillColor(winner?.color);
+    },
+    [setCoreFillColor],
+  );
 
-  const resizeCanvas = useCallback((canvasElement: HTMLCanvasElement | null, size: number): void => {
-    if (canvasElement) {
-      canvasElement.height = size;
-      canvasElement.width = size;
-    }
+  const resetStyles = useCallback(() => {
+    rendererRef.current?.draw();
   }, []);
 
   const firstResizeDrawRef = useRef(false);
 
   const resizeWheel = useCallback(() => {
-    if (!wrapper.current || !spinTarget.current || !wheelCanvas.current || !wheelContent.current) return;
+    if (!wrapper.current || !spinTarget.current || !wheelContent.current || !rendererRef.current) return;
 
-    const canvasSize = Math.min(
+    const targetWheelSize = Math.min(
       wrapper.current.clientHeight - 20 - spinTarget.current.clientHeight,
       wrapper.current.clientWidth,
     );
 
-    if (canvasSize === wheelCanvas.current.height || canvasSize < 160) {
+    if (targetWheelSize < 160) {
       return;
     }
 
-    resizeCanvas(wheelCanvas.current, canvasSize);
-    resizeCanvas(selectorCanvas.current, canvasSize);
-    // Effects canvas will be resized by the CanvasUtils.setupEffectsCanvas method
-    wheelContent.current.style.width = `${canvasSize}px`;
-    onOptimalSizeChange?.(canvasSize);
-
-    if (wheelCanvas.current && selectorCanvas.current) {
-      resetStyles();
-      firstResizeDrawRef.current = true;
+    const nextTargetWheelSize = Math.round(targetWheelSize);
+    if (rendererRef.current.getLayout()?.targetWheelSize === nextTargetWheelSize) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wheelDrawer]);
+
+    rendererRef.current.setLayout(nextTargetWheelSize);
+    const layout = rendererRef.current.getLayout();
+    if (!layout) {
+      return;
+    }
+
+    wheelContent.current.style.width = `${layout.targetWheelSize}px`;
+    wheelContent.current.style.height = `${layout.targetWheelSize}px`;
+    if (wheelCanvas.current) {
+      wheelCanvas.current.style.left = `${-layout.overflowPadding}px`;
+      wheelCanvas.current.style.top = `${-layout.overflowPadding}px`;
+    }
+    if (foregroundCanvas.current) {
+      foregroundCanvas.current.style.left = `${-layout.overflowPadding}px`;
+      foregroundCanvas.current.style.top = `${-layout.overflowPadding}px`;
+    }
+    onOptimalSizeChange?.(layout.targetWheelSize);
+    setCoreSize(layout.targetWheelSize * 0.2);
+    setCoreBorderWidth(Math.max(2, (layout.targetWheelSize / 800) * 3));
+    firstResizeDrawRef.current = true;
+
+    resetStyles();
+  }, [onOptimalSizeChange, resetStyles]);
 
   useLayoutEffect(() => {
     const resizeObserver = new ResizeObserver(
@@ -212,12 +196,33 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     };
   }, [resizeWheel]);
 
-  const resetPosition = useCallback(() => {
-    gsap.to(wheelCanvas.current, {
-      duration: 0,
-      rotate: 0,
+  useEffect(() => {
+    rendererRef.current?.destroy();
+    rendererRef.current = createWheelRenderer(wheelStyle, {
+      wheelCanvas,
+      foregroundCanvas,
     });
-  }, []);
+    rendererRef.current.setItems(latestItemsRef.current);
+    normalizedRef.current = rendererRef.current.getItems();
+    const winner = getWinnerFromDistance({ distance: rendererRef.current.getRotation(), items: normalizedRef.current });
+    setCoreFillColor(winner?.color);
+    resizeWheel();
+
+    if (firstResizeDrawRef.current) {
+      rendererRef.current.draw();
+    }
+
+    return () => {
+      rendererRef.current?.destroy();
+      rendererRef.current = null;
+    };
+  }, [resizeWheel, setCoreFillColor, wheelStyle]);
+
+  const resetPosition = useCallback(() => {
+    rendererRef.current?.setRotation(0);
+    const winner = getWinnerFromDistance({ distance: 0, items: normalizedRef.current });
+    setCoreFillColor(winner?.color);
+  }, [setCoreFillColor]);
 
   const finalizeSpin = useCallback(
     (winner?: WheelItemWithAngle): Promise<WheelItem | null> => {
@@ -242,13 +247,17 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     [resetPosition, resetWheel],
   );
 
-  const { animate, getCurrentRotation } = useWheelAnimator({ wheelCanvas, onSpin: onSpinTick });
+  const getCurrentRotation = useCallback(() => rendererRef.current?.getRotation() ?? 0, []);
+  const setRotation = useCallback((rotation: number) => {
+    rendererRef.current?.setRotation(rotation);
+  }, []);
+  const { animate } = useWheelAnimator({ getCurrentRotation, setRotation, onSpin: onSpinTick });
 
   const spin: WheelController['spin'] = useCallback(
     ({ winnerId, duration, distance }: SpinParams): SpinResult => {
       setWinnerItem(undefined);
 
-      effectsManager.current?.setSpeedMultiplier(5);
+      rendererRef.current?.setSpeedMultiplier(5);
 
       const initialDistance = getCurrentRotation();
       const spinDistance =
@@ -264,7 +273,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
         await finalizeSpin(winnerItem);
 
-        effectsManager.current?.setSpeedMultiplier(1);
+        rendererRef.current?.setSpeedMultiplier(1);
       };
 
       return {
@@ -277,33 +286,21 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   );
 
   useEffect(() => {
-    if (wheelCanvas.current && selectorCanvas.current && firstResizeDrawRef.current) {
-      resetPosition();
-      resetStyles();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedItems]);
+    if (rendererRef.current) {
+      rendererRef.current.setItems(items);
+      normalizedRef.current = rendererRef.current.getItems();
+      const winner = getWinnerFromDistance({
+        distance: rendererRef.current.getRotation(),
+        items: normalizedRef.current,
+      });
+      setCoreFillColor(winner?.color);
 
-  // Redraw wheel when wheelStyle changes
-  useEffect(() => {
-    if (previousStyle.current !== wheelStyle) {
-      if (wheelCanvas.current && selectorCanvas.current && firstResizeDrawRef.current) {
+      if (firstResizeDrawRef.current) {
+        resetPosition();
         resetStyles();
       }
     }
-    previousStyle.current = wheelStyle ?? null;
-
-    return () => {
-      if ('destroy' in wheelDrawer) {
-        (wheelDrawer as any).destroy();
-      }
-
-      if (effectsManager.current) {
-        effectsManager.current.destroy();
-        effectsManager.current = null;
-      }
-    };
-  }, [wheelStyle, resetStyles, wheelDrawer]);
+  }, [items, resetPosition, resetStyles, setCoreFillColor]);
 
   const clearWinner = useCallback(() => {
     setWinnerItem(undefined);
@@ -317,15 +314,11 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     controller,
     () => {
       const highlight = (id: ID) => {
-        if (wheelCanvas.current && selectorCanvas.current) {
-          wheelDrawer.highlightItem(id, normalizedItems, wheelCanvas.current, selectorCanvas.current);
-        }
+        rendererRef.current?.highlightItem(id);
       };
 
       const _eatAnimation = async (id: ID, duration?: number) => {
-        if (wheelCanvas.current && selectorCanvas.current) {
-          await wheelDrawer.eatAnimation(id, normalizedItems, wheelCanvas.current, selectorCanvas.current, duration);
-        }
+        await rendererRef.current?.eatAnimation(id, duration);
       };
 
       return {
@@ -338,8 +331,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
         getItems: () => normalizedRef.current,
       };
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [clearWinner, controller, resetPosition, spin, normalizedItems, wheelDrawer],
+    [clearWinner, resetPosition, resetStyles, spin],
   );
 
   const [isClickOusideAllowed, setIsClickOusideAllowed] = useState(true);
@@ -350,22 +342,29 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       style={{ width: '100%', height: '100%', display: 'inline-block', pointerEvents: 'none', overflow: 'visible' }}
       ref={wrapper}
     >
-      <div ref={wheelContent}>
+      <div>
         <Title order={2} className={classes.wheelTarget} ref={spinTarget}>
           {t('wheel.winner')}
         </Title>
-        <div className={classes.wheelContent}>
-          <canvas style={{ position: 'absolute', zIndex: 1, top: -32 }} ref={selectorCanvas} />
-          {hasEffects && (
-            <canvas style={{ position: 'absolute', zIndex: 2, pointerEvents: 'none' }} ref={effectsCanvas} />
-          )}
+        <div ref={wheelContent} className={classes.wheelContent}>
+          <canvas style={{ position: 'absolute', zIndex: 1, inset: 0, pointerEvents: 'none' }} ref={foregroundCanvas} />
           <div className={classes.wheelCanvasWrapper}>
             <canvas ref={wheelCanvas} />
           </div>
           {onCoreImageChange && (
             <Popover width={420} withArrow position='right' closeOnClickOutside={isClickOusideAllowed}>
               <Popover.Target>
-                <div className={classes.wheelCore} style={{ backgroundImage: coreBackground }}>
+                <div
+                  ref={coreElement}
+                  className={classes.wheelCore}
+                  style={{
+                    backgroundImage: coreBackground,
+                    width: coreSize,
+                    height: coreSize,
+                    borderWidth: coreBorderWidth,
+                    borderColor: '#fff',
+                  }}
+                >
                   <div className={classes.wheelCoreOverlay}>
                     <Overlay color='black' opacity={0.7} />
                     <Text className={classes.wheelCoreText} size='xl'>
@@ -388,7 +387,19 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
               </Popover.Dropdown>
             </Popover>
           )}
-          {!onCoreImageChange && <div className={classes.wheelCore} style={{ backgroundImage: coreBackground }}></div>}
+          {!onCoreImageChange && (
+            <div
+              ref={coreElement}
+              className={classes.wheelCore}
+              style={{
+                backgroundImage: coreBackground,
+                width: coreSize,
+                height: coreSize,
+                borderWidth: coreBorderWidth,
+                borderColor: '#fff',
+              }}
+            ></div>
+          )}
           {!!winnerItem && (
             <WinnerBackdrop
               currentSpinWinner={winnerItem}
