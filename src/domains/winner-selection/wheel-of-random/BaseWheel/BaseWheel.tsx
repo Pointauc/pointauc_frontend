@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -24,9 +25,10 @@ import { RandomPaceConfig } from '@services/SpinPaceService';
 import { ID } from '@components/Bracket/components/model';
 
 import classes from './BaseWheel.module.css';
+import DefaultWheelPointer from './DefaultWheelPointer';
 import WinnerBackdrop from './WinnerBackdrop';
 import { useWheelAnimator } from './hooks/useWheelAnimator';
-import { createWheelRenderer } from './renderers/createWheelRenderer';
+import { createWheelRenderer, resolveWheelStyle } from './renderers/createWheelRenderer';
 
 import type { WheelRenderer } from './renderers/types';
 
@@ -335,6 +337,9 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
   );
 
   const [isClickOusideAllowed, setIsClickOusideAllowed] = useState(true);
+  const pointerIdPrefix = useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const resolvedWheelStyle = resolveWheelStyle(wheelStyle);
+  const pointerSize = Math.max(68, Math.round(coreSize * 0.9));
 
   return (
     <div
@@ -347,6 +352,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
           {t('wheel.winner')}
         </Title>
         <div ref={wheelContent} className={classes.wheelContent}>
+          {resolvedWheelStyle === 'default' && <DefaultWheelPointer size={pointerSize} idPrefix={pointerIdPrefix} />}
           <canvas style={{ position: 'absolute', zIndex: 1, inset: 0, pointerEvents: 'none' }} ref={foregroundCanvas} />
           <div className={classes.wheelCanvasWrapper}>
             <canvas ref={wheelCanvas} />

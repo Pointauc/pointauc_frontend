@@ -3,6 +3,16 @@
   overflow: visible;
 }
 
+.wheelPointer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  pointer-events: none;
+  transform: translate(-50%, -42%);
+  overflow: visible;
+}
+
 .wheelCanvasWrapper {
   position: relative;
   overflow: visible;
