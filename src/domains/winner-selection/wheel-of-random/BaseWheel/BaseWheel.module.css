@@ -39,6 +39,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 18px rgb(255 255 255 / 15%);
+  z-index: 3;
 }
 
 .wheelCanvasWrapper canvas {

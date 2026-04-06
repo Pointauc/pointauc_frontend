@@ -36,7 +36,7 @@ import { signedRandomControllerGenerateWinnerMutation } from '@api/openapi/@tans
 import { useSyncEffect } from '@shared/lib/react';
 import { useAudioPlayback } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/useAudioPlayback';
 
-import { SpinParams, DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../BaseWheel/DropoutVariant';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
 import { MAX_QUOTA } from '../../settings/ui/Fields/TicketCard/TicketCard';
 import { defaultWheelSettings } from '../../lib/hooks/useSavedWheelSettings';
@@ -44,6 +44,8 @@ import PlayerFactory from '../../settings/ui/Fields/Soundtrack/PlayerFactory';
 import { PlayerRef } from '../../settings/ui/Fields/Soundtrack/PlayerFactory/types';
 
 import styles from './index.module.css';
+
+import type { SpinParams, WheelController } from '../../BaseWheel/BaseWheel';
 
 export interface SettingElements {
   mode: boolean;

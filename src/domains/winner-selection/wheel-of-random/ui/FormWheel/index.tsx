@@ -5,6 +5,7 @@ import { WheelItem } from '@models/wheel.model';
 import { WheelFormat } from '@constants/wheel';
 
 import BaseWheel, { BaseWheelProps } from '../../BaseWheel/BaseWheel';
+import { resolveWheelParts } from '../../BaseWheel/parts/resolveWheelParts';
 
 interface Props extends Pick<BaseWheelProps<any>, 'controller' | 'className' | 'onOptimalSizeChange'> {
   deleteItem?: (id: Key) => void;
@@ -16,20 +17,25 @@ const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptim
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const wheelStyles = useWatch<Wheel.Settings>({ name: 'wheelStyles' });
   const showDeleteConfirmation = useWatch<Wheel.Settings>({ name: 'showDeleteConfirmation' });
+  const parts = resolveWheelParts(wheelStyles);
   const { setValue } = useFormContext<Wheel.Settings>();
+  const setWheelValue = setValue as (
+    name: 'coreImage' | 'showDeleteConfirmation',
+    value: string | boolean,
+  ) => void;
   const onCoreImageChange = useCallback(
     (image: string) => {
-      setValue('coreImage', image);
+      setWheelValue('coreImage', image);
     },
-    [setValue],
+    [setWheelValue],
   );
 
   const handleDeleteItem = useCallback(
     (id: Key, showConfirmation?: boolean) => {
       deleteItem?.(id);
-      setValue('showDeleteConfirmation', showConfirmation ?? true);
+      setWheelValue('showDeleteConfirmation', showConfirmation ?? true);
     },
-    [deleteItem, setValue],
+    [deleteItem, setWheelValue],
   );
 
   return (
@@ -42,7 +48,7 @@ const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptim
       dropOut={format === WheelFormat.Dropout}
       className={className}
       onOptimalSizeChange={onOptimalSizeChange}
-      wheelStyle={wheelStyles}
+      parts={parts}
       showDeleteConfirmation={showDeleteConfirmation}
     />
   );

@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 import { IconAlertCircle, IconShieldCheckFilled } from '@tabler/icons-react';
 
 import { WheelFormat } from '@constants/wheel.ts';
-import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
+import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/DropoutVariant';
 import TicketCard from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/TicketCard/TicketCard';
 import RandomnessExplanationModal from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/RandomnessExplanationModal';
 import { RevealedData } from '@domains/winner-selection/wheel-of-random/lib/hooks/useTicketManagement';
