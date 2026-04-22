@@ -22,8 +22,9 @@ const useNormalWheel = ({
     generateSeed,
   }: Wheel.GetNextWinnerIdParams): Promise<Wheel.GetNextWinnerIdResult> => {
     const seed = await generateSeed();
+    const winnerId = items[getSlotFromSeed(items, seed)].id;
 
-    return { id: items[getSlotFromSeed(items, seed)].id, isFinalSpin: true };
+    return { id: winnerId, isFinalSpin: true, finalWinnerId: winnerId };
   };
 
   const renderSubmitButton = (defaultButton: ReactNode): ReactNode => {

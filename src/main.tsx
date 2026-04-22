@@ -28,6 +28,7 @@ import RedirectPage from '@domains/bids/external-integrations/shared/auth/redire
 import ROUTES from '@constants/routes.constants.ts';
 import { TutorialProvider } from '@domains/tutorials';
 import rootReducer from '@reducers/index.ts';
+import { configuredAnalyticsProviders, initAnalytics } from '@shared/lib/analytics';
 import { createConfiguredErrorTrackingProvider } from '@shared/lib/error-tracking/providers';
 import { initErrorTracking } from '@shared/lib/error-tracking/service';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
@@ -42,6 +43,11 @@ import { initStore, store } from './store.ts';
 // is fully initialized, so initStore() can safely create the Redux store.
 initErrorTracking(createConfiguredErrorTrackingProvider());
 initStore(rootReducer);
+
+const analyticsProviders = configuredAnalyticsProviders.getProviders();
+initAnalytics({
+  providers: analyticsProviders,
+});
 
 export { store };
 

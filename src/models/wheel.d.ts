@@ -3,7 +3,7 @@ namespace Wheel {
   import { ButtonProps } from '@mantine/core';
 
   import { SpinParams } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel.tsx';
-import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/DropoutVariant';
+  import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/DropoutVariant';
   import { WheelFormat } from '@constants/wheel.ts';
   import { RandomPaceConfig } from '@services/SpinPaceService.ts';
   import { WheelItem, ItemWithLabel, WheelItemWithAngle, WheelStyle } from '@models/wheel.model.ts';
@@ -85,6 +85,7 @@ import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWh
   export interface GetNextWinnerIdResult {
     id: string | number;
     isFinalSpin: boolean;
+    finalWinnerId?: string | number;
   }
 
   interface FormatHook {

@@ -1,11 +1,11 @@
 import path from 'path';
 
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { analyzer } from 'vite-bundle-analyzer';
 import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -73,5 +73,15 @@ export default defineConfig({
     // conversion for each package. This is appropriate for a build-time
     // prerender script (not a production server), where bundle size doesn't matter.
     noExternal: true,
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/shared/test/setupTests.ts'],
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    passWithNoTests: true,
+    css: true,
+    restoreMocks: true,
+    clearMocks: true,
+    mockReset: true,
   },
 });

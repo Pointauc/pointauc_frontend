@@ -15,7 +15,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mantine/core';
 
 import ItemsPreview from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview';
 import WheelComponent from '@domains/winner-selection/wheel-of-random/ui/FormWheel';
@@ -25,18 +24,18 @@ import useWheelResolver from '@domains/winner-selection/wheel-of-random/lib/stra
 import useTicketManagement, {
   RevealedData,
 } from '@domains/winner-selection/wheel-of-random/lib/hooks/useTicketManagement';
+import { buildWheelSpinResultPayload } from '@domains/winner-selection/wheel-of-random/lib/buildWheelSpinResultPayload';
 import wheelUtils from '@domains/winner-selection/wheel-of-random/lib/wheelUtils';
-import { PACE_PRESETS, WheelFormat } from '@constants/wheel.ts';
+import { WheelFormat } from '@constants/wheel.ts';
 import withLoading from '@decorators/withLoading';
 import { WheelItem } from '@models/wheel.model.ts';
-import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
-import array from '@utils/dataType/array.ts';
 import { getRandomNumber } from '@api/randomApi';
 import { signedRandomControllerGenerateWinnerMutation } from '@api/openapi/@tanstack/react-query.gen';
+import { trackWheelSpinResult } from '@shared/lib/analytics/events/wheel';
 import { useSyncEffect } from '@shared/lib/react';
-import { useAudioPlayback } from '@domains/winner-selection/wheel-of-random/settings/lib/soundtrack/useAudioPlayback';
+import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
+import array from '@utils/dataType/array.ts';
 
-import { DropoutVariant } from '../../BaseWheel/DropoutVariant';
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
 import { MAX_QUOTA } from '../../settings/ui/Fields/TicketCard/TicketCard';
 import { defaultWheelSettings } from '../../lib/hooks/useSavedWheelSettings';
@@ -127,7 +126,15 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const spinTime = useWatch({ name: 'spinTime', control });
   const randomnessSource = useWatch({ name: 'randomnessSource', control });
   const format = useWatch({ name: 'format', control });
+  const paceConfig = useWatch({ name: 'paceConfig', control });
+  const split = useWatch<Wheel.Settings>({ name: 'split' });
+  const maxDepth = useWatch({ name: 'maxDepth', control });
+  const depthRestriction = useWatch({ name: 'depthRestriction', control });
   const dropoutVariant = useWatch({ name: 'dropoutVariant', control });
+  const coreImage = useWatch({ name: 'coreImage', control });
+  const wheelStyles = useWatch({ name: 'wheelStyles', control });
+  const showDeleteConfirmation = useWatch({ name: 'showDeleteConfirmation', control });
+  const soundtrack = useWatch({ name: 'soundtrack', control });
   const soundtrackEnabled = useWatch({ name: 'soundtrack.enabled', control });
   const soundtrackSource = useWatch({ name: 'soundtrack.source', control });
   const soundtrackOffset = useWatch({ name: 'soundtrack.offset', control });
@@ -252,6 +259,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     async ({ randomnessSource }: Wheel.Settings) => {
       const { min, max } = randomSpinConfig!;
       const duration = (randomSpinEnabled ? random.getInt(min!, max!) : spinTime) ?? 20;
+      const activeWheelItems = wheelController.current?.getItems() ?? [];
 
       const generateSeed = async (): Promise<number> => {
         if (randomnessSource === 'random-org') {
@@ -300,7 +308,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
       const winnerResult = await wheelStrategy.getNextWinnerId({
         generateSeed,
-        items: wheelController.current?.getItems() ?? [],
+        items: activeWheelItems,
       });
       const winnerItem = itemsFromProps.find((item) => item.id === winnerResult.id);
 
@@ -329,6 +337,39 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       soundtrackPlayerRef.current?.stop();
 
       await onSpinEnd?.(winnerItem);
+
+      const finalWinnerId = winnerResult.finalWinnerId ?? winnerResult.id;
+
+      if (winnerResult.isFinalSpin && finalWinnerId) {
+        try {
+          trackWheelSpinResult(
+            buildWheelSpinResultPayload({
+              settings: {
+                spinTime,
+                randomSpinConfig,
+                randomSpinEnabled,
+                randomnessSource,
+                format,
+                paceConfig,
+                split,
+                maxDepth,
+                depthRestriction,
+                dropoutVariant,
+                coreImage,
+                wheelStyles,
+                showDeleteConfirmation,
+                soundtrack,
+              },
+              allItems: filteredItems,
+              finalSpinItems: activeWheelItems,
+              winnerId: finalWinnerId,
+              spinDuration: duration,
+            }),
+          );
+        } catch (error) {
+          console.error(error);
+        }
+      }
 
       if (randomnessSource === 'random-org-signed' && winnerResult.isFinalSpin) {
         setShouldRevealNumber(true);
@@ -360,10 +401,19 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       soundtrackOffset,
       soundtrackVolume,
       setShouldRevealNumber,
+      paceConfig,
+      split,
+      maxDepth,
+      depthRestriction,
+      coreImage,
+      wheelStyles,
+      showDeleteConfirmation,
+      soundtrack,
+      format,
+      dropoutVariant,
     ],
   );
 
-  const split = useWatch<Wheel.Settings>({ name: 'split' });
   const maxSize = useMemo(() => Math.max(...items.map<number>(({ amount }) => Number(amount))), [items]);
   const deleteWheelItem = (id: Key) => {
     if (format === WheelFormat.Default) {

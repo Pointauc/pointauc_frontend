@@ -28,7 +28,11 @@ const useRuntimeDropout = (controller: RefObject<WheelController | null>): Wheel
   const getNextWinnerId = ({ items }: Wheel.GetNextWinnerIdParams): Wheel.GetNextWinnerIdResult => {
     // ToDo: async seed is not supported for strategy with multiple steps
     const seed = random.value();
-    return { id: items[getSlotFromSeed(items, seed)].id, isFinalSpin: false };
+    const eliminatedItemId = items[getSlotFromSeed(items, seed)].id;
+    const finalWinnerId = items.find(({ id }) => id !== eliminatedItemId)?.id;
+    const isFinalSpin = items.length === 2 && finalWinnerId != null;
+
+    return { id: eliminatedItemId, isFinalSpin, finalWinnerId };
   };
 
   return {
