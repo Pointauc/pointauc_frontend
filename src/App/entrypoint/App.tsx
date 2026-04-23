@@ -154,7 +154,7 @@ const App: React.FC = () => {
     <PortalContextProvider>
       <AppShell
         padding={0}
-        className='bg-paper-800'
+        className='bg-paper-900'
         header={{ height: { base: 50, sm: 0 } }}
         navbar={{ width: 70, breakpoint: 'sm', collapsed: { mobile: !isNavbarOpened } }}
         transitionDuration={isMobile ? 200 : 0}

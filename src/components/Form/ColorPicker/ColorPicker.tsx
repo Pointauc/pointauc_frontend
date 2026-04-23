@@ -26,8 +26,8 @@ const ColorPicker: FC<ColorPickerProps> = ({ value, onChange, onBlur }) => {
         <Popover.Target>
           <Button
             style={{
-              width: 34,
-              height: 34,
+              width: 36,
+              height: 36,
               backgroundColor: value,
               padding: 0,
               border: '3px solid #eee',

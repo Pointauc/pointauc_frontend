@@ -80,9 +80,9 @@ export const useMenuGroups = (): MenuGroups => {
         {
           title: 'menu.items.settings.title',
           icon: <SettingsIcon />,
-          path: ROUTES.SETTINGS,
+          path: ROUTES.SETTINGS_WEBSITE,
           navbarFixedState: 'opened',
-          pathMatch: `${ROUTES.SETTINGS}/*`,
+          pathMatch: ROUTES.SETTINGS_WEBSITE,
         },
         { title: 'menu.items.overlays.title', icon: <LayersIcon />, path: ROUTES.OVERLAYS, isBeta: true },
         {

@@ -3,6 +3,7 @@ import { Route, Routes, useMatch } from 'react-router-dom';
 import { lazy } from 'react';
 
 import UserSettings from '@domains/user-settings/pages/UserSettings/UserSettings';
+import WebsiteSettings from '@domains/user-settings-v2/pages/WebsiteSettings';
 import LogoutPage from '@pages/logout/LogoutPage.tsx';
 import UserSettingsTanstack from '@domains/user-settings/pages/UserSettings/UserSettingsTanstack';
 import HelpPage from '@components/HelpPage/HelpPage';
@@ -31,6 +32,7 @@ export const AppMain = () => {
       </div>
       {/* <AlertsContainer /> */}
       <Routes>
+        <Route path={ROUTES.SETTINGS_WEBSITE} element={<WebsiteSettings />} />
         <Route path={`${ROUTES.SETTINGS}/*`} element={<UserSettings />} />
         <Route path={ROUTES.WHEEL} element={<WheelPage />} />
         {/* <Route path={ROUTES.HISTORY} element={<HistoryPage />} /> */}

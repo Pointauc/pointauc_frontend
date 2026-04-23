@@ -40,10 +40,10 @@ const darkPaletteBase = [
   '#606060',
   '#3e3e3e',
   '#363636',
-  '#2e2e2e',
-  '#272727',
-  '#1e1e1e',
-  '#161616',
+  '#303030',
+  '#282828',
+  '#212121',
+  '#1b1b1b',
 ] as const;
 
 const darkPalette = darkPaletteBase;
