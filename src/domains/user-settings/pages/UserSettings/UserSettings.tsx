@@ -60,7 +60,11 @@ const UserSettings = () => {
   }, [username]);
 
   useEffect(() => {
-    const normalizedTouched: FieldNamesMarkedBoolean<SettingsForm> = { ...touchedFields, background: true };
+    const normalizedTouched: FieldNamesMarkedBoolean<SettingsForm> = {
+      ...touchedFields,
+      background: true,
+      backgroundType: true,
+    };
     const dirtyValues = getDirtyValues(getValues(), dirtyFields, initialState.settings, normalizedTouched);
 
     if (Object.keys(dirtyValues).length > 0) {

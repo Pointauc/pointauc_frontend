@@ -1,6 +1,6 @@
 import { ComboboxItem, ComboboxLikeRenderOptionInput, Group, Text } from '@mantine/core';
-import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
-import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
+import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import { FC } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -20,10 +20,10 @@ const BidsSortSelect: FC<BidsSortSelectProps> = ({ control }) => {
   const value = useWatch({ control, name: 'purchaseSort' });
 
   const data = [
-    { value: '0', label: t('settings.auc.dateSort'), icon: <ArrowUpwardOutlinedIcon /> },
-    { value: '1', label: t('settings.auc.dateSort'), icon: <ArrowDownwardOutlinedIcon /> },
-    { value: '2', label: t('settings.auc.costSort'), icon: <ArrowUpwardOutlinedIcon /> },
-    { value: '3', label: t('settings.auc.costSort'), icon: <ArrowDownwardOutlinedIcon /> },
+    { value: '0', label: t('settings.auc.purchaseSortOptions.earliest'), icon: <AccessTimeOutlinedIcon /> },
+    { value: '1', label: t('settings.auc.purchaseSortOptions.newest'), icon: <AccessTimeOutlinedIcon /> },
+    { value: '2', label: t('settings.auc.purchaseSortOptions.lowest'), icon: <AttachMoneyOutlinedIcon /> },
+    { value: '3', label: t('settings.auc.purchaseSortOptions.highest'), icon: <AttachMoneyOutlinedIcon /> },
   ];
 
   const renderOption = (option: ComboboxLikeRenderOptionInput<ComboboxItem>) => (
@@ -40,7 +40,7 @@ const BidsSortSelect: FC<BidsSortSelectProps> = ({ control }) => {
       label={<SettingLabel text={t('settings.integrationCommon.sortBids')} />}
       data={data}
       renderOption={renderOption}
-      leftSection={data[value].icon}
+      leftSection={data[value ?? 0].icon}
       leftSectionPointerEvents='none'
       isInlineLabel
       isNumberValue

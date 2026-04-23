@@ -101,7 +101,7 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
       colors: {
         dark: darkPalette,
         darkTransparent: darkPalette.map((color) => alpha(color, uiOpacity)) as unknown as MantineColorsTuple,
-        primary: generateColors(adjustedPrimary),
+        primary: adjustedPrimary ? generateColors(adjustedPrimary) : generateColors('#228be6'),
       },
       components: {
         Notification: {

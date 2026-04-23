@@ -12,7 +12,7 @@ interface SettingsSectionProps {
 
 const SettingsSection = ({ id, title, icon, children }: SettingsSectionProps) => {
   return (
-    <Stack component='section' gap='md'>
+    <Stack component='section' pb='sm' gap='md'>
       <Group component='h2' id={id} gap='xs' align='center' wrap='nowrap' style={{ scrollMarginTop: '1.5rem' }}>
         {icon ? (
           <Box component='span' c='var(--mantine-primary-color-filled)' style={{ display: 'inline-flex' }}>

@@ -10,6 +10,8 @@ import SettingsTableOfContents from '@domains/user-settings-v2/ui/SettingsTableO
 import { SettingsForm } from '@models/settings.model.ts';
 import { RootState } from '@reducers/index';
 import AppearanceSection from '@domains/user-settings-v2/Widgets/appearance/AppearanceSection';
+import ChannelPointsSection from '@domains/user-settings-v2/Widgets/channel-points/ChannelPointsSection';
+import BidsGeneralSection from '@domains/user-settings-v2/Widgets/bids-general/BidsGeneralSection';
 import ExtraModesSection from '@domains/user-settings-v2/Widgets/extra-modes/ExtraModesSection';
 import TimerSection from '@domains/user-settings-v2/Widgets/timer/TimerSection';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
@@ -57,6 +59,7 @@ const WebsiteSettings = () => {
     const normalizedTouched = {
       ...touchedFields,
       background: true,
+      backgroundType: true,
       primaryColor: true,
       backgroundTone: true,
     };
@@ -76,7 +79,12 @@ const WebsiteSettings = () => {
   return (
     <FormProvider {...formMethods}>
       <form>
-        <PageContainer contentId={WEBSITE_SETTINGS_CONTENT_ID} contentRef={contentRef} className='h-full'>
+        <PageContainer
+          contentId={WEBSITE_SETTINGS_CONTENT_ID}
+          contentRef={contentRef}
+          className='h-full'
+          classes={{ content: styles.pageContent }}
+        >
           <Box className={styles.layout}>
             <Box className={styles.sidebarColumn}>
               <SettingsSidebar />
@@ -87,6 +95,8 @@ const WebsiteSettings = () => {
                 <TimerSection />
                 <AppearanceSection />
                 <ExtraModesSection />
+                <BidsGeneralSection />
+                <ChannelPointsSection />
               </Stack>
             </Box>
 

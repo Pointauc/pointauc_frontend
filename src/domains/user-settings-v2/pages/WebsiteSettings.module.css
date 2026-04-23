@@ -1,9 +1,15 @@
+.pageContent {
+  align-items: flex-start;
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 800px) minmax(0, 1fr);
   column-gap: var(--mantine-spacing-xl);
   align-items: start;
+  width: 100%;
   min-width: 0;
+  align-self: flex-start;
 }
 
 .sidebarColumn {

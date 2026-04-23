@@ -634,16 +634,20 @@
         "none": "Never"
       },
       "bidNameStrategyLabel": "What to use as a bid name",
-      "bidNameStrategyHint": "This value will be used as the main text for new bids.<ul><li><b>{{messageLabel}}</b> - for auctions where the viewer specifies an arbitrary outcome</li><li><b>{{usernameLabel}}</b> - convenient in an auction on the victory of a specific person</li></ul>",
+      "bidNameStrategyHint": "Choose which text will be used for new bid names. Hover over an option to see details.",
       "bidNameStrategy": {
         "message": "Message text",
-        "username": "Username"
+        "messageTooltip": "Uses the bid message as the bid name. Best when viewers send custom text or instructions.",
+        "username": "Username",
+        "usernameTooltip": "Uses the viewer's username as the bid name. Best when you want a simple, consistent name."
       }
     },
     "auc": {
       "hideAmounts": "Hide values of lots and bids",
       "auc": "Auction",
       "background": "Auction Background",
+      "backgroundHint": "Choose the auction floor background shown on the casting screen.",
+      "backgroundType": "Background type",
       "costSort": "Cost",
       "dateSort": "Date",
       "selectFromList": "Select from List",
@@ -651,11 +655,23 @@
       "showTotal": "Show Total Amount",
       "showWinningChances": "Show Winning Chances",
       "sortBids": "Sort Bids queue",
+      "purchaseSortOptions": {
+        "earliest": "Earliest first",
+        "newest": "Newest first",
+        "lowest": "Lowest first",
+        "highest": "Highest first"
+      },
       "uploadBackground": "Upload Background",
       "backgroundOverlayOpacity": "Overlay opacity",
       "backgroundBlur": "Blur",
       "resetBackground": "Remove custom background",
       "backgroundAlt": "Background unavailable. Please upload new image.",
+      "backgroundImageModal": "Select auction background",
+      "backgroundTypes": {
+        "customMedia": "Custom background",
+        "default": "Default",
+        "geometry": "Geometry"
+      },
       "favoritesIsEnable": "Enable lot pinning",
       "stateTransfer": {
         "title": "Settings transfer",

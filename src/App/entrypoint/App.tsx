@@ -1,4 +1,4 @@
-import { Alert, Anchor, AppShell, Button, Group, Modal, Text } from '@mantine/core';
+import { Alert, Anchor, AppShell, Box, Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertTriangle, IconInfoCircle } from '@tabler/icons-react';
 import clsx from 'clsx';
@@ -23,6 +23,7 @@ import { RootState } from '@reducers';
 import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
+import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
@@ -149,16 +150,23 @@ const App: React.FC = () => {
   const isNavbarExpanded = useMemo(() => {
     return (isHovered && activeMenu?.navbarFixedState !== 'closed') || activeMenu?.navbarFixedState === 'opened';
   }, [isHovered, activeMenu]);
+  const backgroundType = useSelector((root: RootState) => root.aucSettings.settings.backgroundType);
+  const hasGeometryBackground = backgroundType === 'geometry';
 
   return (
     <PortalContextProvider>
       <AppShell
         padding={0}
-        className='bg-paper-900'
         header={{ height: { base: 50, sm: 0 } }}
         navbar={{ width: 70, breakpoint: 'sm', collapsed: { mobile: !isNavbarOpened } }}
         transitionDuration={isMobile ? 200 : 0}
       >
+        {!hasGeometryBackground && <div className='bg-paper-900 absolute top-0 left-0 z-[-1] h-full w-full' />}
+        {hasGeometryBackground ? (
+          <Box className='absolute top-0 left-0 z-[-1] h-full w-full'>
+            <GeometryBackgroundPreview />
+          </Box>
+        ) : null}
         <AppHeader isNavbarOpened={isNavbarOpened} toggleNavbar={mobileNavbar.toggle} activeMenu={activeMenu} t={t} />
         <AppNavbar
           onActiveMenuChange={setActiveMenu}

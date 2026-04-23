@@ -507,7 +507,7 @@
         "appearance": "Внешний вид",
         "extraModes": "Дополнительные режимы",
         "integrations": "Интеграции",
-        "bidsGeneral": "Общие ставки",
+        "bidsGeneral": "Ставки общее",
         "channelPoints": "Баллы канала",
         "donations": "Донаты",
         "other": "Прочее",
@@ -562,10 +562,12 @@
         "none": "Никогда"
       },
       "bidNameStrategyLabel": "Название ставки",
-      "bidNameStrategyHint": "Это значение будет использоваться как основной текст для новых ставок.<ul><li><b>{{messageLabel}}</b> - для аукционов где зритель указывает произвольный исход</li><li><b>{{usernameLabel}}</b> - удобно в аукционе на победу конкретного человека</li></ul>",
+      "bidNameStrategyHint": "Выберите, какое значение будет использоваться для текста заказа.",
       "bidNameStrategy": {
         "message": "Сообщение",
-        "username": "Имя зрителя"
+        "messageTooltip": "Использует текст сообщения ставки как название. Подходит, когда зрители пишут свой текст или инструкцию.",
+        "username": "Имя зрителя",
+        "usernameTooltip": "Использует имя зрителя как название ставки. Подходит для простого и одинакового отображения."
       }
     },
     "twitch": {
@@ -613,11 +615,25 @@
       "showTotal": "Показать итоговую сумму",
       "showWinningChances": "Показать шансы выигрыша",
       "background": "Фон аукциона",
+      "backgroundType": "Тип фона",
+      "backgroundHint": "Выберите фон аукциона, который отображается на экране трансляции.",
+      "purchaseSortOptions": {
+        "earliest": "Сначала старые",
+        "newest": "Сначала новые",
+        "lowest": "Сначала дешевые",
+        "highest": "Сначала дорогие"
+      },
       "uploadBackground": "Изменить фон",
       "backgroundOverlayOpacity": "Прозрачность",
       "backgroundBlur": "Размытие",
       "resetBackground": "Убрать фон",
       "backgroundAlt": "Фон недоступен. Пожалуйста, загрузите новый фон.",
+      "backgroundImageModal": "Выбрать фон аукциона",
+      "backgroundTypes": {
+        "customMedia": "Пользовательский фон",
+        "default": "Стандартный",
+        "geometry": "Geometry"
+      },
       "selectFromList": "Выбрать из списка",
       "sortBids": "Сортировать покупки за поинты",
       "dateSort": "Дата",

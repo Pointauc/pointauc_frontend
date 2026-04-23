@@ -1,9 +1,8 @@
-import { ActionIcon, Divider, Group, Stack, Tooltip } from '@mantine/core';
-import { IconPalette, IconRefresh } from '@tabler/icons-react';
-import { useFormContext } from 'react-hook-form';
+import { ColorInput, ColorSwatch, Divider, Group, Stack, UnstyledButton } from '@mantine/core';
+import { IconPalette } from '@tabler/icons-react';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import BackgroundSettings from '@domains/user-settings/ui/BackgroundSettings';
 import FieldLabel from '@domains/user-settings-v2/ui/FieldLabel';
 import SettingsCard from '@domains/user-settings-v2/ui/SettingsCard';
 import SettingsRow from '@domains/user-settings-v2/ui/SettingsRow';
@@ -11,18 +10,17 @@ import FormSwitchField from '@domains/user-settings-v2/ui/FormSwitchField';
 import SettingsSection from '@domains/user-settings-v2/ui/SettingsSection';
 import { SettingsForm } from '@models/settings.model.ts';
 import { COLORS } from '@constants/color.constants.ts';
-import FormColorPicker from '@components/Form/FormColorPicker/FormColorPicker.tsx';
+
+import AuctionBackgroundSettings from './auction-background/AuctionBackgroundSettings';
+
+const PRIMARY_COLOR_SHORTCUTS = [COLORS.THEME.PRIMARY, '#69b39d', '#f59f00', '#d67676', '#ae87ed'];
 
 const AppearanceSection = () => {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<SettingsForm>();
 
-  const resetPrimaryColor = () => {
-    setValue('primaryColor', COLORS.THEME.PRIMARY, { shouldDirty: true, shouldTouch: true });
-  };
-
-  const resetBackgroundTone = () => {
-    setValue('backgroundTone', COLORS.THEME.BACKGROUND_TONE, { shouldDirty: true, shouldTouch: true });
+  const handlePrimaryColorShortcutClick = (color: string) => {
+    setValue('primaryColor', color, { shouldDirty: true, shouldTouch: true });
   };
 
   return (
@@ -32,23 +30,42 @@ const AppearanceSection = () => {
       icon={<IconPalette size={24} />}
     >
       <SettingsCard>
-        <SettingsRow>
-          <BackgroundSettings />
-        </SettingsRow>
+        <AuctionBackgroundSettings />
 
         <Divider />
 
         <Stack gap={0}>
-          <SettingsRow compact>
+          <SettingsRow compact htmlFor='primaryColor'>
             <Group align='center' justify='space-between' gap='md' wrap='wrap'>
               <FieldLabel text={t('settings.appearance.primaryColor')} />
-              <Group gap='xs' wrap='nowrap'>
-                <FormColorPicker control={control} name='primaryColor' />
-                <Tooltip label={t('common.reset')}>
-                  <ActionIcon size='lg' variant='subtle' onClick={resetPrimaryColor}>
-                    <IconRefresh size={20} />
-                  </ActionIcon>
-                </Tooltip>
+              <Group gap='md' align='center'>
+                <Group gap={8} wrap='nowrap'>
+                  {PRIMARY_COLOR_SHORTCUTS.map((color) => (
+                    <UnstyledButton
+                      key={color}
+                      type='button'
+                      aria-label={`Set primary color to ${color}`}
+                      onClick={() => handlePrimaryColorShortcutClick(color)}
+                    >
+                      <ColorSwatch color={color} size={26} />
+                    </UnstyledButton>
+                  ))}
+                </Group>
+                <Controller
+                  control={control}
+                  name='primaryColor'
+                  render={({ field }) => (
+                    <ColorInput
+                      value={field.value}
+                      onChangeEnd={field.onChange}
+                      onBlur={field.onBlur}
+                      fixOnBlur={false}
+                      format='hex'
+                      name='primaryColor'
+                      w={150}
+                    />
+                  )}
+                />
               </Group>
             </Group>
           </SettingsRow>

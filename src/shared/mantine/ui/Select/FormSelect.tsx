@@ -28,6 +28,7 @@ const FormSelect = ({
       render={({ field }) => (
         <Select
           {...field}
+          id={name}
           size={size}
           value={isNumberValue ? field.value.toString() : field.value}
           onChange={(value) => field.onChange(isNumberValue ? Number(value) : value)}

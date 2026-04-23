@@ -1,6 +1,7 @@
-import { Box, Group, Stack, TableOfContents, Text } from '@mantine/core';
-import { IconClockHour4, IconPalette, IconSparkles } from '@tabler/icons-react';
-import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from 'react';
+import { Box, Group, Stack, Text, UnstyledButton } from '@mantine/core';
+import { useScrollSpy } from '@mantine/hooks';
+import { IconArticle, IconClockHour4, IconCoin, IconPalette, IconSparkles } from '@tabler/icons-react';
+import { useEffect, useMemo, useState, type ReactNode, type RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from '@domains/user-settings-v2/pages/WebsiteSettings.module.css';
@@ -10,105 +11,129 @@ interface SettingsTableOfContentsProps {
   contentRef: RefObject<HTMLDivElement | null>;
 }
 
-const tocIcons: Record<string, ReactNode> = {
-  'website-settings-timer': <IconClockHour4 size={18} stroke={2} />,
-  'website-settings-appearance': <IconPalette size={18} stroke={2} />,
-  'website-settings-extra-modes': <IconSparkles size={18} stroke={2} />,
-};
+interface SettingsTableOfContentsLink {
+  id: string;
+  label: string;
+  icon: ReactNode;
+}
+
+interface SettingsTableOfContentsArea {
+  title: string;
+  links: SettingsTableOfContentsLink[];
+}
+
+const ACTIVE_SECTION_OFFSET = 24;
 
 const SettingsTableOfContents = ({ contentId, contentRef }: SettingsTableOfContentsProps) => {
-  const { t, i18n } = useTranslation();
-  const tocReinitializeRef = useRef<() => void>(() => {});
+  const { t } = useTranslation();
   const [scrollHost, setScrollHost] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setScrollHost(contentRef.current);
   }, [contentRef]);
 
-  useEffect(() => {
-    tocReinitializeRef.current();
-  }, [i18n.language, scrollHost]);
-
-  const sectionLabelMap = useMemo<Record<string, string>>(
-    () => ({
-      'website-settings-timer': t('settings.website.toc.timer'),
-      'website-settings-appearance': t('settings.website.toc.appearance'),
-      'website-settings-extra-modes': t('settings.website.toc.extraModes'),
-    }),
+  const tocAreas = useMemo<SettingsTableOfContentsArea[]>(
+    () => [
+      {
+        title: t('settings.website.toc.website'),
+        links: [
+          {
+            id: 'website-settings-timer',
+            label: t('settings.website.toc.timer'),
+            icon: <IconClockHour4 size={18} stroke={2} />,
+          },
+          {
+            id: 'website-settings-appearance',
+            label: t('settings.website.toc.appearance'),
+            icon: <IconPalette size={18} stroke={2} />,
+          },
+          {
+            id: 'website-settings-extra-modes',
+            label: t('settings.website.toc.extraModes'),
+            icon: <IconSparkles size={18} stroke={2} />,
+          },
+        ],
+      },
+      {
+        title: t('settings.website.toc.integrations'),
+        links: [
+          {
+            id: 'website-settings-bids-general',
+            label: t('settings.website.toc.bidsGeneral'),
+            icon: <IconArticle size={18} stroke={2} />,
+          },
+          {
+            id: 'website-settings-channel-points',
+            label: t('settings.website.toc.channelPoints'),
+            icon: <IconCoin size={18} stroke={2} />,
+          },
+        ],
+      },
+    ],
     [t],
   );
 
-  const placeholderStyle = {
-    color: 'var(--mantine-color-dimmed)',
-    opacity: 0.58,
-    pointerEvents: 'none' as const,
+  const tocLinks = useMemo(() => tocAreas.flatMap((area) => area.links), [tocAreas]);
+  const tocLinkSelector = useMemo(() => tocLinks.map(({ id }) => `#${id}`).join(', '), [tocLinks]);
+  const tocLinkLabelMap = useMemo(() => Object.fromEntries(tocLinks.map((link) => [link.id, link.label])), [tocLinks]);
+
+  const { active, data, reinitialize } = useScrollSpy({
+    selector: `#${contentId} :is(${tocLinkSelector})`,
+    scrollHost: scrollHost ?? undefined,
+    offset: ACTIVE_SECTION_OFFSET,
+    getDepth: () => 1,
+    getValue: (element) => tocLinkLabelMap[element.id] ?? element.textContent ?? '',
+  });
+
+  const activeSectionId = data[active]?.id ?? null;
+
+  useEffect(() => {
+    if (scrollHost) {
+      reinitialize();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollHost, tocLinkSelector]);
+
+  const scrollToSection = (sectionId: string) => {
+    const section = data.find((heading) => heading.id === sectionId);
+
+    section?.getNode().scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
-    <Stack gap='sm'>
-      <Box component='nav' aria-label={t('settings.website.toc.label')}>
-        <Stack gap={4}>
-          <Text size='sm' fw={700} tt='uppercase' c='dimmed'>
-            {t('settings.website.toc.website')}
-          </Text>
-          <TableOfContents
-            color='blue'
-            variant='none'
-            classNames={{
-              control: styles.tocControl,
-            }}
-            reinitializeRef={tocReinitializeRef}
-            scrollSpyOptions={{
-              selector: `#${contentId} :is(h2)`,
-              scrollHost: scrollHost ?? undefined,
-              offset: 24,
-              getValue: (element) => sectionLabelMap[element.id] ?? element.textContent ?? '',
-            }}
-            size='md'
-            getControlProps={({ active, data }) => ({
-              onClick: () => data.getNode().scrollIntoView({ behavior: 'smooth', block: 'start' }),
-              children: (
-                <Group gap='xs' wrap='nowrap' miw={0} style={{ width: '100%' }}>
-                  <Box className={styles.tocIcon}>{data.id ? tocIcons[data.id] ?? null : null}</Box>
-                  <Text className={styles.tocLabel} size='md' fw={500} truncate>
-                    {data.value}
-                  </Text>
-                </Group>
-              ),
-              'data-active': active || undefined,
+    <Box component='nav' aria-label={t('settings.website.toc.label')} id={`${contentId}-toc`}>
+      <Stack gap='sm'>
+        {tocAreas.map((area) => (
+          <Stack key={area.title} gap={4}>
+            <Text size='sm' fw={700} tt='uppercase' c='dimmed'>
+              {area.title}
+            </Text>
+
+            {area.links.map((link) => {
+              const isActive = activeSectionId === link.id;
+
+              return (
+                <UnstyledButton
+                  key={link.id}
+                  type='button'
+                  className={styles.tocControl}
+                  aria-current={isActive ? 'location' : undefined}
+                  data-active={isActive || undefined}
+                  onClick={() => scrollToSection(link.id)}
+                >
+                  <Group gap='xs' wrap='nowrap' miw={0} style={{ width: '100%' }}>
+                    <Box className={styles.tocIcon}>{link.icon}</Box>
+                    <Text className={styles.tocLabel} size='sm' fw={500} truncate>
+                      {link.label}
+                    </Text>
+                  </Group>
+                </UnstyledButton>
+              );
             })}
-          />
-        </Stack>
-      </Box>
-
-      <Box>
-        <Stack gap={4}>
-          <Text size='sm' fw={700} tt='uppercase' c='dimmed'>
-            {t('settings.website.toc.integrations')}
-          </Text>
-          <Text size='sm' fw={500} style={placeholderStyle}>
-            {t('settings.website.toc.bidsGeneral')}
-          </Text>
-          <Text size='sm' fw={500} style={placeholderStyle}>
-            {t('settings.website.toc.channelPoints')}
-          </Text>
-          <Text size='sm' fw={500} style={placeholderStyle}>
-            {t('settings.website.toc.donations')}
-          </Text>
-        </Stack>
-      </Box>
-
-      <Box>
-        <Stack gap={4}>
-          <Text size='sm' fw={700} tt='uppercase' c='dimmed'>
-            {t('settings.website.toc.other')}
-          </Text>
-          <Text size='sm' fw={500} style={placeholderStyle}>
-            {t('settings.website.toc.api')}
-          </Text>
-        </Stack>
-      </Box>
-    </Stack>
+          </Stack>
+        ))}
+      </Stack>
+    </Box>
   );
 };
 

@@ -108,7 +108,18 @@
       "showTotal": "Показаті Загальну Суму",
       "showWinningChances": "Показаті Ймовірності Віграшу",
       "background": "Фон Аукціону",
+      "backgroundType": "Тип фону",
       "uploadBackground": "Завантажіті Фон",
+      "backgroundOverlayOpacity": "Прозорість накладання",
+      "backgroundBlur": "Розмиття",
+      "resetBackground": "Прибрати користувацький фон",
+      "backgroundAlt": "Фон недоступний. Завантажте нове зображення.",
+      "backgroundImageModal": "Вибрати фон аукціону",
+      "backgroundTypes": {
+        "customMedia": "Користувацький фон",
+        "default": "Стандартний",
+        "geometry": "Geometry"
+      },
       "selectFromList": "Вібраті зі спіску",
       "sortBids": "Сортуваті Покупкі за Баламі",
       "dateSort": "Дата",
