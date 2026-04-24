@@ -1,13 +1,6 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  ComboboxItem,
-  ComboboxLikeRenderOptionInput,
-  Divider,
-  SegmentedControl,
-  Text,
-  Tooltip,
-} from '@mantine/core';
+import { ComboboxItem, ComboboxLikeRenderOptionInput, Divider, SegmentedControl, Text, Tooltip } from '@mantine/core';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import { IconArticle } from '@tabler/icons-react';
@@ -38,7 +31,7 @@ const BidsGeneralSection = () => {
   ];
 
   const bidsSortOptions = [
-    { value: '0', label: t('settings.auc.purchaseSortOptions.earliest'), icon: <AccessTimeOutlinedIcon /> },
+    { value: '0', label: t('settings.auc.purchaseSortOptions.oldest'), icon: <AccessTimeOutlinedIcon /> },
     { value: '1', label: t('settings.auc.purchaseSortOptions.newest'), icon: <AccessTimeOutlinedIcon /> },
     { value: '2', label: t('settings.auc.purchaseSortOptions.lowest'), icon: <AttachMoneyOutlinedIcon /> },
     { value: '3', label: t('settings.auc.purchaseSortOptions.highest'), icon: <AttachMoneyOutlinedIcon /> },

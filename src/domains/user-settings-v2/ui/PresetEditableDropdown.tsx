@@ -160,7 +160,7 @@ const PresetEditableDropdown = () => {
       <EditableDropdown
         options={presetOptions}
         value={activePresetId}
-        disabled={isPresetTransferBusy}
+        disabled
         placeholder={t('settings.website.presets.selectPlaceholder')}
         addOptionLabel={t('settings.website.presets.addNew')}
         selectedLabel={t('settings.website.presets.active')}

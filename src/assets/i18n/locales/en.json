@@ -547,7 +547,7 @@
     "website": {
       "presets": {
         "title": "Presets",
-        "description": "Manage preset templates and transfer them as a file.",
+        "description": "In development",
         "selectPlaceholder": "Select preset",
         "addNew": "Add new preset",
         "active": "Active",
@@ -671,7 +671,7 @@
       "showWinningChances": "Show Winning Chances",
       "sortBids": "Sort Bids queue",
       "purchaseSortOptions": {
-        "earliest": "Earliest first",
+        "oldest": "Oldest first",
         "newest": "Newest first",
         "lowest": "Lowest first",
         "highest": "Highest first"
