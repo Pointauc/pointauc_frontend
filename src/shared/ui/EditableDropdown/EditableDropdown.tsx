@@ -149,7 +149,7 @@ const EditableDropdown = ({
       <Combobox.Dropdown>
         <Combobox.Options>
           <Combobox.Option value={ADD_OPTION_VALUE}>
-            <Group gap='xs' wrap='nowrap'>
+            <Group gap='xs' wrap='nowrap' c='primary'>
               <IconPlus size={18} />
               <Text fw={500} size='sm'>
                 {addOptionLabel}

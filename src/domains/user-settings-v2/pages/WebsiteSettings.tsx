@@ -1,5 +1,6 @@
 import { Box, Stack } from '@mantine/core';
-import { useCallback, useEffect, useRef, useTransition } from 'react';
+import { useAsyncDebouncer } from '@tanstack/react-pacer/async-debouncer';
+import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -23,61 +24,93 @@ import { settingsApi } from '@api/userApi';
 import styles from './WebsiteSettings.module.css';
 
 const WEBSITE_SETTINGS_CONTENT_ID = 'website-settings-content';
+const WEBSITE_SETTINGS_AUTOSAVE_WAIT = 200;
+
+interface WebsiteSettingsAutosavePayload {
+  dirtyValues: Partial<SettingsForm>;
+  changeVersion: number;
+}
 
 const WebsiteSettings = () => {
   const { username } = useSelector((root: RootState) => root.user);
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const [, startTransition] = useTransition();
 
   const formMethods = useForm<SettingsForm>({
     defaultValues: settings,
     mode: 'onBlur',
   });
 
-  const {
-    reset,
-    formState: { dirtyFields, touchedFields },
-    getValues,
-    handleSubmit,
-  } = formMethods;
-
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const latestChangeVersionRef = useRef(0);
+  const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
 
-  useEffect(() => {
-    reset(settings);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username]);
+  const autosaveDebouncer = useAsyncDebouncer(
+    async ({ dirtyValues, changeVersion }: WebsiteSettingsAutosavePayload) => {
+      const saveNextSettings = async () => {
+        await formMethods.handleSubmit(async (values) => {
+          await settingsApi.preset.setActiveData(dirtyValues);
+          await dispatch(saveSettings(dirtyValues));
 
-  const onSubmit = useCallback(
-    (data: SettingsForm, dirtyValues: Partial<SettingsForm>) => {
-      dispatch(saveSettings(dirtyValues));
-      reset({ ...data, ...dirtyValues });
+          if (latestChangeVersionRef.current === changeVersion) {
+            formMethods.reset({ ...values, ...dirtyValues });
+          }
+        })();
+      };
+
+      saveQueueRef.current = saveQueueRef.current.catch(() => undefined).then(saveNextSettings);
+
+      await saveQueueRef.current;
     },
-    [dispatch, reset],
+    {
+      wait: WEBSITE_SETTINGS_AUTOSAVE_WAIT,
+      onError: (err) => {
+        console.error('Failed to autosave website settings', err);
+      },
+    },
   );
 
   useEffect(() => {
-    const normalizedTouched = {
-      ...touchedFields,
-      background: true,
-      backgroundType: true,
-      isGeometryBackgroundColorEnabled: true,
-      primaryColor: true,
-      backgroundTone: true,
-    };
-
-    const dirtyValues = getDirtyValues(getValues(), dirtyFields, initialState.settings, normalizedTouched);
-
-    if (Object.keys(dirtyValues).length > 0) {
-      startTransition(() => {
-        settingsApi.preset.setActiveData(dirtyValues);
-      });
-
-      void handleSubmit((data) => onSubmit(data, dirtyValues))();
-    }
+    latestChangeVersionRef.current += 1;
+    autosaveDebouncer.cancel();
+    formMethods.reset(settings);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(dirtyFields), JSON.stringify(touchedFields), handleSubmit, onSubmit]);
+  }, [username]);
+
+  useEffect(() => {
+    const unsubscribe = formMethods.subscribe({
+      formState: {
+        values: true,
+        dirtyFields: true,
+        touchedFields: true,
+      },
+      callback: ({ values, dirtyFields, touchedFields }) => {
+        const changeVersion = latestChangeVersionRef.current + 1;
+        latestChangeVersionRef.current = changeVersion;
+
+        const dirtyValues = getDirtyValues(
+          (values ?? formMethods.getValues()) as SettingsForm,
+          dirtyFields,
+          initialState.settings,
+          touchedFields,
+        );
+
+        if (Object.keys(dirtyValues).length === 0) {
+          return;
+        }
+
+        void autosaveDebouncer.maybeExecute({
+          dirtyValues,
+          changeVersion,
+        });
+      },
+    });
+
+    return () => {
+      autosaveDebouncer.cancel();
+      unsubscribe();
+    };
+  }, [autosaveDebouncer, formMethods]);
 
   return (
     <FormProvider {...formMethods}>

@@ -481,8 +481,8 @@
     "pageTitle": "Настройки",
     "website": {
       "presets": {
-        "title": "Настройки",
-        "description": "Вы можете создавать различные шаблоны настроек.",
+        "title": "Пресеты",
+        "description": "Вы можете создавать разные шаблоны настроек и переключаться между ними.",
         "selectPlaceholder": "Выберите шаблон",
         "addNew": "Добавить шаблон",
         "active": "Активен",
@@ -554,7 +554,7 @@
       "integrationCommon": "Общее",
       "sortBids": "Сортировка",
       "title": "Общее",
-      "insertStrategyLabel": "Автодобавление ставок",
+      "insertStrategyLabel": "Автоматическое добавление ставок",
       "revoke": "Отвязать",
       "insertStrategy": {
         "force": "Всегда",
@@ -562,7 +562,7 @@
         "none": "Никогда"
       },
       "bidNameStrategyLabel": "Текст ставок",
-      "bidNameStrategyHint": "Выберите, какое значение использовать как текст заказов",
+      "bidNameStrategyHint": "Выберите, какое значение использовать для текст заказов",
       "bidNameStrategy": {
         "message": "Сообщение",
         "messageTooltip": "Использовать текст сообщения зрителя. Подходит, когда зрители указывают свой вариант.",
@@ -634,8 +634,8 @@
     "auc": {
       "auc": "Таблица",
       "showBuyout": "Показать выкуп",
-      "showTotal": "Показать итоговую сумму",
-      "showWinningChances": "Показать шансы выигрыша",
+      "showTotal": "Показать сумму аукциона",
+      "showWinningChances": "Показать шансы выигрыша у лотов",
       "background": "Фон аукциона",
       "backgroundType": "Тип фона",
       "backgroundHint": "Выберите фон аукциона, который отображается на экране трансляции.",
@@ -687,7 +687,7 @@
     "marbles": {
       "marbles": "Шаровой аукцион",
       "marbleAuc": "Шаровой аукцион",
-      "marblesAucDesc": "Все новые ставки будут автоматически пересчитываться в шары",
+      "marblesAucDesc": "Для тех кто выбирает победителя через <a href='https://store.steampowered.com/app/1170970/Marbles_on_Stream/' target='_blank'>Marbles on Stream</a>. Все новые ставки будут автоматически пересчитываться в шары",
       "marbleCost": "Стоимость шара",
       "marbleCostDesc": "Стоимость одного шара при добавлении к существующему лоту",
       "newPositionCost": "Стоимость новой категории",
@@ -700,7 +700,7 @@
       "additionalTime": "Время прибавления таймера",
       "additionalTimeDesc": "Время на которое изменится таймер при нажатии на +/-.",
       "addTimeOnLeaderChange": "Смена лидера",
-      "addTimeOnNewPosition": "Новая позиция",
+      "addTimeOnNewPosition": "Новый лот",
       "maxAdditionalTime": "Время таймера больше чем",
       "minTimeRequired": "Не добавлять время если на таймере больше чем",
       "addTimeOnDonation": "Новый донат",

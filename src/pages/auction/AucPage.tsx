@@ -4,7 +4,6 @@ import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
-import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview';
 import { RootState } from '@reducers';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 import { ScrollContextProvider, useScrollContext } from '@shared/lib/scroll';

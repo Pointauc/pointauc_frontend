@@ -12,7 +12,15 @@ interface SettingsCardProps extends CardProps {
 const SettingsCard = ({ nested = false, children, ...props }: SettingsCardProps) => {
   return (
     <div className={clsx({ 'p-2': nested })}>
-      <Card {...props} withBorder radius='md' shadow='sm' p={0} bg={nested ? 'dark.7' : 'dark.8'}>
+      <Card
+        {...props}
+        withBorder
+        radius='md'
+        shadow='sm'
+        style={{ overflow: 'visible' }}
+        p={0}
+        bg={nested ? 'dark.7' : 'dark.8'}
+      >
         {children}
       </Card>
     </div>

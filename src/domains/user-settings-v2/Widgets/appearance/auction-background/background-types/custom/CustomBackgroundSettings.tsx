@@ -13,70 +13,62 @@ const CustomBackgroundSettings = () => {
   const opacity = useController({ control, name: 'backgroundOverlayOpacity' });
   const blur = useController({ control, name: 'backgroundBlur' });
 
-  const [localOpacity, setLocalOpacity] = useState(Math.round((opacity.field.value ?? 0) * 100));
-  const [localBlur, setLocalBlur] = useState(blur.field.value ?? 0);
-
-  const saveOpacity = (value: number): void => {
-    opacity.field.onChange(value / 100);
-    opacity.field.onBlur();
-  };
-
-  const saveBlur = (value: number): void => {
-    blur.field.onChange(value);
-    blur.field.onBlur();
-  };
-
-  useEffect(() => {
-    setLocalOpacity(Math.round((opacity.field.value ?? 0) * 100));
-    setLocalBlur(blur.field.value ?? 0);
-  }, [opacity.field.value, blur.field.value]);
-
   return (
-    <div>
+    <>
       <SettingsRow nested htmlFor='backgroundOverlayOpacity'>
-        <Grid align='center'>
-          <Grid.Col span={{ base: 12, sm: 4 }} style={{ display: 'flex', alignItems: 'center' }}>
+        <div className='flex w-full items-center justify-between gap-4'>
+          <div>
             <Text size='sm'>{t('settings.auc.backgroundOverlayOpacity')}</Text>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 8 }} style={{ display: 'flex', alignItems: 'center' }}>
+          </div>
+          <div>
             <Slider
               id='backgroundOverlayOpacity'
-              value={localOpacity}
-              onChange={setLocalOpacity}
-              onChangeEnd={saveOpacity}
+              value={Math.round((opacity.field.value ?? 0) * 100)}
+              onChange={(value) => {
+                opacity.field.onChange(value / 100);
+              }}
+              onChangeEnd={() => {
+                opacity.field.onBlur();
+              }}
               label={(value) => `${value}%`}
               min={0}
               max={100}
               marks={null as any}
-              w='100%'
+              w='352'
+              step={1}
             />
-          </Grid.Col>
-        </Grid>
+          </div>
+        </div>
       </SettingsRow>
 
       <Divider />
 
       <SettingsRow nested htmlFor='backgroundBlur'>
-        <Grid align='center'>
-          <Grid.Col span={{ base: 12, sm: 4 }} style={{ display: 'flex', alignItems: 'center' }}>
+        <div className='flex w-full items-center justify-between gap-4'>
+          <div>
             <Text size='sm'>{t('settings.auc.backgroundBlur')}</Text>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, sm: 8 }} style={{ display: 'flex', alignItems: 'center' }}>
+          </div>
+          <div>
             <Slider
               id='backgroundBlur'
-              value={localBlur}
-              onChange={setLocalBlur}
-              onChangeEnd={saveBlur}
-              label={(value) => `${Math.round((value * 100) / 30)}%`}
+              value={((blur.field.value ?? 0) * 100) / 30}
+              onChange={(value) => {
+                blur.field.onChange((value * 30) / 100);
+              }}
+              onChangeEnd={() => {
+                blur.field.onBlur();
+              }}
+              label={(value) => `${Math.round(value)}%`}
               min={0}
-              max={30}
+              max={100}
               marks={null as any}
-              w='100%'
+              w='352'
+              step={1}
             />
-          </Grid.Col>
-        </Grid>
+          </div>
+        </div>
       </SettingsRow>
-    </div>
+    </>
   );
 };
 

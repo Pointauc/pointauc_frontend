@@ -5,7 +5,6 @@ import classes from './index.module.css';
 
 const ExtendedSlider = Slider.extend({
   classNames: (theme, props) => {
-    console.log(props);
     return {
       ...classes,
       root: clsx({

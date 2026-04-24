@@ -12,8 +12,8 @@ import type { ReactNode } from 'react';
 interface ExtraModeCardProps {
   control: Control<SettingsForm>;
   switchName: string;
-  title: string;
-  hint?: string;
+  title: ReactNode;
+  hint?: ReactNode;
   isEnabled: boolean;
   children: ReactNode;
 }
