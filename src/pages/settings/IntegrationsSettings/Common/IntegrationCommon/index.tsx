@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form';
-import { Trans, useTranslation } from 'react-i18next';
-import { Group, List, SegmentedControl, Stack, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+import { Group, SegmentedControl, Stack, Text, Tooltip } from '@mantine/core';
 
 import BidsSortSelect from '@pages/settings/IntegrationsSettings/Common/AucSettings/BidsSortSelect';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
@@ -33,13 +33,7 @@ const IntegrationCommon = () => {
       <Group gap='xxs' wrap='wrap'>
         <SettingLabel
           text={t('bidNameStrategyLabel')}
-          hint={
-            <Trans
-              i18nKey='settings.integrationCommon.bidNameStrategyHint'
-              values={{ messageLabel: t('bidNameStrategy.message'), usernameLabel: t('bidNameStrategy.username') }}
-              components={{ ul: <List size='sm' />, li: <List.Item />, b: <Text size='sm' span fw={600} /> }}
-            />
-          }
+          hint={t('bidNameStrategyHint')}
         />
         <Controller
           name='bidNameStrategy'
@@ -47,8 +41,22 @@ const IntegrationCommon = () => {
           render={({ field: { onChange, value, onBlur } }) => (
             <SegmentedControl
               data={[
-                { value: BidNameStrategy.Message, label: t('bidNameStrategy.message') },
-                { value: BidNameStrategy.Username, label: t('bidNameStrategy.username') },
+                {
+                  value: BidNameStrategy.Message,
+                  label: (
+                    <Tooltip label={t('bidNameStrategy.messageTooltip')} withArrow withinPortal multiline w={280}>
+                      <Text span>{t('bidNameStrategy.message')}</Text>
+                    </Tooltip>
+                  ),
+                },
+                {
+                  value: BidNameStrategy.Username,
+                  label: (
+                    <Tooltip label={t('bidNameStrategy.usernameTooltip')} withArrow withinPortal multiline w={280}>
+                      <Text span>{t('bidNameStrategy.username')}</Text>
+                    </Tooltip>
+                  ),
+                },
               ]}
               value={value}
               color='primary'

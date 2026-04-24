@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { WheelOverlayDto } from '@api/openapi/types.gen';
 import BaseWheel, { WheelController } from '@domains/winner-selection/wheel-of-random/BaseWheel/BaseWheel';
 import WheelFlexboxAutosizer from '@domains/winner-selection/wheel-of-random/BaseWheel/FlexboxAutosizer';
+import { resolveWheelParts } from '@domains/winner-selection/wheel-of-random/BaseWheel/parts/resolveWheelParts';
 import ItemsPreview from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview';
 import { WheelFormat } from '@constants/wheel';
 import { WheelItemWithMetadata } from '@models/wheel.model';
@@ -43,6 +44,7 @@ export const WheelLayout: FC<WheelLayoutProps> = ({ overlay, participants, forma
               dropOut={format === WheelFormat.Dropout}
               coreImage={coreImage}
               onOptimalSizeChange={onOptimalSizeChange}
+              parts={resolveWheelParts()}
             />
           )}
         </WheelFlexboxAutosizer>

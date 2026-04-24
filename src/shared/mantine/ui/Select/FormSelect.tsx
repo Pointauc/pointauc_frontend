@@ -25,19 +25,27 @@ const FormSelect = ({
     <Controller
       control={control}
       name={name}
-      render={({ field }) => (
-        <Select
-          {...field}
-          size={size}
-          value={isNumberValue ? field.value.toString() : field.value}
-          onChange={(value) => field.onChange(isNumberValue ? Number(value) : value)}
-          classNames={{
-            root: clsx(classes.root, { [classes.inlineLabel]: isInlineLabel }),
-            input: clsx({ [classes[inputWidth || 'md']]: inputWidth }),
-          }}
-          {...props}
-        />
-      )}
+      render={({ field }) => {
+        const handleChange = (value: string | null) => {
+          field.onChange(isNumberValue ? Number(value) : value);
+          field.onBlur();
+        };
+        return (
+          <Select
+            {...field}
+            id={name}
+            size={size}
+            value={isNumberValue ? field.value.toString() : field.value}
+            onChange={handleChange}
+            onBlur={() => field.onBlur()}
+            classNames={{
+              root: clsx(classes.root, { [classes.inlineLabel]: isInlineLabel }),
+              input: clsx({ [classes[inputWidth || 'md']]: inputWidth }),
+            }}
+            {...props}
+          />
+        );
+      }}
     />
   );
 };

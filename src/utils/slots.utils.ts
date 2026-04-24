@@ -44,7 +44,7 @@ const slotToWheel = ({ id, name, amount, isFavorite }: Slot, excludeColors: stri
   name: name || '',
   amount: Number(amount),
   color: getWheelColor(excludeColors),
-  isFavorite: isFavorite ?? false
+  isFavorite: isFavorite ?? false,
 });
 
 export const SlotListToWheelList = (slots: Slot[]): WheelItem[] => {
@@ -107,7 +107,7 @@ export const createGame = (
   level = 0,
   matchOrder: Game[] = [],
   parentSide?: SideInfo,
-  maxDepth?: number,
+  maxDepth?: number | null,
 ): Game | null => {
   if (!items.length) {
     return null;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import clsx from 'clsx';
 
 import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton/index.tsx';
 import * as Integration from '@models/integration';
@@ -15,7 +16,7 @@ function DonatePayLoginButton(props: Integration.LoginButtonProps) {
       <IntegrationLoginButton
         {...props}
         onClick={() => setOpened(true)}
-        classes={{ button: styles.button, icon: styles.icon }}
+        classes={{ button: clsx(styles.button, props.classes?.button), icon: styles.icon }}
       />
     </>
   );

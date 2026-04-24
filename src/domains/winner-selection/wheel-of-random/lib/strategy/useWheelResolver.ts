@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import { WheelFormat } from '@constants/wheel.ts';
 
-import { DropoutVariant } from '../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../BaseWheel/DropoutVariant';
 import useBattleRoyale from '../../Duel/lib/useBattleRoyale';
 import useNormalWheel from '../../lib/strategy/useNormalWheel';
 import useRuntimeDropout from '../../Dropout/lib/useRuntimeDropout';

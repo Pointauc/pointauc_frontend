@@ -33,10 +33,11 @@ export function useMockBidForm() {
     defaultValues: defaultMockBidData,
     onSubmit: ({ value }) => {
       const { randomValues, ...rest } = value;
+      const baseBid = { ...rest, timestamp: new Date().toISOString() };
       if (randomValues) {
         dispatch(
           processRedemption({
-            ...rest,
+            ...baseBid,
             id: Math.random().toString(),
             cost: Math.floor(Math.random() * 1000),
             message: `Random message ${Math.random().toString(36).substring(7)}`,
@@ -44,7 +45,7 @@ export function useMockBidForm() {
           }),
         );
       } else {
-        dispatch(processRedemption(rest));
+        dispatch(processRedemption(baseBid));
       }
     },
   });

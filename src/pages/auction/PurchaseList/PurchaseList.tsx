@@ -27,6 +27,10 @@ const PurchaseList: React.FC = () => {
   };
 
   const sortedPurchases = useMemo(() => {
+    if (!purchaseSort || purchaseSort === 0) {
+      return purchases;
+    }
+
     const { key, order } = PURCHASE_SORT_OPTIONS[purchaseSort || 0];
     const orderModifier = order === 'ascend' ? 1 : -1;
 

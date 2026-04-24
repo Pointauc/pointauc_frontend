@@ -4,7 +4,7 @@ import { mergeWith } from 'es-toolkit';
 
 import { getUserData, updateSettings } from '@api/userApi.ts';
 import { GetUserDto } from '@models/user.model.ts';
-import { AucSettingsDto, SettingsForm } from '@models/settings.model.ts';
+import { AucSettingsDto, resolveBackgroundType } from '@models/settings.model.ts';
 import { COLORS } from '@constants/color.constants.ts';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
@@ -38,6 +38,7 @@ export interface AucSettingsState {
   settings: AucSettingsDto & { events: EventsSettings } & SettingsMissingOnBackend;
 }
 const showRules = isBrowser ? localStorage.getItem('showRules') : null;
+const storedSettings = isBrowser && localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings') as string) : null;
 
 const defaultSettings: AucSettingsState['settings'] = {
   startTime: 10,
@@ -47,8 +48,10 @@ const defaultSettings: AucSettingsState['settings'] = {
   autoincrementTime: 30,
   purchaseSort: 0,
   background: null,
+  backgroundType: 'default',
   backgroundOverlayOpacity: 0.4,
   backgroundBlur: 0,
+  isGeometryBackgroundColorEnabled: true,
   marblesAuc: false,
   marbleRate: 50,
   marbleCategory: 100,
@@ -93,8 +96,12 @@ export const initialState: AucSettingsState = {
     autoScroll: false,
   },
   settings:
-    isBrowser && localStorage.getItem('settings')
-      ? { ...defaultSettings, ...JSON.parse(localStorage.getItem('settings') as string) }
+    storedSettings
+      ? {
+          ...defaultSettings,
+          ...storedSettings,
+          backgroundType: resolveBackgroundType(storedSettings.background, storedSettings.backgroundType),
+        }
       : defaultSettings,
 };
 
@@ -161,6 +168,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     dispatch(
       setAucSettings({
         ...settings,
+        backgroundType: resolveBackgroundType(settings.background, settings.backgroundType),
         primaryColor:
           localStorage.getItem('isColorResetDone') !== 'true' ? COLORS.THEME.PRIMARY : settings.primaryColor,
       }),

@@ -26,7 +26,7 @@ const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.Fo
   const [nextWinner, setNextWinner] = useState<WheelItem | null>(null);
   const [maxDepth, setMaxDepth] = useState<number>();
 
-  const depthRestriction = useWatch<Wheel.Settings>({ name: 'depthRestriction' });
+  const depthRestriction = useWatch({ name: 'depthRestriction' });
 
   const initInternal = useCallback(
     (items: WheelItem[]) => {
@@ -106,7 +106,10 @@ const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.Fo
   const getNextWinnerId = ({ items }: Wheel.GetNextWinnerIdParams): Wheel.GetNextWinnerIdResult => {
     // ToDo: async seed is not supported for strategy with multiple steps
     const seed = random.value();
-    return { id: items[getSlotFromSeed(items, seed)].id, isFinalSpin: false };
+    const winnerId = items[getSlotFromSeed(items, seed)].id;
+    const isFinalSpin = step === gameOrder.length - 1;
+
+    return { id: winnerId, isFinalSpin, finalWinnerId: isFinalSpin ? winnerId : undefined };
   };
 
   return {

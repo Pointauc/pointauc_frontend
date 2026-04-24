@@ -65,7 +65,21 @@ If you want to verify the integrity of HTML files manually, you need to strip th
 
 ## 📝 Contribution guidelines
 
-TBD
+Contributions are welcome through issues and pull requests. By contributing to this
+repository, you agree that your contribution may be distributed as part of this
+project under the repository license.
+
+## 📄 License
+
+This repository is **source-available**, not open source.
+
+The code in this repository is licensed under **PolyForm Noncommercial 1.0.0**.
+You may use, modify, and share it for noncommercial purposes under the terms in
+[LICENSE](./LICENSE). Commercial use requires separate permission from the
+project owner.
+
+Please preserve the attribution notice in [NOTICE](./NOTICE) when redistributing
+the project or derivative works.
 
 ## 💡 Suggestions & Bug Reports
 

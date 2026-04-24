@@ -33,7 +33,7 @@ const CoreImageField = () => {
     [getRandomEmote, getValues, setValue],
   );
 
-  const coreImage: string | null = useWatch<Wheel.Settings>({ name: 'coreImage' });
+  const coreImage = useWatch<Wheel.Settings, 'coreImage'>({ name: 'coreImage' });
   useEffect(() => {
     if (coreImage && coreImage.length < 2500000) {
       localStorage.setItem('wheelEmote', coreImage);

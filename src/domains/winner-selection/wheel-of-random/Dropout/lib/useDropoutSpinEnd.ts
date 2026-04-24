@@ -31,11 +31,11 @@ export const animateDropout = async (controller: RefObject<WheelController | nul
 };
 
 const useDropoutSpinEnd = ({ controller, setItems }: Props) => {
-  const spinTime = useWatch<Wheel.Settings>({ name: 'spinTime' });
+  const spinTime = useWatch<Wheel.Settings, 'spinTime'>({ name: 'spinTime' });
 
   return useCallback(
     async ({ id }: WheelItem) => {
-      await animateDropout(controller, id, spinTime);
+      await animateDropout(controller, id, spinTime ?? 5);
       setItems((items) => items?.filter((item) => item.id !== id));
     },
     [controller, setItems, spinTime],

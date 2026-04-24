@@ -13,7 +13,7 @@ import RandomnessSourceField from '@domains/winner-selection/wheel-of-random/set
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
 import WheelFormatField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat';
 
-import { DropoutVariant } from '../../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../../BaseWheel/DropoutVariant';
 import { DropoutHelp } from '../../../Dropout/ui/DropoutHelp';
 import NewDropoutDescription from '../../../Dropout/ui/NewDropoutDescription/NewDropoutDescription';
 import { RevealedData } from '../../../lib/hooks/useTicketManagement';

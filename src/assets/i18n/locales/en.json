@@ -6,6 +6,13 @@
   "resizablePanel": {
     "description": "You can move the window around the screen and change its size by dragging the bottom right corner."
   },
+  "menu": {
+    "items": {
+      "settingsWebsite": {
+        "title": "Settings"
+      }
+    }
+  },
   "documentation": {
     "content": "<h1>Auction Service for Streamers - <a href=\"https://pointauc.com\">pointauc.com</a></h1>\n\n<h2>Overview</h2>\n<p>\n    This service is designed to enhance the interaction between streamers and their audiences by providing a fun and engaging way to make decisions during live streams. Whether it's deciding which game a streamer should play next, which video or movie they should watch with their audience, or running a lottery or contest, this service offers a versatile set of tools to make your streams more interactive and entertaining.\n</p>\n<p>\n    The service features seamless integration with <strong>Twitch Channel Points</strong> and <strong>Donation Alerts</strong>, allowing streamers to easily manage incoming donations and channel point redemptions. This saves valuable time and energy, enabling streamers to focus on what they do best—entertaining their audience!\n</p>\n\n<h2>Integrations</h2>\n<p>The Pointauc supports the following integrations to enhance your streaming experience:</p>\n<ul>\n    <li><strong>Twitch Channel Points</strong>:\n        <p>Allows viewers to use their channel points to participate in auctions, lotteries, and other activities directly through Twitch.</p>\n    </li>\n    <li><strong>Donation Alerts</strong>:\n        <p>Integrates with Donation Alerts to manage monetary donations, which can be used in place of or alongside channel points in auctions and contests.</p>\n    </li>\n    <li><strong>DonatePay</strong> (another donation service)</li>\n</ul>\n\n<h2>Features</h2>\n\n<h3>1. <strong>Game &amp; Content Auctions</strong></h3>\n<ul>\n    <li>Streamers can create auctions where viewers bid using channel points or donations to decide which game should be played next or which content should be watched during the stream or any other activity.</li>\n</ul>\n\n<h3>2. <strong>Lotteries &amp; Contests</strong></h3>\n<ul>\n    <li>Run exciting lotteries or contests where viewers can participate using their channel points or donations. Multiple formats are available, including random draw, highest bid, or entry-based selection.</li>\n</ul>\n\n<h3>3. <strong>Decision-Making Tools</strong></h3>\n<ul>\n    <li>Choose from a variety of interactive decision-making tools to select winners or make choices:\n        <ul>\n            <li><strong>Wheel of Fortune</strong>: Spin a wheel to randomly select a winner or outcome.</li>\n            <li><strong>Dropout Wheel</strong>: Eliminate options gradually until only one remains.</li>\n            <li><strong>Battle Royale</strong>: A competitive elimination-style game where participants are gradually removed until the final winner is determined.</li>\n        </ul>\n    </li>\n</ul>\n\n<h3>4. <strong>Real-Time Updates</strong></h3>\n<ul>\n    <li>Real-time tracking and updates ensure that viewers and streamers are always in sync with the latest bids.</li>\n</ul>\n\n<h3>5. <strong>Customizable Settings</strong></h3>\n<ul>\n    <li>Streamers can personalize the website's appearance, automate timer rules, and add custom enhancements like <a href=\"https://store.steampowered.com/app/1170970/Marbles_on_Stream/\">Marbles on Stream Auction</a> and more. Additionally, the service supports automatic bid creation using channel points, simplifying a work for the streamer.</li>\n</ul>\n\n<h2>Suggestions and bug reports</h2>\n<p>You can create an <a href=\"https://github.com/Pointauc/pointauc_frontend/issues\">issue</a> if you want to suggest something or tell about a bug.</p>"
   },
@@ -47,6 +54,10 @@
     "/settings": {
       "title": "Settings & Integrations – Pointauc",
       "description": "Connect Twitch, Donation Alerts, or DonatePay and fine-tune your setup. Configure timers, customize the look, and pick the format that works for you."
+    },
+    "/settings/website": {
+      "title": "Settings - Pointauc",
+      "description": "Manage presets, tune timer behavior, and adjust appearance settings."
     },
     "/wheel": {
       "title": "Wheel of Random – Pointauc",
@@ -533,6 +544,44 @@
   },
   "settings": {
     "pageTitle": "Settings",
+    "website": {
+      "presets": {
+        "title": "Presets",
+        "description": "In development",
+        "selectPlaceholder": "Select preset",
+        "addNew": "Add new preset",
+        "active": "Active",
+        "edit": "Edit",
+        "nameLabel": "Preset name",
+        "namePlaceholder": "Preset name",
+        "createModalTitle": "Create preset",
+        "import": "Import",
+        "export": "Export",
+        "notifications": {
+          "exportSuccess": "Presets exported",
+          "exportError": "Failed to export presets",
+          "importSuccess": "Presets imported",
+          "importError": "Failed to import presets",
+          "invalidFile": "Invalid preset transfer file"
+        }
+      },
+      "toc": {
+        "label": "Settings table of contents",
+        "website": "Website",
+        "timer": "Timer",
+        "appearance": "Appearance",
+        "extraModes": "Extra modes",
+        "integrations": "Integrations",
+        "bidsGeneral": "Bids general",
+        "channelPoints": "Channel points",
+        "donations": "Donations",
+        "other": "Other",
+        "api": "API"
+      },
+      "timer": {
+        "exceptions": "Exceptions"
+      }
+    },
     "twitch": {
       "rewardPresetsConfirmation": {
         "title": "Warning",
@@ -585,16 +634,35 @@
         "none": "Never"
       },
       "bidNameStrategyLabel": "What to use as a bid name",
-      "bidNameStrategyHint": "This value will be used as the main text for new bids.<ul><li><b>{{messageLabel}}</b> - for auctions where the viewer specifies an arbitrary outcome</li><li><b>{{usernameLabel}}</b> - convenient in an auction on the victory of a specific person</li></ul>",
+      "bidNameStrategyHint": "Choose which text will be used for new bid names. Hover over an option to see details.",
       "bidNameStrategy": {
         "message": "Message text",
-        "username": "Username"
+        "messageTooltip": "Uses the bid message as the bid name. Best when viewers send custom text or instructions.",
+        "username": "Username",
+        "usernameTooltip": "Uses the viewer's username as the bid name. Best when you want a simple, consistent name."
+      },
+      "switchRatesTooltip": {
+        "title": "What the switch button changes",
+        "moneyToCoins": {
+          "title": "Money to coins",
+          "direction": "arrow to the right",
+          "description": "When a donation arrives, the money amount is multiplied by the exchange ratio.",
+          "example": "For example, 10 {{currency}} × 100 = 1,000 coins."
+        },
+        "pointsToMoney": {
+          "title": "Coins to money",
+          "direction": "arrow to the left",
+          "description": "When the direction is switched, channel-point bids are divided by the ratio and shown as a money equivalent.",
+          "example": "For example, 1,000 points ÷ 100 = 10 {{currency}}."
+        }
       }
     },
     "auc": {
       "hideAmounts": "Hide values of lots and bids",
       "auc": "Auction",
       "background": "Auction Background",
+      "backgroundHint": "Choose the auction floor background shown on the casting screen.",
+      "backgroundType": "Background type",
       "costSort": "Cost",
       "dateSort": "Date",
       "selectFromList": "Select from List",
@@ -602,11 +670,24 @@
       "showTotal": "Show Total Amount",
       "showWinningChances": "Show Winning Chances",
       "sortBids": "Sort Bids queue",
+      "purchaseSortOptions": {
+        "oldest": "Oldest first",
+        "newest": "Newest first",
+        "lowest": "Lowest first",
+        "highest": "Highest first"
+      },
       "uploadBackground": "Upload Background",
       "backgroundOverlayOpacity": "Overlay opacity",
       "backgroundBlur": "Blur",
       "resetBackground": "Remove custom background",
       "backgroundAlt": "Background unavailable. Please upload new image.",
+      "backgroundImageModal": "Select auction background",
+      "geometryBackgroundColor": "Color",
+      "backgroundTypes": {
+        "customMedia": "Custom background",
+        "default": "Default",
+        "geometry": "Geometry"
+      },
       "favoritesIsEnable": "Enable lot pinning",
       "stateTransfer": {
         "title": "Settings transfer",
@@ -634,8 +715,15 @@
       "addTimeOnDonation": "Add Time on Donation",
       "pointsRate": "Exchange Rate from Ruble to Points",
       "title": "Donations",
-      "conversion": "Conversion into points:",
-      "switchRates": "switch places"
+      "conversion": "Convert money into points",
+      "switchRates": "switch places",
+      "integrationActive": "Active",
+      "integrationInactive": "Paused",
+      "integrationConnecting": "Connecting",
+      "integrationActiveHint": "This integration is already receiving bids in the background.",
+      "integrationInactiveHint": "Click the card to start receiving bids from this service.",
+      "integrationConnectingHint": "Connection is starting in the background.",
+      "integrationDisconnectHint": "Disconnect this account if you no longer want to use it here."
     },
     "integrations": "Integrations",
     "luckyWheel": {
@@ -674,7 +762,7 @@
 
       "addOnCondition": "Add time on conditions",
       "notOnCondition": "DO NOT Add time on conditions",
-      "maxAdditionalTimeHint": "Example when the field value is <b>5 min</b> and leader change happens: <u><li>Time left 10 min - add extra time</li><li>Time left 2 min - do not add</li></u>"
+      "maxAdditionalTimeHint": ""
     },
     "token": {
       "copied": "Copied",

@@ -12,9 +12,10 @@ const FormSwitch = ({ name, control, ...props }: FormSwitchProps) => {
       name={name}
       render={({ field }) => (
         <Switch
-          checked={field.value}
+          checked={Boolean(field.value)}
+          id={name}
           onChange={(event) => {
-            field.onChange(event);
+            field.onChange(event.currentTarget.checked);
             field.onBlur();
           }}
           onBlur={field.onBlur}

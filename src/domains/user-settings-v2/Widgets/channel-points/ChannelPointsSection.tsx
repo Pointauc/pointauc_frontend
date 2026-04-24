@@ -1,0 +1,124 @@
+import { Button, Divider } from '@mantine/core';
+import { IconCoin } from '@tabler/icons-react';
+import { useCallback, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useStore } from '@tanstack/react-store';
+
+import { closeTwitchRewards } from '@api/twitchApi.ts';
+import twitch from '@domains/bids/external-integrations/Twitch';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
+import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
+import { RootState } from '@reducers';
+import { SettingsForm } from '@models/settings.model.ts';
+import SettingsCard from '@domains/user-settings-v2/ui/SettingsCard';
+import FieldLabel from '@domains/user-settings-v2/ui/FieldLabel';
+import SettingsRow from '@domains/user-settings-v2/ui/SettingsRow';
+import SettingsSection from '@domains/user-settings-v2/ui/SettingsSection';
+import FormSwitchField from '@domains/user-settings-v2/ui/FormSwitchField';
+import PointsIcon from '@assets/icons/channelPoints.svg?react';
+
+import RewardPresetsForm from './RewardPresetsForm';
+
+const ChannelPointsSection = () => {
+  const { t } = useTranslation();
+  const { control } = useFormContext<SettingsForm>();
+  const authData = useSelector((root: RootState) => root.user.authData);
+  const { subscribed, loading: pubsubLoading } = useStore(twitch.pubsubFlow.store, (state) => state);
+
+  const toggleSubscribe = useCallback((): void => {
+    if (subscribed) {
+      twitch.pubsubFlow.disconnect();
+    } else {
+      twitch.pubsubFlow.connect();
+    }
+  }, [subscribed]);
+
+  const { available, unavailable } = useMemo(
+    () => integrationUtils.groupBy.availability(integrations.points, authData),
+    [authData],
+  );
+
+  return (
+    <SettingsSection
+      id='website-settings-channel-points'
+      title={t('settings.website.toc.channelPoints')}
+      icon={<PointsIcon width={24} height={24} />}
+    >
+      <div className='flex flex-col gap-4'>
+        {unavailable.length > 0 && (
+          <SettingsCard>
+            <div className='flex flex-col gap-2.5 p-4'>
+              {unavailable.map((integration) => (
+                <integration.authFlow.loginComponent
+                  key={integration.id}
+                  id={integration.id}
+                  branding={integration.branding}
+                />
+              ))}
+            </div>
+          </SettingsCard>
+        )}
+
+        {available.length > 0 && (
+          <SettingsCard>
+            <div className='flex flex-col'>
+              <SettingsRow>
+                <div className='flex flex-wrap items-center justify-between gap-4'>
+                  <div className='flex flex-wrap gap-2.5'>
+                    <Button
+                      loading={pubsubLoading}
+                      variant='outline'
+                      size='sm'
+                      color={subscribed ? 'white' : undefined}
+                      onClick={toggleSubscribe}
+                    >
+                      {subscribed ? t('settings.twitch.closeRewards') : t('settings.twitch.openRewards')}
+                    </Button>
+                    <Button variant='outline' color='red' size='sm' onClick={closeTwitchRewards}>
+                      {t('settings.twitch.deleteRewards')}
+                    </Button>
+                  </div>
+                  <RevokeIntegrationButton revoke={available[0].authFlow.revoke} />
+                </div>
+              </SettingsRow>
+
+              {/* <Divider /> */}
+
+              {/* <SettingsRow htmlFor='isRefundAvailable'>
+                <FormSwitchField
+                  name='isRefundAvailable'
+                  control={control}
+                  label={<FieldLabel text={t('settings.twitch.returnCanceledBids')} />}
+                />
+              </SettingsRow> */}
+
+              <Divider />
+
+              <SettingsRow compact htmlFor='dynamicRewards'>
+                <FormSwitchField
+                  name='dynamicRewards'
+                  control={control}
+                  label={
+                    <FieldLabel
+                      text={t('settings.twitch.bindRewardsToTimer')}
+                      hint={t('settings.twitch.bindRewardsToTimerDesc')}
+                    />
+                  }
+                />
+              </SettingsRow>
+
+              <Divider />
+
+              <RewardPresetsForm />
+            </div>
+          </SettingsCard>
+        )}
+      </div>
+    </SettingsSection>
+  );
+};
+
+export default ChannelPointsSection;

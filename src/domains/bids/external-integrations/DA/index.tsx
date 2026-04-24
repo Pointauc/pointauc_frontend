@@ -39,7 +39,10 @@ const authFlow: Integration.RedirectFlow = {
     <RedirectLoginButton
       {...props}
       buildUrl={redirectFlow.url}
-      classes={{ button: styles.button, icon: styles.buttonIcon }}
+      classes={{
+        button: `${props.classes?.button ?? ''} ${styles.button}`,
+        icon: `${props.classes?.icon ?? ''} ${styles.buttonIcon}`,
+      }}
     />
   ),
 };

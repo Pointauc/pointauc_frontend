@@ -1,4 +1,4 @@
-import { RefObject, useCallback } from 'react';
+import { useCallback } from 'react';
 import gsap from 'gsap';
 
 // @ts-ignore
@@ -14,7 +14,8 @@ interface Result {
 }
 
 interface Props {
-  wheelCanvas: RefObject<HTMLCanvasElement | null>;
+  getCurrentRotation: () => number;
+  setRotation: (rotation: number) => void;
   onSpin: (rotate: number) => void;
 }
 
@@ -30,38 +31,30 @@ const buildRandomCurve = (): string => {
   return buildSpinPaceCurve(endGuide, middleGuide);
 };
 
-export const useWheelAnimator = ({ wheelCanvas, onSpin }: Props): Result => {
-  const getCurrentRotation = useCallback(() => {
-    if (wheelCanvas.current) {
-      const rotationMatch = /rotate\((.*)deg\)/.exec(wheelCanvas.current.style.transform);
-      return rotationMatch ? Number(rotationMatch[1]) : 0;
-    }
-    return 0;
-  }, [wheelCanvas]);
-
+export const useWheelAnimator = ({ getCurrentRotation, setRotation, onSpin }: Props): Result => {
   const animate = useCallback<Result['animate']>(
     (rotation, duration) => {
       return new Promise<number>((resolve) => {
-        if (wheelCanvas.current) {
-          const startRotation = getCurrentRotation();
-          const endPosition = rotation + startRotation;
+        const startRotation = getCurrentRotation();
+        const endPosition = rotation + startRotation;
+        const animationState = { rotation: startRotation };
 
-          gsap.to(wheelCanvas.current, {
-            duration,
-            ease: CustomEase.create('custom', SPIN_PATH, {
-              onUpdate: (progress: number) => onSpin(startRotation + rotation * progress),
-            }),
-            onComplete: () => {
-              resolve(endPosition);
-            },
-            rotate: endPosition,
-          });
-        } else {
-          resolve(0);
-        }
+        gsap.to(animationState, {
+          duration,
+          ease: CustomEase.create('custom', SPIN_PATH),
+          rotation: endPosition,
+          onUpdate: () => {
+            setRotation(animationState.rotation);
+            onSpin(animationState.rotation);
+          },
+          onComplete: () => {
+            setRotation(endPosition);
+            resolve(endPosition);
+          },
+        });
       });
     },
-    [onSpin, wheelCanvas, getCurrentRotation],
+    [getCurrentRotation, onSpin, setRotation],
   );
 
   return { animate, getCurrentRotation };

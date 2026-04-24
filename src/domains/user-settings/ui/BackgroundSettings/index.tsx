@@ -16,6 +16,7 @@ const BackgroundSettings = () => {
   const { t } = useTranslation();
   const { control } = useFormContext();
   const { field } = useController({ control, name: 'background' });
+  const backgroundType = useController({ control, name: 'backgroundType' });
 
   const opacity = useController({ control, name: 'backgroundOverlayOpacity' });
   const [localOpacity, setLocalOpacity] = useState(opacity.field.value ?? 0);
@@ -41,6 +42,8 @@ const BackgroundSettings = () => {
   const setValue = (value: string | null): void => {
     field.onChange(value);
     field.onBlur();
+    backgroundType.field.onChange(value ? 'customMedia' : 'default');
+    backgroundType.field.onBlur();
   };
 
   const handleImageChange = (image: string): void => {

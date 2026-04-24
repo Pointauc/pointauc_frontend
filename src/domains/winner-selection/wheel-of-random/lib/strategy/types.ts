@@ -2,7 +2,9 @@ import { RefObject } from 'react';
 
 import { WheelFormat } from '@constants/wheel.ts';
 
-import { DropoutVariant, WheelController } from '../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../BaseWheel/DropoutVariant';
+
+import type { WheelController } from '../../BaseWheel/BaseWheel';
 
 export interface WheelResolverProps {
   format: WheelFormat;

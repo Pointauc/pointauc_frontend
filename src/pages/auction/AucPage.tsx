@@ -24,6 +24,7 @@ const AucPageContent: React.FC = () => {
   const { background, backgroundOverlayOpacity, backgroundBlur } = useSelector(
     (root: RootState) => root.aucSettings.settings,
   );
+  const backgroundType = useSelector((root: RootState) => root.aucSettings.settings.backgroundType);
   const isMobile = useIsMobile();
   const { showChances } = useSelector((root: RootState) => root.aucSettings.settings);
   const { slots, searchTerm } = useSelector((root: RootState) => root.slots);
@@ -36,10 +37,13 @@ const AucPageContent: React.FC = () => {
   }, [searchTerm, showChances, slots]);
 
   const imageOpacity = useMemo(() => calcBackgroundOpacity(backgroundOverlayOpacity), [backgroundOverlayOpacity]);
+  const hasCustomBackground = backgroundType === 'customMedia' && Boolean(background);
+  const hasGeometryBackground = backgroundType === 'geometry';
+  const hasVisualBackground = hasCustomBackground || hasGeometryBackground;
 
   return (
-    <Box className={clsx(styles.container, { 'custom-background': background })}>
-      {background && (
+    <Box className={clsx(styles.container, { 'custom-background': hasVisualBackground })}>
+      {hasCustomBackground && (
         <Box className={styles.background}>
           <Image src={background} w='100%' h='100%' />
           <Overlay backgroundOpacity={imageOpacity} color='#242424' blur={backgroundBlur} />

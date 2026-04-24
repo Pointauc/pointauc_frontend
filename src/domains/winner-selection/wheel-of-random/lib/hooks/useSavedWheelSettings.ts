@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 
 import { PACE_PRESETS, WheelFormat } from '@constants/wheel';
 
-import { DropoutVariant } from '../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../BaseWheel/DropoutVariant';
 
 export const defaultWheelSettings: Wheel.Settings = {
   spinTime: 20,

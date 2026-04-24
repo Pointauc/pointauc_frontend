@@ -64,9 +64,12 @@ const useSimulationDropout = ({
       }
 
       const winner = dropoutQueueRef.current.shift() as string;
+      const isFinalSpin = dropoutQueueRef.current.length === 1;
+
       return {
         id: winner,
-        isFinalSpin: dropoutQueueRef.current.length === 1,
+        isFinalSpin,
+        finalWinnerId: isFinalSpin ? (dropoutQueueRef.current[0] as string | number | undefined) : undefined,
       };
     },
     [initialItems],

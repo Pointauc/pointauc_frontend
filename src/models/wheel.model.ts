@@ -6,6 +6,8 @@ export interface WheelItem {
   isFavorite?: boolean;
 }
 
+export type WheelStyle = 'default' | 'genshinImpact';
+
 export interface WheelItemWithMetadata extends WheelItem {
   originalAmount?: number;
 }

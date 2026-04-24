@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { SegmentedControl, SegmentedControlItem } from '@mantine/core';
 
-import { DropoutVariant } from '../../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../../BaseWheel/DropoutVariant';
 
 const DropoutFormatField = () => {
   const { t } = useTranslation();

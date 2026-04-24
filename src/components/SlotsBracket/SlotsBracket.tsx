@@ -15,7 +15,7 @@ export interface BuildGameResult {
   gameOrder: Game[];
 }
 
-export const buildGame = (items: WheelItem[], maxDepth?: number): BuildGameResult => {
+export const buildGame = (items: WheelItem[], maxDepth?: number | null): BuildGameResult => {
   const gameOrder: Game[] = [];
 
   if (items.length < 2) {

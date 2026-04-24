@@ -14,6 +14,7 @@ interface PageContainerProps {
   };
   contentId?: string;
   contentRef?: RefObject<HTMLDivElement | null>;
+  padding?: boolean;
 }
 
 const PageContainer: FC<PageContainerProps> = ({
@@ -24,11 +25,21 @@ const PageContainer: FC<PageContainerProps> = ({
   fixedHeight,
   contentId,
   contentRef,
+  padding = true,
 }) => {
   return (
-    <div className={clsx(className, styles.pageContainer, { [styles.fixedHeight]: fixedHeight })}>
+    <div
+      className={clsx(className, styles.pageContainer, {
+        [styles.fixedHeight]: fixedHeight,
+        [styles.padding]: padding,
+      })}
+    >
       {!!title && (typeof title === 'string' ? <Title order={1}>{title}</Title> : title)}
-      <div className={clsx(styles.pageContainerContent, classes?.content)} id={contentId} ref={contentRef}>
+      <div
+        className={clsx(styles.pageContainerContent, classes?.content, { [styles.padding]: padding })}
+        id={contentId}
+        ref={contentRef}
+      >
         {children}
       </div>
     </div>

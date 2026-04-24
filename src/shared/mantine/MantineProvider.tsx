@@ -40,10 +40,10 @@ const darkPaletteBase = [
   '#606060',
   '#3e3e3e',
   '#363636',
-  '#2e2e2e',
-  '#272727',
-  '#1e1e1e',
-  '#161616',
+  '#303030',
+  '#282828',
+  '#212121',
+  '#1b1b1b',
 ] as const;
 
 const darkPalette = darkPaletteBase;
@@ -101,7 +101,7 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
       colors: {
         dark: darkPalette,
         darkTransparent: darkPalette.map((color) => alpha(color, uiOpacity)) as unknown as MantineColorsTuple,
-        primary: generateColors(adjustedPrimary),
+        primary: adjustedPrimary ? generateColors(adjustedPrimary) : generateColors('#228be6'),
       },
       components: {
         Notification: {

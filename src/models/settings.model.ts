@@ -3,6 +3,8 @@ import { BidNameStrategy } from '@enums/bid.enum';
 
 import { TwitchRewardPresetDto } from './user.model';
 
+export type BackgroundType = 'customMedia' | 'default' | 'geometry';
+
 export interface SettingsPreset {
   name: string;
   id: string;
@@ -33,6 +35,10 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   autoincrementTime: number;
   isBuyoutVisible: boolean;
   background: string | null;
+  backgroundType: BackgroundType;
+  backgroundOverlayOpacity: number;
+  backgroundBlur: number;
+  isGeometryBackgroundColorEnabled: boolean;
   purchaseSort: number;
   marblesAuc: boolean;
   marbleRate: number;
@@ -69,3 +75,10 @@ export interface AucSettingsDto extends Settings {
 }
 
 export type SettingsForm = Partial<AucSettingsDto>;
+
+export const resolveBackgroundType = (background?: string | null, backgroundType?: BackgroundType): BackgroundType => {
+  if (background != null) {
+    return 'customMedia';
+  }
+  return backgroundType ?? 'default';
+};

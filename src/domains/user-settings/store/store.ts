@@ -5,8 +5,7 @@ import { userControllerSetAucSettings } from '@api/openapi';
 import { COLORS } from '@constants/color.constants';
 import { BidNameStrategy } from '@enums/bid.enum';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
-import { AucSettingsDto } from '@models/settings.model';
-import { AucSettingsState as LegacyAucSettingsState } from '@reducers/AucSettings/AucSettings';
+import { AucSettingsDto, resolveBackgroundType } from '@models/settings.model';
 
 interface SettingsMissingOnBackend {
   showTotalTime: boolean;
@@ -27,8 +26,10 @@ const defaultState: AucSettingsStore = {
   autoincrementTime: 30,
   purchaseSort: 0,
   background: null,
+  backgroundType: 'default',
   backgroundOverlayOpacity: 0.4,
   backgroundBlur: 0,
+  isGeometryBackgroundColorEnabled: true,
   marblesAuc: false,
   marbleRate: 50,
   marbleCategory: 100,
@@ -75,6 +76,7 @@ const settingsFromStorage = localStorage.getItem('userSettings')
 // When data structure was changed we need to migrate settings from the local storage to the new structure
 const migratedSettings = {
   showRules: localStorage.getItem('showRules') === 'true',
+  backgroundType: resolveBackgroundType(settingsFromStorage.background, settingsFromStorage.backgroundType),
 };
 
 const initialState: AucSettingsStore = {

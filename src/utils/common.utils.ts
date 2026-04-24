@@ -81,15 +81,26 @@ export const formatSeconds = (value: number): string => `${value}c.`;
 
 export const getDirtyValues = <T extends FieldValues>(
   values: T,
-  dirtyFields: FieldNamesMarkedBoolean<T> = {} as FieldNamesMarkedBoolean<T>,
+  dirtyFields: FieldNamesMarkedBoolean<T> | undefined = {} as FieldNamesMarkedBoolean<T>,
   defaultValues: T,
-  touched: FieldNamesMarkedBoolean<T>,
-): Partial<T> =>
-  Object.keys(dirtyFields).reduce((accum, key) => {
-    const getValue = () => (values[key] === undefined ? defaultValues[key] : values[key]);
+  touched: FieldNamesMarkedBoolean<T> | undefined = {} as FieldNamesMarkedBoolean<T>,
+): Partial<T> => {
+  const dirtyValues: Partial<T> = {};
+  const dirtyFieldsByName = dirtyFields as Partial<Record<keyof T, unknown>>;
+  const touchedByName = touched as Partial<Record<keyof T, unknown>>;
 
-    return touched[key as keyof typeof touched] ? { ...accum, [key]: getValue() } : accum;
-  }, {});
+  Object.keys(dirtyFieldsByName).forEach((key) => {
+    const fieldName = key as keyof T;
+
+    if (!touchedByName[fieldName]) {
+      return;
+    }
+
+    dirtyValues[fieldName] = values[fieldName] === undefined ? defaultValues[fieldName] : values[fieldName];
+  });
+
+  return dirtyValues;
+};
 
 export const shuffle = <T>(_a: T[]): T[] => {
   const a = [..._a];

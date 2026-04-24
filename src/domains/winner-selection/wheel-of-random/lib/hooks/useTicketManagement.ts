@@ -13,7 +13,7 @@ import {
 } from '@api/openapi/types.gen';
 import { WheelFormat } from '@constants/wheel';
 
-import { DropoutVariant } from '../../BaseWheel/BaseWheel';
+import { DropoutVariant } from '../../BaseWheel/DropoutVariant';
 
 interface TicketData {
   ticketId: string;
