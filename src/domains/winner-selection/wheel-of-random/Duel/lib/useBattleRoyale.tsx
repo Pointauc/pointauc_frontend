@@ -26,7 +26,7 @@ const useBattleRoyal = (controller: RefObject<WheelController | null>): Wheel.Fo
   const [nextWinner, setNextWinner] = useState<WheelItem | null>(null);
   const [maxDepth, setMaxDepth] = useState<number>();
 
-  const depthRestriction = useWatch<Wheel.Settings>({ name: 'depthRestriction' });
+  const depthRestriction = useWatch({ name: 'depthRestriction' });
 
   const initInternal = useCallback(
     (items: WheelItem[]) => {

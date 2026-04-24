@@ -13,29 +13,25 @@ interface Props extends Pick<BaseWheelProps<any>, 'controller' | 'className' | '
 }
 
 const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptimalSizeChange }: Props) => {
-  const coreImage = useWatch<Wheel.Settings>({ name: 'coreImage' });
-  const format = useWatch<Wheel.Settings>({ name: 'format' });
-  const wheelStyles = useWatch<Wheel.Settings>({ name: 'wheelStyles' });
-  const showDeleteConfirmation = useWatch<Wheel.Settings>({ name: 'showDeleteConfirmation' });
+  const coreImage = useWatch<Wheel.Settings, 'coreImage'>({ name: 'coreImage' });
+  const format = useWatch<Wheel.Settings, 'format'>({ name: 'format' });
+  const wheelStyles = useWatch<Wheel.Settings, 'wheelStyles'>({ name: 'wheelStyles' });
+  const showDeleteConfirmation = useWatch<Wheel.Settings, 'showDeleteConfirmation'>({ name: 'showDeleteConfirmation' });
   const parts = resolveWheelParts(wheelStyles);
   const { setValue } = useFormContext<Wheel.Settings>();
-  const setWheelValue = setValue as (
-    name: 'coreImage' | 'showDeleteConfirmation',
-    value: string | boolean,
-  ) => void;
   const onCoreImageChange = useCallback(
     (image: string) => {
-      setWheelValue('coreImage', image);
+      setValue('coreImage', image);
     },
-    [setWheelValue],
+    [setValue],
   );
 
   const handleDeleteItem = useCallback(
     (id: Key, showConfirmation?: boolean) => {
       deleteItem?.(id);
-      setWheelValue('showDeleteConfirmation', showConfirmation ?? true);
+      setValue('showDeleteConfirmation', showConfirmation ?? true);
     },
-    [deleteItem, setWheelValue],
+    [deleteItem, setValue],
   );
 
   return (

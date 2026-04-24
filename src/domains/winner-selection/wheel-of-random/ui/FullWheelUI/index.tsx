@@ -127,7 +127,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const randomnessSource = useWatch({ name: 'randomnessSource', control });
   const format = useWatch({ name: 'format', control });
   const paceConfig = useWatch({ name: 'paceConfig', control });
-  const split = useWatch<Wheel.Settings>({ name: 'split' });
+  const split = useWatch({ name: 'split' });
   const maxDepth = useWatch({ name: 'maxDepth', control });
   const depthRestriction = useWatch({ name: 'depthRestriction', control });
   const dropoutVariant = useWatch({ name: 'dropoutVariant', control });
@@ -311,6 +311,10 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
         items: activeWheelItems,
       });
       const winnerItem = itemsFromProps.find((item) => item.id === winnerResult.id);
+
+      if (!winnerItem) {
+        throw new Error('Winner item not found');
+      }
 
       const config: SpinParams = {
         duration,

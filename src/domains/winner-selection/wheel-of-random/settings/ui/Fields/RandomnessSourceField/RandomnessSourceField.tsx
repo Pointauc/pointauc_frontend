@@ -32,9 +32,9 @@ const RandomnessSourceField = ({ ticketData, availableQuota, ticketError }: Rand
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<Wheel.Settings>();
   const { isSubmitting } = useFormState<Wheel.Settings>({ control });
-  const format = useWatch<Wheel.Settings>({ name: 'format' });
-  const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
-  const randomnessSource = useWatch<Wheel.Settings>({ name: 'randomnessSource' });
+  const format = useWatch<Wheel.Settings, 'format'>({ name: 'format' });
+  const dropoutVariant = useWatch<Wheel.Settings, 'dropoutVariant'>({ name: 'dropoutVariant' });
+  const randomnessSource = useWatch<Wheel.Settings, 'randomnessSource'>({ name: 'randomnessSource' });
   const [randomnessModalOpened, setRandomnessModalOpened] = useState(false);
   const [initialModalTab, setInitialModalTab] = useState<'local-basic' | 'random-org' | 'random-org-signed'>();
 
