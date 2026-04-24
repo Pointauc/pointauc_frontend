@@ -18,6 +18,7 @@ import FieldLabel from '@domains/user-settings-v2/ui/FieldLabel';
 import SettingsRow from '@domains/user-settings-v2/ui/SettingsRow';
 import SettingsSection from '@domains/user-settings-v2/ui/SettingsSection';
 import FormSwitchField from '@domains/user-settings-v2/ui/FormSwitchField';
+import PointsIcon from '@assets/icons/channelPoints.svg?react';
 
 import RewardPresetsForm from './RewardPresetsForm';
 
@@ -44,7 +45,7 @@ const ChannelPointsSection = () => {
     <SettingsSection
       id='website-settings-channel-points'
       title={t('settings.website.toc.channelPoints')}
-      icon={<IconCoin size={24} />}
+      icon={<PointsIcon width={24} height={24} />}
     >
       <Stack gap='md'>
         {unavailable.length > 0 && (

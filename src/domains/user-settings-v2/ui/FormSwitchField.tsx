@@ -16,7 +16,7 @@ const FormSwitchField = ({ name, control, label, disabled }: FormSwitchFieldProp
   const labelId = `${name}-label`;
 
   return (
-    <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+    <Group align='center' justify='space-between' gap='md'>
       <Group component='span' style={{ flex: 1, minWidth: 0 }} wrap='nowrap'>
         <Box component='span' id={labelId} style={{ flex: 1, minWidth: 0 }}>
           {label}

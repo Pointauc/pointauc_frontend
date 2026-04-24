@@ -152,6 +152,9 @@ const App: React.FC = () => {
   }, [isHovered, activeMenu]);
   const backgroundType = useSelector((root: RootState) => root.aucSettings.settings.backgroundType);
   const hasGeometryBackground = backgroundType === 'geometry';
+  const isGeometryBackgroundColorEnabled = useSelector(
+    (root: RootState) => root.aucSettings.settings.isGeometryBackgroundColorEnabled,
+  );
 
   return (
     <PortalContextProvider>
@@ -164,7 +167,7 @@ const App: React.FC = () => {
         {!hasGeometryBackground && <div className='bg-paper-900 absolute top-0 left-0 z-[-1] h-full w-full' />}
         {hasGeometryBackground ? (
           <Box className='absolute top-0 left-0 z-[-1] h-full w-full'>
-            <GeometryBackgroundPreview />
+            <GeometryBackgroundPreview isColorEnabled={isGeometryBackgroundColorEnabled} />
           </Box>
         ) : null}
         <AppHeader isNavbarOpened={isNavbarOpened} toggleNavbar={mobileNavbar.toggle} activeMenu={activeMenu} t={t} />

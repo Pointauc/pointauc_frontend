@@ -29,6 +29,7 @@ const defaultState: AucSettingsStore = {
   backgroundType: 'default',
   backgroundOverlayOpacity: 0.4,
   backgroundBlur: 0,
+  isGeometryBackgroundColorEnabled: true,
   marblesAuc: false,
   marbleRate: 50,
   marbleCategory: 100,

@@ -23,6 +23,9 @@ import SettingsSection from '@domains/user-settings-v2/ui/SettingsSection';
 import { SettingsForm } from '@models/settings.model.ts';
 import FormSelect from '@shared/mantine/ui/Select/FormSelect';
 
+import ExchangeRateExample from '../donations/ExchangeRateExample';
+import ExchangeRateControls from '../donations/ExchangeRateControls';
+
 const BidsGeneralSection = () => {
   const { t } = useTranslation();
   const { control } = useFormContext<SettingsForm>();
@@ -150,6 +153,15 @@ const BidsGeneralSection = () => {
                   />
                 )}
               />
+            </Group>
+          </SettingsRow>
+
+          <Divider />
+
+          <SettingsRow compact htmlFor='pointsRate'>
+            <Group align='flex-start' justify='space-between' gap='md' wrap='wrap'>
+              <FieldLabel text={t('settings.donations.conversion')} hint={<ExchangeRateExample />} />
+              <ExchangeRateControls />
             </Group>
           </SettingsRow>
         </Stack>

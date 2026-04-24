@@ -51,9 +51,8 @@
 
 ## UI and Styling
 
-- Prefer Tailwind CSS for styling.
+- IMPORTANT: Always use Tailwind CSS for styles instead of the module CSS files.
 - Use Mantine for basic UI components.
-- When working with Mantine, prefer official Mantine patterns and APIs over custom workarounds.
 - If a Mantine-specific behavior is unclear, consult the Mantine LLM docs linked in `.cursor/rules/mantine.mdc`.
 
 ## React and TypeScript

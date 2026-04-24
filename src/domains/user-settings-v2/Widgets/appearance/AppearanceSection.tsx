@@ -13,7 +13,7 @@ import { COLORS } from '@constants/color.constants.ts';
 
 import AuctionBackgroundSettings from './auction-background/AuctionBackgroundSettings';
 
-const PRIMARY_COLOR_SHORTCUTS = [COLORS.THEME.PRIMARY, '#69b39d', '#f59f00', '#d67676', '#ae87ed'];
+const PRIMARY_COLOR_SHORTCUTS = [COLORS.THEME.PRIMARY, '#69b39d', '#f59f00', '#d67676', '#ae87ed', '#4d824a'];
 
 const AppearanceSection = () => {
   const { t } = useTranslation();
@@ -56,6 +56,8 @@ const AppearanceSection = () => {
                   name='primaryColor'
                   render={({ field }) => (
                     <ColorInput
+                      id='primaryColor'
+                      ref={field.ref}
                       value={field.value}
                       onChangeEnd={field.onChange}
                       onBlur={field.onBlur}

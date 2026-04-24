@@ -33,7 +33,7 @@ const CustomBackgroundSettings = () => {
 
   return (
     <div>
-      <SettingsRow compact nested htmlFor='backgroundOverlayOpacity'>
+      <SettingsRow nested htmlFor='backgroundOverlayOpacity'>
         <Grid align='center'>
           <Grid.Col span={{ base: 12, sm: 4 }} style={{ display: 'flex', alignItems: 'center' }}>
             <Text size='sm'>{t('settings.auc.backgroundOverlayOpacity')}</Text>
@@ -47,6 +47,7 @@ const CustomBackgroundSettings = () => {
               label={(value) => `${value}%`}
               min={0}
               max={100}
+              marks={null as any}
               w='100%'
             />
           </Grid.Col>
@@ -55,7 +56,7 @@ const CustomBackgroundSettings = () => {
 
       <Divider />
 
-      <SettingsRow compact nested htmlFor='backgroundBlur'>
+      <SettingsRow nested htmlFor='backgroundBlur'>
         <Grid align='center'>
           <Grid.Col span={{ base: 12, sm: 4 }} style={{ display: 'flex', alignItems: 'center' }}>
             <Text size='sm'>{t('settings.auc.backgroundBlur')}</Text>
@@ -69,6 +70,7 @@ const CustomBackgroundSettings = () => {
               label={(value) => `${Math.round((value * 100) / 30)}%`}
               min={0}
               max={30}
+              marks={null as any}
               w='100%'
             />
           </Grid.Col>

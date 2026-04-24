@@ -8,7 +8,7 @@ const SettingsSidebar = () => {
 
   return (
     <Stack gap='md'>
-      <Card withBorder radius='md' shadow='sm' p='sm' bg='dark.7'>
+      <Card withBorder radius='md' shadow='sm' p='sm' bg='dark.8'>
         <Stack gap='sm'>
           <Stack gap={2}>
             <Text component='h3' fw={700} size='md'>

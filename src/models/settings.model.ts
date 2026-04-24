@@ -38,6 +38,7 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   backgroundType: BackgroundType;
   backgroundOverlayOpacity: number;
   backgroundBlur: number;
+  isGeometryBackgroundColorEnabled: boolean;
   purchaseSort: number;
   marblesAuc: boolean;
   marbleRate: number;

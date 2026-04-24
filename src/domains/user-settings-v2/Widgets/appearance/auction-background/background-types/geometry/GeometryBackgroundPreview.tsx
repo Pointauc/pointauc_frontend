@@ -1,6 +1,7 @@
 import { type ISourceOptions, MoveDirection, OutMode } from '@tsparticles/engine';
 import Particles, { initParticlesEngine } from '@tsparticles/react';
 import { loadSlim } from '@tsparticles/slim';
+import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
 
 let initializeParticlesPromise: Promise<void> | null = null;
@@ -14,10 +15,11 @@ const initializeParticles = (): Promise<void> => {
 };
 
 interface GeometryBackgroundPreviewProps {
+  isColorEnabled?: boolean;
   isPreview?: boolean;
 }
 
-const GeometryBackgroundPreview = ({ isPreview = false }: GeometryBackgroundPreviewProps) => {
+const GeometryBackgroundPreview = ({ isColorEnabled = true, isPreview = false }: GeometryBackgroundPreviewProps) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const options = useMemo<ISourceOptions>(
     () => ({
@@ -42,17 +44,17 @@ const GeometryBackgroundPreview = ({ isPreview = false }: GeometryBackgroundPrev
       },
       particles: {
         color: {
-          value: ['#69e6ff', '#f5d76e', '#f7f7fb'],
+          value: isColorEnabled ? ['#69e6ff', '#f5d76e', '#f7f7fb'] : ['#f4f4f5', '#b8bcc4', '#7d828c'],
         },
         links: {
-          color: '#b8f3ff',
-          distance: isPreview ? 86 : 145,
+          color: isColorEnabled ? '#b8f3ff' : '#c6c8cc',
+          distance: isPreview ? 26 : 145,
           enable: true,
-          opacity: isPreview ? 0.32 : 0.24,
+          opacity: isPreview ? 0.3 : 0.24,
           triangles: {
             enable: true,
-            color: '#69e6ff',
-            opacity: isPreview ? 0.035 : 0.025,
+            color: isColorEnabled ? '#69e6ff' : '#d6d6d8',
+            opacity: isPreview ? 0.03 : 0.025,
           },
           width: 1,
         },
@@ -63,14 +65,14 @@ const GeometryBackgroundPreview = ({ isPreview = false }: GeometryBackgroundPrev
             default: OutMode.out,
           },
           random: false,
-          speed: isPreview ? 0.7 : 0.45,
+          speed: isPreview ? 0.2 : 0.45,
           straight: false,
         },
         number: {
           density: {
-            enable: true,
+            enable: !isPreview,
           },
-          value: isPreview ? 24 : 90,
+          value: isPreview ? 32 : 90,
         },
         opacity: {
           value: {
@@ -88,15 +90,15 @@ const GeometryBackgroundPreview = ({ isPreview = false }: GeometryBackgroundPrev
         },
         size: {
           value: {
-            min: isPreview ? 1.4 : 1.2,
-            max: isPreview ? 3.4 : 4.2,
+            min: isPreview ? 0.6 : 1.2,
+            max: isPreview ? 2 : 4.2,
           },
         },
       },
       pauseOnBlur: true,
       pauseOnOutsideViewport: true,
     }),
-    [isPreview],
+    [isColorEnabled, isPreview],
   );
 
   useEffect(() => {
@@ -114,9 +116,17 @@ const GeometryBackgroundPreview = ({ isPreview = false }: GeometryBackgroundPrev
   }, []);
 
   return (
-    <div className='relative h-full w-full overflow-hidden bg-[radial-gradient(circle_at_18%_20%,rgba(105,230,255,0.16),transparent_30%),linear-gradient(135deg,#090b12_0%,#181324_52%,#0a1317_100%)]'>
+    <div
+      className={clsx(
+        'relative h-full w-full overflow-hidden',
+        isColorEnabled
+          ? 'bg-[radial-gradient(circle_at_18%_20%,rgba(105,230,255,0.16),transparent_30%),linear-gradient(135deg,#090b12_0%,#181324_52%,#0a1317_100%)]'
+          : 'bg-[var(--mantine-color-dark-9)]',
+      )}
+    >
       {isInitialized ? (
         <Particles
+          key={`${isPreview ? 'preview' : 'screen'}-${isColorEnabled ? 'color' : 'mono'}`}
           id={isPreview ? 'auction-geometry-background-preview' : 'auction-geometry-background'}
           className='absolute inset-0 h-full w-full'
           options={options}

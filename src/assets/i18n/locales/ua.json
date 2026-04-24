@@ -115,6 +115,7 @@
       "resetBackground": "Прибрати користувацький фон",
       "backgroundAlt": "Фон недоступний. Завантажте нове зображення.",
       "backgroundImageModal": "Вибрати фон аукціону",
+      "geometryBackgroundColor": "Color",
       "backgroundTypes": {
         "customMedia": "Користувацький фон",
         "default": "Стандартний",

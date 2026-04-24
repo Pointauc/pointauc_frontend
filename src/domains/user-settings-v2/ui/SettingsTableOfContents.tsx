@@ -1,9 +1,10 @@
 import { Box, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { useScrollSpy } from '@mantine/hooks';
-import { IconArticle, IconClockHour4, IconCoin, IconPalette, IconSparkles } from '@tabler/icons-react';
+import { IconArticle, IconClockHour4, IconCoin, IconKey, IconPalette, IconSparkles } from '@tabler/icons-react';
 import { useEffect, useMemo, useState, type ReactNode, type RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PointsIcon from '@assets/icons/channelPoints.svg?react';
 import styles from '@domains/user-settings-v2/pages/WebsiteSettings.module.css';
 
 interface SettingsTableOfContentsProps {
@@ -47,11 +48,6 @@ const SettingsTableOfContents = ({ contentId, contentRef }: SettingsTableOfConte
             label: t('settings.website.toc.appearance'),
             icon: <IconPalette size={18} stroke={2} />,
           },
-          {
-            id: 'website-settings-extra-modes',
-            label: t('settings.website.toc.extraModes'),
-            icon: <IconSparkles size={18} stroke={2} />,
-          },
         ],
       },
       {
@@ -65,7 +61,27 @@ const SettingsTableOfContents = ({ contentId, contentRef }: SettingsTableOfConte
           {
             id: 'website-settings-channel-points',
             label: t('settings.website.toc.channelPoints'),
+            icon: <PointsIcon width={18} height={18} />,
+          },
+          {
+            id: 'website-settings-donations',
+            label: t('settings.website.toc.donations'),
             icon: <IconCoin size={18} stroke={2} />,
+          },
+        ],
+      },
+      {
+        title: t('settings.website.toc.other'),
+        links: [
+          {
+            id: 'website-settings-extra-modes',
+            label: t('settings.website.toc.extraModes'),
+            icon: <IconSparkles size={18} stroke={2} />,
+          },
+          {
+            id: 'website-settings-api',
+            label: t('settings.website.toc.api'),
+            icon: <IconKey size={18} stroke={2} />,
           },
         ],
       },

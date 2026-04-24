@@ -14,6 +14,8 @@ import ChannelPointsSection from '@domains/user-settings-v2/Widgets/channel-poin
 import BidsGeneralSection from '@domains/user-settings-v2/Widgets/bids-general/BidsGeneralSection';
 import ExtraModesSection from '@domains/user-settings-v2/Widgets/extra-modes/ExtraModesSection';
 import TimerSection from '@domains/user-settings-v2/Widgets/timer/TimerSection';
+import DonationSection from '@domains/user-settings-v2/Widgets/donations/DonationSection';
+import ApiSection from '@domains/user-settings-v2/Widgets/api/ApiSection';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils';
 import { settingsApi } from '@api/userApi';
@@ -60,6 +62,7 @@ const WebsiteSettings = () => {
       ...touchedFields,
       background: true,
       backgroundType: true,
+      isGeometryBackgroundColorEnabled: true,
       primaryColor: true,
       backgroundTone: true,
     };
@@ -78,30 +81,30 @@ const WebsiteSettings = () => {
 
   return (
     <FormProvider {...formMethods}>
-      <form>
+      <form className='w-full'>
         <PageContainer
           contentId={WEBSITE_SETTINGS_CONTENT_ID}
           contentRef={contentRef}
           className='h-full'
           classes={{ content: styles.pageContent }}
+          padding={false}
         >
           <Box className={styles.layout}>
-            <Box className={styles.sidebarColumn}>
-              <SettingsSidebar />
-            </Box>
-
             <Box className={styles.contentColumn}>
-              <Stack className={styles.contentStack} gap='xl'>
+              <Stack className={styles.contentStack} gap='xxl'>
                 <TimerSection />
                 <AppearanceSection />
-                <ExtraModesSection />
                 <BidsGeneralSection />
                 <ChannelPointsSection />
+                <DonationSection />
+                <ExtraModesSection />
+                <ApiSection />
               </Stack>
             </Box>
 
             <Box className={styles.tocColumn}>
               <SettingsTableOfContents contentId={WEBSITE_SETTINGS_CONTENT_ID} contentRef={contentRef} />
+              <SettingsSidebar />
             </Box>
           </Box>
         </PageContainer>

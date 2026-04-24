@@ -11,6 +11,7 @@ import CustomBackgroundPreviewCard from './background-types/custom/CustomBackgro
 import CustomBackgroundSettings from './background-types/custom/CustomBackgroundSettings';
 import DefaultDarkBackgroundPreviewCard from './background-types/default-dark/DefaultDarkBackgroundPreviewCard';
 import GeometryBackgroundPreviewCard from './background-types/geometry/GeometryBackgroundPreviewCard';
+import GeometryBackgroundSettings from './background-types/geometry/GeometryBackgroundSettings';
 
 interface BackgroundTypeConfig {
   type: BackgroundType;
@@ -31,6 +32,7 @@ const BACKGROUND_TYPES: BackgroundTypeConfig[] = [
   {
     type: 'geometry',
     CardComponent: GeometryBackgroundPreviewCard,
+    SettingsComponent: GeometryBackgroundSettings,
   },
 ];
 

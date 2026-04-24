@@ -109,6 +109,7 @@
       "resetBackground": "Прыбраць карыстальніцкі фон",
       "backgroundAlt": "Фон недаступны. Загрузіце новую выяву.",
       "backgroundImageModal": "Выбраць фон аўкцыёна",
+      "geometryBackgroundColor": "Color",
       "backgroundTypes": {
         "customMedia": "Карыстальніцкі фон",
         "default": "Стандартны",

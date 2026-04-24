@@ -1,4 +1,4 @@
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { SettingsForm } from '@models/settings.model.ts';
@@ -13,6 +13,7 @@ const GeometryBackgroundPreviewCard = () => {
   const { control } = useFormContext<SettingsForm>();
   const background = useController({ control, name: 'background' });
   const backgroundType = useController({ control, name: 'backgroundType' });
+  const isColorEnabled = useWatch({ control, name: 'isGeometryBackgroundColorEnabled' }) ?? true;
 
   const handleBackgroundSelect = (): void => {
     background.field.onChange(null);
@@ -29,7 +30,7 @@ const GeometryBackgroundPreviewCard = () => {
       isSelected={backgroundType.field.value === 'geometry'}
       onClick={handleBackgroundSelect}
     >
-      <GeometryBackgroundPreview isPreview />
+      <GeometryBackgroundPreview isColorEnabled={false} isPreview />
     </BackgroundPreviewCard>
   );
 };

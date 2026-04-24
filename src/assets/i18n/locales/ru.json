@@ -552,22 +552,37 @@
     },
     "integrationCommon": {
       "integrationCommon": "Общее",
-      "sortBids": "Сортировать очередь ставок",
+      "sortBids": "Сортировка",
       "title": "Общее",
       "insertStrategyLabel": "Автодобавление ставок",
       "revoke": "Отвязать",
       "insertStrategy": {
         "force": "Всегда",
-        "match": "При полном совпадении имени",
+        "match": "С одинаковым текстом",
         "none": "Никогда"
       },
-      "bidNameStrategyLabel": "Название ставки",
-      "bidNameStrategyHint": "Выберите, какое значение будет использоваться для текста заказа.",
+      "bidNameStrategyLabel": "Текст ставок",
+      "bidNameStrategyHint": "Выберите, какое значение использовать как текст заказов",
       "bidNameStrategy": {
         "message": "Сообщение",
-        "messageTooltip": "Использует текст сообщения ставки как название. Подходит, когда зрители пишут свой текст или инструкцию.",
+        "messageTooltip": "Использовать текст сообщения зрителя. Подходит, когда зрители указывают свой вариант.",
         "username": "Имя зрителя",
-        "usernameTooltip": "Использует имя зрителя как название ставки. Подходит для простого и одинакового отображения."
+        "usernameTooltip": "Использовать имя зрителя как текст ставки. Подходит когда надо выбрать победителем конкретного человека."
+      },
+      "switchRatesTooltip": {
+        "title": "Что меняет эта кнопка?",
+        "moneyToCoins": {
+          "title": "Деньги в баллы",
+          "direction": "стрелка вправо",
+          "description": "Когда приходит донат, сумма денег умножается на коэффициент.",
+          "example": "Например, 10 {{currency}} × 100 = 1 000."
+        },
+        "pointsToMoney": {
+          "title": "Баллы в деньги",
+          "direction": "стрелка влево",
+          "description": "Когда направление переключено, ставки за баллы канала делятся на коэффициент и показываются как эквивалент в деньгах.",
+          "example": "Например, 1 000 баллов ÷ 100 = 10."
+        }
       }
     },
     "twitch": {
@@ -602,8 +617,15 @@
       "title": "Донаты",
       "pointsRate": "Курс рубля к поинтам",
       "addTimeOnDonation": "Добавлять время при донате",
-      "conversion": "Конвертация в баллы:",
-      "switchRates": "поменять местами"
+      "conversion": "Конвертация денег в баллы",
+      "switchRates": "поменять местами",
+      "integrationActive": "Активно",
+      "integrationInactive": "Пауза",
+      "integrationConnecting": "Подключение",
+      "integrationActiveHint": "Интеграция уже получает ставки в фоне.",
+      "integrationInactiveHint": "Нажмите на карточку, чтобы начать получать ставки из этого сервиса.",
+      "integrationConnectingHint": "Подключение запускается в фоне.",
+      "integrationDisconnectHint": "Отвяжите аккаунт, если больше не хотите использовать его здесь."
     },
     "points": {
       "points": "Баллы канала",
@@ -629,10 +651,11 @@
       "resetBackground": "Убрать фон",
       "backgroundAlt": "Фон недоступен. Пожалуйста, загрузите новый фон.",
       "backgroundImageModal": "Выбрать фон аукциона",
+      "geometryBackgroundColor": "Цвет",
       "backgroundTypes": {
         "customMedia": "Пользовательский фон",
         "default": "Стандартный",
-        "geometry": "Geometry"
+        "geometry": "Геометрия"
       },
       "selectFromList": "Выбрать из списка",
       "sortBids": "Сортировать покупки за поинты",

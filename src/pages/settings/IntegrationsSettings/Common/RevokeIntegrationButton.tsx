@@ -7,6 +7,7 @@ import withLoading from '@decorators/withLoading.ts';
 
 interface Props {
   revoke: () => Promise<void> | void;
+  className?: string;
 }
 
 const RevokeIntegrationButton = (props: Props) => {
@@ -20,7 +21,15 @@ const RevokeIntegrationButton = (props: Props) => {
   };
 
   return (
-    <Button leftSection={<LinkOffIcon />} loading={loading} size='sm' variant='outline' color='white' onClick={revoke}>
+    <Button
+      leftSection={<LinkOffIcon />}
+      className={props.className}
+      loading={loading}
+      size='sm'
+      variant='outline'
+      color='white'
+      onClick={revoke}
+    >
       {t('settings.integrationCommon.revoke')}
     </Button>
   );

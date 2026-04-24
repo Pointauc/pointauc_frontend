@@ -640,6 +640,21 @@
         "messageTooltip": "Uses the bid message as the bid name. Best when viewers send custom text or instructions.",
         "username": "Username",
         "usernameTooltip": "Uses the viewer's username as the bid name. Best when you want a simple, consistent name."
+      },
+      "switchRatesTooltip": {
+        "title": "What the switch button changes",
+        "moneyToCoins": {
+          "title": "Money to coins",
+          "direction": "arrow to the right",
+          "description": "When a donation arrives, the money amount is multiplied by the exchange ratio.",
+          "example": "For example, 10 {{currency}} × 100 = 1,000 coins."
+        },
+        "pointsToMoney": {
+          "title": "Coins to money",
+          "direction": "arrow to the left",
+          "description": "When the direction is switched, channel-point bids are divided by the ratio and shown as a money equivalent.",
+          "example": "For example, 1,000 points ÷ 100 = 10 {{currency}}."
+        }
       }
     },
     "auc": {
@@ -667,6 +682,7 @@
       "resetBackground": "Remove custom background",
       "backgroundAlt": "Background unavailable. Please upload new image.",
       "backgroundImageModal": "Select auction background",
+      "geometryBackgroundColor": "Color",
       "backgroundTypes": {
         "customMedia": "Custom background",
         "default": "Default",
@@ -699,8 +715,15 @@
       "addTimeOnDonation": "Add Time on Donation",
       "pointsRate": "Exchange Rate from Ruble to Points",
       "title": "Donations",
-      "conversion": "Conversion into points:",
-      "switchRates": "switch places"
+      "conversion": "Convert money into points",
+      "switchRates": "switch places",
+      "integrationActive": "Active",
+      "integrationInactive": "Paused",
+      "integrationConnecting": "Connecting",
+      "integrationActiveHint": "This integration is already receiving bids in the background.",
+      "integrationInactiveHint": "Click the card to start receiving bids from this service.",
+      "integrationConnectingHint": "Connection is starting in the background.",
+      "integrationDisconnectHint": "Disconnect this account if you no longer want to use it here."
     },
     "integrations": "Integrations",
     "luckyWheel": {
