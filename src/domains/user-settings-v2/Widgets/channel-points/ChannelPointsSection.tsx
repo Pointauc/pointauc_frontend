@@ -1,4 +1,4 @@
-import { Button, Divider, Group, Stack } from '@mantine/core';
+import { Button, Divider } from '@mantine/core';
 import { IconCoin } from '@tabler/icons-react';
 import { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -47,10 +47,10 @@ const ChannelPointsSection = () => {
       title={t('settings.website.toc.channelPoints')}
       icon={<PointsIcon width={24} height={24} />}
     >
-      <Stack gap='md'>
+      <div className='flex flex-col gap-4'>
         {unavailable.length > 0 && (
           <SettingsCard>
-            <Stack gap='sm' p='md'>
+            <div className='flex flex-col gap-2.5 p-4'>
               {unavailable.map((integration) => (
                 <integration.authFlow.loginComponent
                   key={integration.id}
@@ -58,16 +58,16 @@ const ChannelPointsSection = () => {
                   branding={integration.branding}
                 />
               ))}
-            </Stack>
+            </div>
           </SettingsCard>
         )}
 
         {available.length > 0 && (
           <SettingsCard>
-            <Stack gap={0}>
+            <div className='flex flex-col'>
               <SettingsRow>
-                <Group justify='space-between' align='center' gap='md' wrap='wrap'>
-                  <Group gap='sm' wrap='wrap'>
+                <div className='flex flex-wrap items-center justify-between gap-4'>
+                  <div className='flex flex-wrap gap-2.5'>
                     <Button
                       loading={pubsubLoading}
                       variant='outline'
@@ -80,9 +80,9 @@ const ChannelPointsSection = () => {
                     <Button variant='outline' color='red' size='sm' onClick={closeTwitchRewards}>
                       {t('settings.twitch.deleteRewards')}
                     </Button>
-                  </Group>
+                  </div>
                   <RevokeIntegrationButton revoke={available[0].authFlow.revoke} />
-                </Group>
+                </div>
               </SettingsRow>
 
               {/* <Divider /> */}
@@ -113,10 +113,10 @@ const ChannelPointsSection = () => {
               <Divider />
 
               <RewardPresetsForm />
-            </Stack>
+            </div>
           </SettingsCard>
         )}
-      </Stack>
+      </div>
     </SettingsSection>
   );
 };

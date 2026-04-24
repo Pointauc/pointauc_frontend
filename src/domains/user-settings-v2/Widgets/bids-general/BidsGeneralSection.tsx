@@ -4,9 +4,7 @@ import {
   ComboboxItem,
   ComboboxLikeRenderOptionInput,
   Divider,
-  Group,
   SegmentedControl,
-  Stack,
   Text,
   Tooltip,
 } from '@mantine/core';
@@ -47,10 +45,10 @@ const BidsGeneralSection = () => {
   ];
 
   const renderBidsSortOption = (option: ComboboxLikeRenderOptionInput<ComboboxItem>) => (
-    <Group gap='xs'>
+    <div className='flex items-center gap-2'>
       {bidsSortOptions[Number(option.option.value)]?.icon}
       <Text>{option.option.label}</Text>
-    </Group>
+    </div>
   );
 
   return (
@@ -60,9 +58,9 @@ const BidsGeneralSection = () => {
       icon={<IconArticle size={24} />}
     >
       <SettingsCard>
-        <Stack gap={0}>
+        <div className='flex flex-col'>
           <SettingsRow compact htmlFor='insertStrategy'>
-            <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+            <div className='flex flex-wrap items-center justify-between gap-4'>
               <FieldLabel text={t('settings.integrationCommon.insertStrategyLabel')} />
               <FormSelect
                 name='insertStrategy'
@@ -71,13 +69,13 @@ const BidsGeneralSection = () => {
                 inputWidth='md'
                 allowDeselect={false}
               />
-            </Group>
+            </div>
           </SettingsRow>
 
           <Divider />
 
           <SettingsRow compact htmlFor='purchaseSort'>
-            <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+            <div className='flex flex-wrap items-center justify-between gap-4'>
               <FieldLabel text={t('settings.integrationCommon.sortBids')} />
               <FormSelect
                 control={control}
@@ -90,21 +88,21 @@ const BidsGeneralSection = () => {
                 inputWidth='md'
                 allowDeselect={false}
               />
-            </Group>
+            </div>
           </SettingsRow>
 
           <Divider />
 
           <SettingsRow compact htmlFor='bidNameStrategy'>
-            <Group align='flex-start' justify='space-between' gap='md' wrap='nowrap'>
-              <Stack gap={4} maw={520}>
+            <div className='flex flex-nowrap items-start justify-between gap-4'>
+              <div className='flex max-w-[520px] flex-col gap-1'>
                 <Text id={bidNameStrategyLabelId} fw={500} size='sm'>
                   {t('settings.integrationCommon.bidNameStrategyLabel')}
                 </Text>
                 <Text size='xs' c='dimmed'>
                   {t('settings.integrationCommon.bidNameStrategyHint')}
                 </Text>
-              </Stack>
+              </div>
 
               <Controller
                 name='bidNameStrategy'
@@ -153,18 +151,18 @@ const BidsGeneralSection = () => {
                   />
                 )}
               />
-            </Group>
+            </div>
           </SettingsRow>
 
           <Divider />
 
           <SettingsRow compact htmlFor='pointsRate'>
-            <Group align='flex-start' justify='space-between' gap='md' wrap='wrap'>
+            <div className='flex flex-wrap items-start justify-between gap-4'>
               <FieldLabel text={t('settings.donations.conversion')} hint={<ExchangeRateExample />} />
               <ExchangeRateControls />
-            </Group>
+            </div>
           </SettingsRow>
-        </Stack>
+        </div>
       </SettingsCard>
     </SettingsSection>
   );

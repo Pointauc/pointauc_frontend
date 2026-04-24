@@ -1,4 +1,4 @@
-import { Collapse, Divider, Stack } from '@mantine/core';
+import { Collapse, Divider } from '@mantine/core';
 
 import FieldLabel from '@domains/user-settings-v2/ui/FieldLabel';
 import FormSwitchField from '@domains/user-settings-v2/ui/FormSwitchField';
@@ -21,13 +21,13 @@ interface ExtraModeCardProps {
 const ExtraModeCard = ({ control, switchName, title, hint, isEnabled, children }: ExtraModeCardProps) => {
   return (
     <SettingsCard>
-      <Stack gap={0}>
+      <div className='flex flex-col'>
         <SettingsRow htmlFor={switchName}>
           <FormSwitchField name={switchName} control={control} label={<FieldLabel text={title} hint={hint} />} />
         </SettingsRow>
 
         <Collapse in={isEnabled}>{children}</Collapse>
-      </Stack>
+      </div>
     </SettingsCard>
   );
 };

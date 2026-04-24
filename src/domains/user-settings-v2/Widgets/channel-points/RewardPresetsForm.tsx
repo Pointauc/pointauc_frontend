@@ -1,4 +1,4 @@
-import { Divider, Group, Stack, TextInput } from '@mantine/core';
+import { TextInput } from '@mantine/core';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -35,7 +35,7 @@ const RewardPresetsForm = () => {
   return (
     <div>
       <SettingsRow compact htmlFor='rewardsPrefix'>
-        <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+        <div className='flex flex-wrap items-center justify-between gap-4'>
           <FieldLabel text={t('settings.twitch.commonRewardsName')} hint={t('settings.twitch.commonRewardsNameDesc')} />
           <Controller
             control={control}
@@ -44,7 +44,7 @@ const RewardPresetsForm = () => {
               <TextInput {...field} id='rewardsPrefix' w={220} error={errors.rewardsPrefix?.message} />
             )}
           />
-        </Group>
+        </div>
       </SettingsRow>
 
       <SettingsRow>

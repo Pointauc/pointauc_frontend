@@ -1,4 +1,4 @@
-import { ActionIcon, Button, ColorInput, Group, NumberInput, Stack, Table, Text } from '@mantine/core';
+import { ActionIcon, Button, ColorInput, NumberInput, Table, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import {
@@ -183,7 +183,7 @@ const RewardPresetsTable = ({
   const deleteLabel = t('delete');
 
   return (
-    <Stack gap='xs'>
+    <div className='flex flex-col gap-2'>
       <ConfirmFormOnLeave
         isDirtyForm={isDirty}
         onSubmit={handleSubmit(savePresets)}
@@ -228,7 +228,7 @@ const RewardPresetsTable = ({
         </Table>
       </div>
 
-      <Group justify='space-between'>
+      <div className='flex items-center justify-between gap-4'>
         <Button onClick={() => onAppendReward({ cost: 1000, color: '#e3924c' })} variant='outline' size='sm'>
           {t('settings.twitch.addReward')}
         </Button>
@@ -241,8 +241,8 @@ const RewardPresetsTable = ({
         >
           {t('settings.twitch.saveRewards')}
         </Button>
-      </Group>
-    </Stack>
+      </div>
+    </div>
   );
 };
 

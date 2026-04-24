@@ -1,4 +1,4 @@
-import { Anchor, Divider, Group } from '@mantine/core';
+import { Anchor, Divider } from '@mantine/core';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -22,19 +22,19 @@ const MarblesModeCard = () => {
       isEnabled={Boolean(isEnabled)}
     >
       <SettingsRow compact htmlFor='marbleRate'>
-        <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+        <div className='flex flex-wrap items-center justify-between gap-4'>
           <FieldLabel text={t('settings.marbles.marbleCost')} hint={t('settings.marbles.marbleCostDesc')} />
           <FormInput name='marbleRate' control={control} size='sm' type='number' w={96} />
-        </Group>
+        </div>
       </SettingsRow>
 
       <Divider />
 
       <SettingsRow compact htmlFor='marbleCategory'>
-        <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+        <div className='flex flex-wrap items-center justify-between gap-4'>
           <FieldLabel text={t('settings.marbles.newPositionCost')} hint={t('settings.marbles.newPositionCostDesc')} />
           <FormInput name='marbleCategory' control={control} size='sm' type='number' w={96} />
-        </Group>
+        </div>
       </SettingsRow>
     </ExtraModeCard>
   );

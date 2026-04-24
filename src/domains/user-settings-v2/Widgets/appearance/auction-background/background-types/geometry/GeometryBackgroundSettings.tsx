@@ -1,4 +1,3 @@
-import { Stack } from '@mantine/core';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -12,7 +11,7 @@ const GeometryBackgroundSettings = () => {
   const { control } = useFormContext<SettingsForm>();
 
   return (
-    <Stack gap={0}>
+    <div className='flex flex-col'>
       <SettingsRow compact nested htmlFor='isGeometryBackgroundColorEnabled'>
         <FormSwitchField
           name='isGeometryBackgroundColorEnabled'
@@ -20,7 +19,7 @@ const GeometryBackgroundSettings = () => {
           label={<FieldLabel text={t('settings.auc.geometryBackgroundColor')} />}
         />
       </SettingsRow>
-    </Stack>
+    </div>
   );
 };
 

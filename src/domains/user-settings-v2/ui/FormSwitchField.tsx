@@ -1,4 +1,3 @@
-import { Box, Group } from '@mantine/core';
 import { Control } from 'react-hook-form';
 
 import FormSwitch from '@shared/mantine/ui/Switch/FormSwitch.tsx';
@@ -16,16 +15,16 @@ const FormSwitchField = ({ name, control, label, disabled }: FormSwitchFieldProp
   const labelId = `${name}-label`;
 
   return (
-    <Group align='center' justify='space-between' gap='md'>
-      <Group component='span' style={{ flex: 1, minWidth: 0 }} wrap='nowrap'>
-        <Box component='span' id={labelId} style={{ flex: 1, minWidth: 0 }}>
+    <div className='flex items-center justify-between gap-4'>
+      <span className='flex min-w-0 flex-1 flex-nowrap'>
+        <span id={labelId} className='min-w-0 flex-1'>
           {label}
-        </Box>
-      </Group>
-      <Group component='span' wrap='nowrap'>
+        </span>
+      </span>
+      <span className='flex flex-nowrap'>
         <FormSwitch name={name} control={control} disabled={disabled} aria-labelledby={labelId} />
-      </Group>
-    </Group>
+      </span>
+    </div>
   );
 };
 

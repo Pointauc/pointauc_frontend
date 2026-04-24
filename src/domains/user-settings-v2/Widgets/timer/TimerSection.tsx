@@ -1,4 +1,4 @@
-import { Divider, Group, Stack, Text } from '@mantine/core';
+import { Divider, Text } from '@mantine/core';
 import {
   IconArrowsUpDown,
   IconClock,
@@ -40,7 +40,7 @@ const TimerSection = () => {
         <Divider />
 
         <SettingsCard nested>
-          <Stack gap={0}>
+          <div className='flex flex-col'>
             <SettingsRow>
               <Text fw={700} size='md' c='dimmed'>
                 {t('settings.stopwatch.addOnCondition')}
@@ -48,7 +48,7 @@ const TimerSection = () => {
             </SettingsRow>
 
             <SettingsRow compact htmlFor='isAutoincrementActive' nested>
-              <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+              <div className='flex flex-wrap items-center justify-between gap-4'>
                 <FormCheckboxField
                   name='isAutoincrementActive'
                   control={control}
@@ -67,13 +67,13 @@ const TimerSection = () => {
                   w={96}
                   rightSection={<Text>{t('common.sec')}</Text>}
                 />
-              </Group>
+              </div>
             </SettingsRow>
 
             <Divider />
 
             <SettingsRow compact htmlFor='isNewSlotIncrement' nested>
-              <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+              <div className='flex flex-wrap items-center justify-between gap-4'>
                 <FormCheckboxField
                   name='isNewSlotIncrement'
                   control={control}
@@ -92,13 +92,13 @@ const TimerSection = () => {
                   w={96}
                   rightSection={<Text>{t('common.sec')}</Text>}
                 />
-              </Group>
+              </div>
             </SettingsRow>
 
             <Divider />
 
             <SettingsRow compact htmlFor='isIncrementActive' nested>
-              <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+              <div className='flex flex-wrap items-center justify-between gap-4'>
                 <FormCheckboxField
                   name='isIncrementActive'
                   control={control}
@@ -117,7 +117,7 @@ const TimerSection = () => {
                   w={96}
                   rightSection={<Text>{t('common.sec')}</Text>}
                 />
-              </Group>
+              </div>
             </SettingsRow>
 
             <Divider />
@@ -129,7 +129,7 @@ const TimerSection = () => {
             </SettingsRow>
 
             <SettingsRow compact htmlFor='isMinTimeActive' nested>
-              <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+              <div className='flex flex-wrap items-center justify-between gap-4'>
                 <FormCheckboxField
                   name='isMinTimeActive'
                   control={control}
@@ -148,9 +148,9 @@ const TimerSection = () => {
                   w={96}
                   rightSection={<Text>{t('common.min')}</Text>}
                 />
-              </Group>
+              </div>
             </SettingsRow>
-          </Stack>
+          </div>
         </SettingsCard>
       </SettingsCard>
     </SettingsSection>

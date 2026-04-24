@@ -1,4 +1,4 @@
-import { Group, Stack, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 
 import type { ReactNode } from 'react';
 
@@ -10,19 +10,19 @@ interface FieldLabelProps {
 
 const FieldLabel = ({ text, hint, leftSection }: FieldLabelProps) => {
   return (
-    <Stack gap={2} miw={0} style={{ flex: 1 }}>
-      <Group gap={6} wrap='nowrap'>
+    <div className='flex min-w-0 flex-1 flex-col gap-0.5'>
+      <div className='flex flex-nowrap items-center gap-1.5'>
         {leftSection}
         <Text fw={500} size='sm'>
           {text}
         </Text>
-      </Group>
+      </div>
       {hint ? (
         <Text size='xs' c='dimmed'>
           {hint}
         </Text>
       ) : null}
-    </Stack>
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Button, Group, Modal, Stack, TextInput } from '@mantine/core';
+import { Button, Modal, TextInput } from '@mantine/core';
 import { useCallback, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -156,7 +156,7 @@ const PresetEditableDropdown = () => {
   }));
 
   return (
-    <Stack gap='sm'>
+    <div className='flex flex-col gap-2.5'>
       <EditableDropdown
         options={presetOptions}
         value={activePresetId}
@@ -186,7 +186,7 @@ const PresetEditableDropdown = () => {
         title={t('settings.website.presets.createModalTitle')}
         centered
       >
-        <Stack gap='md'>
+        <div className='flex flex-col gap-4'>
           <TextInput
             autoFocus
             label={t('settings.website.presets.nameLabel')}
@@ -200,17 +200,17 @@ const PresetEditableDropdown = () => {
               }
             }}
           />
-          <Group justify='flex-end' gap='xs'>
+          <div className='flex justify-end gap-2'>
             <Button variant='subtle' onClick={() => setIsCreatePresetModalOpened(false)}>
               {t('common.cancel')}
             </Button>
             <Button onClick={() => void handleCreatePreset()} disabled={!newPresetName.trim()}>
               {t('common.submit')}
             </Button>
-          </Group>
-        </Stack>
+          </div>
+        </div>
       </Modal>
-    </Stack>
+    </div>
   );
 };
 

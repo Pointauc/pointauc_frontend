@@ -1,4 +1,4 @@
-import { Box, Checkbox, Group } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import { Control, Controller } from 'react-hook-form';
 
 import type { ReactNode } from 'react';
@@ -18,7 +18,7 @@ const FormCheckboxField = ({ name, control, label, disabled }: FormCheckboxField
       control={control}
       name={name}
       render={({ field }) => (
-        <Group align='center' gap='sm' wrap='nowrap' style={{ minWidth: 0 }}>
+        <div className='flex min-w-0 flex-nowrap items-center gap-2.5'>
           <Checkbox
             checked={Boolean(field.value)}
             disabled={disabled}
@@ -32,10 +32,10 @@ const FormCheckboxField = ({ name, control, label, disabled }: FormCheckboxField
             }}
             ref={field.ref}
           />
-          <Box component='span' id={labelId} style={{ flex: 1, minWidth: 0 }}>
+          <span id={labelId} className='min-w-0 flex-1'>
             {label}
-          </Box>
-        </Group>
+          </span>
+        </div>
       )}
     />
   );

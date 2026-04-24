@@ -71,7 +71,7 @@ const DonateXLoginButton = ({ id, branding, classes }: Integration.LoginButtonPr
       id={id}
       branding={branding}
       onClick={() => void handleAuth()}
-      classes={{ ...classes, button: styles.loginButton }}
+      classes={{ ...classes, button: `${classes?.button ?? ''} ${styles.loginButton}` }}
     />
   );
 };

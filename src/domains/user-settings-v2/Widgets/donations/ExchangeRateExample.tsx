@@ -12,10 +12,6 @@ const ExchangeRateExample = () => {
   const pointsRate = useWatch({ control, name: 'pointsRate' });
   const numericPointsRate = Number(pointsRate ?? 0);
 
-  if (numericPointsRate <= 1) {
-    return null;
-  }
-
   return (
     <>
       {examplePresets

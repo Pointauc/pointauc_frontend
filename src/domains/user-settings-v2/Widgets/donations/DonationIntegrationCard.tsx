@@ -1,4 +1,4 @@
-import { Group, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { useStore } from '@tanstack/react-store';
 import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
@@ -92,12 +92,12 @@ const DonationIntegrationCard = ({ integration }: DonationIntegrationCardProps) 
           <span className={clsx('absolute inset-1 rounded-full', status === 'active' && 'bg-emerald-500')} />
         </span>
 
-        <Group gap='xxs' wrap='nowrap' miw={0}>
+        <div className='flex min-w-0 flex-nowrap items-center gap-1.5'>
           <Icon size={22} />
           <Text fw={600} size='sm' truncate>
             {displayName}
           </Text>
-        </Group>
+        </div>
       </div>
 
       <div className='px-2 pb-2' onClick={(event) => event.stopPropagation()}>

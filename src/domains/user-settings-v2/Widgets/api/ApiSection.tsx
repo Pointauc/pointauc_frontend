@@ -1,4 +1,4 @@
-import { Anchor, Button, CopyButton, Group, Modal, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Anchor, Button, CopyButton, Modal, Text, TextInput, Title } from '@mantine/core';
 import { IconCheck, IconCopy, IconKey } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
@@ -40,7 +40,7 @@ const ApiSection = () => {
     <>
       <SettingsSection id='website-settings-api' title={t('settings.website.toc.api')} icon={<IconKey size={24} />}>
         <SettingsCard>
-          <Stack gap='md' p='md'>
+          <div className='flex flex-col gap-4 p-4'>
             <Anchor
               href='https://app.theneo.io/bf08f5b1-1025-4a83-8518-14458df03592/pointauc/api-reference'
               target='_blank'
@@ -48,23 +48,23 @@ const ApiSection = () => {
               {t('settings.token.openDocs')}
             </Anchor>
 
-            <Group gap='sm' align='center' wrap='wrap'>
+            <div className='flex flex-wrap items-center gap-2.5'>
               <Button disabled={!userId} onClick={() => setOpened(true)} variant='outline'>
                 {t('settings.token.show')}
               </Button>
               {!userId && <Text c='dimmed'>{t('settings.token.userIdRequired')}</Text>}
-            </Group>
-          </Stack>
+            </div>
+          </div>
         </SettingsCard>
       </SettingsSection>
 
       <Modal opened={opened} centered size='xl' title={t('settings.token.modalTitle')} onClose={() => setOpened(false)}>
-        <Stack gap='md'>
+        <div className='flex flex-col gap-4'>
           <Title order={4} c='red'>
             {t('settings.token.dontShareToken')}
           </Title>
 
-          <Group gap='sm' wrap='wrap'>
+          <div className='flex flex-wrap gap-2.5'>
             <TextInput type='password' value={token ?? ''} flex={1} readOnly />
             <CopyButton value={token ?? ''}>
               {({ copied, copy }) => (
@@ -82,8 +82,8 @@ const ApiSection = () => {
             <Button onClick={() => void resetToken()} loading={loading} variant='outline'>
               {t('settings.token.update')}
             </Button>
-          </Group>
-        </Stack>
+          </div>
+        </div>
       </Modal>
     </>
   );

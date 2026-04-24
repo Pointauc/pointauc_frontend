@@ -28,7 +28,12 @@ const PageContainer: FC<PageContainerProps> = ({
   padding = true,
 }) => {
   return (
-    <div className={clsx(className, styles.pageContainer, { [styles.fixedHeight]: fixedHeight })}>
+    <div
+      className={clsx(className, styles.pageContainer, {
+        [styles.fixedHeight]: fixedHeight,
+        [styles.padding]: padding,
+      })}
+    >
       {!!title && (typeof title === 'string' ? <Title order={1}>{title}</Title> : title)}
       <div
         className={clsx(styles.pageContainerContent, classes?.content, { [styles.padding]: padding })}

@@ -1,4 +1,4 @@
-import { Group, Modal, Stack, Text, TextInput } from '@mantine/core';
+import { Modal, Text, TextInput } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { IconPhoto, IconPhotoPlus, IconPhotoX } from '@tabler/icons-react';
 import { useState, type ClipboardEvent } from 'react';
@@ -65,9 +65,9 @@ const BackgroundImageModal = ({ isOpened, onClose, onChange }: BackgroundImageMo
       centered
       title={t('settings.auc.backgroundImageModal')}
     >
-      <Stack gap='md' align='stretch' justify='center'>
+      <div className='flex flex-col items-stretch justify-center gap-4'>
         <Dropzone onDrop={handleFileUpload} maxFiles={1} maxSize={1000 * 1000 * 50} accept={['image/*']}>
-          <Group justify='center' gap='xl' mih={120} style={{ pointerEvents: 'none' }}>
+          <div className='pointer-events-none flex min-h-[120px] items-center justify-center gap-6'>
             <Dropzone.Accept>
               <IconPhotoPlus size={28} />
             </Dropzone.Accept>
@@ -80,7 +80,7 @@ const BackgroundImageModal = ({ isOpened, onClose, onChange }: BackgroundImageMo
             <Text size='lg' inline>
               {t('common.moveFileOrClick')}
             </Text>
-          </Group>
+          </div>
         </Dropzone>
         <Text size='xl' ta='center'>
           {t('common.or')}
@@ -91,7 +91,7 @@ const BackgroundImageModal = ({ isOpened, onClose, onChange }: BackgroundImageMo
           placeholder={t('common.insertImageLink')}
           error={isCorrectUrl ? undefined : t('common.incorrectLink')}
         />
-      </Stack>
+      </div>
     </Modal>
   );
 };

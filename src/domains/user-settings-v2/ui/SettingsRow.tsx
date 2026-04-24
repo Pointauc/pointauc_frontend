@@ -1,4 +1,3 @@
-import { Box } from '@mantine/core';
 import clsx from 'clsx';
 
 import type { ReactNode } from 'react';
@@ -11,20 +10,22 @@ interface SettingsRowProps {
 }
 
 const SettingsRow = ({ children, compact, htmlFor, nested = false }: SettingsRowProps) => {
+  const isLabel = Boolean(htmlFor);
+  const Component = isLabel ? 'label' : 'div';
+
   return (
-    <Box
-      component={htmlFor ? 'label' : 'div'}
-      htmlFor={htmlFor}
+    <Component
+      {...(htmlFor ? { htmlFor } : {})}
       className={clsx(
+        'block min-w-0 px-4',
+        compact ? 'py-1.5' : 'py-3',
         htmlFor && 'rounded-sm transition-colors duration-150',
         htmlFor && (nested ? 'hover:bg-[var(--mantine-color-dark-6)]' : 'hover:bg-[var(--mantine-color-dark-7)]'),
       )}
-      px='md'
-      py={compact ? 'xxs' : 'sm'}
-      style={{ display: 'block', minWidth: 0, cursor: htmlFor ? 'pointer' : undefined }}
+      style={{ cursor: htmlFor ? 'pointer' : undefined }}
     >
       {children}
-    </Box>
+    </Component>
   );
 };
 

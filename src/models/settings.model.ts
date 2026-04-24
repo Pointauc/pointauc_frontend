@@ -76,5 +76,9 @@ export interface AucSettingsDto extends Settings {
 
 export type SettingsForm = Partial<AucSettingsDto>;
 
-export const resolveBackgroundType = (background?: string | null, backgroundType?: BackgroundType): BackgroundType =>
-  backgroundType ?? (background ? 'customMedia' : 'default');
+export const resolveBackgroundType = (background?: string | null, backgroundType?: BackgroundType): BackgroundType => {
+  if (background != null) {
+    return 'customMedia';
+  }
+  return backgroundType ?? 'default';
+};

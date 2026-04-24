@@ -1,4 +1,3 @@
-import { Stack } from '@mantine/core';
 import { IconSparkles } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,10 +14,10 @@ const ExtraModesSection = () => {
       title={t('settings.website.toc.extraModes')}
       icon={<IconSparkles size={24} />}
     >
-      <Stack gap='xs'>
+      <div className='flex flex-col gap-2'>
         <MarblesModeCard />
         <WheelOfLuckModeCard />
-      </Stack>
+      </div>
     </SettingsSection>
   );
 };

@@ -1,4 +1,4 @@
-import { ColorInput, ColorSwatch, Divider, Group, Stack, UnstyledButton } from '@mantine/core';
+import { ColorInput, ColorSwatch, Divider, UnstyledButton } from '@mantine/core';
 import { IconPalette } from '@tabler/icons-react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -34,12 +34,12 @@ const AppearanceSection = () => {
 
         <Divider />
 
-        <Stack gap={0}>
+        <div className='flex flex-col'>
           <SettingsRow compact htmlFor='primaryColor'>
-            <Group align='center' justify='space-between' gap='md' wrap='wrap'>
+            <div className='flex flex-wrap items-center justify-between gap-4'>
               <FieldLabel text={t('settings.appearance.primaryColor')} />
-              <Group gap='md' align='center'>
-                <Group gap={8} wrap='nowrap'>
+              <div className='flex items-center gap-4'>
+                <div className='flex flex-nowrap gap-2'>
                   {PRIMARY_COLOR_SHORTCUTS.map((color) => (
                     <UnstyledButton
                       key={color}
@@ -50,7 +50,7 @@ const AppearanceSection = () => {
                       <ColorSwatch color={color} size={26} />
                     </UnstyledButton>
                   ))}
-                </Group>
+                </div>
                 <Controller
                   control={control}
                   name='primaryColor'
@@ -71,8 +71,8 @@ const AppearanceSection = () => {
                     />
                   )}
                 />
-              </Group>
-            </Group>
+              </div>
+            </div>
           </SettingsRow>
 
           <Divider />
@@ -104,7 +104,7 @@ const AppearanceSection = () => {
               label={<FieldLabel text={t('settings.auc.hideAmounts')} />}
             />
           </SettingsRow>
-        </Stack>
+        </div>
       </SettingsCard>
     </SettingsSection>
   );

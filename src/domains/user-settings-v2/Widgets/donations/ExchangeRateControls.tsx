@@ -1,4 +1,4 @@
-import { Button, Group, Stack, Text, Tooltip } from '@mantine/core';
+import { Button, Text, Tooltip } from '@mantine/core';
 import { IconArrowBigRightFilled, IconTransfer } from '@tabler/icons-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ const SwitchPlacesTooltip = () => {
   const { t } = useTranslation();
 
   return (
-    <Stack gap={10} maw={380} className='py-1'>
+    <div className='flex max-w-[380px] flex-col gap-2.5 py-1'>
       <div>
         <Text component='p' fw={600} size='sm'>
           {t('settings.integrationCommon.switchRatesTooltip.title')}
@@ -55,7 +55,7 @@ const SwitchPlacesTooltip = () => {
           })}
         </Text>
       </div>
-    </Stack>
+    </div>
   );
 };
 
@@ -66,8 +66,8 @@ const ExchangeRateControls = () => {
   const reversePointsRate = useWatch({ control, name: 'reversePointsRate' });
 
   return (
-    <Group align='center' gap='0' wrap='wrap' miw={0}>
-      <Group align='center' gap='sm' wrap='wrap'>
+    <div className='flex min-w-0 flex-wrap items-center gap-0'>
+      <div className='flex flex-wrap items-center gap-2.5'>
         <Text component='span'>{`1 ${t('common.currencySign')}`}</Text>
         <IconArrowBigRightFilled
           style={{
@@ -83,7 +83,7 @@ const ExchangeRateControls = () => {
           size='sm'
           rightSection={<PointsIcon width={20} height={20} />}
         />
-      </Group>
+      </div>
 
       <Tooltip label={<SwitchPlacesTooltip />} withArrow multiline withinPortal w={380} position='top-end'>
         <Button
@@ -92,15 +92,15 @@ const ExchangeRateControls = () => {
           className='hover:underline'
           onClick={() => setValue('reversePointsRate', !reversePointsRate, { shouldDirty: true, shouldTouch: true })}
         >
-          <Group align='center' gap='xxs'>
+          <div className='flex items-center gap-1'>
             <Text size='sm' fw={500}>
               {t('settings.donations.switchRates')}
             </Text>
             <IconTransfer size={20} />
-          </Group>
+          </div>
         </Button>
       </Tooltip>
-    </Group>
+    </div>
   );
 };
 

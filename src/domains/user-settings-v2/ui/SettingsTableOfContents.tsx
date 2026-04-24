@@ -1,11 +1,11 @@
-import { Box, Group, Stack, Text, UnstyledButton } from '@mantine/core';
+import { Text, UnstyledButton } from '@mantine/core';
 import { useScrollSpy } from '@mantine/hooks';
 import { IconArticle, IconClockHour4, IconCoin, IconKey, IconPalette, IconSparkles } from '@tabler/icons-react';
-import { useEffect, useMemo, useState, type ReactNode, type RefObject } from 'react';
+import clsx from 'clsx';
+import { useEffect, useLayoutEffect, useMemo, useState, type ReactNode, type RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PointsIcon from '@assets/icons/channelPoints.svg?react';
-import styles from '@domains/user-settings-v2/pages/WebsiteSettings.module.css';
 
 interface SettingsTableOfContentsProps {
   contentId: string;
@@ -117,10 +117,10 @@ const SettingsTableOfContents = ({ contentId, contentRef }: SettingsTableOfConte
   };
 
   return (
-    <Box component='nav' aria-label={t('settings.website.toc.label')} id={`${contentId}-toc`}>
-      <Stack gap='sm'>
+    <nav aria-label={t('settings.website.toc.label')} id={`${contentId}-toc`} className='flex flex-col gap-2.5'>
+      <div className='flex flex-col gap-2.5'>
         {tocAreas.map((area) => (
-          <Stack key={area.title} gap={4}>
+          <div key={area.title} className='flex flex-col gap-1'>
             <Text size='sm' fw={700} tt='uppercase' c='dimmed'>
               {area.title}
             </Text>
@@ -132,24 +132,28 @@ const SettingsTableOfContents = ({ contentId, contentRef }: SettingsTableOfConte
                 <UnstyledButton
                   key={link.id}
                   type='button'
-                  className={styles.tocControl}
+                  className={clsx(
+                    'flex w-full items-center gap-2 border-l-4 px-3 py-[0.4rem] transition-colors duration-150 hover:bg-[light-dark(var(--mantine-color-gray-0),var(--mantine-color-dark-6))]',
+                    isActive && 'border-l-[color:var(--mantine-primary-color-5)] text-[var(--mantine-primary-color-5)]',
+                    !isActive && 'border-l-transparent text-[var(--text-color)]',
+                  )}
                   aria-current={isActive ? 'location' : undefined}
                   data-active={isActive || undefined}
                   onClick={() => scrollToSection(link.id)}
                 >
-                  <Group gap='xs' wrap='nowrap' miw={0} style={{ width: '100%' }}>
-                    <Box className={styles.tocIcon}>{link.icon}</Box>
-                    <Text className={styles.tocLabel} size='sm' fw={500} truncate>
+                  <div className='flex w-full min-w-0 flex-nowrap items-center gap-2'>
+                    <span className='inline-flex flex-none items-center justify-center text-inherit'>{link.icon}</span>
+                    <Text className={clsx('truncate text-sm text-inherit', isActive && 'font-bold')} fw={500}>
                       {link.label}
                     </Text>
-                  </Group>
+                  </div>
                 </UnstyledButton>
               );
             })}
-          </Stack>
+          </div>
         ))}
-      </Stack>
-    </Box>
+      </div>
+    </nav>
   );
 };
 

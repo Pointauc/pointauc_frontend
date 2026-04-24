@@ -38,7 +38,7 @@ const IntegrationLoginButton = ({ branding, id, onClick, classes }: IntegrationL
 
   return (
     <Button
-      className={clsx('h-10 text-[#f1f1f1]', classes?.button)}
+      className={clsx('h-10 px-3 text-[#f1f1f1]', classes?.button)}
       variant='filled'
       leftSection={<Icon size={22} classes={classes?.icon} />}
       onClick={onClick}

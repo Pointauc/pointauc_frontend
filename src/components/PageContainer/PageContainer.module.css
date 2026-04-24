@@ -9,22 +9,25 @@
   &.fixedHeight {
     max-height: 100dvh;
   }
-}
 
-.padding {
-  padding: var(--mantine-spacing-md) var(--mantine-spacing-md) 0 var(--mantine-spacing-md);
+  &.padding {
+    padding: var(--mantine-spacing-md) var(--mantine-spacing-md) 0 var(--mantine-spacing-md);
 
-  @media (min-width: 48em) {
-    padding: 2rem 3em 0 3em;
+    @media (min-width: 48em) {
+      padding: 2rem 3em 0 3em;
+    }
   }
 }
 
 .pageContainerContent {
   min-height: 0;
   overflow-y: auto;
-  padding-bottom: 1em;
 
   display: flex;
   align-items: stretch;
   flex-grow: 1;
+
+  &.padding {
+    padding-bottom: 1em;
+  }
 }

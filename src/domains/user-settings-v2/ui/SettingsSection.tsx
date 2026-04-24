@@ -1,7 +1,5 @@
-import { Box, Group, Stack, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import { type ReactNode } from 'react';
-
-import SettingsCard from '@domains/user-settings-v2/ui/SettingsCard';
 
 interface SettingsSectionProps {
   id: string;
@@ -12,19 +10,19 @@ interface SettingsSectionProps {
 
 const SettingsSection = ({ id, title, icon, children }: SettingsSectionProps) => {
   return (
-    <Stack component='section' gap='md'>
-      <Group component='h2' id={id} gap='xs' align='center' wrap='nowrap' style={{ scrollMarginTop: '1.5rem' }}>
+    <section className='flex flex-col gap-4'>
+      <h2 id={id} className='flex flex-nowrap items-center gap-2 scroll-mt-6'>
         {icon ? (
-          <Box component='span' c='var(--mantine-primary-color-filled)' style={{ display: 'inline-flex' }}>
+          <span className='inline-flex text-[var(--mantine-primary-color-filled)]'>
             {icon}
-          </Box>
+          </span>
         ) : null}
         <Text component='span' fw={700} size='lg'>
           {title}
         </Text>
-      </Group>
+      </h2>
       {children}
-    </Stack>
+    </section>
   );
 };
 

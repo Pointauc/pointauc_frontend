@@ -1,4 +1,4 @@
-import { Button, Group, Modal, Stack, Text } from '@mantine/core';
+import { Button, Modal, Text } from '@mantine/core';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,15 +18,15 @@ const RewardPresetsConfirmation: FC<RewardPresetsConfirmationProps> = ({ open, o
 
   return (
     <Modal opened={open} onClose={onClose} title={t('settings.twitch.rewardPresetsConfirmation.title')}>
-      <Stack>
+      <div className='flex flex-col gap-4'>
         <Text>{t('settings.twitch.rewardPresetsConfirmation.description')}</Text>
-        <Group justify='flex-end'>
+        <div className='flex justify-end gap-2'>
           <Button onClick={onClose} variant='outline'>
             {t('common.cancel')}
           </Button>
           <Button onClick={handleConfirmClick}>{t('settings.twitch.rewardPresetsConfirmation.confirm')}</Button>
-        </Group>
-      </Stack>
+        </div>
+      </div>
     </Modal>
   );
 };

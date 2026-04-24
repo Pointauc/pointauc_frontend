@@ -1,4 +1,3 @@
-import { Box, Stack } from '@mantine/core';
 import { useAsyncDebouncer } from '@tanstack/react-pacer/async-debouncer';
 import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -20,8 +19,6 @@ import ApiSection from '@domains/user-settings-v2/Widgets/api/ApiSection';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils';
 import { settingsApi } from '@api/userApi';
-
-import styles from './WebsiteSettings.module.css';
 
 const WEBSITE_SETTINGS_CONTENT_ID = 'website-settings-content';
 const WEBSITE_SETTINGS_AUTOSAVE_WAIT = 200;
@@ -119,12 +116,12 @@ const WebsiteSettings = () => {
           contentId={WEBSITE_SETTINGS_CONTENT_ID}
           contentRef={contentRef}
           className='h-full'
-          classes={{ content: styles.pageContent }}
+          classes={{ content: 'items-start' }}
           padding={false}
         >
-          <Box className={styles.layout}>
-            <Box className={styles.contentColumn}>
-              <Stack className={styles.contentStack} gap='xxl'>
+          <div className='grid w-full min-w-0 grid-cols-1 items-start gap-y-8 self-start xl:grid-cols-[minmax(0,1fr)_minmax(0,800px)_minmax(0,1fr)] xl:gap-x-8'>
+            <div className='w-full min-w-0 xl:col-start-2 xl:mx-auto xl:max-w-[800px] xl:py-6'>
+              <div className='flex flex-col gap-8'>
                 <TimerSection />
                 <AppearanceSection />
                 <BidsGeneralSection />
@@ -132,14 +129,14 @@ const WebsiteSettings = () => {
                 <DonationSection />
                 <ExtraModesSection />
                 <ApiSection />
-              </Stack>
-            </Box>
+              </div>
+            </div>
 
-            <Box className={styles.tocColumn}>
+            <div className='w-full min-w-0 xl:sticky xl:top-0 xl:col-start-3 xl:flex xl:h-screen xl:max-w-[320px] xl:flex-col xl:justify-between xl:py-6'>
               <SettingsTableOfContents contentId={WEBSITE_SETTINGS_CONTENT_ID} contentRef={contentRef} />
               <SettingsSidebar />
-            </Box>
-          </Box>
+            </div>
+          </div>
         </PageContainer>
       </form>
     </FormProvider>
