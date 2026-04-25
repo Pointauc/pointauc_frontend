@@ -780,6 +780,7 @@
   "stopwatch": {
     "addTime": "Add Time",
     "addTimex2": "Add Time X2",
+    "clickToEdit": "Click to edit",
     "continue": "Continue",
     "pause": "Pause",
     "reduceTime": "Reduce Time",

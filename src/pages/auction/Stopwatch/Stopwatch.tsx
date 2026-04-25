@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Text } from '@mantine/core';
+import { ActionIcon, Group } from '@mantine/core';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardCapslockIcon from '@mui/icons-material/KeyboardCapslock';
@@ -19,16 +19,10 @@ import { RootState } from '@reducers';
 import { Purchase } from '@reducers/Purchases/Purchases';
 import { useHeadroom } from '@shared/lib/scroll';
 
+import EditableTimer from './EditableTimer';
 import classes from './Stopwatch.module.css';
-
-export const STOPWATCH = {
-  FORMAT: 'mm:ss:SSS',
-  HOUR_FORMAT: 'mm:ss',
-  TOTAL_FORMAT: 'HH:mm:ss',
-};
-const HOUR = 60 * 60 * 1000;
-
-type TimerType = 'stopwatch' | 'total';
+import { HOUR, STOPWATCH, TimerType } from './stopwatch.constants';
+import useTimerEditing from './useTimerEditing';
 
 export interface StopwatchController {
   getTimeLeft: () => number;
@@ -89,6 +83,21 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const totalTimeElement = useRef<HTMLDivElement>(null);
   const winnerRef = useRef<Slot | undefined>(undefined);
   const [focusedTimer, setFocusedTimer] = useState<TimerType>('stopwatch');
+  const editingTimerRef = useRef<TimerType | null>(null);
+
+  const formatStopwatchTime = useCallback((currentTime: number): string => {
+    const date = dayjs(currentTime);
+    const hours = Math.floor(currentTime / HOUR);
+    const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
+
+    return hours ? `${hours > 9 ? hours : `0${hours}`}:${formatted}` : formatted;
+  }, []);
+
+  const formatTotalTime = useCallback((currentTime: number): string => {
+    const date = dayjs.duration(currentTime);
+
+    return date.format(STOPWATCH.TOTAL_FORMAT);
+  }, []);
 
   const winnerSlot = useMemo(() => {
     [winnerRef.current] = slots;
@@ -100,47 +109,42 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const updateTimerUIDebounced = useMemo(
     () =>
       throttle(
-        (timeLeft: number): void => {
-          const date = dayjs(timeLeft);
-          const hours = Math.floor(timeLeft / HOUR);
-          const formatted = hours ? date.format(STOPWATCH.HOUR_FORMAT) : date.format(STOPWATCH.FORMAT).slice(0, -1);
-          if (stopwatchElement.current) {
-            stopwatchElement.current.textContent = hours
-              ? `${hours > 9 ? hours : `0${hours}`}:${formatted}`
-              : formatted;
+        (currentTimeLeft: number): void => {
+          if (stopwatchElement.current && editingTimerRef.current !== 'stopwatch') {
+            stopwatchElement.current.textContent = formatStopwatchTime(currentTimeLeft);
           }
         },
         { wait: 68, leading: true, trailing: true },
       ),
-    [],
+    [formatStopwatchTime],
   );
 
   const updateStopwatch = useCallback(
     (timeDifference = 0): void => {
-      if (stopwatchElement.current) {
-        timeLeft.current += timeDifference;
-        if (timeLeft.current < 0) {
-          timeLeft.current = 0;
-          setIsStopped(true);
-          onEnd?.();
-        }
-        updateTimerUIDebounced(timeLeft.current);
+      timeLeft.current += timeDifference;
+      if (timeLeft.current < 0) {
+        timeLeft.current = 0;
+        setIsStopped(true);
+        onEnd?.();
       }
+      updateTimerUIDebounced(timeLeft.current);
     },
     [onEnd, updateTimerUIDebounced],
   );
 
-  const updateTotalTime = useCallback((timeDifference = 0) => {
-    totalTime.current += timeDifference;
-    if (totalTime.current < 0) {
-      totalTime.current = 0;
-    }
+  const updateTotalTime = useCallback(
+    (timeDifference = 0): void => {
+      totalTime.current += timeDifference;
+      if (totalTime.current < 0) {
+        totalTime.current = 0;
+      }
 
-    if (totalTimeElement.current) {
-      const date = dayjs.duration(totalTime.current);
-      totalTimeElement.current.textContent = date.format(STOPWATCH.TOTAL_FORMAT);
-    }
-  }, []);
+      if (totalTimeElement.current && editingTimerRef.current !== 'total') {
+        totalTimeElement.current.textContent = formatTotalTime(totalTime.current);
+      }
+    },
+    [formatTotalTime],
+  );
 
   useEffect(() => {
     if (!showTotalTime) {
@@ -157,13 +161,13 @@ const Stopwatch: React.FC<StopwatchProps> = ({
 
   const autoUpdateTimer = useCallback(
     (timeChange: number) => {
-      const maxMilliseconds = maxTime * 60 * 1000;
-
-      if (isMinTimeActive && timeLeft.current > minTime * 60 * 1000) return;
+      if (isMinTimeActive && timeLeft.current > minTime * 60 * 1000) {
+        return;
+      }
 
       updateStopwatch(timeChange);
     },
-    [isMinTimeActive, maxTime, minTime, updateStopwatch],
+    [isMinTimeActive, minTime, updateStopwatch],
   );
 
   useEffect(() => {
@@ -178,11 +182,11 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     return () => {
       globalBidsEventBus.off('bid', handleBid);
     };
-  }, [autoUpdateTimer, isIncrementActive, incrementTime]);
+  }, [autoUpdateTimer, incrementTime, isIncrementActive]);
 
   useEffect(() => {
     updateStopwatch();
-  }, [updateStopwatch, updateTotalTime]);
+  }, [updateStopwatch]);
 
   useEffect(() => {
     if (slots.length > previousSlotsLength.current && isNewSlotIncrement) {
@@ -192,23 +196,63 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     previousSlotsLength.current = slots.length;
   }, [autoUpdateTimer, isNewSlotIncrement, newSlotIncrement, slots.length]);
 
-  const updateTimeOnFrame = (timestamp: number): void => {
-    if (prevTimestamp.current) {
-      const timeDifference = prevTimestamp.current - timestamp;
-      updateStopwatch(timeDifference);
-      updateTotalTime(-timeDifference);
-    }
-    prevTimestamp.current = timestamp;
-    frameId.current = timeLeft.current ? requestAnimationFrame(updateTimeOnFrame) : undefined;
-  };
-  const stopTimer = (): void => {
+  const updateTimeOnFrame = useCallback(
+    (timestamp: number): void => {
+      if (prevTimestamp.current) {
+        const timeDifference = prevTimestamp.current - timestamp;
+        updateStopwatch(timeDifference);
+        updateTotalTime(-timeDifference);
+      }
+
+      prevTimestamp.current = timestamp;
+      frameId.current = timeLeft.current ? requestAnimationFrame(updateTimeOnFrame) : undefined;
+    },
+    [updateStopwatch, updateTotalTime],
+  );
+
+  const stopTimer = useCallback((): void => {
     if (frameId.current) {
       cancelAnimationFrame(frameId.current);
       frameId.current = undefined;
     }
+
     setIsStopped(true);
     onPause?.(timeLeft.current);
-  };
+  }, [onPause]);
+
+  const startTimer = useCallback((): void => {
+    if (timeLeft.current) {
+      setIsStopped(false);
+      prevTimestamp.current = undefined;
+      frameId.current = requestAnimationFrame(updateTimeOnFrame);
+      onStart?.(timeLeft.current);
+    }
+  }, [onStart, updateTimeOnFrame]);
+
+  const { editingState, startEditing, updateEditingValue, commitEditing, cancelEditing } = useTimerEditing({
+    showControls,
+    checkIsStopped: isStopped,
+    getStopwatchTime: () => timeLeft.current,
+    getTotalTime: () => totalTime.current,
+    formatStopwatchTime,
+    formatTotalTime,
+    stopTimer,
+    startTimer,
+    setFocusedTimer,
+    applyStopwatchTime: (nextTime) => {
+      timeLeft.current = nextTime;
+      updateStopwatch();
+      onTimeChanged?.(timeLeft.current, 'paused');
+    },
+    applyTotalTime: (nextTime) => {
+      totalTime.current = nextTime;
+      updateTotalTime();
+    },
+  });
+
+  useEffect(() => {
+    editingTimerRef.current = editingState?.type ?? null;
+  }, [editingState]);
 
   const resetTimer = useCallback((): void => {
     if (focusedTimer === 'stopwatch') {
@@ -216,30 +260,23 @@ const Stopwatch: React.FC<StopwatchProps> = ({
       timeLeft.current = defaultTime;
       updateStopwatch();
       onReset?.(timeLeft.current);
-    } else {
-      totalTime.current = 0;
-      updateTotalTime();
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultTime, focusedTimer, onReset, updateTotalTime, updateStopwatch]);
 
-  const startTimer = (): void => {
-    if (timeLeft.current) {
-      setIsStopped(false);
-      prevTimestamp.current = undefined;
-      frameId.current = requestAnimationFrame(updateTimeOnFrame);
-      onStart?.(timeLeft.current);
-    }
-  };
+    totalTime.current = 0;
+    updateTotalTime();
+  }, [defaultTime, focusedTimer, onReset, stopTimer, updateStopwatch, updateTotalTime]);
 
   const addTime = (): void => {
     updateFocusedTimer(stopwatchStep);
     onTimeChanged?.(timeLeft.current, isStopped ? 'paused' : 'running');
   };
+
   const addDoubleTime = (): void => {
     updateFocusedTimer(stopwatchStep * 2);
     onTimeChanged?.(timeLeft.current, isStopped ? 'paused' : 'running');
   };
+
   const subtractTime = (): void => {
     updateFocusedTimer(-stopwatchStep);
     onTimeChanged?.(timeLeft.current, isStopped ? 'paused' : 'running');
@@ -247,10 +284,11 @@ const Stopwatch: React.FC<StopwatchProps> = ({
 
   useEffect(() => {
     if (isAutoincrementActive && winnerSlot.amount && previousWinnerSlotId.current !== winnerSlot.id) {
-      autoUpdateTimer(Number(stopwatchAutoincrement));
+      autoUpdateTimer(stopwatchAutoincrement);
     }
+
     previousWinnerSlotId.current = winnerSlot.id;
-  }, [autoUpdateTimer, isAutoincrementActive, stopwatchAutoincrement, updateStopwatch, winnerSlot]);
+  }, [autoUpdateTimer, isAutoincrementActive, stopwatchAutoincrement, winnerSlot]);
 
   const swapTimers = () => setFocusedTimer((type) => (type === 'stopwatch' ? 'total' : 'stopwatch'));
   const getTimerClass = (type: TimerType) => (focusedTimer === type ? classes.timerPrimary : classes.timerSecondary);
@@ -267,12 +305,40 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     getState: () => (isStopped ? 'paused' : 'running'),
   }));
 
+  const renderTimer = (timerType: TimerType) => {
+    const checkIsEditing = editingState?.type === timerType;
+
+    return (
+      <EditableTimer
+        timerType={timerType}
+        checkIsEditing={checkIsEditing}
+        displayClassName={clsx(getTimerClass(timerType), {
+          [classes.timerEditable]: showControls,
+          [classes.timerEditing]: checkIsEditing,
+        })}
+        inputClassName={clsx(classes.timerInput, {
+          [classes.timerPrimaryInput]: timerType === 'stopwatch',
+          [classes.timerSecondaryInput]: timerType === 'total',
+        })}
+        showControls={showControls}
+        tooltipLabel={t('stopwatch.clickToEdit')}
+        textRef={timerType === 'stopwatch' ? stopwatchElement : totalTimeElement}
+        color={timerType === 'total' ? 'primary' : undefined}
+        editingValue={checkIsEditing ? editingState?.value ?? '' : ''}
+        onStartEditing={startEditing}
+        onEditingValueChange={updateEditingValue}
+        onCommitEditing={commitEditing}
+        onCancelEditing={cancelEditing}
+      />
+    );
+  };
+
   return (
     <div className={clsx(classes.wrapper, { [classes.wrapperCompact]: controlsCompact })}>
-      <Text className={getTimerClass('stopwatch')} ref={stopwatchElement} />
+      {renderTimer('stopwatch')}
       {showTotalTime && (
         <>
-          <Text className={getTimerClass('total')} c='primary' ref={totalTimeElement} />
+          {renderTimer('total')}
           <div className={classes.swapTimers}>
             <ActionIcon
               size='xs'

@@ -20,9 +20,11 @@
   font-size: 50px;
   line-height: 60px;
   position: relative;
+  border-radius: var(--mantine-radius-md);
   transition:
     font-size 0.2s,
-    width 0.2s;
+    width 0.2s,
+    background-color 0.15s ease;
 }
 
 @media (min-width: 48em) {
@@ -43,6 +45,7 @@
   z-index: -1;
   background-color: var(--mantine-color-darkTransparent-8);
   border-radius: var(--mantine-radius-md);
+  transition: background-color 0.15s ease;
 }
 
 .timerSecondary {
@@ -52,6 +55,50 @@
   top: -6px;
   height: 12px;
   letter-spacing: 2px;
+  border-radius: var(--mantine-radius-sm);
+  transition: background-color 0.15s ease;
+}
+
+.timerEditable {
+  cursor: pointer;
+}
+
+.timerEditable.timerPrimary:hover::after,
+.timerEditable.timerPrimary:focus-visible::after {
+  background-color: var(--mantine-color-darkTransparent-7);
+}
+
+.timerEditable.timerSecondary:hover,
+.timerEditable.timerSecondary:focus-visible {
+  background-color: var(--mantine-color-darkTransparent-8);
+}
+
+.timerEditing {
+  cursor: text;
+}
+
+.timerInput {
+  color: inherit;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.timerInput::selection {
+  background-color: var(--mantine-color-blue-filled);
+  color: var(--mantine-color-white);
+}
+
+.timerPrimaryInput {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.timerSecondaryInput {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
 }
 
 .controls {
