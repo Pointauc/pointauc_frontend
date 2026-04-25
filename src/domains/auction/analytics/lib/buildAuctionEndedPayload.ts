@@ -1,4 +1,5 @@
 import { analyticsEventNames } from '@shared/lib/analytics/events';
+import { COLORS } from '@constants/color.constants';
 
 import type { AnalyticsEventMap } from '@shared/lib/analytics/events';
 import type { AucSettingsState } from '@reducers/AucSettings/AucSettings';
@@ -31,25 +32,31 @@ export const buildAuctionEndedPayload = ({
   const lotCount = activeLots.length;
 
   return {
-    timerStartMinutes: Number(settings.startTime),
-    timerStepSeconds: Number(settings.timeStep),
-    isAutoincrementActive: settings.isAutoincrementActive,
-    isNewSlotIncrement: settings.isNewSlotIncrement,
-    isBidIncrementActive: settings.isIncrementActive,
-    isMinTimeActive: settings.isMinTimeActive,
-    isMaxTimeActive: settings.isMaxTimeActive,
-    showChances: settings.showChances,
-    showTotalTime: settings.showTotalTime,
-    isBuyoutVisible: settings.isBuyoutVisible,
-    hideAmounts: settings.hideAmounts,
-    dynamicRewards: settings.dynamicRewards,
-    insertStrategy: String(settings.insertStrategy),
-    bidNameStrategy: String(settings.bidNameStrategy),
-    lotCount,
-    participantCount: getUniqueParticipantCount(activeLots),
-    totalAmount,
-    maxAmount: amounts.length > 0 ? Math.max(...amounts) : 0,
-    averageAmount: lotCount > 0 ? Number((totalAmount / lotCount).toFixed(2)) : 0,
-    favoriteLotCount: activeLots.filter((lot) => lot.isFavorite).length,
+    timer_start_minutes: Number(settings.startTime),
+    is_donation_autoincrement_active: settings.isAutoincrementActive,
+    is_new_slot_increment_active: settings.isNewSlotIncrement,
+    is_leader_change_increment_active: settings.isIncrementActive,
+    is_min_time_active: settings.isMinTimeActive,
+    is_max_time_active: settings.isMaxTimeActive,
+    is_show_chances: settings.showChances,
+    is_show_total_time: settings.showTotalTime,
+    is_hide_amounts: settings.hideAmounts,
+    insert_strategy: String(settings.insertStrategy),
+    bid_name_strategy: String(settings.bidNameStrategy),
+    background_type: String(settings.backgroundType),
+    background_overlay_opacity: settings.backgroundOverlayOpacity,
+    background_blur: settings.backgroundBlur,
+    is_geometry_background_color_enabled: settings.isGeometryBackgroundColorEnabled,
+    is_custom_primary_color: settings.primaryColor !== COLORS.THEME.PRIMARY,
+    purchase_sort: String(settings.purchaseSort),
+    is_marbles_auc_enabled: settings.marblesAuc,
+    is_max_time_enabled: settings.isMaxTimeActive,
+    is_lucky_wheel_enabled: settings.luckyWheelEnabled,
+    lot_count: lotCount,
+    total_amount: totalAmount,
+    max_amount: amounts.length > 0 ? Math.max(...amounts) : 0,
+    average_amount: lotCount > 0 ? Number((totalAmount / lotCount).toFixed(2)) : 0,
+    has_favorites: activeLots.some((lot) => lot.isFavorite),
+    has_locked_percentage: activeLots.some((lot) => lot.lockedPercentage !== null),
   };
 };

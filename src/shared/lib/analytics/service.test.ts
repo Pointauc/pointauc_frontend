@@ -46,8 +46,8 @@ describe('AnalyticsService', () => {
     });
 
     service.track(analyticsEventNames.overlayOpened, {
-      overlayId: 'sidebar',
-      overlayType: 'drawer',
+      overlay_id: 'sidebar',
+      overlay_type: 'drawer',
       source: 'list',
     });
 
@@ -58,8 +58,8 @@ describe('AnalyticsService', () => {
     expect(trackedEvent).toMatchObject({
       name: analyticsEventNames.overlayOpened,
       payload: {
-        overlayId: 'sidebar',
-        overlayType: 'drawer',
+        overlay_id: 'sidebar',
+        overlay_type: 'drawer',
         source: 'list',
       },
       context: {
@@ -95,8 +95,8 @@ describe('AnalyticsService', () => {
 
     service.track(analyticsEventNames.appBootstrapped, {
       source: 'manual',
-      hasProviders: true,
-      providerCount: 2,
+      has_providers: true,
+      provider_count: 2,
     });
 
     await Promise.resolve();

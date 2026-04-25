@@ -10,8 +10,8 @@ describe('ConsoleAnalyticsProvider', () => {
     consoleAnalyticsProvider.track({
       name: analyticsEventNames.overlayOpened,
       payload: {
-        overlayId: 'sidebar',
-        overlayType: 'drawer',
+        overlay_id: 'sidebar',
+        overlay_type: 'drawer',
         source: 'list',
       },
       timestamp: '2026-04-18T12:00:00.000Z',
@@ -29,8 +29,8 @@ describe('ConsoleAnalyticsProvider', () => {
       '[analytics]',
       analyticsEventNames.overlayOpened,
       {
-        overlayId: 'sidebar',
-        overlayType: 'drawer',
+        overlay_id: 'sidebar',
+        overlay_type: 'drawer',
         source: 'list',
       },
       {

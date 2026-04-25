@@ -1,24 +1,23 @@
-import { RefObject, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { ActionIcon, Group, Text } from '@mantine/core';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import ReplayIcon from '@mui/icons-material/Replay';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import KeyboardCapslockIcon from '@mui/icons-material/KeyboardCapslock';
 import PauseIcon from '@mui/icons-material/Pause';
-import { useDispatch, useSelector } from 'react-redux';
-import dayjs from 'dayjs';
-import { ThunkDispatch } from 'redux-thunk';
-import { useTranslation } from 'react-i18next';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ReplayIcon from '@mui/icons-material/Replay';
 import { IconArrowsSort } from '@tabler/icons-react';
-import clsx from 'clsx';
 import { throttle } from '@tanstack/react-pacer';
+import clsx from 'clsx';
+import dayjs from 'dayjs';
+import { RefObject, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import { RootState } from '@reducers';
-import { Slot } from '@models/slot.model.ts';
-import { useHeadroom } from '@shared/lib/scroll';
 import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
+import { Slot } from '@models/slot.model.ts';
+import { RootState } from '@reducers';
 import { Purchase } from '@reducers/Purchases/Purchases';
+import { useHeadroom } from '@shared/lib/scroll';
 
 import classes from './Stopwatch.module.css';
 
@@ -59,13 +58,11 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   onTimeChanged,
   onEnd,
 }) => {
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { slots } = useSelector((root: RootState) => root.slots);
   const { settings } = useSelector((root: RootState) => root.aucSettings);
   const {
     startTime,
-    timeStep,
     isAutoincrementActive,
     autoincrementTime,
     maxTime = 15,
@@ -73,13 +70,12 @@ const Stopwatch: React.FC<StopwatchProps> = ({
     isMinTimeActive,
     isNewSlotIncrement,
     newSlotIncrement,
-    dynamicRewards,
     showTotalTime,
     isIncrementActive,
     incrementTime,
   } = settings;
   const defaultTime = Number(startTime) * 60 * 1000;
-  const stopwatchStep = Number(timeStep) * 1000;
+  const stopwatchStep = 60 * 1000;
   const stopwatchAutoincrement = Number(autoincrementTime) * 1000;
   const controlsCompact = useHeadroom({ fixedAt: 60 });
 
