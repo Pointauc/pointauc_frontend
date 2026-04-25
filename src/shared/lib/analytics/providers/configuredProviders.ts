@@ -9,6 +9,8 @@ export class ConfiguredAnalyticsProviders {
     const providers: AnalyticsProvider[] = [];
     const googleAnalyticsMeasurementId = import.meta.env.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID;
 
+    console.log('googleAnalyticsMeasurementId', googleAnalyticsMeasurementId);
+
     if (googleAnalyticsMeasurementId) {
       providers.push(googleAnalyticsProvider.configure(googleAnalyticsMeasurementId));
     }
