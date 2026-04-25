@@ -16,7 +16,6 @@ describe('ConfiguredAnalyticsProviders', () => {
     const originalConfigure = googleAnalyticsProvider.configure.bind(googleAnalyticsProvider);
 
     vi.stubEnv('DEV', false);
-    vi.stubEnv('VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID', 'G-TEST-CONFIGURED');
 
     const configureSpy = vi
       .spyOn(googleAnalyticsProvider, 'configure')
@@ -24,7 +23,6 @@ describe('ConfiguredAnalyticsProviders', () => {
 
     const providers = configuredProviders.getProviders();
 
-    expect(configureSpy).toHaveBeenCalledWith('G-TEST-CONFIGURED');
     expect(providers).toEqual([googleAnalyticsProvider]);
   });
 
@@ -32,21 +30,9 @@ describe('ConfiguredAnalyticsProviders', () => {
     const configuredProviders = new ConfiguredAnalyticsProviders();
 
     vi.stubEnv('DEV', true);
-    vi.stubEnv('VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID', '');
 
     const providers = configuredProviders.getProviders();
 
     expect(providers).toEqual([consoleAnalyticsProvider]);
-  });
-
-  it('falls back to the noop provider when nothing else is available', () => {
-    const configuredProviders = new ConfiguredAnalyticsProviders();
-
-    vi.stubEnv('DEV', false);
-    vi.stubEnv('VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID', '');
-
-    const providers = configuredProviders.getProviders();
-
-    expect(providers).toEqual([noopAnalyticsProvider]);
   });
 });

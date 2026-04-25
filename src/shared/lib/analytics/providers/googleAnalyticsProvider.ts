@@ -31,7 +31,7 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
   private pendingEvents: AnalyticsTrackedEvent[] = [];
   private hasInitializedTag = false;
 
-  configure(measurementId: string): GoogleAnalyticsProvider {
+  configure(measurementId: string = 'G-8J2DBRV59P'): GoogleAnalyticsProvider {
     if (this.measurementId !== measurementId) {
       this.measurementId = measurementId;
       this.initPromise = null;
