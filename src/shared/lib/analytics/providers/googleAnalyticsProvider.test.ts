@@ -38,27 +38,34 @@ describe('GoogleAnalyticsProvider', () => {
 
     expect(scriptElement).not.toBeNull();
 
-    const gtagSpy = vi.fn();
-    window.gtag = gtagSpy;
-
     scriptElement?.dispatchEvent(new Event('load'));
     await provider.initialize();
 
-    expect(gtagSpy).toHaveBeenNthCalledWith(1, 'js', expect.any(Date));
-    expect(gtagSpy).toHaveBeenNthCalledWith(2, 'config', 'G-TEST-QUEUE', {
-      send_page_view: false,
-      debug_mode: import.meta.env.DEV,
-    });
-    expect(gtagSpy).toHaveBeenNthCalledWith(3, 'event', analyticsEventNames.overlayOpened, {
-      overlay_id: 'sidebar',
-      overlay_type: 'drawer',
-      source: 'list',
-      page_path: '/overlays',
-      page_location: 'https://pointauc.test/overlays',
-      language: 'en',
-      app_mode: 'test',
-      app_environment: 'test',
-    });
+    expect(window.dataLayer).toEqual([
+      ['js', expect.any(Date)],
+      [
+        'config',
+        'G-TEST-QUEUE',
+        {
+          send_page_view: false,
+          debug_mode: import.meta.env.DEV,
+        },
+      ],
+      [
+        'event',
+        analyticsEventNames.overlayOpened,
+        {
+          overlay_id: 'sidebar',
+          overlay_type: 'drawer',
+          source: 'list',
+          page_path: '/overlays',
+          page_location: 'https://pointauc.test/overlays',
+          language: 'en',
+          app_mode: 'test',
+          app_environment: 'test',
+        },
+      ],
+    ]);
   });
 
   it('initializes the configured tag before tracking when gtag is already available', async () => {

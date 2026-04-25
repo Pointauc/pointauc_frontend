@@ -29,14 +29,12 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
   private measurementId: string | null = null;
   private initPromise: Promise<void> | null = null;
   private pendingEvents: AnalyticsTrackedEvent[] = [];
-  private hasInitializedTag = false;
 
   configure(measurementId: string = 'G-8J2DBRV59P'): GoogleAnalyticsProvider {
     if (this.measurementId !== measurementId) {
       this.measurementId = measurementId;
       this.initPromise = null;
       this.pendingEvents = [];
-      this.hasInitializedTag = false;
     }
 
     return this;
@@ -51,7 +49,7 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       return;
     }
 
-    if (!window.gtag || !this.hasInitializedTag) {
+    if (!window.gtag) {
       this.pendingEvents.push(event);
       void this.ensureReady();
       return;
@@ -209,20 +207,19 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
   }
 
   private ensureReady(): Promise<void> {
-    if (!isBrowser || !this.measurementId) {
+    if (!isBrowser || !this.measurementId || window.gtag) {
       return Promise.resolve();
     }
 
     if (!this.initPromise) {
       const activeMeasurementId = this.measurementId;
-      this.initPromise = this.loadGoogleAnalyticsScript(activeMeasurementId).then(() => {
-        this.initializeGoogleAnalyticsTag(activeMeasurementId, {
-          send_page_view: false,
-          debug_mode: import.meta.env.DEV,
-        });
-        this.hasInitializedTag = true;
-        this.flushPendingEvents();
+
+      this.initializeGoogleAnalyticsTag(activeMeasurementId, {
+        send_page_view: false,
+        debug_mode: import.meta.env.DEV,
       });
+      this.flushPendingEvents();
+      this.initPromise = this.loadGoogleAnalyticsScript(activeMeasurementId);
     }
 
     return this.initPromise;
