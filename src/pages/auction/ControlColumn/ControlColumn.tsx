@@ -1,5 +1,6 @@
-import { Box } from '@mantine/core';
+import { useMemo } from 'react';
 
+import { useAuctionEndedAnalytics } from '@domains/auction/analytics/lib/useAuctionEndedAnalytics';
 import { useTimerBroadcasting } from '@domains/broadcasting/lib/useTimerBroadcasting';
 import { useIsMobile } from '@shared/lib/ui';
 
@@ -10,8 +11,31 @@ import FastAccessPanel from '../FastAccessPanel/FastAccessPanel';
 import classes from './ControlColumn.module.css';
 
 const ControlColumn: React.FC = () => {
-  const timerProps = useTimerBroadcasting();
+  const timerBroadcastingProps = useTimerBroadcasting();
+  const auctionEndedAnalyticsProps = useAuctionEndedAnalytics();
   const isMobile = useIsMobile();
+  const timerProps = useMemo(
+    () => ({
+      ...timerBroadcastingProps,
+      onStart: (timeLeft: number) => {
+        timerBroadcastingProps.onStart?.(timeLeft);
+        auctionEndedAnalyticsProps.onStart?.(timeLeft);
+      },
+      onReset: (timeLeft: number) => {
+        timerBroadcastingProps.onReset?.(timeLeft);
+        auctionEndedAnalyticsProps.onReset?.(timeLeft);
+      },
+      onTimeChanged: (timeLeft: number, state: 'paused' | 'running') => {
+        timerBroadcastingProps.onTimeChanged?.(timeLeft, state);
+        auctionEndedAnalyticsProps.onTimeChanged?.(timeLeft, state);
+      },
+      onEnd: () => {
+        timerBroadcastingProps.onEnd?.();
+        auctionEndedAnalyticsProps.onEnd?.();
+      },
+    }),
+    [auctionEndedAnalyticsProps, timerBroadcastingProps],
+  );
 
   return (
     <div className={classes.controlColumn}>

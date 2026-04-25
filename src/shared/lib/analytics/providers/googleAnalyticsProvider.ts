@@ -20,6 +20,8 @@ interface GoogleAnalyticsConfigOptions {
 type GoogleAnalyticsParameterValue = string | number | boolean;
 type GoogleAnalyticsParameters = Record<string, GoogleAnalyticsParameterValue>;
 
+const GOOGLE_ANALYTICS_PARAMETER_VALUE_MAX_LENGTH = 200;
+
 const googleAnalyticsScriptLoaders = new Map<string, Promise<void>>();
 export class GoogleAnalyticsProvider implements AnalyticsProvider {
   readonly name = 'google-analytics';
@@ -27,12 +29,14 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
   private measurementId: string | null = null;
   private initPromise: Promise<void> | null = null;
   private pendingEvents: AnalyticsTrackedEvent[] = [];
+  private hasInitializedTag = false;
 
   configure(measurementId: string): GoogleAnalyticsProvider {
     if (this.measurementId !== measurementId) {
       this.measurementId = measurementId;
       this.initPromise = null;
       this.pendingEvents = [];
+      this.hasInitializedTag = false;
     }
 
     return this;
@@ -47,7 +51,7 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       return;
     }
 
-    if (!window.gtag) {
+    if (!window.gtag || !this.hasInitializedTag) {
       this.pendingEvents.push(event);
       void this.ensureReady();
       return;
@@ -120,7 +124,11 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
   }
 
   private toGoogleAnalyticsValue(value: unknown): GoogleAnalyticsParameterValue | undefined {
-    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    if (typeof value === 'string') {
+      return value.slice(0, GOOGLE_ANALYTICS_PARAMETER_VALUE_MAX_LENGTH);
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
       return value;
     }
 
@@ -128,17 +136,36 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       return undefined;
     }
 
-    return JSON.stringify(value);
+    return undefined;
+  }
+
+  private toGoogleAnalyticsParameterName(key: string): string {
+    const snakeCaseKey = key
+      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
+      .replace(/[^a-zA-Z0-9_]/g, '_')
+      .toLowerCase();
+
+    return /^[a-zA-Z]/.test(snakeCaseKey) ? snakeCaseKey.slice(0, 40) : `p_${snakeCaseKey}`.slice(0, 40);
   }
 
   private toGoogleAnalyticsParameters(record: Record<string, unknown>): GoogleAnalyticsParameters {
     return Object.entries(record).reduce<GoogleAnalyticsParameters>((acc, [key, value]) => {
       const mappedValue = this.toGoogleAnalyticsValue(value);
       if (mappedValue !== undefined) {
-        acc[key] = mappedValue;
+        acc[this.toGoogleAnalyticsParameterName(key)] = mappedValue;
       }
       return acc;
     }, {});
+  }
+
+  private getContextParameters(event: AnalyticsTrackedEvent): Record<string, unknown> {
+    return {
+      page_path: event.context.pathname,
+      page_location: event.context.href,
+      language: event.context.locale,
+      app_mode: event.context.mode,
+      app_environment: event.context.environment,
+    };
   }
 
   private mapEventToGoogleAnalytics(event: AnalyticsTrackedEvent): { name: string; params: GoogleAnalyticsParameters } {
@@ -160,11 +187,7 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       name: event.name,
       params: this.toGoogleAnalyticsParameters({
         ...event.payload,
-        page_path: event.context.pathname,
-        page_location: event.context.href,
-        language: event.context.locale,
-        app_mode: event.context.mode,
-        app_environment: event.context.environment,
+        ...this.getContextParameters(event),
       }),
     };
   }
@@ -197,6 +220,7 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
           send_page_view: false,
           debug_mode: import.meta.env.DEV,
         });
+        this.hasInitializedTag = true;
         this.flushPendingEvents();
       });
     }

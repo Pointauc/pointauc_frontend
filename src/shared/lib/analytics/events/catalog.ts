@@ -2,6 +2,7 @@ export const analyticsEventNames = {
   appBootstrapped: 'app_bootstrapped',
   routeVisited: 'route_visited',
   auctionLotCreated: 'auction_lot_created',
+  auctionEnded: 'auction_ended',
   overlayOpened: 'overlay_opened',
   settingsSaved: 'settings_saved',
   wheelSpinResult: 'wheel_spin_result',
@@ -55,6 +56,28 @@ export interface AnalyticsEventMap {
     lotId?: string;
     slotIndex?: number;
     origin?: 'manual' | 'import' | 'unknown';
+  };
+  [analyticsEventNames.auctionEnded]: {
+    timerStartMinutes: number;
+    timerStepSeconds: number;
+    isAutoincrementActive: boolean;
+    isNewSlotIncrement: boolean;
+    isBidIncrementActive: boolean;
+    isMinTimeActive: boolean;
+    isMaxTimeActive: boolean;
+    showChances: boolean;
+    showTotalTime: boolean;
+    isBuyoutVisible: boolean;
+    hideAmounts: boolean;
+    dynamicRewards: boolean;
+    insertStrategy: string;
+    bidNameStrategy: string;
+    lotCount: number;
+    participantCount: number;
+    totalAmount: number;
+    maxAmount: number;
+    averageAmount: number;
+    favoriteLotCount: number;
   };
   [analyticsEventNames.overlayOpened]: {
     overlayId?: string;

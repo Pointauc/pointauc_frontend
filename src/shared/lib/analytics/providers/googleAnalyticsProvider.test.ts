@@ -50,8 +50,8 @@ describe('GoogleAnalyticsProvider', () => {
       debug_mode: import.meta.env.DEV,
     });
     expect(gtagSpy).toHaveBeenNthCalledWith(3, 'event', analyticsEventNames.overlayOpened, {
-      overlayId: 'sidebar',
-      overlayType: 'drawer',
+      overlay_id: 'sidebar',
+      overlay_type: 'drawer',
       source: 'list',
       page_path: '/overlays',
       page_location: 'https://pointauc.test/overlays',
@@ -61,7 +61,7 @@ describe('GoogleAnalyticsProvider', () => {
     });
   });
 
-  it('tracks immediately when gtag is already available', () => {
+  it('initializes the configured tag before tracking when gtag is already available', async () => {
     const provider = new GoogleAnalyticsProvider().configure('G-TEST-READY');
     const trackedEvent = createTrackedEvent();
     const gtagSpy = vi.fn();
@@ -70,9 +70,18 @@ describe('GoogleAnalyticsProvider', () => {
 
     provider.track(trackedEvent);
 
+    const scriptElement = document.querySelector<HTMLScriptElement>('script[data-google-analytics-id="G-TEST-READY"]');
+
+    scriptElement?.dispatchEvent(new Event('load'));
+    await provider.initialize();
+
+    expect(gtagSpy).toHaveBeenCalledWith('config', 'G-TEST-READY', {
+      send_page_view: false,
+      debug_mode: import.meta.env.DEV,
+    });
     expect(gtagSpy).toHaveBeenCalledWith('event', analyticsEventNames.overlayOpened, {
-      overlayId: 'sidebar',
-      overlayType: 'drawer',
+      overlay_id: 'sidebar',
+      overlay_type: 'drawer',
       source: 'list',
       page_path: '/overlays',
       page_location: 'https://pointauc.test/overlays',
@@ -80,7 +89,6 @@ describe('GoogleAnalyticsProvider', () => {
       app_mode: 'test',
       app_environment: 'test',
     });
-    expect(document.querySelector('script[data-google-analytics-id="G-TEST-READY"]')).toBeNull();
   });
 
   it('does not attempt to track when no measurement id is configured', () => {
