@@ -58,16 +58,17 @@ interface HotkeyNotificationDefinitionBase<ActionId extends HotkeyActionId> {
   buildMessage: (payload: HotkeyNotificationPayload<ActionId>, t: TFunction) => string;
 }
 
-export type HotkeyNotificationDefinition<ActionId extends HotkeyActionId> =
-  [HotkeyNotificationPayload<ActionId>] extends [never]
-    ? never
-    : [HotkeyNotificationPayload<ActionId>] extends [undefined]
-      ? HotkeyNotificationDefinitionBase<ActionId> & {
-          requiresPayload?: false;
-        }
-      : HotkeyNotificationDefinitionBase<ActionId> & {
-          requiresPayload: true;
-        };
+export type HotkeyNotificationDefinition<ActionId extends HotkeyActionId> = [
+  HotkeyNotificationPayload<ActionId>,
+] extends [never]
+  ? never
+  : [HotkeyNotificationPayload<ActionId>] extends [undefined]
+  ? HotkeyNotificationDefinitionBase<ActionId> & {
+      requiresPayload?: false;
+    }
+  : HotkeyNotificationDefinitionBase<ActionId> & {
+      requiresPayload: true;
+    };
 
 export interface HotkeyDefinition<ActionId extends HotkeyActionId = HotkeyActionId> {
   binding: RegisterableHotkey;
@@ -80,10 +81,10 @@ export interface HotkeyDefinition<ActionId extends HotkeyActionId = HotkeyAction
 type HotkeyNotificationControls<ActionId extends HotkeyActionId> = [HotkeyNotificationPayload<ActionId>] extends [never]
   ? {}
   : [HotkeyNotificationPayload<ActionId>] extends [undefined]
-    ? {}
-    : {
-        setNotificationData: (payload: HotkeyNotificationPayload<ActionId>) => void;
-      };
+  ? {}
+  : {
+      setNotificationData: (payload: HotkeyNotificationPayload<ActionId>) => void;
+    };
 
 export type AppHotkeyCallbackContext<ActionId extends HotkeyActionId> = HotkeyCallbackContext &
   HotkeyNotificationControls<ActionId>;

@@ -238,8 +238,8 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       ? itemsFromProps.filter(({ amount }) => amount && amount > 0)
       : itemsFromProps.map((item) => ({ ...item, amount: 1 }));
 
-    return filtered.sort((a, b) => b.amount - a.amount || a.name.localeCompare(b.name));
-  }, [itemsFromProps]);
+    return shouldShuffle ? filtered.sort((a, b) => b.amount - a.amount || a.name.localeCompare(b.name)) : filtered;
+  }, [itemsFromProps, shouldShuffle]);
 
   useSyncEffect(() => {
     init?.(filteredItems);

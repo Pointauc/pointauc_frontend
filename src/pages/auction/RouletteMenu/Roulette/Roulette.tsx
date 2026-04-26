@@ -8,10 +8,14 @@ import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { RootState } from '@reducers';
 import RandomWheel, { SettingElements } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
 import array from '@utils/dataType/array.ts';
+import useStorageState from '@hooks/useStorageState';
+import { useWheelSettings } from '@domains/winner-selection/wheel-of-random/lib/hooks/useWheelSettings';
+import { defaultWheelSettings } from '@domains/winner-selection/wheel-of-random/lib/hooks/useSavedWheelSettings';
 
 import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
 import { RoulettePreset } from '../PresetSelect/PresetSelect';
 import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
+
 import classes from './Roulette.module.css';
 
 interface RouletteProps {
@@ -66,23 +70,46 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
     onRoll(winner.multiplier);
   };
 
+  const [spinTime, setSpinTime] = useStorageState('lucky-bid-spin-time', 5);
+  const { data: initialSettings, isLoading: isLoadingSettings } = useWheelSettings();
+  const handleSettingsChange = useCallback(
+    (settings: Wheel.Settings) => {
+      setSpinTime(settings.spinTime ?? 5);
+    },
+    [setSpinTime],
+  );
+
   return (
     <div className={classes.roulette}>
       <div className={classes.rouletteWheel}>
-        <RandomWheel items={rawItems} onWin={handleWin} elements={wheelElements} initialSpinTime={5}>
-          {settings.luckyWheelSelectBet && selectedPreset && (
-            <div className={classes.roulettePresetWrapper}>
-              <Text>{t('auc.casino.yourLot')}</Text>
-              <RoulettePresetView preset={selectedPreset} />
+        {!isLoadingSettings && (
+          <RandomWheel
+            items={rawItems}
+            onWin={handleWin}
+            elements={wheelElements}
+            shouldShuffle={false}
+            initialSettings={{
+              ...defaultWheelSettings,
+              spinTime,
+              coreImage: initialSettings?.data?.coreImage || defaultWheelSettings.coreImage,
+              wheelStyles: initialSettings?.data?.wheelStyles || defaultWheelSettings.wheelStyles,
+            }}
+            onSettingsChanged={handleSettingsChange}
+          >
+            {settings.luckyWheelSelectBet && selectedPreset && (
+              <div className={classes.roulettePresetWrapper}>
+                <Text>{t('auc.casino.yourLot')}</Text>
+                <RoulettePresetView preset={selectedPreset} />
+              </div>
+            )}
+            <div className={classes.rouletteWheelExtra}>
+              <div>
+                <Text>{t('auc.casino.yourBid')}</Text>
+                <PurchaseComponent {...bid} hideActions disabled />
+              </div>
             </div>
-          )}
-          <div className={classes.rouletteWheelExtra}>
-            <div>
-              <Text>{t('auc.casino.yourBid')}</Text>
-              <PurchaseComponent {...bid} hideActions disabled />
-            </div>
-          </div>
-        </RandomWheel>
+          </RandomWheel>
+        )}
       </div>
     </div>
   );

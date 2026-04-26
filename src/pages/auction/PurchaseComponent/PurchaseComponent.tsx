@@ -270,19 +270,6 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 </Menu.Dropdown>
               </Menu>
             </Button.Group>
-
-            {luckyWheelEnabled && (
-              <Button
-                variant='outline'
-                color='gray'
-                size='xs'
-                fz='sm'
-                className={classes.actionButton}
-                onClick={openCasino}
-              >
-                {t('bid.luckyWheel')}
-              </Button>
-            )}
             {bestMatch && (
               <Button
                 variant='outline'
@@ -304,19 +291,34 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 </span>
               </Button>
             )}
+
+            {luckyWheelEnabled && (
+              <>
+                {casinoModalOpened && (
+                  <Modal
+                    opened={casinoModalOpened}
+                    onClose={() => setCasinoModalOpened(false)}
+                    size='68%'
+                    classNames={{ content: 'overflow-hidden' }}
+                  >
+                    <RouletteMenu onRoll={multiplySlot} bid={purchase} />
+                  </Modal>
+                )}
+                <Button
+                  variant='outline'
+                  color='white'
+                  size='xs'
+                  fz='sm'
+                  className={classes.actionButton}
+                  onClick={openCasino}
+                >
+                  {t('bid.luckyWheel')}
+                </Button>
+              </>
+            )}
           </>
         )}
       </Stack>
-      {casinoModalOpened && (
-        <Modal opened={casinoModalOpened} onClose={() => setCasinoModalOpened(false)} size='lg'>
-          <Stack>
-            <RouletteMenu onRoll={multiplySlot} bid={purchase} />
-            <Button variant='outline' onClick={() => setCasinoModalOpened(false)}>
-              {t('bid.close')}
-            </Button>
-          </Stack>
-        </Modal>
-      )}
     </Card>
   );
 };

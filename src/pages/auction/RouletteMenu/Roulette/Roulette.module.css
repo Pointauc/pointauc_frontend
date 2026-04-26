@@ -29,6 +29,8 @@
 .rouletteWheel {
   position: relative;
   height: 80vh;
+  max-height: 80vh;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
@@ -42,7 +44,6 @@
 }
 
 .rouletteWheel > * {
-  overflow: hidden;
+  overflow: visible;
   margin-right: 0 !important;
 }
-
