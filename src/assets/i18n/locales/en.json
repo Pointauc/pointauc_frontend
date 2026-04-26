@@ -1001,8 +1001,6 @@
     "wheel": "Wheel",
     "winner": "Winner",
     "randomSpin": "Random spin time",
-    "settingsButton": "Open wheel settings",
-    "settingsDrawerTitle": "Wheel settings",
     "helpNotification": {
       "title": "About the Wheel",
       "message": "Detailed explanation of <2>wheel settings</2> is available at <1>this link</1>"
