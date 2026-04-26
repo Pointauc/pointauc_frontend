@@ -24,6 +24,7 @@ import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
 import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
+import { registerPublicApiSocketHandlers } from '@domains/public-api/lib/socket.ts';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
@@ -77,12 +78,10 @@ const App: React.FC = () => {
 
       // Connect to global socket
       const globalSocket = io(`${getSocketIOUrl()}`, { query: { cookie: document.cookie }, transports: ['websocket'] });
-
-      globalSocket.on('Bid', (bid: Purchase) => {
-        globalBidsEventBus.emit('bid', { ...bid, source: 'API' });
-      });
+      const unregisterPublicApiSocketHandlers = registerPublicApiSocketHandlers(globalSocket, dispatch);
 
       return () => {
+        unregisterPublicApiSocketHandlers();
         globalSocket.disconnect();
       };
     }
