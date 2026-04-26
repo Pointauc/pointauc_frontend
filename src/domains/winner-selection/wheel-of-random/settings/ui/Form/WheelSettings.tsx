@@ -1,16 +1,13 @@
-import { Alert, Anchor, Button, Group, rem, SimpleGrid, Stack } from '@mantine/core';
+import { Alert, Anchor, rem, SimpleGrid, Stack } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { CSSProperties, ReactNode, useRef } from 'react';
-import { useFormContext, useFormState, useWatch } from 'react-hook-form';
+import { CSSProperties, ReactNode } from 'react';
+import { useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
 import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification';
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { WheelFormat } from '@constants/wheel.ts';
 import { useLocalStorageState } from '@shared/lib/localState/useLocalStorageState';
-import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
-import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
-import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ClassicDropoutDescription';
 import RandomnessSourceField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/RandomnessSourceField/RandomnessSourceField';
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
@@ -23,68 +20,32 @@ import { RevealedData } from '../../../lib/hooks/useTicketManagement';
 import CoreImageField from '../Fields/CoreImageExpandPanel/CoreImage';
 import DropoutFormatField from '../Fields/DropoutFormat';
 import WheelSoundtrackField from '../Fields/Soundtrack';
-import SpinTimeComposed from '../Fields/Soundtrack/SpinTimeComposed';
 import WheelStyleSelect from '../Fields/StyleSelect/StyleSelect';
 
 interface WheelSettingsProps {
-  nextWinner?: string;
-  isLoadingSeed: boolean;
   controls: Wheel.SettingControls;
   children: ReactNode;
-  renderSubmitButton?: (defaultButton: ReactNode) => ReactNode;
   direction?: 'row' | 'column';
   ticketData?: RevealedData | null;
   availableQuota?: number | null;
-  isCreatingTicket?: boolean;
   ticketError?: Error | null;
 }
 
 const WheelSettings = (props: WheelSettingsProps) => {
   const {
-    isLoadingSeed,
     direction = 'column',
     controls,
     children,
-    renderSubmitButton,
     ticketData,
-    isCreatingTicket,
     availableQuota,
     ticketError,
   } = props;
   const { t } = useTranslation();
-  const { control } = useFormContext<Wheel.Settings>();
-  const { isSubmitting } = useFormState<Wheel.Settings>({ control });
-  const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
   const [isNewDropoutFairnessInfoDismissed, setIsNewDropoutFairnessInfoDismissed] = useLocalStorageState(
     'wheelNewDropoutFairnessInfoDismissed',
     false,
-  );
-
-  const submitButton = (
-    <Button
-      ref={submitButtonRef}
-      loading={isLoadingSeed || isCreatingTicket}
-      disabled={isSubmitting}
-      variant='contained'
-      type='submit'
-      rightSection={<HotkeyHint actionId={HOTKEY_ACTION_IDS.wheelSpin} />}
-    >
-      {isSubmitting ? t('wheel.spinning') : t('wheel.spin')}
-    </Button>
-  );
-
-  useAppHotkey(
-    HOTKEY_ACTION_IDS.wheelSpin,
-    (event) => {
-      event.preventDefault();
-      submitButtonRef.current?.click();
-    },
-    {
-      enabled: !isSubmitting && !isLoadingSeed && !isCreatingTicket,
-      preventDefault: true,
-    },
   );
 
   const docsUrl = useDocsUrl(DOCS_PAGES.wheel.settings.page);
@@ -103,14 +64,8 @@ const WheelSettings = (props: WheelSettingsProps) => {
       />
       <SimpleGrid cols={direction === 'row' ? 2 : 1} spacing='md' style={{ minHeight: 0 }}>
         <Stack gap='sm' mih={0}>
-          <Group align='center' gap='xs'>
-            {renderSubmitButton ? renderSubmitButton(submitButton) : submitButton}
-            <div className='flex-1 flex-shrink-0'>
-              <SpinTimeComposed disabled={isSubmitting} />
-            </div>
-            <WheelSoundtrackField />
-          </Group>
           <Stack gap='sm' style={{ overflowY: 'auto', overflowX: 'hidden' }}>
+            <WheelSoundtrackField />
             <WheelStyleSelect />
             <Stack gap='xxs'>
               {controls.mode && <WheelFormatField />}

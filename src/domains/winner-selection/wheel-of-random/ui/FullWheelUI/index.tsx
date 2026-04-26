@@ -19,7 +19,6 @@ import { useTranslation } from 'react-i18next';
 import ItemsPreview from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview';
 import WheelComponent from '@domains/winner-selection/wheel-of-random/ui/FormWheel';
 import { WheelContextProvider } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
-import WheelSettings from '@domains/winner-selection/wheel-of-random/settings/ui/Form/WheelSettings';
 import useWheelResolver from '@domains/winner-selection/wheel-of-random/lib/strategy/useWheelResolver';
 import useTicketManagement, {
   RevealedData,
@@ -43,6 +42,7 @@ import PlayerFactory from '../../settings/ui/Fields/Soundtrack/PlayerFactory';
 import { PlayerRef } from '../../settings/ui/Fields/Soundtrack/PlayerFactory/types';
 
 import styles from './index.module.css';
+import WheelFloatingControls from './WheelFloatingControls';
 
 import type { SpinParams, WheelController } from '../../BaseWheel/BaseWheel';
 
@@ -452,39 +452,31 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
         {content && <div className='wheel-content-negative-space' />}
         <WheelFlexboxAutosizer>
           {({ onOptimalSizeChange }) => (
-            <WheelComponent
-              finalItems={splittedItems}
-              deleteItem={deleteWheelItem}
-              controller={wheelController}
-              onOptimalSizeChange={onOptimalSizeChange}
-            />
+            <>
+              <WheelFloatingControls
+                isLoadingSeed={isLoadingSeed || signedWinnerMutation.isPending}
+                controls={elements}
+                renderSubmitButton={renderSubmitButton}
+                ticketData={visibleRevealedData}
+                availableQuota={availableQuota}
+                isCreatingTicket={isCreating}
+                ticketError={error}
+              >
+                <>
+                  {extraSettings}
+                  {children}
+                </>
+              </WheelFloatingControls>
+              <WheelComponent
+                finalItems={splittedItems}
+                deleteItem={deleteWheelItem}
+                controller={wheelController}
+                onOptimalSizeChange={onOptimalSizeChange}
+              />
+            </>
           )}
         </WheelFlexboxAutosizer>
-        <div
-          className={classNames(styles.rightSide, 'wheel-info-wrapper', {
-            shrink: content,
-            [styles.withExtraContent]: content,
-          })}
-        >
-          <div className={classNames('wheel-controls')}>
-            <WheelSettings
-              direction={content ? 'row' : 'column'}
-              isLoadingSeed={isLoadingSeed || signedWinnerMutation.isPending}
-              controls={elements}
-              renderSubmitButton={renderSubmitButton}
-              ticketData={visibleRevealedData}
-              availableQuota={availableQuota}
-              isCreatingTicket={isCreating}
-              ticketError={error}
-            >
-              <>
-                {extraSettings}
-                {children}
-              </>
-            </WheelSettings>
-          </div>
-          {content}
-        </div>
+        {content && <div className={classNames(styles.rightSide, 'wheel-info-wrapper', 'shrink')}>{content}</div>}
       </form>
     </WheelContextProvider>
   );

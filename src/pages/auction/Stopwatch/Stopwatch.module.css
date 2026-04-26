@@ -6,7 +6,7 @@
   justify-content: center;
   position: sticky;
   top: 0;
-  font-family: 'Helvetica Neue', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* font-family: 'Helvetica Neue', Roboto, 'Helvetica Neue', Arial, sans-serif; */
 }
 
 @media (min-width: 48em) {
