@@ -19,7 +19,9 @@ const SettingsCard = ({ nested = false, children, ...props }: SettingsCardProps)
         shadow='sm'
         style={{ overflow: 'visible' }}
         p={0}
+        bd={0}
         bg={nested ? 'dark.7' : 'dark.8'}
+        className='elevated-6'
       >
         {children}
       </Card>

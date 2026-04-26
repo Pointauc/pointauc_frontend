@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useAuctionEndedAnalytics } from '@domains/auction/analytics/lib/useAuctionEndedAnalytics';
 import { useTimerBroadcasting } from '@domains/broadcasting/lib/useTimerBroadcasting';
 import { useIsMobile } from '@shared/lib/ui';
+import { trackTimerEdited } from '@shared/lib/analytics/events';
 
 import Stopwatch from '../Stopwatch/Stopwatch';
 import PurchaseList from '../PurchaseList/PurchaseList';
@@ -28,6 +29,11 @@ const ControlColumn: React.FC = () => {
       onTimeChanged: (timeLeft: number, state: 'paused' | 'running') => {
         timerBroadcastingProps.onTimeChanged?.(timeLeft, state);
         auctionEndedAnalyticsProps.onTimeChanged?.(timeLeft, state);
+      },
+      onTimeEdited: (timerType: 'stopwatch' | 'total') => {
+        trackTimerEdited({
+          timer_type: timerType,
+        });
       },
       onEnd: () => {
         timerBroadcastingProps.onEnd?.();

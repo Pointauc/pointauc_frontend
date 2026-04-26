@@ -5,5 +5,11 @@ export const STOPWATCH = {
 };
 
 export const HOUR = 60 * 60 * 1000;
+export const STOPWATCH_STEP = 60 * 1000;
 
 export type TimerType = 'stopwatch' | 'total';
+
+export enum TimerPriority {
+  Primary = 'primary',
+  Secondary = 'secondary',
+}

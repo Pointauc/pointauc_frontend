@@ -83,6 +83,10 @@
   padding: 0;
   border: 0;
   background: transparent;
+  height: 80px;
+  font-family: 'Helvetica Neue', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  position: relative;
+  left: -4px;
 }
 
 .timerInput::selection {

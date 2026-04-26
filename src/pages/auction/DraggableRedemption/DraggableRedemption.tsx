@@ -9,7 +9,11 @@ import { draggedBid } from '../DragBidContext/DragBidContext';
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 
-const DraggableRedemption: FC<Purchase> = (purchase) => {
+interface DraggableRedemptionProps extends Purchase {
+  isHotkeyTarget?: boolean;
+}
+
+const DraggableRedemption: FC<DraggableRedemptionProps> = ({ isHotkeyTarget, ...purchase }) => {
   const dispatch = useDispatch();
   const { cost } = purchase;
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -61,7 +65,6 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
     [mouseOffset.left, mouseOffset.top],
   );
 
-  // eslint-disable-next-line consistent-return
   useEffect(() => {
     let isFrameRequested = false;
     const handleDragOver = (e: MouseEvent): void => {
@@ -85,7 +88,7 @@ const DraggableRedemption: FC<Purchase> = (purchase) => {
   return (
     <>
       <div draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd} ref={redemptionRef}>
-        <PurchaseComponent {...purchase} isDragging={isDragging} />
+        <PurchaseComponent {...purchase} isDragging={isDragging} isHotkeyTarget={isHotkeyTarget} />
       </div>
     </>
   );

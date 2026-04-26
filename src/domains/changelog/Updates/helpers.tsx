@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Stack, Title, Text } from '@mantine/core';
+import { Stack, Text, Title } from '@mantine/core';
 
 import { Language } from '@enums/language.enum';
 import { UpdateData } from '@domains/changelog/model/types';
@@ -17,26 +17,36 @@ const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
   [Language.EN]: [
     {
       fixes: [
-        <Stack gap='xs'>
-          <Title order={5}>Fixed an issue with dropout spin</Title>
-          <Text>The winner was not chosen correctly during the dropout spin.</Text>
-          <Text>This issue was present on the site from 14:00 to 21:00 (UTC +3) on December 20, 2025.</Text>
-          <Text>I apologize for the inconvenience, and I will take measures to prevent this from happening again.</Text>
-        </Stack>,
+        {
+          content: (
+            <Stack gap='xs'>
+              <Title order={5}>Fixed an issue with dropout spin</Title>
+              <Text>The winner was not chosen correctly during the dropout spin.</Text>
+              <Text>This issue was present on the site from 14:00 to 21:00 (UTC +3) on December 20, 2025.</Text>
+              <Text>
+                I apologize for the inconvenience, and I will take measures to prevent this from happening again.
+              </Text>
+            </Stack>
+          ),
+        },
       ],
     },
   ],
   [Language.RU]: [
     {
       fixes: [
-        <Stack gap='xs'>
-          <Title order={5}>Исправлена ошибка с некорректным выбором победителя в колесе на выбывание</Title>
-          <Text>
-            Ошибка была на сайте 2025-12-20 ровно с 14:00 до 21:00 по МСК (UTC +3). Рекомендуется отменить результат
-            аукционов на выбывание, которые произошли в этом промежутке.
-          </Text>
-          <Text>Приношу извинения за неудобства, впредь будут приняты меры чтобы такого не повторилось.</Text>
-        </Stack>,
+        {
+          content: (
+            <Stack gap='xs'>
+              <Title order={5}>Исправлена ошибка с некорректным выбором победителя в колесе на выбывание</Title>
+              <Text>
+                Ошибка была на сайте 2025-12-20 ровно с 14:00 до 21:00 по МСК (UTC +3). Рекомендуется отменить результат
+                аукционов на выбывание, которые произошли в этом промежутке.
+              </Text>
+              <Text>Приношу извинения за неудобства, впредь будут приняты меры чтобы такого не повторилось.</Text>
+            </Stack>
+          ),
+        },
       ],
     },
   ],
@@ -44,20 +54,20 @@ const extraUpdates: Record<Language, Omit<UpdateData, 'date'>[] | null> = {
   [Language.UA]: null,
 };
 
-const getUpdatesFromDate = (updates: UpdateData[], from: string): UpdateData[] => {
+const getUpdatesFromDate = (currentUpdates: UpdateData[], from: string): UpdateData[] => {
   if (/\d\d\.\d\d\.\d\d\d\d/.test(from)) {
     const normalizedDate = dayjs(from, 'DD.MM.YYYY').format('YYYY-MM-DD');
 
-    return getUpdatesFromDate(updates, normalizedDate);
+    return getUpdatesFromDate(currentUpdates, normalizedDate);
   }
 
-  const unseenChangelogEnd = updates.findIndex(({ date }) => {
+  const unseenChangelogEnd = currentUpdates.findIndex(({ date }) => {
     const dateInstance = dayjs(date);
 
     return dateInstance.isSame(from) || dateInstance.isBefore(from);
   });
 
-  return unseenChangelogEnd > -1 ? updates.slice(0, unseenChangelogEnd) : updates;
+  return unseenChangelogEnd > -1 ? currentUpdates.slice(0, unseenChangelogEnd) : currentUpdates;
 };
 
 export const getUpdates = (date: string, locale: Language): UpdateData[] => {
@@ -79,7 +89,8 @@ export const getUpdates = (date: string, locale: Language): UpdateData[] => {
       ...update,
       date: todayDate,
     }));
-    return [...baseUpdates];
+
+    return [...baseUpdates, ...extra];
   }
 
   return baseUpdates;

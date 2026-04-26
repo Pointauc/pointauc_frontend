@@ -1,21 +1,21 @@
 import { Switch } from '@mantine/core';
-import clsx from 'clsx';
 import React, { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import * as Integration from '@models/integration';
+import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 
-import styles from './SwitchAllIntegrations.module.css';
+import type { HotkeyActionId } from '@shared/lib/hotkeys/hotkeys.types';
 
 interface Props {
   integrations: Integration.Config[];
   showLabel?: boolean;
   classNames?: any;
+  labelText?: string;
+  hotkeyActionId?: HotkeyActionId;
 }
 
-const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames }: Props) => {
-  const { t } = useTranslation();
+const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames, labelText, hotkeyActionId }: Props) => {
   const onSwitchAll = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.stopPropagation();
     integrations.forEach((integration) => {
@@ -37,13 +37,19 @@ const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames }: P
   }, [integrations, subscriptions]);
 
   const label = (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <span>{t('integration.groups.donations')} (</span>
-      {integrations.map((integration) => (
-        <integration.branding.icon key={integration.id} size={32} />
-      ))}
-      <span>)</span>
-    </div>
+    <span className='inline-flex w-full items-center justify-between gap-2'>
+      {showLabel && labelText ? (
+        <span className='inline-flex items-center gap-1'>
+          <span>{labelText}</span>
+          <span>(</span>
+          {integrations.map((integration) => (
+            <integration.branding.icon key={integration.id} size={32} />
+          ))}
+          <span>)</span>
+        </span>
+      ) : null}
+      {hotkeyActionId ? <HotkeyHint actionId={hotkeyActionId} /> : null}
+    </span>
   );
 
   return (
@@ -53,7 +59,7 @@ const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames }: P
       onChange={onSwitchAll}
       disabled={selectAllDisabled}
       checked={isAllSelected}
-      label={showLabel && label}
+      label={showLabel || hotkeyActionId ? label : undefined}
       classNames={classNames}
     />
   );

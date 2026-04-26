@@ -42,7 +42,7 @@ const PurchaseList: React.FC = () => {
       <DragBidContext />
       <div className={classes.list}>
         {sortedPurchases.map((purchase) => (
-          <DraggableRedemption {...purchase} key={purchase.id} />
+          <DraggableRedemption {...purchase} key={purchase.id} isHotkeyTarget={sortedPurchases[0]?.id === purchase.id} />
         ))}
       </div>
       {!!purchases.length && (

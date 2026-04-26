@@ -90,7 +90,9 @@
   },
   "integration": {
     "groups": {
-      "donations": "Донаты"
+      "donations": "Донаты",
+      "channelPoints": "Баллы канала",
+      "integrations": "Интеграции"
     },
     "donatePay": {
       "name": "Donate Pay",
@@ -428,6 +430,14 @@
     "size": "Размер"
   },
   "changelog": {
+    "dialog": {
+      "title": "Новые обновления",
+      "openDetails": "Показать подробности",
+      "moreUpdates_one": "И ещё {{count}} изменение.",
+      "moreUpdates_few": "И ещё {{count}} изменения.",
+      "moreUpdates_many": "И ещё {{count}} изменений.",
+      "moreUpdates_other": "И ещё {{count}} изменения."
+    },
     "modal": {
       "title": "Что нового?"
     },
@@ -1019,7 +1029,7 @@
     }
   },
   "stopwatch": {
-    "clickToEdit": "Нажмите, чтобы изменить",
+    "clickToEdit": "Нажмите, чтобы редактировать",
     "continue": "Продолжить",
     "pause": "Пауза",
     "reset": "Обнулить",
@@ -1059,6 +1069,27 @@
     "clearColor": "Сбросить цвет",
     "highlightColor": "Выделение",
     "clearHighlight": "Сбросить выделение"
+  },
+  "hotkeys": {
+    "notifications": {
+      "title": "Hotkey {{hotkey}}",
+      "stopwatch": {
+        "continue": "Таймер возобновлен",
+        "pause": "Таймер приостановлен",
+        "addTime": "Добавлено время таймера",
+        "reduceTime": "Уменьшено время таймера",
+        "addTimeDouble": "Добавлено двойное время таймера"
+      },
+      "bid": {
+        "new": "Создан новый лот \"{{name}}\"",
+        "addToLot": "Добавлено \"{{bidName}}\" к \"{{lotName}}\""
+      },
+      "integrations": {
+        "toggleGroup": "{{target}} {{state}}",
+        "enabled": "включен",
+        "disabled": "выключен"
+      }
+    }
   },
   "tutorial": {
     "startButton": "Начать обучение",

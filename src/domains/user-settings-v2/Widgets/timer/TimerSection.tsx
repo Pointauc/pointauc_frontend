@@ -70,7 +70,7 @@ const TimerSection = () => {
               </div>
             </SettingsRow>
 
-            <Divider />
+            <Divider color='dark.4' />
 
             <SettingsRow compact htmlFor='isNewSlotIncrement' nested>
               <div className='flex flex-wrap items-center justify-between gap-4'>
@@ -95,7 +95,7 @@ const TimerSection = () => {
               </div>
             </SettingsRow>
 
-            <Divider />
+            <Divider color='dark.4' />
 
             <SettingsRow compact htmlFor='isIncrementActive' nested>
               <div className='flex flex-wrap items-center justify-between gap-4'>
@@ -120,7 +120,7 @@ const TimerSection = () => {
               </div>
             </SettingsRow>
 
-            <Divider />
+            <Divider color='dark.4' />
 
             <SettingsRow>
               <Text fw={700} size='md' c='dimmed'>

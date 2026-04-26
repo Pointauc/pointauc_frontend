@@ -25,6 +25,9 @@ import {
   updateExistBids,
 } from '@reducers/Purchases/Purchases.ts';
 import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
+import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
+import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
+import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 import bidUtils from '@utils/bid.utils.ts';
 import { store } from '@store';
 
@@ -39,6 +42,7 @@ interface PurchaseComponentProps extends Purchase {
   showBestMatch?: boolean;
   hideActions?: boolean;
   disabled?: boolean;
+  isHotkeyTarget?: boolean;
 }
 
 const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
@@ -46,6 +50,7 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   showBestMatch = true,
   hideActions,
   disabled,
+  isHotkeyTarget,
   ...purchase
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -180,6 +185,39 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
     dispatch(updateBid({ ...purchase, cost: purchase.cost * multi }));
   };
 
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.firstBidNew,
+    (event, { setNotificationData }) => {
+      event.preventDefault();
+      handleAddNewSlot();
+      setNotificationData({ name });
+    },
+    {
+      enabled: Boolean(isHotkeyTarget && !hideActions && !disabled),
+      preventDefault: true,
+    },
+  );
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.firstBidAddToLot,
+    (event, { setNotificationData }) => {
+      event.preventDefault();
+      handleAddToBestMatch();
+
+      if (!bestMatch) {
+        return;
+      }
+
+      setNotificationData({
+        bidName: name,
+        lotName: bestMatch.name ?? '',
+      });
+    },
+    {
+      enabled: Boolean(isHotkeyTarget && bestMatch && !hideActions && !disabled),
+      preventDefault: true,
+    },
+  );
+
   return (
     <Card className={purchaseClasses} style={isDragging ? undefined : backgroundStyles} padding='sm'>
       <div className={classes.header}>
@@ -200,10 +238,19 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 size='xs'
                 fz='sm'
                 flex={1}
-                className={classes.actionButton}
+                className={clsx(classes.actionButton, 'relative')}
                 onClick={handleAddNewSlot}
               >
-                {t('bid.new')}
+                <span className='inline-flex w-full items-center justify-center'>
+                  {isHotkeyTarget && (
+                    <HotkeyHint
+                      actionId={HOTKEY_ACTION_IDS.firstBidNew}
+                      variant='overlay'
+                      className='pointer-events-none absolute top-1/2 left-2 -translate-y-1/2'
+                    />
+                  )}
+                  <span>{t('bid.new')}</span>
+                </span>
               </Button>
               <Menu position='bottom-end'>
                 <Menu.Target>
@@ -242,10 +289,19 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
                 color='white'
                 size='xs'
                 fz='sm'
-                className={classes.actionButton}
+                className={clsx(classes.actionButton, 'relative')}
                 onClick={handleAddToBestMatch}
               >
-                {t('bid.toLot', { name: bestMatch.name })}
+                <span className='inline-flex w-full items-center justify-center'>
+                  {isHotkeyTarget && (
+                    <HotkeyHint
+                      actionId={HOTKEY_ACTION_IDS.firstBidAddToLot}
+                      variant='overlay'
+                      className='pointer-events-none absolute top-1/2 left-2 -translate-y-1/2'
+                    />
+                  )}
+                  <span>{t('bid.toLot', { name: bestMatch.name })}</span>
+                </span>
               </Button>
             )}
           </>

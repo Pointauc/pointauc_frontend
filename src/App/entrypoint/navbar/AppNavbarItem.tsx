@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { MenuItem } from '@models/common.model';
+import { resolveNavbarHotkeyActionId } from '@shared/lib/hotkeys/hotkeys.registry';
+import HotkeyTooltip from '@shared/ui/HotkeyTooltip/HotkeyTooltip';
 
 const checkIsExternalNav = (path: string, target?: MenuItem['target']): boolean =>
   target === '_blank' || /^https?:\/\//.test(path);
@@ -21,6 +23,7 @@ export const AppNavbarItem = ({ menuItem, isActive, isNextActive, onMouseDown, o
   const { t } = useTranslation();
   const { icon, title, path, target } = menuItem;
   const isExternal = checkIsExternalNav(path, target);
+  const hotkeyActionId = resolveNavbarHotkeyActionId(path);
 
   const linkClassName = clsx(
     'group relative flex h-[46px] items-center justify-center rounded-md border text-inherit no-underline transition-[background-color,border-color] duration-150 hover:bg-primary-400/20 active:bg-primary-light-hover active:border-primary-500',
@@ -61,9 +64,27 @@ export const AppNavbarItem = ({ menuItem, isActive, isNextActive, onMouseDown, o
     </Link>
   );
 
+  if (!hotkeyActionId) {
+    return (
+      <Tooltip label={t(title)} px='sm' py='xs' fw={600} fz='md' position='right' withArrow arrowSize={7}>
+        {navLink}
+      </Tooltip>
+    );
+  }
+
   return (
-    <Tooltip label={t(title)} px='sm' py='xs' fw={600} fz='md' position='right' withArrow arrowSize={7}>
+    <HotkeyTooltip
+      actionId={hotkeyActionId}
+      label={t(title)}
+      px='sm'
+      py='xs'
+      fw={600}
+      fz='md'
+      position='right'
+      withArrow
+      arrowSize={7}
+    >
       {navLink}
-    </Tooltip>
+    </HotkeyTooltip>
   );
 };

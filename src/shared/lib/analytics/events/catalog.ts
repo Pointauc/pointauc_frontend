@@ -5,6 +5,7 @@ export const analyticsEventNames = {
   auctionEnded: 'auction_ended',
   overlayOpened: 'overlay_opened',
   settingsSaved: 'settings_saved',
+  timerEdited: 'timer_edited',
   wheelSpinResult: 'wheel_spin_result',
 } as const;
 
@@ -91,6 +92,9 @@ export interface AnalyticsEventMap {
   [analyticsEventNames.settingsSaved]: {
     section: 'auction' | 'integrations' | 'appearance' | 'general' | 'unknown';
     source?: 'manual' | 'autosave';
+  };
+  [analyticsEventNames.timerEdited]: {
+    timer_type: 'stopwatch' | 'total';
   };
   [analyticsEventNames.wheelSpinResult]: WheelSpinResultPayload;
 }

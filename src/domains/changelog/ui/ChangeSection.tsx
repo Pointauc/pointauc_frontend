@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-import { ChangeType } from '@domains/changelog/model/types';
+import { ChangeItem, ChangeType } from '@domains/changelog/model/types';
 import styles from '@domains/changelog/ui/Changelog.module.css';
 
 interface ChangeSectionProps {
   type: ChangeType;
-  items: ReactNode[];
+  items: ChangeItem[];
   label: string;
   icon: ReactNode;
 }
@@ -22,7 +22,7 @@ function ChangeSection({ type, items, label, icon }: ChangeSectionProps) {
       <ul className={styles.changesList}>
         {items.map((item, index) => (
           <li key={index} className={styles.changeItem}>
-            {item}
+            {item.content}
           </li>
         ))}
       </ul>

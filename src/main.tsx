@@ -6,6 +6,7 @@ import './index.css';
 import '@assets/i18n/index.ts';
 
 import { Notifications } from '@mantine/notifications';
+import { HotkeysProvider } from '@tanstack/react-hotkeys';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
@@ -87,12 +88,14 @@ const router = createBrowserRouter([
     errorElement: <RouteErrorBoundary />,
     element: (
       <MantineProvider>
-        <TutorialProvider>
-          <QueryClientProvider client={queryClient}>
-            <Notifications limit={4} autoClose={3000} />
-            <Outlet />
-          </QueryClientProvider>
-        </TutorialProvider>
+        <HotkeysProvider defaultOptions={{ hotkey: { ignoreInputs: true } }}>
+          <TutorialProvider>
+            <QueryClientProvider client={queryClient}>
+              <Notifications limit={4} autoClose={3000} />
+              <Outlet />
+            </QueryClientProvider>
+          </TutorialProvider>
+        </HotkeysProvider>
       </MantineProvider>
     ),
     children: [

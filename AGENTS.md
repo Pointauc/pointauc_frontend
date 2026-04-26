@@ -54,6 +54,7 @@
 - IMPORTANT: Always use Tailwind CSS for styles instead of the module CSS files.
 - Use Mantine for basic UI components.
 - If a Mantine-specific behavior is unclear, consult the Mantine LLM docs linked in `.cursor/rules/mantine.mdc`.
+- Be cautious with gradients, avoid them for regular elements. We are building a tasteful and professional app, not some flashy slop.
 
 ## React and TypeScript
 

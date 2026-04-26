@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import SwitchAllIntegrations from '@components/SwitchAllIntegrations/SwitchAllIntegrations.tsx';
 import PubsubSwitch from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitch.tsx';
 import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import * as Integration from '@models/integration';
 
+import type { HotkeyActionId } from '@shared/lib/hotkeys/hotkeys.types';
+
 interface Props {
   integrations: Integration.Config[];
   classNames?: any;
+  labelText?: string;
+  hotkeyActionId?: HotkeyActionId;
 }
 
-const PubsubSwitchGroup = ({ integrations, classNames }: Props) => {
-  const { t } = useTranslation();
+const PubsubSwitchGroup = ({ integrations, classNames, labelText, hotkeyActionId }: Props) => {
   const [discrepancy, setDiscrepancy] = React.useState(false);
   const subscriptions = useMergedSubscriptionsState(integrations);
 
@@ -26,7 +28,12 @@ const PubsubSwitchGroup = ({ integrations, classNames }: Props) => {
 
   return (
     <>
-      <SwitchAllIntegrations integrations={integrations} classNames={classNames} />
+      <SwitchAllIntegrations
+        integrations={integrations}
+        classNames={classNames}
+        labelText={labelText}
+        hotkeyActionId={hotkeyActionId}
+      />
       {discrepancy && (
         <div className='available-integrations'>
           {integrations.map((integration) => (

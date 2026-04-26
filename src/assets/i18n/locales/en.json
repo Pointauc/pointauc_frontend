@@ -90,7 +90,9 @@
   },
   "integration": {
     "groups": {
-      "donations": "Donations"
+      "donations": "Donations",
+      "channelPoints": "Channel Points",
+      "integrations": "Integrations"
     },
     "donatePay": {
       "name": "Donate Pay",
@@ -255,6 +257,12 @@
     }
   },
   "changelog": {
+    "dialog": {
+      "title": "New updates",
+      "openDetails": "Open details",
+      "moreUpdates_one": "And {{count}} more update.",
+      "moreUpdates_other": "And {{count}} more updates."
+    },
     "modal": {
       "title": "What's new?"
     },
@@ -1076,6 +1084,27 @@
     "clearColor": "Clear color",
     "highlightColor": "Highlight",
     "clearHighlight": "Clear highlight"
+  },
+  "hotkeys": {
+    "notifications": {
+      "title": "Hotkey {{hotkey}}",
+      "stopwatch": {
+        "continue": "Timer resumed",
+        "pause": "Timer paused",
+        "addTime": "Added timer time",
+        "reduceTime": "Reduced timer time",
+        "addTimeDouble": "Added double timer time"
+      },
+      "bid": {
+        "new": "Created a new lot from {{name}}",
+        "addToLot": "Added {{bidName}} to {{lotName}}"
+      },
+      "integrations": {
+        "toggleGroup": "{{target}} {{state}}",
+        "enabled": "enabled",
+        "disabled": "disabled"
+      }
+    }
   },
   "tutorial": {
     "startButton": "Start Tutorial",

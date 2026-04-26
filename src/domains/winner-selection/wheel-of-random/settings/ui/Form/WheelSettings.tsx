@@ -1,6 +1,6 @@
 import { Alert, Anchor, Button, Group, rem, SimpleGrid, Stack } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
-import { CSSProperties, ReactNode } from 'react';
+import { CSSProperties, ReactNode, useRef } from 'react';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { Trans, useTranslation } from 'react-i18next';
 
@@ -8,6 +8,9 @@ import { FirstTimeHelpNotification } from '@components/FirstTimeHelpNotification
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { WheelFormat } from '@constants/wheel.ts';
 import { useLocalStorageState } from '@shared/lib/localState/useLocalStorageState';
+import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
+import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
+import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ClassicDropoutDescription';
 import RandomnessSourceField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/RandomnessSourceField/RandomnessSourceField';
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
@@ -51,6 +54,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
   const { t } = useTranslation();
   const { control } = useFormContext<Wheel.Settings>();
   const { isSubmitting } = useFormState<Wheel.Settings>({ control });
+  const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
   const [isNewDropoutFairnessInfoDismissed, setIsNewDropoutFairnessInfoDismissed] = useLocalStorageState(
@@ -59,9 +63,28 @@ const WheelSettings = (props: WheelSettingsProps) => {
   );
 
   const submitButton = (
-    <Button loading={isLoadingSeed || isCreatingTicket} disabled={isSubmitting} variant='contained' type='submit'>
+    <Button
+      ref={submitButtonRef}
+      loading={isLoadingSeed || isCreatingTicket}
+      disabled={isSubmitting}
+      variant='contained'
+      type='submit'
+      rightSection={<HotkeyHint actionId={HOTKEY_ACTION_IDS.wheelSpin} />}
+    >
       {isSubmitting ? t('wheel.spinning') : t('wheel.spin')}
     </Button>
+  );
+
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.wheelSpin,
+    (event) => {
+      event.preventDefault();
+      submitButtonRef.current?.click();
+    },
+    {
+      enabled: !isSubmitting && !isLoadingSeed && !isCreatingTicket,
+      preventDefault: true,
+    },
   );
 
   const docsUrl = useDocsUrl(DOCS_PAGES.wheel.settings.page);

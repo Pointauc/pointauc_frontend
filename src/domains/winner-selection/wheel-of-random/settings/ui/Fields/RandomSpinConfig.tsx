@@ -34,7 +34,6 @@ const RandomSpinConfig = () => {
           />
         )}
       />
-      <Text className='wheel-controls-tip'>{t('common.sec')}</Text>
     </Group>
   );
 };

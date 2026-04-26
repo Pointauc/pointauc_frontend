@@ -1,33 +1,32 @@
+import { CodeHighlightAdapterProvider, plainTextAdapter } from '@mantine/code-highlight';
+import { generateColors } from '@mantine/colors-generator';
 import {
-  CSSVariablesResolver,
-  MantineProvider as MantineBaseProvider,
-  MantineColorsTuple,
   alpha,
   createTheme,
+  CSSVariablesResolver,
   DEFAULT_THEME,
-  lighten,
+  defaultVariantColorsResolver,
+  Divider,
+  MantineProvider as MantineBaseProvider,
+  MantineColorsTuple,
   MantineTheme,
   rem,
   VariantColorsResolver,
-  defaultVariantColorsResolver,
 } from '@mantine/core';
-import { CodeHighlightAdapterProvider, plainTextAdapter } from '@mantine/code-highlight';
 import { ModalsProvider } from '@mantine/modals';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { generateColors } from '@mantine/colors-generator';
-import tinycolor from 'tinycolor2';
 
-import { calcUiElementsOpacity } from '@utils/ui/background';
 import { RootState } from '@reducers';
+import { calcUiElementsOpacity } from '@utils/ui/background';
 
-import ExtendedTextInput from './ui/Input';
-import ExtendedSlider from './ui/Slider';
 import ExtendedCheckbox from './ui/Checkbox';
-import ExtendedSegmentedControl from './ui/SegmentedControl';
-import ModalExtended from './ui/Modal';
-import ExtendedSwitch from './ui/Switch';
 import CloseButtonExtended from './ui/CloseButton';
+import ExtendedTextInput from './ui/Input';
+import ModalExtended from './ui/Modal';
+import ExtendedSegmentedControl from './ui/SegmentedControl';
+import ExtendedSlider from './ui/Slider';
+import ExtendedSwitch from './ui/Switch';
 
 const shadowOpacityMain = 0.12;
 const shadowOpacitySecondary = 0.09;
@@ -79,7 +78,6 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
   const primaryColor = useSelector((root: RootState) => root.aucSettings.settings.primaryColor);
   const backgroundOverlayOpacity = useSelector((root: RootState) => root.aucSettings.settings.backgroundOverlayOpacity);
   const darkAlpha = useSelector((root: RootState) => root.overlay.darkAlpha);
-  const backgroundTone = useSelector((root: RootState) => root.aucSettings.settings.backgroundTone);
 
   const adjustedPrimary = primaryColor === '#a6d4fa' ? '#228be6' : primaryColor ?? '#228be6';
 
@@ -131,6 +129,11 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
         Tooltip: {
           defaultProps: {
             color: 'gray',
+          },
+        },
+        Divider: {
+          defaultProps: {
+            color: 'dark.5',
           },
         },
         CloseButton: CloseButtonExtended,

@@ -1,9 +1,13 @@
 import { AppShell, Stack } from '@mantine/core';
 import { TFunction } from 'i18next';
 import { useLayoutEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { flattenMenuGroups, useActiveMenu, useMenuGroups } from '@constants/menuItems.constants';
 import { MenuItem } from '@models/common.model';
+import { resolveNavbarPathForAction } from '@shared/lib/hotkeys/hotkeys.registry';
+import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
+import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
 
 import NavbarGroup from './Group';
 
@@ -18,10 +22,39 @@ interface AppNavbarProps {
 }
 
 export const AppNavbar = ({ onActiveMenuChange }: AppNavbarProps) => {
+  const navigate = useNavigate();
   const menuGroups = useMenuGroups();
   const menuItems = useMemo(() => flattenMenuGroups(menuGroups), [menuGroups]);
   const activeMenu = useActiveMenu(menuItems);
   const [nextActiveMenu, setNextActiveMenu] = useState<MenuItem | undefined>(undefined);
+
+  useAppHotkey(HOTKEY_ACTION_IDS.navigateAuction, () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateAuction)!), {
+    preventDefault: true,
+  });
+  useAppHotkey(HOTKEY_ACTION_IDS.navigateWheel, () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateWheel)!), {
+    preventDefault: true,
+  });
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.navigateSettings,
+    () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateSettings)!),
+    {
+      preventDefault: true,
+    },
+  );
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.navigateOverlays,
+    () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateOverlays)!),
+    {
+      preventDefault: true,
+    },
+  );
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.navigateTicketVerification,
+    () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateTicketVerification)!),
+    {
+      preventDefault: true,
+    },
+  );
 
   useLayoutEffect(() => {
     onActiveMenuChange(activeMenu);
