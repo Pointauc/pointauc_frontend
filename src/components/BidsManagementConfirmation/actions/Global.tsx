@@ -13,6 +13,7 @@ function GlobalActionTitle() {
 
 export class GlobalActionConfig implements ConfigProps, Bid.BaseActionConfig {
   Title = GlobalActionTitle;
+  lotId = '';
 
   constructor(public type: Bid.Action) {}
 
