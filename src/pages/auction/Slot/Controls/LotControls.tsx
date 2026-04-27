@@ -2,9 +2,10 @@ import { Menu, TextInputProps } from '@mantine/core';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconHash, IconPlus, IconTrash, IconStar, IconStarFilled } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { FC, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { FC, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { Slot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
@@ -14,14 +15,14 @@ import {
   addSlot,
   deleteSlot,
   setSlotAmount,
-  setSlotIsFavorite,
-  setSlotName
+  setSlotIsFavorite
 } from '@reducers/Slots/Slots.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { animateValue } from '@utils/common.utils.ts';
 import { numberUtils } from '@utils/common/number';
 
+import LotNameField from './LotNameField';
 import styles from './LotControls.module.css';
 import WinningChance from './WinningChance';
 
@@ -34,10 +35,9 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   const marblesAuc = useSelector((root: RootState) => root.aucSettings.settings.marblesAuc);
   const showChances = useSelector((root: RootState) => root.aucSettings.settings.showChances);
   const hideAmounts = useSelector((root: RootState) => root.aucSettings.settings.hideAmounts);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
   const { id, extra, amount, name, isFavorite } = lot;
-  const [currentName, setCurrentName] = useState(name);
   const [currentExtra, setCurrentExtra] = useState(extra);
   const amountInput = useRef<HTMLInputElement>(null);
   const percentsRef = useRef<HTMLSpanElement>(null);
@@ -56,14 +56,6 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, showChances]);
-
-  const handleNameBlur: TextInputProps['onBlur'] = (e): void => {
-    if (name === e.target.value) return;
-    dispatch(setSlotName({ id, name: e.target.value }));
-  };
-  const handleNameChange: TextInputProps['onChange'] = (e): void => {
-    setCurrentName(e.target.value);
-  };
 
   const updateExtraAmount = (value: number | null): void => {
     setCurrentExtra(value);
@@ -94,7 +86,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     }
   };
 
-  const createNewSlotOnEnter = (e: any): void => {
+  const createNewSlotOnEnter: TextInputProps['onKeyPress'] = (e): void => {
     const inputAmount = Number(amountInput.current?.value) || null;
     const isAmountChanged = amount !== inputAmount;
 
@@ -127,11 +119,6 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     }
   }, [amount, marblesAuc]);
 
-  useEffect(() => {
-    if (name !== currentName) setCurrentName(name);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [name]);
-
   const handleDelete = (): void => {
     dispatch(deleteSlot(id));
   };
@@ -157,14 +144,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
           <div>{`${lot.fastId}`}</div>
         </div>
       </div>
-      <input
-        className={clsx(styles.input, styles.name, { [styles.lockedLot]: isLocked })}
-        placeholder={t('auc.lotName')}
-        onBlur={handleNameBlur}
-        onChange={handleNameChange}
-        onKeyPress={createNewSlotOnEnter}
-        value={currentName ?? ''}
-      />
+      <LotNameField id={id} name={name} isLocked={isLocked} onKeyPress={createNewSlotOnEnter} />
       {showChances && (
         <WinningChance slotId={id} ref={percentsRef} isLocked={isLocked} lockedPercentage={lot.lockedPercentage} />
       )}

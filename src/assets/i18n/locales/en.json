@@ -312,8 +312,10 @@
     "copyFailed": "Copy failed",
     "needHelp": "Need help?",
     "externalLinkWarning": "⚠️ External Link Warning",
-    "externalLinkDisclaimer": "Please be careful when opening unknown links. Only proceed if you trust this source.",
+    "externalLinkDisclaimer": "Please be careful when opening unknown links. Only proceed if you trust this website.",
     "openLink": "Open Link",
+    "addDomainToAllowList": "Add {{domain}} to the allow list",
+    "ignoreExternalLinkConfirmation": "Do not ask for confirmation",
     "error": "Error",
     "noChanges": "Start editing the form to save changes",
     "default": "Default"
@@ -341,7 +343,8 @@
     "cannotLock": "Total sum of all locked lots cannot exceed 100%",
     "applyPercentage": "Apply",
     "pin": "Pin",
-    "unpin": "Unpin"
+    "unpin": "Unpin",
+    "openDetectedLink": "Open {{url}}"
   },
   "menu": {
     "items": {

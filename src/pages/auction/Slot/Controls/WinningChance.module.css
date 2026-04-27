@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  min-width: 5ch;
+  justify-content: flex-end;
 }
 
 .clickable {
@@ -14,6 +16,8 @@
 
 .chance {
   color: var(--mantine-color-dark-0);
+  min-width: 4ch;
+  text-align: right;
 }
 
 .chance.locked {

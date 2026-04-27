@@ -3,6 +3,7 @@ import { debounce } from '@tanstack/react-pacer';
 
 import { userControllerSetAucSettings } from '@api/openapi';
 import { COLORS } from '@constants/color.constants';
+import { DEFAULT_ALLOWED_DOMAINS } from '@domains/links/config/defaultAllowedDomains';
 import { BidNameStrategy } from '@enums/bid.enum';
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { AucSettingsDto, resolveBackgroundType } from '@models/settings.model';
@@ -58,6 +59,8 @@ const defaultState: AucSettingsStore = {
   primaryColor: COLORS.THEME.PRIMARY,
   backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   hideAmounts: false,
+  allowedDomains: DEFAULT_ALLOWED_DOMAINS,
+  ignoreExternalLinkConfirmation: false,
   showTotalTime: false,
   compact: false,
   showRules: false,

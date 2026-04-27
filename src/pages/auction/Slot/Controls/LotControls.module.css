@@ -92,6 +92,27 @@
   transform: translateY(calc(0.0625rem * var(--mantine-scale)));
 }
 
+.linkIconButton {
+  color: var(--mantine-primary-color-filled);
+  background-color: transparent;
+  border-radius: 0;
+  height: 100%;
+}
+
+.linkIconButton:hover {
+  color: var(--mantine-primary-color-filled);
+  background-color: transparent;
+}
+
+.linkIconUnderline {
+  display: inline-flex;
+  border-bottom: 1px solid transparent;
+}
+
+.linkIconButton:hover .linkIconUnderline {
+  border-bottom-color: var(--mantine-primary-color-filled);
+}
+
 :global(.compact-view) {
   .input {
     font-size: var(--mantine-font-size-lg);

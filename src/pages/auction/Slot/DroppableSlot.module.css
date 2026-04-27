@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--mantine-spacing-xs);
+  gap: var(--mantine-spacing-xxs);
   height: 50px;
   overflow: hidden;
   margin-bottom: 4px;

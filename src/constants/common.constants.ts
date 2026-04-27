@@ -47,9 +47,3 @@ export const YOUTUBE_API_KEYS = [
 export enum LocalStorage {
   SaveConfig = 'saveConfig',
 }
-
-export const ALLOWED_SAFE_DOMAINS = [
-  'youtube.com',
-  'youtu.be',
-  'twitch.tv'
-]

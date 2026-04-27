@@ -10,6 +10,7 @@ import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
 import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
+import { DEFAULT_ALLOWED_DOMAINS } from '@domains/links/config/defaultAllowedDomains';
 import { isBrowser } from '@utils/ssr.ts';
 
 import { setUserState } from '../User/User';
@@ -80,6 +81,8 @@ const defaultSettings: AucSettingsState['settings'] = {
   primaryColor: COLORS.THEME.PRIMARY,
   backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   hideAmounts: false,
+  allowedDomains: DEFAULT_ALLOWED_DOMAINS,
+  ignoreExternalLinkConfirmation: false,
   showTotalTime: false,
   activeRuleId: null,
   events: {

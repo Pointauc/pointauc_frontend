@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from
 import cn from 'classnames';
 import { Stack } from '@mantine/core';
 
-import LinkedText from '@components/LinkedText/LinkedText.tsx';
+import LinkifiedText from '@domains/links/ui/LinkifiedText';
 
 import styles from './WinnerBackdropName.module.css';
 
@@ -39,12 +39,12 @@ const WinnerBackdropName = ({ name, dropout = false, winnerName }: WinnerBackdro
     <Stack gap='xs' className={styles.container} align='center'>
       <div className={cn({ [styles.loserName]: showWinner })} ref={nameRef}>
         <div className={`${dropout ? styles.dropout : ''}`}>
-          <LinkedText copyable>{name}</LinkedText>
+          <LinkifiedText copyable>{name}</LinkifiedText>
         </div>
       </div>
       {showWinner && winnerName && (
         <div className={styles.winnerName} ref={onWinnerRef}>
-          <LinkedText copyable>{winnerName}</LinkedText>
+          <LinkifiedText copyable>{winnerName}</LinkifiedText>
         </div>
       )}
     </Stack>

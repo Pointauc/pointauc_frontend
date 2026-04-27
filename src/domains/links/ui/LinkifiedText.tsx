@@ -2,19 +2,19 @@ import React, { useCallback, useMemo } from 'react';
 import Linkify from 'linkify-react';
 import { Opts as LinkifyOptions } from 'linkifyjs';
 
-import LinkedTextUrl from '@components/LinkedText/LinkedTextUrl.tsx';
+import LinkifiedTextUrl from '@domains/links/ui/LinkifiedTextUrl';
 
-interface LinkedTextProps {
+interface LinkifiedTextProps {
   children: React.ReactNode;
   copyable?: boolean;
 }
 
-const LinkedText = ({ children, copyable = false }: LinkedTextProps) => {
+const LinkifiedText = ({ children, copyable = false }: LinkifiedTextProps) => {
   const renderUrl = useCallback(
     ({ attributes, content }: { attributes: { [attr: string]: any }; content: string }) => {
       const { href, ...props } = attributes;
 
-      return <LinkedTextUrl href={href} content={content} copyable={copyable} linkProps={props} />;
+      return <LinkifiedTextUrl href={href} content={content} copyable={copyable} linkProps={props} />;
     },
     [copyable],
   );
@@ -32,4 +32,4 @@ const LinkedText = ({ children, copyable = false }: LinkedTextProps) => {
   return <Linkify options={linkifyOptions}>{children}</Linkify>;
 };
 
-export default LinkedText;
+export default LinkifiedText;

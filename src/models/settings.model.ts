@@ -57,6 +57,8 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   insertStrategy: InsertStrategy;
   bidNameStrategy: BidNameStrategy;
   hideAmounts: boolean;
+  allowedDomains: string[];
+  ignoreExternalLinkConfirmation: boolean;
 
   // Appearance
   primaryColor: string;
