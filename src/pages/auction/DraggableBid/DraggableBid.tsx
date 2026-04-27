@@ -4,16 +4,16 @@ import { useDispatch } from 'react-redux';
 import { Purchase, setDraggedRedemption } from '@reducers/Purchases/Purchases.ts';
 import { DragPosition } from '@models/common.model.ts';
 
-import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
+import BidComponent from '../BidComponent/BidComponent';
 import { draggedBid } from '../DragBidContext/DragBidContext';
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 
-interface DraggableRedemptionProps extends Purchase {
+interface DraggableBidProps extends Purchase {
   isHotkeyTarget?: boolean;
 }
 
-const DraggableRedemption: FC<DraggableRedemptionProps> = ({ isHotkeyTarget, ...purchase }) => {
+const DraggableBid: FC<DraggableBidProps> = ({ isHotkeyTarget, ...purchase }) => {
   const dispatch = useDispatch();
   const { cost } = purchase;
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -88,10 +88,10 @@ const DraggableRedemption: FC<DraggableRedemptionProps> = ({ isHotkeyTarget, ...
   return (
     <>
       <div draggable onDragStart={handleDragStart} onDragEnd={handleDragEnd} ref={redemptionRef}>
-        <PurchaseComponent {...purchase} isDragging={isDragging} isHotkeyTarget={isHotkeyTarget} />
+        <BidComponent {...purchase} isDragging={isDragging} isHotkeyTarget={isHotkeyTarget} />
       </div>
     </>
   );
 };
 
-export default memo(DraggableRedemption);
+export default memo(DraggableBid);

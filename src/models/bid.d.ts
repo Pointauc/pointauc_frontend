@@ -1,23 +1,27 @@
-namespace Bid {
-  import { ReactNode } from 'react';
+import { ReactNode } from 'react';
 
-  import { Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
-  import { GlobalActionConfig } from '@components/BidsManagementConfirmation/actions/Global.tsx';
-  import { LotActionConfig } from '@components/BidsManagementConfirmation/actions/Lot.tsx';
-  import * as Integration from '@models/integration';
+import { Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { GlobalActionConfig } from '@components/BidsManagementConfirmation/actions/Global.tsx';
+import { LotActionConfig } from '@components/BidsManagementConfirmation/actions/Lot.tsx';
+import * as Integration from '@models/integration';
 
-  type Source = Integration.ID | 'API' | 'Mock';
+declare global {
+  namespace Bid {
+    type Source = Integration.ID | 'API' | 'Mock';
 
-  type Item = Purchase;
+    type Item = Purchase;
 
-  type Action = 'return' | 'accept';
+    type Action = 'return' | 'accept';
 
-  interface BaseActionConfig {
-    type: Action;
-    Title: (props: any) => ReactNode;
+    interface BaseActionConfig {
+      type: Action;
+      Title: (props: any) => ReactNode;
 
-    canApply(bid: PurchaseLog): boolean;
+      canApply(bid: PurchaseLog): boolean;
+    }
+
+    type ActionConfig = LotActionConfig | GlobalActionConfig;
   }
-
-  type ActionConfig = LotActionConfig | GlobalActionConfig;
 }
+
+export {};

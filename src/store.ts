@@ -9,7 +9,9 @@ import { sortSlots } from '@utils/common.utils.ts';
 import { isBrowser } from '@utils/ssr.ts';
 import { Slot } from '@models/slot.model.ts';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
+import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
+import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 
 import type { RootState } from '@reducers/index.ts';
 
@@ -49,13 +51,36 @@ const getSlotsUpdateEvents = () => {
   return _slotsUpdateEvents;
 };
 
+let _purchaseUpdateEvents: string[] | null = null;
+const excludeBidUpdateEventNames = ['setDraggedRedemption', 'addPurchaseLog'];
+const getPurchaseUpdateEvents = () => {
+  if (!_purchaseUpdateEvents) {
+    _purchaseUpdateEvents = Object.keys(purchasesSlice.actions)
+      .map((actionName) => `${purchasesSlice.name}/${actionName}`)
+      .filter((actionName) => !excludeBidUpdateEventNames.includes(actionName));
+  }
+  return _purchaseUpdateEvents;
+};
+
+let _autosaveEvents: string[] | null = null;
+const getAutosaveEvents = () => {
+  if (!_autosaveEvents) {
+    _autosaveEvents = [...getSlotsUpdateEvents(), ...getPurchaseUpdateEvents()];
+  }
+  return _autosaveEvents;
+};
+
 const saveSlotsWithCooldown = throttle(
-  (slots: Slot[]) => {
+  ({ slots, purchases }: { slots: Slot[]; purchases: RootState['purchases']['purchases'] }) => {
     if (!isBrowser) return;
-    const lots = slotsToArchivedLots(slots);
+    const data = createArchiveData({
+      lots: slotsToArchivedLots(slots),
+      purchases,
+      isAutosave: true,
+    });
     archiveApi
-      .upsertAutosave({ lots })
-      .then(() => console.log('Autosave updated', lots))
+      .upsertAutosave(data)
+      .then(() => console.log('Autosave updated', data))
       .catch((err) => console.error('Autosave failed:', err));
   },
   { wait: 2000, trailing: true, leading: false },
@@ -66,9 +91,14 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
   (next) =>
   (action): AnyAction => {
     const result = next(action);
-    const { slots, isInitialized } = storeApi.getState().slots;
-    if (isInitialized && getSlotsUpdateEvents().includes(action.type)) {
-      saveSlotsWithCooldown(slots);
+    const {
+      slots: { slots, isInitialized },
+      purchases: { purchases },
+    } = storeApi.getState();
+    const autosaveEvents = getAutosaveEvents();
+
+    if (isInitialized && autosaveEvents.includes(action.type)) {
+      saveSlotsWithCooldown({ slots, purchases });
     }
     return result;
   };

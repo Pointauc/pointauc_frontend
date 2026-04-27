@@ -79,6 +79,8 @@ const purchasesSlice = createSlice({
   },
 });
 
+export { purchasesSlice };
+
 export const {
   addPurchase,
   setHistory,

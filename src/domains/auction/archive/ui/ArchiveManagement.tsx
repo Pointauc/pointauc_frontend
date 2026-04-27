@@ -7,7 +7,9 @@ import dayjs from 'dayjs';
 
 import { RootState } from '@reducers/index';
 
+import { createArchiveData } from '../lib/archiveData';
 import { slotsToArchivedLots } from '../lib/converters';
+import openPendingBidsDecisionModal from '../lib/openPendingBidsDecisionModal';
 import { useArchives, useCreateArchive, useImportArchive, useLoadArchive } from '../api/hooks';
 import { ArchiveData } from '../model/types';
 
@@ -27,6 +29,7 @@ function ArchiveManagement() {
   const [isImportModalOpened, setIsImportModalOpened] = useState(false);
 
   const slots = useSelector((state: RootState) => state.slots.slots);
+  const purchases = useSelector((state: RootState) => state.purchases.purchases);
   const { data: archives = [], isLoading } = useArchives();
   const createMutation = useCreateArchive();
   const loadMutation = useLoadArchive();
@@ -58,12 +61,30 @@ function ArchiveManagement() {
     setAlertDismissed(true);
   };
 
-  const handleSaveCurrentAuction = () => {
+  const createArchive = (includePendingBids: boolean) => {
     const date = dayjs().format('YYYY-MM-DD HH:mm');
     const name = t('archive.newArchiveName', { date });
-    const data = { lots: slotsToArchivedLots(slots) };
+    const data = createArchiveData({
+      lots: slotsToArchivedLots(slots),
+      purchases,
+      isAutosave: false,
+      includePurchases: includePendingBids,
+    });
 
     createMutation.mutate({ name, data });
+  };
+
+  const handleSaveCurrentAuction = () => {
+    if (purchases.length === 0) {
+      createArchive(false);
+      return;
+    }
+
+    openPendingBidsDecisionModal({
+      pendingBidsCount: purchases.length,
+      onExclude: () => createArchive(false),
+      onInclude: () => createArchive(true),
+    });
   };
 
   const handleLoadArchive = (id: string) => {

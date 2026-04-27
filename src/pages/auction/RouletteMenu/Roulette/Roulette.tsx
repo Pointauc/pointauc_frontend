@@ -12,7 +12,7 @@ import useStorageState from '@hooks/useStorageState';
 import { useWheelSettings } from '@domains/winner-selection/wheel-of-random/lib/hooks/useWheelSettings';
 import { defaultWheelSettings } from '@domains/winner-selection/wheel-of-random/lib/hooks/useSavedWheelSettings';
 
-import PurchaseComponent from '../../PurchaseComponent/PurchaseComponent';
+import BidComponent from '../../BidComponent/BidComponent';
 import { RoulettePreset } from '../PresetSelect/PresetSelect';
 import RoulettePresetView from '../RoulettePresetView/RoulettePresetView';
 
@@ -105,7 +105,7 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
             <div className={classes.rouletteWheelExtra}>
               <div>
                 <Text>{t('auc.casino.yourBid')}</Text>
-                <PurchaseComponent {...bid} hideActions disabled />
+                <BidComponent {...bid} hideActions disabled />
               </div>
             </div>
           </RandomWheel>

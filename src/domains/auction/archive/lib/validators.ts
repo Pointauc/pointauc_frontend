@@ -27,8 +27,9 @@ export function isValidArchiveData(dataString: string): boolean {
 
     if (!data || typeof data !== 'object') return false;
     if (!Array.isArray(data.lots)) return false;
+    if (data.purchases !== undefined && !Array.isArray(data.purchases)) return false;
 
-    return data.lots.every(
+    const checkLots = data.lots.every(
       (lot) =>
         lot &&
         typeof lot === 'object' &&
@@ -36,6 +37,12 @@ export function isValidArchiveData(dataString: string): boolean {
         (lot.amount === null || typeof lot.amount === 'number') &&
         (lot.investors === undefined || Array.isArray(lot.investors)),
     );
+
+    if (!checkLots) {
+      return false;
+    }
+
+    return true;
   } catch {
     return false;
   }
@@ -47,4 +54,3 @@ export function isValidArchiveData(dataString: string): boolean {
 export function isValidArchiveName(name: string): boolean {
   return name.trim().length > 0 && name.length <= 100;
 }
-

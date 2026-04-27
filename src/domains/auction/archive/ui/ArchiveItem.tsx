@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Group, Paper, Text, TextInput, Tooltip } from '@mantine/core';
+﻿import { ActionIcon, Badge, Group, Paper, Text, TextInput, Tooltip } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { IconArchive, IconCheck, IconDownload, IconPencil, IconTrash, IconX } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
@@ -9,7 +9,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { RootState } from '@reducers/index';
 
+import { createArchiveData, getArchivePurchases } from '../lib/archiveData';
 import { slotsToArchivedLots } from '../lib/converters';
+import openPendingBidsDecisionModal from '../lib/openPendingBidsDecisionModal';
 import { ArchiveData, ArchiveRecord } from '../model/types';
 import { useDeleteArchive, useExportArchive, useUpdateArchive } from '../api/hooks';
 import { isValidArchiveName } from '../lib/validators';
@@ -35,12 +37,14 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
   const itemRef = useRef<HTMLDivElement | null>(null);
 
   const slots = useSelector((state: RootState) => state.slots.slots);
+  const purchases = useSelector((state: RootState) => state.purchases.purchases);
   const updateMutation = useUpdateArchive();
   const deleteMutation = useDeleteArchive();
   const exportMutation = useExportArchive();
 
   const data: ArchiveData = JSON.parse(archive.data);
   const lotCount = data.lots.length;
+  const purchaseCount = getArchivePurchases(data).length;
 
   // Update archive name when debounced value changes
   useEffect(() => {
@@ -82,10 +86,29 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
     exportMutation.mutate(archive.id);
   };
 
+  const overwriteArchive = (includePendingBids: boolean) => {
+    const archiveData = createArchiveData({
+      lots: slotsToArchivedLots(slots),
+      purchases,
+      isAutosave: false,
+      includePurchases: includePendingBids,
+    });
+    updateMutation.mutate({ id: archive.id, data: archiveData });
+  };
+
   const handleOverwrite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const archiveData = { lots: slotsToArchivedLots(slots) };
-    updateMutation.mutate({ id: archive.id, data: archiveData });
+
+    if (purchases.length === 0) {
+      overwriteArchive(false);
+      return;
+    }
+
+    openPendingBidsDecisionModal({
+      pendingBidsCount: purchases.length,
+      onExclude: () => overwriteArchive(false),
+      onInclude: () => overwriteArchive(true),
+    });
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -188,7 +211,8 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
         </div>
 
         <Text size='sm' c='dimmed' className={styles.info}>
-          {timeText} • {t('archive.item.lotCount', { count: lotCount })}
+          {timeText} • {t('archive.item.lotCount', { count: lotCount })}{' '}
+          {purchaseCount > 0 && `• ${t('archive.item.bidCount', { count: purchaseCount })}`}
         </Text>
       </div>
 

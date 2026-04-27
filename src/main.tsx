@@ -34,6 +34,7 @@ import { createConfiguredErrorTrackingProvider } from '@shared/lib/error-trackin
 import { initErrorTracking } from '@shared/lib/error-tracking/service';
 import MantineProvider from '@shared/mantine/MantineProvider.tsx';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
+import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import * as Integration from '@models/integration';
 import { queryClient } from '@shared/lib/react-query/client.ts';
@@ -66,11 +67,18 @@ i18n.on('languageChanged', (language) => {
 });
 
 window.onbeforeunload = (): undefined => {
-  const { slots } = store.getState().slots;
+  const {
+    slots: { slots },
+    purchases: { purchases },
+  } = store.getState();
 
-  if (slots.length > 1) {
-    const lots = slotsToArchivedLots(slots);
-    archiveApi.upsertAutosave({ lots }).catch((err) => console.error('Final autosave failed:', err));
+  if (slots.length > 1 || purchases.length > 0) {
+    const data = createArchiveData({
+      lots: slotsToArchivedLots(slots),
+      purchases,
+      isAutosave: true,
+    });
+    archiveApi.upsertAutosave(data).catch((err) => console.error('Final autosave failed:', err));
   }
 
   return undefined;

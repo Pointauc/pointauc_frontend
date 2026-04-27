@@ -250,6 +250,7 @@
     "new": "New",
     "toLot": "To {{name}}",
     "totalBids": "Total Bids:",
+    "clearPurchases": "Clear",
     "anonymous": "Anonymous",
     "convertedTitle": {
       "donation": "{{actualCost}} ({{cost}} $) {{user}}",
@@ -274,6 +275,7 @@
     "contributors": "Thanks to {{contributors}} for the contribution"
   },
   "common": {
+    "confirm": "Confirm",
     "copy": "Copy",
     "copied": "Copied",
     "accountProgress": "Account loading...",
@@ -1256,6 +1258,8 @@
       "delete": "Delete",
       "lotCount_one": "{{count}} lot",
       "lotCount_other": "{{count}} lots",
+      "bidCount_one": "{{count}} bid",
+      "bidCount_other": "{{count}} bids",
       "cannotDelete": "Autosave cannot be deleted",
       "updated": "Updated {{time}}",
       "created": "Created {{time}}",
@@ -1274,6 +1278,12 @@
       "message": "This will replace your current auction. Are you sure?",
       "confirm": "Load",
       "cancel": "Cancel"
+    },
+    "pendingBidsPrompt": {
+      "title": "Save pending bids?",
+      "description": "There are {{count}} pending bids that have not been handled yet. Do you want to include them in the archive?",
+      "excludeButton": "Save without bids",
+      "includeButton": "Save with bids"
     },
     "notifications": {
       "created": "Archive created successfully",

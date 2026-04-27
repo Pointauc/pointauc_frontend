@@ -6,7 +6,7 @@ import { useIsMobile } from '@shared/lib/ui';
 import { trackTimerEdited } from '@shared/lib/analytics/events';
 
 import Stopwatch from '../Stopwatch/Stopwatch';
-import PurchaseList from '../PurchaseList/PurchaseList';
+import BidList from '../BidList/BidList';
 import FastAccessPanel from '../FastAccessPanel/FastAccessPanel';
 
 import classes from './ControlColumn.module.css';
@@ -49,7 +49,7 @@ const ControlColumn: React.FC = () => {
       {!isMobile && (
         <>
           <FastAccessPanel />
-          <PurchaseList />
+          <BidList />
         </>
       )}
     </div>

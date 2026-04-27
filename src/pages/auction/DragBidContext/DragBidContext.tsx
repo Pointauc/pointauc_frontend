@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '@reducers';
 
-import PurchaseComponent from '../PurchaseComponent/PurchaseComponent';
+import BidComponent from '../BidComponent/BidComponent';
 
 interface DraggedBid {
   ref: HTMLDivElement | null;
@@ -24,7 +24,7 @@ const DragBidContext: FC = () => {
   return (
     <Portal>
       <div style={{ pointerEvents: 'none', position: 'absolute' }} className='drag-context' ref={handleRef}>
-        {draggedRedemption && <PurchaseComponent {...draggedRedemption} showBestMatch={false} />}
+        {draggedRedemption && <BidComponent {...draggedRedemption} showBestMatch={false} />}
       </div>
     </Portal>
   );

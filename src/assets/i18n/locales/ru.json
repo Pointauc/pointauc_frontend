@@ -384,6 +384,7 @@
     "overlayNotFound": "Виджет не найден"
   },
   "common": {
+    "confirm": "Подтвердить",
     "copy": "Копировать",
     "copied": "Скопировано",
     "connectTwitch": "Twitch",
@@ -1023,6 +1024,7 @@
     "close": "Закрыть",
     "new": "Новый",
     "anonymous": "Аноним",
+    "clearPurchases": "Очистить",
     "convertedTitle": {
       "donation": "{{actualCost}} ({{cost}} ₽) {{user}}",
       "points": "{{actualCost}} ({{cost}} <icon />) {{user}}"
@@ -1243,6 +1245,10 @@
       "lotCount_few": "{{count}} лота",
       "lotCount_many": "{{count}} лотов",
       "lotCount_other": "{{count}} лота",
+      "bidCount_one": "{{count}} ставка",
+      "bidCount_few": "{{count}} ставки",
+      "bidCount_many": "{{count}} ставок",
+      "bidCount_other": "{{count}} ставки",
       "cannotDelete": "Автосохранение нельзя удалить",
       "updated": "Обновлено {{time}}",
       "created": "Создано {{time}}",
@@ -1261,6 +1267,12 @@
       "message": "Это заменит текущий аукцион. Вы уверены?",
       "confirm": "Загрузить",
       "cancel": "Отмена"
+    },
+    "pendingBidsPrompt": {
+      "title": "Сохранить очередь ставок?",
+      "description": "Есть {{count}} необработанных ставок. Включить их в архив?",
+      "excludeButton": "Сохранить без ставок",
+      "includeButton": "Сохранить со ставками"
     },
     "notifications": {
       "created": "Архив успешно создан",

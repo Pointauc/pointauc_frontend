@@ -5,10 +5,12 @@ import { LocalStorage } from '@constants/common.constants';
 import { SaveInfo } from '@models/save.model';
 import { Slot } from '@models/slot.model';
 import { RootState } from '@reducers/index';
+import { setPurchases } from '@reducers/Purchases/Purchases.ts';
 import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
 import { captureError } from '@shared/lib/error-tracking/service';
 
 import archiveApi from '../api/IndexedDBAdapter';
+import { checkHasArchiveContent, getArchivePurchases } from '../lib/archiveData';
 import { archivedLotsToSlots, slotsToArchivedLots } from '../lib/converters';
 import { ArchiveData } from '../model/types';
 
@@ -125,9 +127,17 @@ function AutoloadAutosave() {
           const autosave = await archiveApi.getAutosave();
           if (autosave) {
             const data: ArchiveData = JSON.parse(autosave.data);
-            if (data.lots.length > 0) {
+            if (checkHasArchiveContent(data)) {
               const loadedSlots = archivedLotsToSlots(data.lots);
-              dispatch(setSlots(loadedSlots));
+              const purchases = getArchivePurchases(data);
+
+              if (loadedSlots.length > 0) {
+                dispatch(setSlots(loadedSlots));
+              }
+
+              if (purchases.length > 0) {
+                dispatch(setPurchases(purchases));
+              }
             }
           }
         } catch (err) {

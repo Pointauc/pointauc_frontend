@@ -18,7 +18,6 @@ import { RootState } from '@reducers';
 import { addAlert } from '@reducers/notifications/notifications.ts';
 import {
   logPurchase,
-  Purchase,
   removePurchase,
   setDraggedRedemption,
   updateBid,
@@ -33,11 +32,11 @@ import { store } from '@store';
 
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
-import classes from './PurchaseComponent.module.css';
+import classes from './BidComponent.module.css';
 
 import type { ThunkDispatch } from 'redux-thunk';
 
-interface PurchaseComponentProps extends Purchase {
+interface BidComponentProps extends Bid.Item {
   isDragging?: boolean;
   showBestMatch?: boolean;
   hideActions?: boolean;
@@ -45,7 +44,7 @@ interface PurchaseComponentProps extends Purchase {
   isHotkeyTarget?: boolean;
 }
 
-const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
+const BidComponent: React.FC<BidComponentProps> = ({
   isDragging,
   showBestMatch = true,
   hideActions,
@@ -323,4 +322,4 @@ const PurchaseComponent: React.FC<PurchaseComponentProps> = ({
   );
 };
 
-export default PurchaseComponent;
+export default BidComponent;

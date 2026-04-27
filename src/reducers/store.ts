@@ -4,8 +4,10 @@ import thunk from 'redux-thunk';
 import { throttle } from '@tanstack/react-pacer';
 
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
+import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import { Slot } from '@models/slot.model';
+import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 import { sortSlots } from '@utils/common.utils';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
 
@@ -40,13 +42,20 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
   };
 
 const SLOTS_UPDATE_EVENTS = Object.keys(slotsSlice.actions).map((actionName) => `${slotsSlice.name}/${actionName}`);
+const PURCHASE_UPDATE_EVENTS = Object.keys(purchasesSlice.actions).map(
+  (actionName) => `${purchasesSlice.name}/${actionName}`,
+);
 
 const saveSlotsWithCooldown = throttle(
-  (slots: Slot[]) => {
-    const lots = slotsToArchivedLots(slots);
+  ({ slots, purchases }: { slots: Slot[]; purchases: RootState['purchases']['purchases'] }) => {
+    const data = createArchiveData({
+      lots: slotsToArchivedLots(slots),
+      purchases,
+      isAutosave: true,
+    });
     archiveApi
-      .upsertAutosave({ lots })
-      .then(() => console.log('Autosave updated', lots))
+      .upsertAutosave(data)
+      .then(() => console.log('Autosave updated', data))
       .catch((err) => console.error('Autosave failed:', err));
   },
   { wait: 2000, trailing: true, leading: false },
@@ -57,10 +66,13 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
   (next) =>
   (action): AnyAction => {
     const result = next(action);
-    if (SLOTS_UPDATE_EVENTS.includes(action.type)) {
-      const { slots } = store.getState().slots;
+    if ([...SLOTS_UPDATE_EVENTS, ...PURCHASE_UPDATE_EVENTS].includes(action.type)) {
+      const {
+        slots: { slots },
+        purchases: { purchases },
+      } = store.getState();
 
-      saveSlotsWithCooldown(slots);
+      saveSlotsWithCooldown({ slots, purchases });
     }
     return result;
   };
@@ -72,11 +84,18 @@ export const store = configureStore({
 
 // Handle autosave before page unload
 window.onbeforeunload = (): undefined => {
-  const { slots } = store.getState().slots;
+  const {
+    slots: { slots },
+    purchases: { purchases },
+  } = store.getState();
 
-  if (slots.length > 1) {
-    const lots = slotsToArchivedLots(slots);
-    archiveApi.upsertAutosave({ lots }).catch((err) => console.error('Final autosave failed:', err));
+  if (slots.length > 1 || purchases.length > 0) {
+    const data = createArchiveData({
+      lots: slotsToArchivedLots(slots),
+      purchases,
+      isAutosave: true,
+    });
+    archiveApi.upsertAutosave(data).catch((err) => console.error('Final autosave failed:', err));
   }
 
   return undefined;
