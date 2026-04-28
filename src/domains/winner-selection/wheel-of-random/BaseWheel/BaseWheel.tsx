@@ -184,7 +184,6 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
 
   useEffect(() => {
     setHighlightedItemId(null);
-    setWinnerItem(undefined);
     if (spinTarget.current) {
       spinTarget.current.textContent = t('wheel.winner');
     }

@@ -21,7 +21,7 @@ const WinnerBackdropName = ({ name, dropout = false, winnerName }: WinnerBackdro
       // Wait for strikethrough animation to finish (1500ms)
       const timer = setTimeout(() => {
         setShowWinner(true);
-      }, 1500);
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
