@@ -1,7 +1,7 @@
 // Shared contracts for participant URL parsing sources and parsing results.
-export type ParticipantUrlParsingSource = 'imdb';
+export type ParticipantUrlParsingSource = 'imdb' | 'kinopoisk';
 
-export type ParticipantUrlParsingProvider = 'wikidata' | 'tmdb' | 'imdb-scrape';
+export type ParticipantUrlParsingProvider = 'wikidata' | 'tmdb' | 'imdb-scrape' | 'kinopoisk-scrape';
 
 export interface ParticipantUrlMovieMetadata {
   imdbTitleId: string;
