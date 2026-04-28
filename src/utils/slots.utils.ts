@@ -1,3 +1,4 @@
+import { getLotNameDisplayName } from '@domains/links/lib/lotNameLink';
 import { parseCSV } from '@domains/auction/archive/lib/parsers/csvParser';
 import { parseJSON } from '@domains/auction/archive/lib/parsers/jsonParser';
 
@@ -42,6 +43,7 @@ export const parseLotsImportFile = async (file: File): Promise<ArchivedLot[]> =>
 const slotToWheel = ({ id, name, amount, isFavorite }: Slot, excludeColors: string[] = []): WheelItem => ({
   id: id.toString(),
   name: name || '',
+  displayName: getLotNameDisplayName(name),
   amount: Number(amount),
   color: getWheelColor(excludeColors),
   isFavorite: isFavorite ?? false,

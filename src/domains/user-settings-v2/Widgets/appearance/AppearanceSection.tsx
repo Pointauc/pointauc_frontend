@@ -104,6 +104,16 @@ const AppearanceSection = () => {
               label={<FieldLabel text={t('settings.auc.hideAmounts')} />}
             />
           </SettingsRow>
+
+          <Divider />
+
+          <SettingsRow htmlFor='isLotLinkParsingEnabled'>
+            <FormSwitchField
+              name='isLotLinkParsingEnabled'
+              control={control}
+              label={<FieldLabel text={t('settings.auc.lotLinkParsing')} />}
+            />
+          </SettingsRow>
         </div>
       </SettingsCard>
     </SettingsSection>

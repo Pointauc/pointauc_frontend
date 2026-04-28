@@ -1,12 +1,68 @@
-import { Link } from 'react-router-dom';
 import { Anchor, Space } from '@mantine/core';
+import { Link } from 'react-router-dom';
 
-import { UpdateData } from '@domains/changelog/model/types';
-import ROUTES from '@constants/routes.constants';
-import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
+import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
+import ROUTES from '@constants/routes.constants';
+import { UpdateData } from '@domains/changelog/model/types';
 
 export const ChangesEN: UpdateData[] = [
+  {
+    date: '2026-04-28T15:45:00.000Z',
+    newFeatures: [
+      {
+        briefDescription: 'IMDb and Kinopoisk links now resolve to movie titles',
+        content: (
+          <>
+            <strong>IMDb and Kinopoisk links</strong>
+            <Space h='sm' />
+            <div>
+              The app now automatically replaces IMDb and Kinopoisk links with the nicer movie title. Original link is
+              still attached to the lot and you can see it when editing the lot name.
+            </div>
+          </>
+        ),
+      },
+      {
+        briefDescription: 'Quick shortcut for links in lot names',
+        content: (
+          <>
+            <strong>Lot name links</strong>
+            <Space h='sm' />
+            <div>
+              When a lot name contains a link, the app now shows a button that opens that link. Lot names also support
+              Markdown link syntax, so you can provide the correct label and a URL.
+            </div>
+            <Space h='xs' />
+            <div style={{ paddingLeft: '16px' }}>
+              <strong>Markdown example:</strong> <code>[The Godfather](https://example.com)</code>
+            </div>
+            <Space h='xs' />
+            <div>
+              In that case, the app displays only <strong>The Godfather</strong> instead of the full URL.
+            </div>
+          </>
+        ),
+      },
+      {
+        briefDescription: 'Pending bids can be archived',
+        content: (
+          <>
+            <strong>Pending bids in archives</strong>
+            <Space h='sm' />
+            <div>
+              The app can now save pending bids into archives. Pending bids are also saved automatically when you
+              refresh the auction page or perform any action.
+            </div>
+          </>
+        ),
+      },
+    ],
+  },
+  {
+    date: '2026-10-13T06:00:00.000Z',
+    newFeatures: [],
+  },
   {
     date: '2026-04-26T06:00:00.000Z',
     newFeatures: [

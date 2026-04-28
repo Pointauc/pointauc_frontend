@@ -17,13 +17,13 @@ const GenshinSpinningWheel: FC<SpinningWheelProps> = (props) => {
     <CanvasSpinningWheel
       {...props}
       renderer={{
-        drawText(ctx, { startAngle, endAngle, name }: WheelItemWithAngle, { layout, scale }) {
+        drawText(ctx, { startAngle, endAngle, name, displayName }: WheelItemWithAngle, { layout, scale }) {
           if ((endAngle - startAngle) / Math.PI / 2 < 0.016) {
             return;
           }
 
           const radius = layout.wheelRadius - scale(3);
-          const text = fitText(name, maxTextLength);
+          const text = fitText(displayName || name, maxTextLength);
           const currentTime = Date.now() * 0.003;
 
           ctx.save();

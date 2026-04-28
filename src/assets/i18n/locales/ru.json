@@ -675,6 +675,7 @@
       "dateSort": "Дата",
       "costSort": "Стоимость",
       "hideAmounts": "Скрыть стоимости лотов и ставок",
+      "lotLinkParsing": "Заменять ссылки в названии лота на текст",
       "favoritesIsEnable": "Возможность закреплять лоты",
       "stateTransfer": {
         "title": "Перенос настроек",
@@ -1017,7 +1018,11 @@
     "applyPercentage": "Применить",
     "pin": "Закрепить лот",
     "unpin": "Открепить лот",
-    "openDetectedLink": "Открыть {{url}}"
+    "openDetectedLink": "Открыть {{url}}",
+    "linkParsingNotice": {
+      "title": "Ссылка была преобразована в текст",
+      "message": "Ссылка {{sourceLink}} была заменена на \"{{parsedText}}\". Вы можете отключить это в <settingsLink>настройках</settingsLink>."
+    }
   },
   "bid": {
     "totalBids": "Всего заказов:",

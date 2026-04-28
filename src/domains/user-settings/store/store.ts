@@ -59,6 +59,7 @@ const defaultState: AucSettingsStore = {
   primaryColor: COLORS.THEME.PRIMARY,
   backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   hideAmounts: false,
+  isLotLinkParsingEnabled: false,
   allowedDomains: DEFAULT_ALLOWED_DOMAINS,
   ignoreExternalLinkConfirmation: false,
   showTotalTime: false,
@@ -76,10 +77,21 @@ const settingsFromStorage = localStorage.getItem('userSettings')
   ? JSON.parse(localStorage.getItem('userSettings') as string)
   : {};
 
+const resolveLotLinkParsingSetting = (settings: Record<string, unknown>): boolean => {
+  const nextValue = settings.isLotLinkParsingEnabled;
+  if (typeof nextValue === 'boolean') {
+    return nextValue;
+  }
+
+  const legacyValue = settings.isParticipantImdbParsingEnabled;
+  return typeof legacyValue === 'boolean' ? legacyValue : defaultState.isLotLinkParsingEnabled;
+};
+
 // When data structure was changed we need to migrate settings from the local storage to the new structure
 const migratedSettings = {
   showRules: localStorage.getItem('showRules') === 'true',
   backgroundType: resolveBackgroundType(settingsFromStorage.background, settingsFromStorage.backgroundType),
+  isLotLinkParsingEnabled: resolveLotLinkParsingSetting(settingsFromStorage),
 };
 
 const initialState: AucSettingsStore = {

@@ -30,7 +30,7 @@
   background-size: 100% 3px;
   opacity: 1;
   color: var(--mantine-color-dark-0);
-  animation: strikethrough 1500ms ease-in-out;
+  animation: strikethrough 1200ms ease-in-out;
 }
 
 .loserName {

@@ -1,5 +1,6 @@
 export interface WheelItem {
   name: string;
+  displayName?: string;
   id: string | number;
   color: string;
   amount: number;
