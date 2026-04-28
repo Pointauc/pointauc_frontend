@@ -31,7 +31,7 @@ jobs:
       - name: Build application
         env:
           VITE_DOCS_BASE_URL: ${{ secrets.VITE_DOCS_BASE_URL }}
-          VITE_DONATEX_CLIENT_ID: ${{ secrets.VITE_DONATEX_CLIENT_ID }}
+          VITE_DONATEX_CLIENT_ID: ${{ secrets.VITE_DONATEX_CLIENT_ID_PRODUCTION }}
           VITE_ERROR_TRACKING_PROVIDER: ${{ secrets.VITE_ERROR_TRACKING_PROVIDER }}
           VITE_GLITCHTIP_DSN: ${{ secrets.VITE_GLITCHTIP_DSN }}
           VITE_GLITCHTIP_ENVIRONMENT: ${{ secrets.VITE_GLITCHTIP_ENVIRONMENT }}
