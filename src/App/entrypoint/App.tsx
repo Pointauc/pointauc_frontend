@@ -25,10 +25,11 @@ import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
 import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
 import { registerPublicApiSocketHandlers } from '@domains/public-api/lib/socket.ts';
+import { buildSocketIoOptions } from '@shared/lib/socketIo';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
-import { connectToBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
+import { connectToBroadcastingSocket, disconnectBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
 import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
 import { getCookie } from '../../utils/common.utils';
@@ -77,11 +78,12 @@ const App: React.FC = () => {
       dispatch(connectToBroadcastingSocket);
 
       // Connect to global socket
-      const globalSocket = io(`${getSocketIOUrl()}`, { query: { cookie: document.cookie }, transports: ['websocket'] });
+      const globalSocket = io(`${getSocketIOUrl()}`, buildSocketIoOptions('default', { query: { cookie: document.cookie } }));
       const unregisterPublicApiSocketHandlers = registerPublicApiSocketHandlers(globalSocket, dispatch);
 
       return () => {
         unregisterPublicApiSocketHandlers();
+        dispatch(disconnectBroadcastingSocket);
         globalSocket.disconnect();
       };
     }
