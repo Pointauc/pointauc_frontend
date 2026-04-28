@@ -39,7 +39,8 @@ export interface AucSettingsState {
   settings: AucSettingsDto & { events: EventsSettings } & SettingsMissingOnBackend;
 }
 const showRules = isBrowser ? localStorage.getItem('showRules') : null;
-const storedSettings = isBrowser && localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings') as string) : null;
+const storedSettings =
+  isBrowser && localStorage.getItem('settings') ? JSON.parse(localStorage.getItem('settings') as string) : null;
 
 const defaultSettings: AucSettingsState['settings'] = {
   startTime: 10,
@@ -81,6 +82,7 @@ const defaultSettings: AucSettingsState['settings'] = {
   primaryColor: COLORS.THEME.PRIMARY,
   backgroundTone: COLORS.THEME.BACKGROUND_TONE,
   hideAmounts: false,
+  isLotLinkParsingEnabled: true,
   allowedDomains: DEFAULT_ALLOWED_DOMAINS,
   ignoreExternalLinkConfirmation: false,
   showTotalTime: false,
@@ -92,20 +94,24 @@ const defaultSettings: AucSettingsState['settings'] = {
   },
 };
 
+const resolveLotLinkParsingSetting = (settings: Record<string, unknown> | null): boolean => {
+  return settings?.isLotLinkParsingEnabled as boolean;
+};
+
 export const initialState: AucSettingsState = {
   view: {
     compact: false,
     showRules: showRules === 'true',
     autoScroll: false,
   },
-  settings:
-    storedSettings
-      ? {
-          ...defaultSettings,
-          ...storedSettings,
-          backgroundType: resolveBackgroundType(storedSettings.background, storedSettings.backgroundType),
-        }
-      : defaultSettings,
+  settings: storedSettings
+    ? {
+        ...defaultSettings,
+        ...storedSettings,
+        isLotLinkParsingEnabled: resolveLotLinkParsingSetting(storedSettings),
+        backgroundType: resolveBackgroundType(storedSettings.background, storedSettings.backgroundType),
+      }
+    : defaultSettings,
 };
 
 const mergeCheck = <T>(obj: T, src: T): T => (src === undefined ? obj : src);
@@ -171,6 +177,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
     dispatch(
       setAucSettings({
         ...settings,
+        isLotLinkParsingEnabled: resolveLotLinkParsingSetting(settings as Record<string, unknown>),
         backgroundType: resolveBackgroundType(settings.background, settings.backgroundType),
         primaryColor:
           localStorage.getItem('isColorResetDone') !== 'true' ? COLORS.THEME.PRIMARY : settings.primaryColor,

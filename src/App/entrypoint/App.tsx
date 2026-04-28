@@ -25,7 +25,6 @@ import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
 import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
 import { registerPublicApiSocketHandlers } from '@domains/public-api/lib/socket.ts';
-import { getMovieMetadataFromAllSourcesByImdbUrl } from '@domains/links/lib/movieMetadataByImdbUrl.ts';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
@@ -42,15 +41,6 @@ const hasToken = isBrowser && !!getCookie('userSession');
 let openDriverTimeout: any;
 
 const productionUrl = 'https://pointauc.com/';
-
-(async () => {
-  const result = await getMovieMetadataFromAllSourcesByImdbUrl({
-    imdbUrl: 'https://www.imdb.com/title/tt1450321',
-    tmdbApiKey: 'ed1934b028bce6ba4683ae388e662329',
-  });
-
-  console.log(result);
-})();
 
 const App: React.FC = () => {
   const { t } = useTranslation();

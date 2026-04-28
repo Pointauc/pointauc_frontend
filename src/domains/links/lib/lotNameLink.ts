@@ -15,6 +15,8 @@ export interface ParsedLotMarkdownLink {
 export interface ParsedLotLink {
   href: string;
   url: string;
+  startIndex: number;
+  endIndex: number;
   markdownLink: ParsedLotMarkdownLink | null;
 }
 
@@ -67,23 +69,42 @@ export const parseLotLink = (value: string | null | undefined): ParsedLotLink | 
   }
 
   const markdownLink = parseMarkdownLotLink(value);
-  if (markdownLink) {
+  const foundLinks = linkify.find(value, 'url');
+  const firstValidLink = foundLinks.find((item) => normalizeUrl(item.href ?? item.value));
+  const firstPlainLink =
+    firstValidLink && firstValidLink.start != null && firstValidLink.end != null
+      ? {
+          href: firstValidLink.href ?? firstValidLink.value,
+          url: firstValidLink.value,
+          startIndex: firstValidLink.start,
+          endIndex: firstValidLink.end,
+          markdownLink: null,
+        }
+      : null;
+
+  if (markdownLink && (!firstPlainLink || markdownLink.startIndex <= firstPlainLink.startIndex)) {
     return {
       href: markdownLink.href,
       url: markdownLink.rawUrl,
+      startIndex: markdownLink.startIndex,
+      endIndex: markdownLink.endIndex,
       markdownLink,
     };
   }
 
-  const foundLinks = linkify.find(value, 'url');
-  const firstValidLink = foundLinks.find((item) => normalizeUrl(item.href ?? item.value));
-  if (!firstValidLink) {
+  if (!firstPlainLink) {
     return null;
   }
 
-  return {
-    href: firstValidLink.href ?? firstValidLink.value,
-    url: firstValidLink.value,
-    markdownLink: null,
-  };
+  return firstPlainLink;
+};
+
+export const checkHasMarkdownLotLink = (value: string | null | undefined): boolean => parseMarkdownLotLink(value) != null;
+
+export const replaceFirstParsedLotLinkWithMarkdown = (
+  lotName: string,
+  parsedLink: ParsedLotLink,
+  markdownLink: string,
+): string => {
+  return `${lotName.slice(0, parsedLink.startIndex)}${markdownLink}${lotName.slice(parsedLink.endIndex)}`;
 };

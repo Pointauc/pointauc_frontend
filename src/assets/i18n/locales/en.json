@@ -8,8 +8,47 @@
   },
   "menu": {
     "items": {
-      "settingsWebsite": {
+      "auction": {
+        "title": "Auction"
+      },
+      "guides": {
+        "title": "User manual"
+      },
+      "history": {
+        "title": "History"
+      },
+      "integration": {
+        "title": "Integration"
+      },
+      "settings": {
         "title": "Settings"
+      },
+      "statistics": {
+        "title": "Statistics"
+      },
+      "viewer_orders": {
+        "title": "Viewer orders"
+      },
+      "wheel": {
+        "title": "Wheel of Random"
+      },
+      "overlays": {
+        "title": "Overlays"
+      },
+      "logout": {
+        "title": "Exit Account"
+      },
+      "ticketVerification": {
+        "title": "Ticket Verification"
+      },
+      "github": {
+        "title": "GitHub"
+      },
+      "telegram": {
+        "title": "Telegram"
+      },
+      "support": {
+        "title": "Support"
       }
     }
   },
@@ -291,6 +330,7 @@
     "search": "Search",
     "submit": "Submit",
     "loading": "Loading",
+    "source": "source",
     "connectDA": "Donation Alerts",
     "connectDonatePay": "Donate Pay",
     "connectTwitch": "Twitch",
@@ -344,52 +384,11 @@
     "applyPercentage": "Apply",
     "pin": "Pin",
     "unpin": "Unpin",
-    "openDetectedLink": "Open {{url}}"
-  },
-  "menu": {
-    "items": {
-      "auction": {
-        "title": "Auction"
-      },
-      "guides": {
-        "title": "User manual"
-      },
-      "history": {
-        "title": "History"
-      },
-      "integration": {
-        "title": "Integration"
-      },
-      "settings": {
-        "title": "Settings"
-      },
-      "statistics": {
-        "title": "Statistics"
-      },
-      "viewer_orders": {
-        "title": "Viewer orders"
-      },
-      "wheel": {
-        "title": "Wheel of Random"
-      },
-      "overlays": {
-        "title": "Overlays"
-      },
-      "logout": {
-        "title": "Exit Account"
-      },
-      "ticketVerification": {
-        "title": "Ticket Verification"
-      },
-      "github": {
-        "title": "GitHub"
-      },
-      "telegram": {
-        "title": "Telegram"
-      },
-      "support": {
-        "title": "Support"
-      }
+    "openDetectedLink": "Open {{url}}",
+    "loadingDataFromSource": "Loading data from {{sourceName}}",
+    "linkParsingNotice": {
+      "title": "Link was converted into text",
+      "message": "Converted {{sourceLink}} to \"{{parsedText}}\". You can disable this in <settingsLink>settings</settingsLink>."
     }
   },
   "overlays": {
@@ -628,7 +627,6 @@
       "auc": "Auction",
       "integrations": "Integrations"
     },
-
     "addNewBids": "Automatically Add All New Rewards",
     "appearance": {
       "appearance": "Appearance",
@@ -672,6 +670,7 @@
     },
     "auc": {
       "hideAmounts": "Hide values of lots and bids",
+      "lotLinkParsing": "Auto-parse links in lot names",
       "auc": "Auction",
       "background": "Auction Background",
       "backgroundHint": "Choose the auction floor background shown on the casting screen.",
@@ -772,7 +771,6 @@
       "addTimeOnDonation": "On Donation",
       "totalTime": "Show total auction time",
       "totalTimeHint": "Time is only counted when the timer is running. The total time does not grow while the timer is paused.",
-
       "addOnCondition": "Add time on conditions",
       "notOnCondition": "DO NOT Add time on conditions",
       "maxAdditionalTimeHint": ""
