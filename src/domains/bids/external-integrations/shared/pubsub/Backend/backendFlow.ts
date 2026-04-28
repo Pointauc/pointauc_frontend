@@ -4,6 +4,7 @@ import EventEmitter from 'eventemitter3';
 
 import { getSocketIOUrl } from '@utils/url.utils';
 import * as Integration from '@models/integration';
+import { buildSocketIoOptions } from '@shared/lib/socketIo';
 
 interface Config {
   id: Integration.ID;
@@ -35,10 +36,12 @@ export class BackendFlow implements Integration.PubsubFlow {
 
   async createSocketConnection(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.socket = io(`${getSocketIOUrl()}/${this.id}`, {
-        query: { cookie: document.cookie },
-        transports: ['websocket'],
-      });
+      this.socket = io(
+        `${getSocketIOUrl()}/${this.id}`,
+        buildSocketIoOptions('default', {
+          query: { cookie: document.cookie },
+        }),
+      );
 
       this.socket.on('connect', () => {
         this.store.setState((state) => ({ ...state, loading: false }));

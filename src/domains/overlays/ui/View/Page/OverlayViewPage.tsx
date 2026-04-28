@@ -8,6 +8,7 @@ import { client } from '@api/openapi/client.gen';
 import { AuctionOverlayDto, WheelOverlayDto } from '@api/openapi/types.gen';
 import { Broadcasting } from '@domains/broadcasting/model/types';
 import { getSocketIOUrl } from '@utils/url.utils';
+import { buildSocketIoOptions } from '@shared/lib/socketIo';
 
 import AuctionOverlayPage from '../../../Auction/ui/View';
 import WheelOverlayPage from '../../../Wheel/ui/View';
@@ -51,7 +52,10 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     }
 
     setSocketLoading(true);
-    const socket = io(`${getSocketIOUrl()}/broadcasting`, { auth: { token }, transports: ['websocket'] });
+    const socket = io(
+      `${getSocketIOUrl()}/broadcasting`,
+      buildSocketIoOptions('overlay', { auth: { token } }),
+    );
 
     console.log('Overlay socket connecting...');
 
