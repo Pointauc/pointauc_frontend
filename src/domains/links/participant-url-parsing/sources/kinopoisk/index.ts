@@ -3,7 +3,7 @@ import { getKinopoiskMovieMetadataWithFallback } from '@domains/links/participan
 import {
   buildKinopoiskMovieUrl,
   checkIsKinopoiskMovieUrl,
-  extractKinopoiskMovieId,
+  extractKinopoiskTitleInfo,
 } from '@domains/links/participant-url-parsing/sources/kinopoisk/helpers';
 
 import type {
@@ -24,18 +24,17 @@ export const kinopoiskParticipantUrlSource: ParticipantUrlSource = {
   sourceName: 'Kinopoisk',
   domains: ['kinopoisk.ru', 'www.kinopoisk.ru', 'm.kinopoisk.ru'],
   checkIsValidLink: (link: string): boolean => {
-    return checkIsKinopoiskMovieUrl(link) && extractKinopoiskMovieId(link) != null;
+    return checkIsKinopoiskMovieUrl(link) && extractKinopoiskTitleInfo(link) != null;
   },
   parseLink: async (params: ParseParticipantUrlParams): Promise<ParsedParticipantUrlResult | null> => {
-    const kinopoiskMovieId = extractKinopoiskMovieId(params.link);
-    if (!kinopoiskMovieId) {
+    const kinopoiskTitleInfo = extractKinopoiskTitleInfo(params.link);
+    if (!kinopoiskTitleInfo) {
       return null;
     }
 
-    const kinopoiskUrl = buildKinopoiskMovieUrl(kinopoiskMovieId);
     const metadata = await getKinopoiskMovieMetadataWithFallback({
-      kinopoiskMovieId,
-      kinopoiskUrl,
+      kinopoiskMovieId: kinopoiskTitleInfo.kinopoiskMovieId,
+      kinopoiskUrl: params.link,
       signal: params.signal,
     });
 
@@ -45,7 +44,7 @@ export const kinopoiskParticipantUrlSource: ParticipantUrlSource = {
 
     const label = getMovieLabel(metadata.title, metadata.year);
     return {
-      markdownLink: `[${label}](${kinopoiskUrl})`,
+      markdownLink: `[${label}](${params.link})`,
       metadata,
     };
   },

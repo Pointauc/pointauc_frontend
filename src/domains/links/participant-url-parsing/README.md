@@ -27,4 +27,3 @@ This module resolves plain links inside lot names into human-readable markdown l
 
 - `shared/providers/`: generic data providers reusable by multiple sources.
 - `shared/`: parser orchestration and generic helpers (domain map, URL parsing, JSON-LD parsing, value parsing).
-

@@ -101,6 +101,19 @@ export const parseLotLink = (value: string | null | undefined): ParsedLotLink | 
 
 export const checkHasMarkdownLotLink = (value: string | null | undefined): boolean => parseMarkdownLotLink(value) != null;
 
+export const getLotNameDisplayName = (value: string | null | undefined): string => {
+  if (!value) {
+    return '';
+  }
+
+  const markdownLink = parseMarkdownLotLink(value);
+  if (!markdownLink) {
+    return value;
+  }
+
+  return `${value.slice(0, markdownLink.startIndex)}${markdownLink.label}${value.slice(markdownLink.endIndex)}`;
+};
+
 export const replaceFirstParsedLotLinkWithMarkdown = (
   lotName: string,
   parsedLink: ParsedLotLink,

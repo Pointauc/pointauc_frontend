@@ -92,7 +92,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       const winner = getWinnerFromDistance({ distance: rotation, items: normalizedRef.current });
 
       if (winner && spinTarget.current) {
-        spinTarget.current.textContent = winner.name;
+        spinTarget.current.textContent = winner.displayName ?? winner.name;
       }
 
       setCoreFillColor(winner?.color);
@@ -159,7 +159,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
       return new Promise((resolve) => {
         if (winner && spinTarget.current) {
           setWinnerItem(winner);
-          spinTarget.current.textContent = winner.name;
+          spinTarget.current.textContent = winner.displayName ?? winner.name;
 
           if (resetWheel) {
             setTimeout(() => {

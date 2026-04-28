@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import cn from 'classnames';
 import { Stack } from '@mantine/core';
 
-import LinkifiedText from '@domains/links/ui/LinkifiedText';
+import LotNameText from '@domains/links/ui/LotNameText';
 
 import styles from './WinnerBackdropName.module.css';
 
@@ -14,7 +14,6 @@ interface WinnerBackdropWinProps {
 
 const WinnerBackdropName = ({ name, dropout = false, winnerName }: WinnerBackdropWinProps) => {
   const [showWinner, setShowWinner] = useState(false);
-  const winnerNameRef = useRef<HTMLDivElement>(null);
   const nameRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,12 +38,12 @@ const WinnerBackdropName = ({ name, dropout = false, winnerName }: WinnerBackdro
     <Stack gap='xs' className={styles.container} align='center'>
       <div className={cn({ [styles.loserName]: showWinner })} ref={nameRef}>
         <div className={`${dropout ? styles.dropout : ''}`}>
-          <LinkifiedText copyable>{name}</LinkifiedText>
+          <LotNameText value={name} />
         </div>
       </div>
       {showWinner && winnerName && (
         <div className={styles.winnerName} ref={onWinnerRef}>
-          <LinkifiedText copyable>{winnerName}</LinkifiedText>
+          <LotNameText value={winnerName} />
         </div>
       )}
     </Stack>

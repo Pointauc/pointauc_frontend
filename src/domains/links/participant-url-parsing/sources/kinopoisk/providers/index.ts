@@ -1,5 +1,5 @@
 // Provider fallback chain for Kinopoisk metadata loading.
-import { getMovieMetadataFromKinopoiskPage } from '@domains/links/participant-url-parsing/sources/kinopoisk/providers/kinopoiskScrape';
+import { getMovieMetadataFromKinopoiskWorker } from '@domains/links/participant-url-parsing/sources/kinopoisk/providers/kinopoiskWorker';
 import { getMovieMetadataFromTmdb } from '@domains/links/participant-url-parsing/sources/kinopoisk/providers/tmdb';
 import { getMovieMetadataFromWikidata } from '@domains/links/participant-url-parsing/sources/kinopoisk/providers/wikidata';
 
@@ -15,8 +15,8 @@ type ProviderLoader = (params: GetKinopoiskMovieMetadataParams) => Promise<Parti
 
 const providerLoaders: ProviderLoader[] = [
   getMovieMetadataFromWikidata,
+  getMovieMetadataFromKinopoiskWorker,
   getMovieMetadataFromTmdb,
-  getMovieMetadataFromKinopoiskPage,
 ];
 
 export const getKinopoiskMovieMetadataWithFallback = async (

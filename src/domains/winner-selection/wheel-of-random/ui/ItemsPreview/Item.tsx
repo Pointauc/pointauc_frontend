@@ -18,7 +18,8 @@ interface Props {
 }
 
 const Item = ({ item, disabled, total, actionable }: Props) => {
-  const { name, color } = item;
+  const { color } = item;
+  const displayName = item.displayName ?? item.name;
   const amountToDisplay = wheelItem.getAmount(item);
   const chance = useMemo(() => ((amountToDisplay / total) * 100).toFixed(1), [amountToDisplay, total]);
   const { controller } = useContext(WheelContext);
@@ -40,7 +41,7 @@ const Item = ({ item, disabled, total, actionable }: Props) => {
       onMouseLeave={onLeave}
     >
       { item.isFavorite && <StarIcon /> }
-      <Text className={classes.name}>{name}</Text>
+      <Text className={classes.name}>{displayName}</Text>
       <Text className={classes.amount}>{Number(amountToDisplay.toFixed(2))}</Text>
       <Divider orientation='vertical' />
       <Text className={classes.chance}>{chance + ' %'}</Text>
