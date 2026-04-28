@@ -29,7 +29,7 @@ import { buildSocketIoOptions } from '@shared/lib/socketIo';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
-import { connectToBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
+import { connectToBroadcastingSocket, disconnectBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
 import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
 import { getCookie } from '../../utils/common.utils';
@@ -83,6 +83,7 @@ const App: React.FC = () => {
 
       return () => {
         unregisterPublicApiSocketHandlers();
+        dispatch(disconnectBroadcastingSocket);
         globalSocket.disconnect();
       };
     }

@@ -50,7 +50,6 @@ export class BackendFlow implements Integration.PubsubFlow {
       });
 
       this.socket.on('disconnect', () => {
-        this.socket = null;
         this.wasSubscribedBeforeDisconnect = this.store.state.subscribed;
         this.store.setState((state) => ({ ...state, loading: true }));
         reject();

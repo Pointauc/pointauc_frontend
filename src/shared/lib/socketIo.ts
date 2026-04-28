@@ -26,6 +26,7 @@ export const buildSocketIoOptions = (
   return {
     ...options,
     transports: ['websocket'],
+    randomizationFactor: 0.5,
     ...reconnectDelays,
   };
 };
