@@ -675,6 +675,7 @@
       "dateSort": "Дата",
       "costSort": "Стоимость",
       "hideAmounts": "Скрыть стоимости лотов и ставок",
+      "lotLinkParsing": "Заменять ссылки в названии лота на текст",
       "favoritesIsEnable": "Возможность закреплять лоты",
       "stateTransfer": {
         "title": "Перенос настроек",
