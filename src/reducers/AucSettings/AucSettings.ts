@@ -160,6 +160,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
   const user = await getUserData();
   const {
     twitchAuth,
+    vkVideoLiveAuth,
     activeSettings,
     daAuth,
     tourniquetAuth,
@@ -186,8 +187,14 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
   }
   dispatch(
     setUserState({
-      username: twitchAuth?.username ?? daAuth?.username ?? donatePayAuth?.username ?? donatexAuth?.username ?? 'Empty',
-      userId: twitchAuth?.id,
+      username:
+        twitchAuth?.username ??
+        vkVideoLiveAuth?.username ??
+        daAuth?.username ??
+        donatePayAuth?.username ??
+        donatexAuth?.username ??
+        'Empty',
+      userId: twitchAuth?.id ?? vkVideoLiveAuth?.id,
       pointaucUserId: userId,
       activeSettingsPresetId,
       authData: {
@@ -195,6 +202,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
         donatePayEu: donatePayEuAuth,
         da: daAuth,
         twitch: twitchAuth,
+        vkVideoLive: vkVideoLiveAuth,
         tourniquet: tourniquetAuth,
         ihaq: ihaqAuth,
         donatex: donatexAuth,

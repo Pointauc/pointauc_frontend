@@ -71,6 +71,7 @@
     "@uiw/react-color-sketch": "^2.5.5",
     "axios": "^1.6.0",
     "canvas-confetti": "^1.9.3",
+    "centrifuge": "5.5.3",
     "centrifuge2": "npm:centrifuge@2",
     "chart.js": "^4.4.0",
     "chroma-js": "^3.1.2",

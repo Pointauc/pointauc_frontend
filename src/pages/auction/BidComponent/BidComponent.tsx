@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { findBestMatch } from 'string-similarity';
 
 import { updateRedemption } from '@api/twitchApi.ts';
+import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import PointsIcon from '@assets/icons/channelPoints.svg?react';
 import donationBackground from '@assets/img/donationBackground.jpg';
 import Marble from '@assets/img/Marble.png';
@@ -80,14 +81,25 @@ const BidComponent: React.FC<BidComponentProps> = ({
   }, []);
 
   const refundRedemption = useCallback(
-    () =>
-      rewardId &&
-      updateRedemption({
+    () => {
+      if (!rewardId) {
+        return undefined;
+      }
+
+      const requestData = {
         status: RedemptionStatus.Canceled,
         redemptionId: id,
         rewardId,
-      }),
-    [id, rewardId],
+      };
+
+      if (purchase.source === 'vkVideoLive') {
+        const channelUrl = (store.getState() as RootState).user.authData.vkVideoLive?.channelUrl;
+        return channelUrl ? vkVideoLiveRewardsApi.updateRedemption(requestData, channelUrl) : undefined;
+      }
+
+      return updateRedemption(requestData);
+    },
+    [id, purchase.source, rewardId],
   );
 
   const handleRemove = (): void => {

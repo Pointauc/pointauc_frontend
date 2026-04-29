@@ -7,6 +7,7 @@ export interface IntegrationAvailability {
 export interface IntegrationDataDto extends IntegrationAvailability {
   username: string;
   id: string;
+  channelUrl?: string;
   accessToken?: string;
   socketConnectionToken?: string;
 }
@@ -18,6 +19,7 @@ export interface TwitchRewardPresetDto {
 
 export interface IntegrationData {
   twitchAuth: IntegrationDataDto;
+  vkVideoLiveAuth: IntegrationDataDto;
   daAuth: IntegrationDataDto;
   donatePayAuth: IntegrationDataDto;
   donatePayEuAuth: IntegrationDataDto;

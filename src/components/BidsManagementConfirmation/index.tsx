@@ -9,6 +9,7 @@ import { RootState } from '@reducers';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import ActionStatus from '@components/BidsManagementConfirmation/ActionStatus.tsx';
 import { updateRedemptions } from '@api/twitchApi.ts';
+import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import bidsManagementUtils from '@components/BidsManagementConfirmation/utils.ts';
 import { setHistory } from '@reducers/Purchases/Purchases.ts';
 import { addAlert } from '@reducers/notifications/notifications.ts';
@@ -16,6 +17,26 @@ import { AlertTypeEnum } from '@models/alert.model.ts';
 import { store } from '@store';
 
 import classes from './BidsManagementConfirmation.module.css';
+
+const channelPointsSources = new Set<Bid.Source>(['twitch', 'vkVideoLive']);
+
+const updateRedemptionsBySource = async (
+  data: ReturnType<typeof bidsManagementUtils.toDto>,
+  source: Bid.Source,
+): Promise<void> => {
+  if (source === 'vkVideoLive') {
+    const channelUrl = store.getState().user.authData.vkVideoLive?.channelUrl;
+
+    if (!channelUrl) {
+      throw new Error('VK Video Live channel URL is missing');
+    }
+
+    await vkVideoLiveRewardsApi.updateRedemptions(data, channelUrl);
+    return;
+  }
+
+  await updateRedemptions(data);
+};
 
 export interface BidsManagementConfirmationProps {
   actions: Bid.ActionConfig[];
@@ -39,7 +60,7 @@ function BidsManagementConfirmation({ actions: _actions, onLoadingChanged, onClo
         const shouldBeAdded =
           !distributedBids.includes(bid.id) &&
           bid.status === PurchaseStatusEnum.Processed &&
-          bid.source === 'twitch' &&
+          channelPointsSources.has(bid.source) &&
           action.canApply(bid);
 
         if (shouldBeAdded) distributedBids.push(bid.id);
@@ -91,11 +112,19 @@ function BidsManagementConfirmation({ actions: _actions, onLoadingChanged, onClo
         continue;
       }
 
-      const requestData = bidsManagementUtils.toDto(data, action.type);
-
       setActionStatus('loading', index);
 
-      await updateRedemptions(requestData)
+      await Promise.all(
+        Array.from(channelPointsSources).map((source) => {
+          const sourceData = data.filter((bid) => bid.source === source);
+
+          if (!sourceData.length) {
+            return Promise.resolve();
+          }
+
+          return updateRedemptionsBySource(bidsManagementUtils.toDto(sourceData, action.type), source);
+        }),
+      )
         .then(() => {
           const history = store.getState().purchases.history;
           dispatch(setHistory(bidsManagementUtils.markStatus(data, history, action.type)));

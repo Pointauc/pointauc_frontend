@@ -17,8 +17,10 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { updateRewardPresets } from '@api/twitchApi.ts';
+import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import ConfirmFormOnLeave from '@components/ConfirmFormOnLeave/ConfirmFormOnLeave';
 import withLoading from '@decorators/withLoading';
+import vkVideoLive from '@domains/bids/external-integrations/VkVideoLive';
 import { SettingsForm } from '@models/settings.model.ts';
 import { RootState } from '@reducers';
 import { setAucSettings } from '@reducers/AucSettings/AucSettings.ts';
@@ -137,7 +139,7 @@ const RewardPresetsTable = ({
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [confirmOpened, setConfirmOpened] = useState(false);
-  const { activeSettingsPresetId } = useSelector((root: RootState) => root.user);
+  const { activeSettingsPresetId, authData } = useSelector((root: RootState) => root.user);
   const currentRewardsPrefix = useWatch({ control, name: 'rewardsPrefix' });
   const currentRewardPresets = useWatch({ control, name: 'rewardPresets' });
 
@@ -157,12 +159,22 @@ const RewardPresetsTable = ({
     if (activeSettingsPresetId) {
       withLoading(
         setIsLoading,
-        updateRewardPresets,
-      )({
-        presets: data.rewardPresets ?? [],
-        prefix: data.rewardsPrefix ?? '',
-        settingsId: activeSettingsPresetId,
-      });
+        async () => {
+          const presetsRequest = {
+            presets: data.rewardPresets ?? [],
+            prefix: data.rewardsPrefix ?? '',
+          };
+
+          await updateRewardPresets({
+            ...presetsRequest,
+            settingsId: activeSettingsPresetId,
+          });
+
+          if (vkVideoLive.pubsubFlow.store.state.subscribed && authData.vkVideoLive?.channelUrl) {
+            await vkVideoLiveRewardsApi.openRewards(presetsRequest, authData.vkVideoLive.channelUrl);
+          }
+        },
+      )();
     }
   };
 

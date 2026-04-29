@@ -196,6 +196,9 @@
         }
       }
     },
+    "vkVideoLive": {
+      "name": "VK Video Live"
+    },
     "tourniquet": {
       "name": "Tourniquet"
     },

@@ -157,6 +157,9 @@
         }
       }
     },
+    "vkVideoLive": {
+      "name": "VK Video Live"
+    },
     "donatex": {
       "name": "DonateX"
     },
