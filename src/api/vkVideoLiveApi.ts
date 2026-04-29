@@ -3,10 +3,10 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import ENDPOINTS from '@constants/api.constants';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers';
 import { PatchRedemptionDto, PatchRedemptionsDto, RedemptionStatus } from '@models/redemption.model';
-import { TwitchRewardPresetsRequest } from '@models/user.model';
+import { TwitchRewardPresetDto, TwitchRewardPresetsRequest } from '@models/user.model';
 
 const INTEGRATION_ID = 'vkVideoLive';
-const API_BASE_URL = 'https://api.live.vkvideo.ru';
+const API_BASE_URL = 'https://apidev.live.vkvideo.ru';
 
 interface AuthResponse {
   isNew: boolean;
@@ -159,8 +159,17 @@ export class VkVideoLiveApiClient {
 
   private async request<T>(config: RequestConfig): Promise<T> {
     try {
-      const { data } = await this.client.request<T>(config);
-      return data;
+      if (this.refreshPromise) {
+        const newAccessToken = await this.refreshPromise;
+        const { data } = await this.client.request<T>({
+          ...config,
+          headers: { ...config.headers, Authorization: `Bearer ${newAccessToken}` },
+        });
+        return data;
+      } else {
+        const { data } = await this.client.request<T>(config);
+        return data;
+      }
     } catch (error) {
       const axiosError = error as AxiosError;
       const status = axiosError.response?.status;
@@ -262,7 +271,7 @@ export class VkVideoLiveApiClient {
     });
   }
 
-  async setDemandStatus(channelUrl: string, demandIds: Array<string | number>, status: RedemptionStatus): Promise<void> {
+  async setDemandStatus(channelUrl: string, demandIds: (string | number)[], status: RedemptionStatus): Promise<void> {
     await this.request({
       method: 'POST',
       url: `/v1/channel_point/reward/demand/${status === RedemptionStatus.Fulfilled ? 'accept' : 'reject'}`,
@@ -318,37 +327,80 @@ export const getNearestVkVideoLiveColorIndex = (hex: string): number => {
   ).index;
 };
 
+interface RewardsDiff {
+  toCreate: TwitchRewardPresetDto[];
+  toUpdate: { preset: TwitchRewardPresetDto; existing: VkVideoLiveReward }[];
+  toDelete: VkVideoLiveReward[];
+}
+
+const getRawardsDiff = (
+  prefix: string,
+  presets: TwitchRewardPresetDto[],
+  existingRewards: VkVideoLiveReward[],
+): RewardsDiff => {
+  const existingByName = new Map(existingRewards.map((reward) => [reward.name, reward]));
+  const newByName = new Map(presets.map((reward) => [buildVkVideoLiveRewardName(prefix, reward.cost), reward]));
+
+  const toCreate = presets.filter((reward) => !existingByName.has(buildVkVideoLiveRewardName(prefix, reward.cost)));
+  const toUpdate = presets
+    .filter((reward) => existingByName.has(buildVkVideoLiveRewardName(prefix, reward.cost)))
+    .map((reward) => ({
+      preset: reward,
+      existing: existingByName.get(buildVkVideoLiveRewardName(prefix, reward.cost))!,
+    }));
+  const toDelete = existingRewards.filter((reward) => !newByName.has(reward.name));
+
+  return { toCreate, toUpdate, toDelete };
+};
+
+const createVKRewardDataFromPreset = (prefix: string, preset: TwitchRewardPresetDto): VkVideoLiveRewardRequest => ({
+  background_color: getNearestVkVideoLiveColorIndex(preset.color),
+  description: '',
+  is_message_required: true,
+  name: buildVkVideoLiveRewardName(prefix, preset.cost),
+  price: preset.cost,
+  repair_timeout: 0,
+});
+
 export const vkVideoLiveRewardsApi = {
   openRewards: async ({ presets, prefix }: Omit<TwitchRewardPresetsRequest, 'settingsId'>, channelUrl: string) => {
-    const existingRewards = await vkVideoLiveApiClient.getManageRewards(channelUrl);
-    const existingByName = new Map(existingRewards.map((reward) => [reward.name, reward]));
-
-    const activeRewards = await Promise.all(
-      presets.map(async ({ cost, color }) => {
-        const name = buildVkVideoLiveRewardName(prefix, cost);
-        const reward: VkVideoLiveRewardRequest = {
-          background_color: getNearestVkVideoLiveColorIndex(color),
-          description: '',
-          id: existingByName.get(name)?.id,
-          is_message_required: true,
-          name,
-          price: cost,
-          repair_timeout: 0,
-        };
-        const existing = existingByName.get(name);
-
-        if (existing) {
-          await vkVideoLiveApiClient.editReward(channelUrl, existing.id, { ...existing, ...reward, id: existing.id });
-          await vkVideoLiveApiClient.setRewardEnabled(channelUrl, existing.id, true);
-          return { ...existing, ...reward, id: existing.id };
-        }
-
-        const id = await vkVideoLiveApiClient.createReward(channelUrl, reward);
-        return { ...reward, id };
-      }),
+    const { toCreate, toUpdate, toDelete } = getRawardsDiff(
+      prefix,
+      presets,
+      await vkVideoLiveApiClient.getManageRewards(channelUrl),
     );
 
-    return activeRewards;
+    const newActiveRewards: VkVideoLiveReward[] = [];
+
+    await Promise.all([
+      ...toCreate.map(
+        (reward) =>
+          new Promise<void>((resolve) => {
+            const newReward = createVKRewardDataFromPreset(prefix, reward);
+            vkVideoLiveApiClient.createReward(channelUrl, newReward).then((id) => {
+              newActiveRewards.push({ ...newReward, id });
+              resolve();
+            });
+          }),
+      ),
+      ...toUpdate.map(({ existing }) => {
+        return new Promise<void>((resolve) => {
+          vkVideoLiveApiClient.setRewardEnabled(channelUrl, existing.id, true).then(() => {
+            newActiveRewards.push(existing);
+            resolve();
+          });
+        });
+      }),
+      ...toDelete.map((reward) => {
+        return new Promise<void>((resolve) => {
+          vkVideoLiveApiClient.deleteReward(channelUrl, reward.id).then(() => {
+            resolve();
+          });
+        });
+      }),
+    ]);
+
+    return newActiveRewards;
   },
   hideRewards: async (channelUrl: string) => {
     const rewards = await vkVideoLiveApiClient.getManageRewards(channelUrl);

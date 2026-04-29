@@ -1,13 +1,34 @@
 import { Purchase } from '@reducers/Purchases/Purchases';
-import {
-  getVkVideoLivePaletteColor,
-  VkVideoLiveReward,
-} from '@api/vkVideoLiveApi';
+import { getVkVideoLivePaletteColor, VkVideoLiveReward } from '@api/vkVideoLiveApi';
+
+interface VkVideoLiveLinkMessagePart {
+  content: string;
+  url: string;
+}
+
+interface VkVideoLiveMentionMessagePart {
+  id: number;
+  nick: string;
+}
+
+interface VkVideoLiveSmileMessagePart {
+  id: number;
+  animated: boolean;
+  large_url: string;
+  medium_url: string;
+  small_url: string;
+  name: string;
+}
+
+interface VkVideoLiveTextMessagePart {
+  content: string;
+}
 
 interface VkVideoLiveMessagePart {
-  text?: string;
-  content?: string;
-  value?: string;
+  link?: VkVideoLiveLinkMessagePart;
+  mention?: VkVideoLiveMentionMessagePart;
+  smile?: VkVideoLiveSmileMessagePart;
+  text?: VkVideoLiveTextMessagePart;
 }
 
 interface VkVideoLiveRewardDemand {
@@ -55,7 +76,7 @@ const buildMessage = (demand: VkVideoLiveRewardDemand): string | undefined => {
   }
 
   const parts = demand.message_parts
-    ?.map((part) => part.text ?? part.content ?? part.value ?? '')
+    ?.map((part) => part.text?.content ?? part.link?.url ?? part.mention?.nick ?? part.smile?.name ?? '')
     .filter(Boolean)
     .join(' ')
     .trim();

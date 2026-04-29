@@ -2,11 +2,7 @@ import { Centrifuge, Subscription } from 'centrifuge';
 import { Store } from '@tanstack/react-store';
 import EventEmitter from 'eventemitter3';
 
-import {
-  vkVideoLiveApiClient,
-  vkVideoLiveRewardsApi,
-  VkVideoLiveReward,
-} from '@api/vkVideoLiveApi';
+import { vkVideoLiveApiClient, vkVideoLiveRewardsApi, VkVideoLiveReward } from '@api/vkVideoLiveApi';
 import * as Integration from '@models/integration';
 import { mergeAuthData } from '@reducers/User/User';
 import { store as appStore } from '@store';
@@ -95,7 +91,7 @@ export class VkVideoLivePubsubFlow implements Integration.PubsubFlow {
   }
 
   async connect(): Promise<void> {
-    this.store.setState({ subscribed: false, loading: true });
+    this.store.setState({ subscribed: true, loading: true });
 
     try {
       const channelUrl = this.getChannelUrl();
@@ -125,6 +121,7 @@ export class VkVideoLivePubsubFlow implements Integration.PubsubFlow {
   }
 
   async disconnect(): Promise<void> {
+    this.store.setState({ subscribed: false, loading: true });
     const channelUrl = appStore.getState().user.authData.vkVideoLive?.channelUrl;
 
     this.subscription?.unsubscribe();
