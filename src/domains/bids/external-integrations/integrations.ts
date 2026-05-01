@@ -1,6 +1,7 @@
 import donatePay from '@domains/bids/external-integrations/DonatePay';
 import da from '@domains/bids/external-integrations/DA';
 import twitch from '@domains/bids/external-integrations/Twitch';
+import kick from '@domains/bids/external-integrations/Kick';
 import vkVideoLive from '@domains/bids/external-integrations/VkVideoLive';
 import tourniquet from '@domains/bids/external-integrations/Tourniquet';
 import donatex from '@domains/bids/external-integrations/DonateX/index.tsx';
@@ -8,7 +9,7 @@ import ihaq from '@domains/bids/external-integrations/ihaq/lib/integrationScheme
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import donateHelper from '@domains/bids/external-integrations/donate-helper/lib/integrationScheme';
 
-const INTEGRATIONS = [donateHelper, donatex, twitch, vkVideoLive, da, donatePay, ihaq, tourniquet];
+const INTEGRATIONS = [ihaq, donateHelper, twitch, kick, vkVideoLive, da, donatePay, donatex, tourniquet];
 
 export default INTEGRATIONS;
 

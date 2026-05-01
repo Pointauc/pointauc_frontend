@@ -115,6 +115,7 @@ export class VkVideoLivePubsubFlow implements Integration.PubsubFlow {
       await Promise.all([connectedPromise, subscribedPromise]);
       this.store.setState({ subscribed: true, loading: false });
     } catch (err) {
+      console.error('VK Video Live pubsub connection error:', err);
       this.store.setState({ subscribed: false, loading: false });
       throw err;
     }

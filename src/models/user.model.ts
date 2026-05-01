@@ -19,6 +19,7 @@ export interface TwitchRewardPresetDto {
 
 export interface IntegrationData {
   twitchAuth: IntegrationDataDto;
+  kickAuth: IntegrationDataDto;
   vkVideoLiveAuth: IntegrationDataDto;
   daAuth: IntegrationDataDto;
   donatePayAuth: IntegrationDataDto;

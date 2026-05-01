@@ -55,7 +55,7 @@ const hotkeyDefinitions: HotkeyDefinitions = {
   [HOTKEY_ACTION_IDS.stopwatchAddTime]: {
     binding: '=',
     aliasBindings: [{ key: 'Add' }],
-    displayLabel: '+',
+    displayLabel: '=',
     enabledRoutes: [ROUTES.HOME],
     showTooltip: true,
     notification: {
@@ -73,7 +73,7 @@ const hotkeyDefinitions: HotkeyDefinitions = {
   },
   [HOTKEY_ACTION_IDS.stopwatchAddTimeDouble]: {
     binding: { key: '=', shift: true },
-    displayLabel: 'Shift + +',
+    displayLabel: 'Shift + =',
     enabledRoutes: [ROUTES.HOME],
     showTooltip: true,
     notification: {
@@ -110,7 +110,9 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: ({ enabled }, t) =>
         t('hotkeys.notifications.integrations.toggleGroup', {
           target: t('integration.groups.integrations'),
-          state: enabled ? t('hotkeys.notifications.integrations.enabled') : t('hotkeys.notifications.integrations.disabled'),
+          state: enabled
+            ? t('hotkeys.notifications.integrations.enabled')
+            : t('hotkeys.notifications.integrations.disabled'),
         }),
     },
   },
@@ -124,7 +126,9 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: ({ enabled }, t) =>
         t('hotkeys.notifications.integrations.toggleGroup', {
           target: t('integration.groups.donations'),
-          state: enabled ? t('hotkeys.notifications.integrations.enabled') : t('hotkeys.notifications.integrations.disabled'),
+          state: enabled
+            ? t('hotkeys.notifications.integrations.enabled')
+            : t('hotkeys.notifications.integrations.disabled'),
         }),
     },
   },
@@ -138,7 +142,9 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: ({ enabled }, t) =>
         t('hotkeys.notifications.integrations.toggleGroup', {
           target: t('integration.groups.channelPoints'),
-          state: enabled ? t('hotkeys.notifications.integrations.enabled') : t('hotkeys.notifications.integrations.disabled'),
+          state: enabled
+            ? t('hotkeys.notifications.integrations.enabled')
+            : t('hotkeys.notifications.integrations.disabled'),
         }),
     },
   },
@@ -164,10 +170,9 @@ export const resolveHotkeyDisplayLabel = (actionId: HotkeyActionId): string =>
   getHotkeyDefinition(actionId).displayLabel;
 
 export const resolveNavbarHotkeyActionId = (path: string): HotkeyActionId | undefined => {
-  return (Object.entries(hotkeyDefinitions) as [HotkeyActionId, HotkeyDefinitionRecord<HotkeyActionId>][])
-    .find(
+  return (Object.entries(hotkeyDefinitions) as [HotkeyActionId, HotkeyDefinitionRecord<HotkeyActionId>][]).find(
     ([, definition]) => definition.navbarPath === path,
-    )?.[0];
+  )?.[0];
 };
 
 export const resolveNavbarPathForAction = (actionId: HotkeyActionId): string | undefined => {

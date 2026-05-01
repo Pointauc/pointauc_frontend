@@ -17,6 +17,7 @@ export interface UserState extends UserInfo {
     donatePayEu?: IntegrationDataDto;
     da?: IntegrationDataDto;
     twitch?: IntegrationDataDto;
+    kick?: IntegrationDataDto;
     vkVideoLive?: IntegrationDataDto;
     tourniquet?: IntegrationDataDto;
     donatex?: IntegrationDataDto;

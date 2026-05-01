@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { findBestMatch } from 'string-similarity';
 
 import { updateRedemption } from '@api/twitchApi.ts';
+import { updateKickRedemption } from '@api/kickApi';
 import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import PointsIcon from '@assets/icons/channelPoints.svg?react';
 import donationBackground from '@assets/img/donationBackground.jpg';
@@ -95,6 +96,10 @@ const BidComponent: React.FC<BidComponentProps> = ({
       if (purchase.source === 'vkVideoLive') {
         const channelUrl = (store.getState() as RootState).user.authData.vkVideoLive?.channelUrl;
         return channelUrl ? vkVideoLiveRewardsApi.updateRedemption(requestData, channelUrl) : undefined;
+      }
+
+      if (purchase.source === 'kick') {
+        return updateKickRedemption(requestData);
       }
 
       return updateRedemption(requestData);

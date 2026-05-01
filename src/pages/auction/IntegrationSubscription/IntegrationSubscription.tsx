@@ -1,10 +1,8 @@
 import { FC, lazy, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Accordion, Divider, Group, Stack, Title } from '@mantine/core';
+import { Accordion, Group, Stack, Title } from '@mantine/core';
 
-import PubsubSwitch from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitch.tsx';
-import PubsubSwitchGroup from '@domains/bids/external-integrations/shared/pubsub/ui/PubsubSwitchGroup.tsx';
 import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
@@ -14,7 +12,8 @@ import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
 import { isProduction } from '@utils/common.utils';
 
-import classes from './IntegrationSubscription.module.css';
+import IntegrationSubscriptionLogins from './Logins.tsx';
+import IntegrationSubscriptionSwitches from './Switches.tsx';
 
 const MockBidButton = lazy(() => import('@pages/auction/MockBidForm/MockBidButton'));
 
@@ -27,21 +26,14 @@ const IntegrationSubscription: FC = () => {
     [user.authData],
   );
   const { donate, points } = useMemo(() => integrationUtils.groupBy.type(available), [available]);
-  const { partner: partnerIntegrations, regular: regularIntegrations } = useMemo(
-    () => integrationUtils.groupBy.partner(unavailable),
-    [unavailable],
-  );
   const labelClassNames = useMemo(
     () => ({
-      labelWrapper: classes.switchLabelWrapper,
-      body: classes.switchBody,
-      track: classes.switchTrack,
-      root: classes.switchRoot,
+      labelWrapper: 'grow',
+      body: 'w-full',
     }),
     [],
   );
 
-  const hasPartnerAndRegular = partnerIntegrations.length > 0 && regularIntegrations.length > 0;
   const availableSubscriptions = useMergedSubscriptionsState(available);
   const donateSubscriptions = useMergedSubscriptionsState(donate);
   const pointsSubscriptions = useMergedSubscriptionsState(points);
@@ -50,11 +42,17 @@ const IntegrationSubscription: FC = () => {
     return integrations.some((integration) => subscriptions[integration.id]?.loading);
   };
 
-  const checkAreAllSubscribed = (integrations: typeof available, subscriptions: typeof availableSubscriptions): boolean => {
+  const checkAreAllSubscribed = (
+    integrations: typeof available,
+    subscriptions: typeof availableSubscriptions,
+  ): boolean => {
     return integrations.length > 0 && integrations.every((integration) => subscriptions[integration.id]?.subscribed);
   };
 
-  const toggleIntegrations = (integrations: typeof available, subscriptions: typeof availableSubscriptions): boolean => {
+  const toggleIntegrations = (
+    integrations: typeof available,
+    subscriptions: typeof availableSubscriptions,
+  ): boolean => {
     const shouldEnable = !checkAreAllSubscribed(integrations, subscriptions);
 
     integrations.forEach((integration) => {
@@ -109,10 +107,10 @@ const IntegrationSubscription: FC = () => {
   );
 
   return (
-    <Accordion variant='separated' defaultValue='integrations' classNames={{ root: classes.accordion }}>
+    <Accordion variant='separated' defaultValue='integrations' className='mb-2.5 w-full'>
       <Accordion.Item value='integrations'>
         <Accordion.Control>
-          <Group align='center'>
+          <Group align='center' wrap='nowrap'>
             <Title order={4}>{t('auc.integrations')}</Title>
             {available.length > 0 && (
               <SwitchAllIntegrations
@@ -126,55 +124,14 @@ const IntegrationSubscription: FC = () => {
         </Accordion.Control>
         <Accordion.Panel>
           <Stack gap='sm'>
-            {donate.length <= 1 &&
-              donate.map((integration) => (
-                <PubsubSwitch
-                  key={integration.id}
-                  switchProps={{ classNames: labelClassNames }}
-                  integration={integration}
-                  hotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleDonations}
-                />
-              ))}
-            {donate.length > 1 && (
-              <PubsubSwitchGroup
-                integrations={donate}
-                classNames={labelClassNames}
-                labelText={t('integration.groups.donations')}
-                hotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleDonations}
-              />
-            )}
-            {points.length <= 1 &&
-              points.map((integration) => (
-                <PubsubSwitch
-                  key={integration.id}
-                  switchProps={{ classNames: labelClassNames }}
-                  integration={integration}
-                  hotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleChannelPoints}
-                />
-              ))}
-            {points.length > 1 && (
-              <PubsubSwitchGroup
-                integrations={points}
-                classNames={labelClassNames}
-                labelText={t('integration.groups.channelPoints')}
-                hotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleChannelPoints}
-              />
-            )}
-            {partnerIntegrations.map((integration) => (
-              <integration.authFlow.loginComponent
-                key={integration.id}
-                id={integration.id}
-                branding={integration.branding}
-              />
-            ))}
-            {hasPartnerAndRegular && <Divider />}
-            {regularIntegrations.map((integration) => (
-              <integration.authFlow.loginComponent
-                key={integration.id}
-                id={integration.id}
-                branding={integration.branding}
-              />
-            ))}
+            <IntegrationSubscriptionSwitches
+              donationIntegrations={donate}
+              channelPointIntegrations={points}
+              labelClassNames={labelClassNames}
+              donationHotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleDonations}
+              channelPointsHotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleChannelPoints}
+            />
+            <IntegrationSubscriptionLogins integrations={unavailable} />
             {!isProduction() && <MockBidButton />}
           </Stack>
         </Accordion.Panel>

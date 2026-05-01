@@ -46,6 +46,8 @@ jobs:
           VITE_SENTRY_ENVIRONMENT: ${{ secrets.VITE_SENTRY_ENVIRONMENT }}
           VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
           VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
+          VITE_VK_VIDEO_LIVE_CLIENT_ID: ${{ secrets.VITE_VK_VIDEO_LIVE_CLIENT_ID }}
+          VITE_KICK_CLIENT_ID: ${{ secrets.VITE_KICK_CLIENT_ID }}
         run: pnpm build:ssg
 
       - name: Build documentation

@@ -1,4 +1,5 @@
-import { Button, Group, Text } from '@mantine/core';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { Badge, Button, Group, Text } from '@mantine/core';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
@@ -9,15 +10,24 @@ interface IntegrationLoginButtonProps {
   id: Integration.ID;
   onClick: () => void;
   classes?: Integration.LoginButtonClasses;
+  showPartnerChip?: boolean;
+  color?: string;
 }
 
-const IntegrationLoginButton = ({ branding, id, onClick, classes }: IntegrationLoginButtonProps) => {
+const IntegrationLoginButton = ({
+  branding,
+  id,
+  onClick,
+  classes,
+  showPartnerChip,
+  color,
+}: IntegrationLoginButtonProps) => {
   const { t } = useTranslation();
   const { icon: Icon, partner, description } = branding;
   const isPartner = partner && description;
 
   if (isPartner) {
-    return (
+    const button = (
       <Button
         className={clsx('h-auto min-h-[56px] px-4 py-2', classes?.button)}
         classNames={{ label: 'flex flex-col items-start' }}
@@ -34,6 +44,19 @@ const IntegrationLoginButton = ({ branding, id, onClick, classes }: IntegrationL
         <Text size='xs'>{description}</Text>
       </Button>
     );
+
+    if (!showPartnerChip) {
+      return button;
+    }
+
+    return (
+      <div className='relative'>
+        {button}
+        <Badge className='pointer-events-none absolute -top-1 -right-1 rounded-full' color='green.6' variant='filled'>
+          <ThumbUpIcon sx={{ fontSize: 12 }} />
+        </Badge>
+      </div>
+    );
   }
 
   return (
@@ -43,6 +66,7 @@ const IntegrationLoginButton = ({ branding, id, onClick, classes }: IntegrationL
       leftSection={<Icon size={22} classes={classes?.icon} />}
       onClick={onClick}
       data-integration={id}
+      color={color}
     >
       {t(`integration.${id}.name`)}
     </Button>

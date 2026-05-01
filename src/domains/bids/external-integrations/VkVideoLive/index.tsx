@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth/redirect/LoginButton';
 import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers';
@@ -8,6 +10,8 @@ import * as Integration from '@models/integration';
 import { mergeAuthData } from '@reducers/User/User';
 import { store } from '@store';
 import { isBrowser } from '@utils/ssr';
+
+import styles from './index.module.css';
 
 const id: Integration.ID = 'vkVideoLive';
 const redirectUri = isBrowser ? `${window.location.origin}/${id}/redirect` : '';
@@ -36,7 +40,13 @@ const redirectFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authP
 const authFlow: Integration.RedirectFlow = {
   ...redirectFlow,
   validate: () => Boolean(store.getState().user.authData.vkVideoLive?.isValid && vkVideoLiveAuthApi.getAccessToken()),
-  loginComponent: ({ ...props }) => <RedirectLoginButton {...props} buildUrl={redirectFlow.url} />,
+  loginComponent: ({ ...props }) => (
+    <RedirectLoginButton
+      {...props}
+      classes={{ ...props.classes, icon: clsx(props.classes?.icon, styles.buttonIcon) }}
+      buildUrl={redirectFlow.url}
+    />
+  ),
   revoke: async () => {
     await vkVideoLiveAuthApi.revoke();
     integrationUtils.session.remove(id, 'pubsubToken2');

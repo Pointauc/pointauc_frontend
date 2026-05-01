@@ -25,8 +25,15 @@ const authFlow: Integration.RedirectFlow = {
   revoke: () => {
     store.dispatch(mergeAuthData({ [id]: undefined }));
   },
-  loginComponent: ({ id, branding, classes }: Integration.LoginButtonProps) => (
-    <RedirectLoginButton id={id} branding={branding} buildUrl={buildAuthUrl} classes={classes} />
+  loginComponent: ({ id, branding, classes, showPartnerChip, ...props }: Integration.LoginButtonProps) => (
+    <RedirectLoginButton
+      id={id}
+      branding={branding}
+      buildUrl={buildAuthUrl}
+      classes={classes}
+      showPartnerChip={showPartnerChip}
+      {...props}
+    />
   ),
   validate: () => true,
   url: buildAuthUrl,
@@ -34,9 +41,16 @@ const authFlow: Integration.RedirectFlow = {
   redirectCodeQueryKey: QUERIES.REQUEST_ID,
 };
 
-const Icon = () => {
+const Icon = ({ classes, size }: Integration.IconProps) => {
   return (
-    <svg width='28' height='28' viewBox='0 0 28 28' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg
+      width={size || 28}
+      height={size || 28}
+      className={classes}
+      viewBox='0 0 28 28'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
       <rect width='28' height='28' rx='8' fill='#FFFF00'></rect>
       <line x1='17.6345' y1='20.6207' x2='12.6344' y2='9.6207' stroke='black' stroke-width='3'></line>
       <line x1='9.56326' y1='20.569' x2='12.5633' y2='10.569' stroke='black' stroke-width='3'></line>

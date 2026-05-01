@@ -1,6 +1,7 @@
 import { HubConnectionBuilder, HubConnectionState, LogLevel, type HubConnection } from '@microsoft/signalr';
 import { Store } from '@tanstack/react-store';
 import EventEmitter from 'eventemitter3';
+import clsx from 'clsx';
 
 import DonateXSvg from '@assets/icons/donatex.svg';
 import { InvalidTokenError } from '@domains/bids/external-integrations/shared/helpers.ts';
@@ -56,7 +57,7 @@ const revoke = () => {
   store.dispatch(mergeAuthData({ donatex: undefined }));
 };
 
-const DonateXLoginButton = ({ id, branding, classes }: Integration.LoginButtonProps) => {
+const DonateXLoginButton = ({ id, branding, classes, showPartnerChip }: Integration.LoginButtonProps) => {
   const handleAuth = async (): Promise<void> => {
     try {
       const url = await buildAuthorizeUrl();
@@ -72,6 +73,7 @@ const DonateXLoginButton = ({ id, branding, classes }: Integration.LoginButtonPr
       branding={branding}
       onClick={() => void handleAuth()}
       classes={{ ...classes, button: `${classes?.button ?? ''} ${styles.loginButton}` }}
+      showPartnerChip={showPartnerChip}
     />
   );
 };
@@ -165,7 +167,21 @@ const donatex: Integration.Config = {
   authFlow,
   pubsubFlow: buildSignalRFlow(),
   branding: {
-    icon: () => <img src={DonateXSvg} alt='DonateX' className={styles.icon} />,
+    icon: ({ classes, size = 22 }: Integration.IconProps) => {
+      const negativePaddings = Math.round(size * 0.36);
+      return (
+        <div className='flex items-center justify-center' style={{ width: size, height: size }}>
+          <img
+            src={DonateXSvg}
+            alt='DonateX'
+            className={clsx(classes, styles.icon)}
+            style={{ margin: `-${negativePaddings / 2}px` }}
+            width={size + negativePaddings}
+            height={size + negativePaddings}
+          />
+        </div>
+      );
+    },
   },
 };
 

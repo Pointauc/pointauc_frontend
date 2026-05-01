@@ -1,49 +1,5 @@
 import { Purchase } from '@reducers/Purchases/Purchases';
-import { getVkVideoLivePaletteColor, VkVideoLiveReward } from '@api/vkVideoLiveApi';
-
-interface VkVideoLiveLinkMessagePart {
-  content: string;
-  url: string;
-}
-
-interface VkVideoLiveMentionMessagePart {
-  id: number;
-  nick: string;
-}
-
-interface VkVideoLiveSmileMessagePart {
-  id: number;
-  animated: boolean;
-  large_url: string;
-  medium_url: string;
-  small_url: string;
-  name: string;
-}
-
-interface VkVideoLiveTextMessagePart {
-  content: string;
-}
-
-interface VkVideoLiveMessagePart {
-  link?: VkVideoLiveLinkMessagePart;
-  mention?: VkVideoLiveMentionMessagePart;
-  smile?: VkVideoLiveSmileMessagePart;
-  text?: VkVideoLiveTextMessagePart;
-}
-
-interface VkVideoLiveRewardDemand {
-  created_at?: number | string;
-  id: number | string;
-  message?: string;
-  message_parts?: VkVideoLiveMessagePart[];
-  reward?: {
-    id?: number | string;
-  };
-  user?: {
-    nick?: string;
-    username?: string;
-  };
-}
+import { getVkVideoLivePaletteColor, VkVideoLiveReward, VkVideoLiveRewardDemand } from '@api/vkVideoLiveApi';
 
 interface VkVideoLivePublication {
   data?: {

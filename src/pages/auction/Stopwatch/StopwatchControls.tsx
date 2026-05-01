@@ -23,6 +23,7 @@ interface StopwatchControlsProps {
   onAddTime: () => void;
   onSubtractTime: () => void;
   onAddDoubleTime: () => void;
+  onControlButtonClick?: (buttonName: string) => void;
 }
 
 const StopwatchControls: FC<StopwatchControlsProps> = ({
@@ -33,6 +34,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
   onAddTime,
   onSubtractTime,
   onAddDoubleTime,
+  onControlButtonClick,
 }) => {
   const { t } = useTranslation();
 
@@ -88,7 +90,10 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
         {checkIsStopped ? (
           <ActionIcon
             color='gray.0'
-            onClick={onStart}
+            onClick={() => {
+              onControlButtonClick?.('toggle');
+              onStart();
+            }}
             title={t('stopwatch.continue')}
             size='xl'
             variant='subtle'
@@ -100,7 +105,10 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
         ) : (
           <ActionIcon
             color='gray.0'
-            onClick={onStop}
+            onClick={() => {
+              onControlButtonClick?.('toggle');
+              onStop();
+            }}
             title={t('stopwatch.pause')}
             size='xl'
             variant='subtle'
@@ -113,7 +121,10 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
       </HotkeyTooltip>
       <ActionIcon
         color='gray.0'
-        onClick={onReset}
+        onClick={() => {
+          onControlButtonClick?.('reset');
+          onReset();
+        }}
         title={t('stopwatch.reset')}
         size='xl'
         variant='subtle'
@@ -130,7 +141,10 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
       >
         <ActionIcon
           color='gray.0'
-          onClick={onAddTime}
+          onClick={() => {
+            onControlButtonClick?.('addTime');
+            onAddTime();
+          }}
           title={t('stopwatch.addTime')}
           size='xl'
           variant='subtle'
@@ -148,7 +162,10 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
       >
         <ActionIcon
           color='gray.0'
-          onClick={onSubtractTime}
+          onClick={() => {
+            onControlButtonClick?.('subtractTime');
+            onSubtractTime();
+          }}
           title={t('stopwatch.reduceTime')}
           size='xl'
           variant='subtle'
@@ -166,7 +183,10 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
       >
         <ActionIcon
           color='gray.0'
-          onClick={onAddDoubleTime}
+          onClick={() => {
+            onControlButtonClick?.('addDoubleTime');
+            onAddDoubleTime();
+          }}
           title={t('stopwatch.addTimex2')}
           size='xl'
           variant='subtle'

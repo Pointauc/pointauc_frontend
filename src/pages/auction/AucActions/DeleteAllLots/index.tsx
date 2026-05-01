@@ -1,7 +1,8 @@
-import { Anchor, Button, Tooltip } from '@mantine/core';
+import { Anchor, Button, Popover, Tooltip } from '@mantine/core';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 
 import { AlertTypeEnum } from '@models/alert.model.ts';
 import { RootState } from '@reducers';
@@ -14,6 +15,7 @@ const DeleteAllLots = () => {
   const { t } = useTranslation();
   const slots = useSelector((rootReducer: RootState) => rootReducer.slots.slots);
   const purchases = useSelector((rootReducer: RootState) => rootReducer.purchases.purchases);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleResetSlots = (): void => {
     dispatch(resetSlots());
@@ -46,11 +48,25 @@ const DeleteAllLots = () => {
     );
   };
 
+  const handleConfirm = () => {
+    setShowConfirm(false);
+    handleResetSlots();
+  };
+
   return (
     <Tooltip label={t('auc.clearAll')}>
-      <Button onClick={handleResetSlots} size='sm' variant='outline' color='primary.3'>
-        <DeleteSweepIcon />
-      </Button>
+      <Popover position='top' offset={-1} opened={showConfirm}>
+        <Popover.Target>
+          <Button size='sm' onClick={() => setShowConfirm((prev) => !prev)} variant='outline' color='primary.3'>
+            <DeleteSweepIcon />
+          </Button>
+        </Popover.Target>
+        <Popover.Dropdown p='4'>
+          <Button color='red' size='xs' variant='light' onClick={handleConfirm}>
+            {t('common.confirm')}
+          </Button>
+        </Popover.Dropdown>
+      </Popover>
     </Tooltip>
   );
 };

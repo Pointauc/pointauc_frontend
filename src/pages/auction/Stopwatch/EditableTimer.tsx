@@ -2,6 +2,7 @@ import { InputBase, Text, Tooltip } from '@mantine/core';
 import clsx from 'clsx';
 import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
+import { useTranslation } from 'react-i18next';
 
 import classes from './Stopwatch.module.css';
 import { TimerPriority, TimerType } from './stopwatch.constants';
@@ -19,6 +20,8 @@ interface EditableTimerProps {
   onResumeStopwatch: () => void;
   onTimeChanged?: (timeLeft: number) => void;
   onTimeEdited?: (timerType: TimerType) => void;
+  showManualEditHint?: boolean;
+  hideManualEditHint?: () => void;
 }
 
 const TIMER_MASK = '00:00:00';
@@ -36,11 +39,14 @@ const EditableTimer: FC<EditableTimerProps> = ({
   onResumeStopwatch,
   onTimeChanged,
   onTimeEdited,
+  showManualEditHint,
+  hideManualEditHint,
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const checkShouldResumeAfterEditing = useRef(false);
   const [editingValue, setEditingValue] = useState('');
   const [checkIsEditing, setCheckIsEditing] = useState(false);
+  const { t } = useTranslation();
 
   const checkIsPrimary = priority === TimerPriority.Primary;
   const checkCanEdit = showControls && checkIsPrimary;
@@ -59,6 +65,16 @@ const EditableTimer: FC<EditableTimerProps> = ({
       inputRef.current.select();
     }
   }, [checkIsEditing]);
+
+  useEffect(() => {
+    if (showManualEditHint) {
+      const timeoutId = window.setTimeout(() => {
+        hideManualEditHint?.();
+      }, 7000);
+
+      return () => window.clearTimeout(timeoutId);
+    }
+  }, [showManualEditHint, hideManualEditHint]);
 
   const finishEditing = (checkCommit: boolean): void => {
     if (!checkIsEditing) {
@@ -89,6 +105,7 @@ const EditableTimer: FC<EditableTimerProps> = ({
     if (!checkCanEdit) {
       return;
     }
+    hideManualEditHint?.();
 
     checkShouldResumeAfterEditing.current = !checkIsStopwatchStopped;
     if (!checkIsStopwatchStopped) {
@@ -143,14 +160,16 @@ const EditableTimer: FC<EditableTimerProps> = ({
       events={{ hover: true, focus: true, touch: false }}
       withArrow
     >
-      <Text
-        className={displayClassName}
-        ref={controller.textRef}
-        c={controller.timerType === 'total' ? 'primary' : undefined}
-        onClick={startEditing}
-        onKeyDown={handleDisplayKeyDown}
-        tabIndex={showControls ? 0 : -1}
-      />
+      <Tooltip label={t('stopwatch.keyboardEditHint')} withArrow opened={showManualEditHint} position='left'>
+        <Text
+          className={displayClassName}
+          ref={controller.textRef}
+          c={controller.timerType === 'total' ? 'primary' : undefined}
+          onClick={startEditing}
+          onKeyDown={handleDisplayKeyDown}
+          tabIndex={showControls ? 0 : -1}
+        />
+      </Tooltip>
     </Tooltip>
   );
 };

@@ -7,7 +7,7 @@ import * as Integration from '@models/integration';
 import AuthModal from './AuthModal.tsx';
 import styles from './LoginButton.module.css';
 
-const DonateHelperLoginButton = ({ id, branding, classes }: Integration.LoginButtonProps) => {
+const DonateHelperLoginButton = ({ id, branding, classes, showPartnerChip }: Integration.LoginButtonProps) => {
   const [opened, setOpened] = useState(false);
 
   return (
@@ -18,6 +18,7 @@ const DonateHelperLoginButton = ({ id, branding, classes }: Integration.LoginBut
         branding={branding}
         onClick={() => setOpened(true)}
         classes={{ ...classes, button: clsx(styles.loginButton, classes?.button) }}
+        showPartnerChip={showPartnerChip}
       />
     </>
   );

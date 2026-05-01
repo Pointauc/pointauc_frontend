@@ -28,8 +28,14 @@ export const buildRedirectAuthFlow = ({
     authenticate,
     url: () => authUrl.toString(),
     validate: () => true,
-    loginComponent: ({ id, branding, classes }: Integration.LoginButtonProps) => (
-      <RedirectLoginButton id={id} branding={branding} buildUrl={() => authUrl.toString()} classes={classes} />
+    loginComponent: ({ id, branding, classes, showPartnerChip }: Integration.LoginButtonProps) => (
+      <RedirectLoginButton
+        id={id}
+        branding={branding}
+        buildUrl={() => authUrl.toString()}
+        classes={classes}
+        showPartnerChip={showPartnerChip}
+      />
     ),
     revoke: () => {
       store.dispatch(mergeAuthData({ [id]: undefined }));

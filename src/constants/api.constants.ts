@@ -1,5 +1,11 @@
 const ENDPOINTS = {
   TWITCH_AUTH: '/api/twitch/auth',
+  KICK_AUTH_STATE: '/api/kick/auth/state',
+  KICK_AUTH: '/api/kick/auth',
+  KICK_REWARDS: '/api/kick/rewards',
+  KICK_REDEMPTIONS: '/api/kick/redemptions',
+  KICK_REDEMPTIONS_BATCH: '/api/kick/redemptions/batch',
+  KICK_REVOKE: '/api/kick/revoke',
   TWITCH_REWARDS: '/api/twitch/rewards',
   TWITCH_REDEMPTIONS: '/api/twitch/redemptions',
   TWITCH_REDEMPTIONS_BATCH: '/api/twitch/redemptions/batch',
@@ -7,6 +13,7 @@ const ENDPOINTS = {
   VK_VIDEO_LIVE_AUTH: '/api/vkVideoLive/auth',
   VK_VIDEO_LIVE_REFRESH: '/api/vkVideoLive/refresh',
   VK_VIDEO_LIVE_REVOKE: '/api/vkVideoLive/revoke',
+  VK_VIDEO_LIVE_REDEMPTIONS_REJECT_ALL: '/api/vkVideoLive/redemptions/reject-all',
   DA_AUTH: '/api/da/auth',
   TWITCH_CHANNEL_POINTS: '/api/twitch/channelPoints',
   CAMILLE_BOT: '/api/requests/camilleBot',
@@ -56,3 +63,4 @@ const ENDPOINTS = {
 };
 
 export default ENDPOINTS;
+

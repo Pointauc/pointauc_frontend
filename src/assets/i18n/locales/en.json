@@ -128,10 +128,15 @@
     "support": "Support the website"
   },
   "integration": {
+    "connectServices": "Connect Apps",
     "groups": {
       "donations": "Donations",
       "channelPoints": "Channel Points",
       "integrations": "Integrations"
+    },
+    "modalWindow": {
+      "donations": "Donation Services",
+      "channelPoints": "Streaming Services"
     },
     "donatePay": {
       "name": "Donate Pay",
@@ -195,6 +200,9 @@
           "copyErrorMessage": "Copy error message"
         }
       }
+    },
+    "kick": {
+      "name": "Kick"
     },
     "vkVideoLive": {
       "name": "VK Video Live"
@@ -795,6 +803,7 @@
     "addTime": "Add Time",
     "addTimex2": "Add Time X2",
     "clickToEdit": "Click to edit",
+    "keyboardEditHint": "Tip: click the timer text to enter time from keyboard",
     "continue": "Continue",
     "pause": "Pause",
     "reduceTime": "Reduce Time",

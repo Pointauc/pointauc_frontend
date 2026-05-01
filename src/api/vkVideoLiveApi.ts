@@ -85,7 +85,63 @@ interface ChannelResponse {
   };
 }
 
+interface VkVideoLiveLinkMessagePart {
+  content: string;
+  url: string;
+}
+
+interface VkVideoLiveMentionMessagePart {
+  id: number;
+  nick: string;
+}
+
+interface VkVideoLiveSmileMessagePart {
+  id: number;
+  animated: boolean;
+  large_url: string;
+  medium_url: string;
+  small_url: string;
+  name: string;
+}
+
+interface VkVideoLiveTextMessagePart {
+  content: string;
+}
+
+interface VkVideoLiveMessagePart {
+  link?: VkVideoLiveLinkMessagePart;
+  mention?: VkVideoLiveMentionMessagePart;
+  smile?: VkVideoLiveSmileMessagePart;
+  text?: VkVideoLiveTextMessagePart;
+}
+
+export interface VkVideoLiveRewardDemand {
+  created_at?: number | string;
+  id: number | string;
+  message?: string;
+  message_parts?: VkVideoLiveMessagePart[];
+  reward?: {
+    id?: number | string;
+  };
+  user?: {
+    nick?: string;
+    username?: string;
+  };
+}
+
+export interface VkVideoLiveRewardDemandResponse {
+  data: {
+    demands: VkVideoLiveRewardDemand[];
+  };
+  extra: {
+    offset: number;
+    is_last: boolean;
+  };
+}
+
 type RequestConfig = AxiosRequestConfig & { hasRetried?: boolean };
+
+const MAX_DEMANDS_BATCH_SIZE = 100;
 
 const setStoredToken = (token: string): void => {
   integrationUtils.storage.set(INTEGRATION_ID, 'authToken', token);
@@ -263,7 +319,13 @@ export class VkVideoLiveApiClient {
     });
   }
 
-  async deleteReward(channelUrl: string, rewardId: string): Promise<void> {
+  async deleteReward(channelUrl: string, rewardId: string, isEnabled: boolean): Promise<void> {
+    if (isEnabled) {
+      await this.setRewardEnabled(channelUrl, rewardId, false);
+    }
+
+    await this.rejectAllRedemptions(channelUrl, rewardId);
+
     await this.request({
       method: 'POST',
       url: '/v1/channel_point/reward/delete',
@@ -278,6 +340,54 @@ export class VkVideoLiveApiClient {
       params: { channel_url: channelUrl },
       data: { demands: demandIds.map((id) => ({ id: Number(id) })) },
     });
+  }
+
+  async getDemands(channelUrl: string, rewardId: string): Promise<VkVideoLiveRewardDemand[]> {
+    const demands: VkVideoLiveRewardDemand[] = [];
+    let offset = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await this.request<VkVideoLiveRewardDemandResponse>({
+        method: 'GET',
+        url: '/v1/channel_point/reward/demands',
+        params: { channel_url: channelUrl, reward_id: rewardId, limit: MAX_DEMANDS_BATCH_SIZE, offset },
+      });
+
+      demands.push(...response.data.demands);
+
+      if (response.extra.is_last) {
+        hasMore = false;
+      } else {
+        offset = response.extra.offset;
+      }
+    }
+    return demands;
+  }
+
+  async rejectAllRedemptions(channelUrl: string, rewardId: string): Promise<void> {
+    const demands = await this.getDemands(channelUrl, rewardId);
+    if (demands.length > 0) {
+      await this.setDemandStatus(
+        channelUrl,
+        demands.map((demand) => demand.id),
+        RedemptionStatus.Fulfilled,
+      ).catch(() => {
+        // Fallback to rejecting by batch
+        const promises: Promise<void>[] = [];
+        for (let i = 0; i < demands.length; i += MAX_DEMANDS_BATCH_SIZE) {
+          const batch = demands.slice(i, i + MAX_DEMANDS_BATCH_SIZE);
+          promises.push(
+            this.setDemandStatus(
+              channelUrl,
+              batch.map((demand) => demand.id),
+              RedemptionStatus.Fulfilled,
+            ),
+          );
+        }
+        return Promise.all(promises);
+      });
+    }
   }
 }
 
@@ -375,27 +485,36 @@ export const vkVideoLiveRewardsApi = {
     await Promise.all([
       ...toCreate.map(
         (reward) =>
-          new Promise<void>((resolve) => {
+          new Promise<void>((resolve, reject) => {
             const newReward = createVKRewardDataFromPreset(prefix, reward);
-            vkVideoLiveApiClient.createReward(channelUrl, newReward).then((id) => {
-              newActiveRewards.push({ ...newReward, id });
-              resolve();
-            });
+            vkVideoLiveApiClient
+              .createReward(channelUrl, newReward)
+              .then((id) => {
+                newActiveRewards.push({ ...newReward, id });
+                resolve();
+              })
+              .catch(reject);
           }),
       ),
       ...toUpdate.map(({ existing }) => {
-        return new Promise<void>((resolve) => {
-          vkVideoLiveApiClient.setRewardEnabled(channelUrl, existing.id, true).then(() => {
-            newActiveRewards.push(existing);
-            resolve();
-          });
+        return new Promise<void>((resolve, reject) => {
+          vkVideoLiveApiClient
+            .setRewardEnabled(channelUrl, existing.id, true)
+            .then(() => {
+              newActiveRewards.push(existing);
+              resolve();
+            })
+            .catch(reject);
         });
       }),
       ...toDelete.map((reward) => {
-        return new Promise<void>((resolve) => {
-          vkVideoLiveApiClient.deleteReward(channelUrl, reward.id).then(() => {
-            resolve();
-          });
+        return new Promise<void>((resolve, reject) => {
+          vkVideoLiveApiClient
+            .deleteReward(channelUrl, reward.id, !reward.is_disabled)
+            .then(() => {
+              resolve();
+            })
+            .catch(reject);
         });
       }),
     ]);
@@ -408,7 +527,9 @@ export const vkVideoLiveRewardsApi = {
   },
   deleteRewards: async (channelUrl: string) => {
     const rewards = await vkVideoLiveApiClient.getManageRewards(channelUrl);
-    await Promise.all(rewards.map((reward) => vkVideoLiveApiClient.deleteReward(channelUrl, reward.id)));
+    await Promise.all(
+      rewards.map((reward) => vkVideoLiveApiClient.deleteReward(channelUrl, reward.id, !reward.is_disabled)),
+    );
   },
   updateRedemption: async (data: PatchRedemptionDto, channelUrl: string) => {
     await vkVideoLiveApiClient.setDemandStatus(channelUrl, [data.redemptionId], data.status as RedemptionStatus);

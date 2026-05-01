@@ -1,4 +1,4 @@
-import { Component, FC, FunctionComponent, JSX } from 'react';
+import { FC, FunctionComponent } from 'react';
 import { Store } from '@tanstack/react-store';
 import EventEmitter from 'eventemitter3';
 
@@ -8,6 +8,7 @@ export type ID =
   | 'donatePay'
   | 'da'
   | 'twitch'
+  | 'kick'
   | 'vkVideoLive'
   | 'tourniquet'
   | 'ihaq'
@@ -25,6 +26,7 @@ export interface LoginButtonProps {
   id: ID;
   branding: Branding;
   classes?: LoginButtonClasses;
+  showPartnerChip?: boolean;
 }
 
 export interface PubsubComponentProps {
@@ -36,7 +38,7 @@ export enum IconSize {
   MEDIUM = 32,
 }
 
-interface IconProps {
+export interface IconProps {
   /**
    * Size of the icon in pixels. Possible values are 22px and 32px.
    */

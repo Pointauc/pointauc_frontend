@@ -89,10 +89,15 @@
     "support": "Поддержать сайт"
   },
   "integration": {
+    "connectServices": "Подключить Сервисы",
     "groups": {
       "donations": "Донаты",
-      "channelPoints": "Баллы канала",
+      "channelPoints": "Баллы",
       "integrations": "Интеграции"
+    },
+    "modalWindow": {
+      "donations": "Донатные сервисы",
+      "channelPoints": "Стриминговые сервисы"
     },
     "donatePay": {
       "name": "Donate Pay",
@@ -156,6 +161,9 @@
           "copyErrorMessage": "Скопировать сообщение об ошибке"
         }
       }
+    },
+    "kick": {
+      "name": "Kick"
     },
     "vkVideoLive": {
       "name": "VK Video Live"
@@ -1043,6 +1051,7 @@
   },
   "stopwatch": {
     "clickToEdit": "Нажмите, чтобы редактировать",
+    "keyboardEditHint": "Подсказка: нажмите на таймер, чтобы ввести время с клавиатуры",
     "continue": "Продолжить",
     "pause": "Пауза",
     "reset": "Обнулить",

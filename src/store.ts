@@ -72,7 +72,7 @@ const getAutosaveEvents = () => {
 
 const saveSlotsWithCooldown = throttle(
   ({ slots, purchases }: { slots: Slot[]; purchases: RootState['purchases']['purchases'] }) => {
-    if (!isBrowser) return;
+    if (!isBrowser || slots.length === 1) return;
     const data = createArchiveData({
       lots: slotsToArchivedLots(slots),
       purchases,

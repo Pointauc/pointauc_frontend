@@ -118,7 +118,7 @@ export const useLotLinkParsing = ({
               />
             ),
             color: 'blue',
-            autoClose: false,
+            autoClose: 8_000,
             withCloseButton: true,
             position: 'bottom-right',
           });

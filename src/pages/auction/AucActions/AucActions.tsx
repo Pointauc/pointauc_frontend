@@ -1,17 +1,11 @@
-import { ActionIcon, Button, Group, Text, Tooltip } from '@mantine/core';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { Button, Group, Popover, Text, Tooltip } from '@mantine/core';
 import CompressIcon from '@mui/icons-material/Compress';
 import DownloadIcon from '@mui/icons-material/Download';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import PercentIcon from '@mui/icons-material/Percent';
-import PestControlIcon from '@mui/icons-material/PestControl';
-import SaveIcon from '@mui/icons-material/Save';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { IconDeviceFloppy } from '@tabler/icons-react';
 import { ThunkDispatch } from '@reduxjs/toolkit';
+import { IconDeviceFloppy } from '@tabler/icons-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,18 +13,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateSettings } from '@api/userApi';
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
 import { LINE_BREAK } from '@constants/common.constants.ts';
+import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
 import { Slot } from '@models/slot.model.ts';
 import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
 import { RootState } from '@reducers';
-import {
-  saveSettings,
-  setAutoScroll,
-  setCompact,
-  setShowChances,
-  setShowRules,
-} from '@reducers/AucSettings/AucSettings';
+import { setAutoScroll, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings';
 import { loadFile } from '@utils/common.utils.ts';
-import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
 
 import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 

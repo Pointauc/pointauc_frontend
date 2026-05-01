@@ -7,6 +7,7 @@ import { useStore } from '@tanstack/react-store';
 
 import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import { closeTwitchRewards } from '@api/twitchApi.ts';
+import { closeKickRewards } from '@api/kickApi';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
@@ -39,6 +40,10 @@ const deleteRewards = async (integration: Integration.Config): Promise<void> => 
     if (vkChannelUrl) {
       await vkVideoLiveRewardsApi.deleteRewards(vkChannelUrl);
     }
+  }
+
+  if (integration.id === 'kick') {
+    await closeKickRewards();
   }
 };
 
@@ -102,10 +107,10 @@ const ChannelPointsSection = () => {
       title={t('settings.website.toc.channelPoints')}
       icon={<PointsIcon width={24} height={24} />}
     >
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-2'>
         {unavailable.length > 0 && (
           <SettingsCard>
-            <div className='flex flex-col gap-2.5 p-4'>
+            <div className='grid grid-cols-4 gap-2.5 p-4'>
               {unavailable.map((integration) => (
                 <integration.authFlow.loginComponent
                   key={integration.id}

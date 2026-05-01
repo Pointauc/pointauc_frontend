@@ -1,16 +1,15 @@
-import React from 'react';
+import { notifications } from '@mantine/notifications';
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Navigate, useLocation } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
-import { notifications } from '@mantine/notifications';
 
-import { getQueryValue } from '@utils/url.utils.ts';
-import { QUERIES } from '@constants/common.constants.ts';
-import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
 import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
+import { QUERIES } from '@constants/common.constants.ts';
 import ROUTES from '@constants/routes.constants.ts';
 import * as Integration from '@models/integration';
+import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
+import { getQueryValue } from '@utils/url.utils.ts';
 
 interface RedirectPageProps {
   integration: Integration.Config<Integration.RedirectFlow>;
@@ -50,7 +49,7 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
   }
 
   if (authQuery.isSuccess) {
-    return <Navigate to={ROUTES.INTEGRATIONS} />;
+    return <Navigate to={ROUTES.HOME} />;
   }
 
   return <LoadingPage helpText={t('common.authProgress')} />;

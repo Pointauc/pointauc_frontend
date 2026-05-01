@@ -9,6 +9,7 @@ import { RootState } from '@reducers';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import ActionStatus from '@components/BidsManagementConfirmation/ActionStatus.tsx';
 import { updateRedemptions } from '@api/twitchApi.ts';
+import { updateKickRedemptions } from '@api/kickApi';
 import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import bidsManagementUtils from '@components/BidsManagementConfirmation/utils.ts';
 import { setHistory } from '@reducers/Purchases/Purchases.ts';
@@ -18,7 +19,7 @@ import { store } from '@store';
 
 import classes from './BidsManagementConfirmation.module.css';
 
-const channelPointsSources = new Set<Bid.Source>(['twitch', 'vkVideoLive']);
+const channelPointsSources = new Set<Bid.Source>(['twitch', 'kick', 'vkVideoLive']);
 
 const updateRedemptionsBySource = async (
   data: ReturnType<typeof bidsManagementUtils.toDto>,
@@ -32,6 +33,11 @@ const updateRedemptionsBySource = async (
     }
 
     await vkVideoLiveRewardsApi.updateRedemptions(data, channelUrl);
+    return;
+  }
+
+  if (source === 'kick') {
+    await updateKickRedemptions(data);
     return;
   }
 

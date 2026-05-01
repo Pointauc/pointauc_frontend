@@ -21,6 +21,8 @@ interface SwappableTimerProps {
   onStopwatchTimeChanged: (timeLeft: number) => void;
   onTimeEdited?: (timerType: TimerType) => void;
   onSwapTimers: () => void;
+  showManualEditHint?: boolean;
+  hideManualEditHint?: () => void;
 }
 
 const SwappableTimer: FC<SwappableTimerProps> = ({
@@ -36,6 +38,8 @@ const SwappableTimer: FC<SwappableTimerProps> = ({
   onStopwatchTimeChanged,
   onTimeEdited,
   onSwapTimers,
+  showManualEditHint = false,
+  hideManualEditHint,
 }) => {
   const { t } = useTranslation();
 
@@ -53,6 +57,8 @@ const SwappableTimer: FC<SwappableTimerProps> = ({
         onResumeStopwatch={onResumeStopwatch}
         onTimeChanged={onStopwatchTimeChanged}
         onTimeEdited={onTimeEdited}
+        showManualEditHint={showManualEditHint && mainTimer === 'stopwatch'}
+        hideManualEditHint={hideManualEditHint}
       />
       {showTotalTime && (
         <>
@@ -67,6 +73,8 @@ const SwappableTimer: FC<SwappableTimerProps> = ({
             onPauseStopwatch={onPauseStopwatch}
             onResumeStopwatch={onResumeStopwatch}
             onTimeEdited={onTimeEdited}
+            showManualEditHint={showManualEditHint && mainTimer === 'total'}
+            hideManualEditHint={hideManualEditHint}
           />
           <div className={classes.swapTimers}>
             <ActionIcon

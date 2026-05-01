@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '@reducers';
 import { useHeadroom } from '@shared/lib/scroll';
+import useStorageState from '@hooks/useStorageState';
 
 import classes from './Stopwatch.module.css';
 import StopwatchControls from './StopwatchControls';
@@ -33,6 +34,9 @@ export interface StopwatchProps {
   onEnd?: () => void;
 }
 
+const FAST_CLICK_THRESHOLD = 8;
+const FAST_CLICK_WINDOW_MS = 4000;
+
 const Stopwatch: React.FC<StopwatchProps> = ({
   controller,
   showControls = true,
@@ -49,8 +53,14 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const controlsCompact = useHeadroom({ fixedAt: 60 });
 
   const [isStopped, setIsStopped] = useState<boolean>(true);
+  const [showManualEditHint, setShowManualEditHint] = useState(false);
   const frameId = useRef<number | undefined>(undefined);
   const prevTimestamp = useRef<number | undefined>(undefined);
+  const [checkIsManualEditHintAlreadyShown, setCheckIsManualEditHintAlreadyShown] = useStorageState(
+    'checkIsManualEditHintAlreadyShown',
+    false,
+  );
+  const lastControlClick = useRef<{ buttonName: string; timestamp: number; count: number } | null>(null);
   const [mainTimer, setMainTimer] = useState<TimerType>('stopwatch');
 
   const handleStopwatchEnd = useCallback((): void => {
@@ -171,6 +181,35 @@ const Stopwatch: React.FC<StopwatchProps> = ({
   const addDoubleTime = (): number => mainTimerController.addTime(STOPWATCH_STEP * 2);
   const subtractTime = (): number => mainTimerController.subtractTime(STOPWATCH_STEP);
 
+  const handleControlButtonClick = useCallback(
+    (buttonName: string): void => {
+      if (checkIsManualEditHintAlreadyShown) {
+        return;
+      }
+
+      const timestampNow = Date.now();
+      const previousClick = lastControlClick.current;
+
+      if (
+        !previousClick ||
+        previousClick.buttonName !== buttonName ||
+        timestampNow - previousClick.timestamp > FAST_CLICK_WINDOW_MS
+      ) {
+        lastControlClick.current = { buttonName, timestamp: timestampNow, count: 1 };
+        return;
+      }
+
+      const nextCount = previousClick.count + 1;
+      lastControlClick.current = { buttonName, timestamp: timestampNow, count: nextCount };
+
+      if (nextCount > FAST_CLICK_THRESHOLD) {
+        setCheckIsManualEditHintAlreadyShown(true);
+        setShowManualEditHint(true);
+      }
+    },
+    [checkIsManualEditHintAlreadyShown, setCheckIsManualEditHintAlreadyShown, setShowManualEditHint],
+  );
+
   const swapTimers = useCallback(() => setMainTimer((type) => (type === 'stopwatch' ? 'total' : 'stopwatch')), []);
   useImperativeHandle(controller, () => ({
     start: startTimer,
@@ -198,6 +237,8 @@ const Stopwatch: React.FC<StopwatchProps> = ({
         onStopwatchTimeChanged={notifyStopwatchEditingTimeChanged}
         onTimeEdited={onTimeEdited}
         onSwapTimers={swapTimers}
+        showManualEditHint={showManualEditHint}
+        hideManualEditHint={() => setShowManualEditHint(false)}
       />
       {showControls && (
         <StopwatchControls
@@ -208,6 +249,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({
           onAddTime={addTime}
           onSubtractTime={subtractTime}
           onAddDoubleTime={addDoubleTime}
+          onControlButtonClick={handleControlButtonClick}
         />
       )}
     </div>
