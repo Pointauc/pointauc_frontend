@@ -11,7 +11,7 @@ import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 import { sortSlots } from '@utils/common.utils';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
 
-import { setSlots, slotsSlice } from './Slots/Slots';
+import { reorderSlots, slotsSlice } from './Slots/Slots';
 
 import rootReducer, { RootState } from './index';
 
@@ -36,7 +36,7 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
       const updatedSlots = recalculateAllLockedSlots(slots);
       const sortedSlots = sortSlots(updatedSlots);
 
-      return next(setSlots(sortedSlots));
+      return next(reorderSlots(sortedSlots));
     }
     return result;
   };

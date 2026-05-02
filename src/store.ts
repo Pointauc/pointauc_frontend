@@ -3,7 +3,7 @@ import { AnyAction, Middleware } from 'redux';
 import thunk from 'redux-thunk';
 import { throttle } from '@tanstack/react-pacer';
 
-import { setSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
+import { reorderSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
 import { sortSlots } from '@utils/common.utils.ts';
 import { isBrowser } from '@utils/ssr.ts';
@@ -37,7 +37,7 @@ const sortSlotsMiddleware: Middleware<{}, RootState> =
       const updatedSlots = recalculateAllLockedSlots(slots);
       const sortedSlots = sortSlots(updatedSlots);
 
-      return next(setSlots(sortedSlots));
+      return next(reorderSlots(sortedSlots));
     }
     return result;
   };
@@ -110,7 +110,6 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
  * function callbacks — live ES module binding ensures they see the real
  * store once it is set, even across circular imports.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export let store: any = null;
 
 /**
@@ -119,7 +118,6 @@ export let store: any = null;
  * Accepts rootReducer as a parameter to avoid importing it at module scope,
  * which would trigger a circular-dependency TDZ in Rollup SSR bundles.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function initStore(rootReducer: Reducer<any>) {
   store = configureStore({
     reducer: rootReducer,

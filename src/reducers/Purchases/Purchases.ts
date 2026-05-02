@@ -103,13 +103,37 @@ export const logPurchase =
     }
   };
 
+const visibleNotifications: string[] = [];
+
 export const fastAddBid =
   (bid: Purchase, slotId: string | Slot) =>
-  (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+  (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
     const showAlert = (cost: number): void => {
       const name = bidUtils.getName(bid);
       const alertMessage = `${bid.username} добавил ${bidUtils.getDisplayCost(cost)} к "${name}" ("${name}")!`;
-      notifications.show({ message: alertMessage, color: 'green', position: 'bottom-left' });
+
+      if (visibleNotifications.length >= 4) {
+        const id = visibleNotifications.shift();
+        if (id) {
+          notifications.hide(id);
+        }
+      }
+
+      notifications.show({
+        id: bid.id,
+        message: alertMessage,
+        color: 'green',
+        position: 'bottom-left',
+        autoClose: 2000,
+        onClose: () => {
+          if (visibleNotifications.includes(bid.id)) {
+            visibleNotifications.shift();
+          }
+        },
+        onOpen: () => {
+          visibleNotifications.push(bid.id);
+        },
+      });
     };
 
     dispatch(addBid(slotId, bid, { removeBid: false, callback: showAlert }));

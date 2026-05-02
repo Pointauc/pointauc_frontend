@@ -4,7 +4,7 @@
  * Used exclusively at build time by scripts/prerender.js — never loaded in the browser.
  */
 import '@assets/i18n/index.ts';
-import { StrictMode, Suspense } from 'react';
+import { Suspense } from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { Provider } from 'react-redux';
@@ -130,23 +130,21 @@ export async function render(url: string): Promise<SsrRenderResult> {
   try {
     html = renderToString(
       sheet.collectStyles(
-        <StrictMode>
-          <Provider store={store}>
-            <MantineProvider>
-              <TutorialProvider>
-                <QueryClientProvider client={queryClient}>
-                  <StaticRouter location={url}>
-                    {/* Suspense boundary ensures lazy components render their fallback
-                        (null) rather than throwing during synchronous renderToString. */}
-                    <Suspense>
-                      <App />
-                    </Suspense>
-                  </StaticRouter>
-                </QueryClientProvider>
-              </TutorialProvider>
-            </MantineProvider>
-          </Provider>
-        </StrictMode>,
+        <Provider store={store}>
+          <MantineProvider>
+            <TutorialProvider>
+              <QueryClientProvider client={queryClient}>
+                <StaticRouter location={url}>
+                  {/* Suspense boundary ensures lazy components render their fallback
+                      (null) rather than throwing during synchronous renderToString. */}
+                  <Suspense>
+                    <App />
+                  </Suspense>
+                </StaticRouter>
+              </QueryClientProvider>
+            </TutorialProvider>
+          </MantineProvider>
+        </Provider>,
       ),
     );
   } finally {

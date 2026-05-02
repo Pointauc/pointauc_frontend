@@ -27,6 +27,7 @@ export interface LoginButtonProps {
   branding: Branding;
   classes?: LoginButtonClasses;
   showPartnerChip?: boolean;
+  color?: string;
 }
 
 export interface PubsubComponentProps {

@@ -43,6 +43,7 @@ const authFlow: Integration.RedirectFlow = {
   loginComponent: ({ ...props }) => (
     <RedirectLoginButton
       {...props}
+      color='#0077FF'
       classes={{ ...props.classes, icon: clsx(props.classes?.icon, styles.buttonIcon) }}
       buildUrl={redirectFlow.url}
     />

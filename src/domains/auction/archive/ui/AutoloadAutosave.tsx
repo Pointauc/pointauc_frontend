@@ -29,20 +29,16 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
 
     // No old saves to migrate
     if (!rawConfig) {
-      console.log('No old saves found to migrate');
       return;
     }
 
     const savesConfig: SaveInfo[] = JSON.parse(rawConfig);
 
     if (savesConfig.length === 0) {
-      console.log('No old saves to migrate');
       // Clean up empty config
       localStorage.removeItem(LocalStorage.SaveConfig);
       return;
     }
-
-    console.log(`Starting migration of ${savesConfig.length} old save(s)...`);
 
     // Migrate each save to IndexedDB
     for (const saveInfo of savesConfig) {
@@ -51,7 +47,6 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
         const slotsData = localStorage.getItem(saveInfo.slotsLocation);
 
         if (!slotsData) {
-          console.warn(`No data found for save: ${saveInfo.name}`);
           continue;
         }
 
@@ -65,7 +60,6 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
         if (saveInfo.name === 'Автосохранение') {
           // Override the current autosave in IndexedDB
           await archiveApi.upsertAutosave(archiveData);
-          console.log(`Migrated autosave: ${saveInfo.name} (${slots.length} lots)`);
         } else {
           // Create a regular archive record
           await archiveApi.create({
@@ -73,7 +67,6 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
             data: JSON.stringify(archiveData),
             isAutosave: false,
           });
-          console.log(`Migrated save: ${saveInfo.name} (${slots.length} lots)`);
         }
 
         // Remove old LocalStorage entry
@@ -90,7 +83,6 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
 
     // Remove old config after migration
     localStorage.removeItem(LocalStorage.SaveConfig);
-    console.log('Migration completed successfully');
   } catch (err) {
     const migrationError = err as ArchiveMigrationError;
     captureError(migrationError, {

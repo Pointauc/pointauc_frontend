@@ -44,6 +44,7 @@ export const getMovieMetadataFromKinopoiskWorker = async (
   }
 
   return {
+    kind: 'movie',
     imdbTitleId: params.kinopoiskMovieId,
     title: payload.title.trim(),
     year: getNumericValue(payload.year),

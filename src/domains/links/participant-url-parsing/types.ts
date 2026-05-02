@@ -1,22 +1,39 @@
 // Shared contracts for participant URL parsing sources and parsing results.
-export type ParticipantUrlParsingSource = 'imdb' | 'kinopoisk';
+export type ParticipantUrlParsingSource = 'imdb' | 'kinopoisk' | 'youtube';
 
-export type ParticipantUrlParsingProvider = 'wikidata' | 'tmdb' | 'imdb-scrape' | 'kinopoisk-scrape' | 'kinopoisk-worker';
+export type ParticipantUrlParsingProvider =
+  | 'wikidata'
+  | 'tmdb'
+  | 'imdb-scrape'
+  | 'kinopoisk-scrape'
+  | 'kinopoisk-worker'
+  | 'youtube-oembed';
 
-export interface ParticipantUrlMovieMetadata {
-  imdbTitleId: string;
+interface ParticipantUrlBaseMetadata {
   title: string;
-  year: number | null;
-  runtimeMinutes: number | null;
-  rating: number | null;
   source: ParticipantUrlParsingSource;
   provider: ParticipantUrlParsingProvider;
   sourceUrl: string;
 }
 
+export interface ParticipantUrlMovieMetadata extends ParticipantUrlBaseMetadata {
+  kind: 'movie';
+  imdbTitleId: string;
+  year: number | null;
+  runtimeMinutes: number | null;
+  rating: number | null;
+}
+
+export interface ParticipantUrlVideoMetadata extends ParticipantUrlBaseMetadata {
+  kind: 'video';
+  videoId: string;
+}
+
+export type ParticipantUrlMetadata = ParticipantUrlMovieMetadata | ParticipantUrlVideoMetadata;
+
 export interface ParsedParticipantUrlResult {
   markdownLink: string;
-  metadata: ParticipantUrlMovieMetadata;
+  metadata: ParticipantUrlMetadata;
 }
 
 export interface ParseParticipantUrlParams {

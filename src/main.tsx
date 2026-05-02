@@ -15,7 +15,7 @@ import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/be';
 import 'dayjs/locale/uk';
-import { lazy, StrictMode } from 'react';
+import { lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
@@ -122,11 +122,9 @@ portalRoot.id = 'portal-root';
 document.body.appendChild(portalRoot);
 
 root.render(
-  <StrictMode>
-    <Provider store={store}>
-      <AppErrorBoundary>
-        <RouterProvider router={router} />
-      </AppErrorBoundary>
-    </Provider>
-  </StrictMode>,
+  <Provider store={store}>
+    <AppErrorBoundary>
+      <RouterProvider router={router} />
+    </AppErrorBoundary>
+  </Provider>,
 );

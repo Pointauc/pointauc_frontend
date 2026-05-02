@@ -32,6 +32,7 @@ export const getMovieMetadataFromImdbPage = async (
   }
 
   return {
+    kind: 'movie',
     imdbTitleId: params.imdbTitleId,
     title: movie.name,
     year: getYearFromDate(movie.datePublished),

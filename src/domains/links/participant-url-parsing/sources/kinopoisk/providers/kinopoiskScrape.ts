@@ -136,6 +136,7 @@ export const getMovieMetadataFromKinopoiskPage = async (
   const rating = getNumericValue(movie?.aggregateRating?.ratingValue) ?? extractRatingFromHtml(html);
 
   return {
+    kind: 'movie',
     imdbTitleId: params.kinopoiskMovieId,
     title,
     year,

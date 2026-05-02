@@ -55,6 +55,7 @@ export const getMovieMetadataFromTmdb = async (
   }
 
   return {
+    kind: 'movie',
     imdbTitleId: imdbTitleId ?? params.kinopoiskMovieId,
     title,
     year: getYearFromDate(details.releaseDate ?? matchedMovie.releaseDate),

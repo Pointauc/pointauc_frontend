@@ -5,7 +5,7 @@ interface RedirectLoginButtonProps extends Integration.LoginButtonProps {
   buildUrl: () => string;
 }
 
-const RedirectLoginButton = ({ id, branding, buildUrl, classes, showPartnerChip }: RedirectLoginButtonProps) => {
+const RedirectLoginButton = ({ id, branding, buildUrl, classes, showPartnerChip, color }: RedirectLoginButtonProps) => {
   const handleAuth = (): void => {
     window.open(buildUrl(), '_self');
   };
@@ -17,6 +17,7 @@ const RedirectLoginButton = ({ id, branding, buildUrl, classes, showPartnerChip 
       onClick={handleAuth}
       classes={classes}
       showPartnerChip={showPartnerChip}
+      color={color}
     />
   );
 };

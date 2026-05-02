@@ -1,5 +1,4 @@
 import { ArchivedLot, Slot } from '@models/slot.model';
-import { createSlot } from '@reducers/Slots/Slots';
 
 /**
  * Converts Slot array to ArchivedLot array by omitting runtime-only properties
@@ -17,13 +16,14 @@ export function slotsToArchivedLots(slots: Slot[]): ArchivedLot[] {
  * Converts ArchivedLot array to Slot array by creating new Slot instances
  */
 export function archivedLotsToSlots(lots: ArchivedLot[]): Slot[] {
-  return lots.map((lot) =>
-    createSlot({
-      name: lot.name,
-      amount: lot.amount,
-      investors: lot.investors,
-      isFavorite: lot.isFavorite
-    }),
-  );
+  return lots.map((lot, index) => ({
+    id: Math.random().toString(),
+    fastId: index + 1,
+    name: lot.name,
+    amount: lot.amount,
+    extra: null,
+    investors: lot.investors,
+    lockedPercentage: null,
+    isFavorite: lot.isFavorite,
+  }));
 }
-

@@ -45,7 +45,7 @@ export function useMockBidForm() {
           }),
         );
       } else {
-        dispatch(processRedemption(baseBid));
+        dispatch(processRedemption({ ...baseBid, id: Math.random().toString() }));
       }
     },
   });

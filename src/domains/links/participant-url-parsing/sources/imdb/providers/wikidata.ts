@@ -55,6 +55,7 @@ LIMIT 1`.trim();
   const releaseDateYear = getYearFromDate(getString(matchedMovie, 'releaseDate'));
 
   return {
+    kind: 'movie',
     imdbTitleId: params.imdbTitleId,
     title,
     year: releaseYear ?? releaseDateYear,
