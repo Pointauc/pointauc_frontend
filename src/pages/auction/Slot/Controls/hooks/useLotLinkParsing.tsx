@@ -10,6 +10,10 @@ import { Link } from 'react-router-dom';
 import ROUTES from '@constants/routes.constants';
 import { parseMarkdownLotLink } from '@domains/links/lib/lotNameLink';
 import { LotLinkParser } from '@domains/links/participant-url-parsing/shared/LotLinkParser';
+import {
+  trackAuctionAutoParsedLotNameWithUrl,
+  trackAuctionLotNameWithUrl,
+} from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import useStorageState from '@hooks/useStorageState.ts';
 import { RootState } from '@reducers';
 import { setSlotName } from '@reducers/Slots/Slots';
@@ -61,6 +65,8 @@ export const useLotLinkParsing = ({
       return;
     }
 
+    trackAuctionLotNameWithUrl({ lotId: id });
+
     const nextRequestId = parsingRequestIdRef.current + 1;
     parsingRequestIdRef.current = nextRequestId;
 
@@ -86,6 +92,8 @@ export const useLotLinkParsing = ({
         if (parsingResult.lotName === name) {
           return;
         }
+
+        trackAuctionAutoParsedLotNameWithUrl({ lotId: id });
 
         const hasSeenLotLinkParsingNotificationInStorage =
           localStorage.getItem(LOT_LINK_PARSING_NOTIFICATION_STORAGE_KEY) === 'true';

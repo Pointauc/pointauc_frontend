@@ -1,6 +1,7 @@
 import { analyticsEventNames } from '@shared/lib/analytics/events';
 import { COLORS } from '@constants/color.constants';
 
+import type { AuctionFeatureUsageState } from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import type { AnalyticsEventMap } from '@shared/lib/analytics/events';
 import type { AucSettingsState } from '@reducers/AucSettings/AucSettings';
 import type { Slot } from '@models/slot.model';
@@ -8,6 +9,7 @@ import type { Slot } from '@models/slot.model';
 interface BuildAuctionEndedPayloadParams {
   settings: AucSettingsState['settings'];
   lots: Slot[];
+  featureUsage: AuctionFeatureUsageState;
 }
 
 const getLotAmount = (lot: Slot): number => Number(lot.amount ?? 0) + Number(lot.extra ?? 0);
@@ -22,14 +24,27 @@ const getUniqueParticipantCount = (lots: Slot[]): number => {
   return participantIds.size;
 };
 
+const getTrackedEntityCount = (trackedEntities: Record<string, true>): number => {
+  return Object.keys(trackedEntities).length;
+};
+
+const getTrackedIntegrationIds = (trackedIntegrations: Partial<Record<string, true>>): string[] => {
+  return Object.keys(trackedIntegrations).sort();
+};
+
 export const buildAuctionEndedPayload = ({
   settings,
   lots,
+  featureUsage,
 }: BuildAuctionEndedPayloadParams): AnalyticsEventMap[typeof analyticsEventNames.auctionEnded] => {
   const activeLots = lots.filter((lot) => Boolean(lot.name) || getLotAmount(lot) > 0);
   const amounts = activeLots.map(getLotAmount);
   const totalAmount = amounts.reduce((sum, amount) => sum + amount, 0);
   const lotCount = activeLots.length;
+  const lotNamesWithUrlCount = getTrackedEntityCount(featureUsage.lotNamesWithUrl);
+  const autoParsedLotNamesWithUrlCount = getTrackedEntityCount(featureUsage.autoParsedLotNamesWithUrl);
+  const enabledIntegrations = getTrackedIntegrationIds(featureUsage.enabledIntegrations);
+  const integrationsWithTransferredBids = getTrackedIntegrationIds(featureUsage.integrationsWithTransferredBids);
 
   return {
     timer_start_minutes: Number(settings.startTime),
@@ -58,5 +73,13 @@ export const buildAuctionEndedPayload = ({
     average_amount: lotCount > 0 ? Number((totalAmount / lotCount).toFixed(2)) : 0,
     has_favorites: activeLots.some((lot) => lot.isFavorite),
     has_locked_percentage: activeLots.some((lot) => lot.lockedPercentage !== null),
+    lot_names_with_url_count: lotNamesWithUrlCount,
+    auto_parsed_lot_names_with_url_count: autoParsedLotNamesWithUrlCount,
+    auto_parsed_lot_names_with_url_percent:
+      lotNamesWithUrlCount > 0 ? Number(((autoParsedLotNamesWithUrlCount / lotNamesWithUrlCount) * 100).toFixed(2)) : 0,
+    enabled_integrations: enabledIntegrations.join(','),
+    enabled_integrations_count: enabledIntegrations.length,
+    integrations_with_transferred_bids: integrationsWithTransferredBids.join(','),
+    integrations_with_transferred_bids_count: integrationsWithTransferredBids.length,
   };
 };

@@ -18,6 +18,10 @@ import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
 import { TutorialManager } from '@domains/tutorials';
+import {
+  trackAuctionEnabledIntegration,
+  trackAuctionIntegrationTransferredBid,
+} from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import { MenuItem } from '@models/common.model';
 import { RootState } from '@reducers';
 import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
@@ -91,9 +95,23 @@ const App: React.FC = () => {
 
   // Redirect all bids to the global event bus
   useEffect(() => {
+    const integrationSubscriptionUnsubscribers = integrations.all.map((integration) => {
+      const syncIntegrationUsage = () => {
+        if (integration.pubsubFlow.store.state.subscribed) {
+          trackAuctionEnabledIntegration(integration.id);
+        }
+      };
+
+      syncIntegrationUsage();
+      return integration.pubsubFlow.store.subscribe(() => {
+        syncIntegrationUsage();
+      });
+    });
+
     // Subscribe to all integration bid events and redirect to global bus
-    const unsubscribers = integrations.all.map((integration) => {
+    const integrationBidUnsubscribers = integrations.all.map((integration) => {
       const callback = (bid: Purchase) => {
+        trackAuctionIntegrationTransferredBid(integration.id);
         globalBidsEventBus.emit('bid', bid);
       };
       integration.pubsubFlow.events.on('bid', callback);
@@ -103,7 +121,8 @@ const App: React.FC = () => {
     });
 
     return () => {
-      unsubscribers.forEach((unsubscribe) => unsubscribe());
+      integrationSubscriptionUnsubscribers.forEach((unsubscribe) => unsubscribe());
+      integrationBidUnsubscribers.forEach((unsubscribe) => unsubscribe());
     };
   }, []);
 
