@@ -7,6 +7,7 @@ import { TwitchRewardPresetDto, TwitchRewardPresetsRequest } from '@models/user.
 
 const INTEGRATION_ID = 'vkVideoLive';
 const API_BASE_URL = 'https://apidev.live.vkvideo.ru';
+const POINTAUC_REWARD_DESCRIPTION = 'PointAuc managed reward';
 
 interface AuthResponse {
   isNew: boolean;
@@ -443,6 +444,10 @@ interface RewardsDiff {
   toDelete: VkVideoLiveReward[];
 }
 
+const checkIsPointaucReward = (reward: VkVideoLiveReward): boolean => reward.description === POINTAUC_REWARD_DESCRIPTION;
+
+const getPointaucRewards = (rewards: VkVideoLiveReward[]): VkVideoLiveReward[] => rewards.filter(checkIsPointaucReward);
+
 const getRawardsDiff = (
   prefix: string,
   presets: TwitchRewardPresetDto[],
@@ -465,7 +470,7 @@ const getRawardsDiff = (
 
 const createVKRewardDataFromPreset = (prefix: string, preset: TwitchRewardPresetDto): VkVideoLiveRewardRequest => ({
   background_color: getNearestVkVideoLiveColorIndex(preset.color),
-  description: '',
+  description: POINTAUC_REWARD_DESCRIPTION,
   is_message_required: true,
   name: buildVkVideoLiveRewardName(prefix, preset.cost),
   price: preset.cost,
@@ -477,7 +482,7 @@ export const vkVideoLiveRewardsApi = {
     const { toCreate, toUpdate, toDelete } = getRawardsDiff(
       prefix,
       presets,
-      await vkVideoLiveApiClient.getManageRewards(channelUrl),
+      getPointaucRewards(await vkVideoLiveApiClient.getManageRewards(channelUrl)),
     );
 
     const newActiveRewards: VkVideoLiveReward[] = [];
@@ -522,11 +527,11 @@ export const vkVideoLiveRewardsApi = {
     return newActiveRewards;
   },
   hideRewards: async (channelUrl: string) => {
-    const rewards = await vkVideoLiveApiClient.getManageRewards(channelUrl);
+    const rewards = getPointaucRewards(await vkVideoLiveApiClient.getManageRewards(channelUrl));
     await Promise.all(rewards.map((reward) => vkVideoLiveApiClient.setRewardEnabled(channelUrl, reward.id, false)));
   },
   deleteRewards: async (channelUrl: string) => {
-    const rewards = await vkVideoLiveApiClient.getManageRewards(channelUrl);
+    const rewards = getPointaucRewards(await vkVideoLiveApiClient.getManageRewards(channelUrl));
     await Promise.all(
       rewards.map((reward) => vkVideoLiveApiClient.deleteReward(channelUrl, reward.id, !reward.is_disabled)),
     );
