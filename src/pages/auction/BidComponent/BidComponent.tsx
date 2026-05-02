@@ -71,41 +71,38 @@ const BidComponent: React.FC<BidComponentProps> = ({
     }
 
     const { slots } = (store.getState() as RootState).slots;
-    const slotNames = slots.map(({ name }) => name || '');
+    const slotNames = slots.map(({ name }) => String(name || ''));
     const {
       bestMatch: { rating },
       bestMatchIndex,
-    } = findBestMatch(name, slotNames);
+    } = findBestMatch(String(name || ''), slotNames);
 
     return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const refundRedemption = useCallback(
-    () => {
-      if (!rewardId) {
-        return undefined;
-      }
+  const refundRedemption = useCallback(() => {
+    if (!rewardId) {
+      return undefined;
+    }
 
-      const requestData = {
-        status: RedemptionStatus.Canceled,
-        redemptionId: id,
-        rewardId,
-      };
+    const requestData = {
+      status: RedemptionStatus.Canceled,
+      redemptionId: id,
+      rewardId,
+    };
 
-      if (purchase.source === 'vkVideoLive') {
-        const channelUrl = (store.getState() as RootState).user.authData.vkVideoLive?.channelUrl;
-        return channelUrl ? vkVideoLiveRewardsApi.updateRedemption(requestData, channelUrl) : undefined;
-      }
+    if (purchase.source === 'vkVideoLive') {
+      const channelUrl = (store.getState() as RootState).user.authData.vkVideoLive?.channelUrl;
+      return channelUrl ? vkVideoLiveRewardsApi.updateRedemption(requestData, channelUrl) : undefined;
+    }
 
-      if (purchase.source === 'kick') {
-        return updateKickRedemption(requestData);
-      }
+    if (purchase.source === 'kick') {
+      return updateKickRedemption(requestData);
+    }
 
-      return updateRedemption(requestData);
-    },
-    [id, purchase.source, rewardId],
-  );
+    return updateRedemption(requestData);
+  }, [id, purchase.source, rewardId]);
 
   const handleRemove = (): void => {
     dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Deleted }));
