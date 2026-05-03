@@ -1,6 +1,7 @@
 import { consoleAnalyticsProvider } from './consoleProvider';
 import { googleTagManagerProvider } from './googleTagManagerProvider';
 import { noopAnalyticsProvider } from './noopProvider';
+import { postHogProvider } from './postHogProvider';
 
 import type { AnalyticsProvider } from './provider';
 
@@ -9,6 +10,10 @@ export class ConfiguredAnalyticsProviders {
     const providers: AnalyticsProvider[] = [];
 
     providers.push(googleTagManagerProvider.configure('GTM-5CVBSXX4'));
+
+    if (postHogProvider) {
+      providers.push(postHogProvider);
+    }
 
     if (import.meta.env.DEV) {
       providers.push(consoleAnalyticsProvider);

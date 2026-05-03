@@ -48,6 +48,9 @@ jobs:
           VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
           VITE_VK_VIDEO_LIVE_CLIENT_ID: ${{ secrets.VITE_VK_VIDEO_LIVE_CLIENT_ID }}
           VITE_KICK_CLIENT_ID: ${{ secrets.VITE_KICK_CLIENT_ID }}
+          VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
+          VITE_PUBLIC_POSTHOG_HOST: ${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
+
         run: pnpm build:ssg
 
       - name: Build documentation
