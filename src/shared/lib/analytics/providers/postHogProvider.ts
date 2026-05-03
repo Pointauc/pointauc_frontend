@@ -23,8 +23,6 @@ export class PostHogProvider implements AnalyticsProvider {
       return;
     }
 
-    console.log('Initializing PostHog with key:', this.key, 'and host:', this.host);
-
     posthog.init(this.key, {
       api_host: this.host,
       capture_pageview: false,
