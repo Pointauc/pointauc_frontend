@@ -1,29 +1,37 @@
 # Participant URL Parsing
 
-This module resolves plain links inside lot names into human-readable markdown links (for example, IMDb title links).
+This module is the shared entry point for resolving external links in participant-controlled text, such as auction lot names and video request bid messages.
 
-## How it works
+## Architecture
 
-1. `LotLinkParser` parses the first link from the lot name and skips markdown links.
-2. It extracts the link domain and finds a source from `sourceByDomainMap`.
-3. The matched source validates the link format/id.
-4. The source loads metadata through its provider fallback chain.
-5. The parser replaces the original link segment with a markdown link.
+- Sources live in `sources/<source>/` and are registered in `sources/index.ts`.
+- `sourceByDomainMap` maps normalized hostnames to registered sources.
+- A source owns its URL validation, identifier extraction, canonical URL building, metadata provider fallback chain, and source-specific metadata normalization.
+- `parseLink` is the lightweight path used by auction participant parsing to create readable markdown labels.
+- `getVideoRequestMetadata` is an optional richer capability for sources that can provide playable video-request metadata.
+- Callers should use the registered source contract instead of implementing source-specific URL parsing in feature code.
 
-## Add a new source
+## Runtime Flow
 
-1. Create `src/domains/links/participant-url-parsing/sources/<source>/index.ts`.
-2. Export a `ParticipantUrlSource` object with:
-   - `sourceName` (for UI tooltip)
-   - `domains` (all supported hostnames)
-   - `checkIsValidLink(link)`
-   - `parseLink({ link, signal })`
-3. Add source-specific helpers in `sources/<source>/helpers.ts` (id extraction, link checks, etc.).
-4. Add source-specific providers in `sources/<source>/providers/` and define provider fallback order in `providers/index.ts`.
-5. Reuse common providers from `shared/providers/` where possible (`tmdb`, `wikidata`, `scrape`).
-6. Register the source in `sources/index.ts`.
+1. Extract the first supported plain URL and skip existing markdown links when relevant.
+2. Resolve the URL domain through `sourceByDomainMap`.
+3. Validate the URL with `source.checkIsValidLink(link)`.
+4. For auction display, call `source.parseLink({ link, signal })`.
+5. For video requests, call `source.getVideoRequestMetadata({ link, signal })` when the source supports it.
 
-## Shared areas
+## Adding A Source
 
-- `shared/providers/`: generic data providers reusable by multiple sources.
-- `shared/`: parser orchestration and generic helpers (domain map, URL parsing, JSON-LD parsing, value parsing).
+1. Create a folder under `sources/<source>/`.
+2. Add helpers for URL validation, identifier extraction, and canonical URL construction.
+3. Add providers under `providers/` when metadata requires network or fallback logic.
+4. Export a `ParticipantUrlSource` with `sourceName`, `domains`, `checkIsValidLink`, `parseLink`, and optional `getVideoRequestMetadata`.
+5. Register the source in `sources/index.ts`.
+6. Add focused tests for source helpers and supported URL shapes.
+
+## Shared Areas
+
+- `shared/sourceRegistry.ts`: domain-to-source lookup.
+- `shared/providers/`: generic metadata providers reusable by multiple sources.
+- `shared/url.ts`: domain extraction and normalization.
+- `shared/jsonLd.ts`: structured data helpers for scraping providers.
+- `shared/valueParsers.ts`: parsing helpers for source values.
