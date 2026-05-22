@@ -29,6 +29,9 @@
       "viewer_orders": {
         "title": "Viewer orders"
       },
+      "videoRequests": {
+        "title": "Video Requests"
+      },
       "wheel": {
         "title": "Wheel of Random"
       },
@@ -117,6 +120,10 @@
     "/overlays": {
       "title": "Live Overlays for Streamers – Pointauc",
       "description": "Add a live overlay to your stream showing bids, item names, and timers on screen — fully customizable to fit your style."
+    },
+    "/videoPoints": {
+      "title": "Video Requests – Pointauc",
+      "description": "Review viewer video requests in a clean stream scene built for queue playback, moderation, and request controls."
     },
     "/tickets/info": {
       "title": "Verify Tickets – Fair Winner Selection",
@@ -1248,6 +1255,12 @@
     "noUserId": "No User ID",
     "noUserIdMessage": "User ID is not available. Please make sure you are logged in.",
     "user": "User: {{username}}"
+  },
+  "videoRequests": {
+    "page": {
+      "title": "Video Requests",
+      "description": "The root route is ready. Queue, player, and request controls will be added in the next steps."
+    }
   },
   "archive": {
     "modal": {

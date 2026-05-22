@@ -25,6 +25,7 @@ import { RouteErrorBoundary } from '@App/error-tracking/RouteErrorBoundary';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
 import i18n from '@assets/i18n/index.ts';
+import Metadata from '@components/Metadata';
 import RedirectPage from '@domains/bids/external-integrations/shared/auth/redirect/RedirectPage.tsx';
 import ROUTES from '@constants/routes.constants.ts';
 import { TutorialProvider } from '@domains/tutorials';
@@ -54,6 +55,7 @@ initAnalytics({
 export { store };
 
 const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
+const VideoRequestsPage = lazy(() => import('@domains/video-requests/ui/Page/VideoRequestsPage'));
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -100,6 +102,7 @@ const router = createBrowserRouter([
           <TutorialProvider>
             <QueryClientProvider client={queryClient}>
               <Notifications limit={4} autoClose={3000} />
+              <Metadata />
               <Outlet />
             </QueryClientProvider>
           </TutorialProvider>
@@ -107,8 +110,9 @@ const router = createBrowserRouter([
       </MantineProvider>
     ),
     children: [
-      { path: `${ROUTES.HOME}*`, element: <App /> },
+      { path: ROUTES.VIDEO_REQUESTS, element: <VideoRequestsPage /> },
       { path: '/overlays/view/:id', element: <OverlayViewPage /> },
+      { path: `${ROUTES.HOME}*`, element: <App /> },
       ...redirectRoutes,
     ],
   },

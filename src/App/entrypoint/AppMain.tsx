@@ -3,7 +3,6 @@ import { lazy } from 'react';
 import { Route, Routes, useMatch } from 'react-router-dom';
 
 import HelpPage from '@components/HelpPage/HelpPage';
-import Metadata from '@components/Metadata';
 import ROUTES from '@constants/routes.constants';
 import WebsiteSettings from '@domains/user-settings-v2/pages/WebsiteSettings';
 import AucPage from '@pages/auction/AucPage';
@@ -23,7 +22,6 @@ export const AppMain = () => {
   const isHomePage = useMatch(ROUTES.HOME);
   return (
     <AppShell.Main className={classes.main}>
-      <Metadata />
       <div style={{ display: isHomePage ? 'contents' : 'none' }} hidden={!isHomePage}>
         <AucPage />
       </div>
