@@ -85,6 +85,10 @@ const extractYoutubeVideoIdFromUrlInstance = (url: URL): string | null => {
 
 export const buildYoutubeVideoUrl = (videoId: string): string => `https://www.youtube.com/watch?v=${videoId}`;
 
+export const buildYoutubeEmbedUrl = (videoId: string): string => `https://www.youtube.com/embed/${videoId}`;
+
+export const buildYoutubeThumbnailUrl = (videoId: string): string => `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
 export const extractYoutubeVideoId = (value: string | null | undefined): string | null => {
   if (!value) {
     return null;
