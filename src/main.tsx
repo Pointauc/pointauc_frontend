@@ -24,6 +24,7 @@ import { AppErrorBoundary } from '@App/error-tracking/AppErrorBoundary';
 import { RouteErrorBoundary } from '@App/error-tracking/RouteErrorBoundary';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
+import GlobalBidRuntime from '@domains/bids/lib/GlobalBidRuntime';
 import i18n from '@assets/i18n/index.ts';
 import Metadata from '@components/Metadata';
 import RedirectPage from '@domains/bids/external-integrations/shared/auth/redirect/RedirectPage.tsx';
@@ -103,6 +104,7 @@ const router = createBrowserRouter([
             <QueryClientProvider client={queryClient}>
               <Notifications limit={4} autoClose={3000} />
               <Metadata />
+              <GlobalBidRuntime />
               <Outlet />
             </QueryClientProvider>
           </TutorialProvider>

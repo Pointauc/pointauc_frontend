@@ -10,6 +10,10 @@ const DEFAULT_SUPPORTED_SOURCE_IDS: VideoSourceId[] = ['youtube', 'twitchClip', 
 export const createDefaultVideoRequestSettings = (): VideoRequestSettings => ({
   id: VIDEO_REQUEST_SETTINGS_ID,
   supportedSourceIds: [...DEFAULT_SUPPORTED_SOURCE_IDS],
+  listening: {
+    isEnabled: false,
+    activeBidGroups: ['donations', 'channelPoints'],
+  },
   isAutoplayEnabled: false,
   nextStrategy: 'requestOrder',
   skipVoting: {

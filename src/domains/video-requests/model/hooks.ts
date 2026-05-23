@@ -10,7 +10,7 @@ import {
   VideoRequestSettingsPatch,
 } from '@domains/video-requests/model/types';
 
-const VIDEO_REQUESTS_QUERY_KEYS = {
+export const VIDEO_REQUESTS_QUERY_KEYS = {
   all: ['video-requests'] as const,
   queue: ['video-requests', 'queue'] as const,
   settings: ['video-requests', 'settings'] as const,

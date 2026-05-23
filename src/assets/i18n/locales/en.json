@@ -1259,7 +1259,28 @@
   "videoRequests": {
     "page": {
       "title": "Video Requests",
-      "description": "The root route is ready. Queue, player, and request controls will be added in the next steps."
+      "description": "Bid listening is now wired for video request ingestion. Queue playback and moderation views will be layered on in the next steps."
+    },
+    "listener": {
+      "title": "Bid Listener",
+      "description": "Choose which connected integrations should route incoming bids into the video request queue.",
+      "enable": "Listening enabled",
+      "groupsTitle": "Bid groups",
+      "groups": {
+        "donations": "Donations",
+        "channelPoints": "Channel points"
+      },
+      "integrationsTitle": "Authenticated integrations",
+      "noAuthenticatedIntegrations": "No authenticated integrations are available for this group yet.",
+      "integrationStatus": {
+        "idle": "Idle",
+        "loading": "Connecting",
+        "subscribed": "Listening"
+      },
+      "stats": {
+        "queue": "Queue: {{count}}",
+        "rejections": "Rejected: {{count}}"
+      }
     }
   },
   "archive": {

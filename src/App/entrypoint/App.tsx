@@ -15,12 +15,9 @@ import { AppNavbar } from '@App/entrypoint/navbar/AppNavbar.tsx';
 import { PortalContextProvider } from '@App/storage/portalContext';
 import { COLORS } from '@constants/color.constants';
 import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
-import { integrations } from '@domains/bids/external-integrations/integrations.ts';
-import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
 import { TutorialManager } from '@domains/tutorials';
 import { MenuItem } from '@models/common.model';
 import { RootState } from '@reducers';
-import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
 import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
@@ -88,35 +85,6 @@ const App: React.FC = () => {
       };
     }
   }, [dispatch, username]);
-
-  // Redirect all bids to the global event bus
-  useEffect(() => {
-    // Subscribe to all integration bid events and redirect to global bus
-    const unsubscribers = integrations.all.map((integration) => {
-      const callback = (bid: Purchase) => {
-        globalBidsEventBus.emit('bid', bid);
-      };
-      integration.pubsubFlow.events.on('bid', callback);
-      return () => {
-        integration.pubsubFlow.events.off('bid', callback);
-      };
-    });
-
-    return () => {
-      unsubscribers.forEach((unsubscribe) => unsubscribe());
-    };
-  }, []);
-
-  // Handle new bids
-  useEffect(() => {
-    const handleBid = (bid: Purchase) => {
-      dispatch(processRedemption(bid));
-    };
-    globalBidsEventBus.on('bid', handleBid);
-    return () => {
-      globalBidsEventBus.off('bid', handleBid);
-    };
-  }, [dispatch]);
 
   useEffect(() => {
     let interval: any;

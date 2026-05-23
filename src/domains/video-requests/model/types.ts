@@ -1,4 +1,5 @@
 export type VideoSourceId = 'youtube' | 'twitchClip' | 'twitchVod';
+export type VideoRequestBidGroup = 'donations' | 'channelPoints';
 
 export type VideoRequestStatus = 'queued' | 'playing' | 'watched' | 'skipped' | 'removed';
 
@@ -26,6 +27,17 @@ export interface ParsedVideoReference {
   startTimeSeconds: number | null;
 }
 
+export interface VideoRequestBidSnapshot {
+  id: string;
+  source: Bid.Source;
+  cost: number;
+  username: string;
+  message: string | null;
+  timestamp: string;
+  rewardId: string | null;
+  isDonation: boolean;
+}
+
 export interface VideoRequest {
   id: string;
   bidId: string | null;
@@ -35,6 +47,7 @@ export interface VideoRequest {
   requestedBy: string | null;
   sourceId: VideoSourceId;
   requestText: string | null;
+  bidSnapshot: VideoRequestBidSnapshot | null;
   metadata: VideoMetadata;
   parsedVideoReference: ParsedVideoReference;
 }
@@ -58,6 +71,10 @@ export interface SkipVoteState {
 export interface VideoRequestSettings {
   id: string;
   supportedSourceIds: VideoSourceId[];
+  listening: {
+    isEnabled: boolean;
+    activeBidGroups: VideoRequestBidGroup[];
+  };
   isAutoplayEnabled: boolean;
   nextStrategy: VideoRequestNextStrategy;
   skipVoting: {
@@ -73,6 +90,7 @@ export interface VideoRequestSettings {
 
 export interface VideoRequestSettingsPatch {
   supportedSourceIds?: VideoSourceId[];
+  listening?: Partial<VideoRequestSettings['listening']>;
   isAutoplayEnabled?: boolean;
   nextStrategy?: VideoRequestNextStrategy;
   skipVoting?: Partial<VideoRequestSettings['skipVoting']>;

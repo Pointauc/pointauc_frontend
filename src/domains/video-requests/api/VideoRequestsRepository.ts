@@ -26,6 +26,11 @@ const compareCompletedAtDescending = (
   right: VideoRequestHistoryRecord,
 ) => right.completedAt.localeCompare(left.completedAt) || right.id.localeCompare(left.id);
 
+const normalizeVideoRequestRecord = (record: VideoRequest): VideoRequest => ({
+  ...record,
+  bidSnapshot: record.bidSnapshot ?? null,
+});
+
 const normalizeVideoRequestSettings = (
   settings?: Partial<VideoRequestSettings> | null,
 ): VideoRequestSettings => {
@@ -35,6 +40,11 @@ const normalizeVideoRequestSettings = (
     ...defaults,
     ...settings,
     supportedSourceIds: settings?.supportedSourceIds ?? defaults.supportedSourceIds,
+    listening: {
+      ...defaults.listening,
+      ...settings?.listening,
+      activeBidGroups: settings?.listening?.activeBidGroups ?? defaults.listening.activeBidGroups,
+    },
     skipVoting: {
       ...defaults.skipVoting,
       ...settings?.skipVoting,
@@ -53,6 +63,11 @@ const mergeVideoRequestSettings = (
   ...currentSettings,
   ...patch,
   supportedSourceIds: patch.supportedSourceIds ?? currentSettings.supportedSourceIds,
+  listening: {
+    ...currentSettings.listening,
+    ...patch.listening,
+    activeBidGroups: patch.listening?.activeBidGroups ?? currentSettings.listening.activeBidGroups,
+  },
   skipVoting: {
     ...currentSettings.skipVoting,
     ...patch.skipVoting,
@@ -72,13 +87,13 @@ class VideoRequestsRepository {
   async listRequests(): Promise<VideoRequest[]> {
     const records = await videoRequestsDb.requests.toArray();
 
-    return records.sort(compareIsoAscending);
+    return records.map(normalizeVideoRequestRecord).sort(compareIsoAscending);
   }
 
   async getRequest(id: string): Promise<VideoRequest | null> {
     const record = await videoRequestsDb.requests.get(id);
 
-    return record ?? null;
+    return record ? normalizeVideoRequestRecord(record) : null;
   }
 
   async createRequest(input: CreateVideoRequestInput): Promise<VideoRequest> {
@@ -93,6 +108,7 @@ class VideoRequestsRepository {
       requestedBy: input.requestedBy,
       sourceId: input.sourceId,
       requestText: input.requestText,
+      bidSnapshot: input.bidSnapshot ?? null,
       metadata: input.metadata,
       parsedVideoReference: input.parsedVideoReference,
     };
