@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
+import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
+import {
+  getAuctionFeatureUsageState,
+  resetAuctionFeatureUsageState,
+} from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import { trackAuctionEnded } from '@shared/lib/analytics/events';
 
 import { buildAuctionEndedPayload } from './buildAuctionEndedPayload';
@@ -11,6 +16,10 @@ import type { StopwatchProps } from '@pages/auction/Stopwatch/Stopwatch';
 const AUCTION_ENDED_CONFIRMATION_DELAY_MS = 3000;
 
 type UseAuctionEndedAnalyticsReturn = Pick<StopwatchProps, 'onEnd' | 'onReset' | 'onStart' | 'onTimeChanged'>;
+
+const getCurrentlyEnabledIntegrationIds = () => {
+  return INTEGRATIONS.filter((integration) => integration.pubsubFlow.store.state.subscribed).map((integration) => integration.id);
+};
 
 export const useAuctionEndedAnalytics = (): UseAuctionEndedAnalyticsReturn => {
   const lots = useSelector((state: RootState) => state.slots.slots);
@@ -38,12 +47,16 @@ export const useAuctionEndedAnalytics = (): UseAuctionEndedAnalyticsReturn => {
 
     confirmationTimer.current = window.setTimeout(() => {
       confirmationTimer.current = null;
+      const featureUsage = getAuctionFeatureUsageState();
+
       trackAuctionEnded(
         buildAuctionEndedPayload({
           settings: latestSettings.current,
           lots: latestLots.current,
+          featureUsage,
         }),
       );
+      resetAuctionFeatureUsageState({ enabledIntegrationIds: getCurrentlyEnabledIntegrationIds() });
     }, AUCTION_ENDED_CONFIRMATION_DELAY_MS);
   }, [cancelPendingAuctionEndedEvent]);
 
