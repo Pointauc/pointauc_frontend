@@ -9,7 +9,7 @@ import ihaq from '@domains/bids/external-integrations/ihaq/lib/integrationScheme
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import donateHelper from '@domains/bids/external-integrations/donate-helper/lib/integrationScheme';
 
-const INTEGRATIONS = [ihaq, donateHelper, twitch, kick, vkVideoLive, da, donatePay, donatex, tourniquet];
+const INTEGRATIONS = [ihaq, donateHelper, twitch, da, donatePay, donatex, tourniquet];
 
 export default INTEGRATIONS;
 

@@ -119,12 +119,12 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
-  const { isLoading: isLotLinkParsingLoading, sourceName: lotLinkParsingSourceName } = useLotLinkParsing({
-    id,
-    name,
-    setCurrentName,
-    setIsNameRawMode,
-  });
+  // const { isLoading: isLotLinkParsingLoading, sourceName: lotLinkParsingSourceName } = useLotLinkParsing({
+  //   id,
+  //   name,
+  //   setCurrentName,
+  //   setIsNameRawMode,
+  // });
 
   return (
     <>
@@ -139,21 +139,7 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
           onKeyPress={onKeyPress}
           value={displayedLotName}
         />
-        {isLotLinkParsingLoading ? (
-          <Tooltip
-            label={t('lot.loadingDataFromSource', {
-              sourceName: lotLinkParsingSourceName ?? t('common.source'),
-            })}
-            withArrow
-            openDelay={120}
-          >
-            <div className='flex h-full w-11 items-center justify-center' aria-label={t('common.loading')}>
-              <Loader size='sm' />
-            </div>
-          </Tooltip>
-        ) : (
-          lotLink && <LotLinkButton href={lotLink.href} url={lotLink.url} />
-        )}
+        {lotLink && <LotLinkButton href={lotLink.href} url={lotLink.url} />}
       </div>
     </>
   );
