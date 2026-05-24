@@ -15,6 +15,10 @@ export interface VideoMetadata {
   authorName: string | null;
   thumbnailUrl: string | null;
   durationSeconds: number | null;
+  viewCount?: number | null;
+  likeCount?: number | null;
+  publishedAt?: string | null;
+  createdAt?: string | null;
   canonicalUrl: string;
 }
 

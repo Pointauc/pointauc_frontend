@@ -39,7 +39,7 @@ Implement the settings modal, request filters, autoplay behavior, and next-video
    - Use a concise UI label such as "Next pick".
    - `requestOrder`: next queued item by created time.
    - `biggestBid`: highest bid cost, tie broken by created time.
-   - `randomWheel`: utility bar button text changes from Next to Pick Next.
+   - `randomWheel`: utility bar button text changes from Next to Spin the wheel.
 4. Random wheel flow:
    - Convert queued requests to `WheelItem[]` with `amount` equal to bid cost, or `1` when cost is missing/zero.
    - On Pick Next, replace the player area with the wheel view, wait a tiny delay, spin immediately, then set the winning request as current.

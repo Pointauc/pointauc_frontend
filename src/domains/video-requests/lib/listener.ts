@@ -81,6 +81,10 @@ export const buildVideoRequestMetadataSnapshot = (
   authorName: metadata.channelName,
   thumbnailUrl: metadata.thumbnailUrl,
   durationSeconds: metadata.durationSeconds,
+  viewCount: metadata.viewCount,
+  likeCount: metadata.likeCount,
+  publishedAt: metadata.publishedAt,
+  createdAt: metadata.createdAt,
   canonicalUrl: metadata.canonicalUrl,
 });
 

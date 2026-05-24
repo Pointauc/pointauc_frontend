@@ -1,114 +1,236 @@
-import { Badge, Checkbox, Divider, Group, Paper, Stack, Switch, Text, Title } from '@mantine/core';
-import { useTranslation } from 'react-i18next';
+import { Loader } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
 
-import { useVideoRequestQueue, useVideoRequestRejections } from '@domains/video-requests/model/hooks';
+import {
+  useAppendVideoRequestHistory,
+  useClearVideoRequestHistory,
+  useClearVideoRequestQueue,
+  useCreateVideoRequest,
+  useDeleteVideoRequest,
+  useSaveVideoRequestSettings,
+  useVideoRequestHistory,
+  useVideoRequestQueue,
+} from '@domains/video-requests/model/hooks';
 import { useVideoRequestListener } from '@domains/video-requests/model/useVideoRequestListener';
+import {
+  VideoRequest,
+  VideoRequestHistoryRecord,
+  VideoRequestHistoryStatus,
+} from '@domains/video-requests/model/types';
+import VideoRequestsUtilityBar from '@domains/video-requests/ui/Controls/VideoRequestsUtilityBar';
+import VideoRequestDebugPanel from '@domains/video-requests/ui/Debug/VideoRequestDebugPanel';
+import VideoRequestHistoryModal from '@domains/video-requests/ui/History/VideoRequestHistoryModal';
+import VideoRequestPlayer from '@domains/video-requests/ui/Player/VideoRequestPlayer';
+import VideoRequestQueue from '@domains/video-requests/ui/Queue/VideoRequestQueue';
+import VideoRequestSettingsModal from '@domains/video-requests/ui/Settings/VideoRequestSettingsModal';
+
+const getCurrentRequest = (queue: VideoRequest[]) => queue[0] ?? null;
+const getNextRequest = (queue: VideoRequest[]) => queue[1] ?? null;
+
+const getPreviousRequest = (history: VideoRequestHistoryRecord[]) =>
+  history.find((request) => request.status === 'watched' || request.status === 'skipped') ?? null;
 
 const VideoRequestsPage = () => {
-  const { t } = useTranslation();
   const listener = useVideoRequestListener();
   const queueQuery = useVideoRequestQueue();
-  const rejectionsQuery = useVideoRequestRejections();
+  const historyQuery = useVideoRequestHistory();
+  const deleteRequestMutation = useDeleteVideoRequest();
+  const clearQueueMutation = useClearVideoRequestQueue();
+  const appendHistoryMutation = useAppendVideoRequestHistory();
+  const clearHistoryMutation = useClearVideoRequestHistory();
+  const saveSettingsMutation = useSaveVideoRequestSettings();
+  const createRequestMutation = useCreateVideoRequest();
+  const [isHistoryOpened, historyModal] = useDisclosure(false);
+  const [isSettingsOpened, settingsModal] = useDisclosure(false);
+  const [isTheaterMode, theaterMode] = useDisclosure(false);
+  const [isTheaterPanelOpen, setIsTheaterPanelOpen] = useState(false);
 
-  const listeningSettings = listener.settings?.listening;
+  const queue = queueQuery.data ?? [];
+  const history = historyQuery.data ?? [];
+  const currentRequest = getCurrentRequest(queue);
+  const nextRequest = getNextRequest(queue);
+  const previousRequest = getPreviousRequest(history);
+  const isAutoplayEnabled = Boolean(listener.settings?.isAutoplayEnabled);
+
+  useEffect(() => {
+    if (!isTheaterMode) {
+      setIsTheaterPanelOpen(false);
+      return;
+    }
+
+    const handlePointerMove = (event: MouseEvent | PointerEvent) => {
+      const panelWidth = Math.min(416, window.innerWidth * 0.92);
+
+      if (event.clientX >= window.innerWidth - 112) {
+        setIsTheaterPanelOpen(true);
+        return;
+      }
+
+      if (event.clientX < window.innerWidth - panelWidth - 24) {
+        setIsTheaterPanelOpen(false);
+      }
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('mousemove', handlePointerMove);
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('mousemove', handlePointerMove);
+    };
+  }, [isTheaterMode]);
+
+  const completeRequest = async (request: VideoRequest, status: VideoRequestHistoryStatus) => {
+    await appendHistoryMutation.mutateAsync({
+      ...request,
+      status,
+    });
+    await deleteRequestMutation.mutateAsync(request.id);
+  };
+
+  const handleNext = async () => {
+    if (!currentRequest) {
+      return;
+    }
+
+    await completeRequest(currentRequest, 'watched');
+  };
+
+  const handleRemove = async (id: string) => {
+    const request = queue.find((item) => item.id === id);
+
+    if (!request) {
+      return;
+    }
+
+    await completeRequest(request, 'removed');
+  };
+
+  const handlePrevious = async () => {
+    if (!previousRequest) {
+      return;
+    }
+
+    await createRequestMutation.mutateAsync({
+      ...previousRequest,
+      id: crypto.randomUUID(),
+      status: 'queued',
+      createdAt: new Date().toISOString(),
+    });
+  };
+
+  const handlePlayerEnded = () => {
+    if (currentRequest && isAutoplayEnabled) {
+      void completeRequest(currentRequest, 'watched');
+    }
+  };
 
   return (
-    <main className='min-h-screen bg-slate-950 px-6 py-10 text-slate-50'>
-      <div className='mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-5xl items-center justify-center'>
-        <Paper
-          radius='lg'
-          shadow='xl'
-          className='w-full max-w-2xl border border-slate-800 bg-slate-900/90 p-8'
-        >
-          <Stack gap='lg'>
-            <Title order={1} className='text-3xl font-semibold text-slate-50'>
-              {t('videoRequests.page.title')}
-            </Title>
-            <Text size='lg' c='dimmed'>
-              {t('videoRequests.page.description')}
-            </Text>
-            <Divider className='border-slate-800' />
-            <Group justify='space-between' align='center'>
-              <div>
-                <Text fw={600}>{t('videoRequests.listener.title')}</Text>
-                <Text size='sm' c='dimmed'>
-                  {t('videoRequests.listener.description')}
-                </Text>
-              </div>
-              <Switch
-                checked={Boolean(listeningSettings?.isEnabled)}
-                disabled={listener.isLoading || listener.isSaving}
-                onChange={(event) => void listener.setListeningEnabled(event.currentTarget.checked)}
-                label={t('videoRequests.listener.enable')}
-              />
-            </Group>
-            <Stack gap='xs'>
-              <Text fw={600}>{t('videoRequests.listener.groupsTitle')}</Text>
-              <Checkbox
-                checked={Boolean(listeningSettings?.activeBidGroups.includes('donations'))}
-                disabled={listener.isLoading || listener.isSaving}
-                label={t('videoRequests.listener.groups.donations')}
-                onChange={(event) => void listener.toggleBidGroup('donations', event.currentTarget.checked)}
-              />
-              <Checkbox
-                checked={Boolean(listeningSettings?.activeBidGroups.includes('channelPoints'))}
-                disabled={listener.isLoading || listener.isSaving}
-                label={t('videoRequests.listener.groups.channelPoints')}
-                onChange={(event) => void listener.toggleBidGroup('channelPoints', event.currentTarget.checked)}
-              />
-            </Stack>
-            <Stack gap='sm'>
-              <Text fw={600}>{t('videoRequests.listener.integrationsTitle')}</Text>
-              {Object.entries(listener.availableIntegrationsByGroup).map(([group, groupIntegrations]) => (
-                <Paper key={group} radius='md' className='border border-slate-800 bg-slate-950/70 p-4'>
-                  <Stack gap='sm'>
-                    <Group justify='space-between'>
-                      <Text fw={500}>{t(`videoRequests.listener.groups.${group}`)}</Text>
-                      <Badge variant='light' color='gray'>
-                        {groupIntegrations.length}
-                      </Badge>
-                    </Group>
-                    {groupIntegrations.length === 0 ? (
-                      <Text size='sm' c='dimmed'>
-                        {t('videoRequests.listener.noAuthenticatedIntegrations')}
-                      </Text>
-                    ) : (
-                      groupIntegrations.map((integration) => {
-                        const subscription = listener.subscriptions[integration.id];
-                        const statusKey = subscription?.loading
-                          ? 'loading'
-                          : subscription?.subscribed
-                            ? 'subscribed'
-                            : 'idle';
+    <main
+      className={clsx(
+        'bg-paper-950 text-paper-50 min-h-screen',
+        isTheaterMode ? 'fixed inset-0 z-50 h-screen overflow-hidden' : 'h-screen overflow-hidden',
+      )}
+    >
+      {import.meta.env.DEV && <VideoRequestDebugPanel />}
 
-                        return (
-                          <Group key={integration.id} justify='space-between'>
-                            <Text size='sm'>{t(`integration.${integration.id}.name`)}</Text>
-                            <Badge
-                              variant='light'
-                              color={statusKey === 'subscribed' ? 'green' : statusKey === 'loading' ? 'yellow' : 'gray'}
-                            >
-                              {t(`videoRequests.listener.integrationStatus.${statusKey}`)}
-                            </Badge>
-                          </Group>
-                        );
-                      })
-                    )}
-                  </Stack>
-                </Paper>
-              ))}
-            </Stack>
-            <Group gap='sm'>
-              <Badge variant='light' color='blue'>
-                {t('videoRequests.listener.stats.queue', { count: queueQuery.data?.length ?? 0 })}
-              </Badge>
-              <Badge variant='light' color='red'>
-                {t('videoRequests.listener.stats.rejections', { count: rejectionsQuery.data?.length ?? 0 })}
-              </Badge>
-            </Group>
-          </Stack>
-        </Paper>
-      </div>
+      {queueQuery.isLoading || historyQuery.isLoading || listener.isLoading ? (
+        <div className='flex h-full items-center justify-center'>
+          <Loader color='cyan' />
+        </div>
+      ) : (
+        <div className={clsx('flex h-full min-h-0', isTheaterMode ? 'relative' : 'flex-col lg:flex-row')}>
+          <div className='flex min-h-0 flex-1 flex-col'>
+            <div className='min-h-0 flex-1 p-3 lg:p-4'>
+              <VideoRequestPlayer
+                request={currentRequest}
+                isAutoplayEnabled={isAutoplayEnabled}
+                listener={listener}
+                onEnded={handlePlayerEnded}
+              />
+            </div>
+
+            {!isTheaterMode && (
+              <VideoRequestsUtilityBar
+                currentRequest={currentRequest}
+                previousRequest={previousRequest}
+                nextRequest={nextRequest}
+                isAutoplayEnabled={isAutoplayEnabled}
+                isTheaterMode={isTheaterMode}
+                onPrevious={() => void handlePrevious()}
+                onNext={() => void handleNext()}
+                onToggleAutoplay={(isEnabled) =>
+                  void saveSettingsMutation.mutateAsync({ isAutoplayEnabled: isEnabled })
+                }
+                onOpenHistory={historyModal.open}
+                onOpenSettings={settingsModal.open}
+                onToggleTheater={theaterMode.toggle}
+              />
+            )}
+          </div>
+
+          {isTheaterMode ? (
+            <>
+              <div
+                className='absolute top-0 right-0 z-20 h-full w-28 bg-transparent'
+                onMouseEnter={() => setIsTheaterPanelOpen(true)}
+              />
+              <div
+                className={clsx(
+                  'absolute top-0 right-0 z-30 flex h-full w-[min(27rem,94vw)] flex-col gap-3 p-3 transition-transform duration-200 focus-within:translate-x-0',
+                  true ? 'translate-x-0' : 'translate-x-full',
+                )}
+                onMouseLeave={() => setIsTheaterPanelOpen(false)}
+              >
+                <VideoRequestsUtilityBar
+                  currentRequest={currentRequest}
+                  previousRequest={previousRequest}
+                  nextRequest={nextRequest}
+                  isAutoplayEnabled={isAutoplayEnabled}
+                  isTheaterMode={isTheaterMode}
+                  onPrevious={() => void handlePrevious()}
+                  onNext={() => void handleNext()}
+                  onToggleAutoplay={(isEnabled) =>
+                    void saveSettingsMutation.mutateAsync({ isAutoplayEnabled: isEnabled })
+                  }
+                  onOpenHistory={historyModal.open}
+                  onOpenSettings={settingsModal.open}
+                  onToggleTheater={theaterMode.toggle}
+                />
+                <VideoRequestQueue
+                  requests={queue}
+                  currentRequestId={currentRequest?.id ?? null}
+                  listener={listener}
+                  isClearing={clearQueueMutation.isPending}
+                  isTheaterMode
+                  onRemove={(id) => void handleRemove(id)}
+                  onClear={() => void clearQueueMutation.mutateAsync()}
+                />
+              </div>
+            </>
+          ) : (
+            <VideoRequestQueue
+              requests={queue}
+              currentRequestId={currentRequest?.id ?? null}
+              listener={listener}
+              isClearing={clearQueueMutation.isPending}
+              onRemove={(id) => void handleRemove(id)}
+              onClear={() => void clearQueueMutation.mutateAsync()}
+            />
+          )}
+        </div>
+      )}
+
+      <VideoRequestHistoryModal
+        opened={isHistoryOpened}
+        history={history}
+        isClearing={clearHistoryMutation.isPending}
+        onClose={historyModal.close}
+        onClear={() => void clearHistoryMutation.mutateAsync()}
+      />
+      <VideoRequestSettingsModal opened={isSettingsOpened} onClose={settingsModal.close} />
     </main>
   );
 };

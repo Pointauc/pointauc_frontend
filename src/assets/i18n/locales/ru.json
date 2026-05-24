@@ -1251,12 +1251,76 @@
   "videoRequests": {
     "page": {
       "title": "Запросы видео",
-      "description": "Прослушивание ставок для запросов видео уже подключено. Очередь воспроизведения и инструменты модерации будут добавлены на следующих шагах."
+      "description": "Review viewer requests in a clean playback scene."
+    },
+    "sources": {
+      "youtube": "YouTube",
+      "twitchClip": "Clip",
+      "twitchVod": "VOD"
+    },
+    "player": {
+      "emptyTitle": "Queue is empty",
+      "emptyDescription": "Turn on listening, pick a bid source, then viewer links will land in the queue automatically.",
+      "services": {
+        "youtube": "YouTube videos",
+        "twitch": "Twitch clips and VODs"
+      },
+      "noEmbed": "This request does not have a playable embed URL.",
+      "errorTitle": "Player could not start",
+      "errorDescription": "The video may be unavailable, blocked from embeds, or waiting for a manual play gesture."
+    },
+    "card": {
+      "views": "{{value}} views",
+      "likes": "{{percentage}} likes",
+      "by": "by {{name}}"
+    },
+    "queue": {
+      "title": "Queue",
+      "count": "{{count}} requests",
+      "emptyTitle": "No videos waiting",
+      "emptyDescription": "New accepted requests will appear here.",
+      "remove": "Remove request",
+      "clear": "Clear queue",
+      "clearWithCount": "Clear queue ({{count}})",
+      "clearConfirmTitle": "Clear queue?",
+      "clearConfirmDescription": "This will remove {{count}} queued requests."
+    },
+    "utility": {
+      "nowPlaying": "Now playing",
+      "noCurrent": "Nothing selected",
+      "previous": "Previous",
+      "next": "Next",
+      "noPrevious": "No previous video",
+      "noNext": "No next video",
+      "autoplay": "Autoplay",
+      "history": "History",
+      "settings": "Settings",
+      "theater": "Theater mode",
+      "exitTheater": "Exit theater"
+    },
+    "history": {
+      "title": "History",
+      "emptyTitle": "History is empty",
+      "emptyDescription": "Watched and skipped requests will appear here.",
+      "clear": "Clear history",
+      "status": {
+        "watched": "Watched",
+        "skipped": "Skipped",
+        "removed": "Removed"
+      }
+    },
+    "settings": {
+      "title": "Video request settings",
+      "placeholderTitle": "Settings arrive in the next step",
+      "placeholderDescription": "This modal is wired so the full filtering and selection controls can land without changing the page layout."
     },
     "listener": {
       "title": "Прослушивание ставок",
       "description": "Выберите, какие подключенные интеграции должны направлять входящие ставки в очередь запросов видео.",
       "enable": "Прослушивание включено",
+      "queueSwitchLabel": "Listening",
+      "inlineTitle": "Collect requests from bids",
+      "inlineDescription": "Use connected donation and channel-point services as request sources.",
       "groupsTitle": "Группы ставок",
       "groups": {
         "donations": "Донаты",
@@ -1272,6 +1336,25 @@
       "stats": {
         "queue": "Очередь: {{count}}",
         "rejections": "Отклонено: {{count}}"
+      }
+    },
+    "debug": {
+      "title": "Debug request",
+      "description": "Send a local test bid through the same global bid pipeline used by real integrations.",
+      "send": "Send request",
+      "openSettings": "Open debug request settings",
+      "randomize": "Randomize all fields",
+      "sentNotification": "Debug request sent.",
+      "integrationTypes": {
+        "donate": "Donations",
+        "points": "Channel points"
+      },
+      "fields": {
+        "requestContent": "Request content",
+        "viewerName": "Viewer name",
+        "integration": "Integration",
+        "cost": "Amount",
+        "rewardId": "Reward ID"
       }
     }
   },
