@@ -16,41 +16,36 @@ interface VideoRequestPlayerProps {
   onEnded: () => void;
 }
 
-const VideoRequestPlayer = ({
-  request,
-  isAutoplayEnabled,
-  listener,
-  onEnded,
-}: VideoRequestPlayerProps) => {
+const VideoRequestPlayer = ({ request, isAutoplayEnabled, listener, onEnded }: VideoRequestPlayerProps) => {
   const { t } = useTranslation();
   const [hasError, setHasError] = useState(false);
   const embedUrl = request?.parsedVideoReference.embedUrl;
 
   if (!request) {
     return (
-      <section className='flex h-full min-h-[28rem] items-center justify-center rounded-md border border-paper-800 bg-paper-950 p-6'>
+      <section className='flex h-full min-h-[28rem] items-center justify-center p-6'>
         <div className='grid w-full max-w-5xl gap-5 lg:grid-cols-[1fr_24rem]'>
-          <div className='flex min-h-80 flex-col justify-between rounded-md border border-paper-700 bg-paper-800 p-6 elevated-2'>
+          <div className='elevated-3 bg-paper-900 flex min-h-80 flex-col justify-between rounded-md p-6'>
             <div>
-              <div className='mb-5 flex h-12 w-12 items-center justify-center rounded-md bg-primary-light text-primary'>
+              <div className='bg-primary-light text-primary mb-5 flex h-12 w-12 items-center justify-center rounded-md'>
                 <IconLinkPlus size={26} />
               </div>
               <Text fw={800} size='2rem' className='text-paper-50'>
                 {t('videoRequests.player.emptyTitle')}
               </Text>
-              <Text size='md' className='mt-2 max-w-2xl text-dimmed'>
+              <Text size='md' className='text-dimmed mt-2 max-w-2xl'>
                 {t('videoRequests.player.emptyDescription')}
               </Text>
             </div>
 
             <div className='mt-8 grid gap-3 sm:grid-cols-2'>
-              <div className='rounded-md border border-paper-800 bg-paper-950 p-3'>
+              <div className='border-paper-800 bg-paper-950 rounded-md border p-3'>
                 <IconBrandYoutube size={22} className='mb-2 text-red-400' />
                 <Text fw={650} size='sm' className='text-paper-50'>
                   {t('videoRequests.player.services.youtube')}
                 </Text>
               </div>
-              <div className='rounded-md border border-paper-800 bg-paper-950 p-3'>
+              <div className='border-paper-800 bg-paper-950 rounded-md border p-3'>
                 <IconBrandTwitch size={22} className='mb-2 text-violet-300' />
                 <Text fw={650} size='sm' className='text-paper-50'>
                   {t('videoRequests.player.services.twitch')}
@@ -67,7 +62,7 @@ const VideoRequestPlayer = ({
 
   if (!embedUrl) {
     return (
-      <section className='flex h-full min-h-[28rem] items-center justify-center rounded-md border border-paper-800 bg-paper-950 p-6 text-center'>
+      <section className='bg-paper-950 flex h-full min-h-[28rem] items-center justify-center p-6 text-center'>
         <Stack align='center'>
           <IconAlertCircle className='text-amber-300' size={36} />
           <Text fw={650} className='text-paper-50'>
@@ -79,7 +74,7 @@ const VideoRequestPlayer = ({
   }
 
   return (
-    <section className='relative h-full min-h-[28rem] overflow-hidden rounded-md border border-paper-800 bg-black'>
+    <section className='relative h-full min-h-[28rem] overflow-hidden bg-black'>
       {hasError && (
         <div className='absolute inset-0 z-10 flex items-center justify-center bg-black/85 p-6 text-center'>
           <Stack align='center'>
@@ -87,7 +82,7 @@ const VideoRequestPlayer = ({
             <Text fw={700} className='text-paper-50'>
               {t('videoRequests.player.errorTitle')}
             </Text>
-            <Text size='sm' className='max-w-md text-dimmed'>
+            <Text size='sm' className='text-dimmed max-w-md'>
               {t('videoRequests.player.errorDescription')}
             </Text>
           </Stack>

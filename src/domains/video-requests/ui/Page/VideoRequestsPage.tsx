@@ -130,7 +130,7 @@ const VideoRequestsPage = () => {
   return (
     <main
       className={clsx(
-        'bg-paper-950 text-paper-50 min-h-screen',
+        'bg-paper-900 text-paper-text min-h-screen',
         isTheaterMode ? 'fixed inset-0 z-50 h-screen overflow-hidden' : 'h-screen overflow-hidden',
       )}
     >
@@ -143,7 +143,7 @@ const VideoRequestsPage = () => {
       ) : (
         <div className={clsx('flex h-full min-h-0', isTheaterMode ? 'relative' : 'flex-col lg:flex-row')}>
           <div className='flex min-h-0 flex-1 flex-col'>
-            <div className='min-h-0 flex-1 p-3 lg:p-4'>
+            <div className='border-paper-600 bg-paper-950 mt-3 ml-3 min-h-0 flex-1 overflow-hidden rounded-md border'>
               <VideoRequestPlayer
                 request={currentRequest}
                 isAutoplayEnabled={isAutoplayEnabled}
@@ -180,7 +180,7 @@ const VideoRequestsPage = () => {
               <div
                 className={clsx(
                   'absolute top-0 right-0 z-30 flex h-full w-[min(27rem,94vw)] flex-col gap-3 p-3 transition-transform duration-200 focus-within:translate-x-0',
-                  true ? 'translate-x-0' : 'translate-x-full',
+                  isTheaterPanelOpen ? 'translate-x-0' : 'translate-x-full',
                 )}
                 onMouseLeave={() => setIsTheaterPanelOpen(false)}
               >

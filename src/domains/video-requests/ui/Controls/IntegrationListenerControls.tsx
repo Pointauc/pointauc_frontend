@@ -28,7 +28,7 @@ const IntegrationGroupCards = ({ listener }: Pick<IntegrationListenerControlsPro
             checked={isChecked}
             disabled={listener.isLoading || listener.isSaving}
             radius='md'
-            className='border-paper-700 bg-paper-950 p-3 transition-colors hover:border-paper-500 data-[checked=true]:border-primary-500 data-[checked=true]:bg-primary-light'
+            className='border-paper-700 bg-paper-950 hover:border-paper-500 data-[checked=true]:border-primary-500 data-[checked=true]:bg-primary-light p-3 transition-colors'
             onClick={() => void listener.toggleBidGroup(group, !isChecked)}
             aria-label={t(`videoRequests.listener.groups.${group}`)}
           >
@@ -44,7 +44,7 @@ const IntegrationGroupCards = ({ listener }: Pick<IntegrationListenerControlsPro
                   </Badge>
                 </Group>
                 {groupIntegrations.length === 0 ? (
-                  <Text size='xs' className='mt-1 text-dimmed'>
+                  <Text size='xs' className='text-dimmed mt-1'>
                     {t('videoRequests.listener.noAuthenticatedIntegrations')}
                   </Text>
                 ) : (
@@ -54,12 +54,12 @@ const IntegrationGroupCards = ({ listener }: Pick<IntegrationListenerControlsPro
                       const statusKey = subscription?.loading
                         ? 'loading'
                         : subscription?.subscribed
-                          ? 'subscribed'
-                          : 'idle';
+                        ? 'subscribed'
+                        : 'idle';
 
                       return (
                         <Group key={integration.id} justify='space-between' gap='xs' wrap='nowrap'>
-                          <Text size='xs' className='truncate text-paper-200'>
+                          <Text size='xs' className='text-paper-200 truncate'>
                             {t(`integration.${integration.id}.name`)}
                           </Text>
                           <Badge
@@ -131,10 +131,7 @@ const QueueListenerControl = ({ listener }: Pick<IntegrationListenerControlsProp
   );
 };
 
-const IntegrationListenerControls = ({
-  listener,
-  variant = 'inline',
-}: IntegrationListenerControlsProps) => {
+const IntegrationListenerControls = ({ listener, variant = 'inline' }: IntegrationListenerControlsProps) => {
   const { t } = useTranslation();
   const isEnabled = Boolean(listener.settings?.listening.isEnabled);
 
@@ -143,13 +140,11 @@ const IntegrationListenerControls = ({
   }
 
   return (
-    <section className='w-full max-w-3xl rounded-md border border-paper-700 bg-paper-800 p-4 elevated-2'>
+    <section className='bg-paper-900 elevated-3 w-full max-w-3xl rounded-md p-4'>
       <Stack gap='md'>
         <Group justify='space-between' align='center' gap='md'>
           <div className='min-w-0'>
-            <Text fw={700} className='text-paper-50'>
-              {t('videoRequests.listener.inlineTitle')}
-            </Text>
+            <Text fw={700}>{t('videoRequests.listener.inlineTitle')}</Text>
             <Text size='sm' className='text-dimmed'>
               {t('videoRequests.listener.inlineDescription')}
             </Text>

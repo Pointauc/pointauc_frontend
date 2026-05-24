@@ -1,4 +1,18 @@
-import { ActionIcon, Badge, Button, Group, Modal, NumberInput, Paper, Select, Stack, Switch, Text, TextInput, Tooltip } from '@mantine/core';
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Group,
+  Modal,
+  NumberInput,
+  Paper,
+  Select,
+  Stack,
+  Switch,
+  Text,
+  TextInput,
+  Tooltip,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconPlayerPlay, IconSettings } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
@@ -25,12 +39,7 @@ const SAMPLE_REQUEST_CONTENTS = [
   'https://clips.twitch.tv/AwkwardHelplessSalamanderSwiftRage-4j6rVj8vM4z8mK7v',
 ];
 
-const SAMPLE_VIEWER_NAMES = [
-  'debug_viewer',
-  'queue_tester',
-  'video_fan',
-  'local_repro',
-];
+const SAMPLE_VIEWER_NAMES = ['debug_viewer', 'queue_tester', 'video_fan', 'local_repro'];
 
 const getDefaultIntegrationId = (): Integration.ID => {
   const twitchIntegration = INTEGRATIONS.find((integration) => integration.id === 'twitch');
@@ -63,7 +72,9 @@ const VideoRequestDebugPanel = () => {
     () =>
       INTEGRATIONS.map((integration) => ({
         value: integration.id,
-        label: `${t(`integration.${integration.id}.name`)} - ${t(`videoRequests.debug.integrationTypes.${integration.type}`)}`,
+        label: `${t(`integration.${integration.id}.name`)} - ${t(
+          `videoRequests.debug.integrationTypes.${integration.type}`,
+        )}`,
       })),
     [t],
   );
@@ -137,12 +148,13 @@ const VideoRequestDebugPanel = () => {
 
   return (
     <>
-      <section className='fixed left-4 top-4 z-[60]'>
+      <section className='fixed top-4 left-4 z-[60]'>
         <Paper radius='md' shadow='xl' className='border border-slate-700 bg-slate-950/95 p-2 backdrop-blur'>
           <Group gap='xs' wrap='nowrap'>
             <Button
               leftSection={<IconPlayerPlay size={16} />}
               loading={isSending}
+              size='sm'
               onClick={() => void handleSendRequest()}
             >
               {t('videoRequests.debug.send')}

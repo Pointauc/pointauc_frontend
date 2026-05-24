@@ -8,7 +8,6 @@ import { VideoRequest } from '@domains/video-requests/model/types';
 import IntegrationListenerControls from '@domains/video-requests/ui/Controls/IntegrationListenerControls';
 import { useVideoRequestListener } from '@domains/video-requests/model/useVideoRequestListener';
 import VideoRequestCard from '@domains/video-requests/ui/Queue/VideoRequestCard';
-import Paper from '@shared/ui/Paper/Paper';
 
 interface VideoRequestQueueProps {
   requests: VideoRequest[];
@@ -48,17 +47,14 @@ const VideoRequestQueue = ({
     <aside
       className={clsx(
         'flex h-full min-h-0 w-full flex-col lg:w-[24rem]',
-        isTheaterMode ? 'bg-transparent' : 'border-paper-800 bg-paper-950 border-l',
+        isTheaterMode ? 'bg-transparent' : 'bg-transparent',
       )}
     >
-      <Paper
-        component='header'
-        variant='glass'
-        // glassTint='cool'
-        // className={clsx(
-        //   'shrink-0 p-4',
-        //   isTheaterMode && 'border-paper-transparent-700 bg-paper-transparent-900 rounded-md border backdrop-blur-md',
-        // )}
+      <header
+        className={clsx(
+          'shrink-0 p-4',
+          isTheaterMode && 'border-paper-transparent-700 bg-paper-transparent-900 rounded-md border backdrop-blur-md',
+        )}
       >
         <Group justify='space-between' align='center' wrap='nowrap'>
           <Group gap='xs' wrap='nowrap'>
@@ -71,7 +67,7 @@ const VideoRequestQueue = ({
           </Group>
           <IntegrationListenerControls listener={listener} variant='queue' />
         </Group>
-      </Paper>
+      </header>
 
       {!isTheaterMode && <Divider className='border-paper-800' />}
 
