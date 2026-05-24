@@ -23,6 +23,8 @@ export const createDefaultVideoRequestSettings = (): VideoRequestSettings => ({
   limits: {
     maxDurationSeconds: null,
     maxRequestsPerUser: null,
+    minViewCount: null,
     maxQueueSize: null,
+    maxTotalDurationSeconds: null,
   },
 });

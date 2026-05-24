@@ -40,6 +40,10 @@ const normalizeVideoRequestSettings = (
     ...defaults,
     ...settings,
     supportedSourceIds: settings?.supportedSourceIds ?? defaults.supportedSourceIds,
+    nextStrategy:
+      (settings as { nextStrategy?: string } | null | undefined)?.nextStrategy === 'random'
+        ? 'randomWheel'
+        : settings?.nextStrategy ?? defaults.nextStrategy,
     listening: {
       ...defaults.listening,
       ...settings?.listening,

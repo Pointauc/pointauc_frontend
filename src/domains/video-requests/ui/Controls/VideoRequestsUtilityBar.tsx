@@ -3,7 +3,11 @@ import { IconHistory, IconPlayerSkipBack, IconPlayerSkipForward, IconSettings, I
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import { VideoRequest, VideoRequestHistoryRecord } from '@domains/video-requests/model/types';
+import {
+  VideoRequest,
+  VideoRequestHistoryRecord,
+  VideoRequestNextStrategy,
+} from '@domains/video-requests/model/types';
 import VideoRequestCard from '@domains/video-requests/ui/Queue/VideoRequestCard';
 import { getVideoRequestTitle } from '@domains/video-requests/ui/lib/videoRequestUiFormatters';
 
@@ -13,6 +17,7 @@ interface VideoRequestsUtilityBarProps {
   nextRequest: VideoRequest | null;
   isAutoplayEnabled: boolean;
   isTheaterMode: boolean;
+  nextStrategy: VideoRequestNextStrategy;
   onPrevious: () => void;
   onNext: () => void;
   onToggleAutoplay: (isEnabled: boolean) => void;
@@ -41,6 +46,7 @@ const VideoRequestsUtilityBar = ({
   nextRequest,
   isAutoplayEnabled,
   isTheaterMode,
+  nextStrategy,
   onPrevious,
   onNext,
   onToggleAutoplay,
@@ -49,6 +55,10 @@ const VideoRequestsUtilityBar = ({
   onToggleTheater,
 }: VideoRequestsUtilityBarProps) => {
   const { t } = useTranslation();
+  const nextButtonLabel =
+    nextStrategy === 'randomWheel'
+      ? t('videoRequests.utility.spinWheel')
+      : t('videoRequests.utility.pickNext');
 
   return (
     <footer
@@ -106,9 +116,9 @@ const VideoRequestsUtilityBar = ({
             disabled={!currentRequest && !nextRequest}
             onClick={onNext}
             rightSection={<IconPlayerSkipForward size={18} />}
-            aria-label={t('videoRequests.utility.next')}
+            aria-label={nextButtonLabel}
           >
-            {t('videoRequests.utility.next')}
+            {nextButtonLabel}
           </Button>
         </Tooltip>
 

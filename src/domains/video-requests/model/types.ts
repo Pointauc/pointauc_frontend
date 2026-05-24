@@ -8,7 +8,7 @@ export type VideoRequestHistoryStatus = Extract<
   'watched' | 'skipped' | 'removed'
 >;
 
-export type VideoRequestNextStrategy = 'requestOrder' | 'random';
+export type VideoRequestNextStrategy = 'requestOrder' | 'biggestBid' | 'randomWheel';
 
 export interface VideoMetadata {
   title: string | null;
@@ -88,7 +88,9 @@ export interface VideoRequestSettings {
   limits: {
     maxDurationSeconds: number | null;
     maxRequestsPerUser: number | null;
+    minViewCount: number | null;
     maxQueueSize: number | null;
+    maxTotalDurationSeconds: number | null;
   };
 }
 

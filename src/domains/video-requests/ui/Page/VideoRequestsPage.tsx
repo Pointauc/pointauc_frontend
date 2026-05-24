@@ -3,6 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { selectNextVideoRequest } from '@domains/video-requests/lib/requestSelection';
 import {
   useAppendVideoRequestHistory,
   useClearVideoRequestHistory,
@@ -25,9 +26,10 @@ import VideoRequestHistoryModal from '@domains/video-requests/ui/History/VideoRe
 import VideoRequestPlayer from '@domains/video-requests/ui/Player/VideoRequestPlayer';
 import VideoRequestQueue from '@domains/video-requests/ui/Queue/VideoRequestQueue';
 import VideoRequestSettingsModal from '@domains/video-requests/ui/Settings/VideoRequestSettingsModal';
+import VideoRequestWheelPicker from '@domains/video-requests/ui/Wheel/VideoRequestWheelPicker';
 
-const getCurrentRequest = (queue: VideoRequest[]) => queue[0] ?? null;
-const getNextRequest = (queue: VideoRequest[]) => queue[1] ?? null;
+const getRemainingRequests = (queue: VideoRequest[], currentRequestId: string | null) =>
+  currentRequestId ? queue.filter((request) => request.id !== currentRequestId) : queue;
 
 const getPreviousRequest = (history: VideoRequestHistoryRecord[]) =>
   history.find((request) => request.status === 'watched' || request.status === 'skipped') ?? null;
@@ -46,13 +48,33 @@ const VideoRequestsPage = () => {
   const [isSettingsOpened, settingsModal] = useDisclosure(false);
   const [isTheaterMode, theaterMode] = useDisclosure(false);
   const [isTheaterPanelOpen, setIsTheaterPanelOpen] = useState(false);
+  const [currentRequestId, setCurrentRequestId] = useState<string | null>(null);
+  const [wheelRequests, setWheelRequests] = useState<VideoRequest[]>([]);
+  const [isWheelPicking, setIsWheelPicking] = useState(false);
 
   const queue = queueQuery.data ?? [];
   const history = historyQuery.data ?? [];
-  const currentRequest = getCurrentRequest(queue);
-  const nextRequest = getNextRequest(queue);
   const previousRequest = getPreviousRequest(history);
   const isAutoplayEnabled = Boolean(listener.settings?.isAutoplayEnabled);
+  const nextStrategy = listener.settings?.nextStrategy ?? 'requestOrder';
+  const currentRequest =
+    queue.find((request) => request.id === currentRequestId) ??
+    selectNextVideoRequest(queue, nextStrategy);
+  const remainingRequests = getRemainingRequests(queue, currentRequest?.id ?? null);
+  const nextRequest = selectNextVideoRequest(remainingRequests, nextStrategy);
+
+  useEffect(() => {
+    if (queue.length === 0) {
+      setCurrentRequestId(null);
+      setIsWheelPicking(false);
+      setWheelRequests([]);
+      return;
+    }
+
+    if (!currentRequest || !queue.some((request) => request.id === currentRequest.id)) {
+      setCurrentRequestId(selectNextVideoRequest(queue, nextStrategy)?.id ?? null);
+    }
+  }, [currentRequest, nextStrategy, queue]);
 
   useEffect(() => {
     if (!isTheaterMode) {
@@ -91,11 +113,23 @@ const VideoRequestsPage = () => {
   };
 
   const handleNext = async () => {
-    if (!currentRequest) {
+    if (!currentRequest && queue.length === 0) {
       return;
     }
 
-    await completeRequest(currentRequest, 'watched');
+    const selectableRequests = getRemainingRequests(queue, currentRequest?.id ?? null);
+
+    if (currentRequest) {
+      await completeRequest(currentRequest, 'watched');
+    }
+
+    if (nextStrategy === 'randomWheel' && selectableRequests.length > 0) {
+      setWheelRequests(selectableRequests);
+      setIsWheelPicking(true);
+      return;
+    }
+
+    setCurrentRequestId(selectNextVideoRequest(selectableRequests, nextStrategy)?.id ?? null);
   };
 
   const handleRemove = async (id: string) => {
@@ -113,18 +147,27 @@ const VideoRequestsPage = () => {
       return;
     }
 
+    const restoredRequestId = crypto.randomUUID();
+
     await createRequestMutation.mutateAsync({
       ...previousRequest,
-      id: crypto.randomUUID(),
+      id: restoredRequestId,
       status: 'queued',
       createdAt: new Date().toISOString(),
     });
+    setCurrentRequestId(restoredRequestId);
   };
 
   const handlePlayerEnded = () => {
     if (currentRequest && isAutoplayEnabled) {
-      void completeRequest(currentRequest, 'watched');
+      void handleNext();
     }
+  };
+
+  const handleWheelWin = (requestId: string) => {
+    setCurrentRequestId(requestId);
+    setIsWheelPicking(false);
+    setWheelRequests([]);
   };
 
   return (
@@ -144,12 +187,15 @@ const VideoRequestsPage = () => {
         <div className={clsx('flex h-full min-h-0', isTheaterMode ? 'relative' : 'flex-col lg:flex-row')}>
           <div className='flex min-h-0 flex-1 flex-col'>
             <div className='border-paper-600 bg-paper-950 mt-3 ml-3 min-h-0 flex-1 overflow-hidden rounded-md border'>
-              <VideoRequestPlayer
-                request={currentRequest}
-                isAutoplayEnabled={isAutoplayEnabled}
-                listener={listener}
-                onEnded={handlePlayerEnded}
-              />
+              {isWheelPicking ? (
+                <VideoRequestWheelPicker requests={wheelRequests} onWin={handleWheelWin} />
+              ) : (
+                <VideoRequestPlayer
+                  request={currentRequest}
+                  listener={listener}
+                  onEnded={handlePlayerEnded}
+                />
+              )}
             </div>
 
             {!isTheaterMode && (
@@ -159,6 +205,7 @@ const VideoRequestsPage = () => {
                 nextRequest={nextRequest}
                 isAutoplayEnabled={isAutoplayEnabled}
                 isTheaterMode={isTheaterMode}
+                nextStrategy={nextStrategy}
                 onPrevious={() => void handlePrevious()}
                 onNext={() => void handleNext()}
                 onToggleAutoplay={(isEnabled) =>
@@ -190,6 +237,7 @@ const VideoRequestsPage = () => {
                   nextRequest={nextRequest}
                   isAutoplayEnabled={isAutoplayEnabled}
                   isTheaterMode={isTheaterMode}
+                  nextStrategy={nextStrategy}
                   onPrevious={() => void handlePrevious()}
                   onNext={() => void handleNext()}
                   onToggleAutoplay={(isEnabled) =>

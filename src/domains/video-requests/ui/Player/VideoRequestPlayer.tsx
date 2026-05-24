@@ -11,12 +11,11 @@ import { getVideoRequestTitle } from '@domains/video-requests/ui/lib/videoReques
 
 interface VideoRequestPlayerProps {
   request: VideoRequest | null;
-  isAutoplayEnabled: boolean;
   listener: ReturnType<typeof useVideoRequestListener>;
   onEnded: () => void;
 }
 
-const VideoRequestPlayer = ({ request, isAutoplayEnabled, listener, onEnded }: VideoRequestPlayerProps) => {
+const VideoRequestPlayer = ({ request, listener, onEnded }: VideoRequestPlayerProps) => {
   const { t } = useTranslation();
   const [hasError, setHasError] = useState(false);
   const embedUrl = request?.parsedVideoReference.embedUrl;
@@ -94,7 +93,6 @@ const VideoRequestPlayer = ({ request, isAutoplayEnabled, listener, onEnded }: V
           key={request.id}
           src={request.metadata.canonicalUrl}
           controls
-          playing={isAutoplayEnabled}
           width='100%'
           height='100%'
           fallback={

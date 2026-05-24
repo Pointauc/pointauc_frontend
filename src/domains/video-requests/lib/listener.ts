@@ -10,8 +10,10 @@ export const VIDEO_REQUEST_REJECTION_REASONS = {
   unsupportedSource: 'unsupported_source',
   sourceDisabled: 'source_disabled',
   durationLimitExceeded: 'duration_limit_exceeded',
+  viewLimitNotMet: 'view_limit_not_met',
   requestLimitExceeded: 'request_limit_exceeded',
   queueLimitExceeded: 'queue_limit_exceeded',
+  totalDurationLimitExceeded: 'total_duration_limit_exceeded',
 } as const;
 
 export const VIDEO_REQUEST_BID_GROUPS: VideoRequestBidGroup[] = ['donations', 'channelPoints'];
@@ -113,11 +115,30 @@ export const getVideoRequestValidationReason = ({
     return VIDEO_REQUEST_REJECTION_REASONS.durationLimitExceeded;
   }
 
+  if (
+    settings.limits.minViewCount != null &&
+    request.metadata.viewCount != null &&
+    request.metadata.viewCount < settings.limits.minViewCount
+  ) {
+    return VIDEO_REQUEST_REJECTION_REASONS.viewLimitNotMet;
+  }
+
   if (settings.limits.maxRequestsPerUser != null && request.requestedBy) {
     const userRequestCount = queue.filter((item) => item.requestedBy === request.requestedBy).length;
 
     if (userRequestCount >= settings.limits.maxRequestsPerUser) {
       return VIDEO_REQUEST_REJECTION_REASONS.requestLimitExceeded;
+    }
+  }
+
+  if (settings.limits.maxTotalDurationSeconds != null && request.metadata.durationSeconds != null) {
+    const queuedDurationSeconds = queue.reduce(
+      (total, item) => total + (item.metadata.durationSeconds ?? 0),
+      0,
+    );
+
+    if (queuedDurationSeconds + request.metadata.durationSeconds > settings.limits.maxTotalDurationSeconds) {
+      return VIDEO_REQUEST_REJECTION_REASONS.totalDurationLimitExceeded;
     }
   }
 
