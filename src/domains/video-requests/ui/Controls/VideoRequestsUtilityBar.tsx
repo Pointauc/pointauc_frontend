@@ -18,6 +18,13 @@ interface VideoRequestsUtilityBarProps {
   isAutoplayEnabled: boolean;
   isTheaterMode: boolean;
   nextStrategy: VideoRequestNextStrategy;
+  skipVoting: {
+    isEnabled: boolean;
+    requiredVotes: number;
+    voteCount: number;
+    remainingVotes: number;
+    progress: number;
+  };
   onPrevious: () => void;
   onNext: () => void;
   onToggleAutoplay: (isEnabled: boolean) => void;
@@ -47,6 +54,7 @@ const VideoRequestsUtilityBar = ({
   isAutoplayEnabled,
   isTheaterMode,
   nextStrategy,
+  skipVoting,
   onPrevious,
   onNext,
   onToggleAutoplay,
@@ -59,6 +67,11 @@ const VideoRequestsUtilityBar = ({
     nextStrategy === 'randomWheel'
       ? t('videoRequests.utility.spinWheel')
       : t('videoRequests.utility.pickNext');
+  const skipVoteLabel = t('videoRequests.utility.skipVotesRemaining', {
+    count: skipVoting.remainingVotes,
+    current: skipVoting.voteCount,
+    required: skipVoting.requiredVotes,
+  });
 
   return (
     <footer
@@ -113,12 +126,21 @@ const VideoRequestsUtilityBar = ({
             variant='light'
             color='cyan'
             size='sm'
+            className='relative overflow-hidden'
             disabled={!currentRequest && !nextRequest}
             onClick={onNext}
             rightSection={<IconPlayerSkipForward size={18} />}
             aria-label={nextButtonLabel}
           >
-            {nextButtonLabel}
+            {skipVoting.isEnabled && (
+              <span
+                className='absolute inset-y-0 left-0 bg-cyan-400/30 transition-[width] duration-200'
+                style={{ width: `${skipVoting.progress * 100}%` }}
+              />
+            )}
+            <span className='relative z-10'>
+              {skipVoting.isEnabled ? skipVoteLabel : nextButtonLabel}
+            </span>
           </Button>
         </Tooltip>
 

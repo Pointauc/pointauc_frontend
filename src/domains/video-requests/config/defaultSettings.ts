@@ -19,6 +19,9 @@ export const createDefaultVideoRequestSettings = (): VideoRequestSettings => ({
   skipVoting: {
     isEnabled: false,
     requiredVotes: 3,
+    skipCommand: '!skip',
+    denyCommand: '!noskip',
+    allowDenySkip: true,
   },
   limits: {
     maxDurationSeconds: null,

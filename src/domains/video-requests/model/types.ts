@@ -84,6 +84,9 @@ export interface VideoRequestSettings {
   skipVoting: {
     isEnabled: boolean;
     requiredVotes: number;
+    skipCommand: string;
+    denyCommand: string;
+    allowDenySkip: boolean;
   };
   limits: {
     maxDurationSeconds: number | null;

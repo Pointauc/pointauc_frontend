@@ -1298,7 +1298,8 @@
       "history": "History",
       "settings": "Settings",
       "theater": "Theater mode",
-      "exitTheater": "Exit theater"
+      "exitTheater": "Exit theater",
+      "skipVotesRemaining": "{{count}} to skip ({{current}}/{{required}})"
     },
     "history": {
       "title": "History",
@@ -1326,7 +1327,10 @@
         "maxTotalVideos": "Max total videos",
         "maxTotalLength": "Max total length",
         "skipVotingEnabled": "Enable skip voting",
-        "requiredSkipVotes": "Required skip votes"
+        "requiredSkipVotes": "Required skip votes",
+        "skipCommand": "Skip command",
+        "denyCommand": "Deny command",
+        "allowDenySkip": "Allow vote removal"
       },
       "units": {
         "minutes": "min"

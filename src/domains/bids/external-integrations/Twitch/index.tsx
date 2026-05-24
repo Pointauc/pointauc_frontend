@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 import TwitchSvg from '@assets/icons/twitch.svg?react';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
+import { TwitchChatIntegration } from '@domains/bids/external-integrations/Twitch/chatIntegration';
 import { openTwitchRewardErrorModal } from '@domains/bids/external-integrations/Twitch/rewardErrorModal.tsx';
 import { authenticateTwitch } from '@api/twitchApi.ts';
 import * as Integration from '@models/integration';
@@ -43,6 +44,7 @@ const twitch: Integration.Config<Integration.RedirectFlow, BackendFlow> = {
   type: 'points',
   authFlow,
   pubsubFlow: new BackendFlow({ id, connectErrorHandler: openTwitchRewardErrorModal }),
+  chatIntegration: new TwitchChatIntegration(),
   branding: {
     icon: ({ size = 32, classes }) => <TwitchSvg width={size} height={size} className={clsx(classes, styles.icon)} />,
   },

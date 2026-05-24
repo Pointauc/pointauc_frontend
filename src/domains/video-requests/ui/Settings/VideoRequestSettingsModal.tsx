@@ -9,6 +9,7 @@ import {
   Switch,
   TagsInput,
   Text,
+  TextInput,
 } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -271,6 +272,26 @@ const VideoRequestSettingsModal = ({ opened, onClose }: VideoRequestSettingsModa
               disabled={!draft.skipVoting.isEnabled}
               value={draft.skipVoting.requiredVotes}
               onChange={(value) => updateSkipVoting({ requiredVotes: normalizeNumber(value) ?? 1 })}
+            />
+            <div className='grid gap-3 sm:grid-cols-2'>
+              <TextInput
+                label={t('videoRequests.settings.fields.skipCommand')}
+                disabled={!draft.skipVoting.isEnabled}
+                value={draft.skipVoting.skipCommand}
+                onChange={(event) => updateSkipVoting({ skipCommand: event.currentTarget.value })}
+              />
+              <TextInput
+                label={t('videoRequests.settings.fields.denyCommand')}
+                disabled={!draft.skipVoting.isEnabled || !draft.skipVoting.allowDenySkip}
+                value={draft.skipVoting.denyCommand}
+                onChange={(event) => updateSkipVoting({ denyCommand: event.currentTarget.value })}
+              />
+            </div>
+            <Switch
+              checked={draft.skipVoting.allowDenySkip}
+              disabled={!draft.skipVoting.isEnabled}
+              onChange={(event) => updateSkipVoting({ allowDenySkip: event.currentTarget.checked })}
+              label={t('videoRequests.settings.fields.allowDenySkip')}
             />
           </Stack>
 

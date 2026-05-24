@@ -1,7 +1,7 @@
 import { Loader } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { selectNextVideoRequest } from '@domains/video-requests/lib/requestSelection';
 import {
@@ -14,6 +14,7 @@ import {
   useVideoRequestHistory,
   useVideoRequestQueue,
 } from '@domains/video-requests/model/hooks';
+import { useSkipVoting } from '@domains/video-requests/model/useSkipVoting';
 import { useVideoRequestListener } from '@domains/video-requests/model/useVideoRequestListener';
 import {
   VideoRequest,
@@ -112,7 +113,7 @@ const VideoRequestsPage = () => {
     await deleteRequestMutation.mutateAsync(request.id);
   };
 
-  const handleNext = async () => {
+  const advanceCurrentRequest = useCallback(async (status: Extract<VideoRequestHistoryStatus, 'watched' | 'skipped'>) => {
     if (!currentRequest && queue.length === 0) {
       return;
     }
@@ -120,7 +121,7 @@ const VideoRequestsPage = () => {
     const selectableRequests = getRemainingRequests(queue, currentRequest?.id ?? null);
 
     if (currentRequest) {
-      await completeRequest(currentRequest, 'watched');
+      await completeRequest(currentRequest, status);
     }
 
     if (nextStrategy === 'randomWheel' && selectableRequests.length > 0) {
@@ -130,7 +131,20 @@ const VideoRequestsPage = () => {
     }
 
     setCurrentRequestId(selectNextVideoRequest(selectableRequests, nextStrategy)?.id ?? null);
+  }, [currentRequest, nextStrategy, queue]);
+
+  const handleNext = async () => {
+    await advanceCurrentRequest('watched');
   };
+
+  const handleSkip = useCallback(() => {
+    void advanceCurrentRequest('skipped');
+  }, [advanceCurrentRequest]);
+
+  const skipVoting = useSkipVoting({
+    currentRequest,
+    onSkip: handleSkip,
+  });
 
   const handleRemove = async (id: string) => {
     const request = queue.find((item) => item.id === id);
@@ -206,8 +220,9 @@ const VideoRequestsPage = () => {
                 isAutoplayEnabled={isAutoplayEnabled}
                 isTheaterMode={isTheaterMode}
                 nextStrategy={nextStrategy}
+                skipVoting={skipVoting}
                 onPrevious={() => void handlePrevious()}
-                onNext={() => void handleNext()}
+                onNext={() => (skipVoting.isEnabled ? handleSkip() : void handleNext())}
                 onToggleAutoplay={(isEnabled) =>
                   void saveSettingsMutation.mutateAsync({ isAutoplayEnabled: isEnabled })
                 }
@@ -238,8 +253,9 @@ const VideoRequestsPage = () => {
                   isAutoplayEnabled={isAutoplayEnabled}
                   isTheaterMode={isTheaterMode}
                   nextStrategy={nextStrategy}
+                  skipVoting={skipVoting}
                   onPrevious={() => void handlePrevious()}
-                  onNext={() => void handleNext()}
+                  onNext={() => (skipVoting.isEnabled ? handleSkip() : void handleNext())}
                   onToggleAutoplay={(isEnabled) =>
                     void saveSettingsMutation.mutateAsync({ isAutoplayEnabled: isEnabled })
                   }
