@@ -38,6 +38,7 @@ import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import * as Integration from '@models/integration';
 import { queryClient } from '@shared/lib/react-query/client.ts';
+import { registerTestingScenarios } from '@domains/testing/registerTestingScenarios.ts';
 
 import App from './App/entrypoint/App.tsx';
 import { initStore, store } from './store.ts';
@@ -45,6 +46,7 @@ import { initStore, store } from './store.ts';
 // is fully initialized, so initStore() can safely create the Redux store.
 initErrorTracking(createConfiguredErrorTrackingProvider());
 initStore(rootReducer);
+registerTestingScenarios(store, ['lots.seedRandomYoutubeVideos400']);
 
 const analyticsProviders = configuredAnalyticsProviders.getProviders();
 initAnalytics({

@@ -320,9 +320,12 @@ export const addBid =
 
     slotNamesMap.set(bidName, lot.id);
 
-    const newLotName = !lot.name || lot.name === '' ? bidName : lot.name;
+    if (!lot.name || lot.name === '') {
+      dispatch(setSlotData({ id: lot.id, amount: amount + (lot.amount ?? 0), name: bidName }));
+    } else {
+      dispatch(setSlotAmount({ id: lot.id, amount: amount + (lot.amount ?? 0) }));
+    }
 
-    dispatch(setSlotData({ id: lot.id, amount: amount + (lot.amount ?? 0), name: newLotName }));
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: lot.id }, false));
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);

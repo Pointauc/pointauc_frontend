@@ -68,10 +68,6 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
       dispatch(addBid(id, bid));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);
-
-      if (!name) {
-        dispatch(setSlotName({ id, name }));
-      }
       resetOverStyle();
     },
     [dispatch, id, resetOverStyle],

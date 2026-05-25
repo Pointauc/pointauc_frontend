@@ -66,13 +66,13 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
     mouseResumeDelay: 5,
   });
 
-  useEffect(() => {
-    if (optimize && !compact) {
-      notifications.show({
-        message: t('auc.optimizationEnabled'),
-      });
-    }
-  }, [compact, dispatch, optimize, t]);
+  // useEffect(() => {
+  //   if (optimize && !compact) {
+  //     notifications.show({
+  //       message: t('auc.optimizationEnabled'),
+  //     });
+  //   }
+  // }, [compact, dispatch, optimize, t]);
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {

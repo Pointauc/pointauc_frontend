@@ -1,10 +1,10 @@
 import * as linkify from 'linkifyjs';
 
-const MARKDOWN_LINK_REGEXP = /\[([^\]]+)\]\(([^)\s]+)\)/g;
 const URL_CANDIDATE_REGEXP = /https?:\/\/|www\.|[a-z0-9-]+\.[a-z]{2,}/i;
 
 export interface ParsedLotMarkdownLink {
   label: string;
+  rawLabel: string;
   rawMarkdown: string;
   rawUrl: string;
   href: string;
@@ -36,28 +36,83 @@ const normalizeUrl = (value: string): string | null => {
   }
 };
 
+const unescapeMarkdownLabel = (value: string): string => {
+  return value.replace(/\\([\\[\]])/g, '$1');
+};
+
 export const parseMarkdownLotLink = (value: string | null | undefined): ParsedLotMarkdownLink | null => {
   if (!value || !value.includes('[') || !value.includes('](') || !value.includes(')')) {
     return null;
   }
 
-  for (const markdownMatch of value.matchAll(MARKDOWN_LINK_REGEXP)) {
-    const [, label, rawUrl] = markdownMatch;
-    const startIndex = markdownMatch.index;
-    const href = normalizeUrl(rawUrl);
+  let startIndex = -1;
+  let labelEndIndex = -1;
+  let isEscaped = false;
 
-    if (startIndex == null || !href) {
+  for (let index = 0; index < value.length; index += 1) {
+    const character = value[index];
+
+    if (startIndex === -1) {
+      if (character === '[') {
+        startIndex = index;
+      }
+
       continue;
     }
 
-    return {
-      label,
-      rawMarkdown: markdownMatch[0],
-      rawUrl,
-      href,
-      startIndex,
-      endIndex: startIndex + markdownMatch[0].length,
-    };
+    if (labelEndIndex === -1) {
+      if (character === '\\') {
+        isEscaped = !isEscaped;
+        continue;
+      }
+
+      if (character === ']' && value[index + 1] === '(' && !isEscaped) {
+        labelEndIndex = index;
+        index += 1;
+        isEscaped = false;
+        continue;
+      }
+
+      isEscaped = false;
+      continue;
+    }
+
+    if (/\s/.test(character)) {
+      startIndex = -1;
+      labelEndIndex = -1;
+      isEscaped = false;
+      continue;
+    }
+
+    if (character === '\\') {
+      isEscaped = !isEscaped;
+      continue;
+    }
+
+    if (character === ')' && !isEscaped) {
+      const rawLabel = value.slice(startIndex + 1, labelEndIndex);
+      const rawUrl = value.slice(labelEndIndex + 2, index);
+      const href = normalizeUrl(rawUrl);
+
+      if (!href) {
+        startIndex = -1;
+        labelEndIndex = -1;
+        isEscaped = false;
+        continue;
+      }
+
+      return {
+        label: unescapeMarkdownLabel(rawLabel),
+        rawLabel,
+        rawMarkdown: value.slice(startIndex, index + 1),
+        rawUrl,
+        href,
+        startIndex,
+        endIndex: index + 1,
+      };
+    }
+
+    isEscaped = false;
   }
 
   return null;
@@ -99,7 +154,8 @@ export const parseLotLink = (value: string | null | undefined): ParsedLotLink | 
   return firstPlainLink;
 };
 
-export const checkHasMarkdownLotLink = (value: string | null | undefined): boolean => parseMarkdownLotLink(value) != null;
+export const checkHasMarkdownLotLink = (value: string | null | undefined): boolean =>
+  parseMarkdownLotLink(value) != null;
 
 export const getLotNameDisplayName = (value: string | null | undefined): string => {
   if (!value) {
