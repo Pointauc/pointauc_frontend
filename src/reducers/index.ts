@@ -1,6 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 import broadcasting from '../domains/broadcasting/model/store';
+import lotLinkParsing from '../domains/links/participant-url-parsing/link-processing-queue/slice';
 
 import slots from './Slots/Slots';
 import user from './User/User';
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   extraWindows,
   overlay,
   broadcasting,
+  lotLinkParsing,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -2,14 +2,14 @@ import { Loader, TextInputProps, Tooltip } from '@mantine/core';
 import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { parseLotLink, type ParsedLotMarkdownLink } from '@domains/links/lib/lotNameLink';
+import { RootState } from '@reducers';
 import { setSlotName } from '@reducers/Slots/Slots.ts';
 
 import LotLinkButton from './LotLinkButton';
 import styles from './LotControls.module.css';
-import { useLotLinkParsing } from './hooks/useLotLinkParsing';
 
 interface LotNameFieldProps {
   id: string;
@@ -75,6 +75,7 @@ const mapDisplayCursorToRaw = (
 const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const lotLinkParsingStatus = useSelector((root: RootState) => root.lotLinkParsing.loadingByLotId[id] ?? null);
   const [currentName, setCurrentName] = useState(name);
   const [isNameRawMode, setIsNameRawMode] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -136,12 +137,8 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
-  const { isLoading: isLotLinkParsingLoading, sourceName: lotLinkParsingSourceName } = useLotLinkParsing({
-    id,
-    name,
-    setCurrentName,
-    setIsNameRawMode,
-  });
+  const isLotLinkParsingLoading = lotLinkParsingStatus != null;
+  const lotLinkParsingSourceName = lotLinkParsingStatus?.sourceName ?? null;
 
   return (
     <>

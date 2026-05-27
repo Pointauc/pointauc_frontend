@@ -11,6 +11,7 @@ import { Slot } from '@models/slot.model.ts';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
+import { createLotLinkParsingMiddleware } from '@domains/links/participant-url-parsing/link-processing-queue/middleware';
 import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 
 import type { RootState } from '@reducers/index.ts';
@@ -121,7 +122,7 @@ export let store: any = null;
 export function initStore(rootReducer: Reducer<any>) {
   store = configureStore({
     reducer: rootReducer,
-    middleware: [thunk, sortSlotsMiddleware, saveSlotsMiddleware],
+    middleware: [thunk, sortSlotsMiddleware, createLotLinkParsingMiddleware(), saveSlotsMiddleware],
   });
   return store;
 }

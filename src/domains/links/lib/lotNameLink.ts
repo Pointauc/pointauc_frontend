@@ -119,7 +119,7 @@ export const parseMarkdownLotLink = (value: string | null | undefined): ParsedLo
 };
 
 export const parseLotLink = (value: string | null | undefined): ParsedLotLink | null => {
-  if (!value) {
+  if (!value || value.length > 350) {
     return null;
   }
 

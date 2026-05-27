@@ -130,7 +130,7 @@ export const slotsSlice = createSlice({
         return updatedSlot;
       });
     },
-    setSlotName(state, action: PayloadAction<{ id: string; name: string }>): void {
+    setSlotName(state, action: PayloadAction<{ id: string; name: string; ignoreParsing?: boolean }>): void {
       const { id, name } = action.payload;
       state.slots = state.slots.map((slot) => {
         if (slot.id === id && slot.name != null) {

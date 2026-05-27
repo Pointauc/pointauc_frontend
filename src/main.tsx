@@ -46,7 +46,7 @@ import { initStore, store } from './store.ts';
 // is fully initialized, so initStore() can safely create the Redux store.
 initErrorTracking(createConfiguredErrorTrackingProvider());
 initStore(rootReducer);
-registerTestingScenarios(store, ['lots.seedRandomYoutubeVideos400']);
+registerTestingScenarios(store, []);
 
 const analyticsProviders = configuredAnalyticsProviders.getProviders();
 initAnalytics({
