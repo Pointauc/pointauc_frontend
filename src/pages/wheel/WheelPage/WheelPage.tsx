@@ -10,7 +10,7 @@ import PageContainer from '@components/PageContainer/PageContainer';
 import { useBroadcastSpin, useWheelBroadcasting } from '@domains/broadcasting/lib/useWheelBroadcasting';
 import { SpinStartCallbackParams } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI/index';
 import RandomWheel, { RandomWheelController } from '@domains/winner-selection/wheel-of-random/ui/FullWheelUI';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers';
 import { deleteSlot, initialSlots, setSlots } from '@reducers/Slots/Slots';
@@ -39,7 +39,7 @@ const WheelPage: FC = () => {
   const broadcastSpin = useBroadcastSpin();
   useWheelBroadcasting({ settings: wheelSettings, participants: participants });
 
-  const previousWheelItems = useRef<Slot[]>(initialSlots);
+  const previousWheelItems = useRef<Lot[]>(initialSlots);
   const wheelItems = useMemo(() => SlotListToWheelList(slots), [slots]);
 
   if (previousWheelItems.current === initialSlots) {
@@ -48,7 +48,7 @@ const WheelPage: FC = () => {
   }
 
   const setCustomWheelItems = useCallback(
-    (customItems: Slot[], saveSlots: boolean) => {
+    (customItems: Lot[], saveSlots: boolean) => {
       wheelController.current?.setItems(SlotListToWheelList(customItems));
       previousWheelItems.current = [];
 

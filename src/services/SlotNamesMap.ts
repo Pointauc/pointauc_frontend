@@ -1,5 +1,5 @@
 import { parseMarkdownLotLink } from '@domains/links/lib/lotNameLink';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 
 const normalizeLookupKey = (key: string): string => key.trim().toLowerCase();
 
@@ -81,7 +81,7 @@ export class SlotNamesMap {
   /**
    * Rebuilds the generated aliases derived from the slot name and fast id.
    */
-  private setSlotAliases = ({ id, name, fastId }: Slot): void => {
+  private setSlotAliases = ({ id, name, fastId }: Lot): void => {
     this.deleteAliasesByLotId(id);
     getSlotNameLookupValues(name).forEach((value) => this.setAlias(value, id));
     this.setAlias(`#${fastId}`, id);
@@ -131,12 +131,12 @@ export class SlotNamesMap {
   };
 
   /** Replaces every alias for a slot with aliases generated from its current data. */
-  updateSlot = (slot: Slot): void => {
+  updateSlot = (slot: Lot): void => {
     this.setSlotAliases(slot);
   };
 
   /** Clears all aliases and rebuilds the generated aliases for the provided slot list. */
-  setFromList(slots: Slot[]): void {
+  setFromList(slots: Lot[]): void {
     this.clear();
     slots.forEach(this.setSlotAliases);
   }

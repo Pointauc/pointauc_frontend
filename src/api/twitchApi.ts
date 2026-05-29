@@ -4,7 +4,6 @@ import ENDPOINTS from '../constants/api.constants';
 import { PatchRedemptionDto, PatchRedemptionsDto } from '../models/redemption.model';
 import { TwitchRewardPresetsRequest } from '../models/user.model';
 
-// eslint-disable-next-line import/prefer-default-export
 export const authenticateTwitch = async (code: string): Promise<{ isNew: boolean }> => {
   const { data } = await backendApi.post(ENDPOINTS.TWITCH_AUTH, { code });
 

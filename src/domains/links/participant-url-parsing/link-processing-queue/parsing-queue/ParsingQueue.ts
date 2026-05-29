@@ -1,7 +1,7 @@
 import { AnyAction } from 'redux';
 import PQueue from 'p-queue';
 
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import { RootState } from '@reducers';
 
 import { clearLotLinkParsingLoading } from '../slice';
@@ -29,7 +29,7 @@ export class ParsingQueue {
    * Single-lot mutations should call queueLotName/removeLot directly to avoid
    * scanning large auctions on the hot path.
    */
-  syncSlots(previousSlots: Slot[], nextSlots: Slot[]): void {
+  syncSlots(previousSlots: Lot[], nextSlots: Lot[]): void {
     if (!this.getState().aucSettings.settings.isLotLinkParsingEnabled) {
       this.clear();
       return;

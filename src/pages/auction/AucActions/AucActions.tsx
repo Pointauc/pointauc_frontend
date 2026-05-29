@@ -14,7 +14,7 @@ import { updateSettings } from '@api/userApi';
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
 import { LINE_BREAK } from '@constants/common.constants.ts';
 import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
 import { RootState } from '@reducers';
 import { setAutoScroll, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings';
@@ -25,9 +25,9 @@ import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 import classes from './AucActions.module.css';
 import TotalAmount from './TotalAmount/TotalAmount';
 
-const getSlotNamesByCount = ({ name, amount }: Slot): string =>
+const getSlotNamesByCount = ({ name, amount }: Lot): string =>
   new Array<string>(Number(amount)).fill(name || '').join(LINE_BREAK);
-const createMarbleConfig = (slots: Slot[]): string => slots.map(getSlotNamesByCount).join(LINE_BREAK);
+const createMarbleConfig = (slots: Lot[]): string => slots.map(getSlotNamesByCount).join(LINE_BREAK);
 
 const AucActions: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();

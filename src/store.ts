@@ -7,7 +7,7 @@ import { reorderSlots, slotsSlice } from '@reducers/Slots/Slots.ts';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
 import { sortSlots } from '@utils/common.utils.ts';
 import { isBrowser } from '@utils/ssr.ts';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
@@ -72,7 +72,7 @@ const getAutosaveEvents = () => {
 };
 
 const saveSlotsWithCooldown = throttle(
-  ({ slots, purchases }: { slots: Slot[]; purchases: RootState['purchases']['purchases'] }) => {
+  ({ slots, purchases }: { slots: Lot[]; purchases: RootState['purchases']['purchases'] }) => {
     if (!isBrowser || slots.length === 1) return;
     const data = createArchiveData({
       lots: slotsToArchivedLots(slots),

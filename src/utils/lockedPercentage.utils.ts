@@ -1,9 +1,9 @@
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 
 /**
  * Calculates the total sum of locked percentages across all slots
  */
-export const calculateTotalLockedPercentage = (slots: Slot[]): number => {
+export const calculateTotalLockedPercentage = (slots: Lot[]): number => {
   return slots.reduce((sum, slot) => {
     return sum + (slot.lockedPercentage ?? 0);
   }, 0);
@@ -29,13 +29,13 @@ export const calculateLockedAmount = (
  * Returns a new slots array with updated amounts for locked slots
  */
 export const recalculateAllLockedSlots = (
-  slots: Slot[],
+  slots: Lot[],
   extraLockedLot?: { id: string | number; percentage: number },
-): Slot[] => {
+): Lot[] => {
   let totalLockedPercentage: number = 0;
   let totalOfOtherLots: number = 0;
 
-  const getLotLockedPercentage = (slot: Slot): number => {
+  const getLotLockedPercentage = (slot: Lot): number => {
     if (extraLockedLot?.id === slot.id) {
       return extraLockedLot.percentage;
     }

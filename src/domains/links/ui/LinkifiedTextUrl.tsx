@@ -1,14 +1,12 @@
-import React from 'react';
 import { ActionIcon, Anchor, Group, Tooltip } from '@mantine/core';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import openExternalRedirectConfirmationModal from '@domains/links/ui/ExternalRedirectConfirmationModal';
 import { checkShouldShowExternalLinkConfirmation } from '@domains/links/lib/url';
-import { addAlert } from '@reducers/notifications/notifications';
-import { AlertTypeEnum } from '@models/alert.model.ts';
+import openExternalRedirectConfirmationModal from '@domains/links/ui/ExternalRedirectConfirmationModal';
 
 interface LinkifiedTextUrlProps {
   href: string;
@@ -22,24 +20,7 @@ const LinkifiedTextUrl = ({ href, content, copyable = false, linkProps = {} }: L
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const handleCopy = () => {
-    navigator.clipboard
-      .writeText(href)
-      .then(() => {
-        dispatch(
-          addAlert({
-            type: AlertTypeEnum.Info,
-            message: t('common.linkCopied'),
-          }),
-        );
-      })
-      .catch(() => {
-        dispatch(
-          addAlert({
-            type: AlertTypeEnum.Error,
-            message: t('common.copyFailed'),
-          }),
-        );
-      });
+    navigator.clipboard.writeText(href);
   };
 
   const handleLinkClick = (event: React.MouseEvent) => {
@@ -70,7 +51,6 @@ const LinkifiedTextUrl = ({ href, content, copyable = false, linkProps = {} }: L
           {content}
         </Anchor>
       </Group>
-
     </>
   );
 };

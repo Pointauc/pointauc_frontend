@@ -1,4 +1,4 @@
-import { Slot } from '../models/slot.model';
+import { Lot } from '../models/slot.model';
 import { getSlot, getTotalSize } from '../utils/slots.utils';
 
 export interface SlotChance {
@@ -45,13 +45,13 @@ export const getSlotFromDistance = (slots: SlotLike[], distance: number): number
 };
 
 class PredictionService {
-  initialSlots: Slot[];
-  slots: Slot[];
+  initialSlots: Lot[];
+  slots: Lot[];
   initialChances: SlotChance[];
   dropoutRate: number;
   preserveLogs: boolean;
 
-  constructor(slots: Slot[], preserveLogs = false, dropoutRate = 1) {
+  constructor(slots: Lot[], preserveLogs = false, dropoutRate = 1) {
     this.initialChances = this.normalizeSlotsChances([...slots]);
     this.slots = [...slots];
     this.initialSlots = [...slots];
@@ -60,7 +60,7 @@ class PredictionService {
     // console.log(sortSlots(this.getReverseSlots([...slots])));
   }
 
-  private getReverseSlots = (slots: Slot[]): Slot[] => {
+  private getReverseSlots = (slots: Lot[]): Lot[] => {
     const totalSize = getTotalSize(slots);
 
     return slots.map(({ amount, ...props }) => {
@@ -76,7 +76,7 @@ class PredictionService {
     return (1 - size / totalSize) / (safeLength - 1) || 1;
   };
 
-  private getWinner = (slots: Slot[]): number => {
+  private getWinner = (slots: Lot[]): number => {
     const seed = Math.random();
     let restAmount = seed * getTotalSize(slots);
 
@@ -93,7 +93,7 @@ class PredictionService {
     });
   };
 
-  private performIteration = (slots: Slot[]): string => {
+  private performIteration = (slots: Lot[]): string => {
     const updatedSlots = [...slots];
     while (updatedSlots.length > 1) {
       const winner = this.getWinner(this.getReverseSlots(updatedSlots));
@@ -119,7 +119,7 @@ class PredictionService {
       .sort(({ chance: a }, { chance: b }) => b - a);
   };
 
-  normalizeSlotsChances = (slots: Slot[]): SlotChance[] => {
+  normalizeSlotsChances = (slots: Lot[]): SlotChance[] => {
     const total = getTotalSize(slots);
     return slots
       .map<SlotChance>(({ amount, name, id }) => ({ id, chance: (Number(amount) / total) * 100, name: name || '' }))

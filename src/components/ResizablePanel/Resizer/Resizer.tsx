@@ -2,6 +2,7 @@ import { FC, MouseEvent, MutableRefObject, useCallback, useEffect, useState } fr
 
 import { TRAILER_MIN_SIZE } from '@constants/common.constants.ts';
 import { Size } from '@models/common.model.ts';
+
 import classes from './Resizer.module.css';
 
 interface ResizerProps {

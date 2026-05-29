@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from 'react';
 
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import Stopwatch, { StopwatchController } from '@pages/auction/Stopwatch/Stopwatch';
 import OverlayThemeScope from '@shared/mantine/OverlayThemeScope';
 
@@ -10,7 +10,7 @@ import OverlayRules from '../OverlayRules';
 import classes from './Layout.module.css';
 
 interface LotsProps {
-  items: Slot[];
+  items: Lot[];
   autoScroll: boolean;
   scrollSpeed: number;
 }

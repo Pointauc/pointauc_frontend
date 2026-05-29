@@ -1,4 +1,4 @@
-export interface Slot {
+export interface Lot {
   fastId: number;
   id: string;
   name: string | null;
@@ -9,6 +9,6 @@ export interface Slot {
   isFavorite?: boolean;
 }
 
-export type SlotResponse = Omit<Slot, 'extra'>;
+export type SlotResponse = Omit<Lot, 'extra'>;
 
-export type ArchivedLot = Omit<Slot, 'extra' | 'id' | 'fastId'>;
+export type ArchivedLot = Omit<Lot, 'extra' | 'id' | 'fastId'>;

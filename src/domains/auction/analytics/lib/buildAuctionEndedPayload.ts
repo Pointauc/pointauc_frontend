@@ -4,17 +4,17 @@ import { COLORS } from '@constants/color.constants';
 import type { AuctionFeatureUsageState } from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import type { AnalyticsEventMap } from '@shared/lib/analytics/events';
 import type { AucSettingsState } from '@reducers/AucSettings/AucSettings';
-import type { Slot } from '@models/slot.model';
+import type { Lot } from '@models/slot.model';
 
 interface BuildAuctionEndedPayloadParams {
   settings: AucSettingsState['settings'];
-  lots: Slot[];
+  lots: Lot[];
   featureUsage: AuctionFeatureUsageState;
 }
 
-const getLotAmount = (lot: Slot): number => Number(lot.amount ?? 0) + Number(lot.extra ?? 0);
+const getLotAmount = (lot: Lot): number => Number(lot.amount ?? 0) + Number(lot.extra ?? 0);
 
-const getUniqueParticipantCount = (lots: Slot[]): number => {
+const getUniqueParticipantCount = (lots: Lot[]): number => {
   const participantIds = new Set<string>();
 
   lots.forEach((lot) => {

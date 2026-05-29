@@ -1,21 +1,21 @@
-import { ArchivedLot, Slot } from '@models/slot.model';
+import { ArchivedLot, Lot } from '@models/slot.model';
 
 /**
  * Converts Slot array to ArchivedLot array by omitting runtime-only properties
  */
-export function slotsToArchivedLots(slots: Slot[]): ArchivedLot[] {
+export function slotsToArchivedLots(slots: Lot[]): ArchivedLot[] {
   return slots.map((slot) => ({
     name: slot.name,
     amount: slot.amount,
     investors: slot.investors,
-    isFavorite: slot.isFavorite
+    isFavorite: slot.isFavorite,
   }));
 }
 
 /**
  * Converts ArchivedLot array to Slot array by creating new Slot instances
  */
-export function archivedLotsToSlots(lots: ArchivedLot[]): Slot[] {
+export function archivedLotsToSlots(lots: ArchivedLot[]): Lot[] {
   return lots.map((lot, index) => ({
     id: Math.random().toString(),
     fastId: index + 1,

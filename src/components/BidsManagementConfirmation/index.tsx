@@ -1,20 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Divider, Group, Paper, Stack, Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { updateKickRedemptions } from '@api/kickApi';
+import { updateRedemptions } from '@api/twitchApi.ts';
+import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import ActionChip from '@components/BidsManagementConfirmation/ActionChip.tsx';
 import ActionStatistics from '@components/BidsManagementConfirmation/ActionStatistics.tsx';
-import { RootState } from '@reducers';
-import { PurchaseStatusEnum } from '@models/purchase.ts';
 import ActionStatus from '@components/BidsManagementConfirmation/ActionStatus.tsx';
-import { updateRedemptions } from '@api/twitchApi.ts';
-import { updateKickRedemptions } from '@api/kickApi';
-import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import bidsManagementUtils from '@components/BidsManagementConfirmation/utils.ts';
+import { PurchaseStatusEnum } from '@models/purchase.ts';
+import { RootState } from '@reducers';
 import { setHistory } from '@reducers/Purchases/Purchases.ts';
-import { addAlert } from '@reducers/notifications/notifications.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
 import { store } from '@store';
 
 import classes from './BidsManagementConfirmation.module.css';
@@ -103,9 +102,11 @@ function BidsManagementConfirmation({ actions: _actions, onLoadingChanged, onClo
   const confirmActions = useCallback(async () => {
     const max = 9999;
     if (actionsData.reduce((acc) => actionsData.length + acc, 0) > max) {
-      dispatch(
-        addAlert({ message: t('bidsManagement.tooManyBids', { max }), type: AlertTypeEnum.Error, duration: 10000 }),
-      );
+      notifications.show({
+        message: t('bidsManagement.tooManyBids', { max }),
+        color: 'red',
+        autoClose: 10000,
+      });
       return;
     }
 

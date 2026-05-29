@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import ENDPOINTS from '../constants/api.constants';
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
 namespace SevenTV {
   export interface EmoteFile {
     name: string;

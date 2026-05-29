@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import { throttle } from '@tanstack/react-pacer';
 
 import { broadcastingControllerBroadcastLotsMutation } from '@api/openapi/@tanstack/react-query.gen';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import { RootState } from '@reducers/index';
+import { store } from '@store';
 
 import { Broadcasting } from '../model/types';
-import { store } from '@store';
 
 export const useLotsBroadcasting = () => {
   const lots = useSelector((state: RootState) => state.slots.slots);
@@ -21,7 +21,7 @@ export const useLotsBroadcasting = () => {
   const broadcastLotsWithCooldown = useMemo(
     () =>
       throttle(
-        (lots: Slot[]) => {
+        (lots: Lot[]) => {
           if (!store.getState().broadcasting.broadcastingData.lots) return;
 
           broadcastLots({

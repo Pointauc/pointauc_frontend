@@ -7,7 +7,7 @@ import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import { createLotLinkParsingMiddleware } from '@domains/links/participant-url-parsing/link-processing-queue/middleware';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 import { sortSlots } from '@utils/common.utils';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
@@ -48,7 +48,7 @@ const PURCHASE_UPDATE_EVENTS = Object.keys(purchasesSlice.actions).map(
 );
 
 const saveSlotsWithCooldown = throttle(
-  ({ slots, purchases }: { slots: Slot[]; purchases: RootState['purchases']['purchases'] }) => {
+  ({ slots, purchases }: { slots: Lot[]; purchases: RootState['purchases']['purchases'] }) => {
     const data = createArchiveData({
       lots: slotsToArchivedLots(slots),
       purchases,

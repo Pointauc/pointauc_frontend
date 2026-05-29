@@ -7,7 +7,7 @@ import { LOTS_BELOW_VIRTUAL_LIST_LIMIT } from '../config/auctionList';
 import { TOP_TRENDING_YOUTUBE_VIDEO_IDS } from '../config/youtubeVideoIds';
 import { getRandomInt, getRandomItem, getRandomWords } from '../lib/random';
 
-import type { Slot } from '@models/slot.model';
+import type { Lot } from '@models/slot.model';
 import type { Purchase } from '@reducers/Purchases/Purchases';
 import type { RootState } from '@reducers/index';
 
@@ -21,7 +21,7 @@ interface BidFrequencyConfig {
   randomLotsPerSecond: number;
 }
 
-const createTestingLot = (index: number, name: string): Slot =>
+const createTestingLot = (index: number, name: string): Lot =>
   createSlot({
     id: `testing-lot-${Date.now()}-${index}-${Math.random().toString(36).slice(2)}`,
     name,
@@ -29,11 +29,11 @@ const createTestingLot = (index: number, name: string): Slot =>
     investors: [`testing-user-${getRandomInt(1, 200)}`],
   });
 
-const createRandomLots = (count: number): Slot[] => {
+const createRandomLots = (count: number): Lot[] => {
   return Array.from({ length: count }, (_, index) => createTestingLot(index, `Testing lot ${index + 1}`));
 };
 
-const createYoutubeLots = (count: number): Slot[] => {
+const createYoutubeLots = (count: number): Lot[] => {
   return Array.from({ length: count }, (_, index) => {
     const videoId = TOP_TRENDING_YOUTUBE_VIDEO_IDS[index % TOP_TRENDING_YOUTUBE_VIDEO_IDS.length];
     const videoUrl = buildYoutubeVideoUrl(videoId);
@@ -52,7 +52,7 @@ const createTestingBid = (message: string): Purchase => ({
   message,
 });
 
-const seedLots = (store: AppStore, lots: Slot[]): void => {
+const seedLots = (store: AppStore, lots: Lot[]): void => {
   store.dispatch(setSlots(lots));
 };
 

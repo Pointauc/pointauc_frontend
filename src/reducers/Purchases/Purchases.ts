@@ -4,7 +4,7 @@ import { Action } from 'redux';
 
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
 import bidUtils from '@utils/bid.utils.ts';
 
@@ -106,7 +106,7 @@ export const logPurchase =
 const visibleNotifications: string[] = [];
 
 export const fastAddBid =
-  (bid: Purchase, slotId: string | Slot) =>
+  (bid: Purchase, slotId: string | Lot) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>): void => {
     const showAlert = (cost: number): void => {
       const name = bidUtils.getName(bid);
@@ -139,7 +139,7 @@ export const fastAddBid =
     dispatch(addBid(slotId, bid, { removeBid: false, callback: showAlert }));
   };
 
-const findSimilarLot = (slotName: string, lots: Slot[]): Slot | undefined => {
+const findSimilarLot = (slotName: string, lots: Lot[]): Lot | undefined => {
   const similarSlotId = slotNamesMap.get(slotName);
   const similarLot = lots.find(({ id }) => id === similarSlotId);
   if (similarLot && !similarLot.lockedPercentage) {

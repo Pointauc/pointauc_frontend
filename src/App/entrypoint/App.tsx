@@ -1,35 +1,33 @@
 import { Alert, Anchor, AppShell, Box, Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertTriangle, IconInfoCircle } from '@tabler/icons-react';
-import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
-import classes from '@App/entrypoint/App.module.css';
 import { AppHeader } from '@App/entrypoint/AppHeader';
 import { AppMain } from '@App/entrypoint/AppMain';
 import { AppNavbar } from '@App/entrypoint/navbar/AppNavbar.tsx';
 import { PortalContextProvider } from '@App/storage/portalContext';
 import { COLORS } from '@constants/color.constants';
-import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
-import { integrations } from '@domains/bids/external-integrations/integrations.ts';
-import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
-import { TutorialManager } from '@domains/tutorials';
 import {
   trackAuctionEnabledIntegration,
   trackAuctionIntegrationTransferredBid,
 } from '@domains/auction/analytics/model/auctionFeatureUsageStore';
+import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
+import { integrations } from '@domains/bids/external-integrations/integrations.ts';
+import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
+import { registerPublicApiSocketHandlers } from '@domains/public-api/lib/socket.ts';
+import { TutorialManager } from '@domains/tutorials';
+import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
 import { MenuItem } from '@models/common.model';
 import { RootState } from '@reducers';
 import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
+import { buildSocketIoOptions } from '@shared/lib/socketIo';
 import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
-import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
-import { registerPublicApiSocketHandlers } from '@domains/public-api/lib/socket.ts';
-import { buildSocketIoOptions } from '@shared/lib/socketIo';
 
 import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
@@ -82,7 +80,10 @@ const App: React.FC = () => {
       dispatch(connectToBroadcastingSocket);
 
       // Connect to global socket
-      const globalSocket = io(`${getSocketIOUrl()}`, buildSocketIoOptions('default', { query: { cookie: document.cookie } }));
+      const globalSocket = io(
+        `${getSocketIOUrl()}`,
+        buildSocketIoOptions('default', { query: { cookie: document.cookie } }),
+      );
       const unregisterPublicApiSocketHandlers = registerPublicApiSocketHandlers(globalSocket, dispatch);
 
       return () => {

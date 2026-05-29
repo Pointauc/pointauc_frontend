@@ -5,6 +5,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { findBestMatch } from 'string-similarity';
+import { notifications } from '@mantine/notifications';
 
 import { updateRedemption } from '@api/twitchApi.ts';
 import { updateKickRedemption } from '@api/kickApi';
@@ -13,11 +14,9 @@ import PointsIcon from '@assets/icons/channelPoints.svg?react';
 import donationBackground from '@assets/img/donationBackground.jpg';
 import Marble from '@assets/img/Marble.png';
 import { useCostConvert } from '@hooks/useCostConvert.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { RedemptionStatus } from '@models/redemption.model.ts';
 import { RootState } from '@reducers';
-import { addAlert } from '@reducers/notifications/notifications.ts';
 import {
   logPurchase,
   removePurchase,
@@ -174,7 +173,11 @@ const BidComponent: React.FC<BidComponentProps> = ({
       slotName: slots[rnd].name,
       name,
     });
-    dispatch(addAlert({ type: AlertTypeEnum.Success, message: alertMessage }));
+    notifications.show({
+      title: t('auc.addedToRandomSlotTitle'),
+      message: alertMessage,
+      color: 'green',
+    });
     dispatch(updateExistBids);
   };
 

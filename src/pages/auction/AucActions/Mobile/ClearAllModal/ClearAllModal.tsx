@@ -1,15 +1,13 @@
-import { FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation, Trans } from 'react-i18next';
-import { Button, Group, Modal, Stack, Text, Title, Alert } from '@mantine/core';
-import { IconAlertTriangle } from '@tabler/icons-react';
+import { Alert, Button, Group, Modal, Stack, Text, Title } from '@mantine/core';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import { IconAlertTriangle } from '@tabler/icons-react';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { resetPurchases, setPurchases } from '@reducers/Purchases/Purchases.ts';
-import { resetSlots, setSlots } from '@reducers/Slots/Slots.ts';
-import { addAlert, deleteAlert } from '@reducers/notifications/notifications.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
 import { RootState } from '@reducers';
+import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
+import { resetSlots } from '@reducers/Slots/Slots.ts';
 
 interface ClearAllModalProps {
   opened: boolean;
@@ -30,31 +28,31 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
     const lotsAmount = slots.length;
     const backup = { slots, purchases };
 
-    const revertDeletion = () => {
-      dispatch(deleteAlert(id));
-      dispatch(setSlots(backup.slots));
-      dispatch(setPurchases(backup.purchases));
-    };
+    // const revertDeletion = () => {
+    //   dispatch(deleteAlert(id));
+    //   dispatch(setSlots(backup.slots));
+    //   dispatch(setPurchases(backup.purchases));
+    // };
 
-    dispatch(
-      addAlert({
-        id,
-        type: AlertTypeEnum.Info,
-        message: (
-          <Text
-            onClick={revertDeletion}
-            style={{ color: 'inherit', fontWeight: 'normal', cursor: 'pointer' }}
-            component='span'
-          >
-            <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
-          </Text>
-        ),
-        duration: 1000 * 18,
-        closable: false,
-        showCountdown: true,
-        static: true,
-      }),
-    );
+    // dispatch(
+    //   addAlert({
+    //     id,
+    //     type: AlertTypeEnum.Info,
+    //     message: (
+    //       <Text
+    //         onClick={revertDeletion}
+    //         style={{ color: 'inherit', fontWeight: 'normal', cursor: 'pointer' }}
+    //         component='span'
+    //       >
+    //         <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
+    //       </Text>
+    //     ),
+    //     duration: 1000 * 18,
+    //     closable: false,
+    //     showCountdown: true,
+    //     static: true,
+    //   }),
+    // );
 
     onClose();
   };

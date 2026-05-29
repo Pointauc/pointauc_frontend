@@ -7,16 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
 import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows';
-import {
-  addExtra,
-  addSlot,
-  deleteSlot,
-  setSlotAmount,
-  setSlotIsFavorite
-} from '@reducers/Slots/Slots.ts';
+import { addExtra, addSlot, deleteSlot, setSlotAmount, setSlotIsFavorite } from '@reducers/Slots/Slots.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { useIsMobile } from '@shared/lib/ui';
 import { animateValue } from '@utils/common.utils.ts';
@@ -27,7 +21,7 @@ import styles from './LotControls.module.css';
 import WinningChance from './WinningChance';
 
 interface LotControlsProps {
-  lot: Slot;
+  lot: Lot;
   readonly?: boolean;
 }
 
@@ -136,9 +130,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   return (
     <>
       <div className={styles.hashContainer}>
-        {isFavorite && (
-          <IconStarFilled color={'orange'} size={20} />
-        )}
+        {isFavorite && <IconStarFilled color={'orange'} size={20} />}
         <div className={styles.hash}>
           <IconHash className={styles.hashIcon} size={18} />
           <div>{`${lot.fastId}`}</div>

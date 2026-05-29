@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 import { SaveInfo } from '../models/save.model';
 import { LocalStorage } from '../constants/common.constants';
-import { Slot } from '../models/slot.model';
+import { Lot } from '../models/slot.model';
 import { FORMAT } from '../constants/format.constants';
 
 class SaveLoadService {
@@ -16,7 +16,7 @@ class SaveLoadService {
     return rawConfig ? JSON.parse(rawConfig) : [];
   };
 
-  static getSlots = (name: string): Slot[] => {
+  static getSlots = (name: string): Lot[] => {
     const config = SaveLoadService.getSavesConfig();
     const configIndex = config.findIndex(({ name: infoName }) => infoName === name);
 
@@ -38,7 +38,7 @@ class SaveLoadService {
     return config;
   };
 
-  static rewrite = (slots: Slot[], name: string): SaveInfo[] => {
+  static rewrite = (slots: Lot[], name: string): SaveInfo[] => {
     const config = SaveLoadService.getSavesConfig();
     const configIndex = config.findIndex(({ name: infoName }) => infoName === name);
 
@@ -72,7 +72,7 @@ class SaveLoadService {
     return config;
   };
 
-  static newSave = (slots: Slot[], name?: string): SaveInfo[] => {
+  static newSave = (slots: Lot[], name?: string): SaveInfo[] => {
     const saveInfo: SaveInfo = {
       timestamp: new Date().toISOString(),
       name: name || `Сохранение ${dayjs().format(FORMAT.DATE.dateTime)}`,

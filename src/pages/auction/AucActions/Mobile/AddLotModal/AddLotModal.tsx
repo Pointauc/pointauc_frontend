@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { RootState } from '@reducers';
 import { addSlot } from '@reducers/Slots/Slots.ts';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 
 interface AddLotModalProps {
@@ -27,7 +27,7 @@ const AddLotModal: FC<AddLotModalProps> = ({ opened, onClose }) => {
   const percentsRef = useRef<HTMLSpanElement>(null);
 
   const getNewSlot = useCallback(
-    (): Partial<Slot> => ({
+    (): Partial<Lot> => ({
       amount: Number(lotAmount) || null,
       name: lotName,
     }),
@@ -36,7 +36,7 @@ const AddLotModal: FC<AddLotModalProps> = ({ opened, onClose }) => {
 
   const updateNewSlotChance = useCallback(() => {
     if (showChances && percentsRef.current) {
-      const slot: Slot = { ...getNewSlot(), id: Math.random().toString() } as Slot;
+      const slot: Lot = { ...getNewSlot(), id: Math.random().toString() } as Lot;
       const refMap = new Map<string, HTMLSpanElement>([[slot.id, percentsRef.current]]);
 
       updatePercents([...slots, slot], refMap);

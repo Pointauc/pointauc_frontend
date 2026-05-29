@@ -108,6 +108,7 @@ export const RulesSettingsProvider = ({ children }: { children: ReactNode }): Re
     _merge(settings);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const value = useMemo(() => ({ data: settings, merge }), [settings]);
 
   return <RulesSettingsContext.Provider value={value}>{children}</RulesSettingsContext.Provider>;

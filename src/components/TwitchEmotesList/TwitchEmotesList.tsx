@@ -9,7 +9,6 @@ import { getSevenTVEmotes } from '@api/emotesApi.ts';
 import styles from '@components/TwitchEmotesList/TwitchEmotesList.module.css';
 import { RootState } from '@reducers';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const fetcher = new EmoteFetcher();
 
 interface TwitchEmotesListProps {

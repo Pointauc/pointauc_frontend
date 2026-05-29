@@ -1,6 +1,6 @@
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 
-export const getSlotNameById = (slots: Slot[]): Map<string, string | null> => {
+export const getSlotNameById = (slots: Lot[]): Map<string, string | null> => {
   const slotNameById = new Map<string, string | null>();
   slots.forEach(({ id, name }) => {
     slotNameById.set(id, name);

@@ -8,8 +8,8 @@ import { WheelItemWithMetadata } from '@models/wheel.model';
 import { WheelParticipantDto, WheelSettingsChangedDto } from '@api/openapi/types.gen';
 import { skipSameValueCalls } from '@utils/dataType/function.utils';
 import { WheelFormat } from '@constants/wheel';
-
 import { store } from '@store';
+
 import { Broadcasting } from '../model/types';
 
 export type WheelBroadcastSettings = Omit<WheelSettingsChangedDto, 'type'>;
