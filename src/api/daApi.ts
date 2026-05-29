@@ -1,9 +1,9 @@
-import axios from 'axios';
+import { backendApi } from '@api/backendApi';
 
 import ENDPOINTS from '../constants/api.constants';
 
 export const authenticateDA = async (code: string): Promise<{ isNew: boolean }> => {
-  const { data } = await axios.post(ENDPOINTS.DA_AUTH, { code, redirect_uri: `${window.location.origin}/da/redirect` });
+  const { data } = await backendApi.post(ENDPOINTS.DA_AUTH, { code, redirect_uri: `${window.location.origin}/da/redirect` });
 
   return data;
 };

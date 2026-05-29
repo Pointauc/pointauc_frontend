@@ -41,9 +41,11 @@ import { queryClient } from '@shared/lib/react-query/client.ts';
 import { registerTestingScenarios } from '@domains/testing/registerTestingScenarios.ts';
 
 import App from './App/entrypoint/App.tsx';
+import { setupBackendApiConfig } from './api/backendConfig.ts';
 import { initStore, store } from './store.ts';
 // All static imports are hoisted; by the time this line executes, rootReducer
 // is fully initialized, so initStore() can safely create the Redux store.
+setupBackendApiConfig();
 initErrorTracking(createConfiguredErrorTrackingProvider());
 initStore(rootReducer);
 registerTestingScenarios(store, []);

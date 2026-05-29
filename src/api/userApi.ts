@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 import i18n from '@assets/i18n';
+import { backendApi } from '@api/backendApi';
 
 import ENDPOINTS from '../constants/api.constants';
 import { GetUserDto, IntegrationValidity } from '../models/user.model';
@@ -9,17 +9,17 @@ import { UserInfo } from '../reducers/User/User';
 import { AucSettingsDto, SettingsPreset, SettingsPresetLocal, SettingsUpdateRequest } from '../models/settings.model';
 
 export const getUsername = async (): Promise<UserInfo> => {
-  const { data } = await axios.get(ENDPOINTS.USER.USERNAME);
+  const { data } = await backendApi.get(ENDPOINTS.USER.USERNAME);
 
   return data;
 };
 
 export const updateSettings = async (data: SettingsUpdateRequest): Promise<void> => {
-  await axios.put(ENDPOINTS.USER.SETTINGS, data);
+  await backendApi.put(ENDPOINTS.USER.SETTINGS, data);
 };
 
 export const getUserData = async (): Promise<GetUserDto> => {
-  const { data } = await axios.get(ENDPOINTS.USER.DATA);
+  const { data } = await backendApi.get(ENDPOINTS.USER.DATA);
 
   return data;
 };
@@ -29,7 +29,7 @@ const getLocalSettingsPresets = (): SettingsPresetLocal[] => {
 };
 
 export const getIntegrationsValidity = async (): Promise<IntegrationValidity> => {
-  return (await axios.get(ENDPOINTS.USER.VALIDATE_INTEGRATIONS)).data;
+  return (await backendApi.get(ENDPOINTS.USER.VALIDATE_INTEGRATIONS)).data;
 };
 
 export const normalizeLocalSettings = ({

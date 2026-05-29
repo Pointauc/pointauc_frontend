@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { backendApi } from '@api/backendApi';
 
 import ENDPOINTS from '../constants/api.constants';
 
@@ -23,17 +23,17 @@ export interface AudioPresetPostData extends AudioPresetCommon {
 
 class AudioRoomApi {
   getUser = async (): Promise<AudioRoomUser> => {
-    const { data } = await axios.get<AudioRoomUser>(ENDPOINTS.AUDIO_ROOM.USER);
+    const { data } = await backendApi.get<AudioRoomUser>(ENDPOINTS.AUDIO_ROOM.USER);
 
     return data;
   };
 
   login = async (user: AudioRoomUser): Promise<void> => {
-    await axios.post(ENDPOINTS.AUDIO_ROOM.USER, user);
+    await backendApi.post(ENDPOINTS.AUDIO_ROOM.USER, user);
   };
 
   getPresets = async (): Promise<AudioPreset[]> => {
-    const { data } = await axios.get<AudioPreset[]>(ENDPOINTS.AUDIO_ROOM.PRESETS);
+    const { data } = await backendApi.get<AudioPreset[]>(ENDPOINTS.AUDIO_ROOM.PRESETS);
 
     return data;
   };
@@ -45,13 +45,13 @@ class AudioRoomApi {
     formData.append('volume', volume.toString());
     formData.append('name', name);
 
-    const { data } = await axios.post(ENDPOINTS.AUDIO_ROOM.PRESETS, formData);
+    const { data } = await backendApi.post(ENDPOINTS.AUDIO_ROOM.PRESETS, formData);
 
     return data;
   };
 
   deletePreset = async (id: string): Promise<void> => {
-    await axios.delete(ENDPOINTS.AUDIO_ROOM.PRESETS, { params: { id } });
+    await backendApi.delete(ENDPOINTS.AUDIO_ROOM.PRESETS, { params: { id } });
   };
 }
 

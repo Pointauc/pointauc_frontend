@@ -6,6 +6,7 @@ import RedirectLoginButton from '@domains/bids/external-integrations/shared/auth
 import { authenticateDA } from '@api/daApi.ts';
 import ROUTES from '@constants/routes.constants.ts';
 import ENDPOINTS from '@constants/api.constants.ts';
+import { resolveBackendApiUrl } from '@shared/api/backendOrigin';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { isBrowser } from '@utils/ssr.ts';
 import { store } from '@store';
@@ -72,7 +73,7 @@ const pubsubFlow = buildCentrifugeFlow({
   id,
   authFlow,
   getToken: async () => store.getState().user.authData.da?.socketConnectionToken,
-  subscribeEndpoint: isBrowser ? location.origin + ENDPOINTS.DA.SUBSCRIBE : '',
+  subscribeEndpoint: isBrowser ? resolveBackendApiUrl(ENDPOINTS.DA.SUBSCRIBE) : '',
   getChannel: (id) => `$alerts:donation_${id}`,
 });
 

@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import { backendApi } from '@api/backendApi';
 import ENDPOINTS from '@constants/api.constants';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers';
 import { PatchRedemptionDto, PatchRedemptionsDto, RedemptionStatus } from '@models/redemption.model';
@@ -155,7 +156,7 @@ const clearStoredToken = (): void => {
 
 export const vkVideoLiveAuthApi = {
   authenticate: async (code: string, redirectUri: string): Promise<AuthResponse> => {
-    const { data } = await axios.post<AuthResponse>(ENDPOINTS.VK_VIDEO_LIVE_AUTH, {
+    const { data } = await backendApi.post<AuthResponse>(ENDPOINTS.VK_VIDEO_LIVE_AUTH, {
       code,
       redirect_uri: redirectUri,
     });
@@ -163,13 +164,13 @@ export const vkVideoLiveAuthApi = {
     return data;
   },
   refresh: async (): Promise<RefreshResponse> => {
-    const { data } = await axios.post<RefreshResponse>(ENDPOINTS.VK_VIDEO_LIVE_REFRESH);
+    const { data } = await backendApi.post<RefreshResponse>(ENDPOINTS.VK_VIDEO_LIVE_REFRESH);
     setStoredToken(data.accessToken);
     return data;
   },
   revoke: async (): Promise<void> => {
     try {
-      await axios.post(ENDPOINTS.VK_VIDEO_LIVE_REVOKE);
+      await backendApi.post(ENDPOINTS.VK_VIDEO_LIVE_REVOKE);
     } finally {
       clearStoredToken();
     }

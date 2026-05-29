@@ -1,4 +1,6 @@
 // eslint-disable-next-line import/prefer-default-export
+import { getBackendOrigin } from '@shared/api/backendOrigin';
+
 import { getCookie, isProduction } from './common.utils';
 
 export const getQueryValue = (url: string, queryName: string): string | null => {
@@ -21,7 +23,8 @@ export const splitByUrls = (text: string): string[] => {
 export const getWebsocketUrl = (): string =>
   `wss://woods-service.herokuapp.com?userSession=${getCookie('userSession')}`;
 
-export const getSocketIOUrl = (): string => (isProduction() ? document.location.origin : 'http://localhost:8000');
+export const getSocketIOUrl = (): string =>
+  getBackendOrigin() ?? (isProduction() ? document.location.origin : 'http://localhost:8000');
 
 export const getCloudifyUrl = (imageId: string): string =>
   `https://res.cloudinary.com/dn4ue0pj9/image/upload/v1615110548/15879138916140_zgjk6z.jpg${imageId}`;
