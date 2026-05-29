@@ -1,15 +1,20 @@
 import { AnyAction, Middleware } from 'redux';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '@reducers';
-import { setAucSettings } from '@reducers/AucSettings/AucSettings';
-import { deleteSlot, setSlotData, setSlotName } from '@reducers/Slots/Slots';
 
 import { ParsingQueue } from './parsing-queue/ParsingQueue';
-import { BULK_LOT_NAME_UPDATE_ACTIONS } from './config';
+import {
+  BULK_LOT_NAME_UPDATE_ACTIONS,
+  DELETE_SLOT_ACTION,
+  LOT_LINK_PARSING_SETTING_ACTION,
+  SET_SLOT_DATA_ACTION,
+  SET_SLOT_NAME_ACTION,
+} from './config';
 
-type SetSlotNameAction = ReturnType<typeof setSlotName>;
-type SetSlotDataAction = ReturnType<typeof setSlotData>;
-type DeleteSlotAction = ReturnType<typeof deleteSlot>;
+type SetSlotNameAction = PayloadAction<{ id: string; name: string; ignoreParsing?: boolean }>;
+type SetSlotDataAction = PayloadAction<{ id: string; name?: string | null }>;
+type DeleteSlotAction = PayloadAction<string>;
 
 interface ActionHandlerContext {
   action: AnyAction;
@@ -30,7 +35,7 @@ const syncSlotsHandler: ActionHandler = ({ previousState, nextState, queue }) =>
 
 const actionHandlers: Partial<Record<string, ActionHandler>> = {
   ...Object.fromEntries(Array.from(BULK_LOT_NAME_UPDATE_ACTIONS, (actionType) => [actionType, syncSlotsHandler])),
-  [setAucSettings.type]: ({ previousState, nextState, queue }) => {
+  [LOT_LINK_PARSING_SETTING_ACTION]: ({ previousState, nextState, queue }) => {
     if (!previousState) {
       return;
     }
@@ -42,7 +47,7 @@ const actionHandlers: Partial<Record<string, ActionHandler>> = {
       queue.syncSlots([], nextState.slots.slots);
     }
   },
-  [setSlotName.type]: ({ action, queue }) => {
+  [SET_SLOT_NAME_ACTION]: ({ action, queue }) => {
     const typedAction = action as SetSlotNameAction;
 
     if (typedAction.payload.ignoreParsing) {
@@ -51,7 +56,7 @@ const actionHandlers: Partial<Record<string, ActionHandler>> = {
 
     queue.queueLotName(typedAction.payload.id, typedAction.payload.name);
   },
-  [setSlotData.type]: ({ action, queue }) => {
+  [SET_SLOT_DATA_ACTION]: ({ action, queue }) => {
     const typedAction = action as SetSlotDataAction;
 
     if (!('name' in typedAction.payload)) {
@@ -60,7 +65,7 @@ const actionHandlers: Partial<Record<string, ActionHandler>> = {
 
     queue.queueLotName(typedAction.payload.id as string, typedAction.payload.name ?? null);
   },
-  [deleteSlot.type]: ({ action, queue }) => {
+  [DELETE_SLOT_ACTION]: ({ action, queue }) => {
     queue.removeLot((action as DeleteSlotAction).payload);
   },
 };
