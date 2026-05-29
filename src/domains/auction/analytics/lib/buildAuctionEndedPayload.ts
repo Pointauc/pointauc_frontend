@@ -12,7 +12,7 @@ interface BuildAuctionEndedPayloadParams {
   featureUsage: AuctionFeatureUsageState;
 }
 
-const getLotAmount = (lot: Lot): number => Number(lot.amount ?? 0) + Number(lot.extra ?? 0);
+const getLotAmount = (lot: Lot): number => Number(lot.amount ?? 0);
 
 const getUniqueParticipantCount = (lots: Lot[]): number => {
   const participantIds = new Set<string>();

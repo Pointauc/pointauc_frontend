@@ -13,7 +13,6 @@ const generateMockLots = (count: number): Lot[] => {
     id: `${index + 1}`,
     name: `Lot ${index + 1}`,
     amount: Math.floor(Math.random() * 1000) + 100,
-    extra: Math.floor(Math.random() * 500) + 50,
     fastId: index + 1,
   }));
 };
@@ -50,7 +49,6 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
               id: lot.id,
               name: lot.name,
               amount: lot.amount,
-              extra: 0,
               fastId: lot.fastId,
             })),
           );

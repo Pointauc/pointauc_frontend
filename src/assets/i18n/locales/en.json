@@ -385,6 +385,7 @@
   },
   "lot": {
     "addAmount": "Add Cost",
+    "add": "Add",
     "delete": "Delete Slot",
     "extra": "Extra",
     "trailer": "Trailer (YouTube)",

@@ -19,7 +19,6 @@ import rootReducer, { RootState } from './index';
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotData',
   'slots/setSlotAmount',
-  'slots/addExtra',
   'slots/deleteSlot',
   'slots/addSlot',
   'slots/addSlotAmount',

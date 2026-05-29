@@ -19,7 +19,6 @@ import type { RootState } from '@reducers/index.ts';
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotData',
   'slots/setSlotAmount',
-  'slots/addExtra',
   'slots/deleteSlot',
   'slots/addSlot',
   'slots/addSlotAmount',

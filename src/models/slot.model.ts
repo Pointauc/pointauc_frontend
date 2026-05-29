@@ -8,12 +8,11 @@ export interface Lot {
   id: string;
   name: string | null;
   amount: number | null;
-  extra: number | null;
   contributors?: LotContributor[];
   lockedPercentage?: number | null;
   isFavorite?: boolean;
 }
 
-export type SlotResponse = Omit<Lot, 'extra'>;
+export type SlotResponse = Lot;
 
-export type ArchivedLot = Omit<Lot, 'extra' | 'id' | 'fastId'>;
+export type ArchivedLot = Omit<Lot, 'id' | 'fastId'>;

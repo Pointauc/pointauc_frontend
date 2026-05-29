@@ -50,7 +50,6 @@ const generateMockLots = (): Lot[] => {
       id: `lot-${index + 1}`,
       name,
       amount: Math.floor(Math.random() * 1000) + 100,
-      extra: 0,
       fastId: index + 1,
     }))
     .sort((a, b) => b.amount - a.amount);

@@ -30,7 +30,6 @@ export const createSlot = (props: Partial<Lot> = {}): Lot => {
   const slot = {
     fastId: fastIdAllocator.allocate(fastId),
     id: Math.random().toString(),
-    extra: null,
     amount: null,
     name: '',
     contributors: [],
@@ -68,8 +67,6 @@ const initialState: SlotsState = {
   slots: initialSlots,
   isInitialized: false,
 };
-
-const getAmountSum = (slot: Lot): number | null => (slot.extra ? Number(slot.amount) + slot.extra : slot.amount);
 
 const updateSlotPosition = (slots: Lot[], index: number): void => {
   if (Number(slots[index].amount) >= Number(slots[0].amount)) {
@@ -151,17 +148,9 @@ export const slotsSlice = createSlice({
       const { id, percentage } = action.payload;
       state.slots = sortSlots(recalculateAllLockedSlots(state.slots, { id, percentage }));
     },
-    setSlotExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
-      const { id, extra } = action.payload;
-      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, extra } : slot));
-    },
     setSlotIsFavorite(state, action: PayloadAction<{ id: string | number; state: boolean }>): void {
       const { id, state: favoriteState } = action.payload;
       updateSlotIsFavorite(state.slots, id, favoriteState);
-    },
-    addExtra(state, action: PayloadAction<{ id: string | number; extra: number }>): void {
-      const { id, extra } = action.payload;
-      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, extra: null, amount: Number(slot.amount ?? 0) + extra }));
     },
     deleteSlot(state, action: PayloadAction<string>): void {
       const deletedId = action.payload;
@@ -244,10 +233,8 @@ export const slotsSlice = createSlice({
 export const {
   setSlotData,
   setSlotAmount,
-  setSlotExtra,
   setSlotName,
   setSlotIsFavorite,
-  addExtra,
   addSlot,
   deleteSlot,
   resetSlots,
@@ -276,7 +263,6 @@ export const createSlotFromPurchase =
       id: Math.random().toString(),
       name: slotName,
       amount,
-      extra: null,
       fastId: fastIdAllocator.allocate(),
       contributors: contributorName ? [{ name: contributorName, amount }] : [],
       isFavorite: false,

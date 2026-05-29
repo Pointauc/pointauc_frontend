@@ -34,7 +34,6 @@ export function archivedLotsToSlots(lots: ArchivedLot[]): Lot[] {
     fastId: index + 1,
     name: lot.name,
     amount: lot.amount,
-    extra: null,
     contributors: getArchivedLotContributors(lot),
     lockedPercentage: null,
     isFavorite: lot.isFavorite,
