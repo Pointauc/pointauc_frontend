@@ -29,12 +29,12 @@ const LotContributorSummary = ({ contributors = [], hideAmounts }: LotContributo
       p={0}
       label={<LotContributorTooltipContent contributors={contributors} hideAmounts={hideAmounts} />}
     >
-      <div className='relative flex h-full max-w-44 shrink-0 items-center pr-3'>
-        <span className='text-dimmed min-w-0 truncate rounded-sm px-1.5 text-sm font-medium transition-colors'>
+      <div className='relative flex h-full max-w-44 shrink-0 items-center'>
+        <span className='text-dimmed min-w-0 truncate rounded-sm text-sm font-medium transition-colors'>
           {t('lot.contributorBy', { name: leadingContributor.name })}
         </span>
         {additionalContributorCount > 0 && (
-          <span className='text-dimmed absolute top-1 right-0 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold'>
+          <span className='text-dimmed absolute top-2 right-1 translate-x-full rounded-full text-[10px] leading-none font-bold'>
             {t('lot.additionalContributors', { count: additionalContributorCount })}
           </span>
         )}

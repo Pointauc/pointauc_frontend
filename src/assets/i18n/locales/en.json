@@ -653,10 +653,14 @@
       "sortBids": "Sort Purchases for Points",
       "title": "Common",
       "insertStrategyLabel": "Auto-adding bids",
+      "insertStrategyDesc": "Controls how incoming bids are added to auction lots automatically:",
+      "insertStrategyDescForce": "Adds every new bid automatically.",
+      "insertStrategyDescMatch": "Adds a bid only when its name fully matches an existing lot name.",
+      "insertStrategyDescNone": "Leaves all incoming bids for manual processing.",
       "revoke": "disconnect",
       "insertStrategy": {
         "force": "Always",
-        "match": "When the name fully matches",
+        "match": "When matches",
         "none": "Never"
       },
       "bidNameStrategyLabel": "What to use as a bid name",

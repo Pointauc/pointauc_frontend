@@ -29,11 +29,11 @@ const TimerSection = () => {
       icon={<IconClockHour4 size={24} />}
     >
       <SettingsCard>
-        <SettingsRow htmlFor='showTotalTime'>
+        <SettingsRow htmlFor='showTotalTime' description={t('settings.stopwatch.totalTimeHint')}>
           <FormSwitchField
             name='showTotalTime'
             control={control}
-            label={<FieldLabel text={t('settings.stopwatch.totalTime')} hint={t('settings.stopwatch.totalTimeHint')} />}
+            label={<FieldLabel text={t('settings.stopwatch.totalTime')} withDescriptionIcon />}
           />
         </SettingsRow>
 

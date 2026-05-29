@@ -1,5 +1,5 @@
 import { ColorInput, ColorSwatch, Divider, UnstyledButton } from '@mantine/core';
-import { IconPalette } from '@tabler/icons-react';
+import { IconEyeOff, IconLink, IconPalette, IconPercentage, IconSum, IconUsers } from '@tabler/icons-react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -81,7 +81,12 @@ const AppearanceSection = () => {
             <FormSwitchField
               name='isTotalVisible'
               control={control}
-              label={<FieldLabel text={t('settings.auc.showTotal')} />}
+              label={
+                <FieldLabel
+                  text={t('settings.auc.showTotal')}
+                  leftSection={<IconSum size={18} className='text-dimmed' />}
+                />
+              }
             />
           </SettingsRow>
 
@@ -91,7 +96,12 @@ const AppearanceSection = () => {
             <FormSwitchField
               name='showChances'
               control={control}
-              label={<FieldLabel text={t('settings.auc.showWinningChances')} />}
+              label={
+                <FieldLabel
+                  text={t('settings.auc.showWinningChances')}
+                  leftSection={<IconPercentage size={18} className='text-dimmed' />}
+                />
+              }
             />
           </SettingsRow>
 
@@ -101,17 +111,12 @@ const AppearanceSection = () => {
             <FormSwitchField
               name='showViewerNames'
               control={control}
-              label={<FieldLabel text={t('settings.auc.showViewerNames')} />}
-            />
-          </SettingsRow>
-
-          <Divider />
-
-          <SettingsRow htmlFor='hideAmounts'>
-            <FormSwitchField
-              name='hideAmounts'
-              control={control}
-              label={<FieldLabel text={t('settings.auc.hideAmounts')} />}
+              label={
+                <FieldLabel
+                  text={t('settings.auc.showViewerNames')}
+                  leftSection={<IconUsers size={18} className='text-dimmed' />}
+                />
+              }
             />
           </SettingsRow>
 
@@ -121,7 +126,27 @@ const AppearanceSection = () => {
             <FormSwitchField
               name='isLotLinkParsingEnabled'
               control={control}
-              label={<FieldLabel text={t('settings.auc.lotLinkParsing')} />}
+              label={
+                <FieldLabel
+                  text={t('settings.auc.lotLinkParsing')}
+                  leftSection={<IconLink size={18} className='text-dimmed' />}
+                />
+              }
+            />
+          </SettingsRow>
+
+          <Divider />
+
+          <SettingsRow htmlFor='hideAmounts'>
+            <FormSwitchField
+              name='hideAmounts'
+              control={control}
+              label={
+                <FieldLabel
+                  text={t('settings.auc.hideAmounts')}
+                  leftSection={<IconEyeOff size={18} className='text-dimmed' />}
+                />
+              }
             />
           </SettingsRow>
         </div>

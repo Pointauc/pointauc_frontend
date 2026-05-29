@@ -34,9 +34,9 @@ const RewardPresetsForm = () => {
 
   return (
     <div>
-      <SettingsRow compact htmlFor='rewardsPrefix'>
+      <SettingsRow compact htmlFor='rewardsPrefix' description={t('settings.twitch.commonRewardsNameDesc')}>
         <div className='flex flex-wrap items-center justify-between gap-4'>
-          <FieldLabel text={t('settings.twitch.commonRewardsName')} hint={t('settings.twitch.commonRewardsNameDesc')} />
+          <FieldLabel text={t('settings.twitch.commonRewardsName')} withDescriptionIcon />
           <Controller
             control={control}
             name='rewardsPrefix'
