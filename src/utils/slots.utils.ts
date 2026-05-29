@@ -23,7 +23,7 @@ export const parseSlotsPreset = (text: string): Lot[] => {
   return items.map<Lot>((item, fastId) => {
     const [name, amount = 1] = item.split(',');
 
-    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, investors: [] };
+    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, contributors: [] };
   });
 };
 

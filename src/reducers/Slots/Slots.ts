@@ -7,6 +7,11 @@ import fastIdAllocator from '@services/FastIdAllocator.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
+import {
+  addContributorAmount,
+  contributorsFromLegacyInvestors,
+  getBidContributorName,
+} from '@utils/slotContributors.utils';
 
 import slotNamesMap from '../../services/SlotNamesMap';
 import { addedBidsMap, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
@@ -28,7 +33,7 @@ export const createSlot = (props: Partial<Lot> = {}): Lot => {
     extra: null,
     amount: null,
     name: '',
-    investors: [],
+    contributors: [],
     lockedPercentage: null,
     isFavorite: false,
     ...rest,
@@ -96,7 +101,7 @@ type TestLot = (lot: Lot) => boolean;
 
 const slotsQueryComparator = {
   id: (lot: Lot, id: string) => lot.id === id,
-  investorId: (lot: Lot, investorId: string) => !!lot.investors?.includes(investorId),
+  investorId: (lot: Lot, investorId: string) => lot.contributors?.some(({ name }) => name === investorId) ?? false,
   bidId: (lot: Lot, bidId: string) => lot.id === addedBidsMap.get(bidId),
 };
 
@@ -208,6 +213,7 @@ export const slotsSlice = createSlice({
     },
     mergeLot(state, action: PayloadAction<PublicApi.LotUpdateRequest>): void {
       const { query, lot: requestLot } = action.payload;
+      const { amountChange, investors, ...lotUpdate } = requestLot;
       const compare: TestLot = Object.entries(query).reduce<TestLot>(
         (compare, [key, value]) =>
           value != null ? (lot: Lot) => slotsQueryComparator[key as keyof LotQuery](lot, value) : compare,
@@ -215,11 +221,9 @@ export const slotsSlice = createSlice({
       );
       const updateLot = (lot: Lot): Lot => ({
         ...lot,
-        ...requestLot,
-        amount:
-          requestLot.amountChange != null && lot.amount
-            ? lot.amount + requestLot.amountChange
-            : requestLot.amount ?? lot.amount ?? null,
+        ...lotUpdate,
+        contributors: investors ? contributorsFromLegacyInvestors(investors) : lot.contributors,
+        amount: amountChange != null ? Number(lot.amount ?? 0) + amountChange : requestLot.amount ?? lot.amount ?? null,
       });
 
       state.slots = state.slots.map((lot) => {
@@ -266,13 +270,15 @@ export const createSlotFromPurchase =
       slots: { slots },
     } = getState();
     const slotName = bidUtils.getName(bid);
+    const amount = bidUtils.parseCost(bid, settings, true);
+    const contributorName = getBidContributorName(bid);
     const newSlot: Lot = {
       id: Math.random().toString(),
       name: slotName,
-      amount: bidUtils.parseCost(bid, settings, true),
+      amount,
       extra: null,
       fastId: fastIdAllocator.allocate(),
-      investors: bid.investorId ? [bid.investorId] : [],
+      contributors: contributorName ? [{ name: contributorName, amount }] : [],
       isFavorite: false,
     };
 
@@ -312,9 +318,22 @@ export const addBid =
     slotNamesMap.set(bidName, lot.id);
 
     if (!lot.name || lot.name === '') {
-      dispatch(setSlotData({ id: lot.id, amount: amount + (lot.amount ?? 0), name: bidName }));
+      dispatch(
+        setSlotData({
+          id: lot.id,
+          amount: amount + (lot.amount ?? 0),
+          name: bidName,
+          contributors: addContributorAmount(lot.contributors, getBidContributorName(bid), amount),
+        }),
+      );
     } else {
-      dispatch(setSlotAmount({ id: lot.id, amount: amount + (lot.amount ?? 0) }));
+      dispatch(
+        setSlotData({
+          id: lot.id,
+          amount: amount + (lot.amount ?? 0),
+          contributors: addContributorAmount(lot.contributors, getBidContributorName(bid), amount),
+        }),
+      );
     }
 
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: lot.id }, false));

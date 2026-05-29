@@ -30,7 +30,7 @@ const mapSlotsToPublicLots = (): PublicApi.Lot[] => {
     id: slot.id,
     name: slot.name,
     amount: slot.amount,
-    investors: slot.investors ?? [],
+    investors: slot.contributors?.map(({ name }) => name) ?? [],
   }));
 };
 

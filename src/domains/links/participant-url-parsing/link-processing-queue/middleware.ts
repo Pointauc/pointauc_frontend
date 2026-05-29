@@ -1,15 +1,69 @@
-import { Middleware } from 'redux';
+import { AnyAction, Middleware } from 'redux';
 
 import { RootState } from '@reducers';
+import { setAucSettings } from '@reducers/AucSettings/AucSettings';
+import { deleteSlot, setSlotData, setSlotName } from '@reducers/Slots/Slots';
 
 import { ParsingQueue } from './parsing-queue/ParsingQueue';
-import {
-  BULK_LOT_NAME_UPDATE_ACTIONS,
-  DELETE_SLOT_ACTION,
-  LOT_LINK_PARSING_SETTING_ACTION,
-  SET_SLOT_DATA_ACTION,
-  SET_SLOT_NAME_ACTION,
-} from './config';
+import { BULK_LOT_NAME_UPDATE_ACTIONS } from './config';
+
+type SetSlotNameAction = ReturnType<typeof setSlotName>;
+type SetSlotDataAction = ReturnType<typeof setSlotData>;
+type DeleteSlotAction = ReturnType<typeof deleteSlot>;
+
+interface ActionHandlerContext {
+  action: AnyAction;
+  nextState: RootState;
+  previousState: RootState | null;
+  queue: ParsingQueue;
+}
+
+type ActionHandler = (context: ActionHandlerContext) => void;
+
+const syncSlotsHandler: ActionHandler = ({ previousState, nextState, queue }) => {
+  if (!previousState) {
+    return;
+  }
+
+  queue.syncSlots(previousState.slots.slots, nextState.slots.slots);
+};
+
+const actionHandlers: Partial<Record<string, ActionHandler>> = {
+  ...Object.fromEntries(Array.from(BULK_LOT_NAME_UPDATE_ACTIONS, (actionType) => [actionType, syncSlotsHandler])),
+  [setAucSettings.type]: ({ previousState, nextState, queue }) => {
+    if (!previousState) {
+      return;
+    }
+
+    const wasLotLinkParsingEnabled = previousState.aucSettings.settings.isLotLinkParsingEnabled;
+    const isLotLinkParsingEnabled = nextState.aucSettings.settings.isLotLinkParsingEnabled;
+
+    if (!wasLotLinkParsingEnabled && isLotLinkParsingEnabled) {
+      queue.syncSlots([], nextState.slots.slots);
+    }
+  },
+  [setSlotName.type]: ({ action, queue }) => {
+    const typedAction = action as SetSlotNameAction;
+
+    if (typedAction.payload.ignoreParsing) {
+      return;
+    }
+
+    queue.queueLotName(typedAction.payload.id, typedAction.payload.name);
+  },
+  [setSlotData.type]: ({ action, queue }) => {
+    const typedAction = action as SetSlotDataAction;
+
+    if (!('name' in typedAction.payload)) {
+      return;
+    }
+
+    queue.queueLotName(typedAction.payload.id as string, typedAction.payload.name ?? null);
+  },
+  [deleteSlot.type]: ({ action, queue }) => {
+    queue.removeLot((action as DeleteSlotAction).payload);
+  },
+};
 
 /**
  * Redux action router for centralized lot-link parsing.
@@ -24,36 +78,19 @@ export const createLotLinkParsingMiddleware = (): Middleware<{}, RootState> => {
     queue = new ParsingQueue(storeApi.dispatch, storeApi.getState);
 
     return (next) => (action) => {
-      const shouldSyncSlots = BULK_LOT_NAME_UPDATE_ACTIONS.has(action.type);
-      const shouldCheckSettings = action.type === LOT_LINK_PARSING_SETTING_ACTION;
-      const previousState = shouldSyncSlots || shouldCheckSettings ? storeApi.getState() : null;
-      const previousSlots = previousState?.slots.slots ?? null;
-      const wasLotLinkParsingEnabled = previousState?.aucSettings.settings.isLotLinkParsingEnabled ?? false;
+      const handler = actionHandlers[action.type];
+      if (!handler) {
+        return next(action);
+      }
+      const previousState = storeApi.getState();
       const result = next(action);
-      const nextState = storeApi.getState();
-
-      if (shouldCheckSettings && !wasLotLinkParsingEnabled && nextState.aucSettings.settings.isLotLinkParsingEnabled) {
-        queue?.syncSlots([], nextState.slots.slots);
-        return result;
-      }
-
-      if (previousSlots) {
-        queue?.syncSlots(previousSlots, nextState.slots.slots);
-        return result;
-      }
-
-      if (action.type === SET_SLOT_NAME_ACTION && !action.payload.ignoreParsing) {
-        queue?.queueLotName(action.payload.id, action.payload.name);
-        return result;
-      }
-
-      if (action.type === SET_SLOT_DATA_ACTION && 'name' in action.payload) {
-        queue?.queueLotName(action.payload.id, action.payload.name ?? null);
-        return result;
-      }
-
-      if (action.type === DELETE_SLOT_ACTION) {
-        queue?.removeLot(action.payload);
+      if (queue) {
+        handler({
+          action,
+          nextState: storeApi.getState(),
+          previousState,
+          queue,
+        });
       }
 
       return result;

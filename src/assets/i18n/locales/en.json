@@ -395,6 +395,10 @@
     "applyPercentage": "Apply",
     "pin": "Pin",
     "unpin": "Unpin",
+    "contributorBy": "by {{name}}",
+    "additionalContributors": "+{{count}}",
+    "contributorsBreakdown": "Contributors",
+    "contributorsTotal": "Total",
     "openDetectedLink": "Open {{url}}",
     "loadingDataFromSource": "Loading data from {{sourceName}}",
     "linkParsingNotice": {
@@ -692,6 +696,7 @@
       "showBuyout": "Show Buyout",
       "showTotal": "Show Total Amount",
       "showWinningChances": "Show Winning Chances",
+      "showViewerNames": "Show viewer names",
       "sortBids": "Sort Bids queue",
       "purchaseSortOptions": {
         "oldest": "Oldest first",
@@ -1346,9 +1351,9 @@
           "tab": "JSON",
           "description": "<a href='https://www.w3schools.com/whatis/whatis_json.asp'>JSON</a> format",
           "structureTitle": "Required Structure:",
-          "structure": "{\n  \"lots\": [\n    {\n      \"name\": string | null,\n      \"amount\": number | null,\n      \"investors\": string[] (optional)\n    }\n  ]\n}",
+          "structure": "{\n  \"lots\": [\n    {\n      \"name\": string | null,\n      \"amount\": number | null,\n      \"contributors\": { \"name\": string, \"amount\": number }[] (optional)\n    }\n  ]\n}",
           "exampleTitle": "Example:",
-          "example": "{\n  \"lots\": [\n    { \"name\": \"Game A\", \"amount\": 150 },\n    { \"name\": \"Game B\", \"amount\": 75 },\n    { \"name\": \"Game C\", \"amount\": 200, \"investors\": [\"user1\", \"user2\"] }\n  ]\n}"
+          "example": "{\n  \"lots\": [\n    { \"name\": \"Game A\", \"amount\": 150 },\n    { \"name\": \"Game B\", \"amount\": 75 },\n    { \"name\": \"Game C\", \"amount\": 200, \"contributors\": [{ \"name\": \"user1\", \"amount\": 125 }, { \"name\": \"user2\", \"amount\": 75 }] }\n  ]\n}"
         }
       }
     },

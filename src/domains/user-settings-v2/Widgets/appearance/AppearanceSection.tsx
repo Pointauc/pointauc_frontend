@@ -97,6 +97,16 @@ const AppearanceSection = () => {
 
           <Divider />
 
+          <SettingsRow htmlFor='showViewerNames'>
+            <FormSwitchField
+              name='showViewerNames'
+              control={control}
+              label={<FieldLabel text={t('settings.auc.showViewerNames')} />}
+            />
+          </SettingsRow>
+
+          <Divider />
+
           <SettingsRow htmlFor='hideAmounts'>
             <FormSwitchField
               name='hideAmounts'

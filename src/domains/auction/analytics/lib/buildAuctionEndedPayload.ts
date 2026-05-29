@@ -18,7 +18,7 @@ const getUniqueParticipantCount = (lots: Lot[]): number => {
   const participantIds = new Set<string>();
 
   lots.forEach((lot) => {
-    lot.investors?.forEach((investorId) => participantIds.add(investorId));
+    lot.contributors?.forEach(({ name }) => participantIds.add(name));
   });
 
   return participantIds.size;

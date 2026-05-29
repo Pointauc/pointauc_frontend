@@ -48,6 +48,7 @@ export interface Settings extends TwitchIntegration, DonationSettings {
   isMinTimeActive: boolean;
   minTime: number;
   showChances: boolean;
+  showViewerNames: boolean;
   newSlotIncrement: number;
   isNewSlotIncrement: boolean;
   isTotalVisible: boolean;

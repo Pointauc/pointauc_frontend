@@ -26,7 +26,7 @@ export function parseJSON(text: string): ArchivedLot[] | null {
 
     return items.map((item) =>
       typeof item === 'string'
-        ? ({ name: item, amount: 1, investors: [] } as ArchivedLot)
+        ? ({ name: item, amount: 1, contributors: [] } as ArchivedLot)
         : (item as ArchivedLot),
     );
   } catch {

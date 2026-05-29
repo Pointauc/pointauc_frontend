@@ -1,0 +1,46 @@
+import { Tooltip } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
+
+import { LotContributor } from '@models/slot.model';
+import { getLeadingContributor } from '@utils/slotContributors.utils';
+
+import LotContributorTooltipContent from './LotContributorTooltipContent';
+
+interface LotContributorSummaryProps {
+  contributors?: LotContributor[];
+  hideAmounts: boolean;
+}
+
+const LotContributorSummary = ({ contributors = [], hideAmounts }: LotContributorSummaryProps) => {
+  const { t } = useTranslation();
+  const leadingContributor = getLeadingContributor(contributors);
+  const additionalContributorCount = Math.max(contributors.length - 1, 0);
+
+  if (!leadingContributor) {
+    return null;
+  }
+
+  return (
+    <Tooltip
+      withArrow
+      openDelay={120}
+      color='transparent'
+      position='bottom'
+      p={0}
+      label={<LotContributorTooltipContent contributors={contributors} hideAmounts={hideAmounts} />}
+    >
+      <div className='relative flex h-full max-w-44 shrink-0 items-center pr-3'>
+        <span className='text-dimmed min-w-0 truncate rounded-sm px-1.5 text-sm font-medium transition-colors'>
+          {t('lot.contributorBy', { name: leadingContributor.name })}
+        </span>
+        {additionalContributorCount > 0 && (
+          <span className='text-dimmed absolute top-1 right-0 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold'>
+            {t('lot.additionalContributors', { count: additionalContributorCount })}
+          </span>
+        )}
+      </div>
+    </Tooltip>
+  );
+};
+
+export default LotContributorSummary;

@@ -20,7 +20,7 @@ export function parseCSV(text: string): ArchivedLot[] {
     const delimiterIndex = line.lastIndexOf(CSV_DELIMITER);
 
     if (delimiterIndex === -1) {
-      lots.push({ name: line, amount: 1, investors: [] });
+      lots.push({ name: line, amount: 1, contributors: [] });
     } else {
       const name = line.substring(0, delimiterIndex).trim();
       const costStr = line.substring(delimiterIndex + 1).trim();
@@ -31,7 +31,7 @@ export function parseCSV(text: string): ArchivedLot[] {
       lots.push({
         name,
         amount: !isNaN(cost) && cost > 0 ? cost : 1,
-        investors: [],
+        contributors: [],
       });
     }
   }

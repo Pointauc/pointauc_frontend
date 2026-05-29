@@ -26,7 +26,7 @@ const createTestingLot = (index: number, name: string): Lot =>
     id: `testing-lot-${Date.now()}-${index}-${Math.random().toString(36).slice(2)}`,
     name,
     amount: getRandomInt(10, 5000),
-    investors: [`testing-user-${getRandomInt(1, 200)}`],
+    contributors: [{ name: `testing-user-${getRandomInt(1, 200)}`, amount: getRandomInt(10, 5000) }],
   });
 
 const createRandomLots = (count: number): Lot[] => {

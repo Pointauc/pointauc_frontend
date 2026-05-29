@@ -1,4 +1,17 @@
-import { ArchivedLot, Lot } from '@models/slot.model';
+import { ArchivedLot, Lot, LotContributor } from '@models/slot.model';
+import { contributorsFromLegacyInvestors } from '@utils/slotContributors.utils';
+
+interface LegacyArchivedLot extends ArchivedLot {
+  investors?: string[];
+}
+
+const getArchivedLotContributors = (lot: LegacyArchivedLot): LotContributor[] => {
+  if (lot.contributors) {
+    return lot.contributors.filter((contributor) => contributor.name);
+  }
+
+  return contributorsFromLegacyInvestors(lot.investors);
+};
 
 /**
  * Converts Slot array to ArchivedLot array by omitting runtime-only properties
@@ -7,7 +20,7 @@ export function slotsToArchivedLots(slots: Lot[]): ArchivedLot[] {
   return slots.map((slot) => ({
     name: slot.name,
     amount: slot.amount,
-    investors: slot.investors,
+    contributors: slot.contributors,
     isFavorite: slot.isFavorite,
   }));
 }
@@ -22,7 +35,7 @@ export function archivedLotsToSlots(lots: ArchivedLot[]): Lot[] {
     name: lot.name,
     amount: lot.amount,
     extra: null,
-    investors: lot.investors,
+    contributors: getArchivedLotContributors(lot),
     lockedPercentage: null,
     isFavorite: lot.isFavorite,
   }));

@@ -129,7 +129,7 @@ To switch from IndexedDB to backend API:
 {
   name: string | null;
   amount: number | null;
-  investors?: string[];
+  contributors?: { name: string; amount: number }[];
 }
 ```
 

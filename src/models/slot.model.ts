@@ -1,10 +1,15 @@
+export interface LotContributor {
+  name: string;
+  amount: number;
+}
+
 export interface Lot {
   fastId: number;
   id: string;
   name: string | null;
   amount: number | null;
   extra: number | null;
-  investors?: string[];
+  contributors?: LotContributor[];
   lockedPercentage?: number | null;
   isFavorite?: boolean;
 }

@@ -16,6 +16,7 @@ import { useIsMobile } from '@shared/lib/ui';
 import { animateValue } from '@utils/common.utils.ts';
 import { numberUtils } from '@utils/common/number';
 
+import LotContributorSummary from './LotContributorSummary';
 import LotNameField from './LotNameField';
 import styles from './LotControls.module.css';
 import WinningChance from './WinningChance';
@@ -28,6 +29,7 @@ interface LotControlsProps {
 const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   const marblesAuc = useSelector((root: RootState) => root.aucSettings.settings.marblesAuc);
   const showChances = useSelector((root: RootState) => root.aucSettings.settings.showChances);
+  const showViewerNames = useSelector((root: RootState) => root.aucSettings.settings.showViewerNames);
   const hideAmounts = useSelector((root: RootState) => root.aucSettings.settings.hideAmounts);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
@@ -137,6 +139,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
         </div>
       </div>
       <LotNameField id={id} name={name} isLocked={isLocked} onKeyPress={createNewSlotOnEnter} />
+      {showViewerNames && <LotContributorSummary contributors={lot.contributors} hideAmounts={hideAmounts} />}
       {showChances && (
         <WinningChance slotId={id} ref={percentsRef} isLocked={isLocked} lockedPercentage={lot.lockedPercentage} />
       )}
