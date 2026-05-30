@@ -120,13 +120,13 @@ const AucActions: React.FC = () => {
         <Button.Group>
           {marblesAuc && (
             <Tooltip label={t('auc.downloadMarbles')}>
-              <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary.3'>
+              <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary'>
                 <DownloadIcon />
               </Button>
             </Tooltip>
           )}
           <Tooltip label={t('archive.modal.title')}>
-            <Button onClick={handleArchiveOpen} size='sm' variant='outline' color='primary.3'>
+            <Button onClick={handleArchiveOpen} size='sm' variant='outline' color='primary'>
               <IconDeviceFloppy size={20} />
             </Button>
           </Tooltip>

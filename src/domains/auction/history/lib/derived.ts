@@ -1,4 +1,5 @@
 import { DEFAULT_AUCTION_NAME_PREFIX } from '../model/constants';
+
 import type { AuctionHistoryAuction, AuctionHistoryDropoutVariant, AuctionHistoryWheelVariant } from '../model/types';
 
 export const calculateWeightedDonationPoints = (donationCents: number, pointsToDonationRatio: number): number => {

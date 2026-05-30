@@ -1,0 +1,38 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="64" cy="67" r="54" fill="var(--color-paper-700, #1a1b1e)" />
+  <circle
+    cx="64"
+    cy="67"
+    r="45"
+    fill="var(--color-paper-500, #2c2e33)"
+    stroke="var(--color-paper-700, #1a1b1e)"
+    stroke-width="4"
+  />
+  <path d="M64 22a45 45 0 0 1 36.4 18.6L64 67V22Z" fill="var(--color-paper-600, #25262b)" />
+  <path d="M100.4 40.6A45 45 0 0 1 105.3 82L64 67l36.4-26.4Z" fill="var(--color-paper-400, #373a40)" />
+  <path d="M105.3 82A45 45 0 0 1 63.4 112L64 67l41.3 15Z" fill="var(--color-paper-300, #5c5f66)" />
+  <path d="M63.4 112A45 45 0 0 1 20.7 80.9L64 67l-.6 45Z" fill="var(--color-paper-500, #2c2e33)" />
+  <path d="M20.7 80.9A45 45 0 0 1 27.6 40.6L64 67 20.7 80.9Z" fill="var(--color-paper-300, #5c5f66)" />
+  <path d="M27.6 40.6A45 45 0 0 1 64 22v45L27.6 40.6Z" fill="var(--color-paper-600, #25262b)" />
+  <path
+    d="M64 67 64 22M64 67 100.4 40.6M64 67 105.3 82M64 67 63.4 112M64 67 20.7 80.9M64 67 27.6 40.6"
+    stroke="var(--color-paper-700, #1a1b1e)"
+    stroke-linecap="round"
+    stroke-width="3.5"
+  />
+  <circle
+    cx="64"
+    cy="67"
+    r="13"
+    fill="var(--color-paper-700, #1a1b1e)"
+    stroke="var(--color-paper-300, #5c5f66)"
+    stroke-width="4"
+  />
+  <path
+    d="M56.5 10h15c3.7 0 6.2 3.7 4.9 7.1l-7.5 20.2c-1.7 4.6-8.2 4.6-9.9 0l-7.5-20.2c-1.2-3.4 1.3-7.1 5-7.1Z"
+    fill="var(--color-paper-600, #25262b)"
+    stroke="var(--color-paper-300, #5c5f66)"
+    stroke-linejoin="round"
+    stroke-width="3.5"
+  />
+</svg>

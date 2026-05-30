@@ -31,3 +31,5 @@ docs/.vitepress/dist
 .env.production
 
 nginx/private-nginx.conf
+
+dev-docs/

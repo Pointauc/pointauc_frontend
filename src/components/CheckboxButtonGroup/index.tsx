@@ -27,7 +27,7 @@ const CheckboxButtonGroup = <T extends Key = Key>({
       return (
         <Button
           key={key}
-          color='primary.3'
+          color='primary'
           autoContrast
           size='sm'
           variant={activeKeys.includes(key) ? 'filled' : 'outline'}

@@ -31,7 +31,7 @@
     },
     "requestStatus": {
       "success": "Завершено успешно",
-      "error": "Error: bids were not processed or partially processed, please check manually."
+      "error": "Ошибка: ставки не были обработаны или были обработаны частично. Пожалуйста, проверьте вручную."
     },
     "modalTitle": {
       "returnAllExceptWinner": "Вернуть баллы всем кроме победителя колеса",
@@ -396,84 +396,179 @@
   },
   "auctionHistory": {
     "page": {
-      "title": "Auction Archive",
-      "subtitle": "Past viewer requests, winners, and community activity"
+      "title": "Архив аукционов",
+      "subtitle": "Прошлые запросы зрителей, победители и активность сообщества"
     },
     "newAuction": {
-      "action": "New Auction",
-      "title": "Start a new auction",
-      "description": "This will clear the current auction state. Use Create new to save this auction in Auction History first.",
-      "nameLabel": "Previous auction name",
-      "wheelWinner": "Wheel winner",
-      "noWheelWinner": "No wheel winner yet",
-      "createWithoutSaving": "Create without saving",
-      "createNew": "Create new",
+      "action": "Новый аукцион",
+      "title": "Начать новый аукцион",
+      "description": "Это очистит текущее состояние аукциона. Перед созданием укажите данные для следующего аукциона.",
+      "resetAlert": "Это действие сбросит таблицу аукциона и список ставок. Данные предыдущего аукциона можно посмотреть на <historyLink>странице истории</historyLink>.",
+      "nameLabel": "Название нового аукциона",
+      "requestsKind": {
+        "label": "Тип запросов",
+        "options": {
+          "any": "Любые",
+          "game": "Игры",
+          "movie": "Фильмы",
+          "video": "Видео"
+        }
+      },
+      "wheelWinner": "Победитель колеса",
+      "noWheelWinner": "Победитель колеса пока не выбран",
+      "createWithoutSaving": "Создать без сохранения",
+      "createNew": "Сохранить предыдущий и создать",
       "notifications": {
-        "saved": "Auction saved to history",
-        "cleared": "Auction state cleared",
-        "error": "Could not create a new auction"
+        "saved": "Аукцион сохранен в историю",
+        "cleared": "Состояние аукциона очищено",
+        "error": "Не удалось создать новый аукцион"
       }
     },
     "winner": {
-      "confirm": "Confirm winner",
-      "confirmTooltip": "This winner will be saved as the confirmed wheel winner in Auction History.",
-      "confirmed": "Winner confirmed",
-      "reroll": "Reroll"
+      "confirm": "Подтвердить победителя",
+      "confirmTooltip": "Этот победитель будет сохранен как подтвержденный победитель колеса в истории аукционов.",
+      "confirmed": "Победитель подтвержден",
+      "reroll": "Прокрутить заново"
     },
     "filters": {
-      "startDate": "Start date",
-      "endDate": "End date"
+      "startDate": "Дата начала",
+      "endDate": "Дата окончания",
+      "last30Days": "Последние 30 дней",
+      "last90Days": "Последние 90 дней",
+      "filteredByDay": "Фильтр по дате {{date}}"
     },
     "sections": {
-      "activityHeatmap": "Auction Activity",
-      "weekdayActivity": "Weekday Activity",
-      "previousAuctions": "Previous Auctions",
-      "requestLots": "Request Lots",
-      "topParticipants": "Top Participants",
-      "pointsVsDonations": "Points vs Donations"
+      "activityHeatmap": "Активность аукционов",
+      "weekdayActivity": "Активность по дням недели",
+      "previousAuctions": "Предыдущие аукционы",
+      "requestLots": "Лоты запросов",
+      "topParticipants": "Лучшие участники",
+      "pointsVsDonations": "Баллы и донаты"
     },
     "metrics": {
-      "auctions": "Auctions",
-      "lots": "Lots",
-      "lot": "Lot",
-      "bids": "Bids",
-      "participants": "Participants",
-      "contributors": "Contributors",
-      "duration": "Duration",
-      "points": "Points",
-      "donations": "Donations",
-      "currency": "Currency",
-      "winner": "Winner",
-      "totalAmount": "Total amount",
-      "weightedTotal": "Weighted total"
+      "auctions": "Аукционы",
+      "lots": "Лоты",
+      "lot": "Лот",
+      "bids": "Ставки",
+      "participants": "Участники",
+      "contributors": "Вкладчики",
+      "duration": "Длительность",
+      "points": "Баллы",
+      "donations": "Донаты",
+      "currency": "Валюта",
+      "winner": "Победитель",
+      "totalAmount": "Общая сумма",
+      "weightedTotal": "Взвешенная сумма",
+      "total": "Итого",
+      "averageContribution": "Средний вклад",
+      "biggestWinningLot": "Самый крупный выигравший лот"
     },
     "actions": {
-      "openAuction": "Open auction",
-      "backToList": "Back to Previous Auctions",
-      "clearDayFilter": "Clear day filter"
+      "openAuction": "Открыть аукцион",
+      "backToList": "Назад к предыдущим аукционам",
+      "clearDayFilter": "Сбросить фильтр по дню",
+      "viewMoreUsers": "Показать больше пользователей",
+      "collapseLeaderboard": "Свернуть таблицу лидеров"
     },
+    "card": {
+      "dateDuration": "{{date}} · {{duration}}",
+      "winnerLine": "Победитель",
+      "winnerWithRequest": "{{user}} · {{request}} {{chance}}",
+      "winnerRequest": "{{request}}{{chance}}",
+      "winnerChance": " ({{chance}}%)",
+      "tooltips": {
+        "date": "Дата начала аукциона",
+        "duration": "Длительность аукциона",
+        "lots": "Всего лотов запросов в этом аукционе",
+        "bids": "Всего ставок в этом аукционе",
+        "participants": "Уникальные зрители, участвовавшие в этом аукционе",
+        "points": "Всего баллов канала потрачено в этом аукционе",
+        "donations": "Всего донатов потрачено в этом аукционе"
+      }
+    },
+    "heatmap": {
+      "tooltip": "{{date}} · аукционов: {{auctions}} · баллов: {{points}} · донатов: {{donations}} · участников: {{bids}}",
+      "modes": {
+        "combined": "Сводно",
+        "points": "Баллы",
+        "donations": "Донаты",
+        "auctionCount": "Количество"
+      }
+    },
+    "leaderboard": {
+      "sort": {
+        "wins": "Победы",
+        "points": "Баллы",
+        "donations": "Донаты",
+        "participation": "Участие",
+        "streak": "Серия"
+      }
+    },
+    "statusFlavors": {
+      "popular": {
+        "label": "Популярный",
+        "tooltip": "Участвовало больше зрителей, чем обычно за этот период."
+      },
+      "quickBurst": {
+        "label": "Быстрый всплеск",
+        "tooltip": "Короткий аукцион с активностью выше средней."
+      },
+      "longRun": {
+        "label": "Долгий забег",
+        "tooltip": "Длился дольше большинства аукционов за этот период."
+      },
+      "highRollerNight": {
+        "label": "Ночь крупных ставок",
+        "tooltip": "Средний вклад участника был необычно высоким."
+      },
+      "lotsFestival": {
+        "label": "Фестиваль лотов",
+        "tooltip": "Содержал больше лотов запросов, чем большинство аукционов."
+      },
+      "underdogVictory": {
+        "label": "Победа аутсайдера",
+        "tooltip": "Лот с низким участием выиграл через взвешенное колесо."
+      }
+    },
+    "contextStats": {
+      "biggestAuction": "Самый большой аукцион",
+      "mostGenerousAuction": "Самый щедрый",
+      "highestPointsAuction": "Больше всего баллов",
+      "averageParticipants": "Среднее число участников",
+      "mostActiveParticipant": "Самый активный",
+      "winner": "Победитель",
+      "highestPointsContributor": "Лидер по баллам",
+      "highestDonationContributor": "Лидер по донатам",
+      "bidsHelper": "Ставок: {{count}}",
+      "winsHelper": "Побед: {{count}}"
+    },
+    "lots": {
+      "bidsCount": "Ставок: {{count}}"
+    },
+    "weekdayTooltip": "Аукционов: {{auctions}}, {{percent}}% периода",
     "selectionMethod": {
-      "direct": "Direct",
-      "wheel": "Wheel"
+      "direct": "Напрямую",
+      "wheel": "Колесо"
     },
     "currencyMode": {
-      "points": "Points",
-      "donations": "Donations",
-      "hybrid": "Hybrid"
+      "points": "Баллы",
+      "donations": "Донаты",
+      "hybrid": "Смешанный"
     },
     "weekdays": {
-      "sun": "Sun",
-      "mon": "Mon",
-      "tue": "Tue",
-      "wed": "Wed",
-      "thu": "Thu",
-      "fri": "Fri",
-      "sat": "Sat"
+      "sun": "Вс",
+      "mon": "Пн",
+      "tue": "Вт",
+      "wed": "Ср",
+      "thu": "Чт",
+      "fri": "Пт",
+      "sat": "Сб"
     },
     "empty": {
-      "noAuctions": "No auctions in this date range yet.",
-      "noWinner": "No winner",
-      "unnamedLot": "Unnamed lot"
+      "noAuctions": "В этом диапазоне дат пока нет аукционов.",
+      "noWinner": "Победителя нет",
+      "unnamedLot": "Лот без названия",
+      "noParticipants": "В этом контексте пока нет участников."
     }
   },
   "common": {
@@ -1186,7 +1281,7 @@
   },
   "hotkeys": {
     "notifications": {
-      "title": "Hotkey {{hotkey}}",
+      "title": "Горячая клавиша {{hotkey}}",
       "stopwatch": {
         "continue": "Таймер возобновлен",
         "pause": "Таймер приостановлен",

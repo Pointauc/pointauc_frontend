@@ -1,6 +1,10 @@
 import Dexie, { type EntityTable } from 'dexie';
 
 import { AUCTION_HISTORY_DB_NAME } from '../model/constants';
+import { resolveNextDefaultAuctionName } from '../lib/derived';
+
+import AuctionHistoryApi, { type AuctionHistoryDetails, type AuctionHistoryRangeDetails } from './AuctionHistoryApi';
+
 import type {
   AuctionHistoryAuction,
   AuctionHistoryContribution,
@@ -9,9 +13,6 @@ import type {
   AuctionHistorySnapshot,
   AuctionHistoryWinnerEvent,
 } from '../model/types';
-import { resolveNextDefaultAuctionName } from '../lib/derived';
-
-import AuctionHistoryApi, { type AuctionHistoryDetails } from './AuctionHistoryApi';
 
 class AuctionHistoryDatabase extends Dexie {
   auctions!: EntityTable<AuctionHistoryAuction, 'id'>;
@@ -69,6 +70,33 @@ class IndexedDBAdapter extends AuctionHistoryApi {
 
     return {
       auction,
+      lots,
+      contributions,
+      winnerEvents: winnerEvents.sort(
+        (first, second) => new Date(first.createdAt).getTime() - new Date(second.createdAt).getTime(),
+      ),
+    };
+  }
+
+  async getRangeDetails(startAt: string, endAt: string): Promise<AuctionHistoryRangeDetails> {
+    const auctions = await this.getAuctionsByDateRange(startAt, endAt);
+    const auctionIds = auctions.map((auction) => auction.id);
+
+    if (auctionIds.length === 0) {
+      return {
+        lots: [],
+        contributions: [],
+        winnerEvents: [],
+      };
+    }
+
+    const [lots, contributions, winnerEvents] = await Promise.all([
+      this.db.lots.where('auctionId').anyOf(auctionIds).toArray(),
+      this.db.contributions.where('auctionId').anyOf(auctionIds).toArray(),
+      this.db.winnerEvents.where('auctionId').anyOf(auctionIds).toArray(),
+    ]);
+
+    return {
       lots,
       contributions,
       winnerEvents: winnerEvents.sort(

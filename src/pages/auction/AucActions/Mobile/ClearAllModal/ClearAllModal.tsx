@@ -5,7 +5,6 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import auctionHistoryApi from '@domains/auction/history/api/IndexedDBAdapter';
 import { checkShouldSmartSaveAuction } from '@domains/auction/history/lib/activeAuctionState';
 import { finalizeAuctionHistory } from '@domains/auction/history/lib/finalizeAuctionHistory';
 import { RootState } from '@reducers';
@@ -26,7 +25,7 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
 
   const handleResetSlots = async (): Promise<void> => {
     if (shouldSmartSave) {
-      await finalizeAuctionHistory({ name: await auctionHistoryApi.getNextDefaultName(), shouldSave: true });
+      await finalizeAuctionHistory({ shouldSave: true });
       onClose();
       return;
     }

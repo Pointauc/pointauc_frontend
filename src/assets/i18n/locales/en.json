@@ -326,18 +326,28 @@
   },
   "auctionHistory": {
     "page": {
-      "title": "Auction Archive",
+      "title": "Auctions History",
       "subtitle": "Past viewer requests, winners, and community activity"
     },
     "newAuction": {
       "action": "New Auction",
       "title": "Start a new auction",
-      "description": "This will clear the current auction state. Use Create new to save this auction in Auction History first.",
-      "nameLabel": "Previous auction name",
+      "description": "This will clear the current auction state. Enter metadata for the next auction before creating it.",
+      "resetAlert": "This action will reset the auction table and bids list. You can view data for the previous auction on the <historyLink>history page</historyLink>.",
+      "nameLabel": "New auction name",
+      "requestsKind": {
+        "label": "Requests kind",
+        "options": {
+          "any": "Any",
+          "game": "Game",
+          "movie": "Movie",
+          "video": "Video"
+        }
+      },
       "wheelWinner": "Wheel winner",
       "noWheelWinner": "No wheel winner yet",
       "createWithoutSaving": "Create without saving",
-      "createNew": "Create new",
+      "createNew": "Save previous and create",
       "notifications": {
         "saved": "Auction saved to history",
         "cleared": "Auction state cleared",
@@ -352,7 +362,10 @@
     },
     "filters": {
       "startDate": "Start date",
-      "endDate": "End date"
+      "endDate": "End date",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days",
+      "filteredByDay": "Filtered to {{date}}"
     },
     "sections": {
       "activityHeatmap": "Auction Activity",
@@ -375,13 +388,94 @@
       "currency": "Currency",
       "winner": "Winner",
       "totalAmount": "Total amount",
-      "weightedTotal": "Weighted total"
+      "weightedTotal": "Weighted total",
+      "total": "Total",
+      "averageContribution": "Avg. contribution",
+      "biggestWinningLot": "Biggest winning lot"
     },
     "actions": {
       "openAuction": "Open auction",
       "backToList": "Back to Previous Auctions",
-      "clearDayFilter": "Clear day filter"
+      "clearDayFilter": "Clear day filter",
+      "viewMoreUsers": "View more users",
+      "collapseLeaderboard": "Collapse leaderboard"
     },
+    "card": {
+      "dateDuration": "{{date}} · {{duration}}",
+      "winnerLine": "Winner",
+      "winnerWithRequest": "{{user}} · {{request}} {{chance}}",
+      "winnerRequest": "{{request}}{{chance}}",
+      "winnerChance": " ({{chance}}%)",
+      "tooltips": {
+        "date": "Auction start date",
+        "duration": "Auction duration",
+        "lots": "Total request lots in this auction",
+        "bids": "Total bids placed in this auction",
+        "participants": "Unique viewers who joined this auction",
+        "points": "Total channel points spent in this auction",
+        "donations": "Total donations spent in this auction"
+      }
+    },
+    "heatmap": {
+      "tooltip": "{{date}} · {{auctions}} auctions · {{points}} points · {{donations}} donated · {{bids}} participants",
+      "modes": {
+        "combined": "Combined",
+        "points": "Points",
+        "donations": "Donations",
+        "auctionCount": "Count"
+      }
+    },
+    "leaderboard": {
+      "sort": {
+        "wins": "Wins",
+        "points": "Points",
+        "donations": "Donations",
+        "participation": "Participation",
+        "streak": "Streak"
+      }
+    },
+    "statusFlavors": {
+      "popular": {
+        "label": "Popular",
+        "tooltip": "More viewers participated than usual for this range."
+      },
+      "quickBurst": {
+        "label": "Quick Burst",
+        "tooltip": "Short auction with above-average activity."
+      },
+      "longRun": {
+        "label": "Long Run",
+        "tooltip": "Lasted longer than most auctions in this range."
+      },
+      "highRollerNight": {
+        "label": "High Roller Night",
+        "tooltip": "Average contribution per participant was unusually high."
+      },
+      "lotsFestival": {
+        "label": "Lots Festival",
+        "tooltip": "Contained more request lots than most auctions."
+      },
+      "underdogVictory": {
+        "label": "Underdog Victory",
+        "tooltip": "A low-participation lot won through the weighted wheel."
+      }
+    },
+    "contextStats": {
+      "biggestAuction": "Biggest auction",
+      "mostGenerousAuction": "Most generous",
+      "highestPointsAuction": "Highest points",
+      "averageParticipants": "Avg. participants",
+      "mostActiveParticipant": "Most active",
+      "winner": "Winner",
+      "highestPointsContributor": "Top points",
+      "highestDonationContributor": "Top donations",
+      "bidsHelper": "{{count}} bids",
+      "winsHelper": "{{count}} wins"
+    },
+    "lots": {
+      "bidsCount": "{{count}} bids"
+    },
+    "weekdayTooltip": "{{auctions}} auctions, {{percent}}% of the range",
     "selectionMethod": {
       "direct": "Direct",
       "wheel": "Wheel"
@@ -403,7 +497,8 @@
     "empty": {
       "noAuctions": "No auctions in this date range yet.",
       "noWinner": "No winner",
-      "unnamedLot": "Unnamed lot"
+      "unnamedLot": "Unnamed lot",
+      "noParticipants": "No participants in this context yet."
     }
   },
   "common": {

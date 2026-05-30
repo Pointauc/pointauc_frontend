@@ -1,6 +1,8 @@
 import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/code-highlight/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/charts/styles.css';
 import '@styles/index.scss';
 import './index.css';
 import '@assets/i18n/index.ts';

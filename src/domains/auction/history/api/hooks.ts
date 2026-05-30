@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import auctionHistoryApi from './IndexedDBAdapter';
+
 import type { AuctionHistorySnapshot } from '../model/types';
 
 export const auctionHistoryQueryKeys = {
@@ -10,6 +11,8 @@ export const auctionHistoryQueryKeys = {
     [...auctionHistoryQueryKeys.auctions(), startAt, endAt] as const,
   participants: () => [...auctionHistoryQueryKeys.all, 'participants'] as const,
   details: (auctionId: string | null) => [...auctionHistoryQueryKeys.all, 'details', auctionId] as const,
+  rangeDetails: (startAt: string, endAt: string) =>
+    [...auctionHistoryQueryKeys.all, 'range-details', startAt, endAt] as const,
   nextDefaultName: () => [...auctionHistoryQueryKeys.all, 'next-default-name'] as const,
 };
 
@@ -30,6 +33,12 @@ export const useAuctionHistoryDetails = (auctionId: string | null) =>
     queryKey: auctionHistoryQueryKeys.details(auctionId),
     queryFn: () => (auctionId ? auctionHistoryApi.getDetails(auctionId) : null),
     enabled: Boolean(auctionId),
+  });
+
+export const useAuctionHistoryRangeDetails = (startAt: string, endAt: string) =>
+  useQuery({
+    queryKey: auctionHistoryQueryKeys.rangeDetails(startAt, endAt),
+    queryFn: () => auctionHistoryApi.getRangeDetails(startAt, endAt),
   });
 
 export const useNextAuctionHistoryDefaultName = () =>

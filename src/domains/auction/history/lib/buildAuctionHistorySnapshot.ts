@@ -53,6 +53,7 @@ const createEmptyLotTotals = (lot: AuctionHistoryLot): AuctionHistoryLot => ({
 export const buildAuctionHistorySnapshot = ({
   auctionId,
   auctionName,
+  requestsKind,
   startedAt,
   endedAt,
   pointsToDonationRatio,
@@ -195,6 +196,7 @@ export const buildAuctionHistorySnapshot = ({
     auction: {
       id: auctionId,
       name: auctionName,
+      requestsKind,
       startedAt,
       endedAt,
       durationMs,

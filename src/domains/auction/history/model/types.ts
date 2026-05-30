@@ -5,10 +5,17 @@ export type AuctionHistorySelectionMethod = 'direct' | 'wheel';
 export type AuctionHistoryWinnerStatus = 'candidate' | 'confirmed' | 'rerolled';
 export type AuctionHistoryWheelVariant = 'default' | 'dropout' | 'battleRoyal';
 export type AuctionHistoryDropoutVariant = 'classic' | 'new' | 'none';
+export type AuctionRequestsKind = 'any' | 'game' | 'movie' | 'video';
+
+export interface CurrentAuctionMetadata {
+  name: string;
+  requestsKind: AuctionRequestsKind;
+}
 
 export interface AuctionHistoryAuction {
   id: string;
   name: string;
+  requestsKind: AuctionRequestsKind;
   startedAt: string;
   endedAt: string;
   durationMs: number;
@@ -90,6 +97,7 @@ export interface AuctionHistorySnapshot {
 export interface BuildAuctionHistorySnapshotParams {
   auctionId: string;
   auctionName: string;
+  requestsKind: AuctionRequestsKind;
   startedAt: string;
   endedAt: string;
   pointsToDonationRatio: number;
