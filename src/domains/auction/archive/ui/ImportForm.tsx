@@ -38,7 +38,7 @@ const ImportForm = ({ onImport, extraControls, layout = 'vertical' }: ImportForm
   };
 
   return (
-    <Grid align='flex-start' gutter={layout === 'horizontal' ? 'xl' : 'sm'}>
+    <Grid align='flex-start' gap={layout === 'horizontal' ? 'xl' : 'sm'}>
       <Grid.Col span={layout === 'horizontal' ? 5 : 12} order={layout === 'horizontal' ? 0 : 1}>
         <Stack>
           <Title order={5} fw={400}>
@@ -135,7 +135,7 @@ const ImportForm = ({ onImport, extraControls, layout = 'vertical' }: ImportForm
               <Button size='sm' variant='transparent' onClick={() => setShowManualImport(!showManualImport)}>
                 {t('archive.import.manual')}
               </Button>
-              <Collapse in={showManualImport}>
+              <Collapse expanded={showManualImport}>
                 <ManualImport onSubmit={handleManualImportSubmit} />
               </Collapse>
             </>

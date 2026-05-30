@@ -141,7 +141,7 @@ function ArchiveManagement() {
 
   return (
     <Stack gap='md'>
-      <Grid gutter='xs'>
+      <Grid gap='xs'>
         <Grid.Col span={8}>
           <Button
             leftSection={<IconPlus size={16} />}

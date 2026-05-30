@@ -30,7 +30,7 @@ const ExtraModeCard = ({ control, switchName, title, description, isEnabled, chi
           />
         </SettingsRow>
 
-        <Collapse in={isEnabled}>{children}</Collapse>
+        <Collapse expanded={isEnabled}>{children}</Collapse>
       </div>
     </SettingsCard>
   );

@@ -23,7 +23,7 @@ const IntroView = ({ onSourceClick }: IntroViewProps) => {
         <Text size='sm'>{t('wheel.randomnessModal.intro.tldrNote')}</Text>
       </Alert>
 
-      <Grid gutter='md'>
+      <Grid gap='md'>
         <Grid.Col span={4}>
           <Card
             shadow='sm'

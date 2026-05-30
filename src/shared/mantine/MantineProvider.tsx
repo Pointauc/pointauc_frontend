@@ -91,6 +91,7 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
       variantColorResolver,
       cursorType: 'pointer',
       primaryColor: 'primary',
+      defaultRadius: 'sm',
       spacing: {
         ...DEFAULT_THEME.spacing,
         xxs: rem(6),

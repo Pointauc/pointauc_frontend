@@ -48,7 +48,7 @@ const AuctionSettings: FC = () => {
             name='settings.showTable'
             control={control}
             render={({ field: tableField }) => (
-              <Collapse in={!!tableField.value} transitionDuration={150}>
+              <Collapse expanded={!!tableField.value} transitionDuration={150}>
                 <Divider my='sm' />
                 <Stack gap='sm'>
                   {/* Autoscroll toggle */}

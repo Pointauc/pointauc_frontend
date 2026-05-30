@@ -155,7 +155,7 @@ const TicketVerificationInstructionsPage = () => {
                         </Text>
                       </Stack>
 
-                      <Collapse in={analogyOpened} keepMounted>
+                      <Collapse expanded={analogyOpened} keepMounted>
                         <Box onClick={(event) => event.stopPropagation()} style={{ cursor: 'default' }}>
                           <LotteryAnalogy showTitle={false} />
                         </Box>

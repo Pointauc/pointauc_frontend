@@ -195,7 +195,7 @@ const RevealedTicketPage = () => {
                 </Text>
               </Stack>
 
-              <Collapse in={isVerificationOpened} keepMounted>
+              <Collapse expanded={isVerificationOpened} keepMounted>
                 <Box onClick={(event) => event.stopPropagation()} style={{ cursor: 'default' }}>
                   <Stack gap='sm'>
                     <Title order={4} mt='xs'>
