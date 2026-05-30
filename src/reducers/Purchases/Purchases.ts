@@ -28,6 +28,7 @@ export interface Purchase {
 export interface PurchaseLog extends Purchase {
   status: PurchaseStatusEnum;
   target?: string;
+  rawCost?: number;
 }
 
 interface PurchasesState {
@@ -97,7 +98,7 @@ export const logPurchase =
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
     const cost = bidUtils.parseCost(bidLog, getState().aucSettings.settings, newLot);
 
-    dispatch(addPurchaseLog({ ...bidLog, timestamp: new Date().toISOString(), cost }));
+    dispatch(addPurchaseLog({ ...bidLog, timestamp: new Date().toISOString(), cost, rawCost: bidLog.cost }));
     if (bidLog.target) {
       addedBidsMap.set(bidLog.id, bidLog.target);
     }

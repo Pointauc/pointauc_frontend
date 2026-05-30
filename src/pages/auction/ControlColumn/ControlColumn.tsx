@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useAuctionEndedAnalytics } from '@domains/auction/analytics/lib/useAuctionEndedAnalytics';
+import { ensureActiveAuctionStarted } from '@domains/auction/history/model/activeAuctionHistorySlice';
 import { useTimerBroadcasting } from '@domains/broadcasting/lib/useTimerBroadcasting';
 import { useIsMobile } from '@shared/lib/ui';
 import { trackTimerEdited } from '@shared/lib/analytics/events';
@@ -12,6 +14,7 @@ import FastAccessPanel from '../FastAccessPanel/FastAccessPanel';
 import classes from './ControlColumn.module.css';
 
 const ControlColumn: React.FC = () => {
+  const dispatch = useDispatch();
   const timerBroadcastingProps = useTimerBroadcasting();
   const auctionEndedAnalyticsProps = useAuctionEndedAnalytics();
   const isMobile = useIsMobile();
@@ -19,6 +22,7 @@ const ControlColumn: React.FC = () => {
     () => ({
       ...timerBroadcastingProps,
       onStart: (timeLeft: number) => {
+        dispatch(ensureActiveAuctionStarted());
         timerBroadcastingProps.onStart?.(timeLeft);
         auctionEndedAnalyticsProps.onStart?.(timeLeft);
       },
@@ -40,7 +44,7 @@ const ControlColumn: React.FC = () => {
         auctionEndedAnalyticsProps.onEnd?.();
       },
     }),
-    [auctionEndedAnalyticsProps, timerBroadcastingProps],
+    [auctionEndedAnalyticsProps, dispatch, timerBroadcastingProps],
   );
 
   return (

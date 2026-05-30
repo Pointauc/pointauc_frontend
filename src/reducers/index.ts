@@ -2,6 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 
 import broadcasting from '../domains/broadcasting/model/store';
 import lotLinkParsing from '../domains/links/participant-url-parsing/link-processing-queue/slice';
+import activeAuctionHistory from '../domains/auction/history/model/activeAuctionHistorySlice';
 
 import slots from './Slots/Slots';
 import user from './User/User';
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   overlay,
   broadcasting,
   lotLinkParsing,
+  activeAuctionHistory,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -15,7 +15,6 @@ import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
 import { LINE_BREAK } from '@constants/common.constants.ts';
 import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
 import { Lot } from '@models/slot.model.ts';
-import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
 import { RootState } from '@reducers';
 import { setAutoScroll, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings';
 import { loadFile } from '@utils/common.utils.ts';
@@ -24,6 +23,7 @@ import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 
 import classes from './AucActions.module.css';
 import TotalAmount from './TotalAmount/TotalAmount';
+import NewAuctionButton from './NewAuction/NewAuctionButton';
 
 const getSlotNamesByCount = ({ name, amount }: Lot): string =>
   new Array<string>(Number(amount)).fill(name || '').join(LINE_BREAK);
@@ -136,7 +136,7 @@ const AucActions: React.FC = () => {
       </Group>
 
       <Button.Group>
-        <DeleteAllLots />
+        <NewAuctionButton />
       </Button.Group>
 
       <ArchiveModal opened={archiveModalOpen} onClose={handleArchiveClose} />

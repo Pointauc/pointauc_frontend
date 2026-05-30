@@ -103,6 +103,7 @@ const WheelPage: FC = () => {
           onSettingsChanged={handleSettingsChangedDebounced}
           form={wheelForm}
           onSpinStart={handleSpinStart}
+          trackAuctionHistoryWinner
         />
       )}
     </PageContainer>

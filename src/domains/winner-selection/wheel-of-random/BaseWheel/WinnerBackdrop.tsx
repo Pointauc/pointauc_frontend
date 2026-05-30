@@ -1,11 +1,15 @@
-import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
+import { Button, Checkbox, Group, Modal, Text, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { Key, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import BidsManagementDialog from '@components/BidsManagementConfirmation/Dialog';
 import { pointsManagementPresets } from '@components/BidsManagementConfirmation/utils';
+import {
+  confirmLatestWinnerCandidate,
+  rerollLatestWinnerCandidate,
+} from '@domains/auction/history/model/activeAuctionHistorySlice';
 import { WheelItem } from '@models/wheel.model';
 import { RootState } from '@reducers/index';
 import { getSlot, getTotalSize } from '@utils/slots.utils';
@@ -19,12 +23,22 @@ interface WinnerBackdropProps {
   id: Key;
   finalWinner?: WheelItem | null;
   onDelete?: (showConfirmation?: boolean) => void;
+  onReroll?: () => void;
   dropOut?: boolean;
   showDeleteConfirmation?: boolean;
 }
 
 const WinnerBackdrop = (props: WinnerBackdropProps) => {
-  const { currentSpinWinner, onDelete, id, finalWinner: _finalWinner, dropOut, showDeleteConfirmation = true } = props;
+  const {
+    currentSpinWinner,
+    onDelete,
+    onReroll,
+    id,
+    finalWinner: _finalWinner,
+    dropOut,
+    showDeleteConfirmation = true,
+  } = props;
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const lots = useSelector((state: RootState) => state.slots.slots);
   const [localShowDeleteConfirmation, setLocalShowDeleteConfirmation] = useState<boolean>(showDeleteConfirmation);
@@ -79,12 +93,34 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
     setLocalShowDeleteConfirmation(showDeleteConfirmation);
   };
 
+  const handleConfirmWinner = (): void => {
+    dispatch(confirmLatestWinnerCandidate());
+    notifications.show({ message: t('auctionHistory.winner.confirmed'), color: 'green' });
+  };
+
+  const handleRerollWinner = (): void => {
+    dispatch(rerollLatestWinnerCandidate());
+    onReroll?.();
+  };
+
   const pointsAction = useMemo(() => pointsManagementPresets.returnAllExcept(id as string), [id]);
 
   return (
     <div style={{ pointerEvents: 'all' }} className={classes.wheelWinner}>
       <WinnerBackdropName name={currentSpinWinner.name} winnerName={finalWinner?.name} dropout={dropOut} />
       <Group gap='sm'>
+        {finalWinnerLot && (
+          <>
+            <Tooltip label={t('auctionHistory.winner.confirmTooltip')}>
+              <Button onClick={handleConfirmWinner} variant='filled' color='green'>
+                {t('auctionHistory.winner.confirm')}
+              </Button>
+            </Tooltip>
+            <Button onClick={handleRerollWinner} variant='outline' color='yellow'>
+              {t('auctionHistory.winner.reroll')}
+            </Button>
+          </>
+        )}
         {onDelete && (
           <>
             {!isLotDeleted && (

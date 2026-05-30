@@ -13,6 +13,7 @@ import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import { createLotLinkParsingMiddleware } from '@domains/links/participant-url-parsing/link-processing-queue/middleware';
 import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
+import { ensureActiveAuctionStarted } from '@domains/auction/history/model/activeAuctionHistorySlice';
 
 import type { RootState } from '@reducers/index.ts';
 
@@ -103,6 +104,32 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
     return result;
   };
 
+const activeAuctionStartEvents = new Set([
+  'slots/setSlotData',
+  'slots/setSlotName',
+  'slots/addSlotAmount',
+  'slots/setSlotAmount',
+  'slots/addSlot',
+  'slots/deleteSlot',
+  'slots/mergeLot',
+  'purchases/addPurchaseLog',
+  'purchases/addPurchase',
+  'purchases/updateBid',
+]);
+
+const activeAuctionHistoryMiddleware: Middleware<{}, RootState> =
+  (storeApi) =>
+  (next) =>
+  (action): AnyAction => {
+    const result = next(action);
+
+    if (activeAuctionStartEvents.has(action.type)) {
+      storeApi.dispatch(ensureActiveAuctionStarted());
+    }
+
+    return result;
+  };
+
 /**
  * The singleton Redux store.
  * Starts as `null`; initialized by `initStore()` called from main.tsx.
@@ -121,7 +148,13 @@ export let store: any = null;
 export function initStore(rootReducer: Reducer<any>) {
   store = configureStore({
     reducer: rootReducer,
-    middleware: [thunk, sortSlotsMiddleware, createLotLinkParsingMiddleware(), saveSlotsMiddleware],
+    middleware: [
+      thunk,
+      sortSlotsMiddleware,
+      createLotLinkParsingMiddleware(),
+      activeAuctionHistoryMiddleware,
+      saveSlotsMiddleware,
+    ],
   });
   return store;
 }

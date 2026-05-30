@@ -324,6 +324,88 @@
     },
     "contributors": "Thanks to {{contributors}} for the contribution"
   },
+  "auctionHistory": {
+    "page": {
+      "title": "Auction Archive",
+      "subtitle": "Past viewer requests, winners, and community activity"
+    },
+    "newAuction": {
+      "action": "New Auction",
+      "title": "Start a new auction",
+      "description": "This will clear the current auction state. Use Create new to save this auction in Auction History first.",
+      "nameLabel": "Previous auction name",
+      "wheelWinner": "Wheel winner",
+      "noWheelWinner": "No wheel winner yet",
+      "createWithoutSaving": "Create without saving",
+      "createNew": "Create new",
+      "notifications": {
+        "saved": "Auction saved to history",
+        "cleared": "Auction state cleared",
+        "error": "Could not create a new auction"
+      }
+    },
+    "winner": {
+      "confirm": "Confirm winner",
+      "confirmTooltip": "This winner will be saved as the confirmed wheel winner in Auction History.",
+      "confirmed": "Winner confirmed",
+      "reroll": "Reroll"
+    },
+    "filters": {
+      "startDate": "Start date",
+      "endDate": "End date"
+    },
+    "sections": {
+      "activityHeatmap": "Auction Activity",
+      "weekdayActivity": "Weekday Activity",
+      "previousAuctions": "Previous Auctions",
+      "requestLots": "Request Lots",
+      "topParticipants": "Top Participants",
+      "pointsVsDonations": "Points vs Donations"
+    },
+    "metrics": {
+      "auctions": "Auctions",
+      "lots": "Lots",
+      "lot": "Lot",
+      "bids": "Bids",
+      "participants": "Participants",
+      "contributors": "Contributors",
+      "duration": "Duration",
+      "points": "Points",
+      "donations": "Donations",
+      "currency": "Currency",
+      "winner": "Winner",
+      "totalAmount": "Total amount",
+      "weightedTotal": "Weighted total"
+    },
+    "actions": {
+      "openAuction": "Open auction",
+      "backToList": "Back to Previous Auctions",
+      "clearDayFilter": "Clear day filter"
+    },
+    "selectionMethod": {
+      "direct": "Direct",
+      "wheel": "Wheel"
+    },
+    "currencyMode": {
+      "points": "Points",
+      "donations": "Donations",
+      "hybrid": "Hybrid"
+    },
+    "weekdays": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "empty": {
+      "noAuctions": "No auctions in this date range yet.",
+      "noWinner": "No winner",
+      "unnamedLot": "Unnamed lot"
+    }
+  },
   "common": {
     "confirm": "Confirm",
     "copy": "Copy",

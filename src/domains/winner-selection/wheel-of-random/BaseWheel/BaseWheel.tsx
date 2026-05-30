@@ -348,6 +348,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
               onDelete={
                 deleteItem ? (showConfirmation?: boolean) => deleteItem(winnerItem.id, showConfirmation) : undefined
               }
+              onReroll={clearWinner}
               showDeleteConfirmation={showDeleteConfirmation}
               dropOut={dropOut}
             />

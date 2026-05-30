@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
+import auctionHistoryApi from '@domains/auction/history/api/IndexedDBAdapter';
+import { checkShouldSmartSaveAuction } from '@domains/auction/history/lib/activeAuctionState';
+import { finalizeAuctionHistory } from '@domains/auction/history/lib/finalizeAuctionHistory';
 import { RootState } from '@reducers';
 import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
 import { resetSlots } from '@reducers/Slots/Slots.ts';
@@ -13,9 +16,15 @@ const DeleteAllLots = () => {
   const { t } = useTranslation();
   const slots = useSelector((rootReducer: RootState) => rootReducer.slots.slots);
   const purchases = useSelector((rootReducer: RootState) => rootReducer.purchases.purchases);
+  const shouldSmartSave = useSelector(checkShouldSmartSaveAuction);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleResetSlots = (): void => {
+  const handleResetSlots = async (): Promise<void> => {
+    if (shouldSmartSave) {
+      await finalizeAuctionHistory({ name: await auctionHistoryApi.getNextDefaultName(), shouldSave: true });
+      return;
+    }
+
     dispatch(resetSlots());
     dispatch(resetPurchases());
 
@@ -48,7 +57,7 @@ const DeleteAllLots = () => {
 
   const handleConfirm = () => {
     setShowConfirm(false);
-    handleResetSlots();
+    handleResetSlots().catch((err) => console.error(err));
   };
 
   return (
