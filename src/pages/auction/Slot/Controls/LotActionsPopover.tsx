@@ -1,8 +1,10 @@
-import { Button, Kbd, Menu, Popover, TextInput, TextInputProps } from '@mantine/core';
+import { Button, Menu, Popover, TextInput, TextInputProps } from '@mantine/core';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconPlus, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { FC, KeyboardEvent, ReactNode, RefObject, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 
 import styles from './LotControls.module.css';
 
@@ -68,6 +70,7 @@ const LotActionsPopover: FC<LotActionsPopoverProps> = ({
       onChange={setIsAddAmountOpened}
       position='right'
       shadow='lg'
+      trapFocus
       withArrow
       transitionProps={{ duration: 0 }}
     >
@@ -82,6 +85,7 @@ const LotActionsPopover: FC<LotActionsPopoverProps> = ({
             withArrow
             opened={isActionsMenuOpened}
             onChange={setIsActionsMenuOpened}
+            returnFocus={false}
             transitionProps={{ duration: 0 }}
           >
             <Menu.Target>
@@ -116,12 +120,13 @@ const LotActionsPopover: FC<LotActionsPopoverProps> = ({
           value={currentExtra}
           type='number'
           min='0'
+          data-autofocus
           onKeyDown={handleExtraKeyDown}
           size='xs'
         />
         <Button
           leftSection={<IconPlus size={14} />}
-          rightSection={<Kbd size='xs'>Enter</Kbd>}
+          rightSection={<HotkeyHint label='Enter' variant='overlay' />}
           onClick={handleAddExtra}
           size='xs'
           px='xs'
