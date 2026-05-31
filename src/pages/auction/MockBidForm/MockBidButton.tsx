@@ -2,7 +2,8 @@ import { FC, useCallback, MouseEvent, useState } from 'react';
 import { Button, Popover, Tooltip } from '@mantine/core';
 import { IconFlask } from '@tabler/icons-react';
 
-import MockBidForm, { useMockBidForm } from './MockBidForm';
+import MockBidForm from './MockBidForm';
+import { useMockBidForm } from './useMockBidForm';
 
 /**
  * Button that opens a popover with the MockBidForm.

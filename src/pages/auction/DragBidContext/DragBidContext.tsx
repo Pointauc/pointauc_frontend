@@ -6,13 +6,7 @@ import { RootState } from '@reducers';
 
 import BidComponent from '../BidComponent/BidComponent';
 
-interface DraggedBid {
-  ref: HTMLDivElement | null;
-}
-
-export const draggedBid: DraggedBid = {
-  ref: null,
-};
+import { draggedBid } from './draggedBidStore';
 
 const DragBidContext: FC = () => {
   const { draggedRedemption } = useSelector((root: RootState) => root.purchases);

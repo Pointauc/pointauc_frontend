@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 import { getBackendOrigin } from '@shared/api/backendOrigin';
 
 import { getCookie, isProduction } from './common.utils';

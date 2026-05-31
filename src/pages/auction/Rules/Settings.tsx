@@ -2,7 +2,7 @@ import { ColorInput, Slider, Stack, Text } from '@mantine/core';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { RulesSettingsContext } from '@pages/auction/Rules/RulesSettingsContext';
+import { RulesSettingsContext } from '@pages/auction/Rules/rulesSettingsContextData';
 
 const RulesSettings = () => {
   const { t } = useTranslation();

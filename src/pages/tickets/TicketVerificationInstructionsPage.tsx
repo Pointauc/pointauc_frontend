@@ -185,6 +185,7 @@ const TicketVerificationInstructionsPage = () => {
                                 components={{
                                   1: (
                                     <Anchor
+                                      key='random-org-signature-form'
                                       href='https://api.random.org/signatures/form'
                                       target='_blank'
                                       rel='noopener noreferrer'
@@ -223,6 +224,7 @@ const TicketVerificationInstructionsPage = () => {
                               components={{
                                 1: (
                                   <Anchor
+                                    key='prediction-service-source'
                                     href='https://github.com/Pointauc/pointauc_frontend/blob/master/src/services/PredictionService.ts#L25-L35'
                                     target='_blank'
                                     rel='noopener noreferrer'
@@ -298,6 +300,7 @@ const TicketVerificationInstructionsPage = () => {
                             components={{
                               1: (
                                 <Anchor
+                                  key='random-org-signed-api'
                                   href='https://api.random.org/json-rpc/4/signed'
                                   target='_blank'
                                   rel='noopener noreferrer'
@@ -312,6 +315,7 @@ const TicketVerificationInstructionsPage = () => {
                             components={{
                               1: (
                                 <Anchor
+                                  key='random-org-signatures-resource'
                                   href='https://api.random.org/signatures/form'
                                   target='_blank'
                                   rel='noopener noreferrer'

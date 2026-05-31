@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import SlotsPresetInput from '@components/Form/SlotsPresetInput/SlotsPresetInput.tsx';
-import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
+import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/wheelContextData';
 import { Lot } from '@models/slot.model.ts';
 import { setSlots } from '@reducers/Slots/Slots.ts';
 import { SlotListToWheelList } from '@utils/slots.utils.ts';

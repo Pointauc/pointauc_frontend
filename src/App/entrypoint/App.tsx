@@ -164,8 +164,6 @@ const App: React.FC = () => {
     if (hasToken) {
       loadUser();
     }
-    // do not add t function to the deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const isNavbarExpanded = useMemo(() => {

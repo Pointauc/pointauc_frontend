@@ -30,6 +30,7 @@ export const AppMain = () => {
       </div>
       {/* <AlertsContainer /> */}
       <Routes>
+        <Route path={ROUTES.HOME} element={null} />
         <Route path={`${ROUTES.SETTINGS}/*`} element={<WebsiteSettings />} />
         <Route path={ROUTES.WHEEL} element={<WheelPage />} />
         <Route path={ROUTES.HISTORY} element={<AuctionHistoryPage />} />

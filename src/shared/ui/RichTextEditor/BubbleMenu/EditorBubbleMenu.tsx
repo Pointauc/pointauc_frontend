@@ -1,10 +1,9 @@
+import { Portal } from '@mantine/core';
 import { useRichTextEditorContext } from '@mantine/tiptap';
 import { BubbleMenu } from '@tiptap/react/menus';
-import { Portal } from '@mantine/core';
-import { useContext, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useContext, useState } from 'react';
 
-import { PortalContext } from '@App/storage/portalContext';
+import { PortalContext } from '@App/storage/portalContextData';
 
 import { BubbleMenuContent } from './BubbleMenuContent';
 import classes from './EditorBubbleMenu.module.css';

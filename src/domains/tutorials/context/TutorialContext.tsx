@@ -1,9 +1,9 @@
-import { createContext, ReactNode, RefObject, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { ReactNode, RefObject, useCallback, useMemo, useRef, useState } from 'react';
 
 import { Tutorial, TutorialContextState } from '@domains/tutorials/models/tutorial.model';
 import { isTutorialCompleted, markTutorialCompleted as markCompleted } from '@domains/tutorials/services/tutorialStorage';
 
-const TutorialContext = createContext<TutorialContextState | null>(null);
+import { TutorialContext } from './tutorialContextData';
 
 interface TutorialProviderProps {
   children: ReactNode;
@@ -118,12 +118,3 @@ export function TutorialProvider({ children }: TutorialProviderProps) {
     </TutorialContext.Provider>
   );
 }
-
-export function useTutorialContext(): TutorialContextState {
-  const context = useContext(TutorialContext);
-  if (!context) {
-    throw new Error('useTutorialContext must be used within a TutorialProvider');
-  }
-  return context;
-}
-

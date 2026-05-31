@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import { modals } from '@mantine/modals';
 import i18next from 'i18next';
 

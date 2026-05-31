@@ -7,13 +7,11 @@ import DonateXSvg from '@assets/icons/donatex.svg';
 import { InvalidTokenError } from '@domains/bids/external-integrations/shared/helpers.ts';
 import { mergeAuthData } from '@reducers/User/User.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
-import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton/index.tsx';
 import * as Integration from '@models/integration';
 import { store } from '@store';
 
 import {
   BASE_URL,
-  buildAuthorizeUrl,
   DonateXDonation,
   fetchProfile,
   getDonateXAuthData,
@@ -24,6 +22,7 @@ import {
   storeTokens,
   validateDonateX,
 } from './auth.ts';
+import DonateXLoginButton from './DonateXLoginButton';
 import styles from './index.module.css';
 
 const authenticate = async (code: string) => {
@@ -55,27 +54,6 @@ const revoke = () => {
   sessionStorage.removeItem(PKCE_VERIFIER_KEY);
   localStorage.removeItem('donatex_profile');
   store.dispatch(mergeAuthData({ donatex: undefined }));
-};
-
-const DonateXLoginButton = ({ id, branding, classes, showPartnerChip }: Integration.LoginButtonProps) => {
-  const handleAuth = async (): Promise<void> => {
-    try {
-      const url = await buildAuthorizeUrl();
-      window.open(url, '_self');
-    } catch (e) {
-      console.error('Failed to start DonateX auth', e);
-    }
-  };
-
-  return (
-    <IntegrationLoginButton
-      id={id}
-      branding={branding}
-      onClick={() => void handleAuth()}
-      classes={{ ...classes, button: `${classes?.button ?? ''} ${styles.loginButton}` }}
-      showPartnerChip={showPartnerChip}
-    />
-  );
 };
 
 const authFlow: Integration.RedirectFlow = {

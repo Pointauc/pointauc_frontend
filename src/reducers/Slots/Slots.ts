@@ -14,7 +14,7 @@ import {
 } from '@utils/slotContributors.utils';
 
 import slotNamesMap from '../../services/SlotNamesMap';
-import { addedBidsMap, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
+import { addedBidsMap, addPurchaseLog, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 
 import LotQuery = PublicApi.LotQuery;
@@ -281,6 +281,15 @@ interface BidHandleOptions {
   callback?: (amount: number) => void;
 }
 
+export type SplitBidTarget =
+  | { type: 'existing'; lotId: string; name?: string | null }
+  | { type: 'new'; name: string };
+
+export interface SplitBidEntryRequest {
+  amount: number;
+  target: SplitBidTarget;
+}
+
 export const addBid =
   (slotId: string | Lot, bid: Purchase, options: BidHandleOptions = {}) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
@@ -325,6 +334,97 @@ export const addBid =
     dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: lot.id }, false));
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);
+  };
+
+export const splitBid =
+  (bid: Purchase, entries: SplitBidEntryRequest[]) =>
+  (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+    const {
+      slots: { slots },
+    } = getState();
+
+    const contributorName = getBidContributorName(bid);
+    const bidName = bidUtils.getName(bid);
+    const updatedSlots = [...slots];
+    const appliedEntries = entries.filter(({ amount }) => Number.isFinite(amount) && amount > 0);
+    let appliedEntriesCount = 0;
+
+    if (!appliedEntries.length) {
+      return;
+    }
+
+    appliedEntries.forEach((entry, index) => {
+      const timestamp = new Date().toISOString();
+
+      if (entry.target.type === 'existing') {
+        const target = entry.target;
+        const slotIndex = updatedSlots.findIndex(({ id }) => id === target.lotId);
+
+        if (slotIndex === -1) {
+          return;
+        }
+
+        const slot = updatedSlots[slotIndex];
+        const slotName = slot.name || target.name || bidName;
+        const updatedSlot = {
+          ...slot,
+          name: slotName,
+          amount: Number(slot.amount ?? 0) + entry.amount,
+          contributors: addContributorAmount(slot.contributors, contributorName, entry.amount),
+        };
+
+        updatedSlots[slotIndex] = updatedSlot;
+        slotNamesMap.updateSlot(updatedSlot);
+        slotNamesMap.set(String(target.name || slotName || bidName), updatedSlot.id);
+        appliedEntriesCount += 1;
+
+        dispatch(
+          addPurchaseLog({
+            ...bid,
+            id: `${bid.id}:split:${index}`,
+            timestamp,
+            cost: entry.amount,
+            rawCost: bid.cost,
+            status: PurchaseStatusEnum.Processed,
+            target: updatedSlot.id,
+          }),
+        );
+
+        return;
+      }
+
+      const newSlotName = entry.target.name.trim() || bidName;
+      const newSlot: Lot = {
+        id: Math.random().toString(),
+        name: newSlotName,
+        amount: entry.amount,
+        fastId: fastIdAllocator.allocate(),
+        contributors: contributorName ? [{ name: contributorName, amount: entry.amount }] : [],
+        isFavorite: false,
+      };
+
+      updatedSlots.push(newSlot);
+      slotNamesMap.updateSlot(newSlot);
+      slotNamesMap.set(newSlotName, newSlot.id);
+      appliedEntriesCount += 1;
+
+      dispatch(
+        addPurchaseLog({
+          ...bid,
+          id: `${bid.id}:split:${index}`,
+          timestamp,
+          cost: entry.amount,
+          rawCost: bid.cost,
+          status: PurchaseStatusEnum.Processed,
+          target: newSlot.id,
+        }),
+      );
+    });
+
+    if (appliedEntriesCount > 0) {
+      dispatch(reorderSlots(sortSlots(recalculateAllLockedSlots(updatedSlots))));
+      dispatch(removePurchase(bid.id));
+    }
   };
 
 export default slotsSlice.reducer;

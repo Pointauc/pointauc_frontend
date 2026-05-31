@@ -1,6 +1,5 @@
-import { Button, Kbd, Menu, Popover, TextInput, TextInputProps } from '@mantine/core';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { IconHash, IconPlus, IconTrash, IconStar, IconStarFilled } from '@tabler/icons-react';
+import { TextInputProps } from '@mantine/core';
+import { IconHash, IconStarFilled, IconTrash } from '@tabler/icons-react';
 import clsx from 'clsx';
 import { FC, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +15,7 @@ import { useIsMobile } from '@shared/lib/ui';
 import { animateValue } from '@utils/common.utils.ts';
 import { numberUtils } from '@utils/common/number';
 
+import LotActionsPopover from './LotActionsPopover';
 import LotContributorSummary from './LotContributorSummary';
 import LotNameField from './LotNameField';
 import styles from './LotControls.module.css';
@@ -33,10 +33,8 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   const hideAmounts = useSelector((root: RootState) => root.aucSettings.settings.hideAmounts);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { t } = useTranslation();
-  const { id, amount, name, isFavorite } = lot;
+  const { id, amount, name, isFavorite = false } = lot;
   const [currentExtra, setCurrentExtra] = useState<string>('');
-  const [isAddAmountOpened, setIsAddAmountOpened] = useState(false);
-  const [isActionsMenuOpened, setIsActionsMenuOpened] = useState(false);
   const amountInput = useRef<HTMLInputElement>(null);
   const percentsRef = useRef<HTMLSpanElement>(null);
   const isAmountInitialized = useRef(false);
@@ -59,26 +57,19 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     setCurrentExtra(e.target.value);
   };
 
-  const handleAddExtra = (): void => {
+  const handleAddExtra = (): boolean => {
     const amountToAdd = Number(currentExtra);
-    if (!amountToAdd) return;
+    if (!amountToAdd) return false;
 
     dispatch(addSlotAmount({ id, amount: amountToAdd }));
     setCurrentExtra('');
-    setIsAddAmountOpened(false);
+    return true;
   };
 
   const confirmAmount = useCallback(() => {
     if (Number(amountInput.current?.value) === Number(amount)) return;
     dispatch(setSlotAmount({ id, amount: Number(amountInput.current?.value) }));
   }, [dispatch, id, amount]);
-
-  const addExtraAmountOnEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      handleAddExtra();
-      e.preventDefault();
-    }
-  };
 
   const createNewSlotOnEnter: TextInputProps['onKeyPress'] = (e): void => {
     const inputAmount = Number(amountInput.current?.value) || null;
@@ -121,22 +112,11 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     dispatch(openTrailer(name || ''));
   }, [dispatch, name]);
 
-  const handleOpenAddAmount = (): void => {
-    setIsActionsMenuOpened(false);
-    setIsAddAmountOpened(true);
-  };
-
-  useLayoutEffect(() => {
-    if (isAddAmountOpened) {
-      extraInputRef.current?.focus();
-    }
-  }, [isAddAmountOpened]);
-
   const isLocked = !!lot.lockedPercentage;
 
-  function toggleFavorite() {
+  const toggleFavorite = (): void => {
     dispatch(setSlotIsFavorite({ id, state: !isFavorite }));
-  }
+  };
 
   return (
     <>
@@ -152,84 +132,34 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
       {showChances && (
         <WinningChance slotId={id} ref={percentsRef} isLocked={isLocked} lockedPercentage={lot.lockedPercentage} />
       )}
-      <Popover
-        opened={isAddAmountOpened}
-        onChange={setIsAddAmountOpened}
-        position='right'
-        shadow='lg'
-        withArrow
-        transitionProps={{ duration: 0 }}
+      <LotActionsPopover
+        currentExtra={currentExtra}
+        extraInputRef={extraInputRef}
+        isFavorite={!!isFavorite}
+        isMobile={isMobile}
+        readonly={!!readonly}
+        onAddExtra={handleAddExtra}
+        onDelete={handleDelete}
+        onExtraChange={handleExtraChange}
+        onOpenTrailer={handleOpenTrailer}
+        onToggleFavorite={toggleFavorite}
       >
-        <Popover.Target>
-          <div className={styles.moneyWrapper}>
-            <input
-              className={clsx(styles.input, styles.money)}
-              hidden={hideAmounts}
-              placeholder={t('common.currencySign')}
-              ref={amountInput}
-              onBlur={confirmAmount}
-              onKeyPress={createNewSlotOnEnter}
-              type='number'
-              min='0'
-            />
-            {!readonly && !isMobile && (
-              <button onClick={handleDelete} className={styles.iconButton} title={t('lot.delete')}>
-                <IconTrash />
-              </button>
-            )}
-            <Menu
-              width={200}
-              shadow='lg'
-              offset={-2}
-              position='bottom-start'
-              withArrow
-              opened={isActionsMenuOpened}
-              onChange={setIsActionsMenuOpened}
-              transitionProps={{ duration: 0 }}
-            >
-              <Menu.Target>
-                <button className={styles.iconButton} title={t('lot.extra')} aria-controls='extra'>
-                  <MoreHorizIcon />
-                </button>
-              </Menu.Target>
-              <Menu.Dropdown id='extra'>
-                {!readonly && (
-                  <Menu.Item onClick={handleOpenAddAmount} leftSection={<IconPlus size={16} />}>
-                    {t('lot.addAmount')}
-                  </Menu.Item>
-                )}
-                <Menu.Item
-                  onClick={toggleFavorite}
-                  leftSection={isFavorite ? <IconStarFilled size={16} /> : <IconStar size={16} />}
-                >
-                  {t(isFavorite ? 'lot.unpin' : 'lot.pin')}
-                </Menu.Item>
-                {isMobile && <Menu.Item onClick={handleDelete}>{t('lot.delete')}</Menu.Item>}
-                <Menu.Item onClick={handleOpenTrailer}>{t('lot.trailer')}</Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </div>
-        </Popover.Target>
-        <Popover.Dropdown className='flex items-end gap-2'>
-          <TextInput
-            className='w-36'
-            ref={extraInputRef}
-            placeholder={t('common.currencySign')}
-            onChange={handleExtraChange}
-            value={currentExtra}
-            type='number'
-            min='0'
-            onKeyDown={addExtraAmountOnEnter}
-          />
-          <Button
-            leftSection={<IconPlus size={16} />}
-            rightSection={<Kbd size='xs'>Enter</Kbd>}
-            onClick={handleAddExtra}
-          >
-            {t('lot.add')}
-          </Button>
-        </Popover.Dropdown>
-      </Popover>
+        <input
+          className={clsx(styles.input, styles.money)}
+          hidden={hideAmounts}
+          placeholder={t('common.currencySign')}
+          ref={amountInput}
+          onBlur={confirmAmount}
+          onKeyPress={createNewSlotOnEnter}
+          type='number'
+          min='0'
+        />
+        {!readonly && !isMobile && (
+          <button onClick={handleDelete} className={styles.iconButton} title={t('lot.delete')}>
+            <IconTrash />
+          </button>
+        )}
+      </LotActionsPopover>
     </>
   );
 };

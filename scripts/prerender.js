@@ -150,7 +150,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '../dist');
 
 /** Routes to prerender as static HTML. Add more as the app grows. */
-const PRERENDER_ROUTES = ['/', '/settings', '/wheel', '/overlays', '/tickets/info'];
+const PRERENDER_ROUTES = ['/', '/settings', '/wheel', '/history', '/overlays', '/tickets/info'];
 
 const template = readFileSync(resolve(distDir, 'index.html'), 'utf-8');
 

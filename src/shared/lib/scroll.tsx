@@ -1,31 +1,7 @@
 import { useIsomorphicEffect } from '@mantine/hooks';
-import { MutableRefObject, RefObject, createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
-interface ScrollContextData {
-  elementRef: RefObject<HTMLDivElement | null>;
-}
-
-export const ScrollContext = createContext<ScrollContextData>({
-  elementRef: { current: null },
-});
-
-interface ScrollContextProviderProps {
-  children: ReactNode;
-}
-
-export const ScrollContextProvider: React.FC<ScrollContextProviderProps> = ({ children }) => {
-  const elementRef = useRef<HTMLDivElement>(null);
-
-  return <ScrollContext.Provider value={{ elementRef }}>{children}</ScrollContext.Provider>;
-};
-
-export const useScrollContext = (): ScrollContextData => {
-  const context = useContext(ScrollContext);
-  if (!context) {
-    throw new Error('useScrollContext must be used within ScrollContextProvider');
-  }
-  return context;
-};
+import { useScrollContext } from '@shared/lib/scrollContext';
 
 export interface UseWindowScrollPosition {
   x: number;

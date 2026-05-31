@@ -1,55 +1,8 @@
 import { FC, useCallback, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
 import { Button, Text, Group, Tooltip, ActionIcon, Stack, Box } from '@mantine/core';
 import { IconSend, IconDice5 } from '@tabler/icons-react';
 
-import { useAppForm } from '@shared/tanstack-form/lib/form';
-import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
-
-export interface MockBidFormData extends Purchase {
-  randomValues: boolean;
-}
-
-export const defaultMockBidData: MockBidFormData = {
-  cost: 100,
-  username: 'test',
-  message: 'test',
-  isDonation: false,
-  timestamp: new Date().toISOString(),
-  color: '#000000',
-  id: '1',
-  source: 'Mock',
-  randomValues: true,
-};
-
-export type MockBidFormInstance = ReturnType<typeof useMockBidForm>;
-
-/** Hook that creates and manages the mock bid form state. */
-export function useMockBidForm() {
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-  return useAppForm({
-    defaultValues: defaultMockBidData,
-    onSubmit: ({ value }) => {
-      const { randomValues, ...rest } = value;
-      const baseBid = { ...rest, timestamp: new Date().toISOString() };
-      if (randomValues) {
-        dispatch(
-          processRedemption({
-            ...baseBid,
-            id: Math.random().toString(),
-            cost: Math.floor(Math.random() * 1000),
-            message: `Random message ${Math.random().toString(36).substring(7)}`,
-            username: `User_${Math.random().toString(36).substring(7)}`,
-          }),
-        );
-      } else {
-        dispatch(processRedemption({ ...baseBid, id: Math.random().toString() }));
-      }
-    },
-  });
-}
+import { MockBidFormInstance } from './useMockBidForm';
 
 interface MockBidFormProps {
   form: MockBidFormInstance;

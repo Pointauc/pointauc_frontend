@@ -223,7 +223,7 @@ const CanvasSpinningWheel: FC<CanvasSpinningWheelProps> = ({
         });
       },
     }),
-    [animate, drawCollapsedItems, redraw, setRotation, wheelRef],
+    [animate, drawCollapsedItems, redraw, setRotation],
   );
 
   return (

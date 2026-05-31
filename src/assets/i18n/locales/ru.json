@@ -1234,6 +1234,31 @@
     "convertedTitle": {
       "donation": "{{actualCost}} ({{cost}} ₽) {{user}}",
       "points": "{{actualCost}} ({{cost}} <icon />) {{user}}"
+    },
+    "split": {
+      "menuItem": "Разделить ставку",
+      "title": "Разделить ставку",
+      "sourceBid": "Исходная ставка",
+      "totalLabel": "Всего",
+      "allocatedLabel": "Распределено",
+      "remainingLabel": "Осталось",
+      "entryTitle": "Часть {{index}}",
+      "lotColumn": "Лот",
+      "lotPlaceholder": "Найти или создать лот",
+      "lotSearchHint": "Найдите существующий лот или создайте новый",
+      "newLotOption": "Новый \"{{name}}\"",
+      "suggestedBadge": "Подсказка",
+      "createBadge": "Создать",
+      "addBadge": "Добавить",
+      "currentLotAmount": "Текущая сумма: {{amount}}",
+      "amountLabel": "Сумма",
+      "percentageLabel": "Процент",
+      "addEntry": "Добавить часть",
+      "deleteEntry": "Удалить часть",
+      "distributeEvenly": "Поровну",
+      "smartSuggestions": "Умные подсказки",
+      "cancel": "Отмена",
+      "apply": "Применить"
     }
   },
   "stopwatch": {

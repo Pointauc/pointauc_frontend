@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, Group, Modal, Stack, Text, TextInput } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
-import ImageIcon from '@mui/icons-material/Image';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import BlockIcon from '@mui/icons-material/Block';
+import ImageIcon from '@mui/icons-material/Image';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import classes from './ImageLinkInput.module.css';
 
 interface ImageLinkInputProps {

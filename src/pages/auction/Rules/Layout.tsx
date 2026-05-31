@@ -6,11 +6,11 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'r
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { PortalContext } from '@App/storage/portalContext';
+import { PortalContext } from '@App/storage/portalContextData';
 import { RuleRecord } from '@domains/auction/rules';
 import { useRulesBroadcasting } from '@domains/broadcasting/lib/useRulesBroadcasting';
 import { buildDefaultRule } from '@pages/auction/Rules/helpers';
-import { RulesSettingsContext } from '@pages/auction/Rules/RulesSettingsContext.tsx';
+import { RulesSettingsContext } from '@pages/auction/Rules/rulesSettingsContextData';
 import { saveSettings } from '@reducers/AucSettings/AucSettings';
 import { RootState } from '@reducers/index';
 import EditableSelect from '@shared/ui/EditableSelect/EditableSelect';

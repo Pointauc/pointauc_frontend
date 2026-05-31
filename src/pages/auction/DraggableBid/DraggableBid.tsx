@@ -5,7 +5,7 @@ import { Purchase, setDraggedRedemption } from '@reducers/Purchases/Purchases.ts
 import { DragPosition } from '@models/common.model.ts';
 
 import BidComponent from '../BidComponent/BidComponent';
-import { draggedBid } from '../DragBidContext/DragBidContext';
+import { draggedBid } from '../DragBidContext/draggedBidStore';
 
 const initialPosition: DragPosition = { left: -1000, top: -1000 };
 

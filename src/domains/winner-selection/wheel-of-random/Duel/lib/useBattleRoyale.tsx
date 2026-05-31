@@ -3,7 +3,7 @@ import { ReactNode, RefObject, useCallback, useMemo, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import { buildGame } from '@components/SlotsBracket/SlotsBracket';
+import { buildGame } from '@components/SlotsBracket/buildGame';
 import { DOCS_PAGES, useDocsUrl } from '@constants/docs.constants';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getWheelColor } from '@utils/common.utils.ts';

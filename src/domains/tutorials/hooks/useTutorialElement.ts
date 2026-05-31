@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { useTutorialContext } from '@domains/tutorials/context/TutorialContext';
+import { useTutorialContext } from '@domains/tutorials/context/useTutorialContext';
 
 /**
  * Hook to register an element for tutorials
@@ -22,4 +22,3 @@ export function useTutorialElement<T extends HTMLElement = HTMLElement>(elementI
 
   return elementRef;
 }
-

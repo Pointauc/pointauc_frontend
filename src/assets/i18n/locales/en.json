@@ -305,6 +305,31 @@
     "convertedTitle": {
       "donation": "{{actualCost}} ({{cost}} $) {{user}}",
       "points": "{{actualCost}} ({{cost}} <icon />) {{user}}"
+    },
+    "split": {
+      "menuItem": "Split bid",
+      "title": "Split bid",
+      "sourceBid": "Source bid",
+      "totalLabel": "Total",
+      "allocatedLabel": "Allocated",
+      "remainingLabel": "Remaining",
+      "entryTitle": "Split {{index}}",
+      "lotColumn": "Lot",
+      "lotPlaceholder": "Search or create lot",
+      "lotSearchHint": "Search existing lots or create a new one",
+      "newLotOption": "New \"{{name}}\"",
+      "suggestedBadge": "Suggested",
+      "createBadge": "Create",
+      "addBadge": "Add",
+      "currentLotAmount": "Current amount: {{amount}}",
+      "amountLabel": "Amount",
+      "percentageLabel": "Percent",
+      "addEntry": "Add split",
+      "deleteEntry": "Delete split",
+      "distributeEvenly": "Distribute evenly",
+      "smartSuggestions": "Smart suggestions",
+      "cancel": "Cancel",
+      "apply": "Apply split"
     }
   },
   "changelog": {

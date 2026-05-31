@@ -1,5 +1,4 @@
-import { Button, Card, CloseButton, Menu, Modal, Stack, Text } from '@mantine/core';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Card, Modal, Stack, Text } from '@mantine/core';
 import clsx from 'clsx';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -24,18 +23,21 @@ import {
   updateBid,
   updateExistBids,
 } from '@reducers/Purchases/Purchases.ts';
-import { addBid, createSlotFromPurchase } from '@reducers/Slots/Slots.ts';
+import { addBid, createSlotFromPurchase, splitBid } from '@reducers/Slots/Slots.ts';
 import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
-import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 import bidUtils from '@utils/bid.utils.ts';
 import { store } from '@store';
 
 import RouletteMenu from '../RouletteMenu/RouletteMenu';
 
+import BidActions from './BidActions';
 import classes from './BidComponent.module.css';
+import BidHeader from './BidHeader';
+import SplitBidModal from './SplitBidModal';
 
 import type { ThunkDispatch } from 'redux-thunk';
+import type { SplitBidEntryRequest } from '@reducers/Slots/Slots.ts';
 
 interface BidComponentProps extends Bid.Item {
   isDragging?: boolean;
@@ -55,10 +57,12 @@ const BidComponent: React.FC<BidComponentProps> = ({
 }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { settings } = useSelector((root: RootState) => root.aucSettings);
+  const { slots } = useSelector((root: RootState) => root.slots);
   const { marblesAuc, luckyWheelEnabled, isRefundAvailable, pointsRate, hideAmounts, reversePointsRate } = settings;
   const { id, username, cost, color, rewardId, isDonation } = purchase;
   const isRemovePurchase = useMemo(() => cost < 0, [cost]);
   const [casinoModalOpened, setCasinoModalOpened] = useState(false);
+  const [splitModalOpened, setSplitModalOpened] = useState(false);
   const { t } = useTranslation();
   const name = bidUtils.getName(purchase);
 
@@ -69,7 +73,6 @@ const BidComponent: React.FC<BidComponentProps> = ({
       return null;
     }
 
-    const { slots } = (store.getState() as RootState).slots;
     const slotNames = slots.map(({ name }) => String(name || ''));
     const {
       bestMatch: { rating },
@@ -77,8 +80,7 @@ const BidComponent: React.FC<BidComponentProps> = ({
     } = findBestMatch(String(name || ''), slotNames);
 
     return rating > 0.4 ? { ...slots[bestMatchIndex], index: bestMatchIndex + 1 } : null;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [name, showBestMatch, slots]);
 
   const refundRedemption = useCallback(() => {
     if (!rewardId) {
@@ -196,9 +198,16 @@ const BidComponent: React.FC<BidComponentProps> = ({
   }, [bestMatch, dispatch, purchase]);
 
   const openCasino = (): void => setCasinoModalOpened(true);
+  const openSplitBid = (): void => setSplitModalOpened(true);
 
   const multiplySlot = (multi: number): void => {
     dispatch(updateBid({ ...purchase, cost: purchase.cost * multi }));
+  };
+
+  const handleSplitBid = (entries: SplitBidEntryRequest[]): void => {
+    dispatch(splitBid(purchase, entries));
+    dispatch(setDraggedRedemption(null));
+    dispatch(updateExistBids);
   };
 
   useAppHotkey(
@@ -236,102 +245,43 @@ const BidComponent: React.FC<BidComponentProps> = ({
 
   return (
     <Card className={purchaseClasses} style={isDragging ? undefined : backgroundStyles} padding='sm'>
-      <div className={classes.header}>
-        <Text size='xl' className={classes.headerTitle} title={actualUsername}>
-          {bidTitle}
-        </Text>
-        <CloseButton onClick={handleRemove} c='white' radius='xl' title={t('bid.delete')} size='lg' />
-      </div>
+      <BidHeader title={bidTitle} username={actualUsername} onRemove={handleRemove} deleteLabel={t('bid.delete')} />
 
       <Stack gap='xs'>
         <Text>{name}</Text>
         {!hideActions && (
           <>
-            <Button.Group>
-              <Button
-                variant='outline'
-                color='white'
-                size='xs'
-                fz='sm'
-                flex={1}
-                className={clsx(classes.actionButton, 'relative')}
-                onClick={handleAddNewSlot}
-              >
-                <span className='inline-flex w-full items-center justify-center'>
-                  {isHotkeyTarget && (
-                    <HotkeyHint
-                      actionId={HOTKEY_ACTION_IDS.firstBidNew}
-                      variant='overlay'
-                      className='pointer-events-none absolute top-1/2 left-2 -translate-y-1/2'
-                    />
-                  )}
-                  <span>{t('bid.new')}</span>
-                </span>
-              </Button>
-              <Menu position='bottom-end'>
-                <Menu.Target>
-                  <Button
-                    ref={anchorRef}
-                    variant='outline'
-                    color='white'
-                    size='xs'
-                    fz='sm'
-                    className={clsx(classes.actionButton, classes.splitButtonRight)}
-                  >
-                    <ArrowDropDownIcon />
-                  </Button>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item onClick={addToRandomSlot}>{t('auc.addToRandomSlot')}</Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </Button.Group>
-            {bestMatch && (
-              <Button
-                variant='outline'
-                color='white'
-                size='xs'
-                fz='sm'
-                className={clsx(classes.actionButton, 'relative')}
-                onClick={handleAddToBestMatch}
-              >
-                <span className='inline-flex w-full items-center justify-center'>
-                  {isHotkeyTarget && (
-                    <HotkeyHint
-                      actionId={HOTKEY_ACTION_IDS.firstBidAddToLot}
-                      variant='overlay'
-                      className='pointer-events-none absolute top-1/2 left-2 -translate-y-1/2'
-                    />
-                  )}
-                  <span>{t('bid.toLot', { name: bestMatch.name })}</span>
-                </span>
-              </Button>
-            )}
+            <BidActions
+              bestMatch={bestMatch}
+              isHotkeyTarget={isHotkeyTarget}
+              luckyWheelEnabled={luckyWheelEnabled}
+              anchorRef={anchorRef}
+              onAddNewSlot={handleAddNewSlot}
+              onAddToBestMatch={handleAddToBestMatch}
+              onAddToRandomSlot={addToRandomSlot}
+              onOpenSplitBid={openSplitBid}
+              onOpenCasino={openCasino}
+            />
 
-            {luckyWheelEnabled && (
-              <>
-                {casinoModalOpened && (
-                  <Modal
-                    opened={casinoModalOpened}
-                    onClose={() => setCasinoModalOpened(false)}
-                    size='68%'
-                    classNames={{ content: 'overflow-hidden' }}
-                  >
-                    <RouletteMenu onRoll={multiplySlot} bid={purchase} />
-                  </Modal>
-                )}
-                <Button
-                  variant='outline'
-                  color='white'
-                  size='xs'
-                  fz='sm'
-                  className={classes.actionButton}
-                  onClick={openCasino}
-                >
-                  {t('bid.luckyWheel')}
-                </Button>
-              </>
+            {luckyWheelEnabled && casinoModalOpened && (
+              <Modal
+                opened={casinoModalOpened}
+                onClose={() => setCasinoModalOpened(false)}
+                size='68%'
+                classNames={{ content: 'overflow-hidden' }}
+              >
+                <RouletteMenu onRoll={multiplySlot} bid={purchase} />
+              </Modal>
             )}
+            <SplitBidModal
+              opened={splitModalOpened}
+              onClose={() => setSplitModalOpened(false)}
+              bidName={name}
+              suggestionText={purchase.message || name}
+              totalAmount={actualCost}
+              lots={slots}
+              onSubmit={handleSplitBid}
+            />
           </>
         )}
       </Stack>
