@@ -1,4 +1,6 @@
-import { Paper, Text, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Paper, Text, Title, Tooltip } from '@mantine/core';
+import { IconChartBar, IconPercentage } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { buildWeekdayActivity } from '../lib/statistics';
@@ -8,6 +10,8 @@ import type { AuctionHistoryAuction } from '../model/types';
 interface WeekdayActivityProps {
   auctions: AuctionHistoryAuction[];
 }
+
+type WeekdayBarMode = 'relative' | 'absolute';
 
 const barStyles = [
   'from-cyan-300 to-teal-500',
@@ -21,17 +25,41 @@ const barStyles = [
 
 const WeekdayActivity = ({ auctions }: WeekdayActivityProps) => {
   const { t } = useTranslation();
+  const [barMode, setBarMode] = useState<WeekdayBarMode>('relative');
   const weekdayActivity = buildWeekdayActivity(auctions);
   const highestPercent = Math.max(1, ...weekdayActivity.map((weekday) => weekday.percent));
+  const isRelativeMode = barMode === 'relative';
+  const ToggleIcon = isRelativeMode ? IconPercentage : IconChartBar;
+  const toggleLabel = t(`auctionHistory.weekdayBarMode.${barMode}.toggleTooltip`);
+
+  const handleToggleBarMode = () => {
+    setBarMode((currentMode) => (currentMode === 'relative' ? 'absolute' : 'relative'));
+  };
 
   return (
-    <Paper withBorder radius='md' p='sm' className='flex flex-col'>
-      <Title order={3} size='h4' mb='md'>
+    <Paper withBorder radius='md' p='sm' className='relative flex min-h-[200px] flex-col'>
+      <Title order={3} size='h4' mb='md' pr='xl'>
         {t('auctionHistory.sections.weekdayActivity')}
       </Title>
+      <Tooltip label={toggleLabel} withArrow>
+        <ActionIcon
+          variant='subtle'
+          color='gray'
+          size='md'
+          radius='sm'
+          className='absolute top-2 right-2'
+          aria-label={toggleLabel}
+          onClick={handleToggleBarMode}
+        >
+          <ToggleIcon size={18} />
+        </ActionIcon>
+      </Tooltip>
       <div className='grid flex-1 grid-cols-7 items-end gap-1.5'>
         {weekdayActivity.map((weekday, index) => {
-          const heightPercent = Math.max(8, (weekday.percent / highestPercent) * 100);
+          const heightPercent = Math.max(
+            3,
+            isRelativeMode ? (weekday.percent / highestPercent) * 100 : weekday.percent,
+          );
 
           return (
             <Tooltip

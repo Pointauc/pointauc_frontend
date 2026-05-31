@@ -1,0 +1,29 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path
+    d="M16.8 50.7c-.8-4.4 4.4-7.5 7.9-4.8l17.1 13.5c2.5 2 6.2 1.1 7.6-1.8l4.8-10 5-10.5c1.9-4 7.7-4 9.6 0l5 10.5 4.8 10c1.4 2.9 5.1 3.8 7.6 1.8l17.1-13.5c3.5-2.7 8.7.4 7.9 4.8l-7 37.8H23.8l-7-37.8Z"
+    fill="var(--color-paper-600, #25262b)"
+  />
+  <path
+    d="M28.3 90.5h71.4c5.1 0 9.3 4.2 9.3 9.3v2.2c0 5.1-4.2 9.3-9.3 9.3H28.3c-5.1 0-9.3-4.2-9.3-9.3v-2.2c0-5.1 4.2-9.3 9.3-9.3Z"
+    fill="var(--color-paper-700, #1a1b1e)"
+  />
+  <path
+    d="M16.8 50.7c-.8-4.4 4.4-7.5 7.9-4.8l17.1 13.5c2.5 2 6.2 1.1 7.6-1.8l9.8-20.5c1.9-4 7.7-4 9.6 0l9.8 20.5c1.4 2.9 5.1 3.8 7.6 1.8l17.1-13.5c3.5-2.7 8.7.4 7.9 4.8l-7 37.8H23.8l-7-37.8Z"
+    stroke="var(--color-paper-400, #373a40)"
+    stroke-width="4"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M28.3 90.5h71.4c5.1 0 9.3 4.2 9.3 9.3v2.2c0 5.1-4.2 9.3-9.3 9.3H28.3c-5.1 0-9.3-4.2-9.3-9.3v-2.2c0-5.1 4.2-9.3 9.3-9.3Z"
+    stroke="var(--color-paper-400, #373a40)"
+    stroke-width="4"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M60 61.4 68.3 56v33.8M58.4 89.8h19.2"
+    stroke="var(--color-paper-300, #5c5f66)"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

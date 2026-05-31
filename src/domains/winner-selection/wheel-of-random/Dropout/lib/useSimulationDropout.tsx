@@ -103,6 +103,7 @@ const useSimulationDropout = ({
     getNextWinnerId,
     renderSubmitButton,
     onSpinEnd,
+    reset: onReset,
   };
 };
 

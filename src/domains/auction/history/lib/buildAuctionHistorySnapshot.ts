@@ -56,12 +56,13 @@ export const buildAuctionHistorySnapshot = ({
   requestsKind,
   startedAt,
   endedAt,
+  durationMs,
   pointsToDonationRatio,
   lots,
   purchases,
   pendingWinnerEvents,
 }: BuildAuctionHistorySnapshotParams): AuctionHistorySnapshot => {
-  const durationMs = Math.max(0, new Date(endedAt).getTime() - new Date(startedAt).getTime());
+  const normalizedDurationMs = Math.max(0, durationMs);
   const activeLots = lots.filter((lot) => Boolean(lot.name) || Number(lot.amount ?? 0) > 0);
   const lotIdByRuntimeId = new Map<string, string>();
   const historyLots = activeLots.map<AuctionHistoryLot>((lot) => {
@@ -189,6 +190,7 @@ export const buildAuctionHistorySnapshot = ({
     lastSeenAt: endedAt,
   }));
 
+  const totalAmount = historyLots.reduce((sum, lot) => sum + lot.totalAmount, 0);
   const totalPoints = historyLots.reduce((sum, lot) => sum + lot.totalPoints, 0);
   const totalDonationCents = historyLots.reduce((sum, lot) => sum + lot.totalDonationCents, 0);
 
@@ -199,11 +201,12 @@ export const buildAuctionHistorySnapshot = ({
       requestsKind,
       startedAt,
       endedAt,
-      durationMs,
+      durationMs: normalizedDurationMs,
       selectionMethod: winnerEvents.some((event) => event.method === 'wheel') ? 'wheel' : 'direct',
       pointsToDonationRatio,
       lotCount: historyLots.length,
       participantCount: participants.length,
+      totalAmount,
       totalPoints,
       totalDonationCents,
       createdAt: endedAt,

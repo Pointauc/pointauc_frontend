@@ -176,7 +176,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
   const donatexAuth = getDonateXAuthData();
 
   if (activeSettings) {
-    const { startTime, timeStep, ...settings } = activeSettings;
+    const { timeStep, ...settings } = activeSettings;
     dispatch(
       setAucSettings({
         ...settings,

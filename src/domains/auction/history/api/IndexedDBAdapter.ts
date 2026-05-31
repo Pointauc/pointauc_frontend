@@ -1,5 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
 
+import i18n from '@assets/i18n';
+
 import { AUCTION_HISTORY_DB_NAME } from '../model/constants';
 import { resolveNextDefaultAuctionName } from '../lib/derived';
 
@@ -151,9 +153,9 @@ class IndexedDBAdapter extends AuctionHistoryApi {
     );
   }
 
-  async getNextDefaultName(): Promise<string> {
+  async getNextDefaultName(language = i18n.language): Promise<string> {
     const auctions = await this.db.auctions.toArray();
-    return resolveNextDefaultAuctionName(auctions);
+    return resolveNextDefaultAuctionName(auctions, language);
   }
 }
 

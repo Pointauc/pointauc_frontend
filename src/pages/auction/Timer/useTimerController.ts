@@ -1,7 +1,7 @@
 import { throttle } from '@tanstack/react-pacer';
 import { Ref, RefObject, useCallback, useMemo, useRef } from 'react';
 
-import { HOUR, TimerType } from './stopwatch.constants';
+import { HOUR, TimerType } from './timer.constants';
 
 interface UseTimerControllerParams {
   timerType: TimerType;
@@ -29,7 +29,7 @@ export interface TimerController {
   setEditing: (checkIsEditing: boolean) => void;
 }
 
-const parseStopwatchInput = (value: string, currentTime: number): number | null => {
+const parseTimerInput = (value: string, currentTime: number): number | null => {
   const parts = value.split(':').map(Number);
   const [firstPart, secondPart, thirdPart] = parts;
   const checkUsesHourFormat = currentTime >= HOUR;
@@ -194,8 +194,8 @@ const useTimerController = ({
         return null;
       }
 
-      return timerType === 'stopwatch'
-        ? parseStopwatchInput(normalizedValue, timeRef.current)
+      return timerType === 'timer'
+        ? parseTimerInput(normalizedValue, timeRef.current)
         : parseTotalTimeInput(normalizedValue);
     },
     [timerType],

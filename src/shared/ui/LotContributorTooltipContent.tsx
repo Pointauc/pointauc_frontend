@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LotContributor } from '@models/slot.model';
 import { numberUtils } from '@utils/common/number';
+
+import type { LotContributor } from '@models/slot.model';
 
 interface LotContributorTooltipContentProps {
   contributors: LotContributor[];

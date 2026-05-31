@@ -1,5 +1,6 @@
 import { Loader, Stack, Text } from '@mantine/core';
-import { IconCrown, IconHeart, IconTrophy, IconUsers, IconWallet } from '@tabler/icons-react';
+import { IconCrown, IconDiamond, IconHeart, IconTrophy, IconUsers } from '@tabler/icons-react';
+import { useElementSize } from '@mantine/hooks';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,16 +25,17 @@ import {
   buildParticipantScores,
   createParticipantNameResolver,
   getEffectiveWinnerLot,
-  getAuctionWeightedTotal,
+  getAuctionTotalAmount,
   getTopContributorName,
   resolveRangeTotals,
   sortParticipantScores,
   type HeatmapMode,
 } from '../lib/statistics';
 import { AUCTION_HISTORY_PAGE_SIZE } from '../model/constants';
+import { auctionHistoryMetricColors } from '../config/metricColors';
 
 import AuctionActivitySection from './AuctionActivitySection';
-import AuctionLeaderboardPanel, { type AuctionContextStat } from './AuctionLeaderboardPanel';
+import AuctionLeaderboardPanel, { type AuctionHighlight } from './AuctionLeaderboardPanel';
 import LotsList from './LotsList';
 import MetricStrip from './MetricStrip';
 import SelectedAuctionView from './SelectedAuctionView';
@@ -44,7 +46,7 @@ import type { AuctionHistoryAuction } from '../model/types';
 
 type DateRangeValue = [string | null, string | null];
 
-const getContextStats = ({
+const getAuctionHighlights = ({
   auctions,
   rangeDetails,
   selectedAuction,
@@ -56,7 +58,7 @@ const getContextStats = ({
   selectedAuction?: AuctionHistoryAuction;
   resolveParticipantName: (participantId: string) => string;
   t: TFunction;
-}): AuctionContextStat[] => {
+}): AuctionHighlight[] => {
   const scores = buildParticipantScores(auctions, rangeDetails, resolveParticipantName);
   const highestPointsContributor = sortParticipantScores(scores, 'points')[0];
   const highestDonationContributor = sortParticipantScores(scores, 'donations')[0];
@@ -94,7 +96,7 @@ const getContextStats = ({
         label: t('auctionHistory.contextStats.highestPointsContributor'),
         value: highestPointsContributor ? formatCompactNumber(highestPointsContributor.points) : '-',
         helper: highestPointsContributor?.displayName,
-        icon: <IconWallet size={18} />,
+        icon: <IconDiamond size={18} />,
         color: 'teal',
       },
       {
@@ -107,31 +109,42 @@ const getContextStats = ({
     ];
   }
 
+  const totalAmountByAuctionId = new Map<string, number>();
+  rangeDetails.lots.forEach((lot) => {
+    const totalAmount = Number(lot.totalAmount);
+    totalAmountByAuctionId.set(
+      lot.auctionId,
+      (totalAmountByAuctionId.get(lot.auctionId) ?? 0) + (Number.isFinite(totalAmount) ? totalAmount : 0),
+    );
+  });
+
+  const resolveAuctionTotalAmount = (auction: AuctionHistoryAuction) =>
+    getAuctionTotalAmount(auction, totalAmountByAuctionId.get(auction.id) ?? 0);
   const biggestAuction = [...auctions].sort(
-    (first, second) => getAuctionWeightedTotal(second) - getAuctionWeightedTotal(first),
+    (first, second) => resolveAuctionTotalAmount(second) - resolveAuctionTotalAmount(first),
   )[0];
   const mostGenerousAuction = [...auctions].sort(
     (first, second) => second.totalDonationCents - first.totalDonationCents,
   )[0];
   const highestPointsAuction = [...auctions].sort((first, second) => second.totalPoints - first.totalPoints)[0];
-  const totals = resolveRangeTotals(auctions, rangeDetails);
+  const mostPopularAuction = [...auctions].sort((first, second) => second.participantCount - first.participantCount)[0];
 
   return [
     {
       label: t('auctionHistory.contextStats.biggestAuction'),
-      value: biggestAuction ? formatCompactNumber(getAuctionWeightedTotal(biggestAuction)) : '-',
+      value: biggestAuction ? formatCompactNumber(resolveAuctionTotalAmount(biggestAuction)) : '-',
       helper: biggestAuction ? `${biggestAuction.name} · ${formatDate(biggestAuction.startedAt)}` : undefined,
-      icon: <IconTrophy size={18} />,
-      color: 'yellow',
+      icon: <IconTrophy size={22} />,
+      color: auctionHistoryMetricColors.auctions,
     },
     {
-      label: t('auctionHistory.contextStats.mostGenerousAuction'),
-      value: mostGenerousAuction ? formatCompactMoney(mostGenerousAuction.totalDonationCents) : '-',
-      helper: mostGenerousAuction
-        ? `${mostGenerousAuction.name} · ${formatDate(mostGenerousAuction.startedAt)}`
+      label: t('auctionHistory.contextStats.mostParticipantsAuction'),
+      value: mostPopularAuction ? formatCompactNumber(mostPopularAuction.participantCount) : '-',
+      helper: mostPopularAuction
+        ? `${mostPopularAuction.name} · ${formatDate(mostPopularAuction.startedAt)}`
         : undefined,
-      icon: <IconHeart size={18} />,
-      color: 'red',
+      icon: <IconUsers size={22} />,
+      color: auctionHistoryMetricColors.participants,
     },
     {
       label: t('auctionHistory.contextStats.highestPointsAuction'),
@@ -139,20 +152,24 @@ const getContextStats = ({
       helper: highestPointsAuction
         ? `${highestPointsAuction.name} · ${formatDate(highestPointsAuction.startedAt)}`
         : undefined,
-      icon: <IconWallet size={18} />,
-      color: 'teal',
+      icon: <IconDiamond size={22} />,
+      color: auctionHistoryMetricColors.points,
     },
     {
-      label: t('auctionHistory.contextStats.averageParticipants'),
-      value: Math.round(totals.averageParticipants),
-      icon: <IconUsers size={18} />,
-      color: 'violet',
+      label: t('auctionHistory.contextStats.mostGenerousAuction'),
+      value: mostGenerousAuction ? formatCompactMoney(mostGenerousAuction.totalDonationCents) : '-',
+      helper: mostGenerousAuction
+        ? `${mostGenerousAuction.name} · ${formatDate(mostGenerousAuction.startedAt)}`
+        : undefined,
+      icon: <IconHeart size={22} />,
+      color: auctionHistoryMetricColors.donations,
     },
   ];
 };
 
 const AuctionHistoryPage = () => {
   const { t } = useTranslation();
+  const { ref: leftPanelRef, height: leftPanelHeight } = useElementSize();
   const [dateRange, setDateRange] = useState<DateRangeValue>([getPreviousDateKey(365), toDateKey(new Date())]);
   const [heatmapMode, setHeatmapMode] = useState<HeatmapMode>('auctionCount');
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -194,9 +211,9 @@ const AuctionHistoryPage = () => {
     () => buildParticipantScores(panelAuctions, panelRangeDetails, resolveParticipantName),
     [panelAuctions, panelRangeDetails, resolveParticipantName],
   );
-  const contextStats = useMemo(
+  const auctionHighlights = useMemo(
     () =>
-      getContextStats({
+      getAuctionHighlights({
         auctions: panelAuctions,
         rangeDetails: panelRangeDetails,
         selectedAuction: selectedDetails?.auction,
@@ -219,6 +236,8 @@ const AuctionHistoryPage = () => {
     page * AUCTION_HISTORY_PAGE_SIZE,
   );
   const isLoading = isAuctionsLoading || isRangeLoading;
+  const isFullAuctionListPage = !selectedAuctionId && visibleSummaries.length === AUCTION_HISTORY_PAGE_SIZE;
+  const leaderboardMaxHeight = isFullAuctionListPage && leftPanelHeight > 0 ? leftPanelHeight : undefined;
 
   const biggestWinningLotName = totals.biggestWinningLot?.name
     ? getTopContributorName(
@@ -237,10 +256,10 @@ const AuctionHistoryPage = () => {
             <Loader />
           </div>
         ) : (
-          <div className='flex flex-col gap-4'>
+          <div className='flex flex-col gap-4 pb-3'>
             <MetricStrip totals={totals} biggestWinningLotName={biggestWinningLotName} />
             <div className='grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,12fr)_5fr]'>
-              <Stack gap='md'>
+              <Stack ref={leftPanelRef} gap='md'>
                 <AuctionActivitySection
                   auctions={auctions}
                   endDate={endDate}
@@ -285,7 +304,8 @@ const AuctionHistoryPage = () => {
                 scores={participantScores}
                 totals={totals}
                 isSelectedAuction={Boolean(selectedDetails)}
-                contextStats={contextStats}
+                highlights={auctionHighlights}
+                maxHeight={leaderboardMaxHeight}
               />
             </div>
           </div>

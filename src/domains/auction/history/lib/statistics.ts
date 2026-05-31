@@ -5,6 +5,7 @@ import {
   getAuctionDayKey,
 } from './derived';
 
+import type { LotContributor } from '@models/slot.model';
 import type { AuctionHistoryRangeDetails } from '../api/AuctionHistoryApi';
 import type {
   AuctionHistoryAuction,
@@ -36,7 +37,7 @@ export interface AuctionCardSummary {
   currencyMode: ReturnType<typeof getAuctionCurrencyMode>;
   flavor: StatusFlavor;
   winnerLot?: AuctionHistoryLot;
-  winnerName?: string;
+  winnerContributors: LotContributor[];
   winnerChancePercent?: number;
 }
 
@@ -120,7 +121,9 @@ export const createParticipantNameResolver = (participants: AuctionHistoryPartic
   return (participantId: string): string => participantById.get(participantId)?.displayName ?? participantId;
 };
 
-export const getConfirmedWinnerEvent = (winnerEvents: AuctionHistoryWinnerEvent[]): AuctionHistoryWinnerEvent | undefined => {
+export const getConfirmedWinnerEvent = (
+  winnerEvents: AuctionHistoryWinnerEvent[],
+): AuctionHistoryWinnerEvent | undefined => {
   return [...winnerEvents].reverse().find((event) => event.status === 'confirmed');
 };
 
@@ -160,8 +163,31 @@ export const getTopContributorName = (
   return topContribution ? resolveParticipantName(topContribution.participantId) : undefined;
 };
 
+export const getLotContributors = (
+  lotId: string,
+  contributions: AuctionHistoryContribution[],
+  resolveParticipantName: (participantId: string) => string,
+  pointsToDonationRatio: number,
+): LotContributor[] => {
+  return contributions
+    .filter((contribution) => contribution.lotId === lotId)
+    .map((contribution) => ({
+      name: resolveParticipantName(contribution.participantId),
+      amount: getContributionWeightedTotal(contribution, pointsToDonationRatio),
+    }))
+    .sort((first, second) => second.amount - first.amount);
+};
+
 export const getAuctionWeightedTotal = (auction: AuctionHistoryAuction): number => {
   return calculateWeightedTotalPoints(auction.totalPoints, auction.totalDonationCents, auction.pointsToDonationRatio);
+};
+
+export const getAuctionTotalAmount = (
+  auction: Pick<AuctionHistoryAuction, 'totalAmount'>,
+  fallbackTotalAmount = 0,
+): number => {
+  const totalAmount = Number(auction.totalAmount);
+  return Number.isFinite(totalAmount) ? totalAmount : fallbackTotalAmount;
 };
 
 export const resolveRangeTotals = (
@@ -179,7 +205,9 @@ export const resolveRangeTotals = (
   const lotsByAuctionId = groupBy(rangeDetails.lots, (lot) => lot.auctionId);
   const effectiveWinningLotIds = new Set(
     auctions
-      .map((auction) => getEffectiveWinnerLot(lotsByAuctionId.get(auction.id) ?? [], winnerEventsByAuctionId.get(auction.id) ?? []))
+      .map((auction) =>
+        getEffectiveWinnerLot(lotsByAuctionId.get(auction.id) ?? [], winnerEventsByAuctionId.get(auction.id) ?? []),
+      )
       .filter((lot): lot is AuctionHistoryLot => lot != null)
       .map((lot) => lot.id),
   );
@@ -217,12 +245,21 @@ export const buildAuctionCardSummaries = (
   const contributionsByAuctionId = groupBy(rangeDetails.contributions, (contribution) => contribution.auctionId);
   const winnerEventsByAuctionId = groupBy(rangeDetails.winnerEvents, (event) => event.auctionId);
   const participantAverage = getAverage(auctions.map((auction) => auction.participantCount));
-  const participantPercentile = getPercentile(auctions.map((auction) => auction.participantCount), 75);
+  const participantPercentile = getPercentile(
+    auctions.map((auction) => auction.participantCount),
+    75,
+  );
   const durationAverage = getAverage(auctions.map((auction) => auction.durationMs));
-  const durationPercentile = getPercentile(auctions.map((auction) => auction.durationMs), 75);
+  const durationPercentile = getPercentile(
+    auctions.map((auction) => auction.durationMs),
+    75,
+  );
   const combinedValues = auctions.map(getAuctionWeightedTotal);
   const combinedPercentile = getPercentile(combinedValues, 75);
-  const lotsPercentile = getPercentile(auctions.map((auction) => auction.lotCount), 75);
+  const lotsPercentile = getPercentile(
+    auctions.map((auction) => auction.lotCount),
+    75,
+  );
   const contributionPercentile = getPercentile(
     auctions.map((item) => (item.participantCount ? getAuctionWeightedTotal(item) / item.participantCount : 0)),
     75,
@@ -234,15 +271,22 @@ export const buildAuctionCardSummaries = (
     const auctionWinnerEvents = winnerEventsByAuctionId.get(auction.id) ?? [];
     const winnerEvent = getConfirmedWinnerEvent(auctionWinnerEvents);
     const winnerLot = getEffectiveWinnerLot(auctionLots, auctionWinnerEvents);
-    const winnerName = winnerLot
-      ? getTopContributorName(winnerLot.id, auctionContributions, resolveParticipantName, auction.pointsToDonationRatio)
-      : undefined;
+    const winnerContributors = winnerLot
+      ? getLotContributors(winnerLot.id, auctionContributions, resolveParticipantName, auction.pointsToDonationRatio)
+      : [];
     const combinedTotal = getAuctionWeightedTotal(auction);
     const contributionPerParticipant = auction.participantCount ? combinedTotal / auction.participantCount : 0;
-    const winnerParticipationPercent = winnerLot && auctionContributions.length > 0
-      ? (auctionContributions.filter((contribution) => contribution.lotId === winnerLot.id).length / auctionContributions.length) * 100
-      : 100;
+    const winnerParticipationPercent =
+      winnerLot && auctionContributions.length > 0
+        ? (auctionContributions.filter((contribution) => contribution.lotId === winnerLot.id).length /
+            auctionContributions.length) *
+          100
+        : 100;
     let flavor: StatusFlavor = statusFlavors.popular;
+
+    const getLotPercentage = (amount: number) => {
+      return (amount / auction.lotCount) * 100;
+    };
 
     if (auction.selectionMethod === 'wheel' && winnerParticipationPercent <= 5) {
       flavor = statusFlavors.underdogVictory;
@@ -264,7 +308,7 @@ export const buildAuctionCardSummaries = (
       currencyMode: getAuctionCurrencyMode(auction),
       flavor,
       winnerLot,
-      winnerName,
+      winnerContributors,
       winnerChancePercent: winnerEvent?.chancePercent,
     };
   });
@@ -328,7 +372,9 @@ export const buildParticipantScores = (
   const lotsByAuctionId = groupBy(rangeDetails.lots, (lot) => lot.auctionId);
   const effectiveWinningLotIds = new Set(
     auctions
-      .map((auction) => getEffectiveWinnerLot(lotsByAuctionId.get(auction.id) ?? [], winnerEventsByAuctionId.get(auction.id) ?? []))
+      .map((auction) =>
+        getEffectiveWinnerLot(lotsByAuctionId.get(auction.id) ?? [], winnerEventsByAuctionId.get(auction.id) ?? []),
+      )
       .filter((lot): lot is AuctionHistoryLot => lot != null)
       .map((lot) => lot.id),
   );
@@ -389,10 +435,7 @@ export const buildParticipantScores = (
   return Array.from(scoreByParticipantId.values());
 };
 
-export const sortParticipantScores = (
-  scores: ParticipantScore[],
-  sort: LeaderboardSort,
-): ParticipantScore[] => {
+export const sortParticipantScores = (scores: ParticipantScore[], sort: LeaderboardSort): ParticipantScore[] => {
   return [...scores].sort((first, second) => {
     if (sort === 'donations') {
       return second.donationCents - first.donationCents;

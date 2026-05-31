@@ -13,9 +13,9 @@ import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import HotkeyTooltip from '@shared/ui/HotkeyTooltip/HotkeyTooltip';
 import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
 
-import classes from './Stopwatch.module.css';
+import classes from './Timer.module.css';
 
-interface StopwatchControlsProps {
+interface TimerControlsProps {
   checkIsStopped: boolean;
   onStart: () => void;
   onStop: () => void;
@@ -26,7 +26,7 @@ interface StopwatchControlsProps {
   onControlButtonClick?: (buttonName: string) => void;
 }
 
-const StopwatchControls: FC<StopwatchControlsProps> = ({
+const TimerControls: FC<TimerControlsProps> = ({
   checkIsStopped,
   onStart,
   onStop,
@@ -39,7 +39,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
   const { t } = useTranslation();
 
   useAppHotkey(
-    HOTKEY_ACTION_IDS.stopwatchToggle,
+    HOTKEY_ACTION_IDS.timerToggle,
     (event, { setNotificationData }) => {
       event.preventDefault();
 
@@ -55,7 +55,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
     { preventDefault: true },
   );
   useAppHotkey(
-    HOTKEY_ACTION_IDS.stopwatchAddTime,
+    HOTKEY_ACTION_IDS.timerAddTime,
     (event) => {
       event.preventDefault();
       onAddTime();
@@ -63,7 +63,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
     { preventDefault: true },
   );
   useAppHotkey(
-    HOTKEY_ACTION_IDS.stopwatchSubtractTime,
+    HOTKEY_ACTION_IDS.timerSubtractTime,
     (event) => {
       event.preventDefault();
       onSubtractTime();
@@ -71,7 +71,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
     { preventDefault: true },
   );
   useAppHotkey(
-    HOTKEY_ACTION_IDS.stopwatchAddTimeDouble,
+    HOTKEY_ACTION_IDS.timerAddTimeDouble,
     (event) => {
       event.preventDefault();
       onAddDoubleTime();
@@ -82,7 +82,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
   return (
     <Group className={classes.controls} gap='xs'>
       <HotkeyTooltip
-        actionId={HOTKEY_ACTION_IDS.stopwatchToggle}
+        actionId={HOTKEY_ACTION_IDS.timerToggle}
         showLabel={false}
         visibleOnRoutes={[ROUTES.HOME]}
         position='bottom'
@@ -134,7 +134,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
         <ReplayIcon fontSize='large' />
       </ActionIcon>
       <HotkeyTooltip
-        actionId={HOTKEY_ACTION_IDS.stopwatchAddTime}
+        actionId={HOTKEY_ACTION_IDS.timerAddTime}
         showLabel={false}
         visibleOnRoutes={[ROUTES.HOME]}
         position='bottom'
@@ -155,7 +155,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
         </ActionIcon>
       </HotkeyTooltip>
       <HotkeyTooltip
-        actionId={HOTKEY_ACTION_IDS.stopwatchSubtractTime}
+        actionId={HOTKEY_ACTION_IDS.timerSubtractTime}
         showLabel={false}
         visibleOnRoutes={[ROUTES.HOME]}
         position='bottom'
@@ -176,7 +176,7 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
         </ActionIcon>
       </HotkeyTooltip>
       <HotkeyTooltip
-        actionId={HOTKEY_ACTION_IDS.stopwatchAddTimeDouble}
+        actionId={HOTKEY_ACTION_IDS.timerAddTimeDouble}
         showLabel={false}
         visibleOnRoutes={[ROUTES.HOME]}
         position='bottom'
@@ -200,4 +200,4 @@ const StopwatchControls: FC<StopwatchControlsProps> = ({
   );
 };
 
-export default memo(StopwatchControls);
+export default memo(TimerControls);

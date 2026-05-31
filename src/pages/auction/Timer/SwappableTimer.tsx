@@ -4,21 +4,22 @@ import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import EditableTimer from './EditableTimer';
-import classes from './Stopwatch.module.css';
-import { TimerPriority, TimerType } from './stopwatch.constants';
+import classes from './Timer.module.css';
+import { TimerPriority, TimerType } from './timer.constants';
 import { TimerController } from './useTimerController';
 
 interface SwappableTimerProps {
   mainTimer: TimerType;
   showControls: boolean;
   showTotalTime: boolean;
-  checkIsStopwatchStopped: boolean;
-  stopwatchController: TimerController;
+  checkIsTimerStopped: boolean;
+  timerController: TimerController;
   totalTimeController: TimerController;
   onMainTimerChange: (timerType: TimerType) => void;
-  onPauseStopwatch: () => void;
-  onResumeStopwatch: () => void;
-  onStopwatchTimeChanged: (timeLeft: number) => void;
+  onPauseTimer: () => void;
+  onResumeTimer: () => void;
+  onTimerTimeChanged: (timeLeft: number) => void;
+  onTotalTimeChanged?: (totalTime: number) => void;
   onTimeEdited?: (timerType: TimerType) => void;
   onSwapTimers: () => void;
   showManualEditHint?: boolean;
@@ -29,13 +30,14 @@ const SwappableTimer: FC<SwappableTimerProps> = ({
   mainTimer,
   showControls,
   showTotalTime,
-  checkIsStopwatchStopped,
-  stopwatchController,
+  checkIsTimerStopped,
+  timerController,
   totalTimeController,
   onMainTimerChange,
-  onPauseStopwatch,
-  onResumeStopwatch,
-  onStopwatchTimeChanged,
+  onPauseTimer,
+  onResumeTimer,
+  onTimerTimeChanged,
+  onTotalTimeChanged,
   onTimeEdited,
   onSwapTimers,
   showManualEditHint = false,
@@ -46,32 +48,33 @@ const SwappableTimer: FC<SwappableTimerProps> = ({
   return (
     <>
       <EditableTimer
-        controller={stopwatchController}
-        stopwatchController={stopwatchController}
-        priority={mainTimer === 'stopwatch' ? TimerPriority.Primary : TimerPriority.Secondary}
+        controller={timerController}
+        timerController={timerController}
+        priority={mainTimer === 'timer' ? TimerPriority.Primary : TimerPriority.Secondary}
         showControls={showControls}
         tooltipLabel={t('stopwatch.clickToEdit')}
-        checkIsStopwatchStopped={checkIsStopwatchStopped}
+        checkIsTimerStopped={checkIsTimerStopped}
         onMainTimerChange={onMainTimerChange}
-        onPauseStopwatch={onPauseStopwatch}
-        onResumeStopwatch={onResumeStopwatch}
-        onTimeChanged={onStopwatchTimeChanged}
+        onPauseTimer={onPauseTimer}
+        onResumeTimer={onResumeTimer}
+        onTimeChanged={onTimerTimeChanged}
         onTimeEdited={onTimeEdited}
-        showManualEditHint={showManualEditHint && mainTimer === 'stopwatch'}
+        showManualEditHint={showManualEditHint && mainTimer === 'timer'}
         hideManualEditHint={hideManualEditHint}
       />
       {showTotalTime && (
         <>
           <EditableTimer
             controller={totalTimeController}
-            stopwatchController={stopwatchController}
+            timerController={timerController}
             priority={mainTimer === 'total' ? TimerPriority.Primary : TimerPriority.Secondary}
             showControls={showControls}
             tooltipLabel={t('stopwatch.clickToEdit')}
-            checkIsStopwatchStopped={checkIsStopwatchStopped}
+            checkIsTimerStopped={checkIsTimerStopped}
             onMainTimerChange={onMainTimerChange}
-            onPauseStopwatch={onPauseStopwatch}
-            onResumeStopwatch={onResumeStopwatch}
+            onPauseTimer={onPauseTimer}
+            onResumeTimer={onResumeTimer}
+            onTimeChanged={onTotalTimeChanged}
             onTimeEdited={onTimeEdited}
             showManualEditHint={showManualEditHint && mainTimer === 'total'}
             hideManualEditHint={hideManualEditHint}

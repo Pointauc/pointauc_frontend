@@ -24,6 +24,7 @@ interface WinnerBackdropProps {
   finalWinner?: WheelItem | null;
   onDelete?: (showConfirmation?: boolean) => void;
   onReroll?: () => void;
+  onReset?: () => void;
   dropOut?: boolean;
   showDeleteConfirmation?: boolean;
 }
@@ -33,6 +34,7 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
     currentSpinWinner,
     onDelete,
     onReroll,
+    onReset,
     id,
     finalWinner: _finalWinner,
     dropOut,
@@ -48,6 +50,7 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [bidManagementOpen, setBidManagementOpen] = useState<boolean>(false);
   const [isLotDeleted, setIsLotDeleted] = useState<boolean>(false);
+  const [isWinnerConfirmed, setIsWinnerConfirmed] = useState<boolean>(false);
 
   const finalWinnerLot = useMemo(
     () => (finalWinner?.id ? getSlot(lots, finalWinner?.id.toString()) : null),
@@ -95,11 +98,22 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
 
   const handleConfirmWinner = (): void => {
     dispatch(confirmLatestWinnerCandidate());
-    notifications.show({ message: t('auctionHistory.winner.confirmed'), color: 'green' });
+    setIsWinnerConfirmed(true);
+    notifications.show({
+      title: t('auctionHistory.winner.savedTitle'),
+      message: t('auctionHistory.winner.savedMessage'),
+      color: 'green',
+      autoClose: 8000,
+    });
   };
 
   const handleRerollWinner = (): void => {
     dispatch(rerollLatestWinnerCandidate());
+    if (dropOut) {
+      onReset?.();
+      return;
+    }
+
     onReroll?.();
   };
 
@@ -112,13 +126,26 @@ const WinnerBackdrop = (props: WinnerBackdropProps) => {
         {finalWinnerLot && (
           <>
             <Tooltip label={t('auctionHistory.winner.confirmTooltip')}>
-              <Button onClick={handleConfirmWinner} variant='filled' color='green'>
-                {t('auctionHistory.winner.confirm')}
+              <Button
+                type='button'
+                onClick={handleConfirmWinner}
+                variant='filled'
+                color='green'
+                disabled={isWinnerConfirmed}
+              >
+                {isWinnerConfirmed ? t('auctionHistory.winner.saved') : t('auctionHistory.winner.confirm')}
               </Button>
             </Tooltip>
-            <Button onClick={handleRerollWinner} variant='outline' color='yellow'>
-              {t('auctionHistory.winner.reroll')}
-            </Button>
+            {!isWinnerConfirmed && (
+              <Button
+                type={dropOut ? 'button' : 'submit'}
+                onClick={handleRerollWinner}
+                variant='outline'
+                color='yellow'
+              >
+                {t('auctionHistory.winner.reroll')}
+              </Button>
+            )}
           </>
         )}
         {onDelete && (

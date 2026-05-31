@@ -1,4 +1,6 @@
-import { DEFAULT_AUCTION_NAME_PREFIX } from '../model/constants';
+import { DEFAULT_AUCTION_NAME_PREFIXES, resolveDefaultAuctionNamePrefix } from '../model/constants';
+
+import { getCurrentAuctionMetadata } from './currentAuctionMetadata';
 
 import type { AuctionHistoryAuction, AuctionHistoryDropoutVariant, AuctionHistoryWheelVariant } from '../model/types';
 
@@ -37,18 +39,33 @@ export const formatAuctionCurrencyMode = (
   t: (key: string) => string,
 ): string => t(`auctionHistory.currencyMode.${mode}`);
 
-export const resolveNextDefaultAuctionName = (auctions: Pick<AuctionHistoryAuction, 'name'>[]): string => {
+export const resolveNextDefaultAuctionName = (
+  auctions: Pick<AuctionHistoryAuction, 'name'>[],
+  language?: string,
+): string => {
+  const defaultAuctionNamePrefix = resolveDefaultAuctionNamePrefix(language);
   const usedNumbers = new Set<number>();
 
-  auctions.forEach(({ name }) => {
-    if (!name.startsWith(DEFAULT_AUCTION_NAME_PREFIX)) {
+  const addSequenceNumber = (name: string) => {
+    const matchingPrefix = DEFAULT_AUCTION_NAME_PREFIXES.find((prefix) => name.startsWith(prefix));
+
+    if (!matchingPrefix) {
       return;
     }
 
-    const sequenceNumber = Number(name.slice(DEFAULT_AUCTION_NAME_PREFIX.length));
+    const sequenceNumber = Number(name.slice(matchingPrefix.length));
     if (Number.isInteger(sequenceNumber) && sequenceNumber > 0) {
       usedNumbers.add(sequenceNumber);
     }
+  };
+
+  const currentAuctionName = getCurrentAuctionMetadata().name;
+  if (currentAuctionName) {
+    addSequenceNumber(currentAuctionName);
+  }
+
+  auctions.forEach(({ name }) => {
+    addSequenceNumber(name);
   });
 
   let nextNumber = 1;
@@ -56,7 +73,7 @@ export const resolveNextDefaultAuctionName = (auctions: Pick<AuctionHistoryAucti
     nextNumber += 1;
   }
 
-  return `${DEFAULT_AUCTION_NAME_PREFIX}${nextNumber}`;
+  return `${defaultAuctionNamePrefix}${nextNumber}`;
 };
 
 export const formatWheelVariant = (variant: AuctionHistoryWheelVariant | undefined): string => {

@@ -4,20 +4,20 @@ import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import { useTranslation } from 'react-i18next';
 
-import classes from './Stopwatch.module.css';
-import { TimerPriority, TimerType } from './stopwatch.constants';
+import classes from './Timer.module.css';
+import { TimerPriority, TimerType } from './timer.constants';
 import { TimerController } from './useTimerController';
 
 interface EditableTimerProps {
   controller: TimerController;
-  stopwatchController: TimerController;
+  timerController: TimerController;
   priority: TimerPriority;
   showControls: boolean;
   tooltipLabel: string;
-  checkIsStopwatchStopped: boolean;
+  checkIsTimerStopped: boolean;
   onMainTimerChange: (timerType: TimerType) => void;
-  onPauseStopwatch: () => void;
-  onResumeStopwatch: () => void;
+  onPauseTimer: () => void;
+  onResumeTimer: () => void;
   onTimeChanged?: (timeLeft: number) => void;
   onTimeEdited?: (timerType: TimerType) => void;
   showManualEditHint?: boolean;
@@ -29,14 +29,14 @@ const MaskedInputBase = InputBase as any;
 
 const EditableTimer: FC<EditableTimerProps> = ({
   controller,
-  stopwatchController,
+  timerController,
   priority,
   showControls,
   tooltipLabel,
-  checkIsStopwatchStopped,
+  checkIsTimerStopped,
   onMainTimerChange,
-  onPauseStopwatch,
-  onResumeStopwatch,
+  onPauseTimer,
+  onResumeTimer,
   onTimeChanged,
   onTimeEdited,
   showManualEditHint,
@@ -96,8 +96,8 @@ const EditableTimer: FC<EditableTimerProps> = ({
     setCheckIsEditing(false);
     controller.setEditing(false);
 
-    if (checkShouldResume && stopwatchController.getTime() > 0) {
-      onResumeStopwatch();
+    if (checkShouldResume && timerController.getTime() > 0) {
+      onResumeTimer();
     }
   };
 
@@ -107,9 +107,9 @@ const EditableTimer: FC<EditableTimerProps> = ({
     }
     hideManualEditHint?.();
 
-    checkShouldResumeAfterEditing.current = !checkIsStopwatchStopped;
-    if (!checkIsStopwatchStopped) {
-      onPauseStopwatch();
+    checkShouldResumeAfterEditing.current = !checkIsTimerStopped;
+    if (!checkIsTimerStopped) {
+      onPauseTimer();
     }
 
     onMainTimerChange(controller.timerType);

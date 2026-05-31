@@ -1,13 +1,14 @@
 import { Alert, Anchor, Button, Group, Modal, SegmentedControl, Stack, Text, TextInput, Tooltip } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { IconAlertTriangle, IconClipboardPlusFilled, IconNewSection } from '@tabler/icons-react';
+import { IconAlertTriangle, IconNewSection } from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
 import ROUTES from '@constants/routes.constants';
+import { RootState } from '@reducers';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { QUERY_KEYS as archiveQueryKeys } from '@domains/auction/archive/model/constants';
 import { auctionHistoryQueryKeys, useNextAuctionHistoryDefaultName } from '@domains/auction/history/api/hooks';
@@ -27,6 +28,18 @@ const NewAuctionButton = () => {
   const { data: defaultName } = useNextAuctionHistoryDefaultName();
   const [newAuctionName, setNewAuctionName] = useState('');
   const [requestsKind, setRequestsKind] = useState<AuctionRequestsKind>(DEFAULT_AUCTION_REQUESTS_KIND);
+  const checkHasOnlyOneEmptyLot = useSelector((state: RootState) => {
+    const [lot] = state.slots.slots;
+
+    return (
+      state.slots.slots.length === 1 &&
+      !lot?.name?.trim() &&
+      Number(lot?.amount ?? 0) <= 0 &&
+      state.purchases.purchases.length === 0 &&
+      state.purchases.history.length === 0 &&
+      state.activeAuctionHistory.pendingWinnerEvents.length === 0
+    );
+  });
 
   useEffect(() => {
     if (opened) {
@@ -122,12 +135,20 @@ const NewAuctionButton = () => {
             />
           </Stack>
           <Group justify='end'>
-            <Button variant='light' color='gray.8' onClick={() => handleCreate(false)}>
-              {t('auctionHistory.newAuction.createWithoutSaving')}
-            </Button>
-            <Button color='primary' onClick={() => handleCreate(true)}>
-              {t('auctionHistory.newAuction.createNew')}
-            </Button>
+            {checkHasOnlyOneEmptyLot ? (
+              <Button color='primary' onClick={() => handleCreate(false)}>
+                {t('auctionHistory.newAuction.startNewAuction')}
+              </Button>
+            ) : (
+              <>
+                <Button variant='light' color='gray.8' onClick={() => handleCreate(false)}>
+                  {t('auctionHistory.newAuction.createWithoutSaving')}
+                </Button>
+                <Button color='primary' onClick={() => handleCreate(true)}>
+                  {t('auctionHistory.newAuction.createNew')}
+                </Button>
+              </>
+            )}
           </Group>
         </Stack>
       </Modal>

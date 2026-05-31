@@ -3,12 +3,12 @@ import { SMART_CLEAR_MIN_DURATION_MS } from '../model/constants';
 import type { RootState } from '@reducers';
 
 export const getActiveAuctionDurationMs = (state: Pick<RootState, 'activeAuctionHistory'>): number => {
-  const { startedAt } = state.activeAuctionHistory;
-  if (!startedAt) {
-    return 0;
+  const { durationMs, timerStartedAt } = state.activeAuctionHistory;
+  if (!timerStartedAt) {
+    return durationMs;
   }
 
-  return Math.max(0, Date.now() - new Date(startedAt).getTime());
+  return durationMs + Math.max(0, Date.now() - new Date(timerStartedAt).getTime());
 };
 
 export const checkShouldSmartSaveAuction = (

@@ -1,10 +1,11 @@
-import { resetPurchases } from '@reducers/Purchases/Purchases';
+import { resetPurchases, setHistory } from '@reducers/Purchases/Purchases';
 import { resetSlots } from '@reducers/Slots/Slots';
 import { store } from '@store';
 
 import auctionHistoryApi from '../api/IndexedDBAdapter';
 import { resetActiveAuctionHistory } from '../model/activeAuctionHistorySlice';
 
+import { getActiveAuctionDurationMs } from './activeAuctionState';
 import { buildAuctionHistorySnapshot } from './buildAuctionHistorySnapshot';
 import { getCurrentAuctionMetadata } from './currentAuctionMetadata';
 
@@ -15,6 +16,7 @@ interface FinalizeAuctionHistoryParams {
 export const clearActiveAuctionState = (): void => {
   store.dispatch(resetSlots());
   store.dispatch(resetPurchases());
+  store.dispatch(setHistory([]));
   store.dispatch(resetActiveAuctionHistory());
 };
 
@@ -30,6 +32,7 @@ export const finalizeAuctionHistory = async ({ shouldSave }: FinalizeAuctionHist
       requestsKind: auctionMetadata.requestsKind,
       startedAt: state.activeAuctionHistory.startedAt ?? endedAt,
       endedAt,
+      durationMs: getActiveAuctionDurationMs(state),
       pointsToDonationRatio: Number(state.aucSettings.settings.pointsRate ?? 1),
       lots: state.slots.slots,
       purchases: state.purchases.history,

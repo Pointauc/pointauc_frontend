@@ -11,11 +11,11 @@ import { trackAuctionEnded } from '@shared/lib/analytics/events';
 import { buildAuctionEndedPayload } from './buildAuctionEndedPayload';
 
 import type { RootState } from '@reducers';
-import type { StopwatchProps } from '@pages/auction/Stopwatch/Stopwatch';
+import type { TimerProps } from '@pages/auction/Timer/Timer';
 
 const AUCTION_ENDED_CONFIRMATION_DELAY_MS = 3000;
 
-type UseAuctionEndedAnalyticsReturn = Pick<StopwatchProps, 'onEnd' | 'onReset' | 'onStart' | 'onTimeChanged'>;
+type UseAuctionEndedAnalyticsReturn = Pick<TimerProps, 'onEnd' | 'onReset' | 'onStart' | 'onTimeChanged'>;
 
 const getCurrentlyEnabledIntegrationIds = () => {
   return INTEGRATIONS.filter((integration) => integration.pubsubFlow.store.state.subscribed).map((integration) => integration.id);

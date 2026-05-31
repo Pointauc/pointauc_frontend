@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import auctionHistoryApi from './IndexedDBAdapter';
 
@@ -13,7 +14,7 @@ export const auctionHistoryQueryKeys = {
   details: (auctionId: string | null) => [...auctionHistoryQueryKeys.all, 'details', auctionId] as const,
   rangeDetails: (startAt: string, endAt: string) =>
     [...auctionHistoryQueryKeys.all, 'range-details', startAt, endAt] as const,
-  nextDefaultName: () => [...auctionHistoryQueryKeys.all, 'next-default-name'] as const,
+  nextDefaultName: (language?: string) => [...auctionHistoryQueryKeys.all, 'next-default-name', language] as const,
 };
 
 export const useAuctionHistoryAuctions = (startAt: string, endAt: string) =>
@@ -41,11 +42,14 @@ export const useAuctionHistoryRangeDetails = (startAt: string, endAt: string) =>
     queryFn: () => auctionHistoryApi.getRangeDetails(startAt, endAt),
   });
 
-export const useNextAuctionHistoryDefaultName = () =>
-  useQuery({
-    queryKey: auctionHistoryQueryKeys.nextDefaultName(),
-    queryFn: () => auctionHistoryApi.getNextDefaultName(),
+export const useNextAuctionHistoryDefaultName = () => {
+  const { i18n } = useTranslation();
+
+  return useQuery({
+    queryKey: auctionHistoryQueryKeys.nextDefaultName(i18n.language),
+    queryFn: () => auctionHistoryApi.getNextDefaultName(i18n.language),
   });
+};
 
 export const useSaveAuctionHistorySnapshot = () => {
   const queryClient = useQueryClient();

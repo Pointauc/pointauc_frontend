@@ -7,12 +7,12 @@ import { WheelFormat } from '@constants/wheel';
 import BaseWheel, { BaseWheelProps } from '../../BaseWheel/BaseWheel';
 import { resolveWheelParts } from '../../BaseWheel/parts/resolveWheelParts';
 
-interface Props extends Pick<BaseWheelProps<any>, 'controller' | 'className' | 'onOptimalSizeChange'> {
+interface Props extends Pick<BaseWheelProps<any>, 'controller' | 'className' | 'onOptimalSizeChange' | 'onReroll'> {
   deleteItem?: (id: Key) => void;
   finalItems: WheelItem[];
 }
 
-const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptimalSizeChange }: Props) => {
+const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptimalSizeChange, onReroll }: Props) => {
   const coreImage = useWatch<Wheel.Settings, 'coreImage'>({ name: 'coreImage' });
   const format = useWatch<Wheel.Settings, 'format'>({ name: 'format' });
   const wheelStyles = useWatch<Wheel.Settings, 'wheelStyles'>({ name: 'wheelStyles' });
@@ -44,6 +44,7 @@ const WheelComponent = ({ controller, deleteItem, finalItems, className, onOptim
       dropOut={format === WheelFormat.Dropout}
       className={className}
       onOptimalSizeChange={onOptimalSizeChange}
+      onReroll={onReroll}
       parts={parts}
       showDeleteConfirmation={showDeleteConfirmation}
     />

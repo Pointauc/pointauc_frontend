@@ -23,6 +23,7 @@ export interface AuctionHistoryAuction {
   pointsToDonationRatio: number;
   lotCount: number;
   participantCount: number;
+  totalAmount: number;
   totalPoints: number;
   totalDonationCents: number;
   createdAt: string;
@@ -100,6 +101,7 @@ export interface BuildAuctionHistorySnapshotParams {
   requestsKind: AuctionRequestsKind;
   startedAt: string;
   endedAt: string;
+  durationMs: number;
   pointsToDonationRatio: number;
   lots: import('@models/slot.model').Lot[];
   purchases: import('@reducers/Purchases/Purchases').PurchaseLog[];

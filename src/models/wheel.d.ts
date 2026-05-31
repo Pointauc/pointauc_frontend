@@ -98,6 +98,7 @@ declare global {
       content?: ReactNode;
       renderSubmitButton?: (defaultButton: ReactNode) => ReactNode;
       extraSettings?: ReactNode;
+      reset?: () => void;
     }
   }
 }

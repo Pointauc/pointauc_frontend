@@ -101,7 +101,7 @@ export interface AnalyticsEventMap {
     source?: 'manual' | 'autosave';
   };
   [analyticsEventNames.timerEdited]: {
-    timer_type: 'stopwatch' | 'total';
+    timer_type: 'timer' | 'total';
   };
   [analyticsEventNames.wheelSpinResult]: WheelSpinResultPayload;
 }

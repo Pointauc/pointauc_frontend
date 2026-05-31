@@ -12,11 +12,11 @@ import { openTrailer } from '@reducers/ExtraWindows/ExtraWindows';
 import { addSlot, addSlotAmount, deleteSlot, setSlotAmount, setSlotIsFavorite } from '@reducers/Slots/Slots.ts';
 import { percentsRefMap, updatePercents } from '@services/PercentsRefMap.ts';
 import { useIsMobile } from '@shared/lib/ui';
+import LotContributorSummary from '@shared/ui/LotContributorSummary';
 import { animateValue } from '@utils/common.utils.ts';
 import { numberUtils } from '@utils/common/number';
 
 import LotActionsPopover from './LotActionsPopover';
-import LotContributorSummary from './LotContributorSummary';
 import LotNameField from './LotNameField';
 import styles from './LotControls.module.css';
 import WinningChance from './WinningChance';

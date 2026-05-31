@@ -2,12 +2,17 @@ import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useAuctionEndedAnalytics } from '@domains/auction/analytics/lib/useAuctionEndedAnalytics';
-import { ensureActiveAuctionStarted } from '@domains/auction/history/model/activeAuctionHistorySlice';
+import {
+  pauseActiveAuctionTimer,
+  resetActiveAuctionTimer,
+  setActiveAuctionTimerDuration,
+  startActiveAuctionTimer,
+} from '@domains/auction/history/model/activeAuctionHistorySlice';
 import { useTimerBroadcasting } from '@domains/broadcasting/lib/useTimerBroadcasting';
 import { useIsMobile } from '@shared/lib/ui';
 import { trackTimerEdited } from '@shared/lib/analytics/events';
 
-import Stopwatch from '../Stopwatch/Stopwatch';
+import Timer from '../Timer/Timer';
 import BidList from '../BidList/BidList';
 import FastAccessPanel from '../FastAccessPanel/FastAccessPanel';
 
@@ -22,11 +27,16 @@ const ControlColumn: React.FC = () => {
     () => ({
       ...timerBroadcastingProps,
       onStart: (timeLeft: number) => {
-        dispatch(ensureActiveAuctionStarted());
+        dispatch(startActiveAuctionTimer());
         timerBroadcastingProps.onStart?.(timeLeft);
         auctionEndedAnalyticsProps.onStart?.(timeLeft);
       },
+      onPause: (timeLeft: number) => {
+        dispatch(pauseActiveAuctionTimer());
+        timerBroadcastingProps.onPause?.(timeLeft);
+      },
       onReset: (timeLeft: number) => {
+        dispatch(resetActiveAuctionTimer());
         timerBroadcastingProps.onReset?.(timeLeft);
         auctionEndedAnalyticsProps.onReset?.(timeLeft);
       },
@@ -34,12 +44,16 @@ const ControlColumn: React.FC = () => {
         timerBroadcastingProps.onTimeChanged?.(timeLeft, state);
         auctionEndedAnalyticsProps.onTimeChanged?.(timeLeft, state);
       },
-      onTimeEdited: (timerType: 'stopwatch' | 'total') => {
+      onTotalTimeChanged: (totalTime: number) => {
+        dispatch(setActiveAuctionTimerDuration(totalTime));
+      },
+      onTimeEdited: (timerType: 'timer' | 'total') => {
         trackTimerEdited({
           timer_type: timerType,
         });
       },
       onEnd: () => {
+        dispatch(pauseActiveAuctionTimer());
         timerBroadcastingProps.onEnd?.();
         auctionEndedAnalyticsProps.onEnd?.();
       },
@@ -49,7 +63,7 @@ const ControlColumn: React.FC = () => {
 
   return (
     <div className={classes.controlColumn}>
-      <Stopwatch {...timerProps} />
+      <Timer {...timerProps} />
       {!isMobile && (
         <>
           <FastAccessPanel />

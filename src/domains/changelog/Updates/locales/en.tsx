@@ -8,6 +8,31 @@ import { UpdateData } from '@domains/changelog/model/types';
 
 export const ChangesEN: UpdateData[] = [
   {
+    date: '2026-05-31T14:50:00.000Z',
+    newFeatures: [
+      {
+        briefDescription: 'New history page',
+        content: (
+          <>
+            <strong>History page</strong>
+            <Space h='sm' />
+            <div>Added a new page where you can view data from previous auctions in one place.</div>
+          </>
+        ),
+      },
+      {
+        briefDescription: 'Viewer names can now be shown in auction lots',
+        content: (
+          <>
+            <strong>Viewer names in lots</strong>
+            <Space h='sm' />
+            <div>Added a new option that shows viewer names directly in auction lots.</div>
+          </>
+        ),
+      },
+    ],
+  },
+  {
     date: '2026-04-28T15:45:00.000Z',
     newFeatures: [
       {

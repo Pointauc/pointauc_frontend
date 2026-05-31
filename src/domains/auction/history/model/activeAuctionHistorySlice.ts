@@ -12,13 +12,27 @@ import type {
 
 interface ActiveAuctionHistoryState {
   startedAt: string | null;
+  timerStartedAt: string | null;
+  durationMs: number;
+  timerResetRequestId: number;
   pendingWinnerEvents: PendingAuctionWinnerEvent[];
 }
 
 const createInitialState = (): ActiveAuctionHistoryState => ({
   startedAt: null,
+  timerStartedAt: null,
+  durationMs: 0,
+  timerResetRequestId: 0,
   pendingWinnerEvents: [],
 });
+
+const getRunningDurationMs = (state: ActiveAuctionHistoryState, now = Date.now()): number => {
+  if (!state.timerStartedAt) {
+    return state.durationMs;
+  }
+
+  return state.durationMs + Math.max(0, now - new Date(state.timerStartedAt).getTime());
+};
 
 const mapWheelVariant = (format?: WheelFormat): AuctionHistoryWheelVariant => {
   switch (format) {
@@ -32,10 +46,7 @@ const mapWheelVariant = (format?: WheelFormat): AuctionHistoryWheelVariant => {
   }
 };
 
-const mapDropoutVariant = (
-  format?: WheelFormat,
-  dropoutVariant?: DropoutVariant,
-): AuctionHistoryDropoutVariant => {
+const mapDropoutVariant = (format?: WheelFormat, dropoutVariant?: DropoutVariant): AuctionHistoryDropoutVariant => {
   if (format !== WheelFormat.Dropout) {
     return 'none';
   }
@@ -52,8 +63,37 @@ const activeAuctionHistorySlice = createSlice({
         state.startedAt = new Date().toISOString();
       }
     },
+    startActiveAuctionTimer(state): void {
+      const now = new Date().toISOString();
+
+      if (!state.startedAt) {
+        state.startedAt = now;
+      }
+
+      if (!state.timerStartedAt) {
+        state.timerStartedAt = now;
+      }
+    },
+    pauseActiveAuctionTimer(state): void {
+      state.durationMs = getRunningDurationMs(state);
+      state.timerStartedAt = null;
+    },
+    resetActiveAuctionTimer(state): void {
+      state.durationMs = 0;
+      state.timerStartedAt = null;
+      state.timerResetRequestId += 1;
+    },
+    setActiveAuctionTimerDuration(state, action: PayloadAction<number>): void {
+      state.durationMs = Math.max(0, action.payload);
+
+      if (state.timerStartedAt) {
+        state.timerStartedAt = new Date().toISOString();
+      }
+    },
     resetActiveAuctionHistory(state): void {
+      const timerResetRequestId = state.timerResetRequestId + 1;
       Object.assign(state, createInitialState());
+      state.timerResetRequestId = timerResetRequestId;
     },
     addWheelWinnerCandidate(state, action: PayloadAction<CreateWheelWinnerCandidateParams>): void {
       state.pendingWinnerEvents.push({
@@ -87,6 +127,10 @@ const activeAuctionHistorySlice = createSlice({
 
 export const {
   ensureActiveAuctionStarted,
+  startActiveAuctionTimer,
+  pauseActiveAuctionTimer,
+  resetActiveAuctionTimer,
+  setActiveAuctionTimerDuration,
   resetActiveAuctionHistory,
   addWheelWinnerCandidate,
   confirmLatestWinnerCandidate,

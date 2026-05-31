@@ -236,7 +236,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     isTicketRevealed: !!visibleRevealedData?.randomNumber,
     resetTicket: resetRevealedTicket,
   });
-  const { items, init, extraSettings, renderSubmitButton, onSpinEnd, content } = wheelStrategy;
+  const { items, init, extraSettings, renderSubmitButton, onSpinEnd, content, reset } = wheelStrategy;
 
   const filteredItems = useMemo(() => {
     const filtered = getTotalSize(itemsFromProps)
@@ -244,10 +244,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       : itemsFromProps.map((item) => ({ ...item, amount: 1 }));
 
     return shouldShuffle
-      ? filtered.sort(
-          (a, b) =>
-            b.amount - a.amount || (a.displayName ?? a.name).localeCompare(b.displayName ?? b.name),
-        )
+      ? filtered.sort((a, b) => b.amount - a.amount || (a.displayName ?? a.name).localeCompare(b.displayName ?? b.name))
       : filtered;
   }, [itemsFromProps, shouldShuffle]);
 
@@ -490,6 +487,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
               deleteItem={deleteWheelItem}
               controller={wheelController}
               onOptimalSizeChange={onOptimalSizeChange}
+              onReroll={reset}
             />
           )}
         </WheelFlexboxAutosizer>

@@ -244,6 +244,7 @@
   },
   "rules": {
     "background": "Background",
+    "resizeHandle": "Resize rules section",
     "size": "Size"
   },
   "serverNotifications": {
@@ -371,8 +372,9 @@
       },
       "wheelWinner": "Wheel winner",
       "noWheelWinner": "No wheel winner yet",
-      "createWithoutSaving": "Create without saving",
-      "createNew": "Save previous and create",
+      "startNewAuction": "Start new auction",
+      "createWithoutSaving": "Start without saving",
+      "createNew": "Save previous and Start",
       "notifications": {
         "saved": "Auction saved to history",
         "cleared": "Auction state cleared",
@@ -383,6 +385,9 @@
       "confirm": "Confirm winner",
       "confirmTooltip": "This winner will be saved as the confirmed wheel winner in Auction History.",
       "confirmed": "Winner confirmed",
+      "saved": "Winner was saved",
+      "savedTitle": "Winner saved",
+      "savedMessage": "You will see this auction in the history after starting a new auction.",
       "reroll": "Reroll"
     },
     "filters": {
@@ -425,8 +430,16 @@
       "viewMoreUsers": "View more users",
       "collapseLeaderboard": "Collapse leaderboard"
     },
+    "selectedAuction": {
+      "placeholderTitle": "Work in progress",
+      "placeholderDescription": "Detailed auction history is still being built."
+    },
     "card": {
       "dateDuration": "{{date}} · {{duration}}",
+      "dateLabels": {
+        "todayAt": "Today at {{time}}",
+        "yesterdayAt": "Yesterday at {{time}}"
+      },
       "winnerLine": "Winner",
       "winnerWithRequest": "{{user}} · {{request}} {{chance}}",
       "winnerRequest": "{{request}}{{chance}}",
@@ -490,6 +503,7 @@
       "mostGenerousAuction": "Most generous",
       "highestPointsAuction": "Highest points",
       "averageParticipants": "Avg. participants",
+      "mostParticipantsAuction": "Most participants",
       "mostActiveParticipant": "Most active",
       "winner": "Winner",
       "highestPointsContributor": "Top points",
@@ -501,6 +515,14 @@
       "bidsCount": "{{count}} bids"
     },
     "weekdayTooltip": "{{auctions}} auctions, {{percent}}% of the range",
+    "weekdayBarMode": {
+      "relative": {
+        "toggleTooltip": "Show absolute weekday bars"
+      },
+      "absolute": {
+        "toggleTooltip": "Show relative weekday bars"
+      }
+    },
     "selectionMethod": {
       "direct": "Direct",
       "wheel": "Wheel"

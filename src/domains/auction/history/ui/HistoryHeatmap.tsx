@@ -19,7 +19,6 @@ interface HistoryHeatmapProps {
   onDaySelect: (dayKey: string) => void;
 }
 
-const heatmapColors = ['#211f32', '#3d2f7d', '#6b46c1', '#11a7a0', '#f2c94c'];
 const heatmapModes: HeatmapMode[] = ['auctionCount', 'points', 'donations', 'combined'];
 const heatmapGap = 2;
 const heatmapWeekdayLabelWidth = 34;
@@ -95,7 +94,6 @@ const HistoryHeatmap = ({
           data={heatmapData}
           startDate={visibleStartDate}
           endDate={endDate}
-          colors={heatmapColors}
           domain={[0, Math.max(1, ...Object.values(heatmapData))]}
           rectSize={heatmapRectSize}
           rectRadius={4}

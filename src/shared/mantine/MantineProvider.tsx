@@ -33,7 +33,7 @@ const shadowOpacitySecondary = 0.09;
 const shadowOpacityXs = 0.2;
 
 const darkPaletteBase = [
-  '#959595',
+  '#a0a0a0',
   '#868686',
   '#727272',
   '#606060',
