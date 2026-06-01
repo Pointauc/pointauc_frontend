@@ -1,7 +1,7 @@
 import { TextInputProps } from '@mantine/core';
-import { IconHash, IconStarFilled, IconTrash } from '@tabler/icons-react';
+import { IconHash, IconPlus, IconStarFilled, IconTrash } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { FC, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { FC, memo, useCallback, useContext, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -15,6 +15,7 @@ import { useIsMobile } from '@shared/lib/ui';
 import LotContributorSummary from '@shared/ui/LotContributorSummary';
 import { animateValue } from '@utils/common.utils.ts';
 import { numberUtils } from '@utils/common/number';
+import { LotsColumnContext } from '@pages/auction/SlotsColumn/contexts';
 
 import LotActionsPopover from './LotActionsPopover';
 import LotNameField from './LotNameField';
@@ -40,6 +41,7 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
   const isAmountInitialized = useRef(false);
   const isMobile = useIsMobile();
   const extraInputRef = useRef<HTMLInputElement>(null);
+  const lotsColumnContext = useContext(LotsColumnContext);
 
   useLayoutEffect(() => {
     if (percentsRef.current && showChances) {
@@ -64,6 +66,13 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
     dispatch(addSlotAmount({ id, amount: amountToAdd }));
     setCurrentExtra('');
     return true;
+  };
+
+  const addExtraAmountOnEnter = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === 'Enter') {
+      handleAddExtra();
+      e.preventDefault();
+    }
   };
 
   const confirmAmount = useCallback(() => {
@@ -154,6 +163,21 @@ const LotControls: FC<LotControlsProps> = ({ lot, readonly }) => {
           type='number'
           min='0'
         />
+        {!readonly && !isMobile && lotsColumnContext.lotWidthType == 'full' && (
+          <>
+            <button className={styles.iconButton} onClick={handleAddExtra} title={t('lot.addAmount')}>
+              <IconPlus />
+            </button>
+            <input
+              className={clsx(styles.input, styles.extra)}
+              placeholder={t('common.currencySign')}
+              onChange={handleExtraChange}
+              value={currentExtra || ''}
+              type='number'
+              onKeyPress={addExtraAmountOnEnter}
+            />
+          </>
+        )}
         {!readonly && !isMobile && (
           <button onClick={handleDelete} className={styles.iconButton} title={t('lot.delete')}>
             <IconTrash />

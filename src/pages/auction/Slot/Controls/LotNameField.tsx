@@ -142,7 +142,7 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
 
   return (
     <>
-      <div className='flex h-full flex-1 items-stretch gap-1'>
+      <div className='flex h-full min-w-0 flex-1 items-stretch gap-1'>
         <input
           className={clsx(styles.input, 'min-w-0 flex-1 self-stretch', { [styles.lockedLot]: isLocked })}
           ref={nameInputRef}
