@@ -1,21 +1,31 @@
-import { Button, Menu } from '@mantine/core';
+import { Badge, Button, Menu } from '@mantine/core';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { IconArrowsSplit, IconDice5 } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { RefObject } from 'react';
+import { RefObject, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 
 import classes from './BidComponent.module.css';
+import { buildSmartSplitEntries } from './splitBidSuggestions';
 
 import type { Lot } from '@models/slot.model';
+
+interface BidActionsMenuContentProps {
+  suggestionText: string;
+  totalAmount: number;
+  onAddToRandomSlot: () => void;
+  onOpenSplitBid: () => void;
+}
 
 interface BidActionsProps {
   bestMatch: (Lot & { index: number }) | null;
   isHotkeyTarget?: boolean;
   luckyWheelEnabled: boolean;
+  suggestionText: string;
+  totalAmount: number;
   anchorRef: RefObject<HTMLButtonElement | null>;
   onAddNewSlot: () => void;
   onAddToBestMatch: () => void;
@@ -24,10 +34,41 @@ interface BidActionsProps {
   onOpenCasino: () => void;
 }
 
+const BidActionsMenuContent = ({
+  suggestionText,
+  totalAmount,
+  onAddToRandomSlot,
+  onOpenSplitBid,
+}: BidActionsMenuContentProps) => {
+  const { t } = useTranslation();
+  const suggestedSplitCount = useMemo(
+    () => buildSmartSplitEntries(suggestionText, totalAmount).length,
+    [suggestionText, totalAmount],
+  );
+  const shouldShowSplitCount = suggestedSplitCount > 1;
+
+  return (
+    <>
+      <Menu.Item
+        leftSection={<IconArrowsSplit size={16} />}
+        rightSection={shouldShowSplitCount ? <Badge size='xs'>{suggestedSplitCount}</Badge> : undefined}
+        onClick={onOpenSplitBid}
+      >
+        {t('bid.split.menuItem')}
+      </Menu.Item>
+      <Menu.Item leftSection={<IconDice5 size={16} />} onClick={onAddToRandomSlot}>
+        {t('auc.addToRandomSlot')}
+      </Menu.Item>
+    </>
+  );
+};
+
 const BidActions = ({
   bestMatch,
   isHotkeyTarget,
   luckyWheelEnabled,
+  suggestionText,
+  totalAmount,
   anchorRef,
   onAddNewSlot,
   onAddToBestMatch,
@@ -36,6 +77,7 @@ const BidActions = ({
   onOpenCasino,
 }: BidActionsProps) => {
   const { t } = useTranslation();
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
 
   return (
     <>
@@ -60,7 +102,7 @@ const BidActions = ({
             <span>{t('bid.new')}</span>
           </span>
         </Button>
-        <Menu position='bottom-end'>
+        <Menu position='bottom-end' opened={isMenuOpened} onChange={setIsMenuOpened}>
           <Menu.Target>
             <Button
               ref={anchorRef}
@@ -74,12 +116,14 @@ const BidActions = ({
             </Button>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item leftSection={<IconArrowsSplit size={16} />} onClick={onOpenSplitBid}>
-              {t('bid.split.menuItem')}
-            </Menu.Item>
-            <Menu.Item leftSection={<IconDice5 size={16} />} onClick={onAddToRandomSlot}>
-              {t('auc.addToRandomSlot')}
-            </Menu.Item>
+            {isMenuOpened && (
+              <BidActionsMenuContent
+                suggestionText={suggestionText}
+                totalAmount={totalAmount}
+                onAddToRandomSlot={onAddToRandomSlot}
+                onOpenSplitBid={onOpenSplitBid}
+              />
+            )}
           </Menu.Dropdown>
         </Menu>
       </Button.Group>

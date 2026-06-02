@@ -1,5 +1,5 @@
-import { Button, Group, Modal, Stack, Text } from '@mantine/core';
-import { IconCheck, IconPlus, IconRefresh, IconSparkles } from '@tabler/icons-react';
+import { Button, Group, Modal, Stack, Text, Tooltip } from '@mantine/core';
+import { IconCheck, IconPlus, IconHelp, IconRefresh } from '@tabler/icons-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +19,7 @@ import {
 
 import type { Lot } from '@models/slot.model';
 import type { SplitBidEntryRequest } from '@reducers/Slots/Slots';
-import type { SplitBidDraftEntry, SplitBidDraftTarget } from './splitBidTypes';
+import type { SplitBidDraftEntry } from './splitBidTypes';
 
 interface SplitBidModalProps {
   opened: boolean;
@@ -31,8 +31,29 @@ interface SplitBidModalProps {
   onSubmit: (entries: SplitBidEntryRequest[]) => void;
 }
 
-const checkIsValidTarget = (target: SplitBidDraftTarget): boolean =>
-  target.type === 'existing' ? Boolean(target.lotId) : Boolean(target.name.trim());
+const getSubmitDisabledReason = (
+  entries: SplitBidDraftEntry[],
+  remainingAmount: number,
+  t: ReturnType<typeof useTranslation>['t'],
+): string | null => {
+  if (!entries.length) {
+    return t('bid.split.applyDisabled.noEntries');
+  }
+
+  if (entries.some((entry) => entry.amount <= 0)) {
+    return t('bid.split.applyDisabled.invalidAmount');
+  }
+
+  if (entries.some((entry) => entry.target.type === 'existing' && !entry.target.lotId)) {
+    return t('bid.split.applyDisabled.invalidLot');
+  }
+
+  if (Math.abs(remainingAmount) >= 0.01) {
+    return t('bid.split.applyDisabled.remainingAmount', { amount: remainingAmount });
+  }
+
+  return null;
+};
 
 const SplitBidModal = ({
   opened,
@@ -63,10 +84,8 @@ const SplitBidModal = ({
     [entries],
   );
   const remainingAmount = normalizeSplitAmount(totalAmount - allocatedAmount);
-  const canSubmit =
-    entries.length > 0 &&
-    Math.abs(remainingAmount) < 0.01 &&
-    entries.every((entry) => entry.amount > 0 && checkIsValidTarget(entry.target));
+  const submitDisabledReason = getSubmitDisabledReason(entries, remainingAmount, t);
+  const canSubmit = submitDisabledReason == null;
 
   const updateEntry = (id: string, transform: (entry: SplitBidDraftEntry) => SplitBidDraftEntry): void => {
     setEntries((currentEntries) => currentEntries.map((entry) => (entry.id === id ? transform(entry) : entry)));
@@ -117,7 +136,38 @@ const SplitBidModal = ({
   };
 
   return (
-    <Modal opened={opened} onClose={onClose} title={t('bid.split.title')} size='xl' centered>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={
+        <Group gap='xs' align='center'>
+          <Text fw={700}>{t('bid.split.title')}</Text>
+
+          <Tooltip
+            withArrow
+            multiline
+            label={
+              <Stack gap={6} className='w-80'>
+                <Text size='xs'>{t('bid.split.syntaxRulesTooltip.intro')}</Text>
+                <Text size='xs'>{t('bid.split.syntaxRulesTooltip.amounts')}</Text>
+                <Text size='xs'>{t('bid.split.syntaxRulesTooltip.percentages')}</Text>
+                <Text size='xs'>{t('bid.split.syntaxRulesTooltip.even')}</Text>
+                <Text size='xs'>{t('bid.split.syntaxRulesTooltip.fastIds')}</Text>
+              </Stack>
+            }
+          >
+            <Group gap={4} align='center'>
+              <Text size='sm' c='dimmed'>
+                {t('bid.split.syntaxRules')}
+              </Text>
+              <IconHelp size={16} className='text-[var(--mantine-color-dimmed)]' />
+            </Group>
+          </Tooltip>
+        </Group>
+      }
+      size='xl'
+      centered
+    >
       <Stack gap='sm'>
         <div className='elevated-2 grid grid-cols-1 gap-3 rounded-lg bg-[var(--mantine-color-dark-6)] px-3 py-3 md:grid-cols-[minmax(0,1fr)_auto]'>
           <div className='min-w-0'>
@@ -138,15 +188,6 @@ const SplitBidModal = ({
                 onClick={() => setEntries(distributeEvenly(entries, totalAmount))}
               >
                 {t('bid.split.distributeEvenly')}
-              </Button>
-              <Button
-                variant='subtle'
-                size='compact-sm'
-                color='primary.4'
-                leftSection={<IconSparkles size={15} />}
-                onClick={resetToSmartSuggestions}
-              >
-                {t('bid.split.smartSuggestions')}
               </Button>
             </Group>
           </div>
@@ -190,21 +231,21 @@ const SplitBidModal = ({
           onRemoveEntry={removeEntry}
         />
 
-        <Button variant='outline' size='sm' leftSection={<IconPlus size={16} />} onClick={addEntry} className='w-fit'>
-          {t('bid.split.addEntry')}
-        </Button>
-
         <Group justify='space-between' align='center' className='border-paper-700 border-t pt-3'>
-          <Text size='xs' c='dimmed'>
-            {t('bid.split.rebalanceHint')}
-          </Text>
+          <Button variant='outline' size='sm' leftSection={<IconPlus size={16} />} onClick={addEntry}>
+            {t('bid.split.addEntry')}
+          </Button>
           <Group gap='xs'>
             <Button variant='default' size='sm' onClick={onClose}>
               {t('bid.split.cancel')}
             </Button>
-            <Button size='sm' leftSection={<IconCheck size={16} />} onClick={handleSubmit} disabled={!canSubmit}>
-              {t('bid.split.apply')}
-            </Button>
+            <Tooltip label={submitDisabledReason} disabled={canSubmit} withArrow>
+              <span>
+                <Button size='sm' leftSection={<IconCheck size={16} />} onClick={handleSubmit} disabled={!canSubmit}>
+                  {t('bid.split.apply')}
+                </Button>
+              </span>
+            </Tooltip>
           </Group>
         </Group>
       </Stack>

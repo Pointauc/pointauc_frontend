@@ -311,6 +311,14 @@
       "menuItem": "Split bid",
       "title": "Split bid",
       "sourceBid": "Source bid",
+      "syntaxRules": "split syntax rules",
+      "syntaxRulesTooltip": {
+        "intro": "The app reads the bid text and suggests split rows when it sees a clear pattern.",
+        "amounts": "Use amounts like: 30 Game A, 70 Game B.",
+        "percentages": "Use percentages like: 25% Game A, 75% Game B.",
+        "even": "List names without amounts to split evenly: Game A / Game B / Game C.",
+        "fastIds": "Use # and the lot number to target an existing lot, for example: 50 #15."
+      },
       "totalLabel": "Total",
       "allocatedLabel": "Allocated",
       "remainingLabel": "Remaining",
@@ -331,7 +339,12 @@
       "deleteEntry": "Delete split",
       "distributeEvenly": "Distribute evenly",
       "smartSuggestions": "Smart suggestions",
-      "rebalanceHint": "Editing an amount keeps the total fixed by adjusting the other splits proportionally.",
+      "applyDisabled": {
+        "noEntries": "Add at least one split entry.",
+        "invalidAmount": "Each split entry must have an amount greater than 0.",
+        "invalidLot": "One of the selected lots is no longer available.",
+        "remainingAmount": "Split total must match the source bid. Remaining: {{amount}}."
+      },
       "cancel": "Cancel",
       "apply": "Apply split"
     }

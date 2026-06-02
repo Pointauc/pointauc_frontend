@@ -39,7 +39,7 @@ const SplitBidEntriesTable = ({
       <Table className='w-full border-collapse'>
         <Table.Thead className='bg-[var(--mantine-color-dark-7)]'>
           <Table.Tr className='border-b border-white/10'>
-            <Table.Th className='w-[96px] px-4 py-3 text-left text-xs font-semibold tracking-[0.1em] text-[var(--mantine-color-gray-4)] uppercase'>
+            <Table.Th className='w-[104px] px-4 py-3 text-left text-xs font-semibold tracking-[0.1em] text-[var(--mantine-color-gray-4)] uppercase'>
               {t('bid.split.entryColumn')}
             </Table.Th>
             <Table.Th className='min-w-[260px] px-4 py-3 text-left text-xs font-semibold tracking-[0.1em] text-[var(--mantine-color-gray-4)] uppercase'>
@@ -51,7 +51,7 @@ const SplitBidEntriesTable = ({
             <Table.Th className='w-[140px] px-4 py-3 text-left text-xs font-semibold tracking-[0.1em] text-[var(--mantine-color-gray-4)] uppercase'>
               {t('bid.split.percentageLabel')}
             </Table.Th>
-            <Table.Th className='w-[72px] px-4 py-3 text-right text-xs font-semibold tracking-[0.1em] text-[var(--mantine-color-gray-4)] uppercase' />
+            <Table.Th className='w-[64px] px-4 py-3 text-right text-xs font-semibold tracking-[0.1em] text-[var(--mantine-color-gray-4)] uppercase' />
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -145,7 +145,7 @@ const SplitBidEntriesTable = ({
                   </Popover.Dropdown>
                 </Popover>
               </Table.Td>
-              <Table.Td className='w-[72px] p-2 text-right align-middle'>
+              <Table.Td className='w-[64px] p-2 text-right align-middle'>
                 <Tooltip label={t('bid.split.deleteEntry')}>
                   <ActionIcon
                     variant='subtle'

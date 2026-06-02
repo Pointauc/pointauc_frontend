@@ -8,6 +8,31 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 
 export const ChangesRU: UpdateData[] = [
   {
+    date: '2026-06-02T15:00:00.023Z',
+    newFeatures: [
+      {
+        briefDescription: 'Ставки теперь можно разделять',
+        content: (
+          <>
+            <strong>Разделение ставок</strong>
+            <Space h='sm' />
+            <div>
+              Теперь одну входящую ставку можно разделить на несколько лотов. Сделать это можно через выпадающий список
+              справа от кнопки "Новый".
+            </div>
+            <br />
+            <div>
+              Приложение само предложит вариант как разделить ставку если распознает ключевые символы. Например:
+              <br />
+              <code className='rounded bg-gray-800 p-1'>100 Шрек | 100 Властелин колец | 200 #15</code> или{' '}
+              <code className='rounded bg-gray-800 p-1'>50 на Киберпанк 2077 и 100 на Ведьмак</code>
+            </div>
+          </>
+        ),
+      },
+    ],
+  },
+  {
     date: '2026-05-31T14:50:00.000Z',
     newFeatures: [
       {

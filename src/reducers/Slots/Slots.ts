@@ -281,9 +281,7 @@ interface BidHandleOptions {
   callback?: (amount: number) => void;
 }
 
-export type SplitBidTarget =
-  | { type: 'existing'; lotId: string; name?: string | null }
-  | { type: 'new'; name: string };
+export type SplitBidTarget = { type: 'existing'; lotId: string; name?: string | null } | { type: 'new'; name: string };
 
 export interface SplitBidEntryRequest {
   amount: number;
@@ -393,7 +391,7 @@ export const splitBid =
         return;
       }
 
-      const newSlotName = entry.target.name.trim() || bidName;
+      const newSlotName = entry.target.name.trim();
       const newSlot: Lot = {
         id: Math.random().toString(),
         name: newSlotName,
@@ -405,7 +403,9 @@ export const splitBid =
 
       updatedSlots.push(newSlot);
       slotNamesMap.updateSlot(newSlot);
-      slotNamesMap.set(newSlotName, newSlot.id);
+      if (newSlotName) {
+        slotNamesMap.set(newSlotName, newSlot.id);
+      }
       appliedEntriesCount += 1;
 
       dispatch(

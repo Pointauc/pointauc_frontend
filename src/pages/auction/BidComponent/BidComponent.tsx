@@ -255,6 +255,8 @@ const BidComponent: React.FC<BidComponentProps> = ({
               bestMatch={bestMatch}
               isHotkeyTarget={isHotkeyTarget}
               luckyWheelEnabled={luckyWheelEnabled}
+              suggestionText={name}
+              totalAmount={actualCost}
               anchorRef={anchorRef}
               onAddNewSlot={handleAddNewSlot}
               onAddToBestMatch={handleAddToBestMatch}
@@ -277,7 +279,7 @@ const BidComponent: React.FC<BidComponentProps> = ({
               opened={splitModalOpened}
               onClose={() => setSplitModalOpened(false)}
               bidName={name}
-              suggestionText={purchase.message || name}
+              suggestionText={name}
               totalAmount={actualCost}
               lots={slots}
               onSubmit={handleSplitBid}
