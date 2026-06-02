@@ -398,22 +398,22 @@ export const vkVideoLiveApiClient = new VkVideoLiveApiClient();
 export const buildVkVideoLiveRewardName = (prefix: string, cost: number): string => `${prefix} ${cost}`;
 
 const VK_REWARD_COLORS = [
-  '#e3924c',
-  '#d95d39',
-  '#f2c14e',
-  '#7fb069',
-  '#3a86ff',
-  '#4361ee',
-  '#8338ec',
-  '#ff006e',
-  '#00a896',
-  '#02c39a',
-  '#577590',
-  '#4d908e',
-  '#f94144',
-  '#f3722c',
-  '#90be6d',
-  '#9b5de5',
+  '#D66E34',
+  '#B8AAFF',
+  '#1D90FF',
+  '#9961F9',
+  '#59A840',
+  '#E73629',
+  '#DE6489',
+  '#20BBA1',
+  '#F8B301',
+  '#0099BB',
+  '#7BBEFF',
+  '#E542FF',
+  '#A36C59',
+  '#8BA259',
+  '#00A9FF',
+  '#A20BFF',
 ];
 
 const hexToRgb = (hex: string): [number, number, number] => {
@@ -445,7 +445,8 @@ interface RewardsDiff {
   toDelete: VkVideoLiveReward[];
 }
 
-const checkIsPointaucReward = (reward: VkVideoLiveReward): boolean => reward.description === POINTAUC_REWARD_DESCRIPTION;
+const checkIsPointaucReward = (reward: VkVideoLiveReward): boolean =>
+  reward.description === POINTAUC_REWARD_DESCRIPTION;
 
 const getPointaucRewards = (rewards: VkVideoLiveReward[]): VkVideoLiveReward[] => rewards.filter(checkIsPointaucReward);
 
@@ -502,12 +503,14 @@ export const vkVideoLiveRewardsApi = {
               .catch(reject);
           }),
       ),
-      ...toUpdate.map(({ existing }) => {
+      ...toUpdate.map(({ preset, existing }) => {
         return new Promise<void>((resolve, reject) => {
+          const updatedReward = createVKRewardDataFromPreset(prefix, preset);
           vkVideoLiveApiClient
-            .setRewardEnabled(channelUrl, existing.id, true)
+            .editReward(channelUrl, existing.id, updatedReward)
+            .then(() => vkVideoLiveApiClient.setRewardEnabled(channelUrl, existing.id, true))
             .then(() => {
-              newActiveRewards.push(existing);
+              newActiveRewards.push({ ...updatedReward, id: existing.id });
               resolve();
             })
             .catch(reject);

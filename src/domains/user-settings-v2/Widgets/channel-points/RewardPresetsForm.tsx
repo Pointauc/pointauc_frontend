@@ -24,6 +24,7 @@ const RewardPresetsForm = () => {
     reset,
     clearErrors,
     setError,
+    setValue,
     formState: { isDirty, errors, isValid },
   } = useForm<PresetsForm>({ defaultValues: { rewardPresets, rewardsPrefix } });
 
@@ -57,6 +58,7 @@ const RewardPresetsForm = () => {
           reset={reset}
           clearErrors={clearErrors}
           setError={setError}
+          setValue={setValue}
           isDirty={isDirty}
           isValid={isValid}
         />

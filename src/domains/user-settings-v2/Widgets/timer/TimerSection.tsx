@@ -29,7 +29,7 @@ const TimerSection = () => {
       icon={<IconClockHour4 size={24} />}
     >
       <SettingsCard>
-        <SettingsRow htmlFor='startTime' description={t('settings.stopwatch.startTimeDesc')}>
+        <SettingsRow compact htmlFor='startTime' description={t('settings.stopwatch.startTimeDesc')}>
           <div className='flex flex-wrap items-center justify-between gap-4'>
             <FieldLabel text={t('settings.stopwatch.startTime')} withDescriptionIcon />
             <FormInput

@@ -79,7 +79,12 @@ export class VkVideoLivePubsubFlow implements Integration.PubsubFlow {
       }
 
       subscription.on('publication', (ctx) => {
-        const purchase = parseVkVideoLivePurchase(ctx.data, this.rewardsById);
+        const {
+          aucSettings: {
+            settings: { rewardPresets, rewardsPrefix },
+          },
+        } = appStore.getState();
+        const purchase = parseVkVideoLivePurchase(ctx.data, this.rewardsById, rewardPresets, rewardsPrefix);
         if (purchase) {
           this.events.emit('bid', purchase);
         }

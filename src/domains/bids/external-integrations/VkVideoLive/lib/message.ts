@@ -1,5 +1,11 @@
 import { Purchase } from '@reducers/Purchases/Purchases';
-import { getVkVideoLivePaletteColor, VkVideoLiveReward, VkVideoLiveRewardDemand } from '@api/vkVideoLiveApi';
+import {
+  buildVkVideoLiveRewardName,
+  getVkVideoLivePaletteColor,
+  VkVideoLiveReward,
+  VkVideoLiveRewardDemand,
+} from '@api/vkVideoLiveApi';
+import { TwitchRewardPresetDto } from '@models/user.model';
 
 interface VkVideoLivePublication {
   data?: {
@@ -54,9 +60,19 @@ const getDemand = (publication: VkVideoLivePublication): VkVideoLiveRewardDemand
   return payload.demand ?? (payload as VkVideoLiveRewardDemand);
 };
 
+const getConfiguredRewardColor = (
+  reward: VkVideoLiveReward,
+  rewardPresets: TwitchRewardPresetDto[],
+  rewardsPrefix: string,
+): string | undefined =>
+  rewardPresets.find((preset) => buildVkVideoLiveRewardName(rewardsPrefix, preset.cost) === reward.name)?.color ??
+  rewardPresets.find((preset) => preset.cost === reward.price)?.color;
+
 export const parseVkVideoLivePurchase = (
   publication: VkVideoLivePublication,
   rewardsById: Map<string, VkVideoLiveReward>,
+  rewardPresets: TwitchRewardPresetDto[],
+  rewardsPrefix: string,
 ): Purchase | null => {
   const demand = getDemand(publication);
   const rewardId = demand?.reward?.id;
@@ -77,7 +93,9 @@ export const parseVkVideoLivePurchase = (
     message: buildMessage(demand),
     timestamp: buildTimestamp(demand.created_at),
     cost: reward.price,
-    color: getVkVideoLivePaletteColor(reward.background_color),
+    color:
+      getConfiguredRewardColor(reward, rewardPresets, rewardsPrefix) ??
+      getVkVideoLivePaletteColor(reward.background_color),
     source: 'vkVideoLive',
   };
 };

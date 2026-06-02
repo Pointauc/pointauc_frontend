@@ -144,7 +144,7 @@ const ChannelPointsSection = () => {
 
               <Divider />
 
-              <SettingsRow compact htmlFor='dynamicRewards' description={t('settings.twitch.bindRewardsToTimerDesc')}>
+              <SettingsRow htmlFor='dynamicRewards' description={t('settings.twitch.bindRewardsToTimerDesc')}>
                 <FormSwitchField
                   name='dynamicRewards'
                   control={control}

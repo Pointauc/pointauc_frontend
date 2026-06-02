@@ -1,11 +1,11 @@
 import GitHubIcon from '@mui/icons-material/GitHub';
 import HelpIcon from '@mui/icons-material/Help';
-import HistoryIcon from '@mui/icons-material/History';
 import LayersIcon from '@mui/icons-material/Layers';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -76,7 +76,7 @@ export const useMenuGroups = (): MenuGroups => {
       primary: [
         { title: 'menu.items.auction.title', icon: <AuctionSvg fill='currentColor' />, path: ROUTES.HOME },
         { title: 'menu.items.wheel.title', icon: <WheelSvg />, path: ROUTES.WHEEL, navbarFixedState: 'closed' },
-        { title: 'menu.items.history.title', icon: <HistoryIcon />, path: ROUTES.HISTORY },
+        { title: 'menu.items.history.title', icon: <BarChartIcon />, path: ROUTES.HISTORY },
       ],
       secondary: [
         {

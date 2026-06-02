@@ -64,7 +64,7 @@ const LotSearchInput = ({ value, lots, onChange, onSelect }: LotSearchInputProps
     return (
       <UnstyledButton
         style={style}
-        className='flex w-full items-center justify-between px-3 py-2 text-left hover:bg-paper-transparent-100'
+        className='hover:bg-paper-transparent-100 flex w-full items-center justify-between px-3 py-2 text-left'
         onMouseDown={(event) => {
           event.preventDefault();
           selectOption(option);
@@ -110,8 +110,8 @@ const LotSearchInput = ({ value, lots, onChange, onSelect }: LotSearchInputProps
           }}
         />
       </Popover.Target>
-      <Popover.Dropdown p={0} className='overflow-hidden border-paper-700 bg-paper-900'>
-        <Group gap={0} className='border-b border-paper-700 bg-paper-transparent-100 px-3 py-2'>
+      <Popover.Dropdown p={0} className='overflow-hidden'>
+        <Group gap={0} className='border-paper-400 border-b px-3 py-2'>
           <Text size='xs' c='dimmed'>
             {t('bid.split.lotSearchHint')}
           </Text>
