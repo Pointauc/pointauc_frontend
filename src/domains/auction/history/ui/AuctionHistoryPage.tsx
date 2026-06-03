@@ -1,17 +1,29 @@
 import { Loader, Stack, Text } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import { IconCrown, IconDiamond, IconHeart, IconTrophy, IconUsers } from '@tabler/icons-react';
 import { useElementSize } from '@mantine/hooks';
+import { useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PageContainer from '@components/PageContainer/PageContainer';
+import { resetActiveAuctionHistory } from '@domains/auction/history/model/activeAuctionHistorySlice';
+import { setCurrentAuctionMetadata } from '@domains/auction/history/lib/currentAuctionMetadata';
+import { resetPurchases, setHistory } from '@reducers/Purchases/Purchases';
+import { setSlots } from '@reducers/Slots/Slots';
+import { RootState } from '@reducers';
 
 import {
+  auctionHistoryQueryKeys,
+  useDeleteAuctionHistory,
   useAuctionHistoryAuctions,
   useAuctionHistoryDetails,
   useAuctionHistoryParticipants,
   useAuctionHistoryRangeDetails,
 } from '../api/hooks';
+import auctionHistoryApi from '../api/IndexedDBAdapter';
+import { checkIsAuctionStateEmpty } from '../lib/activeAuctionState';
 import {
   formatCompactMoney,
   formatCompactNumber,
@@ -31,6 +43,7 @@ import {
   sortParticipantScores,
   type HeatmapMode,
 } from '../lib/statistics';
+import { buildRestoredAuctionLots } from '../lib/restoreAuctionLots';
 import { AUCTION_HISTORY_PAGE_SIZE } from '../model/constants';
 import { auctionHistoryMetricColors } from '../config/metricColors';
 
@@ -169,12 +182,18 @@ const getAuctionHighlights = ({
 
 const AuctionHistoryPage = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const { ref: leftPanelRef, height: leftPanelHeight } = useElementSize();
   const [dateRange, setDateRange] = useState<DateRangeValue>([getPreviousDateKey(365), toDateKey(new Date())]);
   const [heatmapMode, setHeatmapMode] = useState<HeatmapMode>('auctionCount');
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [selectedAuctionId, setSelectedAuctionId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
+  const [deletingAuctionId, setDeletingAuctionId] = useState<string | null>(null);
+  const [restoringAuctionId, setRestoringAuctionId] = useState<string | null>(null);
+  const isCurrentAuctionEmpty = useSelector((state: RootState) => checkIsAuctionStateEmpty(state));
+  const deleteAuctionMutation = useDeleteAuctionHistory();
   const startDate = dateRange[0] ?? getPreviousDateKey(365);
   const endDate = dateRange[1] ?? dateRange[0] ?? toDateKey(new Date());
   const startAt = fromDateKey(startDate);
@@ -248,6 +267,51 @@ const AuctionHistoryPage = () => {
       )
     : undefined;
 
+  const handleDeleteAuction = async (auctionId: string): Promise<void> => {
+    setDeletingAuctionId(auctionId);
+
+    try {
+      await deleteAuctionMutation.mutateAsync(auctionId);
+      if (selectedAuctionId === auctionId) {
+        setSelectedAuctionId(null);
+      }
+      notifications.show({ color: 'green', message: t('auctionHistory.notifications.deleted') });
+    } catch (err) {
+      console.error(err);
+      notifications.show({ color: 'red', message: t('auctionHistory.notifications.deleteError') });
+    } finally {
+      setDeletingAuctionId(null);
+    }
+  };
+
+  const handleRestoreAuction = async (auctionId: string): Promise<void> => {
+    setRestoringAuctionId(auctionId);
+
+    try {
+      const details = await auctionHistoryApi.getDetails(auctionId);
+      if (!details) {
+        notifications.show({ color: 'red', message: t('auctionHistory.notifications.restoreError') });
+        return;
+      }
+
+      dispatch(resetActiveAuctionHistory());
+      dispatch(resetPurchases());
+      dispatch(setHistory([]));
+      dispatch(setSlots(buildRestoredAuctionLots(details, participants)));
+      setCurrentAuctionMetadata({
+        name: details.auction.name,
+        requestsKind: details.auction.requestsKind,
+      });
+      await queryClient.invalidateQueries({ queryKey: auctionHistoryQueryKeys.nextDefaultName() });
+      notifications.show({ color: 'green', message: t('auctionHistory.notifications.restored') });
+    } catch (err) {
+      console.error(err);
+      notifications.show({ color: 'red', message: t('auctionHistory.notifications.restoreError') });
+    } finally {
+      setRestoringAuctionId(null);
+    }
+  };
+
   return (
     <PageContainer title={t('auctionHistory.page.title')}>
       <Stack gap='lg'>
@@ -297,6 +361,11 @@ const AuctionHistoryPage = () => {
                     onPageChange={setPage}
                     onClearDayFilter={() => setSelectedDay(null)}
                     onSelectAuction={setSelectedAuctionId}
+                    onDeleteAuction={(auctionId) => handleDeleteAuction(auctionId).catch((err) => console.error(err))}
+                    onRestoreAuction={handleRestoreAuction}
+                    isCurrentAuctionEmpty={isCurrentAuctionEmpty}
+                    deletingAuctionId={deletingAuctionId}
+                    restoringAuctionId={restoringAuctionId}
                   />
                 )}
               </Stack>

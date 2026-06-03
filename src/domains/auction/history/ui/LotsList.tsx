@@ -19,6 +19,11 @@ interface LotsListProps {
   onPageChange: (page: number) => void;
   onClearDayFilter: () => void;
   onSelectAuction: (auctionId: string) => void;
+  onDeleteAuction: (auctionId: string) => void;
+  onRestoreAuction: (auctionId: string) => Promise<void>;
+  isCurrentAuctionEmpty: boolean;
+  deletingAuctionId: string | null;
+  restoringAuctionId: string | null;
 }
 
 const LotsList = ({
@@ -31,6 +36,11 @@ const LotsList = ({
   onPageChange,
   onClearDayFilter,
   onSelectAuction,
+  onDeleteAuction,
+  onRestoreAuction,
+  isCurrentAuctionEmpty,
+  deletingAuctionId,
+  restoringAuctionId,
 }: LotsListProps) => {
   const { t } = useTranslation();
 
@@ -72,7 +82,16 @@ const LotsList = ({
         </Paper>
       ) : (
         visibleSummaries.map((summary) => (
-          <AuctionHistoryCard key={summary.auction.id} summary={summary} onSelect={onSelectAuction} />
+          <AuctionHistoryCard
+            key={summary.auction.id}
+            summary={summary}
+            isCurrentAuctionEmpty={isCurrentAuctionEmpty}
+            isDeleting={deletingAuctionId === summary.auction.id}
+            isRestoring={restoringAuctionId === summary.auction.id}
+            onSelect={onSelectAuction}
+            onDelete={onDeleteAuction}
+            onRestore={onRestoreAuction}
+          />
         ))
       )}
       <Pagination total={totalPages} value={page} onChange={onPageChange} />

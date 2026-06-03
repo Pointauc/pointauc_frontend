@@ -27,6 +27,7 @@ abstract class AuctionHistoryApi {
   abstract getDetails(auctionId: string): Promise<AuctionHistoryDetails | null>;
   abstract getRangeDetails(startAt: string, endAt: string): Promise<AuctionHistoryRangeDetails>;
   abstract saveSnapshot(snapshot: AuctionHistorySnapshot): Promise<void>;
+  abstract deleteAuction(auctionId: string): Promise<void>;
   abstract getNextDefaultName(language?: string): Promise<string>;
 }
 
