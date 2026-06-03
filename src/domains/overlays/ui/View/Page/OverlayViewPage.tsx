@@ -4,11 +4,11 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 
 import { overlaysControllerGetOptions, overlaysControllerGetQueryKey } from '@api/openapi/@tanstack/react-query.gen';
-import { client } from '@api/openapi/client.gen';
 import { AuctionOverlayDto, WheelOverlayDto } from '@api/openapi/types.gen';
 import { Broadcasting } from '@domains/broadcasting/model/types';
 import { getSocketIOUrl } from '@utils/url.utils';
 import { buildSocketIoOptions } from '@shared/lib/socketIo';
+import { backendApi } from '@api/backendApi';
 
 import AuctionOverlayPage from '../../../Auction/ui/View';
 import WheelOverlayPage from '../../../Wheel/ui/View';
@@ -30,7 +30,7 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
 
   // Setup authorization header for API requests
   if (!isTokenInitialized.current && token) {
-    client.instance.interceptors.request.use((config) => {
+    backendApi.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${token}`;
       return config;
     });
@@ -52,10 +52,7 @@ const OverlayViewPage: FC<OverlayViewPageProps> = () => {
     }
 
     setSocketLoading(true);
-    const socket = io(
-      `${getSocketIOUrl()}/broadcasting`,
-      buildSocketIoOptions('overlay', { auth: { token } }),
-    );
+    const socket = io(`${getSocketIOUrl()}/broadcasting`, buildSocketIoOptions('overlay', { auth: { token } }));
 
     console.log('Overlay socket connecting...');
 

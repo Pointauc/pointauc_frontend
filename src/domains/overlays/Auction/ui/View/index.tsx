@@ -3,17 +3,16 @@ import { Socket } from 'socket.io-client';
 
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
 import { Broadcasting } from '@domains/broadcasting/model/types';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 
 import OverlayStatusMessage from '../../../ui/View/OverlayStatusMessage';
 import Layout, { TimerProps } from '../Layout/Layout';
 
-const generateMockLots = (count: number): Slot[] => {
+const generateMockLots = (count: number): Lot[] => {
   return Array.from({ length: count }, (_, index) => ({
     id: `${index + 1}`,
     name: `Lot ${index + 1}`,
     amount: Math.floor(Math.random() * 1000) + 100,
-    extra: Math.floor(Math.random() * 500) + 50,
     fastId: index + 1,
   }));
 };
@@ -26,7 +25,7 @@ interface AuctionOverlayPageProps {
 const defaultTimer: TimerProps = { state: 'paused', timeLeft: 1000 * 60 * 10 };
 
 const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) => {
-  const [lots, setLots] = useState<Slot[]>([]);
+  const [lots, setLots] = useState<Lot[]>([]);
   const [rules, setRules] = useState<string>('');
   const [timer, setTimer] = useState<TimerProps>(defaultTimer);
   const [hasReceivedLotsData, setHasReceivedLotsData] = useState(false);
@@ -50,7 +49,6 @@ const AuctionOverlayPage: FC<AuctionOverlayPageProps> = ({ socket, overlay }) =>
               id: lot.id,
               name: lot.name,
               amount: lot.amount,
-              extra: 0,
               fastId: lot.fastId,
             })),
           );

@@ -1,4 +1,4 @@
-import { useTutorialContext } from '@domains/tutorials/context/TutorialContext';
+import { useTutorialContext } from '@domains/tutorials/context/useTutorialContext';
 import TutorialStepPopup from '@domains/tutorials/ui/TutorialStepPopup/TutorialStepPopup';
 
 /**
@@ -31,4 +31,3 @@ function TutorialManager() {
 }
 
 export default TutorialManager;
-

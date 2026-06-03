@@ -9,7 +9,6 @@ import { getSevenTVEmotes } from '@api/emotesApi.ts';
 import styles from '@components/TwitchEmotesList/TwitchEmotesList.module.css';
 import { RootState } from '@reducers';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const fetcher = new EmoteFetcher();
 
 interface TwitchEmotesListProps {
@@ -17,7 +16,6 @@ interface TwitchEmotesListProps {
   onEmotesLoad?: (emotes: Emote[]) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 const flattenCollection = (collection: Collection<string, Emote>): Emote[] => Array.from<Emote>(collection.values());
 
 const emoteLists = ['default', 'twitch', '7tv', 'bttv', 'ffz'];
@@ -48,7 +46,7 @@ const TwitchEmotesList: FC<TwitchEmotesListProps> = ({ setActiveEmote, onEmotesL
       const flatEmotes = loadedEmotes.reduce((accum, emotes) => (emotes ? [...accum, ...emotes] : accum), []);
       onEmotesLoad(flatEmotes);
     }
-  }, [userId]);
+  }, [onEmotesLoad, userId]);
 
   useEffect(() => {
     updateEmotes();

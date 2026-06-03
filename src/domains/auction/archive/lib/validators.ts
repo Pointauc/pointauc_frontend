@@ -29,14 +29,20 @@ export function isValidArchiveData(dataString: string): boolean {
     if (!Array.isArray(data.lots)) return false;
     if (data.purchases !== undefined && !Array.isArray(data.purchases)) return false;
 
-    const checkLots = data.lots.every(
-      (lot) =>
-        lot &&
-        typeof lot === 'object' &&
-        (lot.name === null || typeof lot.name === 'string') &&
-        (lot.amount === null || typeof lot.amount === 'number') &&
-        (lot.investors === undefined || Array.isArray(lot.investors)),
-    );
+    const checkLots = data.lots.every((lot) => {
+      if (!lot || typeof lot !== 'object') {
+        return false;
+      }
+
+      const archiveLot = lot as Record<string, unknown>;
+
+      return (
+        (archiveLot.name === null || typeof archiveLot.name === 'string') &&
+        (archiveLot.amount === null || typeof archiveLot.amount === 'number') &&
+        (archiveLot.contributors === undefined || Array.isArray(archiveLot.contributors)) &&
+        (archiveLot.investors === undefined || Array.isArray(archiveLot.investors))
+      );
+    });
 
     if (!checkLots) {
       return false;

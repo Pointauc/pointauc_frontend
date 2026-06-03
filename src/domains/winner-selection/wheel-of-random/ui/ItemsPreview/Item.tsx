@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useContext, useMemo } from 'react';
 
 import * as wheelItem from '@domains/winner-selection/wheel-of-random/lib/item';
-import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
+import { WheelContext } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/wheelContextData';
 import { WheelItemWithMetadata } from '@models/wheel.model.ts';
 
 import classes from './Item.module.css';

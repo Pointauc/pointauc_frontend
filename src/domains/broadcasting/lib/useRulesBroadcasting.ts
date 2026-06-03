@@ -4,9 +4,9 @@ import { useMutation } from '@tanstack/react-query';
 
 import { broadcastingControllerBroadcastRulesMutation } from '@api/openapi/@tanstack/react-query.gen';
 import { RootState } from '@reducers/index';
+import { store } from '@store';
 
 import { Broadcasting } from '../model/types';
-import { store } from '@store';
 
 import type { JSONContent } from '@tiptap/react';
 

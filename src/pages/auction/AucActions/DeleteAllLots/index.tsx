@@ -1,56 +1,62 @@
-import { Anchor, Button, Popover, Tooltip } from '@mantine/core';
+import { Button, Popover, Tooltip } from '@mantine/core';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import { Trans, useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { AlertTypeEnum } from '@models/alert.model.ts';
+import { checkShouldSmartSaveAuction } from '@domains/auction/history/lib/activeAuctionState';
+import { finalizeAuctionHistory } from '@domains/auction/history/lib/finalizeAuctionHistory';
 import { RootState } from '@reducers';
-import { resetPurchases, setPurchases } from '@reducers/Purchases/Purchases.ts';
-import { resetSlots, setSlots } from '@reducers/Slots/Slots.ts';
-import { addAlert, deleteAlert } from '@reducers/notifications/notifications.ts';
+import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
+import { resetSlots } from '@reducers/Slots/Slots.ts';
 
 const DeleteAllLots = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const slots = useSelector((rootReducer: RootState) => rootReducer.slots.slots);
   const purchases = useSelector((rootReducer: RootState) => rootReducer.purchases.purchases);
+  const shouldSmartSave = useSelector(checkShouldSmartSaveAuction);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleResetSlots = (): void => {
+  const handleResetSlots = async (): Promise<void> => {
+    if (shouldSmartSave) {
+      await finalizeAuctionHistory({ shouldSave: true });
+      return;
+    }
+
     dispatch(resetSlots());
     dispatch(resetPurchases());
 
-    const id = Math.random();
-    const lotsAmount = slots.length;
-    const backup = { slots, purchases };
+    // const id = Math.random();
+    // const lotsAmount = slots.length;
+    // const backup = { slots, purchases };
 
-    const revertDeletion = () => {
-      dispatch(deleteAlert(id));
-      dispatch(setSlots(backup.slots));
-      dispatch(setPurchases(backup.purchases));
-    };
+    // const revertDeletion = () => {
+    //   dispatch(deleteAlert(id));
+    //   dispatch(setSlots(backup.slots));
+    //   dispatch(setPurchases(backup.purchases));
+    // };
 
-    dispatch(
-      addAlert({
-        id,
-        type: AlertTypeEnum.Info,
-        message: (
-          <Anchor onClick={revertDeletion} c='inherit' fw='normal'>
-            <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
-          </Anchor>
-        ),
-        duration: 1000 * 18,
-        closable: false,
-        showCountdown: true,
-        static: true,
-      }),
-    );
+    // dispatch(
+    //   addAlert({
+    //     id,
+    //     type: AlertTypeEnum.Info,
+    //     message: (
+    //       <Anchor onClick={revertDeletion} c='inherit' fw='normal'>
+    //         <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
+    //       </Anchor>
+    //     ),
+    //     duration: 1000 * 18,
+    //     closable: false,
+    //     showCountdown: true,
+    //     static: true,
+    //   }),
+    // );
   };
 
   const handleConfirm = () => {
     setShowConfirm(false);
-    handleResetSlots();
+    handleResetSlots().catch((err) => console.error(err));
   };
 
   return (

@@ -50,7 +50,7 @@ const CoreImageField = () => {
       >
         <Text size='md'>{t('wheel.coreImage.expandPanel')}</Text>
       </Button>
-      <Collapse in={isExpanded} className={styles.collapse}>
+      <Collapse expanded={isExpanded} className={styles.collapse}>
         <Stack mah={390} gap='sm' w='100%'>
           <Controller
             render={({ field: { onChange } }) => (

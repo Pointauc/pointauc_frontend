@@ -135,6 +135,10 @@ class IndexedDBAdapter extends ArchiveApi {
     return record;
   }
 
+  async clearAutosave(): Promise<void> {
+    await this.db.archives.delete(AUTOSAVE_ID);
+  }
+
   async replaceAll(records: ArchiveRecord[]): Promise<void> {
     await this.db.transaction('rw', this.db.archives, async () => {
       await this.db.archives.clear();

@@ -58,7 +58,7 @@ const TrailerWindow: FC<Trailer> = ({ id, title: windowTitle }) => {
 
   useEffect(() => {
     onSubmit();
-  }, []);
+  }, [onSubmit]);
 
   useEffect(() => {
     if (container.current) {

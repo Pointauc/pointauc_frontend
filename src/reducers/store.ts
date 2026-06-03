@@ -6,7 +6,8 @@ import { throttle } from '@tanstack/react-pacer';
 import archiveApi from '@domains/auction/archive/api/IndexedDBAdapter';
 import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
-import { Slot } from '@models/slot.model';
+import { createLotLinkParsingMiddleware } from '@domains/links/participant-url-parsing/link-processing-queue/middleware';
+import { Lot } from '@models/slot.model';
 import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 import { sortSlots } from '@utils/common.utils';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
@@ -18,7 +19,6 @@ import rootReducer, { RootState } from './index';
 const SORTABLE_SLOT_EVENTS = [
   'slots/setSlotData',
   'slots/setSlotAmount',
-  'slots/addExtra',
   'slots/deleteSlot',
   'slots/addSlot',
   'slots/addSlotAmount',
@@ -47,7 +47,7 @@ const PURCHASE_UPDATE_EVENTS = Object.keys(purchasesSlice.actions).map(
 );
 
 const saveSlotsWithCooldown = throttle(
-  ({ slots, purchases }: { slots: Slot[]; purchases: RootState['purchases']['purchases'] }) => {
+  ({ slots, purchases }: { slots: Lot[]; purchases: RootState['purchases']['purchases'] }) => {
     const data = createArchiveData({
       lots: slotsToArchivedLots(slots),
       purchases,
@@ -79,7 +79,7 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [thunk, sortSlotsMiddleware, saveSlotsMiddleware],
+  middleware: [thunk, sortSlotsMiddleware, createLotLinkParsingMiddleware(), saveSlotsMiddleware],
 });
 
 // Handle autosave before page unload

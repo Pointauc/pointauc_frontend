@@ -1,14 +1,14 @@
 import { FC, useEffect, useRef } from 'react';
 
 import SlotsList from '@pages/auction/SlotsColumn/List/SlotsList';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import useAutoScroll from '@hooks/useAutoScroll';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 
 import classes from './index.module.css';
 
 interface LotsColumnProps {
-  items: Slot[];
+  items: Lot[];
   autoScroll: boolean;
   scrollSpeed: number;
 }

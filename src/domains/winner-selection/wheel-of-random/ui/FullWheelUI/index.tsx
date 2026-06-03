@@ -15,7 +15,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
+import { addWheelWinnerCandidate } from '@domains/auction/history/model/activeAuctionHistorySlice';
 import ItemsPreview from '@domains/winner-selection/wheel-of-random/ui/ItemsPreview';
 import WheelComponent from '@domains/winner-selection/wheel-of-random/ui/FormWheel';
 import { WheelContextProvider } from '@domains/winner-selection/wheel-of-random/settings/ui/Context/WheelContext';
@@ -84,6 +86,7 @@ interface RandomWheelProps<TWheelItem extends WheelItem = WheelItem> {
   onWheelItemsChanged?: (items: TWheelItem[]) => void;
   onSettingsChanged?: (settings: Wheel.Settings) => void;
   onSpinStart?: (params: SpinStartCallbackParams) => void;
+  trackAuctionHistoryWinner?: boolean;
 }
 
 export interface RandomWheelController {
@@ -111,6 +114,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   onWin,
   onWheelItemsChanged,
   onSpinStart,
+  trackAuctionHistoryWinner = false,
   shouldShuffle = true,
   elements: elementsFromProps,
   children,
@@ -141,6 +145,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const soundtrackVolume = useWatch({ name: 'soundtrack.volume', control });
   const soundtrackPlayerRef = useRef<PlayerRef | null>(null);
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   // Ticket management for signed random.org flow
@@ -231,7 +236,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     isTicketRevealed: !!visibleRevealedData?.randomNumber,
     resetTicket: resetRevealedTicket,
   });
-  const { items, init, extraSettings, renderSubmitButton, onSpinEnd, content } = wheelStrategy;
+  const { items, init, extraSettings, renderSubmitButton, onSpinEnd, content, reset } = wheelStrategy;
 
   const filteredItems = useMemo(() => {
     const filtered = getTotalSize(itemsFromProps)
@@ -239,10 +244,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       : itemsFromProps.map((item) => ({ ...item, amount: 1 }));
 
     return shouldShuffle
-      ? filtered.sort(
-          (a, b) =>
-            b.amount - a.amount || (a.displayName ?? a.name).localeCompare(b.displayName ?? b.name),
-        )
+      ? filtered.sort((a, b) => b.amount - a.amount || (a.displayName ?? a.name).localeCompare(b.displayName ?? b.name))
       : filtered;
   }, [itemsFromProps, shouldShuffle]);
 
@@ -265,17 +267,20 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       const { min, max } = randomSpinConfig!;
       const duration = (randomSpinEnabled ? random.getInt(min!, max!) : spinTime) ?? 20;
       const activeWheelItems = wheelController.current?.getItems() ?? [];
+      let generatedRandomNumber: number | undefined;
 
       const generateSeed = async (): Promise<number> => {
         if (randomnessSource === 'random-org') {
           // Simple random.org API call
           const seed = await getSeed();
-          return seed ?? random.value();
+          generatedRandomNumber = seed ?? random.value();
+          return generatedRandomNumber;
         } else if (randomnessSource === 'random-org-signed') {
           // Signed random.org flow
           if (!activeTicketId) {
             setValue('randomnessSource', 'local-basic');
-            return random.value();
+            generatedRandomNumber = random.value();
+            return generatedRandomNumber;
           }
 
           const participants = filteredItems.map((item) => ({
@@ -304,11 +309,13 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
           const randomData = response.random;
           const randomNumber = randomData.data[0];
 
-          return randomNumber !== undefined ? randomNumber : random.value();
+          generatedRandomNumber = randomNumber !== undefined ? randomNumber : random.value();
+          return generatedRandomNumber;
         }
 
         // Local basic randomness
-        return random.value();
+        generatedRandomNumber = random.value();
+        return generatedRandomNumber;
       };
 
       const winnerResult = await wheelStrategy.getNextWinnerId({
@@ -350,6 +357,22 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       const finalWinnerId = winnerResult.finalWinnerId ?? winnerResult.id;
 
       if (winnerResult.isFinalSpin && finalWinnerId) {
+        if (trackAuctionHistoryWinner) {
+          const finalWinnerItem = activeWheelItems.find(({ id }) => id === finalWinnerId);
+          const totalSize = getTotalSize(activeWheelItems);
+
+          dispatch(
+            addWheelWinnerCandidate({
+              runtimeLotId: finalWinnerId.toString(),
+              randomNumber: generatedRandomNumber,
+              chancePercent:
+                totalSize > 0 && finalWinnerItem ? (Number(finalWinnerItem.amount ?? 0) / totalSize) * 100 : 0,
+              format,
+              dropoutVariant,
+            }),
+          );
+        }
+
         try {
           trackWheelSpinResult(
             buildWheelSpinResultPayload({
@@ -397,6 +420,8 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       onSpinStart,
       onSpinEnd,
       onWin,
+      trackAuctionHistoryWinner,
+      dispatch,
       getSeed,
       activeTicketId,
       filteredItems,
@@ -462,6 +487,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
               deleteItem={deleteWheelItem}
               controller={wheelController}
               onOptimalSizeChange={onOptimalSizeChange}
+              onReroll={reset}
             />
           )}
         </WheelFlexboxAutosizer>

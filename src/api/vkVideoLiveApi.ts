@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import { backendApi } from '@api/backendApi';
 import ENDPOINTS from '@constants/api.constants';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers';
 import { PatchRedemptionDto, PatchRedemptionsDto, RedemptionStatus } from '@models/redemption.model';
@@ -155,7 +156,7 @@ const clearStoredToken = (): void => {
 
 export const vkVideoLiveAuthApi = {
   authenticate: async (code: string, redirectUri: string): Promise<AuthResponse> => {
-    const { data } = await axios.post<AuthResponse>(ENDPOINTS.VK_VIDEO_LIVE_AUTH, {
+    const { data } = await backendApi.post<AuthResponse>(ENDPOINTS.VK_VIDEO_LIVE_AUTH, {
       code,
       redirect_uri: redirectUri,
     });
@@ -163,13 +164,13 @@ export const vkVideoLiveAuthApi = {
     return data;
   },
   refresh: async (): Promise<RefreshResponse> => {
-    const { data } = await axios.post<RefreshResponse>(ENDPOINTS.VK_VIDEO_LIVE_REFRESH);
+    const { data } = await backendApi.post<RefreshResponse>(ENDPOINTS.VK_VIDEO_LIVE_REFRESH);
     setStoredToken(data.accessToken);
     return data;
   },
   revoke: async (): Promise<void> => {
     try {
-      await axios.post(ENDPOINTS.VK_VIDEO_LIVE_REVOKE);
+      await backendApi.post(ENDPOINTS.VK_VIDEO_LIVE_REVOKE);
     } finally {
       clearStoredToken();
     }
@@ -397,22 +398,22 @@ export const vkVideoLiveApiClient = new VkVideoLiveApiClient();
 export const buildVkVideoLiveRewardName = (prefix: string, cost: number): string => `${prefix} ${cost}`;
 
 const VK_REWARD_COLORS = [
-  '#e3924c',
-  '#d95d39',
-  '#f2c14e',
-  '#7fb069',
-  '#3a86ff',
-  '#4361ee',
-  '#8338ec',
-  '#ff006e',
-  '#00a896',
-  '#02c39a',
-  '#577590',
-  '#4d908e',
-  '#f94144',
-  '#f3722c',
-  '#90be6d',
-  '#9b5de5',
+  '#D66E34',
+  '#B8AAFF',
+  '#1D90FF',
+  '#9961F9',
+  '#59A840',
+  '#E73629',
+  '#DE6489',
+  '#20BBA1',
+  '#F8B301',
+  '#0099BB',
+  '#7BBEFF',
+  '#E542FF',
+  '#A36C59',
+  '#8BA259',
+  '#00A9FF',
+  '#A20BFF',
 ];
 
 const hexToRgb = (hex: string): [number, number, number] => {
@@ -444,7 +445,8 @@ interface RewardsDiff {
   toDelete: VkVideoLiveReward[];
 }
 
-const checkIsPointaucReward = (reward: VkVideoLiveReward): boolean => reward.description === POINTAUC_REWARD_DESCRIPTION;
+const checkIsPointaucReward = (reward: VkVideoLiveReward): boolean =>
+  reward.description === POINTAUC_REWARD_DESCRIPTION;
 
 const getPointaucRewards = (rewards: VkVideoLiveReward[]): VkVideoLiveReward[] => rewards.filter(checkIsPointaucReward);
 
@@ -501,12 +503,14 @@ export const vkVideoLiveRewardsApi = {
               .catch(reject);
           }),
       ),
-      ...toUpdate.map(({ existing }) => {
+      ...toUpdate.map(({ preset, existing }) => {
         return new Promise<void>((resolve, reject) => {
+          const updatedReward = createVKRewardDataFromPreset(prefix, preset);
           vkVideoLiveApiClient
-            .setRewardEnabled(channelUrl, existing.id, true)
+            .editReward(channelUrl, existing.id, updatedReward)
+            .then(() => vkVideoLiveApiClient.setRewardEnabled(channelUrl, existing.id, true))
             .then(() => {
-              newActiveRewards.push(existing);
+              newActiveRewards.push({ ...updatedReward, id: existing.id });
               resolve();
             })
             .catch(reject);

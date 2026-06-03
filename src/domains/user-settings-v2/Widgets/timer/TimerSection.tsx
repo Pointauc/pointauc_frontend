@@ -29,11 +29,27 @@ const TimerSection = () => {
       icon={<IconClockHour4 size={24} />}
     >
       <SettingsCard>
-        <SettingsRow htmlFor='showTotalTime'>
+        <SettingsRow compact htmlFor='startTime' description={t('settings.stopwatch.startTimeDesc')}>
+          <div className='flex flex-wrap items-center justify-between gap-4'>
+            <FieldLabel text={t('settings.stopwatch.startTime')} withDescriptionIcon />
+            <FormInput
+              name='startTime'
+              control={control}
+              size='sm'
+              type='number'
+              w={96}
+              rightSection={<Text>{t('common.min')}</Text>}
+            />
+          </div>
+        </SettingsRow>
+
+        <Divider />
+
+        <SettingsRow htmlFor='showTotalTime' description={t('settings.stopwatch.totalTimeHint')}>
           <FormSwitchField
             name='showTotalTime'
             control={control}
-            label={<FieldLabel text={t('settings.stopwatch.totalTime')} hint={t('settings.stopwatch.totalTimeHint')} />}
+            label={<FieldLabel text={t('settings.stopwatch.totalTime')} withDescriptionIcon />}
           />
         </SettingsRow>
 

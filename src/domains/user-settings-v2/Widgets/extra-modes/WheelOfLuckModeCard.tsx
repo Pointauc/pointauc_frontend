@@ -17,10 +17,10 @@ const WheelOfLuckModeCard = () => {
       control={control}
       switchName='luckyWheelEnabled'
       title={t('settings.luckyWheel.luckyWheel')}
-      hint={t('settings.luckyWheel.desc')}
+      description={t('settings.luckyWheel.desc')}
       isEnabled={Boolean(isEnabled)}
     >
-        <SettingsRow htmlFor='luckyWheelSelectBet'>
+      <SettingsRow htmlFor='luckyWheelSelectBet'>
         <FormSwitchField
           name='luckyWheelSelectBet'
           control={control}

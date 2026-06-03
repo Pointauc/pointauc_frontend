@@ -13,20 +13,24 @@ interface ExtraModeCardProps {
   control: Control<SettingsForm>;
   switchName: string;
   title: ReactNode;
-  hint?: ReactNode;
+  description?: ReactNode;
   isEnabled: boolean;
   children: ReactNode;
 }
 
-const ExtraModeCard = ({ control, switchName, title, hint, isEnabled, children }: ExtraModeCardProps) => {
+const ExtraModeCard = ({ control, switchName, title, description, isEnabled, children }: ExtraModeCardProps) => {
   return (
     <SettingsCard>
       <div className='flex flex-col'>
-        <SettingsRow htmlFor={switchName}>
-          <FormSwitchField name={switchName} control={control} label={<FieldLabel text={title} hint={hint} />} />
+        <SettingsRow htmlFor={switchName} description={description}>
+          <FormSwitchField
+            name={switchName}
+            control={control}
+            label={<FieldLabel text={title} withDescriptionIcon={Boolean(description)} />}
+          />
         </SettingsRow>
 
-        <Collapse in={isEnabled}>{children}</Collapse>
+        <Collapse expanded={isEnabled}>{children}</Collapse>
       </div>
     </SettingsCard>
   );

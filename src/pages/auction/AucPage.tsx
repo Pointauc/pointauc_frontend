@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import { RootState } from '@reducers';
 import { updatePercents } from '@services/PercentsRefMap.ts';
-import { ScrollContextProvider, useScrollContext } from '@shared/lib/scroll';
+import { ScrollContextProvider } from '@shared/lib/ScrollContextProvider';
+import { useScrollContext } from '@shared/lib/scrollContext';
 import { useIsMobile } from '@shared/lib/ui';
 import { calcBackgroundOpacity } from '@utils/ui/background.ts';
 

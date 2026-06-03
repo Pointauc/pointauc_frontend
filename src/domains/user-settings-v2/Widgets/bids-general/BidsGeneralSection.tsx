@@ -22,12 +22,13 @@ const BidsGeneralSection = () => {
   const { control } = useFormContext<SettingsForm>();
 
   const purchaseSort = useWatch({ control, name: 'purchaseSort' });
+  const insertStrategyLabelId = 'insertStrategy-label';
   const bidNameStrategyLabelId = 'bidNameStrategy-label';
 
   const insertStrategyOptions = [
-    { value: InsertStrategy.Force, label: t('settings.integrationCommon.insertStrategy.force') },
-    { value: InsertStrategy.Match, label: t('settings.integrationCommon.insertStrategy.match') },
     { value: InsertStrategy.None, label: t('settings.integrationCommon.insertStrategy.none') },
+    { value: InsertStrategy.Match, label: t('settings.integrationCommon.insertStrategy.match') },
+    { value: InsertStrategy.Force, label: t('settings.integrationCommon.insertStrategy.force') },
   ];
 
   const bidsSortOptions = [
@@ -52,50 +53,77 @@ const BidsGeneralSection = () => {
     >
       <SettingsCard>
         <div className='flex flex-col'>
-          <SettingsRow compact htmlFor='insertStrategy'>
+          <SettingsRow
+            compact
+            htmlFor='insertStrategy'
+            description={
+              <div className='space-y-2'>
+                <Text size='sm'>{t('settings.integrationCommon.insertStrategyDesc')}</Text>
+                <ul className='list-disc space-y-1 pl-5'>
+                  <li>
+                    <Text size='sm'>
+                      {t('settings.integrationCommon.insertStrategy.force')}:{' '}
+                      {t('settings.integrationCommon.insertStrategyDescForce')}
+                    </Text>
+                  </li>
+                  <li>
+                    <Text size='sm'>
+                      {t('settings.integrationCommon.insertStrategy.match')}:{' '}
+                      {t('settings.integrationCommon.insertStrategyDescMatch')}
+                    </Text>
+                  </li>
+                  <li>
+                    <Text size='sm'>
+                      {t('settings.integrationCommon.insertStrategy.none')}:{' '}
+                      {t('settings.integrationCommon.insertStrategyDescNone')}
+                    </Text>
+                  </li>
+                </ul>
+              </div>
+            }
+          >
             <div className='flex flex-wrap items-center justify-between gap-4'>
-              <FieldLabel text={t('settings.integrationCommon.insertStrategyLabel')} />
-              <FormSelect
+              <FieldLabel
+                id={insertStrategyLabelId}
+                text={t('settings.integrationCommon.insertStrategyLabel')}
+                withDescriptionIcon
+              />
+              <Controller
                 name='insertStrategy'
                 control={control}
-                data={insertStrategyOptions}
-                inputWidth='md'
-                allowDeselect={false}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <SegmentedControl
+                    id='insertStrategy'
+                    name='insertStrategy'
+                    aria-labelledby={insertStrategyLabelId}
+                    data={insertStrategyOptions}
+                    value={value}
+                    color='primary'
+                    className='flex-shrink-0'
+                    w={340}
+                    onChange={(nextValue) => {
+                      onChange(nextValue);
+                      onBlur();
+                    }}
+                  />
+                )}
               />
             </div>
           </SettingsRow>
 
           <Divider />
 
-          <SettingsRow compact htmlFor='purchaseSort'>
-            <div className='flex flex-wrap items-center justify-between gap-4'>
-              <FieldLabel text={t('settings.integrationCommon.sortBids')} />
-              <FormSelect
-                control={control}
-                name='purchaseSort'
-                data={bidsSortOptions}
-                renderOption={renderBidsSortOption}
-                leftSection={bidsSortOptions[purchaseSort ?? 0]?.icon}
-                leftSectionPointerEvents='none'
-                isNumberValue
-                inputWidth='md'
-                allowDeselect={false}
+          <SettingsRow
+            compact
+            htmlFor='bidNameStrategy'
+            description={t('settings.integrationCommon.bidNameStrategyHint')}
+          >
+            <div className='flex flex-nowrap items-center justify-between gap-4'>
+              <FieldLabel
+                id={bidNameStrategyLabelId}
+                text={t('settings.integrationCommon.bidNameStrategyLabel')}
+                withDescriptionIcon
               />
-            </div>
-          </SettingsRow>
-
-          <Divider />
-
-          <SettingsRow compact htmlFor='bidNameStrategy'>
-            <div className='flex flex-nowrap items-start justify-between gap-4'>
-              <div className='flex max-w-[520px] flex-col gap-1'>
-                <Text id={bidNameStrategyLabelId} fw={500} size='sm'>
-                  {t('settings.integrationCommon.bidNameStrategyLabel')}
-                </Text>
-                <Text size='xs' c='dimmed'>
-                  {t('settings.integrationCommon.bidNameStrategyHint')}
-                </Text>
-              </div>
 
               <Controller
                 name='bidNameStrategy'
@@ -105,6 +133,7 @@ const BidsGeneralSection = () => {
                     name='bidNameStrategy'
                     aria-labelledby={bidNameStrategyLabelId}
                     className='flex-shrink-0'
+                    w={340}
                     data={[
                       {
                         value: BidNameStrategy.Message,
@@ -149,9 +178,29 @@ const BidsGeneralSection = () => {
 
           <Divider />
 
-          <SettingsRow compact htmlFor='pointsRate'>
-            <div className='flex flex-wrap items-start justify-between gap-4'>
-              <FieldLabel text={t('settings.donations.conversion')} hint={<ExchangeRateExample />} />
+          <SettingsRow compact htmlFor='purchaseSort'>
+            <div className='flex flex-wrap items-center justify-between gap-4'>
+              <FieldLabel text={t('settings.integrationCommon.sortBids')} />
+              <FormSelect
+                control={control}
+                name='purchaseSort'
+                data={bidsSortOptions}
+                renderOption={renderBidsSortOption}
+                leftSection={bidsSortOptions[purchaseSort ?? 0]?.icon}
+                leftSectionPointerEvents='none'
+                isNumberValue
+                // inputWidth='md'
+                w={340}
+                allowDeselect={false}
+              />
+            </div>
+          </SettingsRow>
+
+          <Divider />
+
+          <SettingsRow compact htmlFor='pointsRate' description={<ExchangeRateExample />}>
+            <div className='flex flex-wrap items-center justify-between'>
+              <FieldLabel text={t('settings.donations.conversion')} withDescriptionIcon />
               <ExchangeRateControls />
             </div>
           </SettingsRow>

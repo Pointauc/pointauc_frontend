@@ -13,6 +13,7 @@ import WheelPage from '@pages/wheel/WheelPage/WheelPage';
 import classes from './App.module.css';
 
 const OverlaysPage = lazy(() => import('@domains/overlays/ui/List/Page/OverlaysPage'));
+const AuctionHistoryPage = lazy(() => import('@domains/auction/history/ui/AuctionHistoryPage'));
 const OverlayPage = lazy(() => import('@domains/overlays/ui/Edit/Page/OverlayPage'));
 const DebugPage = lazy(() => import('@domains/debug/ui/Page/DebugPage'));
 const TicketVerificationInstructionsPage = lazy(() => import('@pages/tickets/TicketVerificationInstructionsPage'));
@@ -27,9 +28,10 @@ export const AppMain = () => {
       </div>
       {/* <AlertsContainer /> */}
       <Routes>
+        <Route path={ROUTES.HOME} element={null} />
         <Route path={`${ROUTES.SETTINGS}/*`} element={<WebsiteSettings />} />
         <Route path={ROUTES.WHEEL} element={<WheelPage />} />
-        {/* <Route path={ROUTES.HISTORY} element={<HistoryPage />} /> */}
+        <Route path={ROUTES.HISTORY} element={<AuctionHistoryPage />} />
         <Route path={ROUTES.HELP} element={<HelpPage />} />
         {/* <Route path={ROUTES.STATISTIC} element={<Statistic />} /> */}
         <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />

@@ -7,10 +7,10 @@ export const HOTKEY_ACTION_IDS = {
   navigateSettings: 'navigateSettings',
   navigateOverlays: 'navigateOverlays',
   navigateTicketVerification: 'navigateTicketVerification',
-  stopwatchToggle: 'stopwatchToggle',
-  stopwatchAddTime: 'stopwatchAddTime',
-  stopwatchSubtractTime: 'stopwatchSubtractTime',
-  stopwatchAddTimeDouble: 'stopwatchAddTimeDouble',
+  timerToggle: 'timerToggle',
+  timerAddTime: 'timerAddTime',
+  timerSubtractTime: 'timerSubtractTime',
+  timerAddTimeDouble: 'timerAddTimeDouble',
   firstBidNew: 'firstBidNew',
   firstBidAddToLot: 'firstBidAddToLot',
   integrationsToggleAll: 'integrationsToggleAll',
@@ -27,12 +27,12 @@ export interface HotkeyNotificationPayloadMap {
   [HOTKEY_ACTION_IDS.navigateSettings]: never;
   [HOTKEY_ACTION_IDS.navigateOverlays]: never;
   [HOTKEY_ACTION_IDS.navigateTicketVerification]: never;
-  [HOTKEY_ACTION_IDS.stopwatchToggle]: {
+  [HOTKEY_ACTION_IDS.timerToggle]: {
     state: 'continue' | 'pause';
   };
-  [HOTKEY_ACTION_IDS.stopwatchAddTime]: undefined;
-  [HOTKEY_ACTION_IDS.stopwatchSubtractTime]: undefined;
-  [HOTKEY_ACTION_IDS.stopwatchAddTimeDouble]: undefined;
+  [HOTKEY_ACTION_IDS.timerAddTime]: undefined;
+  [HOTKEY_ACTION_IDS.timerSubtractTime]: undefined;
+  [HOTKEY_ACTION_IDS.timerAddTimeDouble]: undefined;
   [HOTKEY_ACTION_IDS.firstBidNew]: {
     name: string;
   };

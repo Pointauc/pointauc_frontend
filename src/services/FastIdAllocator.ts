@@ -1,4 +1,4 @@
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 
 export class FastIdAllocator {
   private maxFastId = 0;
@@ -106,7 +106,7 @@ export class FastIdAllocator {
     this.usedFastIds.clear();
   };
 
-  setFromList = (slots: Slot[]): void => {
+  setFromList = (slots: Lot[]): void => {
     this.reset();
 
     slots.forEach(({ fastId }) => {

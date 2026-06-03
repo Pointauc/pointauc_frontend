@@ -18,21 +18,21 @@ const MarblesModeCard = () => {
       control={control}
       switchName='marblesAuc'
       title={t('settings.marbles.marbles')}
-      hint={<Trans i18nKey='settings.marbles.marblesAucDesc' components={{ a: <Anchor underline='always' /> }} />}
+      description={<Trans i18nKey='settings.marbles.marblesAucDesc' components={{ a: <Anchor underline='always' /> }} />}
       isEnabled={Boolean(isEnabled)}
     >
-      <SettingsRow compact htmlFor='marbleRate'>
+      <SettingsRow compact htmlFor='marbleRate' description={t('settings.marbles.marbleCostDesc')}>
         <div className='flex flex-wrap items-center justify-between gap-4'>
-          <FieldLabel text={t('settings.marbles.marbleCost')} hint={t('settings.marbles.marbleCostDesc')} />
+          <FieldLabel text={t('settings.marbles.marbleCost')} withDescriptionIcon />
           <FormInput name='marbleRate' control={control} size='sm' type='number' w={96} />
         </div>
       </SettingsRow>
 
       <Divider />
 
-      <SettingsRow compact htmlFor='marbleCategory'>
+      <SettingsRow compact htmlFor='marbleCategory' description={t('settings.marbles.newPositionCostDesc')}>
         <div className='flex flex-wrap items-center justify-between gap-4'>
-          <FieldLabel text={t('settings.marbles.newPositionCost')} hint={t('settings.marbles.newPositionCostDesc')} />
+          <FieldLabel text={t('settings.marbles.newPositionCost')} withDescriptionIcon />
           <FormInput name='marbleCategory' control={control} size='sm' type='number' w={96} />
         </div>
       </SettingsRow>

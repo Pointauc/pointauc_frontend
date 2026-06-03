@@ -106,7 +106,7 @@ const CreateOverlayModal: FC<CreateOverlayModalProps> = ({ opened, onClose, onSe
       centered
       className={styles.createOverlayModal}
     >
-      <Grid gutter='md'>
+      <Grid gap='md'>
         <Grid.Col span={6}>
           <OverlayTypeCard type='Auction' onClick={() => handleTypeSelect('Auction')} />
         </Grid.Col>

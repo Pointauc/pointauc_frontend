@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import useAutoScroll from '@hooks/useAutoScroll';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import DroppableSlot from '@pages/auction/Slot/DroppableSlot';
 import AnimatedList from '@pages/auction/SlotsColumn/AnimatedList/AnimatedList';
 import { RootState } from '@reducers';
@@ -15,21 +15,21 @@ import { RootState } from '@reducers';
 import classes from './SlotsList.module.css';
 
 interface SlotsListProps {
-  slots: Slot[];
+  slots: Lot[];
   optimize: boolean;
   containerRef: RefObject<HTMLDivElement | null>;
   readonly?: boolean;
   isTransparentUi?: boolean;
 }
 
-const Row = ({ index, style, data }: ListChildComponentProps<Slot[]>) => (
+const Row = ({ index, style, data }: ListChildComponentProps<Lot[]>) => (
   <div style={style as any}>
     <DroppableSlot index={index + 1} slot={data[index]} />
   </div>
 );
 
 interface VirtualListProps {
-  slots: Slot[];
+  slots: Lot[];
   height: number;
   compact: boolean;
   containerRef: RefObject<HTMLDivElement | null>;
@@ -66,13 +66,13 @@ const SlotsList: FC<SlotsListProps> = ({ slots, optimize, containerRef, readonly
     mouseResumeDelay: 5,
   });
 
-  useEffect(() => {
-    if (optimize && !compact) {
-      notifications.show({
-        message: t('auc.optimizationEnabled'),
-      });
-    }
-  }, [compact, dispatch, optimize, t]);
+  // useEffect(() => {
+  //   if (optimize && !compact) {
+  //     notifications.show({
+  //       message: t('auc.optimizationEnabled'),
+  //     });
+  //   }
+  // }, [compact, dispatch, optimize, t]);
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {

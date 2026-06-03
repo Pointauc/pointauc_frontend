@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useEffect, useState } from 'react';
 import clsx from 'clsx';
 
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import DroppableSlot from '@pages/auction/Slot/DroppableSlot';
 
 interface AnimatedListClassNames {
@@ -10,7 +10,7 @@ interface AnimatedListClassNames {
 }
 
 interface AnimatedListProps {
-  slots: Slot[];
+  slots: Lot[];
   classNames?: AnimatedListClassNames;
   readonly?: boolean;
 }

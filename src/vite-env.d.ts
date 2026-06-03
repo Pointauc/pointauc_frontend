@@ -2,6 +2,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
+  readonly VITE_BACKEND_ORIGIN?: string;
   readonly VITE_ERROR_TRACKING_PROVIDER?: 'glitchtip' | 'sentry';
   readonly VITE_GLITCHTIP_DSN?: string;
   readonly VITE_GLITCHTIP_ENVIRONMENT?: string;

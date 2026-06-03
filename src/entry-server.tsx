@@ -4,8 +4,11 @@
  * Used exclusively at build time by scripts/prerender.js — never loaded in the browser.
  */
 import '@assets/i18n/index.ts';
-import { Suspense } from 'react';
-import { renderToString } from 'react-dom/server';
+
+import { Writable } from 'stream';
+
+import { Suspense, type ReactElement } from 'react';
+import { renderToPipeableStream } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -104,6 +107,32 @@ async function waitForI18n(): Promise<void> {
   }
 }
 
+const renderReactTreeToString = (element: ReactElement): Promise<string> =>
+  new Promise((resolve, reject) => {
+    let html = '';
+
+    const stream = renderToPipeableStream(element, {
+      onAllReady() {
+        const writable = new Writable({
+          write(chunk, _encoding, callback) {
+            html += chunk.toString();
+            callback();
+          },
+        });
+
+        writable.on('finish', () => resolve(html));
+        writable.on('error', reject);
+        stream.pipe(writable);
+      },
+      onShellError(error) {
+        reject(error);
+      },
+      onError(error) {
+        reject(error);
+      },
+    });
+  });
+
 /**
  * Renders the app at the given URL path to a static HTML string.
  * A fresh Redux store and QueryClient are created per render to avoid state leakage.
@@ -128,16 +157,14 @@ export async function render(url: string): Promise<SsrRenderResult> {
   const sheet = new ServerStyleSheet();
   let html: string;
   try {
-    html = renderToString(
+    html = await renderReactTreeToString(
       sheet.collectStyles(
         <Provider store={store}>
           <MantineProvider>
             <TutorialProvider>
               <QueryClientProvider client={queryClient}>
                 <StaticRouter location={url}>
-                  {/* Suspense boundary ensures lazy components render their fallback
-                      (null) rather than throwing during synchronous renderToString. */}
-                  <Suspense>
+                  <Suspense fallback={null}>
                     <App />
                   </Suspense>
                 </StaticRouter>

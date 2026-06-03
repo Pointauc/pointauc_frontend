@@ -1,7 +1,7 @@
 import { Loader } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import clsx from 'clsx';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { selectNextVideoRequest } from '@domains/video-requests/lib/requestSelection';
 import {
@@ -53,8 +53,8 @@ const VideoRequestsPage = () => {
   const [wheelRequests, setWheelRequests] = useState<VideoRequest[]>([]);
   const [isWheelPicking, setIsWheelPicking] = useState(false);
 
-  const queue = queueQuery.data ?? [];
-  const history = historyQuery.data ?? [];
+  const queue = useMemo(() => queueQuery.data ?? [], [queueQuery.data]);
+  const history = useMemo(() => historyQuery.data ?? [], [historyQuery.data]);
   const previousRequest = getPreviousRequest(history);
   const isAutoplayEnabled = Boolean(listener.settings?.isAutoplayEnabled);
   const nextStrategy = listener.settings?.nextStrategy ?? 'requestOrder';
@@ -105,13 +105,13 @@ const VideoRequestsPage = () => {
     };
   }, [isTheaterMode]);
 
-  const completeRequest = async (request: VideoRequest, status: VideoRequestHistoryStatus) => {
+  const completeRequest = useCallback(async (request: VideoRequest, status: VideoRequestHistoryStatus) => {
     await appendHistoryMutation.mutateAsync({
       ...request,
       status,
     });
     await deleteRequestMutation.mutateAsync(request.id);
-  };
+  }, [appendHistoryMutation, deleteRequestMutation]);
 
   const advanceCurrentRequest = useCallback(async (status: Extract<VideoRequestHistoryStatus, 'watched' | 'skipped'>) => {
     if (!currentRequest && queue.length === 0) {
@@ -131,7 +131,7 @@ const VideoRequestsPage = () => {
     }
 
     setCurrentRequestId(selectNextVideoRequest(selectableRequests, nextStrategy)?.id ?? null);
-  }, [currentRequest, nextStrategy, queue]);
+  }, [completeRequest, currentRequest, nextStrategy, queue]);
 
   const handleNext = async () => {
     await advanceCurrentRequest('watched');

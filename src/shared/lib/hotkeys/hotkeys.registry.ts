@@ -42,7 +42,7 @@ const hotkeyDefinitions: HotkeyDefinitions = {
     navbarPath: ROUTES.TICKET_VERIFICATION_INFO,
     showTooltip: true,
   },
-  [HOTKEY_ACTION_IDS.stopwatchToggle]: {
+  [HOTKEY_ACTION_IDS.timerToggle]: {
     binding: 'Space',
     displayLabel: 'Space',
     enabledRoutes: [ROUTES.HOME],
@@ -52,7 +52,7 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: ({ state }, t) => t(`hotkeys.notifications.stopwatch.${state}`),
     },
   },
-  [HOTKEY_ACTION_IDS.stopwatchAddTime]: {
+  [HOTKEY_ACTION_IDS.timerAddTime]: {
     binding: '=',
     aliasBindings: [{ key: 'Add' }],
     displayLabel: '=',
@@ -62,7 +62,7 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: (_, t) => t('hotkeys.notifications.stopwatch.addTime'),
     },
   },
-  [HOTKEY_ACTION_IDS.stopwatchSubtractTime]: {
+  [HOTKEY_ACTION_IDS.timerSubtractTime]: {
     binding: '-',
     displayLabel: '-',
     enabledRoutes: [ROUTES.HOME],
@@ -71,7 +71,7 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: (_, t) => t('hotkeys.notifications.stopwatch.reduceTime'),
     },
   },
-  [HOTKEY_ACTION_IDS.stopwatchAddTimeDouble]: {
+  [HOTKEY_ACTION_IDS.timerAddTimeDouble]: {
     binding: { key: '=', shift: true },
     displayLabel: 'Shift + =',
     enabledRoutes: [ROUTES.HOME],

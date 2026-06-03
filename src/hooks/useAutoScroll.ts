@@ -132,6 +132,7 @@ const useAutoScroll = (
         isPausedByUserRef.current = false;
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, isAutoScroll]);
 
   useEffect(() => {
@@ -182,6 +183,7 @@ const useAutoScroll = (
   useEffect(() => {
     if (!isAutoScroll) return;
     debouncedResize();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemCount, debouncedResize]);
 };
 

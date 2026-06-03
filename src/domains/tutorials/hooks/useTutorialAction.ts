@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { useTutorialContext } from '@domains/tutorials/context/TutorialContext';
+import { useTutorialContext } from '@domains/tutorials/context/useTutorialContext';
 
 /**
  * Hook to trigger a manual action in a tutorial
@@ -28,4 +28,3 @@ export function useTutorialActionCallback(actionId: string, callback: (...args: 
     return result;
   }, [actionId, callback, triggerAction]);
 }
-

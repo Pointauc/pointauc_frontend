@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { archivedLotsToSlots } from '@domains/auction/archive/lib/converters';
 import { ArchiveData } from '@domains/auction/archive/model/types';
 import ImportForm from '@domains/auction/archive/ui/ImportForm';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 
 interface SlotsPresetInputProps {
   buttonTitle: string;
-  onChange: (items: Slot[], saveSlots: boolean) => void;
+  onChange: (items: Lot[], saveSlots: boolean) => void;
   buttonClass?: string;
   dialogTitle?: ReactNode;
   hint?: ReactNode;

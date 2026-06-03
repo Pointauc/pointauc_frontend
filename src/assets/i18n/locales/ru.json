@@ -31,7 +31,7 @@
     },
     "requestStatus": {
       "success": "Завершено успешно",
-      "error": "Error: bids were not processed or partially processed, please check manually."
+      "error": "Ошибка: ставки не были обработаны или были обработаны частично. Пожалуйста, проверьте вручную."
     },
     "modalTitle": {
       "returnAllExceptWinner": "Вернуть баллы всем кроме победителя колеса",
@@ -401,6 +401,204 @@
     "backToOverlays": "Назад к виджетам",
     "overlayNotFound": "Виджет не найден"
   },
+  "auctionHistory": {
+    "page": {
+      "title": "История аукционов",
+      "subtitle": "Прошлые запросы зрителей, победители и активность сообщества"
+    },
+    "newAuction": {
+      "action": "Новый аукцион",
+      "title": "Начать новый аукцион",
+      "description": "Это очистит текущее состояние аукциона. Перед созданием укажите данные для следующего аукциона.",
+      "resetAlert": "Это действие сбросит таблицу аукциона и список ставок. Данные предыдущих аукционов можно посмотреть на <historyLink>странице истории</historyLink>.",
+      "nameLabel": "Название нового аукциона",
+      "requestsKind": {
+        "label": "Тип заказов",
+        "options": {
+          "any": "Любые",
+          "game": "Игры",
+          "movie": "Фильмы",
+          "video": "Видео"
+        }
+      },
+      "wheelWinner": "Победитель колеса",
+      "noWheelWinner": "Победитель колеса пока не выбран",
+      "startNewAuction": "Начать новый аукцион",
+      "createWithoutSaving": "Начать без сохранения",
+      "createNew": "Сохранить предыдущий и Начать",
+      "notifications": {
+        "saved": "Аукцион сохранен в историю",
+        "cleared": "Состояние аукциона очищено",
+        "error": "Не удалось создать новый аукцион"
+      }
+    },
+    "winner": {
+      "confirm": "Подтвердить победителя",
+      "confirmTooltip": "Этот победитель будет сохранен как подтвержденный победитель колеса в истории аукционов.",
+      "confirmed": "Победитель подтвержден",
+      "saved": "Победитель сохранен",
+      "savedTitle": "Победитель сохранен",
+      "savedMessage": "Вы увидите этот аукцион в истории после начала нового аукциона.",
+      "reroll": "рерол"
+    },
+    "filters": {
+      "startDate": "Дата начала",
+      "endDate": "Дата окончания",
+      "last30Days": "Последние 30 дней",
+      "last90Days": "Последние 90 дней",
+      "filteredByDay": "Фильтр по дате {{date}}"
+    },
+    "sections": {
+      "activityHeatmap": "Активность аукционов",
+      "weekdayActivity": "Дни недели",
+      "previousAuctions": "Предыдущие аукционы",
+      "requestLots": "Лоты запросов",
+      "topParticipants": "Лучшие участники",
+      "pointsVsDonations": "Баллы и донаты"
+    },
+    "metrics": {
+      "auctions": "Аукционы",
+      "lots": "Лоты",
+      "lot": "Лот",
+      "bids": "Ставки",
+      "participants": "Участники",
+      "contributors": "Вкладчики",
+      "duration": "Длительность",
+      "points": "Баллы",
+      "donations": "Донаты",
+      "currency": "Валюта",
+      "winner": "Победитель",
+      "totalAmount": "Общая сумма",
+      "weightedTotal": "Взвешенная сумма",
+      "total": "Итого",
+      "averageContribution": "Средний вклад",
+      "biggestWinningLot": "Топ победитель"
+    },
+    "actions": {
+      "openAuction": "Открыть аукцион",
+      "backToList": "Назад к предыдущим аукционам",
+      "clearDayFilter": "Сбросить фильтр по дню",
+      "viewMoreUsers": "Показать больше участников",
+      "collapseLeaderboard": "Свернуть таблицу лидеров"
+    },
+    "selectedAuction": {
+      "placeholderTitle": "В разработке",
+      "placeholderDescription": "Подробная история аукциона еще находится в работе."
+    },
+    "card": {
+      "dateDuration": "{{date}} · {{duration}}",
+      "dateLabels": {
+        "todayAt": "Сегодня в {{time}}",
+        "yesterdayAt": "Вчера в {{time}}"
+      },
+      "winnerLine": "Победитель",
+      "winnerWithRequest": "{{user}} · {{request}} {{chance}}",
+      "winnerRequest": "{{request}}{{chance}}",
+      "winnerChance": " ({{chance}}%)",
+      "tooltips": {
+        "date": "Дата начала аукциона",
+        "duration": "Длительность аукциона",
+        "lots": "Всего лотов в этом аукционе",
+        "bids": "Всего ставок в этом аукционе",
+        "participants": "Уникальные зрители, участвовавшие в этом аукционе",
+        "points": "Всего баллов канала потрачено в этом аукционе",
+        "donations": "Всего донатов потрачено в этом аукционе"
+      }
+    },
+    "heatmap": {
+      "tooltip": "{{date}} · аукционов: {{auctions}} · баллов: {{points}} · донатов: {{donations}} · участников: {{bids}}",
+      "modes": {
+        "combined": "Сводно",
+        "points": "Баллы",
+        "donations": "Донаты",
+        "auctionCount": "Аукционы"
+      }
+    },
+    "leaderboard": {
+      "sort": {
+        "wins": "Победы",
+        "points": "Баллы",
+        "donations": "Донаты",
+        "participation": "Участие",
+        "streak": "Стрик"
+      }
+    },
+    "statusFlavors": {
+      "popular": {
+        "label": "Популярный",
+        "tooltip": "Участвовало больше зрителей, чем обычно за этот период."
+      },
+      "quickBurst": {
+        "label": "Быстрый всплеск",
+        "tooltip": "Короткий аукцион с активностью выше средней."
+      },
+      "longRun": {
+        "label": "Долгий забег",
+        "tooltip": "Длился дольше большинства аукционов за этот период."
+      },
+      "highRollerNight": {
+        "label": "Ночь крупных ставок",
+        "tooltip": "Средний вклад участника был необычно высоким."
+      },
+      "lotsFestival": {
+        "label": "Фестиваль лотов",
+        "tooltip": "Содержал больше лотов запросов, чем большинство аукционов."
+      },
+      "underdogVictory": {
+        "label": "Победа аутсайдера",
+        "tooltip": "Лот с низким участием выиграл через взвешенное колесо."
+      }
+    },
+    "contextStats": {
+      "biggestAuction": "Самый большой аукцион",
+      "mostGenerousAuction": "Больше всего донатов",
+      "highestPointsAuction": "Больше всего баллов",
+      "averageParticipants": "Среднее число участников",
+      "mostParticipantsAuction": "Самый популярный",
+      "mostActiveParticipant": "Самый активный",
+      "winner": "Победитель",
+      "highestPointsContributor": "Лидер по баллам",
+      "highestDonationContributor": "Лидер по донатам",
+      "bidsHelper": "Ставок: {{count}}",
+      "winsHelper": "Побед: {{count}}"
+    },
+    "lots": {
+      "bidsCount": "Ставок: {{count}}"
+    },
+    "weekdayTooltip": "Аукционов: {{auctions}}, {{percent}}% периода",
+    "weekdayBarMode": {
+      "relative": {
+        "toggleTooltip": "Показать абсолютные столбцы по дням"
+      },
+      "absolute": {
+        "toggleTooltip": "Показать относительные столбцы по дням"
+      }
+    },
+    "selectionMethod": {
+      "direct": "Напрямую",
+      "wheel": "Колесо"
+    },
+    "currencyMode": {
+      "points": "Баллы",
+      "donations": "Донаты",
+      "hybrid": "Смешанный"
+    },
+    "weekdays": {
+      "sun": "Вс",
+      "mon": "Пн",
+      "tue": "Вт",
+      "wed": "Ср",
+      "thu": "Чт",
+      "fri": "Пт",
+      "sat": "Сб"
+    },
+    "empty": {
+      "noAuctions": "В этом диапазоне дат пока нет аукционов.",
+      "noWinner": "Победителя нет",
+      "unnamedLot": "Лот без названия",
+      "noParticipants": "В этом контексте пока нет участников."
+    }
+  },
   "common": {
     "confirm": "Подтвердить",
     "copy": "Копировать",
@@ -448,6 +646,7 @@
   },
   "rules": {
     "background": "Фон",
+    "resizeHandle": "Resize rules section",
     "size": "Размер"
   },
   "changelog": {
@@ -585,11 +784,15 @@
       "integrationCommon": "Общее",
       "sortBids": "Сортировка",
       "title": "Общее",
-      "insertStrategyLabel": "Автоматическое добавление ставок",
+      "insertStrategyLabel": "Автоматическая обработка ставок",
+      "insertStrategyDesc": "Определяет, как новые ставки автоматически добавляются к лотам аукциона:",
+      "insertStrategyDescForce": "Автоматически добавляет каждую новую ставку.",
+      "insertStrategyDescMatch": "Добавляет ставку только если ее название полностью совпадает с названием существующего лота.",
+      "insertStrategyDescNone": "Оставляет все новые ставки для ручной обработки.",
       "revoke": "Отвязать",
       "insertStrategy": {
         "force": "Всегда",
-        "match": "С одинаковым текстом",
+        "match": "При совпадении",
         "none": "Никогда"
       },
       "bidNameStrategyLabel": "Текст ставок",
@@ -631,9 +834,11 @@
       "commonRewardsName": "Общее название для наград",
       "commonRewardsNameDesc": "При включении интеграции, на канале автоматически создаются награды в формате \"Название + Стоимость\".",
       "rewardsPrefixLengthError": "Название награды (префикс + стоимость) должно быть не длиннее {{maxLength}} символов.",
+      "rewardDescriptionHint": "Kick и VK Video Live используют описания наград для данных интеграции. Не редактируйте описания наград Kick или VK Video Live вручную.",
       "rewardsList": "Список наград:",
       "cost": "Стоимость",
       "color": "Цвет",
+      "applyColorToAll": "Установить этот цвет для всех наград",
       "addReward": "Добавить награду",
       "saveRewards": "Сохранить"
     },
@@ -664,9 +869,10 @@
     },
     "auc": {
       "auc": "Таблица",
-      "showBuyout": "Показать выкуп",
+      "showBuyout": "Выкуп",
       "showTotal": "Показать сумму аукциона",
-      "showWinningChances": "Показать шансы выигрыша у лотов",
+      "showWinningChances": "Показать шансы на победу",
+      "showViewerNames": "Имена зрителей в таблице",
       "background": "Фон аукциона",
       "backgroundType": "Тип фона",
       "backgroundHint": "Выберите фон аукциона, который отображается на экране трансляции.",
@@ -1025,7 +1231,8 @@
     "costColumnIndex": "Номер колонки со стоимостью"
   },
   "lot": {
-    "addAmount": "Прибавить стоимость",
+    "addAmount": "Прибавить",
+    "add": "Добавить",
     "delete": "Удалить слот",
     "extra": "Дополнительно",
     "trailer": "Трейлер (YouTube)",
@@ -1036,6 +1243,10 @@
     "applyPercentage": "Применить",
     "pin": "Закрепить лот",
     "unpin": "Открепить лот",
+    "contributorBy": "от {{name}}",
+    "additionalContributors": "+{{count}}",
+    "contributorsBreakdown": "Участники",
+    "contributorsTotal": "Всего",
     "openDetectedLink": "Открыть {{url}}",
     "linkParsingNotice": {
       "title": "Ссылка была преобразована в текст",
@@ -1054,6 +1265,47 @@
     "convertedTitle": {
       "donation": "{{actualCost}} ({{cost}} ₽) {{user}}",
       "points": "{{actualCost}} ({{cost}} <icon />) {{user}}"
+    },
+    "split": {
+      "menuItem": "Разделить ставку",
+      "title": "Разделить ставку",
+      "sourceBid": "Исходная ставка",
+      "syntaxRules": "правила разделения",
+      "syntaxRulesTooltip": {
+        "intro": "Приложение анализирует текст ставки и предлагает разделение:",
+        "amounts": "Можно указать суммы: 30 Игра A, 70 Игра B.",
+        "percentages": "Можно указать проценты: 25% на Игра A и 75% на Игра B.",
+        "even": "Можно перечислить названия без сумм, чтобы разделить поровну: Игра A / Игра B / Игра C.",
+        "fastIds": "Можно использовать # и номер лота, например: 50 #15."
+      },
+      "totalLabel": "Всего",
+      "allocatedLabel": "Распределено",
+      "remainingLabel": "Осталось",
+      "entryTitle": "Часть {{index}}",
+      "entryColumn": "Часть",
+      "lotColumn": "Лот",
+      "lotPlaceholder": "Найти или создать лот",
+      "lotSearchHint": "Найдите существующий лот или создайте новый",
+      "newLotOption": "Новый \"{{name}}\"",
+      "suggestedBadge": "Подсказка",
+      "createBadge": "Новый",
+      "addBadge": "Добавить к",
+      "currentLotAmount": "Текущая сумма: {{amount}}",
+      "amountLabel": "Сумма",
+      "percentageLabel": "Процент",
+      "percentageSuggestion": "{{percentage}}%",
+      "addEntry": "Добавить часть",
+      "deleteEntry": "Удалить часть",
+      "distributeEvenly": "Поровну",
+      "smartSuggestions": "Умные подсказки",
+      "applyDisabled": {
+        "noEntries": "Добавьте хотя бы одну часть.",
+        "invalidAmount": "У каждой части должна быть сумма больше 0.",
+        "invalidLot": "Один из выбранных лотов больше недоступен.",
+        "remainingAmount": "Сумма частей должна совпадать с исходной ставкой. Осталось: {{amount}}."
+      },
+      "cancel": "Отмена",
+      "apply": "Применить"
     }
   },
   "stopwatch": {
@@ -1101,7 +1353,7 @@
   },
   "hotkeys": {
     "notifications": {
-      "title": "Hotkey {{hotkey}}",
+      "title": "Горячая клавиша {{hotkey}}",
       "stopwatch": {
         "continue": "Таймер возобновлен",
         "pause": "Таймер приостановлен",
@@ -1490,9 +1742,9 @@
           "tab": "JSON",
           "description": "Формат <a href='https://www.w3schools.com/whatis/whatis_json.asp'>JSON</a>",
           "structureTitle": "Требуемая структура:",
-          "structure": "{\n  \"lots\": [\n    {\n      \"name\": string | null,\n      \"amount\": number | null,\n      \"investors\": string[] (необязательно)\n    }\n  ]\n}",
+          "structure": "{\n  \"lots\": [\n    {\n      \"name\": string | null,\n      \"amount\": number | null,\n      \"contributors\": { \"name\": string, \"amount\": number }[] (необязательно)\n    }\n  ]\n}",
           "exampleTitle": "Пример:",
-          "example": "{\n  \"lots\": [\n    { \"name\": \"Игра А\", \"amount\": 150 },\n    { \"name\": \"Игра Б\", \"amount\": 75 },\n    { \"name\": \"Игра В\", \"amount\": 200, \"investors\": [\"user1\", \"user2\"] }\n  ]\n}"
+          "example": "{\n  \"lots\": [\n    { \"name\": \"Игра А\", \"amount\": 150 },\n    { \"name\": \"Игра Б\", \"amount\": 75 },\n    { \"name\": \"Игра В\", \"amount\": 200, \"contributors\": [{ \"name\": \"user1\", \"amount\": 125 }, { \"name\": \"user2\", \"amount\": 75 }] }\n  ]\n}"
         }
       }
     },

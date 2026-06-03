@@ -1,4 +1,4 @@
-import { Slot } from '../models/slot.model';
+import { Lot } from '../models/slot.model';
 
 export const percentsRefMap = new Map<string, HTMLSpanElement>();
 
@@ -6,11 +6,11 @@ export const getValidAmount = (amount: number | null): number => (amount && amou
 
 let lastTotalSum = 0;
 
-export const calculateLotPercentage = (amount: Slot['amount'], total: number): number => {
+export const calculateLotPercentage = (amount: Lot['amount'], total: number): number => {
   return (getValidAmount(amount) / total) * 100;
 };
 
-export const updatePercents = (slots: Slot[], chanceRefMap = percentsRefMap, cached?: boolean): void => {
+export const updatePercents = (slots: Lot[], chanceRefMap = percentsRefMap, cached?: boolean): void => {
   if (!cached) {
     lastTotalSum = slots.reduce((accum, { amount }) => accum + getValidAmount(amount), 0) || 1;
   }

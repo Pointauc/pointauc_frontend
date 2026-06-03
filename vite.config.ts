@@ -51,7 +51,18 @@ export default defineConfig({
     },
   },
   build: {
+    chunkSizeWarningLimit: 2200,
     rollupOptions: {
+      onwarn(warning, warn) {
+        const isSignalrPureAnnotationWarning =
+          warning.code === 'INVALID_ANNOTATION' && warning.id?.includes('@microsoft+signalr');
+
+        if (isSignalrPureAnnotationWarning) {
+          return;
+        }
+
+        warn(warning);
+      },
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router', 'react-router-dom', 'react-redux'],

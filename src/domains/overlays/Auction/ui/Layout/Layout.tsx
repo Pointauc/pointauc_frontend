@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef } from 'react';
 
-import { Slot } from '@models/slot.model';
-import Stopwatch, { StopwatchController } from '@pages/auction/Stopwatch/Stopwatch';
+import { Lot } from '@models/slot.model';
+import Timer, { TimerControllerHandle } from '@pages/auction/Timer/Timer';
 import OverlayThemeScope from '@shared/mantine/OverlayThemeScope';
 
 import LotsColumn from '../LotsColumn';
@@ -10,7 +10,7 @@ import OverlayRules from '../OverlayRules';
 import classes from './Layout.module.css';
 
 interface LotsProps {
-  items: Slot[];
+  items: Lot[];
   autoScroll: boolean;
   scrollSpeed: number;
 }
@@ -32,7 +32,7 @@ interface LayoutProps {
 }
 
 const Layout: FC<LayoutProps> = ({ lots, rules, timer, transparency }) => {
-  const timerController = useRef<StopwatchController | null>(null);
+  const timerController = useRef<TimerControllerHandle | null>(null);
 
   useEffect(() => {
     if (timerController.current && timer?.timeLeft !== undefined) {
@@ -60,7 +60,7 @@ const Layout: FC<LayoutProps> = ({ lots, rules, timer, transparency }) => {
       )}
       {timer && (
         <div className={classes.timer}>
-          <Stopwatch controller={timerController} showControls={false} />
+          <Timer controller={timerController} showControls={false} />
         </div>
       )}
     </OverlayThemeScope>

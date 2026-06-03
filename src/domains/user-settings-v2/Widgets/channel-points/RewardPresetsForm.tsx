@@ -24,6 +24,7 @@ const RewardPresetsForm = () => {
     reset,
     clearErrors,
     setError,
+    setValue,
     formState: { isDirty, errors, isValid },
   } = useForm<PresetsForm>({ defaultValues: { rewardPresets, rewardsPrefix } });
 
@@ -34,9 +35,9 @@ const RewardPresetsForm = () => {
 
   return (
     <div>
-      <SettingsRow compact htmlFor='rewardsPrefix'>
+      <SettingsRow compact htmlFor='rewardsPrefix' description={t('settings.twitch.commonRewardsNameDesc')}>
         <div className='flex flex-wrap items-center justify-between gap-4'>
-          <FieldLabel text={t('settings.twitch.commonRewardsName')} hint={t('settings.twitch.commonRewardsNameDesc')} />
+          <FieldLabel text={t('settings.twitch.commonRewardsName')} withDescriptionIcon />
           <Controller
             control={control}
             name='rewardsPrefix'
@@ -57,6 +58,7 @@ const RewardPresetsForm = () => {
           reset={reset}
           clearErrors={clearErrors}
           setError={setError}
+          setValue={setValue}
           isDirty={isDirty}
           isValid={isValid}
         />

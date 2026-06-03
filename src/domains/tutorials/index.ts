@@ -1,5 +1,6 @@
 // Context and Provider
-export { TutorialProvider, useTutorialContext } from './context/TutorialContext';
+export { TutorialProvider } from './context/TutorialContext';
+export { useTutorialContext } from './context/useTutorialContext';
 
 // Hooks
 export { useTutorial, useTutorialElement, useTutorialAction, useTutorialActionCallback } from './hooks';
@@ -32,4 +33,3 @@ export {
 export { default as TutorialManager } from './ui/TutorialManager/TutorialManager';
 export { default as TutorialStartModal } from './ui/TutorialStartModal/TutorialStartModal';
 export { default as TutorialStartNotification } from './ui/TutorialStartNotification/TutorialStartNotification';
-

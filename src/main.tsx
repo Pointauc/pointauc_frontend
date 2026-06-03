@@ -1,6 +1,8 @@
 import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/code-highlight/styles.css';
+import '@mantine/dates/styles.css';
+import '@mantine/charts/styles.css';
 import '@styles/index.scss';
 import './index.css';
 import '@assets/i18n/index.ts';
@@ -40,13 +42,17 @@ import { createArchiveData } from '@domains/auction/archive/lib/archiveData';
 import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import * as Integration from '@models/integration';
 import { queryClient } from '@shared/lib/react-query/client.ts';
+import { registerTestingScenarios } from '@domains/testing/registerTestingScenarios.ts';
 
 import App from './App/entrypoint/App.tsx';
+import { setupBackendApiConfig } from './api/backendConfig.ts';
 import { initStore, store } from './store.ts';
 // All static imports are hoisted; by the time this line executes, rootReducer
 // is fully initialized, so initStore() can safely create the Redux store.
+setupBackendApiConfig();
 initErrorTracking(createConfiguredErrorTrackingProvider());
 initStore(rootReducer);
+registerTestingScenarios(store, []);
 
 const analyticsProviders = configuredAnalyticsProviders.getProviders();
 initAnalytics({

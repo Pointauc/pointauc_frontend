@@ -2,19 +2,14 @@ import { Loader, TextInputProps, Tooltip } from '@mantine/core';
 import clsx from 'clsx';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { parseLotLink, type ParsedLotMarkdownLink } from '@domains/links/lib/lotNameLink';
+import { RootState } from '@reducers';
 import { setSlotName } from '@reducers/Slots/Slots.ts';
 
-import { useLotLinkParsing } from './hooks/useLotLinkParsing';
 import LotLinkButton from './LotLinkButton';
 import styles from './LotControls.module.css';
-
-interface LotNameDisplayValue {
-  value: string;
-  mapDisplayCursorToRaw: (position: number) => number;
-}
 
 interface LotNameFieldProps {
   id: string;
@@ -23,41 +18,64 @@ interface LotNameFieldProps {
   onKeyPress: TextInputProps['onKeyPress'];
 }
 
-const getLotNameDisplayValue = (rawName: string, markdownLink: ParsedLotMarkdownLink | null): LotNameDisplayValue => {
+const MARKDOWN_LABEL_ESCAPED_CHARACTERS = new Set(['\\', '[', ']']);
+
+const getLotNameDisplayValue = (rawName: string, markdownLink: ParsedLotMarkdownLink | null): string => {
   if (!markdownLink) {
-    return {
-      value: rawName,
-      mapDisplayCursorToRaw: (position) => position,
-    };
+    return rawName;
   }
 
   const prefix = rawName.slice(0, markdownLink.startIndex);
   const suffix = rawName.slice(markdownLink.endIndex);
-  const value = `${prefix}${markdownLink.label}${suffix}`;
+  return `${prefix}${markdownLink.label}${suffix}`;
+};
+
+const mapDisplayCursorToRaw = (
+  rawName: string,
+  markdownLink: ParsedLotMarkdownLink | null,
+  position: number,
+): number => {
+  if (!markdownLink) {
+    return position;
+  }
+
+  const prefix = rawName.slice(0, markdownLink.startIndex);
   const displayLinkStartIndex = prefix.length;
   const displayLinkEndIndex = displayLinkStartIndex + markdownLink.label.length;
   const rawLabelStartIndex = markdownLink.startIndex + 1;
   const rawLengthOffset = markdownLink.rawMarkdown.length - markdownLink.label.length;
+  const displayToRawLabelOffsets = new Array<number>(markdownLink.label.length + 1).fill(0);
+  let displayOffset = 0;
 
-  return {
-    value,
-    mapDisplayCursorToRaw: (position) => {
-      if (position < displayLinkStartIndex) {
-        return position;
-      }
+  for (let rawOffset = 0; rawOffset < markdownLink.rawLabel.length; rawOffset += 1) {
+    displayToRawLabelOffsets[displayOffset] = rawOffset;
 
-      if (position <= displayLinkEndIndex) {
-        return rawLabelStartIndex + position - displayLinkStartIndex;
-      }
+    const nextCharacter = markdownLink.rawLabel[rawOffset + 1];
+    if (markdownLink.rawLabel[rawOffset] === '\\' && MARKDOWN_LABEL_ESCAPED_CHARACTERS.has(nextCharacter)) {
+      rawOffset += 1;
+    }
 
-      return position + rawLengthOffset;
-    },
-  };
+    displayOffset += 1;
+  }
+
+  displayToRawLabelOffsets[displayOffset] = markdownLink.rawLabel.length;
+
+  if (position < displayLinkStartIndex) {
+    return position;
+  }
+
+  if (position <= displayLinkEndIndex) {
+    const labelDisplayOffset = position - displayLinkStartIndex;
+    return rawLabelStartIndex + (displayToRawLabelOffsets[labelDisplayOffset] ?? markdownLink.rawLabel.length);
+  }
+
+  return position + rawLengthOffset;
 };
 
 const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const lotLinkParsingStatus = useSelector((root: RootState) => root.lotLinkParsing.loadingByLotId[id] ?? null);
   const [currentName, setCurrentName] = useState(name);
   const [isNameRawMode, setIsNameRawMode] = useState(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -71,8 +89,8 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
       return rawName;
     }
 
-    return formattedLotName.value;
-  }, [formattedLotName.value, isNameRawMode, markdownLotLink, rawName]);
+    return formattedLotName;
+  }, [formattedLotName, isNameRawMode, markdownLotLink, rawName]);
 
   const handleNameBlur: TextInputProps['onBlur'] = (): void => {
     setIsNameRawMode(false);
@@ -95,7 +113,7 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
 
     if (markdownLotLink) {
       const displayCursorPosition = event.currentTarget.selectionStart ?? displayedLotName.length;
-      pendingNameCursorPosition.current = formattedLotName.mapDisplayCursorToRaw(displayCursorPosition);
+      pendingNameCursorPosition.current = mapDisplayCursorToRaw(rawName, markdownLotLink, displayCursorPosition);
     }
 
     setIsNameRawMode(true);
@@ -119,16 +137,12 @@ const LotNameField = ({ id, name, isLocked, onKeyPress }: LotNameFieldProps) => 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
-  const { isLoading: isLotLinkParsingLoading, sourceName: lotLinkParsingSourceName } = useLotLinkParsing({
-    id,
-    name,
-    setCurrentName,
-    setIsNameRawMode,
-  });
+  const isLotLinkParsingLoading = lotLinkParsingStatus != null;
+  const lotLinkParsingSourceName = lotLinkParsingStatus?.sourceName ?? null;
 
   return (
     <>
-      <div className='flex h-full flex-1 items-stretch gap-1'>
+      <div className='flex h-full min-w-0 flex-1 items-stretch gap-1'>
         <input
           className={clsx(styles.input, 'min-w-0 flex-1 self-stretch', { [styles.lockedLot]: isLocked })}
           ref={nameInputRef}

@@ -3,7 +3,7 @@ import { DragEvent, memo, useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import { Purchase, setDraggedRedemption, updateExistBids } from '@reducers/Purchases/Purchases.ts';
 import { addBid, setSlotName } from '@reducers/Slots/Slots.ts';
 import slotNamesMap from '@services/SlotNamesMap';
@@ -16,7 +16,7 @@ import styles from './DroppableSlot.module.css';
 
 interface DroppableSlotProps {
   index: number;
-  slot: Slot;
+  slot: Lot;
   readonly?: boolean;
 }
 
@@ -68,10 +68,6 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
       dispatch(addBid(id, bid));
       dispatch(setDraggedRedemption(null));
       dispatch(updateExistBids);
-
-      if (!name) {
-        dispatch(setSlotName({ id, name }));
-      }
       resetOverStyle();
     },
     [dispatch, id, resetOverStyle],

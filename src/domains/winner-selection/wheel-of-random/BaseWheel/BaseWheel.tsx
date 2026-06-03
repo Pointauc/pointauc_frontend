@@ -37,6 +37,7 @@ export interface BaseWheelProps<T extends WheelItem> {
   coreImage?: string | null;
   onCoreImageChange?: (image: string) => void;
   onOptimalSizeChange?: (size: number) => void;
+  onReroll?: () => void;
   resetWheel?: boolean;
   delay?: number;
   dropOut?: boolean;
@@ -53,6 +54,7 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
     controller,
     coreImage,
     onCoreImageChange,
+    onReroll,
     dropOut,
     className,
     onOptimalSizeChange,
@@ -348,6 +350,8 @@ const BaseWheel = <T extends WheelItem>(props: BaseWheelProps<T>) => {
               onDelete={
                 deleteItem ? (showConfirmation?: boolean) => deleteItem(winnerItem.id, showConfirmation) : undefined
               }
+              onReroll={clearWinner}
+              onReset={onReroll}
               showDeleteConfirmation={showDeleteConfirmation}
               dropOut={dropOut}
             />

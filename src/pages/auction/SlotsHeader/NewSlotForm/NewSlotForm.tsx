@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import { RootState } from '@reducers';
 import { addSlot, setSlots } from '@reducers/Slots/Slots.ts';
-import { Slot } from '@models/slot.model.ts';
+import { Lot } from '@models/slot.model.ts';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 import { OutlineInput } from '@shared/mantine/ui/Input';
 import { parseRawInput } from '@domains/auction/archive/lib/parsers';
@@ -31,7 +31,7 @@ const NewSlotForm = () => {
   const percentsRef = useRef<HTMLParagraphElement>(null);
 
   const getNewSlot = useCallback(
-    (): Partial<Slot> => ({
+    (): Partial<Lot> => ({
       amount: Number(amountInput.current?.value) || null,
       name: nameInput.current?.value,
     }),
@@ -40,7 +40,7 @@ const NewSlotForm = () => {
 
   const updateNewSlotChance = useCallback(() => {
     if (showChances && percentsRef.current) {
-      const slot: Slot = { ...getNewSlot(), id: Math.random().toString() } as Slot;
+      const slot: Lot = { ...getNewSlot(), id: Math.random().toString() } as Lot;
       const refMap = new Map<string, HTMLSpanElement>([[slot.id, percentsRef.current]]);
 
       updatePercents([...slots, slot], refMap);

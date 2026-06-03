@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 
 import { AuctionOverlayDto } from '@api/openapi/types.gen';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import { buildDefaultRule } from '@pages/auction/Rules/helpers';
 import { rulesActiveApi, rulesQueryKeys } from '@domains/auction/rules';
 import { RootState } from '@reducers/index';
@@ -16,7 +16,7 @@ interface AuctionOverlayPreviewProps {
 }
 
 // Mock data for auction preview
-const generateMockLots = (): Slot[] => {
+const generateMockLots = (): Lot[] => {
   const lotNames = [
     'The Legend of Zelda: Breath of the Wild',
     'Red Dead Redemption 2',
@@ -50,7 +50,6 @@ const generateMockLots = (): Slot[] => {
       id: `lot-${index + 1}`,
       name,
       amount: Math.floor(Math.random() * 1000) + 100,
-      extra: 0,
       fastId: index + 1,
     }))
     .sort((a, b) => b.amount - a.amount);

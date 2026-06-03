@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { LocalStorage } from '@constants/common.constants';
 import { SaveInfo } from '@models/save.model';
-import { Slot } from '@models/slot.model';
+import { Lot } from '@models/slot.model';
 import { RootState } from '@reducers/index';
 import { setPurchases } from '@reducers/Purchases/Purchases.ts';
 import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
@@ -50,7 +50,7 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
           continue;
         }
 
-        const slots: Slot[] = JSON.parse(slotsData);
+        const slots: Lot[] = JSON.parse(slotsData);
         const archivedLots = slotsToArchivedLots(slots);
 
         // Create archive record in IndexedDB

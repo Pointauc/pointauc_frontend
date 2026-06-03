@@ -35,6 +35,7 @@ const defaultState: AucSettingsStore = {
   marbleRate: 50,
   marbleCategory: 100,
   showChances: false,
+  showViewerNames: false,
   maxTime: 15,
   minTime: 2,
   isMinTimeActive: false,

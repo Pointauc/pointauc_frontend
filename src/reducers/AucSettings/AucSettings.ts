@@ -58,6 +58,7 @@ const defaultSettings: AucSettingsState['settings'] = {
   marbleRate: 50,
   marbleCategory: 100,
   showChances: false,
+  showViewerNames: false,
   maxTime: 15,
   minTime: 2,
   isMinTimeActive: false,
@@ -175,7 +176,7 @@ export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action
   const donatexAuth = getDonateXAuthData();
 
   if (activeSettings) {
-    const { startTime, timeStep, ...settings } = activeSettings;
+    const { timeStep, ...settings } = activeSettings;
     dispatch(
       setAucSettings({
         ...settings,

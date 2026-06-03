@@ -83,6 +83,13 @@ export interface AnalyticsEventMap {
     average_amount: number;
     has_favorites: boolean;
     has_locked_percentage: boolean;
+    lot_names_with_url_count: number;
+    auto_parsed_lot_names_with_url_count: number;
+    auto_parsed_lot_names_with_url_percent: number;
+    enabled_integrations: string;
+    enabled_integrations_count: number;
+    integrations_with_transferred_bids: string;
+    integrations_with_transferred_bids_count: number;
   };
   [analyticsEventNames.overlayOpened]: {
     overlay_id?: string;
@@ -94,7 +101,7 @@ export interface AnalyticsEventMap {
     source?: 'manual' | 'autosave';
   };
   [analyticsEventNames.timerEdited]: {
-    timer_type: 'stopwatch' | 'total';
+    timer_type: 'timer' | 'total';
   };
   [analyticsEventNames.wheelSpinResult]: WheelSpinResultPayload;
 }

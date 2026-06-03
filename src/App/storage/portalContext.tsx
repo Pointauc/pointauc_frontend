@@ -1,14 +1,6 @@
-import { createContext, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
-interface PortalContextData {
-  portalRoot: HTMLDivElement | null;
-}
-
-const findPortalRoot = () => {
-  return document.querySelector('[data-portal="true"]') as HTMLDivElement;
-};
-
-export const PortalContext = createContext<PortalContextData>({ portalRoot: findPortalRoot() });
+import { findPortalRoot, PortalContext } from '@App/storage/portalContextData';
 
 interface PortalContextProviderProps {
   children: React.ReactNode;

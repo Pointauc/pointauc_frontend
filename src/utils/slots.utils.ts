@@ -3,27 +3,27 @@ import { parseCSV } from '@domains/auction/archive/lib/parsers/csvParser';
 import { parseJSON } from '@domains/auction/archive/lib/parsers/jsonParser';
 
 import { Game, ID, Side, SideInfo } from '../components/Bracket/components/model';
-import { ArchivedLot, Slot } from '../models/slot.model';
+import { ArchivedLot, Lot } from '../models/slot.model';
 import { WheelItem } from '../models/wheel.model';
 
 import { getWheelColor } from './common.utils';
 
 type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: ID) => SideInfo;
 
-export const getWinnerSlot = (slots: Slot[]): Slot =>
+export const getWinnerSlot = (slots: Lot[]): Lot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
 
 // export const parseWheelPreset = (text: string): WheelItem[] => {
 //   return text.split('\n').map<WheelItem>((value, id) => ({ id: id.toString(), name: value, color: getWheelColor() }));
 // };
 
-export const parseSlotsPreset = (text: string): Slot[] => {
+export const parseSlotsPreset = (text: string): Lot[] => {
   const items = text.split('\n');
 
-  return items.map<Slot>((item, fastId) => {
+  return items.map<Lot>((item, fastId) => {
     const [name, amount = 1] = item.split(',');
 
-    return { name, amount: Number(amount), id: Math.random().toString(), fastId, extra: null, investors: [] };
+    return { name, amount: Number(amount), id: Math.random().toString(), fastId, contributors: [] };
   });
 };
 
@@ -40,7 +40,7 @@ export const parseLotsImportFile = async (file: File): Promise<ArchivedLot[]> =>
   }
 };
 
-const slotToWheel = ({ id, name, amount, isFavorite }: Slot, excludeColors: string[] = []): WheelItem => ({
+const slotToWheel = ({ id, name, amount, isFavorite }: Lot, excludeColors: string[] = []): WheelItem => ({
   id: id.toString(),
   name: name || '',
   displayName: getLotNameDisplayName(name),
@@ -49,7 +49,7 @@ const slotToWheel = ({ id, name, amount, isFavorite }: Slot, excludeColors: stri
   isFavorite: isFavorite ?? false,
 });
 
-export const SlotListToWheelList = (slots: Slot[]): WheelItem[] => {
+export const SlotListToWheelList = (slots: Lot[]): WheelItem[] => {
   let previousColor: string | null = null;
   let firstColor: string | null = null;
 
@@ -77,7 +77,7 @@ export const SlotListToWheelList = (slots: Slot[]): WheelItem[] => {
 export const getTotalSize = (slots: { amount?: number | null }[]): number =>
   slots.reduce((accum, { amount }) => accum + Number(amount), 0);
 
-export const getSlot = (slots: Slot[], slotId: string): Slot | undefined => slots.find(({ id }) => id === slotId);
+export const getSlot = (slots: Lot[], slotId: string): Lot | undefined => slots.find(({ id }) => id === slotId);
 
 export const splitSlotsWitchMostSimilarValues = (items: WheelItem[]): [WheelItem[], WheelItem[]] => {
   const restSlots = [...items];

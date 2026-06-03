@@ -1,4 +1,4 @@
-import { useTutorialContext } from '@domains/tutorials/context/TutorialContext';
+import { useTutorialContext } from '@domains/tutorials/context/useTutorialContext';
 
 /**
  * Hook to access tutorial context
@@ -6,4 +6,3 @@ import { useTutorialContext } from '@domains/tutorials/context/TutorialContext';
 export function useTutorial() {
   return useTutorialContext();
 }
-

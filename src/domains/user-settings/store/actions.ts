@@ -3,7 +3,6 @@ import { debounce } from '@tanstack/react-pacer';
 import { userControllerSetAucSettings } from '@api/openapi';
 import userSettingsStore, { AucSettingsStore } from '@domains/user-settings/store/store';
 import { SettingsUpdateRequest } from '@models/settings.model';
-
 import { store } from '@store';
 
 let pendingSettings: Partial<AucSettingsStore> = {};

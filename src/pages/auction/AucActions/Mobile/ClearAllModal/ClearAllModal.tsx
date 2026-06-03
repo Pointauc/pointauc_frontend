@@ -1,15 +1,15 @@
-import { FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation, Trans } from 'react-i18next';
-import { Button, Group, Modal, Stack, Text, Title, Alert } from '@mantine/core';
-import { IconAlertTriangle } from '@tabler/icons-react';
+import { Alert, Button, Group, Modal, Stack, Text, Title } from '@mantine/core';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import { IconAlertTriangle } from '@tabler/icons-react';
+import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { resetPurchases, setPurchases } from '@reducers/Purchases/Purchases.ts';
-import { resetSlots, setSlots } from '@reducers/Slots/Slots.ts';
-import { addAlert, deleteAlert } from '@reducers/notifications/notifications.ts';
-import { AlertTypeEnum } from '@models/alert.model.ts';
+import { checkShouldSmartSaveAuction } from '@domains/auction/history/lib/activeAuctionState';
+import { finalizeAuctionHistory } from '@domains/auction/history/lib/finalizeAuctionHistory';
 import { RootState } from '@reducers';
+import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
+import { resetSlots } from '@reducers/Slots/Slots.ts';
 
 interface ClearAllModalProps {
   opened: boolean;
@@ -21,8 +21,15 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
   const { t } = useTranslation();
   const slots = useSelector((rootReducer: RootState) => rootReducer.slots.slots);
   const purchases = useSelector((rootReducer: RootState) => rootReducer.purchases.purchases);
+  const shouldSmartSave = useSelector(checkShouldSmartSaveAuction);
 
-  const handleResetSlots = (): void => {
+  const handleResetSlots = async (): Promise<void> => {
+    if (shouldSmartSave) {
+      await finalizeAuctionHistory({ shouldSave: true });
+      onClose();
+      return;
+    }
+
     dispatch(resetSlots());
     dispatch(resetPurchases());
 
@@ -30,31 +37,31 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
     const lotsAmount = slots.length;
     const backup = { slots, purchases };
 
-    const revertDeletion = () => {
-      dispatch(deleteAlert(id));
-      dispatch(setSlots(backup.slots));
-      dispatch(setPurchases(backup.purchases));
-    };
+    // const revertDeletion = () => {
+    //   dispatch(deleteAlert(id));
+    //   dispatch(setSlots(backup.slots));
+    //   dispatch(setPurchases(backup.purchases));
+    // };
 
-    dispatch(
-      addAlert({
-        id,
-        type: AlertTypeEnum.Info,
-        message: (
-          <Text
-            onClick={revertDeletion}
-            style={{ color: 'inherit', fontWeight: 'normal', cursor: 'pointer' }}
-            component='span'
-          >
-            <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
-          </Text>
-        ),
-        duration: 1000 * 18,
-        closable: false,
-        showCountdown: true,
-        static: true,
-      }),
-    );
+    // dispatch(
+    //   addAlert({
+    //     id,
+    //     type: AlertTypeEnum.Info,
+    //     message: (
+    //       <Text
+    //         onClick={revertDeletion}
+    //         style={{ color: 'inherit', fontWeight: 'normal', cursor: 'pointer' }}
+    //         component='span'
+    //       >
+    //         <Trans i18nKey='auc.revertClearAll' values={{ count: lotsAmount }} components={{ b: <b /> }} />
+    //       </Text>
+    //     ),
+    //     duration: 1000 * 18,
+    //     closable: false,
+    //     showCountdown: true,
+    //     static: true,
+    //   }),
+    // );
 
     onClose();
   };
@@ -76,7 +83,12 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
         </Alert>
 
         <Group justify='flex-end' gap='sm'>
-          <Button leftSection={<DeleteSweepIcon />} color='red' onClick={handleResetSlots} disabled={!hasSlots}>
+          <Button
+            leftSection={<DeleteSweepIcon />}
+            color='red'
+            onClick={() => handleResetSlots().catch((err) => console.error(err))}
+            disabled={!hasSlots}
+          >
             {t('auc.clearAll')}
           </Button>
         </Group>

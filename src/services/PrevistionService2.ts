@@ -1,4 +1,4 @@
-import { Slot } from '../models/slot.model';
+import { Lot } from '../models/slot.model';
 import { getSlot, getTotalSize } from '../utils/slots.utils';
 
 export interface SlotChance {
@@ -58,7 +58,7 @@ class PredictionService {
   normalizeWinnersData = (data: Map<string, number>, iterations: number): SlotChance[] => {
     return Array.from(data)
       .map(([id, wins]) => ({
-        name: getSlot(this.initialSlots as Slot[], id)?.name || '',
+        name: getSlot(this.initialSlots as Lot[], id)?.name || '',
         chance: (wins / iterations) * 100,
         id,
         winsCount: wins,

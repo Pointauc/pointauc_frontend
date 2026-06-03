@@ -3,7 +3,7 @@ import { DeepPartial } from 'redux';
 
 import { COLORS } from '../constants/color.constants';
 import { ATTRIBUTES, TAGS } from '../constants/common.constants';
-import { Slot } from '../models/slot.model';
+import { Lot } from '../models/slot.model';
 import { WheelItem } from '../models/wheel.model';
 
 import type { FieldNamesMarkedBoolean, FieldValues } from 'react-hook-form';
@@ -43,8 +43,8 @@ export const removeCookie = (name: string): void => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 };
 
-export const sortSlots = (slots: Slot[]): Slot[] => {
-  return [...slots].sort((a: Slot, b: Slot) => {
+export const sortSlots = (slots: Lot[]): Lot[] => {
+  return [...slots].sort((a: Lot, b: Lot) => {
     if (a.amount === undefined) {
       return 1;
     }

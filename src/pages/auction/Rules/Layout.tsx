@@ -6,11 +6,11 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'r
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { PortalContext } from '@App/storage/portalContext';
+import { PortalContext } from '@App/storage/portalContextData';
 import { RuleRecord } from '@domains/auction/rules';
 import { useRulesBroadcasting } from '@domains/broadcasting/lib/useRulesBroadcasting';
 import { buildDefaultRule } from '@pages/auction/Rules/helpers';
-import { RulesSettingsContext } from '@pages/auction/Rules/RulesSettingsContext.tsx';
+import { RulesSettingsContext } from '@pages/auction/Rules/rulesSettingsContextData';
 import { saveSettings } from '@reducers/AucSettings/AucSettings';
 import { RootState } from '@reducers/index';
 import EditableSelect from '@shared/ui/EditableSelect/EditableSelect';
@@ -20,6 +20,7 @@ import classes from './Rules.module.css';
 import RulesSettings from './Settings';
 
 import type { JSONContent } from '@tiptap/react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
 
 interface RulesLayoutProps {
   onRemoveRule: (id: string) => void;
@@ -27,6 +28,11 @@ interface RulesLayoutProps {
   onUpdateRule: (data: { id: string; updates: Partial<{ name: string; data: string }> }) => void;
   rules: RuleRecord[];
 }
+
+const MIN_RULES_SIZE = 200;
+const MAX_RULES_SIZE = 550;
+
+const clampRulesSize = (value: number) => Math.min(Math.max(value, MIN_RULES_SIZE), MAX_RULES_SIZE);
 
 const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayoutProps) => {
   const { t } = useTranslation();
@@ -38,12 +44,17 @@ const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayo
   const [isEditing, setIsEditing] = useState(false);
   const {
     data: { size, background },
+    merge,
   } = useContext(RulesSettingsContext);
   const { portalRoot } = useContext(PortalContext);
 
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  const [isResizing, setIsResizing] = useState(false);
+  const resizeStartRef = useRef({ pointerX: 0, size: 0 });
+
   useClickOutside(
     () => {
+      if (isResizing) return;
       setIsEditing(false);
     },
     null,
@@ -102,6 +113,49 @@ const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayo
     updateRuleContent(content);
   };
 
+  const startResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    resizeStartRef.current = {
+      pointerX: event.clientX,
+      size,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setIsEditing(true);
+    setIsResizing(true);
+  };
+
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const deltaX = event.clientX - resizeStartRef.current.pointerX;
+      merge({ size: clampRulesSize(resizeStartRef.current.size + deltaX) });
+    };
+
+    const stopResize = () => {
+      setIsResizing(false);
+    };
+
+    const previousCursor = document.body.style.cursor;
+    const previousUserSelect = document.body.style.userSelect;
+
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', stopResize);
+    window.addEventListener('pointercancel', stopResize);
+
+    return () => {
+      document.body.style.cursor = previousCursor;
+      document.body.style.userSelect = previousUserSelect;
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', stopResize);
+      window.removeEventListener('pointercancel', stopResize);
+    };
+  }, [isResizing, merge]);
+
   const createNewRule = (label?: string) => {
     const newRule = buildDefaultRule(t, rules, label);
     onAddRule({
@@ -126,11 +180,25 @@ const RulesLayout = ({ onRemoveRule, onAddRule, onUpdateRule, rules }: RulesLayo
 
   return (
     <div
-      className={classNames(classes.rules, { [classes.active]: isEditing })}
+      className={classNames(classes.rules, 'relative', { [classes.active]: isEditing })}
       style={{ width: size }}
       ref={setContainerRef}
       onClick={() => setIsEditing(true)}
     >
+      {isEditing && (
+        <button
+          type='button'
+          className={classNames(
+            'absolute -right-2 top-0 z-10 h-full w-4 cursor-ew-resize rounded-sm border-0 bg-transparent p-0',
+            'before:absolute before:left-1/2 before:top-0 before:h-full before:w-0.5 before:-translate-x-1/2 before:rounded-full before:bg-yellow-400 before:shadow-[0_0_0_1px_rgba(0,0,0,0.35)]',
+            'after:absolute after:left-1/2 after:top-1/2 after:h-12 after:w-1.5 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:border-x after:border-yellow-200 after:bg-yellow-500/80',
+            'hover:before:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-300/70',
+            { 'before:bg-yellow-300 after:bg-yellow-300': isResizing },
+          )}
+          aria-label={t('rules.resizeHandle')}
+          onPointerDown={startResize}
+        />
+      )}
       {isEditing && activeRuleId && (
         <div>
           <EditableSelect

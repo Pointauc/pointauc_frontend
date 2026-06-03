@@ -4,13 +4,13 @@ import { useEffect, useMemo, useRef } from 'react';
 
 import { broadcastingControllerBroadcastTimerMutation } from '@api/openapi/@tanstack/react-query.gen';
 import { RootState } from '@reducers/index';
-import { StopwatchController, StopwatchProps } from '@pages/auction/Stopwatch/Stopwatch';
+import { TimerControllerHandle, TimerProps } from '@pages/auction/Timer/Timer';
 
-type HookReturnType = Pick<StopwatchProps, 'onPause' | 'onStart' | 'onReset' | 'onTimeChanged' | 'onEnd'>;
+type HookReturnType = Pick<TimerProps, 'onPause' | 'onStart' | 'onReset' | 'onTimeChanged' | 'onEnd'>;
 
 export const useTimerBroadcasting = (): HookReturnType => {
   const isBroadcastEnabled = useSelector((state: RootState) => state.broadcasting.broadcastingData.timer);
-  const controller = useRef<StopwatchController>(null);
+  const controller = useRef<TimerControllerHandle>(null);
 
   const { mutate: broadcastTimer } = useMutation({
     ...broadcastingControllerBroadcastTimerMutation(),

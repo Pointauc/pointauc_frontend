@@ -8,6 +8,57 @@ import { UpdateData } from '@domains/changelog/model/types';
 
 export const ChangesEN: UpdateData[] = [
   {
+    date: '2026-06-02T15:00:00.023Z',
+    newFeatures: [
+      {
+        briefDescription: 'Bids can now be split into multiple lots',
+        content: (
+          <>
+            <strong>Split bids</strong>
+            <Space h='sm' />
+            <div>
+              You can now split one incoming bid into several lots. You can do it from the dropdown menu to the right of
+              the <strong>New</strong> button.
+            </div>
+            <br />
+            <div>
+              The app will also suggest how to split the bid automatically when it recognizes common patterns. For
+              example:
+              <br />
+              <code className='rounded bg-gray-800 p-1'>100 Shrek | 100 Lord of the Rings | 200 #15</code> or{' '}
+              <code className='rounded bg-gray-800 p-1'>50 for Cyberpunk 2077 and 100 for The Witcher</code>
+            </div>
+          </>
+        ),
+      },
+    ],
+  },
+  {
+    date: '2026-05-31T14:50:00.000Z',
+    newFeatures: [
+      {
+        briefDescription: 'New history page',
+        content: (
+          <>
+            <strong>History page</strong>
+            <Space h='sm' />
+            <div>Added a new page where you can view data from previous auctions in one place.</div>
+          </>
+        ),
+      },
+      {
+        briefDescription: 'Viewer names can now be shown in auction lots',
+        content: (
+          <>
+            <strong>Viewer names in lots</strong>
+            <Space h='sm' />
+            <div>Added a new option that shows viewer names directly in auction lots.</div>
+          </>
+        ),
+      },
+    ],
+  },
+  {
     date: '2026-04-28T15:45:00.000Z',
     newFeatures: [
       {

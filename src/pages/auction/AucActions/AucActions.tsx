@@ -14,8 +14,7 @@ import { updateSettings } from '@api/userApi';
 import CheckboxButtonGroup from '@components/CheckboxButtonGroup';
 import { LINE_BREAK } from '@constants/common.constants.ts';
 import ArchiveModal from '@domains/auction/archive/ui/ArchiveModal';
-import { Slot } from '@models/slot.model.ts';
-import DeleteAllLots from '@pages/auction/AucActions/DeleteAllLots';
+import { Lot } from '@models/slot.model.ts';
 import { RootState } from '@reducers';
 import { setAutoScroll, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings';
 import { loadFile } from '@utils/common.utils.ts';
@@ -24,10 +23,11 @@ import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
 
 import classes from './AucActions.module.css';
 import TotalAmount from './TotalAmount/TotalAmount';
+import NewAuctionButton from './NewAuction/NewAuctionButton';
 
-const getSlotNamesByCount = ({ name, amount }: Slot): string =>
+const getSlotNamesByCount = ({ name, amount }: Lot): string =>
   new Array<string>(Number(amount)).fill(name || '').join(LINE_BREAK);
-const createMarbleConfig = (slots: Slot[]): string => slots.map(getSlotNamesByCount).join(LINE_BREAK);
+const createMarbleConfig = (slots: Lot[]): string => slots.map(getSlotNamesByCount).join(LINE_BREAK);
 
 const AucActions: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -120,13 +120,13 @@ const AucActions: React.FC = () => {
         <Button.Group>
           {marblesAuc && (
             <Tooltip label={t('auc.downloadMarbles')}>
-              <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary.3'>
+              <Button onClick={downloadMarbles} size='sm' variant='outline' color='primary'>
                 <DownloadIcon />
               </Button>
             </Tooltip>
           )}
           <Tooltip label={t('archive.modal.title')}>
-            <Button onClick={handleArchiveOpen} size='sm' variant='outline' color='primary.3'>
+            <Button onClick={handleArchiveOpen} size='sm' variant='outline' color='primary'>
               <IconDeviceFloppy size={20} />
             </Button>
           </Tooltip>
@@ -136,7 +136,7 @@ const AucActions: React.FC = () => {
       </Group>
 
       <Button.Group>
-        <DeleteAllLots />
+        <NewAuctionButton />
       </Button.Group>
 
       <ArchiveModal opened={archiveModalOpen} onClose={handleArchiveClose} />

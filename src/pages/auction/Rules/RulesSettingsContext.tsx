@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { DeepPartial } from 'redux';
 import { useSelector } from 'react-redux';
 import tinycolor2 from 'tinycolor2';
@@ -6,13 +6,7 @@ import tinycolor2 from 'tinycolor2';
 import { deepMerge } from '@utils/common.utils.ts';
 import { RootState } from '@reducers';
 
-export interface RulesSettings {
-  size: number;
-  position: 'left' | 'bottom';
-  background: {
-    color: string;
-  };
-}
+import { initialRulesSettings, RulesSettings, RulesSettingsContext } from './rulesSettingsContextData';
 
 export interface RulesSettingsLegacy {
   size: number;
@@ -23,27 +17,12 @@ export interface RulesSettingsLegacy {
   };
 }
 
-interface RulesContextData {
-  data: RulesSettings;
-  merge: (settings: DeepPartial<RulesSettings>) => void;
-}
-
-const initialSettings: RulesSettings = {
-  size: 380,
-  position: 'left',
-  background: {
-    color: '#00000000',
-  },
-};
-
 const backgroundSettings = {
-  ...initialSettings,
+  ...initialRulesSettings,
   background: {
     color: '#00000026',
   },
 };
-
-export const RulesSettingsContext = createContext<RulesContextData>({ data: initialSettings, merge: () => {} });
 
 export const RulesSettingsProvider = ({ children }: { children: ReactNode }): ReactNode => {
   const background = useSelector((root: RootState) => root.aucSettings.settings.background);
@@ -83,17 +62,17 @@ export const RulesSettingsProvider = ({ children }: { children: ReactNode }): Re
 
     return parsedSettings;
   }, []);
-  const [settings, setSettings] = useState<RulesSettings>(storageSettings ?? initialSettings);
+  const [settings, setSettings] = useState<RulesSettings>(storageSettings ?? initialRulesSettings);
   const [hasChanged, setHasChanged] = useState(false);
 
   useEffect(() => {
     if (!hasChanged && !storageSettings) {
-      const settings = background != null ? backgroundSettings : initialSettings;
+      const settings = background != null ? backgroundSettings : initialRulesSettings;
       setSettings(settings);
     }
   }, [background, hasChanged, storageSettings]);
 
-  const _merge = (settings: DeepPartial<RulesSettings>) => {
+  const mergeSettings = useCallback((settings: DeepPartial<RulesSettings>) => {
     setSettings((prevState) => {
       const newSettings = deepMerge<RulesSettings>(prevState, settings);
 
@@ -101,14 +80,14 @@ export const RulesSettingsProvider = ({ children }: { children: ReactNode }): Re
 
       return newSettings;
     });
-  };
+  }, []);
 
-  const merge = (settings: DeepPartial<RulesSettings>) => {
+  const merge = useCallback((settings: DeepPartial<RulesSettings>) => {
     setHasChanged(true);
-    _merge(settings);
-  };
+    mergeSettings(settings);
+  }, [mergeSettings]);
 
-  const value = useMemo(() => ({ data: settings, merge }), [settings]);
+  const value = useMemo(() => ({ data: settings, merge }), [merge, settings]);
 
   return <RulesSettingsContext.Provider value={value}>{children}</RulesSettingsContext.Provider>;
 };
