@@ -1,4 +1,5 @@
-import { resetPurchases, setHistory } from '@reducers/Purchases/Purchases';
+import { clearActionLog, selectPurchaseLogs } from '@reducers/ActionsLog/ActionsLog';
+import { resetPurchases } from '@reducers/Purchases/Purchases';
 import { resetSlots } from '@reducers/Slots/Slots';
 import { store } from '@store';
 
@@ -16,7 +17,7 @@ interface FinalizeAuctionHistoryParams {
 export const clearActiveAuctionState = (): void => {
   store.dispatch(resetSlots());
   store.dispatch(resetPurchases());
-  store.dispatch(setHistory([]));
+  store.dispatch(clearActionLog());
   store.dispatch(resetActiveAuctionHistory());
 };
 
@@ -35,7 +36,7 @@ export const finalizeAuctionHistory = async ({ shouldSave }: FinalizeAuctionHist
       durationMs: getActiveAuctionDurationMs(state),
       pointsToDonationRatio: Number(state.aucSettings.settings.pointsRate ?? 1),
       lots: state.slots.slots,
-      purchases: state.purchases.history,
+      purchases: selectPurchaseLogs(state),
       pendingWinnerEvents: state.activeAuctionHistory.pendingWinnerEvents,
     });
 

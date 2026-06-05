@@ -1,0 +1,16 @@
+export const ACTION_LOG_TRACKED_ACTION_TYPES = {
+  addPurchase: 'purchases/addPurchase',
+  setPurchases: 'purchases/setPurchases',
+  updateBid: 'purchases/updateBid',
+  addSlot: 'slots/addSlot',
+  addSlotAmount: 'slots/addSlotAmount',
+  deleteSlot: 'slots/deleteSlot',
+  setLockedPercentage: 'slots/setLockedPercentage',
+  setLotPercentage: 'slots/setLotPercentage',
+  setSlotAmount: 'slots/setSlotAmount',
+  setSlotIsFavorite: 'slots/setSlotIsFavorite',
+  setSlotName: 'slots/setSlotName',
+  setSlots: 'slots/setSlots',
+  unlockPercentage: 'slots/unlockPercentage',
+  setSlotData: 'slots/setSlotData',
+};

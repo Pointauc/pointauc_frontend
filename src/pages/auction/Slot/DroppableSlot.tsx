@@ -12,15 +12,16 @@ import bidUtils from '@utils/bid.utils';
 import { handleDragOver } from '@utils/common.utils.ts';
 
 import LotControls from './Controls/LotControls';
-import styles from './DroppableSlot.module.css';
+import styles, { highlight } from './DroppableSlot.module.css';
 
 interface DroppableSlotProps {
   index: number;
   slot: Lot;
   readonly?: boolean;
+  isHighlighted?: boolean;
 }
 
-const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) => {
+const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly, isHighlighted }) => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { id, name } = slot;
   const slotElement = useRef<HTMLDivElement>(null);
@@ -86,7 +87,11 @@ const DroppableSlot: React.FC<DroppableSlotProps> = ({ index, slot, readonly }) 
 
   return (
     <div
-      className={clsx(styles.root, { [styles.even]: index % 2 === 0 })}
+      className={clsx(styles.root, {
+        [styles.even]: index % 2 === 0,
+        [styles.highlight]: isHighlighted,
+      })}
+      data-auction-lot-id={id}
       ref={slotElement}
       onDragOver={handleDragOver}
       onDrop={handleDrop}

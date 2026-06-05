@@ -85,6 +85,8 @@ const AuctionHistoryCard = ({ summary, onSelect }: AuctionHistoryCardProps) => {
     yesterdayAt: (time) => t('auctionHistory.card.dateLabels.yesterdayAt', { time }),
   });
 
+  console.log(summary);
+
   return (
     <Paper
       component='button'

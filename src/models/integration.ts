@@ -35,6 +35,7 @@ export interface PubsubComponentProps {
 }
 
 export enum IconSize {
+  EXTRA_SMALL = 18,
   SMALL = 22,
   MEDIUM = 32,
 }

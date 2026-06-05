@@ -99,6 +99,12 @@
       "channelPoints": "Баллы",
       "integrations": "Интеграции"
     },
+    "groupActions": {
+      "startListeningDonations": "Отслеживать донаты",
+      "startListeningPoints": "Отслеживать ставки за баллы канала",
+      "showIntegrationDetails": "Показать детали интеграций",
+      "hideIntegrationDetails": "Скрыть детали интеграций"
+    },
     "modalWindow": {
       "donations": "Донатные сервисы",
       "channelPoints": "Стриминговые сервисы"
@@ -439,7 +445,7 @@
       "saved": "Победитель сохранен",
       "savedTitle": "Победитель сохранен",
       "savedMessage": "Вы увидите этот аукцион в истории после начала нового аукциона.",
-      "reroll": "рерол"
+      "reroll": "реролл"
     },
     "filters": {
       "startDate": "Дата начала",
@@ -1329,6 +1335,68 @@
     "returnRedemptions": "Вернуть выбранные награды",
     "previousBids": "Список прошлых ставок",
     "fastBidsActions": "Быстрые действия с баллами канала:"
+  },
+  "actionsLog": {
+    "empty": "Тут будет история всех ваших действий",
+    "emptyValue": "\" \"",
+    "revert": "Отменить",
+    "reverted": "Отменено",
+    "tabs": {
+      "pending": "Ставки",
+      "history": "История"
+    },
+    "labels": {
+      "action": "Действие",
+      "auction": "Аукцион",
+      "lot": "Лот",
+      "lots": "Лоты",
+      "rewards": "Награды",
+      "user": "Имя"
+    },
+    "types": {
+      "lot": {
+        "renamed": "Смена имени",
+        "priceChanged": "Изменение цены",
+        "added": "Новый лот",
+        "deleted": "Лот удален"
+      },
+      "lots": {
+        "replaced": "Смена таблицы лотов"
+      },
+      "auction": {
+        "cleared": "Очистка таблицы"
+      },
+      "bid": {
+        "processed": "Ставка обработана",
+        "split": "Ставка разделена",
+        "deleted": "Ставка удалена",
+        "updated": "Ставка обновлена",
+        "redemptionStatusChanged": "Статус ставки обновлен"
+      }
+    },
+    "details": {
+      "lotName": "Лот: {{name}}",
+      "lotNameChange": "<b>{{previous}}</b> -> <b>{{next}}</b>",
+      "amountChange": "<b>{{previous}}</b> -> <b>{{next}}</b> (<b>{{delta}}</b>)",
+      "lotsReplaced": "{{previous}} лоты -> {{next}} лотов",
+      "auctionCleared": "{{lots}} лотов и {{bids}} ставок",
+      "bulkChange": "Подмена всей таблицы аукциона",
+      "createdLot": "Был создан новый лот",
+      "localOnly": "Локальный статус изменен",
+      "removedBid": "Ставка была удалена из очереди",
+      "removedLot": "Лот был удален из таблицы",
+      "pinned": "Закреп",
+      "unpinned": "Откреп",
+      "percentageChange": "<b>{{previous}}</b>% -> <b>{{next}}</b>%",
+      "bidUser": "Имя: {{user}}",
+      "bidTarget": "<b>{{cost}}</b> к <b>{{target}}</b>",
+      "splitCount": "Ставка была разделена между {{count}} лотами",
+      "bidCostChange": "<b>{{previous}}</b> -> <b>{{next}}</b>",
+      "redemptionStatusChanged": "{{count}} ставок обновлено"
+    },
+    "notifications": {
+      "undo": "Последнее действие было сброшено"
+    }
   },
   "richTextEditor": {
     "heading1": "Заголовок 1",

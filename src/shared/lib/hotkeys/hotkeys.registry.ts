@@ -100,6 +100,16 @@ const hotkeyDefinitions: HotkeyDefinitions = {
       buildMessage: ({ bidName, lotName }, t) => t('hotkeys.notifications.bid.addToLot', { bidName, lotName }),
     },
   },
+  [HOTKEY_ACTION_IDS.undoLatestAction]: {
+    binding: { key: 'z', ctrl: true },
+    aliasBindings: [{ key: 'z', meta: true }],
+    displayLabel: 'Ctrl + Z',
+    enabledRoutes: [ROUTES.HOME],
+    showTooltip: false,
+    notification: {
+      buildMessage: (_, t) => t('actionsLog.notifications.undo'),
+    },
+  },
   [HOTKEY_ACTION_IDS.integrationsToggleAll]: {
     binding: 'A',
     displayLabel: 'A',

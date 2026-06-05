@@ -32,6 +32,14 @@
   width: 20px;
 }
 
+.highlight.root {
+  background-color: color-mix(in srgb, var(--mantine-color-dark-6) 70%, var(--mantine-primary-color-filled) 30%);
+  border-color: var(--mantine-primary-color-filled);
+  box-shadow:
+    var(--mantine-shadow-md),
+    0 0 12px color-mix(in srgb, var(--mantine-primary-color-filled) 50%, transparent 50%);
+}
+
 /* Subtle highlight when dragging has started (ready to receive) */
 :global(.dragging) {
   .root {

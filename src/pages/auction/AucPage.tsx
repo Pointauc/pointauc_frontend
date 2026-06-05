@@ -1,11 +1,15 @@
 import { Box, Image, Overlay, ScrollArea } from '@mantine/core';
 import clsx from 'clsx';
 import { lazy, Suspense, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import { RootState } from '@reducers';
+import { revertLatestActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import { updatePercents } from '@services/PercentsRefMap.ts';
+import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
+import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
 import { ScrollContextProvider } from '@shared/lib/ScrollContextProvider';
 import { useScrollContext } from '@shared/lib/scrollContext';
 import { useIsMobile } from '@shared/lib/ui';
@@ -17,11 +21,13 @@ import styles from './AucPage.module.css';
 import ControlColumn from './ControlColumn/ControlColumn';
 import RulesSkeleton from './Rules/Skeleton';
 import SlotsColumn from './SlotsColumn/SlotsColumn';
+import TotalAmount from './AucActions/TotalAmount/TotalAmount';
 
 const LazyRules = lazy(() => import('@pages/auction/Rules/Rules.tsx'));
 const ChangelogModal = lazy(() => import('@domains/changelog/ui/ChangelogModal'));
 
 const AucPageContent: React.FC = () => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const { background, backgroundOverlayOpacity, backgroundBlur } = useSelector(
     (root: RootState) => root.aucSettings.settings,
   );
@@ -42,6 +48,15 @@ const AucPageContent: React.FC = () => {
   const hasGeometryBackground = backgroundType === 'geometry';
   const hasVisualBackground = hasCustomBackground || hasGeometryBackground;
 
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.undoLatestAction,
+    (event) => {
+      event.preventDefault();
+      dispatch(revertLatestActionLogEntry());
+    },
+    { preventDefault: true },
+  );
+
   return (
     <Box className={clsx(styles.container, { 'custom-background': hasVisualBackground })}>
       {hasCustomBackground && (
@@ -50,6 +65,8 @@ const AucPageContent: React.FC = () => {
           <Overlay backgroundOpacity={imageOpacity} color='#242424' blur={backgroundBlur} />
         </Box>
       )}
+
+      <TotalAmount />
       <Suspense fallback={null}>
         <ChangelogModal />
       </Suspense>
@@ -61,7 +78,7 @@ const AucPageContent: React.FC = () => {
           <SlotsColumn />
           <ControlColumn />
         </div>
-        {isMobile ? <MobileActions /> : <AucActions />}
+        {isMobile && <MobileActions />}
       </div>
       <TrailersContainer />
     </Box>

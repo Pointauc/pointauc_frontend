@@ -6,6 +6,7 @@ import { Button, Text } from '@mantine/core';
 import clsx from 'clsx';
 
 import { RootState } from '@reducers';
+import { addActionLogEntry, createActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import { addSlot, setSlots } from '@reducers/Slots/Slots.ts';
 import { Lot } from '@models/slot.model.ts';
 import { updatePercents } from '@services/PercentsRefMap.ts';
@@ -91,7 +92,17 @@ const NewSlotForm = () => {
 
       if (confirmed) {
         e.preventDefault();
-        dispatch(setSlots(archivedLotsToSlots(lots)));
+        const nextSlots = archivedLotsToSlots(lots);
+        dispatch(
+          addActionLogEntry(
+            createActionLogEntry({
+              type: 'lots.replaced',
+              previousLots: slots,
+              nextLots: nextSlots,
+            }),
+          ),
+        );
+        dispatch(setSlots(nextSlots));
         resetForm();
       }
     },

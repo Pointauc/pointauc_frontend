@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { checkShouldSmartSaveAuction } from '@domains/auction/history/lib/activeAuctionState';
 import { finalizeAuctionHistory } from '@domains/auction/history/lib/finalizeAuctionHistory';
 import { RootState } from '@reducers';
+import { addActionLogEntry, createActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import { resetPurchases } from '@reducers/Purchases/Purchases.ts';
 import { resetSlots } from '@reducers/Slots/Slots.ts';
 
@@ -30,6 +31,15 @@ const ClearAllModal: FC<ClearAllModalProps> = ({ opened, onClose }) => {
       return;
     }
 
+    dispatch(
+      addActionLogEntry(
+        createActionLogEntry({
+          type: 'auction.cleared',
+          previousLots: slots,
+          previousPurchases: purchases,
+        }),
+      ),
+    );
     dispatch(resetSlots());
     dispatch(resetPurchases());
 

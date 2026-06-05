@@ -13,6 +13,7 @@ export const HOTKEY_ACTION_IDS = {
   timerAddTimeDouble: 'timerAddTimeDouble',
   firstBidNew: 'firstBidNew',
   firstBidAddToLot: 'firstBidAddToLot',
+  undoLatestAction: 'undoLatestAction',
   integrationsToggleAll: 'integrationsToggleAll',
   integrationsToggleDonations: 'integrationsToggleDonations',
   integrationsToggleChannelPoints: 'integrationsToggleChannelPoints',
@@ -40,6 +41,7 @@ export interface HotkeyNotificationPayloadMap {
     bidName: string;
     lotName: string;
   };
+  [HOTKEY_ACTION_IDS.undoLatestAction]: undefined;
   [HOTKEY_ACTION_IDS.integrationsToggleAll]: {
     enabled: boolean;
   };

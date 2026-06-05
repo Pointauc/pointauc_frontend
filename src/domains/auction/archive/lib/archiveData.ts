@@ -1,10 +1,13 @@
 import type { ArchivedLot } from '@models/slot.model';
+import type { ActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import type { Purchase } from '@reducers/Purchases/Purchases.ts';
 import type { ArchiveData } from '../model/types';
 
 interface CreateArchiveDataOptions {
   lots: ArchivedLot[];
   purchases?: Purchase[];
+  /** Kept for compatibility with older callers; new archives do not persist action logs. */
+  actionLog?: ActionLogEntry[];
   isAutosave: boolean;
   includePurchases?: boolean;
 }
@@ -19,17 +22,18 @@ export const createArchiveData = ({
   isAutosave,
   includePurchases = isAutosave,
 }: CreateArchiveDataOptions): ArchiveData => {
-  if (!includePurchases || purchases.length === 0) {
-    return { lots };
+  const data: ArchiveData = { lots };
+
+  if (includePurchases && purchases.length > 0) {
+    data.purchases = purchases;
   }
 
-  return {
-    lots,
-    purchases,
-  };
+  return data;
 };
 
 export const getArchivePurchases = (data: ArchiveData): Purchase[] => data.purchases ?? [];
+
+export const getArchiveActionLog = (data: ArchiveData): ActionLogEntry[] => data.actionLog ?? [];
 
 export const checkHasArchiveContent = (data: ArchiveData): boolean =>
   data.lots.length > 0 || getArchivePurchases(data).length > 0;

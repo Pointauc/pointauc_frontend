@@ -48,6 +48,8 @@ const PURCHASE_UPDATE_EVENTS = Object.keys(purchasesSlice.actions).map(
 
 const saveSlotsWithCooldown = throttle(
   ({ slots, purchases }: { slots: Lot[]; purchases: RootState['purchases']['purchases'] }) => {
+    if (slots.length === 1 && purchases.length === 0) return;
+
     const data = createArchiveData({
       lots: slotsToArchivedLots(slots),
       purchases,

@@ -1,6 +1,7 @@
 import { Switch } from '@mantine/core';
 import React, { useMemo } from 'react';
 
+import { connectIntegrationWithTimeout } from '@domains/bids/external-integrations/shared/pubsub/subscriptionTimeout';
 import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import * as Integration from '@models/integration';
 import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
@@ -20,7 +21,7 @@ const SwitchAllIntegrations = ({ integrations, showLabel = true, classNames, lab
     e.stopPropagation();
     integrations.forEach((integration) => {
       if (e.target.checked) {
-        integration.pubsubFlow.connect();
+        connectIntegrationWithTimeout(integration).catch((err) => console.error(err));
       } else {
         integration.pubsubFlow.disconnect();
       }

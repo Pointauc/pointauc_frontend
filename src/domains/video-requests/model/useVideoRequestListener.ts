@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
+import { connectIntegrationWithTimeout } from '@domains/bids/external-integrations/shared/pubsub/subscriptionTimeout';
 import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import { registerGlobalBidConsumer } from '@domains/bids/lib/globalBidsEventBus.ts';
 import { resolveVideoRequestMetadata } from '@domains/links/participant-url-parsing/resolveVideoRequestMetadata';
@@ -73,7 +74,7 @@ export const useVideoRequestListener = () => {
 
         if (!subscriptionState.subscribed && !subscriptionState.loading) {
           ownedIntegrationIds.add(integration.id);
-          await integration.pubsubFlow.connect();
+          await connectIntegrationWithTimeout(integration);
         }
       }
 

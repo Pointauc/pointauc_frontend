@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Divider, Group, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
-import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { PurchaseLog } from '@reducers/ActionsLog/ActionsLog.ts';
 import array from '@utils/dataType/array.ts';
 import { COLORS } from '@constants/color.constants.ts';
 

@@ -79,12 +79,14 @@ window.onbeforeunload = (): undefined => {
   const {
     slots: { slots },
     purchases: { purchases },
+    actionsLog: { entries: actionLog },
   } = store.getState();
 
-  if (slots.length > 1 || purchases.length > 0) {
+  if (slots.length > 1 || purchases.length > 0 || actionLog.length > 0) {
     const data = createArchiveData({
       lots: slotsToArchivedLots(slots),
       purchases,
+      actionLog,
       isAutosave: true,
     });
     archiveApi.upsertAutosave(data).catch((err) => console.error('Final autosave failed:', err));

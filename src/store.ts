@@ -14,6 +14,7 @@ import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import { createLotLinkParsingMiddleware } from '@domains/links/participant-url-parsing/link-processing-queue/middleware';
 import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 import { ensureActiveAuctionStarted } from '@domains/auction/history/model/activeAuctionHistorySlice';
+import { actionsLogSliceName, createActionsLogMiddleware } from '@reducers/ActionsLog/ActionsLog.ts';
 
 import type { RootState } from '@reducers/index.ts';
 
@@ -53,7 +54,7 @@ const getSlotsUpdateEvents = () => {
 };
 
 let _purchaseUpdateEvents: string[] | null = null;
-const excludeBidUpdateEventNames = ['setDraggedRedemption', 'addPurchaseLog'];
+const excludeBidUpdateEventNames = ['setDraggedRedemption'];
 const getPurchaseUpdateEvents = () => {
   if (!_purchaseUpdateEvents) {
     _purchaseUpdateEvents = Object.keys(purchasesSlice.actions)
@@ -66,23 +67,43 @@ const getPurchaseUpdateEvents = () => {
 let _autosaveEvents: string[] | null = null;
 const getAutosaveEvents = () => {
   if (!_autosaveEvents) {
-    _autosaveEvents = [...getSlotsUpdateEvents(), ...getPurchaseUpdateEvents()];
+    _autosaveEvents = [
+      ...getSlotsUpdateEvents(),
+      ...getPurchaseUpdateEvents(),
+      `${actionsLogSliceName}/addActionLogEntry`,
+      `${actionsLogSliceName}/updateActionLogEntry`,
+      `${actionsLogSliceName}/setActionLog`,
+      `${actionsLogSliceName}/clearActionLog`,
+      `${actionsLogSliceName}/markActionReverted`,
+      `${actionsLogSliceName}/updatePurchaseLogStatuses`,
+    ];
   }
   return _autosaveEvents;
 };
 
 const saveSlotsWithCooldown = throttle(
-  ({ slots, purchases }: { slots: Lot[]; purchases: RootState['purchases']['purchases'] }) => {
-    if (!isBrowser || slots.length === 1) return;
-    const data = createArchiveData({
-      lots: slotsToArchivedLots(slots),
-      purchases,
-      isAutosave: true,
+  ({
+    slots,
+    purchases,
+    actionLog,
+  }: {
+    slots: Lot[];
+    purchases: RootState['purchases']['purchases'];
+    actionLog: RootState['actionsLog']['entries'];
+  }) => {
+    if (!isBrowser || (slots.length === 1 && purchases.length === 0 && actionLog.length === 0)) return;
+    setTimeout(() => {
+      const data = createArchiveData({
+        lots: slotsToArchivedLots(slots),
+        purchases,
+        actionLog,
+        isAutosave: true,
+      });
+      archiveApi
+        .upsertAutosave(data)
+        .then(() => console.log('Autosave updated', data))
+        .catch((err) => console.error('Autosave failed:', err));
     });
-    archiveApi
-      .upsertAutosave(data)
-      .then(() => console.log('Autosave updated', data))
-      .catch((err) => console.error('Autosave failed:', err));
   },
   { wait: 2000, trailing: true, leading: false },
 );
@@ -95,11 +116,12 @@ const saveSlotsMiddleware: Middleware<{}, RootState> =
     const {
       slots: { slots, isInitialized },
       purchases: { purchases },
+      actionsLog: { entries: actionLog },
     } = storeApi.getState();
     const autosaveEvents = getAutosaveEvents();
 
     if (isInitialized && autosaveEvents.includes(action.type)) {
-      saveSlotsWithCooldown({ slots, purchases });
+      saveSlotsWithCooldown({ slots, purchases, actionLog });
     }
     return result;
   };
@@ -112,7 +134,8 @@ const activeAuctionStartEvents = new Set([
   'slots/addSlot',
   'slots/deleteSlot',
   'slots/mergeLot',
-  'purchases/addPurchaseLog',
+  `${actionsLogSliceName}/addActionLogEntry`,
+  `${actionsLogSliceName}/updatePurchaseLogStatuses`,
   'purchases/addPurchase',
   'purchases/updateBid',
 ]);
@@ -150,6 +173,7 @@ export function initStore(rootReducer: Reducer<any>) {
     reducer: rootReducer,
     middleware: [
       thunk,
+      createActionsLogMiddleware(),
       sortSlotsMiddleware,
       createLotLinkParsingMiddleware(),
       activeAuctionHistoryMiddleware,

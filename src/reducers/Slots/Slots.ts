@@ -1,12 +1,20 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 
-import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { Lot } from '@models/slot.model.ts';
 import fastIdAllocator from '@services/FastIdAllocator.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
+import {
+  addActionLogEntry,
+  buildBidLotChange,
+  BidLotChange,
+  createActionLogEntry,
+  createPurchaseLog,
+  logBidProcessed,
+  PurchaseLog,
+} from '@reducers/ActionsLog/ActionsLog.ts';
 import {
   addContributorAmount,
   contributorsFromLegacyInvestors,
@@ -14,7 +22,7 @@ import {
 } from '@utils/slotContributors.utils';
 
 import slotNamesMap from '../../services/SlotNamesMap';
-import { addedBidsMap, addPurchaseLog, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
+import { addedBidsMap, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 
 import LotQuery = PublicApi.LotQuery;
@@ -273,7 +281,8 @@ export const createSlotFromPurchase =
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
     dispatch(reorderSlots(sortSlots(recalculateAllLockedSlots(updatedSlots))));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: newSlot.id, cost: bid.cost }, true));
+    dispatch(logBidProcessed(bid, newSlot, amount, true));
+    addedBidsMap.set(bid.id, newSlot.id);
   };
 
 interface BidHandleOptions {
@@ -329,7 +338,8 @@ export const addBid =
       );
     }
 
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: lot.id }, false));
+    dispatch(logBidProcessed(bid, lot, amount, false));
+    addedBidsMap.set(id, lot.id);
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);
   };
@@ -346,14 +356,14 @@ export const splitBid =
     const updatedSlots = [...slots];
     const appliedEntries = entries.filter(({ amount }) => Number.isFinite(amount) && amount > 0);
     let appliedEntriesCount = 0;
+    const bidLogs: PurchaseLog[] = [];
+    const lotChanges: BidLotChange[] = [];
 
     if (!appliedEntries.length) {
       return;
     }
 
     appliedEntries.forEach((entry, index) => {
-      const timestamp = new Date().toISOString();
-
       if (entry.target.type === 'existing') {
         const target = entry.target;
         const slotIndex = updatedSlots.findIndex(({ id }) => id === target.lotId);
@@ -376,17 +386,16 @@ export const splitBid =
         slotNamesMap.set(String(target.name || slotName || bidName), updatedSlot.id);
         appliedEntriesCount += 1;
 
-        dispatch(
-          addPurchaseLog({
-            ...bid,
-            id: `${bid.id}:split:${index}`,
-            timestamp,
-            cost: entry.amount,
-            rawCost: bid.cost,
-            status: PurchaseStatusEnum.Processed,
-            target: updatedSlot.id,
-          }),
+        bidLogs.push(
+          createPurchaseLog(
+            { ...bid, id: `${bid.id}:split:${index}` },
+            getState,
+            updatedSlot.id,
+            false,
+            { cost: entry.amount, rawCost: bid.cost },
+          ),
         );
+        lotChanges.push(buildBidLotChange(updatedSlot, entry.amount, bid, false));
 
         return;
       }
@@ -408,20 +417,29 @@ export const splitBid =
       }
       appliedEntriesCount += 1;
 
-      dispatch(
-        addPurchaseLog({
-          ...bid,
-          id: `${bid.id}:split:${index}`,
-          timestamp,
-          cost: entry.amount,
-          rawCost: bid.cost,
-          status: PurchaseStatusEnum.Processed,
-          target: newSlot.id,
-        }),
+      bidLogs.push(
+        createPurchaseLog(
+          { ...bid, id: `${bid.id}:split:${index}` },
+          getState,
+          newSlot.id,
+          true,
+          { cost: entry.amount, rawCost: bid.cost },
+        ),
       );
+      lotChanges.push(buildBidLotChange(newSlot, entry.amount, bid, true));
     });
 
     if (appliedEntriesCount > 0) {
+      dispatch(
+        addActionLogEntry(
+          createActionLogEntry({
+            type: 'bid.split',
+            bidLogs,
+            pendingBid: bid,
+            lotChanges,
+          }),
+        ),
+      );
       dispatch(reorderSlots(sortSlots(recalculateAllLockedSlots(updatedSlots))));
       dispatch(removePurchase(bid.id));
     }

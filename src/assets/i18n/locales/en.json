@@ -141,6 +141,12 @@
       "channelPoints": "Channel Points",
       "integrations": "Integrations"
     },
+    "groupActions": {
+      "startListeningDonations": "Listen for donations",
+      "startListeningPoints": "Listen for channel points",
+      "showIntegrationDetails": "Show integration details",
+      "hideIntegrationDetails": "Hide integration details"
+    },
     "modalWindow": {
       "donations": "Donation Services",
       "channelPoints": "Streaming Services"
@@ -629,6 +635,68 @@
     "user": "User",
     "previousBids": "Previous bids list",
     "fastBidsActions": "Actions with the channel points:"
+  },
+  "actionsLog": {
+    "empty": "No actions yet",
+    "emptyValue": "Empty",
+    "revert": "Revert",
+    "reverted": "Reverted",
+    "tabs": {
+      "pending": "Pending bids",
+      "history": "History"
+    },
+    "labels": {
+      "action": "Action",
+      "auction": "Auction",
+      "lot": "Lot",
+      "lots": "Lots",
+      "rewards": "Rewards",
+      "user": "User"
+    },
+    "types": {
+      "lot": {
+        "renamed": "Lot renamed",
+        "priceChanged": "Lot price changed",
+        "added": "Lot added",
+        "deleted": "Lot deleted"
+      },
+      "lots": {
+        "replaced": "Lots replaced"
+      },
+      "auction": {
+        "cleared": "Auction cleared"
+      },
+      "bid": {
+        "processed": "Bid processed",
+        "split": "Bid split",
+        "deleted": "Bid deleted",
+        "updated": "Bid updated",
+        "redemptionStatusChanged": "Reward status changed"
+      }
+    },
+    "details": {
+      "lotName": "Lot: {{name}}",
+      "lotNameChange": "{{previous}} -> {{next}}",
+      "amountChange": "{{previous}} -> {{next}} ({{delta}})",
+      "lotsReplaced": "{{previous}} lots -> {{next}} lots",
+      "auctionCleared": "{{lots}} lots and {{bids}} pending bids",
+      "bulkChange": "Bulk table change",
+      "createdLot": "New lot was created",
+      "localOnly": "Local status change",
+      "removedBid": "Pending bid was removed",
+      "removedLot": "Lot was removed",
+      "pinned": "Pinned",
+      "unpinned": "Unpinned",
+      "percentageChange": "{{previous}}% -> {{next}}%",
+      "bidUser": "User: {{user}}",
+      "bidTarget": "{{cost}} to {{target}}",
+      "splitCount": "{{count}} split entries",
+      "bidCostChange": "{{previous}} -> {{next}}",
+      "redemptionStatusChanged": "{{count}} rewards updated"
+    },
+    "notifications": {
+      "undo": "Latest action reverted"
+    }
   },
   "lot": {
     "addAmount": "Add Cost",

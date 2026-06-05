@@ -181,7 +181,6 @@ const parseEvenSegments = (message: string, totalAmount: number): SplitBidDraftE
 };
 
 export const buildSmartSplitEntries = (message: string, totalAmount: number): SplitBidDraftEntry[] => {
-  console.log('buildSmartSplitEntries', message, totalAmount);
   const normalizedMessage = normalizeText(message);
   // Split decision order is deliberate: explicit weights are safest, amount markers handle free-form text,
   // even split is a useful fallback for name-only lists, and the final single entry keeps the modal predictable.
