@@ -8,6 +8,7 @@ import { useStore } from '@tanstack/react-store';
 import { vkVideoLiveRewardsApi } from '@api/vkVideoLiveApi';
 import { closeTwitchRewards } from '@api/twitchApi.ts';
 import { closeKickRewards } from '@api/kickApi';
+import { connectIntegrationWithTimeout } from '@domains/bids/external-integrations/shared/pubsub/subscriptionTimeout';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import RevokeIntegrationButton from '@pages/settings/IntegrationsSettings/Common/RevokeIntegrationButton.tsx';
@@ -56,7 +57,7 @@ const PointsIntegrationControls = ({ integration }: PointsIntegrationControlsPro
     if (subscribed) {
       integration.pubsubFlow.disconnect();
     } else {
-      integration.pubsubFlow.connect();
+      connectIntegrationWithTimeout(integration).catch((err) => console.error(err));
     }
   }, [integration, subscribed]);
 

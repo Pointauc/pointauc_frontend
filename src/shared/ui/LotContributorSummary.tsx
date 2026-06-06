@@ -33,7 +33,7 @@ const LotContributorSummary = ({
       color='transparent'
       position='bottom'
       p={0}
-      label={<LotContributorTooltipContent contributors={contributors} hideAmounts={hideAmounts} />}
+      label={<LotContributorTooltipContent contributors={contributors} />}
     >
       <div className={'relative flex max-w-44 shrink-0 items-center pr-1'}>
         <span className='text-dimmed min-w-0 truncate rounded-sm text-sm font-medium transition-colors'>

@@ -24,6 +24,8 @@
 
   --color-dimmed: var(--mantine-color-dimmed);
 
+  --color-paper-text: #dedede;
+
   --color-paper-50: var(--mantine-color-dark-0);
   --color-paper-100: var(--mantine-color-dark-1);
   --color-paper-200: var(--mantine-color-dark-2);
@@ -34,7 +36,7 @@
   --color-paper-700: var(--mantine-color-dark-7);
   --color-paper-800: var(--mantine-color-dark-8);
   --color-paper-900: var(--mantine-color-dark-9);
-  --color-paper-950: var(--mantine-color-dark-9);
+  --color-paper-950: #111111;
 
   --color-paper-transparent-50: var(--mantine-color-darkTransparent-0);
   --color-paper-transparent-100: var(--mantine-color-darkTransparent-1);

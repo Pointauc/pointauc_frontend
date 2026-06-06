@@ -1,9 +1,10 @@
 import { Socket } from 'socket.io-client';
 import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 
-import { globalBidsEventBus } from '@domains/bids/lib/globalBidsEventBus.ts';
+import { publishGlobalBid } from '@domains/bids/lib/globalBidsEventBus.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { RootState } from '@reducers/index.ts';
+import { selectPurchaseLogs } from '@reducers/ActionsLog/ActionsLog.ts';
 import { Purchase } from '@reducers/Purchases/Purchases.ts';
 import { mergeLot } from '@reducers/Slots/Slots.ts';
 import { store } from '@store';
@@ -38,8 +39,9 @@ const getBidStatus = (bidId: string): PublicApi.BidStatus => {
   const currentStore = getCurrentStore();
   const state = currentStore.getState() as RootState;
   const {
-    purchases: { history, purchases },
+    purchases: { purchases },
   } = state;
+  const history = selectPurchaseLogs(state);
 
   const historyEntry = history.find((purchase) => purchase.id === bidId);
 
@@ -65,7 +67,7 @@ export const registerPublicApiSocketHandlers = (
   dispatch: Dispatch<AnyAction>,
 ): (() => void) => {
   const handleBid = (bid: Purchase) => {
-    globalBidsEventBus.emit('bid', { ...bid, source: 'API' });
+    void publishGlobalBid({ ...bid, source: 'API' });
   };
 
   const handleUpdateLot = (payload: PublicApi.LotUpdateRequest) => {

@@ -6,6 +6,7 @@ import { RootState } from '@reducers';
 import { useIsMobile } from '@shared/lib/ui';
 
 import SlotsHeader from '../SlotsHeader/SlotsHeader';
+import AucActions from '../AucActions/AucActions';
 
 import SlotsList from './List/SlotsList';
 import classes from './SlotsColumn.module.css';
@@ -89,6 +90,7 @@ const SlotsColumn: React.FC = () => {
           </LotsColumnContext.Provider>
         </div>
       </div>
+      <AucActions />
     </div>
   );
 };

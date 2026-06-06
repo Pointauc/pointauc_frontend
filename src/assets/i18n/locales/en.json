@@ -29,6 +29,9 @@
       "viewer_orders": {
         "title": "Viewer orders"
       },
+      "videoRequests": {
+        "title": "Video Requests"
+      },
       "wheel": {
         "title": "Wheel of Random"
       },
@@ -118,6 +121,10 @@
       "title": "Live Overlays for Streamers – Pointauc",
       "description": "Add a live overlay to your stream showing bids, item names, and timers on screen — fully customizable to fit your style."
     },
+    "/videoPoints": {
+      "title": "Video Requests – Pointauc",
+      "description": "Review viewer video requests in a clean stream scene built for queue playback, moderation, and request controls."
+    },
     "/tickets/info": {
       "title": "Verify Tickets – Fair Winner Selection",
       "description": "Verify tickets quickly and transparently. Confirm who holds winning entries and ensure a fair outcome for any auction."
@@ -133,6 +140,12 @@
       "donations": "Donations",
       "channelPoints": "Channel Points",
       "integrations": "Integrations"
+    },
+    "groupActions": {
+      "startListeningDonations": "Listen for donations",
+      "startListeningPoints": "Listen for channel points",
+      "showIntegrationDetails": "Show integration details",
+      "hideIntegrationDetails": "Hide integration details"
     },
     "modalWindow": {
       "donations": "Donation Services",
@@ -636,6 +649,74 @@
     "user": "User",
     "previousBids": "Previous bids list",
     "fastBidsActions": "Actions with the channel points:"
+  },
+  "actionsLog": {
+    "empty": "No actions yet",
+    "emptyValue": "Empty",
+    "revert": "Revert",
+    "reverted": "Reverted",
+    "tabs": {
+      "pending": "Pending bids",
+      "history": "History"
+    },
+    "labels": {
+      "action": "Action",
+      "auction": "Auction",
+      "lot": "Lot",
+      "lots": "Lots",
+      "rewards": "Rewards",
+      "user": "From"
+    },
+    "types": {
+      "lot": {
+        "renamed": "Lot renamed",
+        "priceChanged": "Lot price changed",
+        "added": "Lot added",
+        "deleted": "Lot deleted"
+      },
+      "lots": {
+        "replaced": "Lots replaced"
+      },
+      "auction": {
+        "cleared": "Auction cleared"
+      },
+      "bid": {
+        "processed": "Bid processed",
+        "split": "Bid split",
+        "deleted": "Bid deleted",
+        "updated": "Bid updated",
+        "redemptionStatusChanged": "Reward status changed"
+      }
+    },
+    "details": {
+      "lotName": "Lot: {{name}}",
+      "lotNameChange": "{{previous}} -> {{next}}",
+      "amountChange": "{{previous}} -> {{next}} ({{delta}})",
+      "lotsReplaced": "{{previous}} lots -> {{next}} lots",
+      "auctionCleared": "{{lots}} lots and {{bids}} pending bids",
+      "bulkChange": "Bulk table change",
+      "createdLot": "New lot was created",
+      "localOnly": "Local status change",
+      "removedBid": "Pending bid was removed",
+      "removedLot": "Lot was removed",
+      "pinned": "Pinned",
+      "unpinned": "Unpinned",
+      "percentageChange": "{{previous}}% -> {{next}}%",
+      "bidUser": "User: {{user}}",
+      "bidTarget": "{{cost}} to {{target}}",
+      "splitCount": "{{count}} split entries",
+      "bidCostChange": "{{previous}} -> {{next}}",
+      "redemptionStatusChanged": "{{count}} rewards updated"
+    },
+    "tooltips": {
+      "originalBidMessage": "Original bid message",
+      "emptyBidMessage": "No original message was stored.",
+      "previousLotName": "Previous name",
+      "newLotName": "New name"
+    },
+    "notifications": {
+      "undo": "Latest action reverted"
+    }
   },
   "lot": {
     "addAmount": "Add Cost",
@@ -1515,6 +1596,147 @@
     "noUserIdMessage": "User ID is not available. Please make sure you are logged in.",
     "user": "User: {{username}}"
   },
+  "videoRequests": {
+    "page": {
+      "title": "Video Requests",
+      "description": "Review viewer requests in a clean playback scene."
+    },
+    "sources": {
+      "youtube": "YouTube",
+      "twitchClip": "Clip",
+      "twitchVod": "VOD"
+    },
+    "player": {
+      "emptyTitle": "Queue is empty",
+      "emptyDescription": "Turn on listening, pick a bid source, then viewer links will land in the queue automatically.",
+      "services": {
+        "youtube": "YouTube videos",
+        "twitch": "Twitch clips and VODs"
+      },
+      "noEmbed": "This request does not have a playable embed URL.",
+      "errorTitle": "Player could not start",
+      "errorDescription": "The video may be unavailable, blocked from embeds, or waiting for a manual play gesture."
+    },
+    "card": {
+      "views": "{{value}} views",
+      "likes": "{{percentage}} likes",
+      "by": "by {{name}}"
+    },
+    "queue": {
+      "title": "Queue",
+      "count": "{{count}} requests",
+      "emptyTitle": "No videos waiting",
+      "emptyDescription": "New accepted requests will appear here.",
+      "remove": "Remove request",
+      "clear": "Clear queue",
+      "clearWithCount": "Clear queue ({{count}})",
+      "clearConfirmTitle": "Clear queue?",
+      "clearConfirmDescription": "This will remove {{count}} queued requests."
+    },
+    "utility": {
+      "nowPlaying": "Now playing",
+      "noCurrent": "Nothing selected",
+      "previous": "Previous",
+      "next": "Next",
+      "pickNext": "Pick Next",
+      "spinWheel": "Spin the wheel",
+      "noPrevious": "No previous video",
+      "noNext": "No next video",
+      "autoplay": "Autoplay",
+      "history": "History",
+      "settings": "Settings",
+      "theater": "Theater mode",
+      "exitTheater": "Exit theater",
+      "skipVotesRemaining": "{{count}} to skip ({{current}}/{{required}})"
+    },
+    "history": {
+      "title": "History",
+      "emptyTitle": "History is empty",
+      "emptyDescription": "Watched and skipped requests will appear here.",
+      "clear": "Clear history",
+      "status": {
+        "watched": "Watched",
+        "skipped": "Skipped",
+        "removed": "Removed"
+      }
+    },
+    "settings": {
+      "title": "Video request settings",
+      "sections": {
+        "filters": "Filters",
+        "nextSelection": "Next pick",
+        "skipVoting": "Skip voting settings"
+      },
+      "fields": {
+        "supportedPlatforms": "Supported platforms",
+        "maxLength": "Max video length",
+        "minViews": "Minimum views",
+        "limitPerViewer": "Max videos from one viewer",
+        "maxTotalVideos": "Max total videos",
+        "maxTotalLength": "Max total length",
+        "skipVotingEnabled": "Enable skip voting",
+        "requiredSkipVotes": "Required skip votes",
+        "skipCommand": "Skip command",
+        "denyCommand": "Deny command",
+        "allowDenySkip": "Allow vote removal"
+      },
+      "units": {
+        "minutes": "min"
+      },
+      "actions": {
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all"
+      },
+      "nextStrategies": {
+        "requestOrder": "Request order",
+        "biggestBid": "Biggest bid",
+        "randomWheel": "Random wheel"
+      }
+    },
+    "listener": {
+      "title": "Bid Listener",
+      "description": "Choose which connected integrations should route incoming bids into the video request queue.",
+      "enable": "Listening enabled",
+      "queueSwitchLabel": "Listening",
+      "inlineTitle": "Collect requests from bids",
+      "inlineDescription": "Use connected donation and channel-point services as request sources.",
+      "groupsTitle": "Bid groups",
+      "groups": {
+        "donations": "Donations",
+        "channelPoints": "Channel points"
+      },
+      "integrationsTitle": "Authenticated integrations",
+      "noAuthenticatedIntegrations": "No authenticated integrations are available for this group yet.",
+      "integrationStatus": {
+        "idle": "Idle",
+        "loading": "Connecting",
+        "subscribed": "Listening"
+      },
+      "stats": {
+        "queue": "Queue: {{count}}",
+        "rejections": "Rejected: {{count}}"
+      }
+    },
+    "debug": {
+      "title": "Debug request",
+      "description": "Send a local test bid through the same global bid pipeline used by real integrations.",
+      "send": "Send request",
+      "openSettings": "Open debug request settings",
+      "randomize": "Randomize all fields",
+      "sentNotification": "Debug request sent.",
+      "integrationTypes": {
+        "donate": "Donations",
+        "points": "Channel points"
+      },
+      "fields": {
+        "requestContent": "Request content",
+        "viewerName": "Viewer name",
+        "integration": "Integration",
+        "cost": "Amount",
+        "rewardId": "Reward ID"
+      }
+    }
+  },
   "archive": {
     "modal": {
       "title": "Archive Management",
@@ -1531,7 +1753,14 @@
     "item": {
       "autosave": "Autosave",
       "autosaveBadge": "persistent",
+      "lastDeleted": "Last deleted",
+      "lastDeletedBadge": "Last deleted",
+      "lastDeletedBadgeTooltip": "Automatically stores the last deleted or overwritten archive in case you want to restore it.",
       "overwrite": "Overwrite with current auction",
+      "overwriteConfirmTitle": "Overwrite archive?",
+      "overwriteConfirmCancel": "Cancel",
+      "overwriteConfirmAction": "Overwrite",
+      "restore": "Restore as a new archive",
       "rename": "Rename",
       "export": "Export",
       "delete": "Delete",
@@ -1540,6 +1769,7 @@
       "bidCount_one": "{{count}} bid",
       "bidCount_other": "{{count}} bids",
       "cannotDelete": "Autosave cannot be deleted",
+      "cannotDeleteLastDeleted": "Last deleted archive cannot be deleted manually",
       "updated": "Updated {{time}}",
       "created": "Created {{time}}",
       "namePlaceholder": "Archive name...",

@@ -7,14 +7,14 @@ import type { LotContributor } from '@models/slot.model';
 
 interface LotContributorTooltipContentProps {
   contributors: LotContributor[];
-  hideAmounts: boolean;
+  hideAmounts?: boolean;
 }
 
 const getDisplayAmount = (amount: number, hideAmounts: boolean): string | number => {
   return hideAmounts ? '**' : numberUtils.roundFixed(amount, 2);
 };
 
-const LotContributorTooltipContent = ({ contributors, hideAmounts }: LotContributorTooltipContentProps) => {
+const LotContributorTooltipContent = ({ contributors, hideAmounts = false }: LotContributorTooltipContentProps) => {
   const { t } = useTranslation();
   const sortedContributors = useMemo(
     () => [...contributors].sort((first, second) => second.amount - first.amount),

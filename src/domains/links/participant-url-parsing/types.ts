@@ -1,5 +1,5 @@
 // Shared contracts for participant URL parsing sources and parsing results.
-export type ParticipantUrlParsingSource = 'imdb' | 'kinopoisk' | 'youtube';
+export type ParticipantUrlParsingSource = 'imdb' | 'kinopoisk' | 'youtube' | 'twitch';
 
 export type ParticipantUrlParsingProvider =
   | 'wikidata'
@@ -7,7 +7,11 @@ export type ParticipantUrlParsingProvider =
   | 'imdb-scrape'
   | 'kinopoisk-scrape'
   | 'kinopoisk-worker'
-  | 'youtube-oembed';
+  | 'youtube-oembed'
+  | 'youtube-data-api'
+  | 'twitch-helix-clips'
+  | 'twitch-helix-videos'
+  | 'twitch-url-fallback';
 
 interface ParticipantUrlBaseMetadata {
   title: string;
@@ -41,9 +45,41 @@ export interface ParseParticipantUrlParams {
   signal?: AbortSignal;
 }
 
+export interface GetVideoRequestMetadataParams extends ParseParticipantUrlParams {
+  parentHost?: string;
+}
+
+export interface ParticipantUrlVideoRequestPlayerData {
+  kind: 'iframe';
+  embedUrl: string;
+  parentHost: string | null;
+}
+
+export interface ParticipantUrlVideoRequestMetadata {
+  source: Extract<ParticipantUrlParsingSource, 'youtube' | 'twitch'>;
+  provider: ParticipantUrlParsingProvider;
+  canonicalUrl: string;
+  player: ParticipantUrlVideoRequestPlayerData;
+  title: string;
+  channelName: string | null;
+  thumbnailUrl: string | null;
+  durationSeconds: number | null;
+  viewCount: number | null;
+  likeCount: number | null;
+  publishedAt: string | null;
+  createdAt: string | null;
+  sourceReference: Record<string, string | number | boolean | null>;
+}
+
 export interface ParticipantUrlSource {
   sourceName: string;
   domains: string[];
   checkIsValidLink: (link: string) => boolean;
   parseLink: (params: ParseParticipantUrlParams) => Promise<ParsedParticipantUrlResult | null>;
+  /**
+   * GetVideoRequestMetadata capability for playable video request sources.
+   */
+  getVideoRequestMetadata?: (
+    params: GetVideoRequestMetadataParams,
+  ) => Promise<ParticipantUrlVideoRequestMetadata | null>;
 }

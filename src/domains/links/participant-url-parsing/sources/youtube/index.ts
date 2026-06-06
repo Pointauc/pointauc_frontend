@@ -1,4 +1,7 @@
-import { getYoutubeVideoMetadata } from '@domains/links/participant-url-parsing/sources/youtube/providers';
+import {
+  getYoutubeVideoMetadata,
+  getYoutubeVideoRequestMetadataWithFallback,
+} from '@domains/links/participant-url-parsing/sources/youtube/providers';
 import {
   buildYoutubeVideoUrl,
   checkIsYoutubeVideoUrl,
@@ -38,5 +41,16 @@ export const youtubeParticipantUrlSource: ParticipantUrlSource = {
       markdownLink: `[${escapeMarkdownLinkLabel(metadata.title)}](${canonicalVideoUrl})`,
       metadata,
     };
+  },
+  getVideoRequestMetadata: async (params) => {
+    const videoId = extractYoutubeVideoId(params.link);
+    if (!videoId) {
+      return null;
+    }
+
+    return getYoutubeVideoRequestMetadataWithFallback({
+      videoId,
+      signal: params.signal,
+    });
   },
 };

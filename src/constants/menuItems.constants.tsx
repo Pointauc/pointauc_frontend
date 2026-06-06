@@ -6,6 +6,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -92,6 +93,11 @@ export const useMenuGroups = (): MenuGroups => {
           icon: <VerifiedUserIcon />,
           path: ROUTES.TICKET_VERIFICATION_INFO,
         },
+        // {
+        //   title: 'menu.items.videoRequests.title',
+        //   icon: <VideoLibraryIcon />,
+        //   path: ROUTES.VIDEO_REQUESTS,
+        // },
         { title: 'menu.items.guides.title', icon: <HelpIcon />, path: docsPath, target: '_blank' },
         ...(userId
           ? [

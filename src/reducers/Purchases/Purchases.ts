@@ -1,10 +1,10 @@
 import { notifications } from '@mantine/notifications';
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 
 import { InsertStrategy } from '@enums/insertStrategy.enum';
-import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { Lot } from '@models/slot.model.ts';
+import { attachActionLogEntry, createActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
 import bidUtils from '@utils/bid.utils.ts';
 
@@ -25,21 +25,13 @@ export interface Purchase {
   insertStrategy?: InsertStrategy;
 }
 
-export interface PurchaseLog extends Purchase {
-  status: PurchaseStatusEnum;
-  target?: string;
-  rawCost?: number;
-}
-
 interface PurchasesState {
   purchases: Purchase[];
-  history: PurchaseLog[];
   draggedRedemption: Purchase | null;
 }
 
 const initialState: PurchasesState = {
   purchases: [],
-  history: [],
   draggedRedemption: null,
 };
 
@@ -49,12 +41,6 @@ const purchasesSlice = createSlice({
   name: 'purchases',
   initialState,
   reducers: {
-    addPurchaseLog(state, action: PayloadAction<PurchaseLog>): void {
-      state.history = [...state.history, action.payload];
-    },
-    setHistory(state, action: PayloadAction<PurchaseLog[]>): void {
-      state.history = action.payload;
-    },
     addPurchase(state, action: PayloadAction<Purchase>): void {
       state.purchases = [...state.purchases, action.payload];
     },
@@ -74,7 +60,19 @@ const purchasesSlice = createSlice({
       const index = state.purchases.findIndex(({ id }) => id === action.payload?.id);
 
       if (index !== -1) {
+        const previousBid = current(state.purchases[index]);
         state.purchases[index] = action.payload;
+
+        if (previousBid.cost !== action.payload.cost) {
+          attachActionLogEntry(
+            action,
+            createActionLogEntry({
+              type: 'bid.updated',
+              previousBid,
+              nextBid: action.payload,
+            }),
+          );
+        }
       }
     },
   },
@@ -82,27 +80,8 @@ const purchasesSlice = createSlice({
 
 export { purchasesSlice };
 
-export const {
-  addPurchase,
-  setHistory,
-  removePurchase,
-  addPurchaseLog,
-  resetPurchases,
-  setDraggedRedemption,
-  updateBid,
-  setPurchases,
-} = purchasesSlice.actions;
-
-export const logPurchase =
-  (bidLog: PurchaseLog, newLot: boolean = false) =>
-  (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
-    const cost = bidUtils.parseCost(bidLog, getState().aucSettings.settings, newLot);
-
-    dispatch(addPurchaseLog({ ...bidLog, timestamp: new Date().toISOString(), cost, rawCost: bidLog.cost }));
-    if (bidLog.target) {
-      addedBidsMap.set(bidLog.id, bidLog.target);
-    }
-  };
+export const { addPurchase, removePurchase, resetPurchases, setDraggedRedemption, updateBid, setPurchases } =
+  purchasesSlice.actions;
 
 const visibleNotifications: string[] = [];
 

@@ -10,6 +10,7 @@ import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
 
 import NavbarGroup from './Group';
+import NavbarLanguageMenu from './NavbarLanguageMenu';
 
 interface AppNavbarProps {
   onActiveMenuChange: (activeMenu: MenuItem | undefined) => void;
@@ -28,12 +29,20 @@ export const AppNavbar = ({ onActiveMenuChange }: AppNavbarProps) => {
   const activeMenu = useActiveMenu(menuItems);
   const [nextActiveMenu, setNextActiveMenu] = useState<MenuItem | undefined>(undefined);
 
-  useAppHotkey(HOTKEY_ACTION_IDS.navigateAuction, () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateAuction)!), {
-    preventDefault: true,
-  });
-  useAppHotkey(HOTKEY_ACTION_IDS.navigateWheel, () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateWheel)!), {
-    preventDefault: true,
-  });
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.navigateAuction,
+    () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateAuction)!),
+    {
+      preventDefault: true,
+    },
+  );
+  useAppHotkey(
+    HOTKEY_ACTION_IDS.navigateWheel,
+    () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateWheel)!),
+    {
+      preventDefault: true,
+    },
+  );
   useAppHotkey(
     HOTKEY_ACTION_IDS.navigateSettings,
     () => navigate(resolveNavbarPathForAction(HOTKEY_ACTION_IDS.navigateSettings)!),
@@ -79,13 +88,16 @@ export const AppNavbar = ({ onActiveMenuChange }: AppNavbarProps) => {
             onMouseUp={() => setNextActiveMenu(undefined)}
           />
         </Stack>
-        <NavbarGroup
-          items={menuGroups.tertiary}
-          activeMenu={activeMenu}
-          nextActiveMenu={nextActiveMenu}
-          onMouseDown={setNextActiveMenu}
-          onMouseUp={() => setNextActiveMenu(undefined)}
-        />
+        <Stack gap='sm'>
+          <NavbarLanguageMenu />
+          <NavbarGroup
+            items={menuGroups.tertiary}
+            activeMenu={activeMenu}
+            nextActiveMenu={nextActiveMenu}
+            onMouseDown={setNextActiveMenu}
+            onMouseUp={() => setNextActiveMenu(undefined)}
+          />
+        </Stack>
       </Stack>
     </AppShell.Navbar>
   );

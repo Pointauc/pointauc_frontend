@@ -5,6 +5,7 @@ import { ChangeEvent, FC, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { getActiveRegion } from '@domains/bids/external-integrations/DonatePay/index.tsx';
+import { connectIntegrationWithTimeout } from '@domains/bids/external-integrations/shared/pubsub/subscriptionTimeout';
 import * as Integration from '@models/integration';
 import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 
@@ -25,7 +26,7 @@ const PubsubSwitch: FC<Props> = ({ integration, hideTitle, switchProps, hotkeyAc
   const handleSwitchChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>): void => {
       if (e.target.checked) {
-        integration.pubsubFlow.connect();
+        connectIntegrationWithTimeout(integration).catch((err) => console.error(err));
       } else {
         integration.pubsubFlow.disconnect();
       }

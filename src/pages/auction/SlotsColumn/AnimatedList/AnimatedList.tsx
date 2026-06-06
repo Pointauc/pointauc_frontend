@@ -13,9 +13,10 @@ interface AnimatedListProps {
   slots: Lot[];
   classNames?: AnimatedListClassNames;
   readonly?: boolean;
+  highlightedLotId?: string | null;
 }
 
-const AnimatedList: FC<AnimatedListProps> = ({ slots, classNames, readonly }) => {
+const AnimatedList: FC<AnimatedListProps> = ({ slots, classNames, readonly, highlightedLotId }) => {
   const [isAnimationsActive, setIsAnimationsActive] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,12 @@ const AnimatedList: FC<AnimatedListProps> = ({ slots, classNames, readonly }) =>
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <DroppableSlot index={index + 1} slot={slot} readonly={readonly} />
+          <DroppableSlot
+            index={index + 1}
+            slot={slot}
+            readonly={readonly}
+            isHighlighted={slot.id === highlightedLotId}
+          />
         </motion.div>
       ))}
     </AnimatePresence>

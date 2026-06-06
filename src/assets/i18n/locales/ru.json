@@ -79,6 +79,10 @@
       "title": "Оверлеи для стримеров – Pointauc",
       "description": "Добавьте оверлей на стрим, чтобы отображать ставки, названия лотов и таймер прямо на экране - полностью настраивается под ваш стиль."
     },
+    "/videoPoints": {
+      "title": "Запросы видео – Pointauc",
+      "description": "Открывайте очередь зрительских запросов на видео в отдельной чистой сцене для стрима с будущими инструментами управления."
+    },
     "/tickets/info": {
       "title": "Проверка билетов – Честный выбор победителя",
       "description": "Быстро и прозрачно проверяйте билеты участников. Тут вы найдете информацию о победителе и как он был выбран."
@@ -94,6 +98,12 @@
       "donations": "Донаты",
       "channelPoints": "Баллы",
       "integrations": "Интеграции"
+    },
+    "groupActions": {
+      "startListeningDonations": "Отслеживать донаты",
+      "startListeningPoints": "Отслеживать ставки за баллы канала",
+      "showIntegrationDetails": "Показать детали интеграций",
+      "hideIntegrationDetails": "Скрыть детали интеграций"
     },
     "modalWindow": {
       "donations": "Донатные сервисы",
@@ -218,6 +228,9 @@
       },
       "viewer_orders": {
         "title": "Заказы зрителей"
+      },
+      "videoRequests": {
+        "title": "Запросы видео"
       },
       "wheel": {
         "title": "Колесо удачи"
@@ -432,7 +445,7 @@
       "saved": "Победитель сохранен",
       "savedTitle": "Победитель сохранен",
       "savedMessage": "Вы увидите этот аукцион в истории после начала нового аукциона.",
-      "reroll": "рерол"
+      "reroll": "реролл"
     },
     "filters": {
       "startDate": "Дата начала",
@@ -1337,6 +1350,74 @@
     "previousBids": "Список прошлых ставок",
     "fastBidsActions": "Быстрые действия с баллами канала:"
   },
+  "actionsLog": {
+    "empty": "Тут будет история всех ваших действий",
+    "emptyValue": "\" \"",
+    "revert": "Отменить",
+    "reverted": "Отменено",
+    "tabs": {
+      "pending": "Ставки",
+      "history": "История"
+    },
+    "labels": {
+      "action": "Действие",
+      "auction": "Аукцион",
+      "lot": "Лот",
+      "lots": "Лоты",
+      "rewards": "Награды",
+      "user": "От"
+    },
+    "types": {
+      "lot": {
+        "renamed": "Смена имени",
+        "priceChanged": "Изменение цены",
+        "added": "Новый лот",
+        "deleted": "Лот удален"
+      },
+      "lots": {
+        "replaced": "Смена таблицы лотов"
+      },
+      "auction": {
+        "cleared": "Очистка таблицы"
+      },
+      "bid": {
+        "processed": "Ставка обработана",
+        "split": "Ставка разделена",
+        "deleted": "Ставка удалена",
+        "updated": "Ставка обновлена",
+        "redemptionStatusChanged": "Статус ставки обновлен"
+      }
+    },
+    "details": {
+      "lotName": "Лот: {{name}}",
+      "lotNameChange": "<b>{{previous}}</b> -> <b>{{next}}</b>",
+      "amountChange": "<b>{{previous}}</b> -> <b>{{next}}</b> (<b>{{delta}}</b>)",
+      "lotsReplaced": "{{previous}} лоты -> {{next}} лотов",
+      "auctionCleared": "{{lots}} лотов и {{bids}} ставок",
+      "bulkChange": "Подмена всей таблицы аукциона",
+      "createdLot": "Был создан новый лот",
+      "localOnly": "Локальный статус изменен",
+      "removedBid": "Ставка была удалена из очереди",
+      "removedLot": "Лот был удален из таблицы",
+      "pinned": "Закреп",
+      "unpinned": "Откреп",
+      "percentageChange": "<b>{{previous}}</b>% -> <b>{{next}}</b>%",
+      "bidUser": "Имя: {{user}}",
+      "bidTarget": "<b>{{cost}}</b> к <b>{{target}}</b>",
+      "splitCount": "Ставка была разделена между {{count}} лотами",
+      "bidCostChange": "<b>{{previous}}</b> -> <b>{{next}}</b>",
+      "redemptionStatusChanged": "{{count}} ставок обновлено"
+    },
+    "tooltips": {
+      "originalBidMessage": "Исходное сообщение ставки",
+      "emptyBidMessage": "Исходное сообщение не было сохранено.",
+      "previousLotName": "Предыдущее название",
+      "newLotName": "Новое название"
+    },
+    "notifications": {
+      "undo": "Последнее действие было сброшено"
+    }
+  },
   "richTextEditor": {
     "heading1": "Заголовок 1",
     "heading2": "Заголовок 2",
@@ -1507,6 +1588,147 @@
     "noUserIdMessage": "ID пользователя недоступен. Пожалуйста, убедитесь, что вы вошли в систему.",
     "user": "Пользователь: {{username}}"
   },
+  "videoRequests": {
+    "page": {
+      "title": "Запросы видео",
+      "description": "Review viewer requests in a clean playback scene."
+    },
+    "sources": {
+      "youtube": "YouTube",
+      "twitchClip": "Clip",
+      "twitchVod": "VOD"
+    },
+    "player": {
+      "emptyTitle": "Queue is empty",
+      "emptyDescription": "Turn on listening, pick a bid source, then viewer links will land in the queue automatically.",
+      "services": {
+        "youtube": "YouTube videos",
+        "twitch": "Twitch clips and VODs"
+      },
+      "noEmbed": "This request does not have a playable embed URL.",
+      "errorTitle": "Player could not start",
+      "errorDescription": "The video may be unavailable, blocked from embeds, or waiting for a manual play gesture."
+    },
+    "card": {
+      "views": "{{value}} views",
+      "likes": "{{percentage}} likes",
+      "by": "by {{name}}"
+    },
+    "queue": {
+      "title": "Queue",
+      "count": "{{count}} requests",
+      "emptyTitle": "No videos waiting",
+      "emptyDescription": "New accepted requests will appear here.",
+      "remove": "Remove request",
+      "clear": "Clear queue",
+      "clearWithCount": "Clear queue ({{count}})",
+      "clearConfirmTitle": "Clear queue?",
+      "clearConfirmDescription": "This will remove {{count}} queued requests."
+    },
+    "utility": {
+      "nowPlaying": "Now playing",
+      "noCurrent": "Nothing selected",
+      "previous": "Previous",
+      "next": "Next",
+      "pickNext": "Pick Next",
+      "spinWheel": "Spin the wheel",
+      "noPrevious": "No previous video",
+      "noNext": "No next video",
+      "autoplay": "Autoplay",
+      "history": "History",
+      "settings": "Settings",
+      "theater": "Theater mode",
+      "exitTheater": "Exit theater",
+      "skipVotesRemaining": "{{count}} to skip ({{current}}/{{required}})"
+    },
+    "history": {
+      "title": "History",
+      "emptyTitle": "History is empty",
+      "emptyDescription": "Watched and skipped requests will appear here.",
+      "clear": "Clear history",
+      "status": {
+        "watched": "Watched",
+        "skipped": "Skipped",
+        "removed": "Removed"
+      }
+    },
+    "settings": {
+      "title": "Video request settings",
+      "sections": {
+        "filters": "Filters",
+        "nextSelection": "Next pick",
+        "skipVoting": "Skip voting settings"
+      },
+      "fields": {
+        "supportedPlatforms": "Supported platforms",
+        "maxLength": "Max video length",
+        "minViews": "Minimum views",
+        "limitPerViewer": "Max videos from one viewer",
+        "maxTotalVideos": "Max total videos",
+        "maxTotalLength": "Max total length",
+        "skipVotingEnabled": "Enable skip voting",
+        "requiredSkipVotes": "Required skip votes",
+        "skipCommand": "Skip command",
+        "denyCommand": "Deny command",
+        "allowDenySkip": "Allow vote removal"
+      },
+      "units": {
+        "minutes": "min"
+      },
+      "actions": {
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all"
+      },
+      "nextStrategies": {
+        "requestOrder": "Request order",
+        "biggestBid": "Biggest bid",
+        "randomWheel": "Random wheel"
+      }
+    },
+    "listener": {
+      "title": "Прослушивание ставок",
+      "description": "Выберите, какие подключенные интеграции должны направлять входящие ставки в очередь запросов видео.",
+      "enable": "Прослушивание включено",
+      "queueSwitchLabel": "Listening",
+      "inlineTitle": "Collect requests from bids",
+      "inlineDescription": "Use connected donation and channel-point services as request sources.",
+      "groupsTitle": "Группы ставок",
+      "groups": {
+        "donations": "Донаты",
+        "channelPoints": "Баллы канала"
+      },
+      "integrationsTitle": "Авторизованные интеграции",
+      "noAuthenticatedIntegrations": "Для этой группы пока нет доступных авторизованных интеграций.",
+      "integrationStatus": {
+        "idle": "Ожидает",
+        "loading": "Подключается",
+        "subscribed": "Слушает"
+      },
+      "stats": {
+        "queue": "Очередь: {{count}}",
+        "rejections": "Отклонено: {{count}}"
+      }
+    },
+    "debug": {
+      "title": "Debug request",
+      "description": "Send a local test bid through the same global bid pipeline used by real integrations.",
+      "send": "Send request",
+      "openSettings": "Open debug request settings",
+      "randomize": "Randomize all fields",
+      "sentNotification": "Debug request sent.",
+      "integrationTypes": {
+        "donate": "Donations",
+        "points": "Channel points"
+      },
+      "fields": {
+        "requestContent": "Request content",
+        "viewerName": "Viewer name",
+        "integration": "Integration",
+        "cost": "Amount",
+        "rewardId": "Reward ID"
+      }
+    }
+  },
   "archive": {
     "modal": {
       "title": "Архив",
@@ -1523,7 +1745,14 @@
     "item": {
       "autosave": "Автосохранение",
       "autosaveBadge": "постоянный",
+      "lastDeleted": "Последний удаленный",
+      "lastDeletedBadge": "последний удаленный",
+      "lastDeletedBadgeTooltip": "Автоматически хранит последний удаленный или перезаписанный архив на случай, если вы захотите его восстановить.",
       "overwrite": "Перезаписать текущим аукционом",
+      "overwriteConfirmTitle": "Перезаписать архив?",
+      "overwriteConfirmCancel": "Отмена",
+      "overwriteConfirmAction": "Перезаписать",
+      "restore": "Восстановить как новый архив",
       "rename": "Переименовать",
       "export": "Экспорт",
       "delete": "Удалить",
@@ -1536,6 +1765,7 @@
       "bidCount_many": "{{count}} ставок",
       "bidCount_other": "{{count}} ставки",
       "cannotDelete": "Автосохранение нельзя удалить",
+      "cannotDeleteLastDeleted": "Нельзя удалить вручную",
       "updated": "Обновлено {{time}}",
       "created": "Создано {{time}}",
       "namePlaceholder": "Название архива...",

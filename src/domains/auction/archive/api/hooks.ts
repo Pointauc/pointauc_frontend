@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import { setPurchases } from '@reducers/Purchases/Purchases.ts';
+import { setActionLog } from '@reducers/ActionsLog/ActionsLog.ts';
 import { setSlots } from '@reducers/Slots/Slots';
 import { loadFile } from '@utils/common.utils';
 
-import { getArchivePurchases } from '../lib/archiveData';
+import { getArchiveActionLog, getArchivePurchases } from '../lib/archiveData';
 import { archivedLotsToSlots } from '../lib/converters';
 import { QUERY_KEYS } from '../model/constants';
 import { ArchiveData, ArchiveRecord } from '../model/types';
@@ -60,6 +61,7 @@ export function useCreateArchive() {
         name,
         data: JSON.stringify(data),
         isAutosave: false,
+        isLastDeleted: false,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.archives });
@@ -163,10 +165,10 @@ export function useLoadArchive() {
       const data: ArchiveData = JSON.parse(archive.data);
       const slots = archivedLotsToSlots(data.lots);
       const purchases = getArchivePurchases(data);
+      const actionLog = getArchiveActionLog(data);
       dispatch(setSlots(slots));
-      if (purchases?.length) {
-        dispatch(setPurchases(purchases));
-      }
+      dispatch(setPurchases(purchases));
+      dispatch(setActionLog(actionLog));
       notifications.show({
         title: t('archive.notifications.loaded'),
         message: '',
@@ -250,6 +252,7 @@ export function useImportArchive() {
         name,
         data: JSON.stringify(data),
         isAutosave: false,
+        isLastDeleted: false,
       });
     },
     onSuccess: () => {

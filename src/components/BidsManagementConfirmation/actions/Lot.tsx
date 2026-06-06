@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { getSlot } from '@utils/slots.utils.ts';
 import { RootState } from '@reducers';
-import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { PurchaseLog } from '@reducers/ActionsLog/ActionsLog.ts';
 
 interface ConfigProps {
   type: Bid.Action;

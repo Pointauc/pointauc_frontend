@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-import { Purchase, PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { Purchase } from '@reducers/Purchases/Purchases.ts';
+import { PurchaseLog } from '@reducers/ActionsLog/ActionsLog.ts';
 import { GlobalActionConfig } from '@components/BidsManagementConfirmation/actions/Global.tsx';
 import { LotActionConfig } from '@components/BidsManagementConfirmation/actions/Lot.tsx';
 import * as Integration from '@models/integration';

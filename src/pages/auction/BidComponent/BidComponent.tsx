@@ -13,11 +13,10 @@ import PointsIcon from '@assets/icons/channelPoints.svg?react';
 import donationBackground from '@assets/img/donationBackground.jpg';
 import Marble from '@assets/img/Marble.png';
 import { useCostConvert } from '@hooks/useCostConvert.ts';
-import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { RedemptionStatus } from '@models/redemption.model.ts';
 import { RootState } from '@reducers';
+import { logBidDeleted } from '@reducers/ActionsLog/ActionsLog.ts';
 import {
-  logPurchase,
   removePurchase,
   setDraggedRedemption,
   updateBid,
@@ -106,7 +105,7 @@ const BidComponent: React.FC<BidComponentProps> = ({
   }, [id, purchase.source, rewardId]);
 
   const handleRemove = (): void => {
-    dispatch(logPurchase({ ...purchase, status: PurchaseStatusEnum.Deleted }));
+    dispatch(logBidDeleted(purchase));
     dispatch(removePurchase(id));
 
     if (isRefundAvailable && !isDonation) {

@@ -146,7 +146,7 @@ const AuctionHistoryCard = ({
           </Tooltip> */}
             <Group
               gap={4}
-              className='pointer-events-none ml-auto shrink-0 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100'
+              className='pointer-events-none ml-auto shrink-0 opacity-0 transition-opacity group-focus-within:pointer-events-auto group-focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100'
               onClick={(event) => event.stopPropagation()}
             >
               <Tooltip label={t('auctionHistory.actions.restoreAuction')} withArrow>

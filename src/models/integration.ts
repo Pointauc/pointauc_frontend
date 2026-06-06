@@ -35,6 +35,7 @@ export interface PubsubComponentProps {
 }
 
 export enum IconSize {
+  EXTRA_SMALL = 18,
   SMALL = 22,
   MEDIUM = 32,
 }
@@ -138,6 +139,33 @@ export interface PubsubFlow {
   store: Store<PubsubSubscription>;
 }
 
+export interface ChatMessage {
+  channel: string;
+  username: string;
+  userId: string | null;
+  message: string;
+  timestamp: string;
+  rawTags: Record<string, unknown>;
+}
+
+export type ChatIntegrationEvents = {
+  message: (message: ChatMessage) => void;
+};
+
+export interface ChatIntegrationSubscription {
+  connected: boolean;
+  loading: boolean;
+  error?: string | null;
+  channel?: string | null;
+}
+
+export interface ChatIntegrationFlow {
+  events: EventEmitter<ChatIntegrationEvents>;
+  connect: (channel: string) => Promise<void>;
+  disconnect: () => Promise<void>;
+  store: Store<ChatIntegrationSubscription>;
+}
+
 /**
  * Final configuration object for the service.
  *
@@ -163,6 +191,10 @@ export interface Config<TAuth extends AuthFlow = AuthFlow, TPubsub extends Pubsu
    * How this App receives real-time updates from the service.
    */
   pubsubFlow: TPubsub;
+  /**
+   * Optional read-only chat flow for services that can expose browser chat events.
+   */
+  chatIntegration?: ChatIntegrationFlow;
   /**
    * How the service is displayed across the app.
    */

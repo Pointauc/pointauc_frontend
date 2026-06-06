@@ -13,7 +13,12 @@ import ActionStatus from '@components/BidsManagementConfirmation/ActionStatus.ts
 import bidsManagementUtils from '@components/BidsManagementConfirmation/utils.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { RootState } from '@reducers';
-import { setHistory } from '@reducers/Purchases/Purchases.ts';
+import {
+  addActionLogEntry,
+  createActionLogEntry,
+  selectPurchaseLogs,
+  updatePurchaseLogStatuses,
+} from '@reducers/ActionsLog/ActionsLog.ts';
 import { store } from '@store';
 
 import classes from './BidsManagementConfirmation.module.css';
@@ -52,7 +57,7 @@ export interface BidsManagementConfirmationProps {
 function BidsManagementConfirmation({ actions: _actions, onLoadingChanged, onClose }: BidsManagementConfirmationProps) {
   const { t } = useTranslation();
   const [actionsStatuses, setActionsStatuses] = useState<API.RequestStatus[]>([]);
-  const { history: _history } = useSelector((root: RootState) => root.purchases);
+  const _history = useSelector(selectPurchaseLogs);
   const [actions] = useState(_actions);
   const [history] = useState(_history);
   const dispatch = useDispatch();
@@ -133,8 +138,23 @@ function BidsManagementConfirmation({ actions: _actions, onLoadingChanged, onClo
         }),
       )
         .then(() => {
-          const history = store.getState().purchases.history;
-          dispatch(setHistory(bidsManagementUtils.markStatus(data, history, action.type)));
+          const bidIds = data.map((bid) => bid.id);
+          dispatch(
+            addActionLogEntry(
+              createActionLogEntry({
+                type: 'bid.redemptionStatusChanged',
+                bidIds,
+                previousStatus: PurchaseStatusEnum.Processed,
+                nextStatus: bidsManagementUtils.actionToLogStatus(action.type),
+              }),
+            ),
+          );
+          dispatch(
+            updatePurchaseLogStatuses({
+              bidIds,
+              status: bidsManagementUtils.actionToLogStatus(action.type),
+            }),
+          );
           setActionStatus('success', index);
         })
         .catch(() => setActionStatus('error', index));

@@ -5,12 +5,13 @@ import { LocalStorage } from '@constants/common.constants';
 import { SaveInfo } from '@models/save.model';
 import { Lot } from '@models/slot.model';
 import { RootState } from '@reducers/index';
+import { setActionLog } from '@reducers/ActionsLog/ActionsLog.ts';
 import { setPurchases } from '@reducers/Purchases/Purchases.ts';
 import { setSlots, setSlotsInitialized } from '@reducers/Slots/Slots';
 import { captureError } from '@shared/lib/error-tracking/service';
 
 import archiveApi from '../api/IndexedDBAdapter';
-import { checkHasArchiveContent, getArchivePurchases } from '../lib/archiveData';
+import { checkHasArchiveContent, getArchiveActionLog, getArchivePurchases } from '../lib/archiveData';
 import { archivedLotsToSlots, slotsToArchivedLots } from '../lib/converters';
 import { ArchiveData } from '../model/types';
 
@@ -66,6 +67,7 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
             name: saveInfo.name,
             data: JSON.stringify(archiveData),
             isAutosave: false,
+            isLastDeleted: false,
           });
         }
 
@@ -122,6 +124,7 @@ function AutoloadAutosave() {
             if (checkHasArchiveContent(data)) {
               const loadedSlots = archivedLotsToSlots(data.lots);
               const purchases = getArchivePurchases(data);
+              const actionLog = getArchiveActionLog(data);
 
               if (loadedSlots.length > 0) {
                 dispatch(setSlots(loadedSlots));
@@ -130,6 +133,8 @@ function AutoloadAutosave() {
               if (purchases.length > 0) {
                 dispatch(setPurchases(purchases));
               }
+
+              dispatch(setActionLog(actionLog));
             }
           }
         } catch (err) {

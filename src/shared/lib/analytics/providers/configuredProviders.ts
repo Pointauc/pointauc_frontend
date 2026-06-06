@@ -8,8 +8,11 @@ import type { AnalyticsProvider } from './provider';
 export class ConfiguredAnalyticsProviders {
   getProviders(): AnalyticsProvider[] {
     const providers: AnalyticsProvider[] = [];
+    const googleTagManagerContainerId = import.meta.env.VITE_GOOGLE_TAG_MANAGER_CONTAINER_ID ?? 'GTM-5CVBSXX4';
 
-    providers.push(googleTagManagerProvider.configure('GTM-5CVBSXX4'));
+    if (googleTagManagerContainerId) {
+      providers.push(googleTagManagerProvider.configure(googleTagManagerContainerId));
+    }
 
     if (postHogProvider) {
       providers.push(postHogProvider);

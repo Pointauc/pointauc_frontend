@@ -1,7 +1,8 @@
 .totalSumWrapper {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  z-index: 1000;
+  left: 5.75rem;
+  bottom: 0.25em;
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-xs);

@@ -36,7 +36,7 @@ const NewAuctionButton = () => {
       !lot?.name?.trim() &&
       Number(lot?.amount ?? 0) <= 0 &&
       state.purchases.purchases.length === 0 &&
-      state.purchases.history.length === 0 &&
+      state.actionsLog.entries.length === 0 &&
       state.activeAuctionHistory.pendingWinnerEvents.length === 0
     );
   });

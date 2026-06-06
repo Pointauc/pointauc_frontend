@@ -104,7 +104,7 @@ export interface BuildAuctionHistorySnapshotParams {
   durationMs: number;
   pointsToDonationRatio: number;
   lots: import('@models/slot.model').Lot[];
-  purchases: import('@reducers/Purchases/Purchases').PurchaseLog[];
+  purchases: import('@reducers/ActionsLog/ActionsLog').PurchaseLog[];
   pendingWinnerEvents: PendingAuctionWinnerEvent[];
 }
 

@@ -1,6 +1,6 @@
 import { LotActionConfig } from '@components/BidsManagementConfirmation/actions/Lot.tsx';
 import { GlobalActionConfig } from '@components/BidsManagementConfirmation/actions/Global.tsx';
-import { PurchaseLog } from '@reducers/Purchases/Purchases.ts';
+import { PurchaseLog } from '@reducers/ActionsLog/ActionsLog.ts';
 import array from '@utils/dataType/array.ts';
 import { RedemptionStatus } from '@models/redemption.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
@@ -39,6 +39,7 @@ const bidsManagementUtils = {
   presets: pointsManagementPresets,
   toDto,
   markStatus,
+  actionToLogStatus,
 };
 
 export default bidsManagementUtils;

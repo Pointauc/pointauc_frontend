@@ -19,8 +19,6 @@ import { RootState } from '@reducers';
 import { setAutoScroll, setCompact, setShowChances, setShowRules } from '@reducers/AucSettings/AucSettings';
 import { loadFile } from '@utils/common.utils.ts';
 
-import LanguageDropdown from '../LanguageDropdown/LanguageDropdown';
-
 import classes from './AucActions.module.css';
 import TotalAmount from './TotalAmount/TotalAmount';
 import NewAuctionButton from './NewAuction/NewAuctionButton';
@@ -140,12 +138,6 @@ const AucActions: React.FC = () => {
       </Button.Group>
 
       <ArchiveModal opened={archiveModalOpen} onClose={handleArchiveClose} />
-
-      <div className={classes.options}>
-        <LanguageDropdown />
-      </div>
-
-      <TotalAmount />
     </Group>
   );
 };

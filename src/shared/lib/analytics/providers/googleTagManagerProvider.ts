@@ -38,11 +38,11 @@ export class GoogleTagManagerProvider implements AnalyticsProvider {
   }
 
   track(event: AnalyticsTrackedEvent): void {
-    // if (!isBrowser || !this.containerId) {
-    //   return;
-    // }
-    // void this.ensureReady();
-    // window.dataLayer?.push(this.mapEventToGoogleTagManagerPayload(event));
+    if (!isBrowser || !this.containerId) {
+      return;
+    }
+    void this.ensureReady();
+    window.dataLayer?.push(this.mapEventToGoogleTagManagerPayload(event));
   }
 
   private getContextParameters(event: AnalyticsTrackedEvent): Record<string, unknown> {
@@ -80,13 +80,43 @@ export class GoogleTagManagerProvider implements AnalyticsProvider {
       return Promise.resolve();
     }
 
-    // if (!this.initPromise) {
-    //   const activeContainerId = this.containerId;
-    //   this.initializeGoogleTagManagerContainer();
-    //   this.initPromise = this.loadGoogleTagManagerScript(activeContainerId);
-    // }
+    if (!this.initPromise) {
+      const activeContainerId = this.containerId;
+      this.initializeGoogleTagManagerContainer();
+      this.initPromise = this.loadGoogleTagManagerScript(activeContainerId);
+    }
 
     return this.initPromise || Promise.resolve();
+  }
+
+  private initializeGoogleTagManagerContainer(): void {
+    window.dataLayer = window.dataLayer ?? [];
+    window.dataLayer.push({
+      event: 'gtm.js',
+      'gtm.start': Date.now(),
+    });
+  }
+
+  private loadGoogleTagManagerScript(containerId: string): Promise<void> {
+    const existingLoader = googleTagManagerScriptLoaders.get(containerId);
+
+    if (existingLoader) {
+      return existingLoader;
+    }
+
+    const loader = new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.async = true;
+      script.dataset.googleTagManagerId = containerId;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(containerId)}`;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`Failed to load Google Tag Manager container ${containerId}`));
+      document.head.appendChild(script);
+    });
+
+    googleTagManagerScriptLoaders.set(containerId, loader);
+
+    return loader;
   }
 }
 

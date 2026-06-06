@@ -1,12 +1,22 @@
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 
-import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { Lot } from '@models/slot.model.ts';
 import fastIdAllocator from '@services/FastIdAllocator.ts';
 import bidUtils from '@utils/bid.utils.ts';
 import { getRandomIntInclusive, sortSlots } from '@utils/common.utils.ts';
 import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils';
+import {
+  addActionLogEntry,
+  attachActionLogEntry,
+  buildBidLotChange,
+  BidLotChange,
+  createActionLogEntry,
+  createLotPriceChangedEntry,
+  createPurchaseLog,
+  logBidProcessed,
+  PurchaseLog,
+} from '@reducers/ActionsLog/ActionsLog.ts';
 import {
   addContributorAmount,
   contributorsFromLegacyInvestors,
@@ -14,7 +24,7 @@ import {
 } from '@utils/slotContributors.utils';
 
 import slotNamesMap from '../../services/SlotNamesMap';
-import { addedBidsMap, addPurchaseLog, logPurchase, Purchase, removePurchase } from '../Purchases/Purchases';
+import { addedBidsMap, Purchase, removePurchase } from '../Purchases/Purchases';
 import { RootState } from '../index';
 
 import LotQuery = PublicApi.LotQuery;
@@ -74,13 +84,21 @@ const updateSlotPosition = (slots: Lot[], index: number): void => {
   }
 };
 
-const updateSlotAmount = (slots: Lot[], updatedId: string | number, transform: (slot: Lot) => Lot): void => {
+const updateSlotAmount = (
+  slots: Lot[],
+  updatedId: string | number,
+  transform: (slot: Lot) => Lot,
+  action: PayloadAction<unknown>,
+): void => {
   const updatedIndex = slots.findIndex(({ id }) => updatedId === id);
   if (updatedIndex === -1) {
     return;
   }
 
-  slots[updatedIndex] = transform(slots[updatedIndex]);
+  const previousLot = current(slots[updatedIndex]);
+  const nextLot = transform(previousLot);
+  slots[updatedIndex] = nextLot;
+  attachActionLogEntry(action, createLotPriceChangedEntry(previousLot, nextLot));
   updateSlotPosition(slots, updatedIndex);
 };
 
@@ -100,6 +118,22 @@ const slotsQueryComparator = {
   id: (lot: Lot, id: string) => lot.id === id,
   investorId: (lot: Lot, investorId: string) => lot.contributors?.some(({ name }) => name === investorId) ?? false,
   bidId: (lot: Lot, bidId: string) => lot.id === addedBidsMap.get(bidId),
+};
+
+const createLotPercentageChangedEntry = (previousLot: Lot, nextLot: Lot) => {
+  if (previousLot.lockedPercentage === nextLot.lockedPercentage) {
+    return null;
+  }
+
+  return createActionLogEntry({
+    type: 'lot.priceChanged',
+    lotId: nextLot.id,
+    lotName: nextLot.name,
+    previousAmount: previousLot.lockedPercentage ?? null,
+    nextAmount: nextLot.lockedPercentage ?? null,
+    amountDelta: Number(nextLot.lockedPercentage ?? 0) - Number(previousLot.lockedPercentage ?? 0),
+    changeValueType: 'percentage' as const,
+  });
 };
 
 export const slotsSlice = createSlice({
@@ -129,6 +163,17 @@ export const slotsSlice = createSlice({
         if (slot.id === id && slot.name != null) {
           const updatedSlot = { ...slot, name };
           slotNamesMap.updateSlot(updatedSlot);
+          if (!action.payload.ignoreParsing && slot.name !== name) {
+            attachActionLogEntry(
+              action,
+              createActionLogEntry({
+                type: 'lot.renamed',
+                lotId: updatedSlot.id,
+                previousName: current(slot).name,
+                nextName: updatedSlot.name,
+              }),
+            );
+          }
 
           return updatedSlot;
         }
@@ -138,11 +183,11 @@ export const slotsSlice = createSlice({
     },
     addSlotAmount(state, action: PayloadAction<{ id: string | number; amount: number }>): void {
       const { id, amount } = action.payload;
-      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount: (slot.amount || 0) + amount }));
+      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount: (slot.amount || 0) + amount }), action);
     },
     setSlotAmount(state, action: PayloadAction<{ id: string | number; amount: number }>): void {
       const { id, amount } = action.payload;
-      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount }));
+      updateSlotAmount(state.slots, id, (slot) => ({ ...slot, amount }), action);
     },
     setLotPercentage(state, action: PayloadAction<{ id: string | number; percentage: number }>): void {
       const { id, percentage } = action.payload;
@@ -159,6 +204,7 @@ export const slotsSlice = createSlice({
       slotNamesMap.deleteBySlotId(deletedId);
       if (deletedSlot) {
         fastIdAllocator.release(deletedSlot.fastId);
+        attachActionLogEntry(action, createActionLogEntry({ type: 'lot.deleted', lot: current(deletedSlot) }));
       }
 
       if (state.slots.length === 1) {
@@ -167,9 +213,14 @@ export const slotsSlice = createSlice({
         state.slots = state.slots.filter(({ id }) => deletedId !== id);
       }
     },
-    addSlot(state, action: PayloadAction<Partial<Lot>>): void {
-      const newSlot = createSlot(action?.payload);
-      state.slots = [...state.slots, newSlot];
+    addSlot: {
+      reducer(state, action: PayloadAction<Lot>): void {
+        attachActionLogEntry(action, createActionLogEntry({ type: 'lot.added', lot: action.payload }));
+        state.slots = [...state.slots, action.payload];
+      },
+      prepare(payload: Partial<Lot>) {
+        return { payload: createSlot(payload) };
+      },
     },
     resetSlots(state): void {
       slotNamesMap.clear();
@@ -194,11 +245,29 @@ export const slotsSlice = createSlice({
     },
     setLockedPercentage(state, action: PayloadAction<{ id: string; percentage: number }>): void {
       const { id, percentage } = action.payload;
-      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, lockedPercentage: percentage } : slot));
+      state.slots = state.slots.map((slot) => {
+        if (slot.id !== id) {
+          return slot;
+        }
+
+        const updatedSlot = { ...slot, lockedPercentage: percentage };
+        attachActionLogEntry(action, createLotPercentageChangedEntry(current(slot), updatedSlot));
+
+        return updatedSlot;
+      });
     },
     unlockPercentage(state, action: PayloadAction<string>): void {
       const id = action.payload;
-      state.slots = state.slots.map((slot) => (slot.id === id ? { ...slot, lockedPercentage: null } : slot));
+      state.slots = state.slots.map((slot) => {
+        if (slot.id !== id) {
+          return slot;
+        }
+
+        const updatedSlot = { ...slot, lockedPercentage: null };
+        attachActionLogEntry(action, createLotPercentageChangedEntry(current(slot), updatedSlot));
+
+        return updatedSlot;
+      });
     },
     mergeLot(state, action: PayloadAction<PublicApi.LotUpdateRequest>): void {
       const { query, lot: requestLot } = action.payload;
@@ -273,7 +342,8 @@ export const createSlotFromPurchase =
 
     updateSlotPosition(updatedSlots, updatedSlots.length - 1);
     dispatch(reorderSlots(sortSlots(recalculateAllLockedSlots(updatedSlots))));
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: newSlot.id, cost: bid.cost }, true));
+    dispatch(logBidProcessed(bid, newSlot, amount, true));
+    addedBidsMap.set(bid.id, newSlot.id);
   };
 
 interface BidHandleOptions {
@@ -329,7 +399,8 @@ export const addBid =
       );
     }
 
-    dispatch(logPurchase({ ...bid, status: PurchaseStatusEnum.Processed, target: lot.id }, false));
+    dispatch(logBidProcessed(bid, lot, amount, false));
+    addedBidsMap.set(id, lot.id);
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);
   };
@@ -346,14 +417,14 @@ export const splitBid =
     const updatedSlots = [...slots];
     const appliedEntries = entries.filter(({ amount }) => Number.isFinite(amount) && amount > 0);
     let appliedEntriesCount = 0;
+    const bidLogs: PurchaseLog[] = [];
+    const lotChanges: BidLotChange[] = [];
 
     if (!appliedEntries.length) {
       return;
     }
 
     appliedEntries.forEach((entry, index) => {
-      const timestamp = new Date().toISOString();
-
       if (entry.target.type === 'existing') {
         const target = entry.target;
         const slotIndex = updatedSlots.findIndex(({ id }) => id === target.lotId);
@@ -376,17 +447,16 @@ export const splitBid =
         slotNamesMap.set(String(target.name || slotName || bidName), updatedSlot.id);
         appliedEntriesCount += 1;
 
-        dispatch(
-          addPurchaseLog({
-            ...bid,
-            id: `${bid.id}:split:${index}`,
-            timestamp,
+        bidLogs.push(
+          createPurchaseLog({ ...bid, id: `${bid.id}:split:${index}` }, getState, updatedSlot.id, false, {
             cost: entry.amount,
             rawCost: bid.cost,
-            status: PurchaseStatusEnum.Processed,
-            target: updatedSlot.id,
           }),
         );
+        lotChanges.push({
+          ...buildBidLotChange(updatedSlot, entry.amount, bid, false),
+          aliasKey: String(target.name || slotName || bidName),
+        });
 
         return;
       }
@@ -408,20 +478,26 @@ export const splitBid =
       }
       appliedEntriesCount += 1;
 
-      dispatch(
-        addPurchaseLog({
-          ...bid,
-          id: `${bid.id}:split:${index}`,
-          timestamp,
+      bidLogs.push(
+        createPurchaseLog({ ...bid, id: `${bid.id}:split:${index}` }, getState, newSlot.id, true, {
           cost: entry.amount,
           rawCost: bid.cost,
-          status: PurchaseStatusEnum.Processed,
-          target: newSlot.id,
         }),
       );
+      lotChanges.push(buildBidLotChange(newSlot, entry.amount, bid, true));
     });
 
     if (appliedEntriesCount > 0) {
+      dispatch(
+        addActionLogEntry(
+          createActionLogEntry({
+            type: 'bid.split',
+            bidLogs,
+            pendingBid: bid,
+            lotChanges,
+          }),
+        ),
+      );
       dispatch(reorderSlots(sortSlots(recalculateAllLockedSlots(updatedSlots))));
       dispatch(removePurchase(bid.id));
     }

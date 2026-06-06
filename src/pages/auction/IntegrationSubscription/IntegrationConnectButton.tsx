@@ -16,7 +16,7 @@ const IntegrationConnectButton = ({ integrations, onClick }: IntegrationConnectB
     <Button
       variant='default'
       onClick={onClick}
-      className='group w-full rounded-sm py-2 pr-2.5 pl-1 text-inherit'
+      className='group border-paper-500/80 bg-paper-700/80 hover:border-paper-400 hover:bg-paper-600 w-full rounded-sm py-2 pr-2.5 pl-1 text-inherit'
       classNames={{ inner: 'w-full', label: 'w-full overflow-visible' }}
       h='auto'
       radius='sm'

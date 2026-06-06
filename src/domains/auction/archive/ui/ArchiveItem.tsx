@@ -1,6 +1,6 @@
-﻿import { ActionIcon, Badge, Group, Paper, Text, TextInput, Tooltip } from '@mantine/core';
+﻿import { ActionIcon, Badge, Button, Group, Paper, Popover, Stack, Text, TextInput, Tooltip } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
-import { IconArchive, IconCheck, IconDownload, IconPencil, IconTrash, IconX } from '@tabler/icons-react';
+import { IconArchive, IconCheck, IconDownload, IconPencil, IconRestore, IconTrash, IconX } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -13,7 +13,7 @@ import { createArchiveData, getArchivePurchases } from '../lib/archiveData';
 import { slotsToArchivedLots } from '../lib/converters';
 import openPendingBidsDecisionModal from '../lib/openPendingBidsDecisionModal';
 import { ArchiveData, ArchiveRecord } from '../model/types';
-import { useDeleteArchive, useExportArchive, useUpdateArchive } from '../api/hooks';
+import { useCreateArchive, useDeleteArchive, useExportArchive, useUpdateArchive } from '../api/hooks';
 import { isValidArchiveName } from '../lib/validators';
 
 import styles from './ArchiveItem.module.css';
@@ -22,22 +22,52 @@ dayjs.extend(relativeTime);
 
 interface ArchiveItemProps {
   archive: ArchiveRecord;
+  archives: ArchiveRecord[];
   onLoad: () => void;
   isLoading?: boolean;
   sortBy: 'name' | 'createdAt' | 'updatedAt';
   shouldHighlight?: boolean;
 }
 
-function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlight = false }: ArchiveItemProps) {
+const getUniqueRestoredArchiveName = (baseName: string, archives: ArchiveRecord[]): string => {
+  const existingNames = new Set(
+    archives.filter((archiveRecord) => !archiveRecord.isLastDeleted).map((archiveRecord) => archiveRecord.name),
+  );
+
+  if (!existingNames.has(baseName)) {
+    return baseName;
+  }
+
+  let restoredCount = 1;
+  let restoredName = `${baseName} [Restored] #${restoredCount}`;
+
+  while (existingNames.has(restoredName)) {
+    restoredCount += 1;
+    restoredName = `${baseName} [Restored] #${restoredCount}`;
+  }
+
+  return restoredName;
+};
+
+function ArchiveItem({
+  archive,
+  archives,
+  onLoad,
+  isLoading = false,
+  sortBy,
+  shouldHighlight = false,
+}: ArchiveItemProps) {
   const { t } = useTranslation();
   const [name, setName] = useState(archive.name);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isHighlightActive, setIsHighlightActive] = useState(false);
+  const [isOverwriteConfirmationOpened, setIsOverwriteConfirmationOpened] = useState(false);
   const [debouncedName] = useDebouncedValue(name, 500);
   const itemRef = useRef<HTMLDivElement | null>(null);
 
   const slots = useSelector((state: RootState) => state.slots.slots);
   const purchases = useSelector((state: RootState) => state.purchases.purchases);
+  const createMutation = useCreateArchive();
   const updateMutation = useUpdateArchive();
   const deleteMutation = useDeleteArchive();
   const exportMutation = useExportArchive();
@@ -45,14 +75,19 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
   const data: ArchiveData = JSON.parse(archive.data);
   const lotCount = data.lots.length;
   const purchaseCount = getArchivePurchases(data).length;
+  const isUtilityArchive = archive.isAutosave || archive.isLastDeleted;
 
   // Update archive name when debounced value changes
   useEffect(() => {
+    if (isUtilityArchive) {
+      return;
+    }
+
     if (debouncedName !== archive.name && isValidArchiveName(debouncedName)) {
       updateMutation.mutate({ id: archive.id, name: debouncedName });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedName]);
+  }, [debouncedName, isUtilityArchive]);
 
   // Sync local state if archive name changes externally
   useEffect(() => {
@@ -78,12 +113,25 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isUtilityArchive) {
+      return;
+    }
+
     deleteMutation.mutate(archive.id);
   };
 
   const handleExport = (e: React.MouseEvent) => {
     e.stopPropagation();
     exportMutation.mutate(archive.id);
+  };
+
+  const handleRestore = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!archive.isLastDeleted) {
+      return;
+    }
+
+    createMutation.mutate({ name: getUniqueRestoredArchiveName(archive.name, archives), data });
   };
 
   const overwriteArchive = (includePendingBids: boolean) => {
@@ -96,8 +144,17 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
     updateMutation.mutate({ id: archive.id, data: archiveData });
   };
 
-  const handleOverwrite = (e: React.MouseEvent) => {
+  const handleOpenOverwriteConfirmation = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isUtilityArchive) {
+      return;
+    }
+
+    setIsOverwriteConfirmationOpened(true);
+  };
+
+  const handleOverwrite = () => {
+    setIsOverwriteConfirmationOpened(false);
 
     if (purchases.length === 0) {
       overwriteArchive(false);
@@ -141,6 +198,12 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
   const timeText = shouldShowUpdated
     ? t('archive.item.updated', { time: dayjs(archive.updatedAt).fromNow() })
     : t('archive.item.created', { time: dayjs(archive.createdAt).fromNow() });
+  const archiveName = archive.isAutosave ? t('archive.item.autosave') : archive.name;
+  const deleteTooltip = archive.isAutosave
+    ? t('archive.item.cannotDelete')
+    : archive.isLastDeleted
+    ? t('archive.item.cannotDeleteLastDeleted')
+    : t('archive.item.delete');
 
   return (
     <Paper
@@ -191,9 +254,9 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
             ) : (
               <>
                 <Text fw={500} style={{ wordBreak: 'break-word' }}>
-                  {archive.isAutosave ? t('archive.item.autosave') : archive.name}
+                  {archiveName}
                 </Text>
-                {!archive.isAutosave && (
+                {!isUtilityArchive && (
                   <Tooltip label={t('archive.item.editName')}>
                     <ActionIcon variant='subtle' size='input-sm' onClick={handleEditName}>
                       <IconPencil size={20} />
@@ -207,6 +270,13 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
                 {t('archive.item.autosaveBadge')}
               </Badge>
             )}
+            {archive.isLastDeleted && (
+              <Tooltip label={t('archive.item.lastDeletedBadgeTooltip')}>
+                <Badge color='grape' size='sm'>
+                  {t('archive.item.lastDeletedBadge')}
+                </Badge>
+              </Tooltip>
+            )}
           </Group>
         </div>
 
@@ -217,10 +287,48 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
       </div>
 
       <Group gap='xs' className={styles.actions}>
-        {!archive.isAutosave && (
-          <Tooltip label={t('archive.item.overwrite')}>
-            <ActionIcon variant='subtle' size='input-sm' onClick={handleOverwrite} loading={updateMutation.isPending}>
-              <IconArchive size={20} />
+        {!isUtilityArchive && (
+          <Popover
+            opened={isOverwriteConfirmationOpened}
+            onChange={setIsOverwriteConfirmationOpened}
+            position='bottom'
+            withArrow
+            shadow='md'
+          >
+            <Popover.Target>
+              <Tooltip label={t('archive.item.overwrite')} disabled={isOverwriteConfirmationOpened}>
+                <ActionIcon
+                  variant='subtle'
+                  size='input-sm'
+                  onClick={handleOpenOverwriteConfirmation}
+                  loading={updateMutation.isPending}
+                >
+                  <IconArchive size={20} />
+                </ActionIcon>
+              </Tooltip>
+            </Popover.Target>
+            <Popover.Dropdown onClick={(e) => e.stopPropagation()} maw={320}>
+              <Stack gap='xs'>
+                <Text size='sm' fw={600}>
+                  {t('archive.item.overwriteConfirmTitle')}
+                </Text>
+                <Group gap='xs' justify='flex-end'>
+                  <Button variant='subtle' size='xs' onClick={() => setIsOverwriteConfirmationOpened(false)}>
+                    {t('archive.item.overwriteConfirmCancel')}
+                  </Button>
+                  <Button color='red' size='xs' onClick={handleOverwrite}>
+                    {t('archive.item.overwriteConfirmAction')}
+                  </Button>
+                </Group>
+              </Stack>
+            </Popover.Dropdown>
+          </Popover>
+        )}
+
+        {archive.isLastDeleted && (
+          <Tooltip label={t('archive.item.restore')}>
+            <ActionIcon variant='subtle' size='input-sm' onClick={handleRestore} loading={createMutation.isPending}>
+              <IconRestore size={20} />
             </ActionIcon>
           </Tooltip>
         )}
@@ -231,13 +339,13 @@ function ArchiveItem({ archive, onLoad, isLoading = false, sortBy, shouldHighlig
           </ActionIcon>
         </Tooltip>
 
-        <Tooltip label={archive.isAutosave ? t('archive.item.cannotDelete') : t('archive.item.delete')}>
+        <Tooltip label={deleteTooltip}>
           <ActionIcon
             variant='subtle'
             size='input-sm'
             color='red'
             onClick={handleDelete}
-            disabled={archive.isAutosave}
+            disabled={isUtilityArchive}
             loading={deleteMutation.isPending}
           >
             <IconTrash size={20} />

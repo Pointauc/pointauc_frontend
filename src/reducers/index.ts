@@ -4,6 +4,7 @@ import broadcasting from '../domains/broadcasting/model/store';
 import lotLinkParsing from '../domains/links/participant-url-parsing/link-processing-queue/slice';
 import activeAuctionHistory from '../domains/auction/history/model/activeAuctionHistorySlice';
 
+import actionsLog from './ActionsLog/ActionsLog';
 import slots from './Slots/Slots';
 import user from './User/User';
 import purchases from './Purchases/Purchases';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   slots,
   user,
   purchases,
+  actionsLog,
   aucSettings,
   extraWindows,
   overlay,
