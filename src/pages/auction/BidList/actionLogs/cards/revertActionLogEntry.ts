@@ -13,6 +13,7 @@ import { ACTION_LOG_TRACKED_ACTION_TYPES } from './actionLogActionTypes';
 import { ActionLogEntry, BidLotChange } from './entryTypes';
 
 import type { Purchase } from '@reducers/Purchases/Purchases.ts';
+import { focusAuctionLot } from '@pages/auction/actionLogLotFocus';
 
 type MarkActionRevertedActionCreator = (entryId: string) => PayloadAction<string>;
 type UpdatePurchaseLogStatusesActionCreator = (payload: {
@@ -124,6 +125,7 @@ export const createRevertActionLogEntry =
   ({ markActionReverted, updatePurchaseLogStatuses }: RevertActionLogEntryOptions) =>
   (entryId: string) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+    focusAuctionLot(null);
     const entry = getState().actionsLog.entries.find(({ id }) => id === entryId);
     if (!entry || entry.revertedAt) {
       return;
