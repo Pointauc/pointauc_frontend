@@ -4,6 +4,10 @@ import { Action, AnyAction } from 'redux';
 import { Lot, LotContributor } from '@models/slot.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { RootState } from '@reducers/index.ts';
+import slotNamesMap, { getSlotNameLookupValues } from '@services/SlotNamesMap.ts';
+import bidUtils from '@utils/bid.utils.ts';
+import { sortSlots } from '@utils/common.utils.ts';
+import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
 
 import { ACTION_LOG_TRACKED_ACTION_TYPES } from './actionLogActionTypes';
 import { ActionLogEntry, BidLotChange } from './entryTypes';
@@ -31,6 +35,22 @@ const dispatchWithoutActionLog = (
     payload,
     meta: { skipActionLog: true },
   } as AnyAction);
+};
+
+const normalizeAliasKey = (aliasKey: string): string => aliasKey.trim().toLowerCase();
+
+const checkIsGeneratedAlias = (lot: Lot, aliasKey: string): boolean => {
+  const generatedAliases = [...getSlotNameLookupValues(lot.name), `#${lot.fastId}`].map(normalizeAliasKey);
+
+  return generatedAliases.includes(normalizeAliasKey(aliasKey));
+};
+
+const deleteCustomLotAlias = (lot: Lot, aliasKey: string | null | undefined): void => {
+  if (!aliasKey || checkIsGeneratedAlias(lot, aliasKey) || slotNamesMap.get(aliasKey) !== lot.id) {
+    return;
+  }
+
+  slotNamesMap.delete(aliasKey);
 };
 
 const subtractContributorAmount = (
@@ -64,6 +84,7 @@ const revertBidLotChanges = (
   dispatch: ThunkDispatch<RootState, {}, Action>,
   getState: () => RootState,
   lotChanges: BidLotChange[],
+  fallbackAliasKey?: string | null,
 ): void => {
   lotChanges.forEach((change) => {
     const lot = getState().slots.slots.find(({ id }) => id === change.lotId);
@@ -82,6 +103,7 @@ const revertBidLotChanges = (
       return;
     }
 
+    deleteCustomLotAlias(lot, change.aliasKey ?? fallbackAliasKey);
     dispatchWithoutActionLog(dispatch, ACTION_LOG_TRACKED_ACTION_TYPES.setSlotData, nextLot);
   });
 };
@@ -148,11 +170,11 @@ export const createRevertActionLogEntry =
         dispatchWithoutActionLog(dispatch, ACTION_LOG_TRACKED_ACTION_TYPES.setPurchases, entry.previousPurchases);
         break;
       case 'bid.processed':
-        revertBidLotChanges(dispatch, getState, entry.lotChanges);
+        revertBidLotChanges(dispatch, getState, entry.lotChanges, bidUtils.getName(entry.pendingBid));
         restorePendingBid(dispatch, getState, entry.pendingBid);
         break;
       case 'bid.split':
-        revertBidLotChanges(dispatch, getState, entry.lotChanges);
+        revertBidLotChanges(dispatch, getState, entry.lotChanges, bidUtils.getName(entry.pendingBid));
         restorePendingBid(dispatch, getState, entry.pendingBid);
         break;
       case 'bid.deleted':

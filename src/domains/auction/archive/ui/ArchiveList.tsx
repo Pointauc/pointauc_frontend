@@ -60,6 +60,7 @@ function ArchiveList({
           >
             <ArchiveItem
               archive={archive}
+              archives={archives}
               onLoad={() => onLoadArchive(archive.id)}
               isLoading={loadingArchiveId === archive.id}
               sortBy={sortBy}

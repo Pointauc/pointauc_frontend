@@ -62,6 +62,7 @@ export interface BidLotChange {
   contributorName: string | null;
   contributorDelta: number;
   wasCreated?: boolean;
+  aliasKey?: string | null;
 }
 
 export interface BidProcessedActionLogEntry extends ActionLogEntryBase {

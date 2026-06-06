@@ -1,7 +1,6 @@
 import { IconCircleCheck } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-
 import ActionLogCard from '../ActionLogCard';
 import { ActionLogCardProps } from '../types';
 
@@ -22,7 +21,6 @@ const BidRedemptionStatusChangedActionCard = ({
       color='indigo'
       subjectLabel={t('actionsLog.labels.rewards')}
       subject={t('actionsLog.details.redemptionStatusChanged', { count: entry.bidIds.length })}
-      detail={t('actionsLog.details.localOnly')}
       isReverting={isReverting}
       onRevert={() => onRevert(entry.id)}
     />

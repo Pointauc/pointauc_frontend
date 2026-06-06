@@ -651,7 +651,7 @@
       "lot": "Lot",
       "lots": "Lots",
       "rewards": "Rewards",
-      "user": "User"
+      "user": "From"
     },
     "types": {
       "lot": {
@@ -693,6 +693,12 @@
       "splitCount": "{{count}} split entries",
       "bidCostChange": "{{previous}} -> {{next}}",
       "redemptionStatusChanged": "{{count}} rewards updated"
+    },
+    "tooltips": {
+      "originalBidMessage": "Original bid message",
+      "emptyBidMessage": "No original message was stored.",
+      "previousLotName": "Previous name",
+      "newLotName": "New name"
     },
     "notifications": {
       "undo": "Latest action reverted"
@@ -1733,7 +1739,14 @@
     "item": {
       "autosave": "Autosave",
       "autosaveBadge": "persistent",
+      "lastDeleted": "Last deleted",
+      "lastDeletedBadge": "Last deleted",
+      "lastDeletedBadgeTooltip": "Automatically stores the last deleted or overwritten archive in case you want to restore it.",
       "overwrite": "Overwrite with current auction",
+      "overwriteConfirmTitle": "Overwrite archive?",
+      "overwriteConfirmCancel": "Cancel",
+      "overwriteConfirmAction": "Overwrite",
+      "restore": "Restore as a new archive",
       "rename": "Rename",
       "export": "Export",
       "delete": "Delete",
@@ -1742,6 +1755,7 @@
       "bidCount_one": "{{count}} bid",
       "bidCount_other": "{{count}} bids",
       "cannotDelete": "Autosave cannot be deleted",
+      "cannotDeleteLastDeleted": "Last deleted archive cannot be deleted manually",
       "updated": "Updated {{time}}",
       "created": "Created {{time}}",
       "namePlaceholder": "Archive name...",

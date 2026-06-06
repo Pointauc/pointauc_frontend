@@ -1,7 +1,7 @@
 import Dexie, { type EntityTable } from 'dexie';
 
 import { ArchiveData, ArchiveRecord, CreateArchiveInput } from '../model/types';
-import { ARCHIVE_DB_NAME, AUTOSAVE_ID } from '../model/constants';
+import { ARCHIVE_DB_NAME, AUTOSAVE_ID, LAST_DELETED_ID } from '../model/constants';
 
 import ArchiveApi from './ArchiveApi';
 
@@ -33,8 +33,10 @@ class IndexedDBAdapter extends ArchiveApi {
   async getAll(): Promise<ArchiveRecord[]> {
     const records = await this.db.archives.toArray();
 
-    // Sort: autosave first, then by updatedAt descending
+    // Sort utility archives first, then regular archives by updatedAt descending.
     records.sort((a, b) => {
+      if (a.isLastDeleted) return -1;
+      if (b.isLastDeleted) return 1;
       if (a.isAutosave) return -1;
       if (b.isAutosave) return 1;
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -68,6 +70,7 @@ class IndexedDBAdapter extends ArchiveApi {
       createdAt: now,
       updatedAt: now,
       ...input,
+      isLastDeleted: input.isLastDeleted ?? false,
     };
 
     await this.db.archives.add(record);
@@ -86,6 +89,9 @@ class IndexedDBAdapter extends ArchiveApi {
 
     // Only update updatedAt if data is being changed (overwrite action)
     const shouldUpdateTimestamp = updates.data !== undefined;
+    if (shouldUpdateTimestamp && (existing.isAutosave || existing.isLastDeleted)) {
+      throw new Error('Cannot overwrite utility archive');
+    }
 
     const updated: ArchiveRecord = {
       ...existing,
@@ -95,12 +101,20 @@ class IndexedDBAdapter extends ArchiveApi {
       updatedAt: shouldUpdateTimestamp ? new Date().toISOString() : existing.updatedAt,
     };
 
-    await this.db.archives.put(updated);
+    if (shouldUpdateTimestamp) {
+      await this.db.transaction('rw', this.db.archives, async () => {
+        await this.upsertLastDeleted(existing);
+        await this.db.archives.put(updated);
+      });
+    } else {
+      await this.db.archives.put(updated);
+    }
+
     return updated;
   }
 
   /**
-   * Deletes an archive record (rejects if it's autosave)
+   * Deletes an archive record and stores the removed regular archive for recovery.
    */
   async delete(id: string): Promise<void> {
     const existing = await this.getById(id);
@@ -108,11 +122,14 @@ class IndexedDBAdapter extends ArchiveApi {
       throw new Error('Archive not found');
     }
 
-    if (existing.isAutosave) {
-      throw new Error('Cannot delete autosave');
+    if (existing.isAutosave || existing.isLastDeleted) {
+      throw new Error('Cannot delete utility archive');
     }
 
-    await this.db.archives.delete(id);
+    await this.db.transaction('rw', this.db.archives, async () => {
+      await this.upsertLastDeleted(existing);
+      await this.db.archives.delete(id);
+    });
   }
 
   /**
@@ -127,6 +144,7 @@ class IndexedDBAdapter extends ArchiveApi {
       name: 'Autosave',
       data: JSON.stringify(data),
       isAutosave: true,
+      isLastDeleted: false,
       createdAt: existing?.createdAt || now,
       updatedAt: now,
     };
@@ -137,6 +155,26 @@ class IndexedDBAdapter extends ArchiveApi {
 
   async clearAutosave(): Promise<void> {
     await this.db.archives.delete(AUTOSAVE_ID);
+  }
+
+  private async upsertLastDeleted(record: ArchiveRecord): Promise<void> {
+    if (record.isAutosave || record.isLastDeleted) {
+      return;
+    }
+
+    const existing = await this.getById(LAST_DELETED_ID);
+    const now = new Date().toISOString();
+    const lastDeletedRecord: ArchiveRecord = {
+      id: LAST_DELETED_ID,
+      name: record.name,
+      data: record.data,
+      isAutosave: false,
+      isLastDeleted: true,
+      createdAt: existing?.createdAt || now,
+      updatedAt: now,
+    };
+
+    await this.db.archives.put(lastDeletedRecord);
   }
 
   async replaceAll(records: ArchiveRecord[]): Promise<void> {

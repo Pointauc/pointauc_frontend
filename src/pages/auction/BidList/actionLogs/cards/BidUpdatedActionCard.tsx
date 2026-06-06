@@ -1,7 +1,6 @@
 import { IconCash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-
 import ActionLogCard from '../ActionLogCard';
 import { ActionLogCardProps } from '../types';
 
@@ -9,6 +8,7 @@ import { BidUpdatedActionLogEntry } from './entryTypes';
 
 const BidUpdatedActionCard = ({ entry, isReverting, onRevert }: ActionLogCardProps<BidUpdatedActionLogEntry>) => {
   const { t } = useTranslation();
+  const amountDelta = entry.nextBid.cost - entry.previousBid.cost;
 
   return (
     <ActionLogCard
@@ -16,9 +16,9 @@ const BidUpdatedActionCard = ({ entry, isReverting, onRevert }: ActionLogCardPro
       timestamp={entry.timestamp}
       icon={IconCash}
       color='lime'
-      subjectLabel={t('actionsLog.labels.user')}
-      subject={entry.previousBid.username || t('bid.anonymous')}
+      userName={entry.previousBid.username || t('bid.anonymous')}
       detail={t('actionsLog.details.bidCostChange', { previous: entry.previousBid.cost, next: entry.nextBid.cost })}
+      priceDelta={amountDelta}
       isReverting={isReverting}
       onRevert={() => onRevert(entry.id)}
     />

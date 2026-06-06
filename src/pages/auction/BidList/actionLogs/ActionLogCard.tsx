@@ -1,5 +1,5 @@
 import { ActionIcon, Card, Group, Stack, Text, Tooltip } from '@mantine/core';
-import { IconArrowBackUp, IconTicket } from '@tabler/icons-react';
+import { IconArrowBackUp, IconCube, IconTicket, IconUserFilled } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +13,13 @@ interface ActionLogCardProps {
   timestamp: string;
   icon: ActionLogIcon;
   color: string;
-  subjectLabel: string;
-  subject: string;
-  detail: ReactNode;
+  subjectLabel?: ReactNode;
+  subject?: string;
+  userName?: string;
+  lotName?: string;
+  detail?: ReactNode;
+  cardTooltip?: ReactNode;
+  priceDelta?: number;
   isReverting: boolean;
   onRevert: () => void;
   onMouseEnter?: () => void;
@@ -29,19 +33,26 @@ const ActionLogCard = ({
   color,
   subjectLabel,
   subject,
+  userName,
+  lotName,
   detail,
+  cardTooltip,
+  priceDelta,
   isReverting,
   onRevert,
   onMouseEnter,
   onMouseLeave,
 }: ActionLogCardProps) => {
   const { t } = useTranslation();
+  const hasPriceDelta = priceDelta !== undefined;
+  const priceDeltaValue = priceDelta ?? 0;
+  const priceDeltaLabel = Math.sign(priceDeltaValue) >= 0 ? `+${priceDeltaValue}` : priceDeltaValue;
 
-  return (
+  const content = (
     <Card
       padding='sm'
       radius='sm'
-      className={`elevated-3 bg-paper-700 h-[108px] shadow-sm transition duration-150 ease-out ${
+      className={`elevated-3 bg-paper-700 relative shadow-sm transition duration-150 ease-out ${
         isReverting ? '-translate-x-2 scale-[0.98] opacity-0' : 'translate-x-0 scale-100 opacity-100'
       }`}
       onMouseEnter={onMouseEnter}
@@ -82,23 +93,75 @@ const ActionLogCard = ({
             </ActionIcon>
           </Tooltip>
         </div>
-        <div className='min-w-0'>
-          <Group gap={6} wrap='nowrap' className='min-w-0'>
-            <Text size='xs' fw={800} tt='uppercase' className='text-dimmed shrink-0'>
-              {subjectLabel}
-            </Text>
-            <Text size='sm' fw={800} truncate className='min-w-0'>
-              {subject}
-            </Text>
-          </Group>
-          {detail && (
-            <Text size='sm' truncate className='mt-0.5 text-slate-400'>
-              {detail}
-            </Text>
+        <div className='min-w-0 space-y-1'>
+          {userName && (
+            <Group gap={6} wrap='nowrap' className='min-w-0'>
+              <IconUserFilled size={16} className='text-dimmed shrink-0' />
+              <Text size='sm' fw={800} truncate className='min-w-0 flex-1'>
+                {userName}
+              </Text>
+              {!lotName && hasPriceDelta && (
+                <Text
+                  size='lg'
+                  fw={800}
+                  c={Math.sign(priceDeltaValue) >= 0 ? 'green' : 'red'}
+                  lh='sm'
+                  className='shrink-0'
+                >
+                  {priceDeltaLabel}
+                </Text>
+              )}
+            </Group>
           )}
+          {lotName && (
+            <Group gap={6} wrap='nowrap' align='center' className='min-w-0'>
+              <IconCube size={16} className='text-dimmed shrink-0' />
+              <Text size='sm' fw={800} truncate className='min-w-0 flex-1'>
+                {lotName}
+              </Text>
+              {hasPriceDelta && (
+                <Text
+                  size='md'
+                  fw={700}
+                  c={Math.sign(priceDeltaValue) >= 0 ? 'green' : 'red'}
+                  lh='sm'
+                  className='shrink-0'
+                >
+                  {priceDeltaLabel}
+                </Text>
+              )}
+            </Group>
+          )}
+          {!userName && !lotName && subject && (
+            <Group gap={6} wrap='nowrap' className='min-w-0'>
+              {subjectLabel && (
+                <Text size='xs' fw={800} tt='uppercase' className='text-dimmed shrink-0'>
+                  {subjectLabel}
+                </Text>
+              )}
+              <Text size='sm' fw={800} truncate className='min-w-0'>
+                {subject}
+              </Text>
+            </Group>
+          )}
+          {detail && <div className='mt-0.5 truncate text-sm text-slate-400'>{detail}</div>}
         </div>
       </Stack>
     </Card>
+  );
+
+  return (
+    <Tooltip
+      label={cardTooltip}
+      disabled={!cardTooltip}
+      withArrow
+      position='left-start'
+      multiline
+      maw={320}
+      openDelay={250}
+    >
+      <div className='w-full'>{content}</div>
+    </Tooltip>
   );
 };
 

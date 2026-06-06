@@ -17,9 +17,7 @@ const LotAddedActionCard = ({ entry, isReverting, onRevert }: ActionLogCardProps
       timestamp={entry.timestamp}
       icon={IconPlus}
       color='green'
-      subjectLabel={t('actionsLog.labels.lot')}
-      subject={entry.lot.name || t('actionsLog.emptyValue')}
-      detail={t('actionsLog.details.createdLot')}
+      lotName={entry.lot.name || t('actionsLog.emptyValue')}
       isReverting={isReverting}
       onRevert={() => onRevert(entry.id)}
       onMouseEnter={() => focusAuctionLot(entry.lot.id)}

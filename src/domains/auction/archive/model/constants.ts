@@ -1,6 +1,7 @@
 export const ARCHIVE_DB_NAME = 'pointauc-archive';
 export const ARCHIVE_STORE_NAME = 'archives';
 export const AUTOSAVE_ID = 'autosave';
+export const LAST_DELETED_ID = 'last-deleted';
 
 export const QUERY_KEYS = {
   archives: ['archives'] as const,

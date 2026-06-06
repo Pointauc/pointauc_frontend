@@ -115,12 +115,16 @@ function ArchiveManagement() {
     // Filter by search term
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      result = result.filter((archive) => archive.name.toLowerCase().includes(term));
+      result = result.filter(
+        (archive) => archive.isAutosave || archive.isLastDeleted || archive.name.toLowerCase().includes(term),
+      );
     }
 
     // Sort
     result.sort((a, b) => {
-      // Autosave always first
+      // Utility archives always keep their fixed positions.
+      if (a.isLastDeleted) return -1;
+      if (b.isLastDeleted) return 1;
       if (a.isAutosave) return -1;
       if (b.isAutosave) return 1;
 

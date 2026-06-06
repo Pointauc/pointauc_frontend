@@ -18,8 +18,8 @@ const BidSplitActionCard = ({ entry, isReverting, onRevert }: ActionLogCardProps
       timestamp={entry.timestamp}
       icon={IconArrowsSplit}
       color='grape'
-      subjectLabel={t('actionsLog.labels.user')}
-      subject={entry.pendingBid.username || t('bid.anonymous')}
+      userName={entry.pendingBid.username || t('bid.anonymous')}
+      lotName={entry.lotChanges[0]?.lotName || t('actionsLog.emptyValue')}
       detail={
         <Trans
           i18nKey='actionsLog.details.splitCount'

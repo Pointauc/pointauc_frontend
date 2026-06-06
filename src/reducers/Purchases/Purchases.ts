@@ -1,9 +1,10 @@
 import { notifications } from '@mantine/notifications';
-import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 
 import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { Lot } from '@models/slot.model.ts';
+import { attachActionLogEntry, createActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import slotNamesMap, { SlotNamesMap } from '@services/SlotNamesMap';
 import bidUtils from '@utils/bid.utils.ts';
 
@@ -59,7 +60,19 @@ const purchasesSlice = createSlice({
       const index = state.purchases.findIndex(({ id }) => id === action.payload?.id);
 
       if (index !== -1) {
+        const previousBid = current(state.purchases[index]);
         state.purchases[index] = action.payload;
+
+        if (previousBid.cost !== action.payload.cost) {
+          attachActionLogEntry(
+            action,
+            createActionLogEntry({
+              type: 'bid.updated',
+              previousBid,
+              nextBid: action.payload,
+            }),
+          );
+        }
       }
     },
   },
@@ -67,14 +80,8 @@ const purchasesSlice = createSlice({
 
 export { purchasesSlice };
 
-export const {
-  addPurchase,
-  removePurchase,
-  resetPurchases,
-  setDraggedRedemption,
-  updateBid,
-  setPurchases,
-} = purchasesSlice.actions;
+export const { addPurchase, removePurchase, resetPurchases, setDraggedRedemption, updateBid, setPurchases } =
+  purchasesSlice.actions;
 
 const visibleNotifications: string[] = [];
 

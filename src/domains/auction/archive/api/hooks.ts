@@ -61,6 +61,7 @@ export function useCreateArchive() {
         name,
         data: JSON.stringify(data),
         isAutosave: false,
+        isLastDeleted: false,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.archives });
@@ -251,6 +252,7 @@ export function useImportArchive() {
         name,
         data: JSON.stringify(data),
         isAutosave: false,
+        isLastDeleted: false,
       });
     },
     onSuccess: () => {

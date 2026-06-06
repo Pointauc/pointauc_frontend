@@ -1,14 +1,13 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
-import { Action, AnyAction, Middleware } from 'redux';
+import { Action, AnyAction } from 'redux';
 
 import { PurchaseStatusEnum } from '@models/purchase.ts';
 import { Lot } from '@models/slot.model.ts';
-import { ACTION_LOG_TRACKED_ACTION_TYPES } from '@pages/auction/BidList/actionLogs/cards/actionLogActionTypes';
 import { createRevertActionLogEntry } from '@pages/auction/BidList/actionLogs/cards/revertActionLogEntry';
-import { RootState } from '@reducers/index.ts';
 import { getBidContributorName } from '@utils/slotContributors.utils';
 import bidUtils from '@utils/bid.utils.ts';
 
+import type { RootState } from '@reducers/index.ts';
 import type {
   ActionLogEntry,
   BidLotChange,
@@ -78,6 +77,26 @@ const mapBidLogStatus = (
     return entry;
   });
 
+export const attachActionLogEntry = (action: PayloadAction<unknown>, entry: ActionLogEntry | null): void => {
+  if (!entry) {
+    return;
+  }
+
+  const mutableAction = action as AnyAction;
+  mutableAction.meta = {
+    ...mutableAction.meta,
+    actionLogEntry: entry,
+  };
+};
+
+const getAttachedActionLogEntry = (action: AnyAction): ActionLogEntry | null => {
+  if (action.meta?.skipActionLog) {
+    return null;
+  }
+
+  return action.meta?.actionLogEntry ?? null;
+};
+
 const actionsLogSlice = createSlice({
   name: 'actionsLog',
   initialState,
@@ -100,6 +119,17 @@ const actionsLogSlice = createSlice({
     updatePurchaseLogStatuses(state, action: PayloadAction<{ bidIds: string[]; status: PurchaseStatusEnum }>): void {
       state.entries = mapBidLogStatus(state.entries, new Set(action.payload.bidIds), action.payload.status);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action): action is AnyAction => Boolean(getAttachedActionLogEntry(action as AnyAction)),
+      (state, action) => {
+        const entry = getAttachedActionLogEntry(action);
+        if (entry) {
+          state.entries = [...state.entries, entry];
+        }
+      },
+    );
   },
 });
 
@@ -146,10 +176,7 @@ export const revertLatestActionLogEntry =
     }
   };
 
-const getLotById = (state: RootState, lotId: string | number): Lot | undefined =>
-  state.slots.slots.find(({ id }) => id === lotId);
-
-const createLotPriceChangedEntry = (
+export const createLotPriceChangedEntry = (
   previousLot: Lot | undefined,
   nextLot: Lot | undefined,
 ): LotPriceChangedActionLogEntry | null => {
@@ -175,126 +202,6 @@ const createLotPriceChangedEntry = (
   });
 };
 
-interface ActionLogHandlerContext {
-  action: AnyAction;
-  nextState: RootState;
-  previousState: RootState;
-}
-
-type ActionLogHandler = (context: ActionLogHandlerContext) => ActionLogEntry | null;
-
-const getLotIdFromSlotPayload = (payload: string | { id: string | number }): string | number =>
-  typeof payload === 'string' ? payload : payload.id;
-
-const createLotNameChangedEntry: ActionLogHandler = ({ action, previousState, nextState }) => {
-  if (action.payload?.ignoreParsing) {
-    return null;
-  }
-
-  const previousLot = getLotById(previousState, action.payload.id);
-  const nextLot = getLotById(nextState, action.payload.id);
-
-  if (!previousLot || !nextLot || previousLot.name === nextLot.name) {
-    return null;
-  }
-
-  return createActionLogEntry({
-    type: 'lot.renamed',
-    lotId: nextLot.id,
-    previousName: previousLot.name,
-    nextName: nextLot.name,
-  });
-};
-
-const createLotAmountChangedEntry: ActionLogHandler = ({ action, previousState, nextState }) => {
-  const previousLot = getLotById(previousState, action.payload.id);
-  const nextLot = getLotById(nextState, action.payload.id);
-
-  return createLotPriceChangedEntry(previousLot, nextLot);
-};
-
-const createLotAddedEntry: ActionLogHandler = ({ previousState, nextState }) => {
-  const previousIds = new Set(previousState.slots.slots.map(({ id }) => id));
-  const lot = nextState.slots.slots.find(({ id }) => !previousIds.has(id));
-
-  return lot ? createActionLogEntry({ type: 'lot.added', lot }) : null;
-};
-
-const createLotDeletedEntry: ActionLogHandler = ({ action, previousState }) => {
-  const lot = previousState.slots.slots.find(({ id }) => id === action.payload);
-
-  return lot ? createActionLogEntry({ type: 'lot.deleted', lot }) : null;
-};
-
-const createLotPercentageChangedEntry: ActionLogHandler = ({ action, previousState, nextState }) => {
-  const lotId = getLotIdFromSlotPayload(action.payload);
-  const previousLot = getLotById(previousState, lotId);
-  const nextLot = getLotById(nextState, lotId);
-
-  if (!previousLot || !nextLot || previousLot.lockedPercentage === nextLot.lockedPercentage) {
-    return null;
-  }
-
-  return createActionLogEntry({
-    type: 'lot.priceChanged',
-    lotId: nextLot.id,
-    lotName: nextLot.name,
-    previousAmount: previousLot.lockedPercentage ?? null,
-    nextAmount: nextLot.lockedPercentage ?? null,
-    amountDelta: Number(nextLot.lockedPercentage ?? 0) - Number(previousLot.lockedPercentage ?? 0),
-    changeValueType: 'percentage' as const,
-  });
-};
-
-const createBidUpdatedEntry: ActionLogHandler = ({ action, previousState }) => {
-  const previousBid = previousState.purchases.purchases.find(({ id }) => id === action.payload.id);
-  if (!previousBid || previousBid.cost === action.payload.cost) {
-    return null;
-  }
-
-  return createActionLogEntry({
-    type: 'bid.updated',
-    previousBid,
-    nextBid: action.payload,
-  });
-};
-
-const actionLogHandlers: Partial<Record<string, ActionLogHandler>> = {
-  [ACTION_LOG_TRACKED_ACTION_TYPES.setSlotName]: createLotNameChangedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.setSlotAmount]: createLotAmountChangedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.addSlotAmount]: createLotAmountChangedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.addSlot]: createLotAddedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.deleteSlot]: createLotDeletedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.setLockedPercentage]: createLotPercentageChangedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.unlockPercentage]: createLotPercentageChangedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.setLotPercentage]: createLotPercentageChangedEntry,
-  [ACTION_LOG_TRACKED_ACTION_TYPES.updateBid]: createBidUpdatedEntry,
-};
-
-export const createActionsLogMiddleware = (): Middleware<{}, RootState> => (storeApi) => (next) => (action) => {
-  const typedAction = action as AnyAction;
-
-  if (typedAction.meta?.skipActionLog || typedAction.type.startsWith(`${actionsLogSlice.name}/`)) {
-    return next(action);
-  }
-
-  const handler = actionLogHandlers[typedAction.type];
-  if (!handler) {
-    return next(action);
-  }
-
-  const previousState = storeApi.getState();
-  const result = next(action);
-  const nextState = storeApi.getState();
-  const entry = handler({ action: typedAction, nextState, previousState });
-
-  if (entry) {
-    storeApi.dispatch(addActionLogEntry(entry));
-  }
-
-  return result;
-};
-
 export const buildBidLotChange = (lot: Lot, amountDelta: number, bid: Purchase, wasCreated = false): BidLotChange => ({
   lotId: lot.id,
   lotName: lot.name,
@@ -302,6 +209,7 @@ export const buildBidLotChange = (lot: Lot, amountDelta: number, bid: Purchase, 
   contributorName: getBidContributorName(bid),
   contributorDelta: amountDelta,
   wasCreated,
+  aliasKey: bidUtils.getName(bid),
 });
 
 export const createPurchaseLog = (

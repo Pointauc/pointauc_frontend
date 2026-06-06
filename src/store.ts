@@ -14,7 +14,7 @@ import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import { createLotLinkParsingMiddleware } from '@domains/links/participant-url-parsing/link-processing-queue/middleware';
 import { purchasesSlice } from '@reducers/Purchases/Purchases.ts';
 import { ensureActiveAuctionStarted } from '@domains/auction/history/model/activeAuctionHistorySlice';
-import { actionsLogSliceName, createActionsLogMiddleware } from '@reducers/ActionsLog/ActionsLog.ts';
+import { actionsLogSliceName } from '@reducers/ActionsLog/ActionsLog.ts';
 
 import type { RootState } from '@reducers/index.ts';
 
@@ -173,7 +173,6 @@ export function initStore(rootReducer: Reducer<any>) {
     reducer: rootReducer,
     middleware: [
       thunk,
-      createActionsLogMiddleware(),
       sortSlotsMiddleware,
       createLotLinkParsingMiddleware(),
       activeAuctionHistoryMiddleware,

@@ -33,7 +33,6 @@ const BidList: React.FC = () => {
   const [revertingIds, setRevertingIds] = useState<string[]>([]);
   const { purchases } = useSelector((root: RootState) => root.purchases);
   const { slots } = useSelector((root: RootState) => root.slots);
-  const actionLog = useSelector((root: RootState) => root.actionsLog.entries);
   const {
     settings: { purchaseSort },
   } = useSelector((root: RootState) => root.aucSettings);
@@ -77,7 +76,6 @@ const BidList: React.FC = () => {
         compareValues(firstPurchase[key], secondPurchase[key]) * orderModifier,
     );
   }, [purchaseSort, purchases]);
-  const historyEntries = useMemo(() => [...actionLog].reverse(), [actionLog]);
 
   return (
     <div className={`${classes.container} min-h-0`}>
@@ -137,7 +135,7 @@ const BidList: React.FC = () => {
           )}
         </>
       ) : (
-        <ActionLogsList entries={historyEntries} revertingIds={revertingIds} onRevert={handleRevertAction} />
+        <ActionLogsList revertingIds={revertingIds} onRevert={handleRevertAction} />
       )}
     </div>
   );

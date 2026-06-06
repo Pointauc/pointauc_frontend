@@ -67,6 +67,7 @@ async function migrateOldSavesToIndexedDB(): Promise<void> {
             name: saveInfo.name,
             data: JSON.stringify(archiveData),
             isAutosave: false,
+            isLastDeleted: false,
           });
         }
 

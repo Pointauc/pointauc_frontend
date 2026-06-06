@@ -67,7 +67,7 @@ const IntegrationGroupCard = ({
           isPressed={isEnabled}
           ariaLabel={tooltip}
           onClick={isAnyLoading ? undefined : onToggle}
-          className='h-12'
+          className='h-11'
         >
           <IntegrationStatusCardHeader
             status={status}
@@ -89,7 +89,7 @@ const IntegrationGroupCard = ({
                       key={integration.id}
                       className={clsx(
                         'inline-flex items-center justify-center rounded-md',
-                        status === 'enabled' && integrationStatus === 'disabled' && 'grayscale opacity-45',
+                        status === 'enabled' && integrationStatus === 'disabled' && 'opacity-45 grayscale',
                       )}
                       data-status={integrationStatus}
                     >

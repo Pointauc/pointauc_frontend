@@ -10,6 +10,7 @@ export interface ArchiveRecord {
   updatedAt: string;
   data: string;
   isAutosave: boolean;
+  isLastDeleted?: boolean;
 }
 
 export interface ArchiveData {

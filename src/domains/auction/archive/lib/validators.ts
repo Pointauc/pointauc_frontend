@@ -14,7 +14,8 @@ export function isValidArchiveRecord(obj: unknown): obj is ArchiveRecord {
     typeof record.createdAt === 'string' &&
     typeof record.updatedAt === 'string' &&
     typeof record.data === 'string' &&
-    typeof record.isAutosave === 'boolean'
+    typeof record.isAutosave === 'boolean' &&
+    (record.isLastDeleted === undefined || typeof record.isLastDeleted === 'boolean')
   );
 }
 

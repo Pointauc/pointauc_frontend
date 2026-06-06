@@ -1,7 +1,6 @@
 import { IconEraser } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-
 import ActionLogCard from '../ActionLogCard';
 import { ActionLogCardProps } from '../types';
 
@@ -25,7 +24,6 @@ const AuctionClearedActionCard = ({
         lots: entry.previousLots.length,
         bids: entry.previousPurchases.length,
       })}
-      detail={t('actionsLog.details.bulkChange')}
       isReverting={isReverting}
       onRevert={() => onRevert(entry.id)}
     />

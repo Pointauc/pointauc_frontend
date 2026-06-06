@@ -1351,7 +1351,7 @@
       "lot": "Лот",
       "lots": "Лоты",
       "rewards": "Награды",
-      "user": "Имя"
+      "user": "От"
     },
     "types": {
       "lot": {
@@ -1393,6 +1393,12 @@
       "splitCount": "Ставка была разделена между {{count}} лотами",
       "bidCostChange": "<b>{{previous}}</b> -> <b>{{next}}</b>",
       "redemptionStatusChanged": "{{count}} ставок обновлено"
+    },
+    "tooltips": {
+      "originalBidMessage": "Исходное сообщение ставки",
+      "emptyBidMessage": "Исходное сообщение не было сохранено.",
+      "previousLotName": "Предыдущее название",
+      "newLotName": "Новое название"
     },
     "notifications": {
       "undo": "Последнее действие было сброшено"
@@ -1725,7 +1731,14 @@
     "item": {
       "autosave": "Автосохранение",
       "autosaveBadge": "постоянный",
+      "lastDeleted": "Последний удаленный",
+      "lastDeletedBadge": "последний удаленный",
+      "lastDeletedBadgeTooltip": "Автоматически хранит последний удаленный или перезаписанный архив на случай, если вы захотите его восстановить.",
       "overwrite": "Перезаписать текущим аукционом",
+      "overwriteConfirmTitle": "Перезаписать архив?",
+      "overwriteConfirmCancel": "Отмена",
+      "overwriteConfirmAction": "Перезаписать",
+      "restore": "Восстановить как новый архив",
       "rename": "Переименовать",
       "export": "Экспорт",
       "delete": "Удалить",
@@ -1738,6 +1751,7 @@
       "bidCount_many": "{{count}} ставок",
       "bidCount_other": "{{count}} ставки",
       "cannotDelete": "Автосохранение нельзя удалить",
+      "cannotDeleteLastDeleted": "Нельзя удалить вручную",
       "updated": "Обновлено {{time}}",
       "created": "Создано {{time}}",
       "namePlaceholder": "Название архива...",
