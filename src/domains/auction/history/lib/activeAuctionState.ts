@@ -11,11 +11,11 @@ export const getActiveAuctionDurationMs = (state: Pick<RootState, 'activeAuction
   return durationMs + Math.max(0, Date.now() - new Date(timerStartedAt).getTime());
 };
 
-export const checkShouldSmartSaveAuction = (
-  state: Pick<RootState, 'activeAuctionHistory' | 'slots'>,
-): boolean => {
-  return state.slots.slots.some((lot) => Boolean(lot.name) || Number(lot.amount ?? 0) > 0)
-    && getActiveAuctionDurationMs(state) >= SMART_CLEAR_MIN_DURATION_MS;
+export const checkShouldSmartSaveAuction = (state: Pick<RootState, 'activeAuctionHistory' | 'slots'>): boolean => {
+  return (
+    state.slots.slots.some((lot) => Boolean(lot.name) || Number(lot.amount ?? 0) > 0) &&
+    getActiveAuctionDurationMs(state) >= SMART_CLEAR_MIN_DURATION_MS
+  );
 };
 
 export const checkIsAuctionStateEmpty = (
@@ -28,7 +28,6 @@ export const checkIsAuctionStateEmpty = (
     !lot?.name?.trim() &&
     Number(lot?.amount ?? 0) <= 0 &&
     state.purchases.purchases.length === 0 &&
-    state.purchases.history.length === 0 &&
     state.activeAuctionHistory.pendingWinnerEvents.length === 0
   );
 };

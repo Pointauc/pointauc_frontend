@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PageContainer from '@components/PageContainer/PageContainer';
 import { resetActiveAuctionHistory } from '@domains/auction/history/model/activeAuctionHistorySlice';
 import { setCurrentAuctionMetadata } from '@domains/auction/history/lib/currentAuctionMetadata';
-import { resetPurchases, setHistory } from '@reducers/Purchases/Purchases';
+import { resetPurchases } from '@reducers/Purchases/Purchases';
 import { setSlots } from '@reducers/Slots/Slots';
 import { RootState } from '@reducers';
 
@@ -296,7 +296,6 @@ const AuctionHistoryPage = () => {
 
       dispatch(resetActiveAuctionHistory());
       dispatch(resetPurchases());
-      dispatch(setHistory([]));
       dispatch(setSlots(buildRestoredAuctionLots(details, participants)));
       setCurrentAuctionMetadata({
         name: details.auction.name,

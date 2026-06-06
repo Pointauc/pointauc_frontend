@@ -12,7 +12,7 @@ import bidUtils from '@utils/bid.utils';
 import { handleDragOver } from '@utils/common.utils.ts';
 
 import LotControls from './Controls/LotControls';
-import styles, { highlight } from './DroppableSlot.module.css';
+import styles from './DroppableSlot.module.css';
 
 interface DroppableSlotProps {
   index: number;
