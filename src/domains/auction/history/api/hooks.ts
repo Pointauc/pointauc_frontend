@@ -61,3 +61,14 @@ export const useSaveAuctionHistorySnapshot = () => {
     },
   });
 };
+
+export const useDeleteAuctionHistory = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (auctionId: string) => auctionHistoryApi.deleteAuction(auctionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: auctionHistoryQueryKeys.all });
+    },
+  });
+};

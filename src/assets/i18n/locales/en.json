@@ -454,10 +454,24 @@
     },
     "actions": {
       "openAuction": "Open auction",
+      "restoreAuction": "Restore auction",
+      "deleteAuction": "Delete auction",
       "backToList": "Back to Previous Auctions",
       "clearDayFilter": "Clear day filter",
       "viewMoreUsers": "View more users",
       "collapseLeaderboard": "Collapse leaderboard"
+    },
+    "restore": {
+      "title": "Restore auction",
+      "warning": "All current auction state will be replaced with lots from this history entry.",
+      "cancel": "Cancel",
+      "confirm": "Restore"
+    },
+    "notifications": {
+      "deleted": "Auction deleted from history",
+      "deleteError": "Could not delete auction",
+      "restored": "Auction restored",
+      "restoreError": "Could not restore auction"
     },
     "selectedAuction": {
       "placeholderTitle": "Work in progress",

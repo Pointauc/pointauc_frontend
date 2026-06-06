@@ -17,3 +17,18 @@ export const checkShouldSmartSaveAuction = (
   return state.slots.slots.some((lot) => Boolean(lot.name) || Number(lot.amount ?? 0) > 0)
     && getActiveAuctionDurationMs(state) >= SMART_CLEAR_MIN_DURATION_MS;
 };
+
+export const checkIsAuctionStateEmpty = (
+  state: Pick<RootState, 'activeAuctionHistory' | 'purchases' | 'slots'>,
+): boolean => {
+  const [lot] = state.slots.slots;
+
+  return (
+    state.slots.slots.length === 1 &&
+    !lot?.name?.trim() &&
+    Number(lot?.amount ?? 0) <= 0 &&
+    state.purchases.purchases.length === 0 &&
+    state.purchases.history.length === 0 &&
+    state.activeAuctionHistory.pendingWinnerEvents.length === 0
+  );
+};

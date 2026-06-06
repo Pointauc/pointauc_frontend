@@ -482,10 +482,24 @@
     },
     "actions": {
       "openAuction": "Открыть аукцион",
+      "restoreAuction": "Восстановить аукцион",
+      "deleteAuction": "Удалить аукцион",
       "backToList": "Назад к предыдущим аукционам",
       "clearDayFilter": "Сбросить фильтр по дню",
       "viewMoreUsers": "Показать больше участников",
       "collapseLeaderboard": "Свернуть таблицу лидеров"
+    },
+    "restore": {
+      "title": "Восстановить аукцион",
+      "warning": "Все текущее состояние аукциона будет заменено лотами из этой записи истории.",
+      "cancel": "Отмена",
+      "confirm": "Восстановить"
+    },
+    "notifications": {
+      "deleted": "Аукцион удален из истории",
+      "deleteError": "Не удалось удалить аукцион",
+      "restored": "Аукцион восстановлен",
+      "restoreError": "Не удалось восстановить аукцион"
     },
     "selectedAuction": {
       "placeholderTitle": "В разработке",
