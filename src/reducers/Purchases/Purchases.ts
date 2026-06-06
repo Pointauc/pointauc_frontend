@@ -131,9 +131,17 @@ const findSimilarLot = (slotName: string, lots: Lot[]): Lot | undefined => {
 export const processRedemption =
   (bid: Purchase) =>
   (dispatch: ThunkDispatch<RootState, {}, Action>, getState: () => RootState): void => {
+    const state = getState();
     const {
       aucSettings: { settings },
-    } = getState();
+      purchases: { purchases },
+    } = state;
+    // const hasHandledBid = purchases.some(({ id }) => id === bid.id) || Boolean(addedBidsMap.get(bid.id));
+
+    // if (hasHandledBid) {
+    //   return;
+    // }
+
     const insertStrategy =
       !bid.insertStrategy || bid.insertStrategy === InsertStrategy.Auto ? settings.insertStrategy : bid.insertStrategy;
 
@@ -143,7 +151,7 @@ export const processRedemption =
     }
 
     const slotName = bidUtils.getName(bid);
-    const similarSlot = findSimilarLot(slotName, getState().slots.slots);
+    const similarSlot = findSimilarLot(slotName, state.slots.slots);
 
     if (similarSlot) {
       dispatch(fastAddBid(bid, similarSlot));

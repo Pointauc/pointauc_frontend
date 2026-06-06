@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
+import {
+  trackAuctionEnabledIntegration,
+  trackAuctionIntegrationTransferredBid,
+} from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import {
   publishGlobalBid,
@@ -14,8 +18,22 @@ const GlobalBidRuntime = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   useEffect(() => {
-    const unsubscribers = integrations.all.map((integration) => {
+    const integrationSubscriptionUnsubscribers = integrations.all.map((integration) => {
+      const syncIntegrationUsage = () => {
+        if (integration.pubsubFlow.store.state.subscribed) {
+          trackAuctionEnabledIntegration(integration.id);
+        }
+      };
+
+      syncIntegrationUsage();
+      return integration.pubsubFlow.store.subscribe(() => {
+        syncIntegrationUsage();
+      });
+    });
+
+    const integrationBidUnsubscribers = integrations.all.map((integration) => {
       const handleBid = (bid: Purchase) => {
+        trackAuctionIntegrationTransferredBid(integration.id);
         void publishGlobalBid(bid);
       };
 
@@ -27,7 +45,8 @@ const GlobalBidRuntime = () => {
     });
 
     return () => {
-      unsubscribers.forEach((unsubscribe) => unsubscribe());
+      integrationSubscriptionUnsubscribers.forEach((unsubscribe) => unsubscribe());
+      integrationBidUnsubscribers.forEach((unsubscribe) => unsubscribe());
     };
   }, []);
 

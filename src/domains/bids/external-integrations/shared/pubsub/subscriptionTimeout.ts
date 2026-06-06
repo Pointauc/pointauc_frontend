@@ -2,7 +2,7 @@ import * as Integration from '@models/integration';
 
 const SUBSCRIBE_TIMEOUT_BY_TYPE: Record<Integration.BidType, number> = {
   donate: 10_000,
-  points: 15_000,
+  points: 20_000,
 };
 
 const createSubscribeTimeoutError = (integration: Integration.Config): Error =>

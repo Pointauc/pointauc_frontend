@@ -1,19 +1,17 @@
 import { PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action, AnyAction } from 'redux';
 
-import { Lot, LotContributor } from '@models/slot.model.ts';
 import { PurchaseStatusEnum } from '@models/purchase.ts';
+import { Lot, LotContributor } from '@models/slot.model.ts';
+import { focusAuctionLot } from '@pages/auction/actionLogLotFocus';
 import { RootState } from '@reducers/index.ts';
 import slotNamesMap, { getSlotNameLookupValues } from '@services/SlotNamesMap.ts';
 import bidUtils from '@utils/bid.utils.ts';
-import { sortSlots } from '@utils/common.utils.ts';
-import { recalculateAllLockedSlots } from '@utils/lockedPercentage.utils.ts';
 
 import { ACTION_LOG_TRACKED_ACTION_TYPES } from './actionLogActionTypes';
-import { ActionLogEntry, BidLotChange } from './entryTypes';
+import { BidLotChange } from './entryTypes';
 
 import type { Purchase } from '@reducers/Purchases/Purchases.ts';
-import { focusAuctionLot } from '@pages/auction/actionLogLotFocus';
 
 type MarkActionRevertedActionCreator = (entryId: string) => PayloadAction<string>;
 type UpdatePurchaseLogStatusesActionCreator = (payload: {
