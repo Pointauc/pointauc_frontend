@@ -1,7 +1,7 @@
 import { Alert, Anchor, AppShell, Box, Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconAlertTriangle, IconInfoCircle } from '@tabler/icons-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,8 +11,8 @@ import { AppHeader } from '@App/entrypoint/AppHeader';
 import { AppMain } from '@App/entrypoint/AppMain';
 import { AppNavbar } from '@App/entrypoint/navbar/AppNavbar.tsx';
 import { PortalContextProvider } from '@App/storage/portalContext';
-import { COLORS } from '@constants/color.constants';
 import AutoloadAutosave from '@domains/auction/archive/ui/AutoloadAutosave';
+import { useInitializeUser } from '@domains/bids/lib/useInitializeUser.ts';
 import { registerPublicApiSocketHandlers } from '@domains/public-api/lib/socket.ts';
 import { TutorialManager } from '@domains/tutorials';
 import GeometryBackgroundPreview from '@domains/user-settings-v2/Widgets/appearance/auction-background/background-types/geometry/GeometryBackgroundPreview.tsx';
@@ -21,18 +21,15 @@ import { RootState } from '@reducers';
 import { buildSocketIoOptions } from '@shared/lib/socketIo';
 import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
+import { registerGlobalBidFallbackConsumer } from '@domains/bids/lib/globalBidsEventBus.ts';
+import { processRedemption } from '@reducers/Purchases/Purchases.ts';
 
-import { getIntegrationsValidity } from '../../api/userApi';
 import ROUTES from '../../constants/routes.constants';
 import { connectToBroadcastingSocket, disconnectBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
 import { useLotsBroadcasting } from '../../domains/broadcasting/lib/useLotsBroadcasting';
-import { loadUserData, setAucSettings } from '../../reducers/AucSettings/AucSettings';
-import { getCookie } from '../../utils/common.utils';
 import { isBrowser } from '../../utils/ssr.ts';
 
 import type { ThunkDispatch } from 'redux-thunk';
-
-const hasToken = isBrowser && !!getCookie('userSession');
 
 let openDriverTimeout: any;
 
@@ -47,16 +44,9 @@ const App: React.FC = () => {
   );
   const { username } = useSelector((root: RootState) => root.user);
   const [activeMenu, setActiveMenu] = useState<MenuItem | undefined>();
-  const isColorResetDone = useRef(localStorage.getItem('isColorResetDone') === 'true');
 
   const [isNavbarOpened, mobileNavbar] = useDisclosure();
   const isMobile = useIsMobile();
-
-  if (!isColorResetDone.current && !hasToken) {
-    localStorage.setItem('isColorResetDone', 'true');
-    isColorResetDone.current = true;
-    dispatch(setAucSettings({ primaryColor: COLORS.THEME.PRIMARY }));
-  }
 
   const showDrawer = useCallback(() => {
     openDriverTimeout = setTimeout(() => setIsDrawerOpen(true), 70);
@@ -87,32 +77,13 @@ const App: React.FC = () => {
     }
   }, [dispatch, username]);
 
-  useEffect(() => {
-    let interval: any;
-    if (hasToken && username) {
-      interval = setInterval(
-        () => {
-          getIntegrationsValidity();
-        },
-        1000 * 60 * 60 * 3,
-      );
-    }
-
-    return (): void => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [username]);
+  useInitializeUser();
 
   useEffect(() => {
-    const loadUser = async () => {
-      await loadUserData(dispatch);
-    };
-
-    if (hasToken) {
-      loadUser();
-    }
+    return registerGlobalBidFallbackConsumer(async (bid) => {
+      dispatch(processRedemption(bid));
+      return true;
+    });
   }, [dispatch]);
 
   const isNavbarExpanded = useMemo(() => {

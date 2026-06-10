@@ -4,9 +4,8 @@ import { useSelector } from 'react-redux';
 import { Collapse, Stack, Title, Tooltip, UnstyledButton } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 
-import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
-import { connectIntegrationWithTimeout } from '@domains/bids/external-integrations/shared/pubsub/subscriptionTimeout';
+import { useIntegrationsController } from '@domains/bids/external-integrations/shared/useIntegrationsController';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
 import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
@@ -32,55 +31,24 @@ const IntegrationSubscription: FC = () => {
   );
   const { donate, points } = useMemo(() => integrationUtils.groupBy.type(available), [available]);
 
-  const donateSubscriptions = useMergedSubscriptionsState(donate);
-  const pointsSubscriptions = useMergedSubscriptionsState(points);
+  const donateController = useIntegrationsController(donate);
+  const pointsController = useIntegrationsController(points);
   const integrationDetailsToggleLabel = t(
     isContentExpanded
       ? 'integration.groupActions.hideIntegrationDetails'
       : 'integration.groupActions.showIntegrationDetails',
   );
 
-  const checkIsAnyLoading = (
-    integrations: typeof available,
-    subscriptions: ReturnType<typeof useMergedSubscriptionsState>,
-  ): boolean => {
-    return integrations.some((integration) => subscriptions[integration.id]?.loading);
-  };
-
-  const checkIsAnySubscribed = (
-    integrations: typeof available,
-    subscriptions: ReturnType<typeof useMergedSubscriptionsState>,
-  ): boolean => {
-    return integrations.length > 0 && integrations.some((integration) => subscriptions[integration.id]?.subscribed);
-  };
-
-  const toggleIntegrations = (
-    integrations: typeof available,
-    subscriptions: ReturnType<typeof useMergedSubscriptionsState>,
-  ): boolean => {
-    const shouldEnable = !checkIsAnySubscribed(integrations, subscriptions);
-
-    integrations.forEach((integration) => {
-      if (shouldEnable) {
-        connectIntegrationWithTimeout(integration).catch((err) => console.error(err));
-      } else {
-        integration.pubsubFlow.disconnect();
-      }
-    });
-
-    return shouldEnable;
-  };
-
   useAppHotkey(
     HOTKEY_ACTION_IDS.integrationsToggleDonations,
     (event, { setNotificationData }) => {
       event.preventDefault();
-      const isEnabled = toggleIntegrations(donate, donateSubscriptions);
+      const isEnabled = donateController.toggle();
 
       setNotificationData({ enabled: isEnabled });
     },
     {
-      enabled: donate.length > 0 && !checkIsAnyLoading(donate, donateSubscriptions),
+      enabled: donate.length > 0 && !donateController.isAnyLoading,
       preventDefault: true,
     },
   );
@@ -88,12 +56,12 @@ const IntegrationSubscription: FC = () => {
     HOTKEY_ACTION_IDS.integrationsToggleChannelPoints,
     (event, { setNotificationData }) => {
       event.preventDefault();
-      const isEnabled = toggleIntegrations(points, pointsSubscriptions);
+      const isEnabled = pointsController.toggle();
 
       setNotificationData({ enabled: isEnabled });
     },
     {
-      enabled: points.length > 0 && !checkIsAnyLoading(points, pointsSubscriptions),
+      enabled: points.length > 0 && !pointsController.isAnyLoading,
       preventDefault: true,
     },
   );
@@ -121,23 +89,23 @@ const IntegrationSubscription: FC = () => {
         {donate.length > 0 && (
           <IntegrationGroupCard
             integrations={donate}
-            subscriptions={donateSubscriptions}
+            subscriptions={donateController.subscriptions}
             title={t('integration.groups.donations')}
             icon={t('common.currencySign')}
             tooltip={t('integration.groupActions.startListeningDonations')}
             hotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleDonations}
-            onToggle={() => toggleIntegrations(donate, donateSubscriptions)}
+            onToggle={donateController.toggle}
           />
         )}
         {points.length > 0 && (
           <IntegrationGroupCard
             integrations={points}
-            subscriptions={pointsSubscriptions}
+            subscriptions={pointsController.subscriptions}
             title={t('integration.groups.channelPoints')}
             icon={<PointsIcon width={18} height={18} />}
             tooltip={t('integration.groupActions.startListeningPoints')}
             hotkeyActionId={HOTKEY_ACTION_IDS.integrationsToggleChannelPoints}
-            onToggle={() => toggleIntegrations(points, pointsSubscriptions)}
+            onToggle={pointsController.toggle}
           />
         )}
       </div>

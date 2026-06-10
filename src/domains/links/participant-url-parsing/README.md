@@ -9,6 +9,7 @@ This module is the shared entry point for resolving external links in participan
 - A source owns its URL validation, identifier extraction, canonical URL building, metadata provider fallback chain, and source-specific metadata normalization.
 - `parseLink` is the lightweight path used by auction participant parsing to create readable markdown labels.
 - `getVideoRequestMetadata` is an optional richer capability for sources that can provide playable video-request metadata.
+- Worker-backed providers call the metadata worker when a source needs server-side credentials or a browser-safe API proxy.
 - Callers should use the registered source contract instead of implementing source-specific URL parsing in feature code.
 
 ## Runtime Flow
@@ -24,9 +25,10 @@ This module is the shared entry point for resolving external links in participan
 1. Create a folder under `sources/<source>/`.
 2. Add helpers for URL validation, identifier extraction, and canonical URL construction.
 3. Add providers under `providers/` when metadata requires network or fallback logic.
-4. Export a `ParticipantUrlSource` with `sourceName`, `domains`, `checkIsValidLink`, `parseLink`, and optional `getVideoRequestMetadata`.
-5. Register the source in `sources/index.ts`.
-6. Add focused tests for source helpers and supported URL shapes.
+4. Put server-secret API calls behind the metadata worker and add a browser provider that calls the worker endpoint.
+5. Export a `ParticipantUrlSource` with `sourceName`, `domains`, `checkIsValidLink`, `parseLink`, and optional `getVideoRequestMetadata`.
+6. Register the source in `sources/index.ts`.
+7. Add focused tests for source helpers and supported URL shapes.
 
 ## Shared Areas
 

@@ -2,6 +2,7 @@ import clsx from 'clsx';
 
 import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton/index.tsx';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow.ts';
+import { saveRedirectReturnPath } from '@domains/bids/external-integrations/shared/auth/redirect/redirectReturnPath';
 import * as Integration from '@models/integration';
 import { mergeAuthData } from '@reducers/User/User.ts';
 import { store } from '@store';
@@ -57,6 +58,7 @@ const authFlow: Integration.RedirectFlow = {
       showPartnerChip={showPartnerChip}
       color='#04ad1e'
       onClick={async () => {
+        saveRedirectReturnPath(integrationId);
         const authUrl = await createKickAuthorizeUrl(clientId, redirectUri);
         window.open(authUrl, '_self');
       }}

@@ -1,4 +1,5 @@
 import { getNumericValue } from '@domains/links/participant-url-parsing/shared/valueParsers';
+import { getMetadataWorkerUrl } from '@domains/links/participant-url-parsing/shared/metadataWorker';
 
 import type { ParticipantUrlMovieMetadata } from '@domains/links/participant-url-parsing/types';
 
@@ -17,17 +18,11 @@ interface KinopoiskWorkerMetadataResponse {
   sourceUrl?: string;
 }
 
-const KINOPOISK_METADATA_WORKER_URL = import.meta.env.VITE_KINOPOISK_METADATA_WORKER_URL;
-
 export const getMovieMetadataFromKinopoiskWorker = async (
   params: GetMovieMetadataFromKinopoiskWorkerParams,
 ): Promise<ParticipantUrlMovieMetadata> => {
-  if (!KINOPOISK_METADATA_WORKER_URL) {
-    throw new Error('Kinopoisk worker provider is not configured: VITE_KINOPOISK_METADATA_WORKER_URL is missing.');
-  }
-
   const kinopoiskTitleType = params.kinopoiskUrl.includes('/series/') ? 'series' : 'film';
-  const workerUrl = `${KINOPOISK_METADATA_WORKER_URL.replace(/\/$/, '')}/api/metadata/kinopoisk/${kinopoiskTitleType}/${params.kinopoiskMovieId}`;
+  const workerUrl = getMetadataWorkerUrl(`/api/metadata/kinopoisk/${kinopoiskTitleType}/${params.kinopoiskMovieId}`);
   const response = await fetch(workerUrl, {
     method: 'GET',
     signal: params.signal,

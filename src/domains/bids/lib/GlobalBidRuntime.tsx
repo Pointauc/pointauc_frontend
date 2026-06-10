@@ -6,10 +6,7 @@ import {
   trackAuctionIntegrationTransferredBid,
 } from '@domains/auction/analytics/model/auctionFeatureUsageStore';
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
-import {
-  publishGlobalBid,
-  registerGlobalBidFallbackConsumer,
-} from '@domains/bids/lib/globalBidsEventBus.ts';
+import { publishGlobalBid, registerGlobalBidFallbackConsumer } from '@domains/bids/lib/globalBidsEventBus.ts';
 import { processRedemption, Purchase } from '@reducers/Purchases/Purchases.ts';
 
 import type { ThunkDispatch } from 'redux-thunk';
@@ -49,13 +46,6 @@ const GlobalBidRuntime = () => {
       integrationBidUnsubscribers.forEach((unsubscribe) => unsubscribe());
     };
   }, []);
-
-  useEffect(() => {
-    return registerGlobalBidFallbackConsumer(async (bid) => {
-      dispatch(processRedemption(bid));
-      return true;
-    });
-  }, [dispatch]);
 
   return null;
 };

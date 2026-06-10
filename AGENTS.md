@@ -11,7 +11,7 @@
 
 ## Code Style and Structure
 
-- Prefer keeping files under 300 lines when splitting improves clarity.
+- Prefer keeping files small and modular. Split large components into smaller, focused ones.
 - Favor modularization and reuse over duplication.
 - Use descriptive variable names.
 - Prefer boolean names like `isLoading`, `hasError`, `canSubmit`.
@@ -23,6 +23,7 @@
   - `props`
   - `ref`
 - Prefer arrow functions. Only use function declarations inside classes.
+- Each file must contain only a single component. When you need to breakdown logic into separate components for better architecture - put them in separate files.
 
 ## Imports and Paths
 

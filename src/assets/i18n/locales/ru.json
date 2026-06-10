@@ -1612,7 +1612,12 @@
     "card": {
       "views": "{{value}} views",
       "likes": "{{percentage}} likes",
-      "by": "by {{name}}"
+      "by": "by {{name}}",
+      "actions": "Card actions",
+      "play": "Play",
+      "moveToTop": "Move to top",
+      "restore": "Restore",
+      "delete": "Delete"
     },
     "queue": {
       "title": "Queue",
@@ -1622,6 +1627,7 @@
       "remove": "Remove request",
       "clear": "Clear queue",
       "clearWithCount": "Clear queue ({{count}})",
+      "clearWithDuration": "Clear queue ({{duration}})",
       "clearConfirmTitle": "Clear queue?",
       "clearConfirmDescription": "This will remove {{count}} queued requests."
     },
@@ -1630,7 +1636,7 @@
       "noCurrent": "Nothing selected",
       "previous": "Previous",
       "next": "Next",
-      "pickNext": "Pick Next",
+      "pickNext": "Next video",
       "spinWheel": "Spin the wheel",
       "noPrevious": "No previous video",
       "noNext": "No next video",
@@ -1646,6 +1652,9 @@
       "emptyTitle": "History is empty",
       "emptyDescription": "Watched and skipped requests will appear here.",
       "clear": "Clear history",
+      "clearWithCount": "Clear history ({{count}})",
+      "clearConfirmTitle": "Clear history?",
+      "clearConfirmDescription": "This will permanently delete {{count}} history records.",
       "status": {
         "watched": "Watched",
         "skipped": "Skipped",
@@ -1657,7 +1666,11 @@
       "sections": {
         "filters": "Filters",
         "nextSelection": "Next pick",
-        "skipVoting": "Skip voting settings"
+        "skipVoting": "Skip voting settings",
+        "order": "Order",
+        "skip": "Skip",
+        "points": "Points",
+        "donations": "Donations"
       },
       "fields": {
         "supportedPlatforms": "Supported platforms",
@@ -1696,6 +1709,16 @@
       "groups": {
         "donations": "Донаты",
         "channelPoints": "Баллы канала"
+      },
+      "tooltips": {
+        "enable": {
+          "donations": "Enable donation requests",
+          "channelPoints": "Enable channel point requests"
+        },
+        "disable": {
+          "donations": "Disable donation requests",
+          "channelPoints": "Disable channel point requests"
+        }
       },
       "integrationsTitle": "Авторизованные интеграции",
       "noAuthenticatedIntegrations": "Для этой группы пока нет доступных авторизованных интеграций.",

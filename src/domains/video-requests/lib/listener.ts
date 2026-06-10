@@ -1,7 +1,12 @@
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import { ParticipantUrlVideoRequestMetadata } from '@domains/links/participant-url-parsing/types';
-import { VideoRequest, VideoRequestBidGroup, VideoRequestSettings, VideoSourceId } from '@domains/video-requests/model/types';
+import {
+  VideoRequest,
+  VideoRequestBidGroup,
+  VideoRequestSettings,
+  VideoSourceId,
+} from '@domains/video-requests/model/types';
 import { Purchase } from '@reducers/Purchases/Purchases';
 import { UserState } from '@reducers/User/User';
 import * as Integration from '@models/integration';
@@ -24,13 +29,12 @@ export const getVideoRequestBidGroup = (bid: Purchase): VideoRequestBidGroup =>
 export const getAvailableVideoRequestIntegrations = (
   authData: UserState['authData'],
 ): Record<VideoRequestBidGroup, Integration.Config[]> => ({
-  donations: integrationUtils.groupBy.availability(integrations.donate, authData).available,
+  donations: integrationUtils.groupBy.availability(integrationUtils.filterBy.partners(integrations.donate), authData)
+    .available,
   channelPoints: integrationUtils.groupBy.availability(integrations.points, authData).available,
 });
 
-export const mapSourceMetadataToVideoSourceId = (
-  metadata: ParticipantUrlVideoRequestMetadata,
-): VideoSourceId => {
+export const mapSourceMetadataToVideoSourceId = (metadata: ParticipantUrlVideoRequestMetadata): VideoSourceId => {
   if (metadata.source === 'youtube') {
     return 'youtube';
   }
@@ -38,10 +42,7 @@ export const mapSourceMetadataToVideoSourceId = (
   return metadata.sourceReference.kind === 'clip' ? 'twitchClip' : 'twitchVod';
 };
 
-export const buildParsedVideoReference = (
-  sourceId: VideoSourceId,
-  metadata: ParticipantUrlVideoRequestMetadata,
-) => {
+export const buildParsedVideoReference = (sourceId: VideoSourceId, metadata: ParticipantUrlVideoRequestMetadata) => {
   const sourceReference = metadata.sourceReference;
 
   if (sourceId === 'youtube') {
@@ -76,9 +77,7 @@ export const buildParsedVideoReference = (
   };
 };
 
-export const buildVideoRequestMetadataSnapshot = (
-  metadata: ParticipantUrlVideoRequestMetadata,
-) => ({
+export const buildVideoRequestMetadataSnapshot = (metadata: ParticipantUrlVideoRequestMetadata) => ({
   title: metadata.title,
   authorName: metadata.channelName,
   thumbnailUrl: metadata.thumbnailUrl,
@@ -132,10 +131,7 @@ export const getVideoRequestValidationReason = ({
   }
 
   if (settings.limits.maxTotalDurationSeconds != null && request.metadata.durationSeconds != null) {
-    const queuedDurationSeconds = queue.reduce(
-      (total, item) => total + (item.metadata.durationSeconds ?? 0),
-      0,
-    );
+    const queuedDurationSeconds = queue.reduce((total, item) => total + (item.metadata.durationSeconds ?? 0), 0);
 
     if (queuedDurationSeconds + request.metadata.durationSeconds > settings.limits.maxTotalDurationSeconds) {
       return VIDEO_REQUEST_REJECTION_REASONS.totalDurationLimitExceeded;

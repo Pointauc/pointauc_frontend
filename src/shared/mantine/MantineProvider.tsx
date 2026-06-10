@@ -16,9 +16,11 @@ import {
 import { ModalsProvider } from '@mantine/modals';
 import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
 import { RootState } from '@reducers';
 import { calcUiElementsOpacity } from '@utils/ui/background';
+import ROUTES from '@constants/routes.constants';
 
 import ExtendedCheckbox from './ui/Checkbox';
 import CloseButtonExtended from './ui/CloseButton';
@@ -81,6 +83,8 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
 
   const adjustedPrimary = primaryColor === '#a6d4fa' ? '#228be6' : primaryColor ?? '#228be6';
 
+  const location = useLocation();
+
   const uiOpacity = useMemo(
     () => darkAlpha ?? calcUiElementsOpacity(backgroundOverlayOpacity),
     [darkAlpha, backgroundOverlayOpacity],
@@ -91,7 +95,7 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
       variantColorResolver,
       cursorType: 'pointer',
       primaryColor: 'primary',
-      defaultRadius: 'sm',
+      defaultRadius: location.pathname === ROUTES.VIDEO_REQUESTS ? 'lg' : 'sm',
       spacing: {
         ...DEFAULT_THEME.spacing,
         xxs: rem(6),
@@ -140,7 +144,7 @@ const MantineProvider = ({ children }: { children: React.ReactNode }) => {
         CloseButton: CloseButtonExtended,
       },
     });
-  }, [uiOpacity, adjustedPrimary]);
+  }, [location.pathname, adjustedPrimary, uiOpacity]);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--custom-background-ui-opacity', uiOpacity.toString());

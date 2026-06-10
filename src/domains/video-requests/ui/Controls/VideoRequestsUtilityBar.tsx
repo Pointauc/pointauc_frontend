@@ -1,13 +1,9 @@
 import { ActionIcon, Button, Group, Switch, Text, Tooltip } from '@mantine/core';
-import { IconHistory, IconPlayerSkipBack, IconPlayerSkipForward, IconSettings, IconTheater } from '@tabler/icons-react';
+import { IconPlayerSkipBack, IconPlayerSkipForward, IconSettings, IconTheater } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-import {
-  VideoRequest,
-  VideoRequestHistoryRecord,
-  VideoRequestNextStrategy,
-} from '@domains/video-requests/model/types';
+import { VideoRequest, VideoRequestHistoryRecord, VideoRequestNextStrategy } from '@domains/video-requests/model/types';
 import VideoRequestCard from '@domains/video-requests/ui/Queue/VideoRequestCard';
 import { getVideoRequestTitle } from '@domains/video-requests/ui/lib/videoRequestUiFormatters';
 
@@ -28,7 +24,6 @@ interface VideoRequestsUtilityBarProps {
   onPrevious: () => void;
   onNext: () => void;
   onToggleAutoplay: (isEnabled: boolean) => void;
-  onOpenHistory: () => void;
   onOpenSettings: () => void;
   onToggleTheater: () => void;
 }
@@ -41,10 +36,18 @@ const TargetTooltip = ({
   fallback: string;
 }) => {
   if (!request) {
-    return <Text size='xs'>{fallback}</Text>;
+    return (
+      <Text size='xs' className='px-4 py-2'>
+        {fallback}
+      </Text>
+    );
   }
 
-  return <VideoRequestCard request={request} compact />;
+  return (
+    <div className='overflow-hidden rounded-md'>
+      <VideoRequestCard request={request} borders={false} />
+    </div>
+  );
 };
 
 const VideoRequestsUtilityBar = ({
@@ -58,15 +61,12 @@ const VideoRequestsUtilityBar = ({
   onPrevious,
   onNext,
   onToggleAutoplay,
-  onOpenHistory,
   onOpenSettings,
   onToggleTheater,
 }: VideoRequestsUtilityBarProps) => {
   const { t } = useTranslation();
   const nextButtonLabel =
-    nextStrategy === 'randomWheel'
-      ? t('videoRequests.utility.spinWheel')
-      : t('videoRequests.utility.pickNext');
+    nextStrategy === 'randomWheel' ? t('videoRequests.utility.spinWheel') : t('videoRequests.utility.pickNext');
   const skipVoteLabel = t('videoRequests.utility.skipVotesRemaining', {
     count: skipVoting.remainingVotes,
     current: skipVoting.voteCount,
@@ -76,16 +76,13 @@ const VideoRequestsUtilityBar = ({
   return (
     <footer
       className={clsx(
-        'shrink-0',
+        'flex shrink-0 gap-1',
         isTheaterMode
           ? 'border-paper-transparent-700 bg-paper-transparent-900 rounded-md border p-3 backdrop-blur-md'
           : 'flex min-h-16 flex-col justify-center gap-3 bg-transparent px-5 py-2 lg:flex-row lg:items-center lg:justify-between',
       )}
     >
-      <div className={clsx('min-w-0', isTheaterMode ? 'mb-3' : 'flex-1')}>
-        <Text size='xs' className='text-dimmed'>
-          {t('videoRequests.utility.nowPlaying')}
-        </Text>
+      <div className={clsx('min-w-0 basis-1/2', isTheaterMode ? 'mb-3' : 'flex-1')}>
         <Text fw={750} className='truncate'>
           {currentRequest ? getVideoRequestTitle(currentRequest.metadata) : t('videoRequests.utility.noCurrent')}
         </Text>
@@ -96,98 +93,99 @@ const VideoRequestsUtilityBar = ({
         )}
       </div>
 
-      <Group gap='md' justify={isTheaterMode ? 'space-between' : 'center'} wrap='wrap'>
-        <Tooltip
-          label={<TargetTooltip request={previousRequest} fallback={t('videoRequests.utility.noPrevious')} />}
-          position='top'
-          withArrow
-          multiline
-        >
-          <Button
-            variant='light'
-            color='gray'
-            size='sm'
-            disabled={!previousRequest}
-            onClick={onPrevious}
-            leftSection={<IconPlayerSkipBack size={18} />}
-            aria-label={t('videoRequests.utility.previous')}
+      <Group gap='md' justify={'space-between'} className='basis-1/2' wrap='wrap'>
+        <div className='flex gap-4'>
+          <Tooltip
+            label={<TargetTooltip request={previousRequest} fallback={t('videoRequests.utility.noPrevious')} />}
+            position='top'
+            withArrow
+            multiline
+            radius='md'
+            color='gray.8'
+            className='max-w-[28rem]'
+            p={0}
           >
-            {t('videoRequests.utility.previous')}
-          </Button>
-        </Tooltip>
+            <Button
+              variant='light'
+              color='cyan'
+              size='sm'
+              className='px-6'
+              disabled={!previousRequest}
+              onClick={onPrevious}
+              leftSection={<IconPlayerSkipBack size={18} />}
+              aria-label={t('videoRequests.utility.previous')}
+            >
+              {t('videoRequests.utility.previous')}
+            </Button>
+          </Tooltip>
 
-        <Tooltip
-          label={<TargetTooltip request={nextRequest} fallback={t('videoRequests.utility.noNext')} />}
-          position='top'
-          withArrow
-          multiline
-        >
-          <Button
-            variant='light'
-            color='cyan'
-            size='sm'
-            className='relative overflow-hidden'
-            disabled={!currentRequest && !nextRequest}
-            onClick={onNext}
-            rightSection={<IconPlayerSkipForward size={18} />}
-            aria-label={nextButtonLabel}
+          <Tooltip
+            label={<TargetTooltip request={nextRequest} fallback={t('videoRequests.utility.noNext')} />}
+            position='top'
+            withArrow
+            multiline
+            radius='md'
+            color='gray.8'
+            className='max-w-[28rem]'
+            p={0}
           >
-            {skipVoting.isEnabled && (
-              <span
-                className='absolute inset-y-0 left-0 bg-cyan-400/30 transition-[width] duration-200'
-                style={{ width: `${skipVoting.progress * 100}%` }}
-              />
-            )}
-            <span className='relative z-10'>
-              {skipVoting.isEnabled ? skipVoteLabel : nextButtonLabel}
-            </span>
-          </Button>
-        </Tooltip>
-
-        <Switch
-          size='sm'
-          checked={isAutoplayEnabled}
-          onChange={(event) => onToggleAutoplay(event.currentTarget.checked)}
-          label={t('videoRequests.utility.autoplay')}
-        />
-
-        <Group gap='xs' wrap='nowrap'>
-          <Tooltip label={t('videoRequests.utility.history')}>
-            <ActionIcon
+            <Button
               variant='light'
-              color='gray'
-              size='lg'
-              onClick={onOpenHistory}
-              aria-label={t('videoRequests.utility.history')}
+              color='cyan'
+              size='sm'
+              className='relative overflow-hidden px-6'
+              disabled={!currentRequest && !nextRequest}
+              onClick={onNext}
+              rightSection={<IconPlayerSkipForward size={18} />}
+              aria-label={nextButtonLabel}
             >
-              <IconHistory size={20} />
-            </ActionIcon>
+              {skipVoting.isEnabled && (
+                <span
+                  className='absolute inset-y-0 left-0 bg-cyan-400/30 transition-[width] duration-200'
+                  style={{ width: `${skipVoting.progress * 100}%` }}
+                />
+              )}
+              <span className='relative z-10'>{skipVoting.isEnabled ? skipVoteLabel : nextButtonLabel}</span>
+            </Button>
           </Tooltip>
+        </div>
 
-          <Tooltip label={t('videoRequests.utility.settings')}>
-            <ActionIcon
-              variant='light'
-              color='gray'
-              size='lg'
-              onClick={onOpenSettings}
-              aria-label={t('videoRequests.utility.settings')}
-            >
-              <IconSettings size={20} />
-            </ActionIcon>
-          </Tooltip>
+        <div className='flex items-center gap-4'>
+          <Switch
+            size='sm'
+            checked={isAutoplayEnabled}
+            onChange={(event) => onToggleAutoplay(event.currentTarget.checked)}
+            label={t('videoRequests.utility.autoplay')}
+          />
 
-          <Tooltip label={isTheaterMode ? t('videoRequests.utility.exitTheater') : t('videoRequests.utility.theater')}>
-            <ActionIcon
-              variant='light'
-              color='gray'
-              size='lg'
-              onClick={onToggleTheater}
-              aria-label={t('videoRequests.utility.theater')}
+          <Group gap='xs' wrap='nowrap'>
+            <Tooltip label={t('videoRequests.utility.settings')}>
+              <ActionIcon
+                variant='light'
+                color='gray.8'
+                size='lg'
+                onClick={onOpenSettings}
+                aria-label={t('videoRequests.utility.settings')}
+              >
+                <IconSettings size={20} />
+              </ActionIcon>
+            </Tooltip>
+
+            {/* <Tooltip
+              label={isTheaterMode ? t('videoRequests.utility.exitTheater') : t('videoRequests.utility.theater')}
             >
-              <IconTheater size={20} />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
+              <ActionIcon
+                variant='light'
+                color='gray'
+                size='lg'
+                onClick={onToggleTheater}
+                aria-label={t('videoRequests.utility.theater')}
+              >
+                <IconTheater size={20} />
+              </ActionIcon>
+            </Tooltip> */}
+          </Group>
+        </div>
       </Group>
     </footer>
   );

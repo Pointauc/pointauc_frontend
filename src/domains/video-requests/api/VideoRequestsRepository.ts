@@ -145,6 +145,26 @@ class VideoRequestsRepository {
     return updatedRecord;
   }
 
+  async reorderRequests(requestIds: string[]): Promise<void> {
+    const existingRequests = await videoRequestsDb.requests.bulkGet(requestIds);
+    const baseTimestamp = Date.now();
+    const updates = existingRequests
+      .map((request, index): VideoRequest | null => {
+        if (!request) {
+          return null;
+        }
+
+        return {
+          ...request,
+          createdAt: new Date(baseTimestamp + index).toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+      })
+      .filter((request): request is VideoRequest => request != null);
+
+    await videoRequestsDb.requests.bulkPut(updates);
+  }
+
   async deleteRequest(id: string): Promise<void> {
     await videoRequestsDb.requests.delete(id);
   }
@@ -227,6 +247,10 @@ class VideoRequestsRepository {
 
   async clearHistory(): Promise<void> {
     await videoRequestsDb.history.clear();
+  }
+
+  async deleteHistoryRecord(id: string): Promise<void> {
+    await videoRequestsDb.history.delete(id);
   }
 }
 

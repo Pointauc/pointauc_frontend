@@ -54,6 +54,8 @@ export const integrationUtils = {
       type: Integration.AuthFlow['type'],
     ): Integration.Config<T>[] =>
       integrations.filter((integration) => integration.authFlow.type === type) as Integration.Config<T>[],
+    partners: (integrations: Integration.Config[]) =>
+      integrations.filter((integration) => !!integration.branding.partner),
   },
   groupBy: {
     availability: (integrations: Integration.Config[], authData: UserState['authData']) =>

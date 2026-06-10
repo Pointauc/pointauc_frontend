@@ -12,14 +12,20 @@ import { RootState } from '@reducers';
 
 import DonationIntegrationCard from './DonationIntegrationCard';
 
-const DonationSection = () => {
+interface DonationSectionProps {
+  onlyPartners?: boolean;
+}
+
+const DonationSection = ({ onlyPartners = false }: DonationSectionProps) => {
   const { t } = useTranslation();
   const authData = useSelector((root: RootState) => root.user.authData);
 
-  const { available, unavailable } = useMemo(
-    () => integrationUtils.groupBy.availability(integrations.donate, authData),
-    [authData],
-  );
+  const { available, unavailable } = useMemo(() => {
+    const integrationsToUse = onlyPartners
+      ? integrationUtils.filterBy.partners(integrations.donate)
+      : integrations.donate;
+    return integrationUtils.groupBy.availability(integrationsToUse, authData);
+  }, [authData, onlyPartners]);
   const { partner: partnerIntegrations, regular: regularIntegrations } = useMemo(
     () => integrationUtils.groupBy.partner(unavailable),
     [unavailable],

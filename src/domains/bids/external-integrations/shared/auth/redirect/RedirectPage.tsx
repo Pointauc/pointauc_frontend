@@ -1,15 +1,17 @@
 import { notifications } from '@mantine/notifications';
 import { useQuery } from '@tanstack/react-query';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Navigate, useLocation } from 'react-router';
 
 import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
 import { QUERIES } from '@constants/common.constants.ts';
-import ROUTES from '@constants/routes.constants.ts';
 import * as Integration from '@models/integration';
 import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
 import { getQueryValue } from '@utils/url.utils.ts';
+
+import { consumeRedirectReturnPath } from './redirectReturnPath';
 
 interface RedirectPageProps {
   integration: Integration.Config<Integration.RedirectFlow>;
@@ -20,8 +22,17 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
   const { authFlow } = integration;
   const dispatch = useDispatch();
   const location = useLocation();
+  const returnPathRef = useRef<string | null>(null);
 
   const code = getQueryValue(location.search, authFlow.redirectCodeQueryKey ?? QUERIES.CODE);
+
+  const getReturnPath = (): string => {
+    if (!returnPathRef.current) {
+      returnPathRef.current = consumeRedirectReturnPath(integration.id);
+    }
+
+    return returnPathRef.current;
+  };
 
   const authQuery = useQuery({
     queryKey: ['auth-redirect', code],
@@ -45,11 +56,11 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
       autoClose: 10000,
       withCloseButton: true,
     });
-    return <Navigate to={ROUTES.HOME} />;
+    return <Navigate to={getReturnPath()} replace />;
   }
 
   if (authQuery.isSuccess) {
-    return <Navigate to={ROUTES.HOME} />;
+    return <Navigate to={getReturnPath()} replace />;
   }
 
   return <LoadingPage helpText={t('common.authProgress')} />;

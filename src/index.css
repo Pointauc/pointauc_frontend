@@ -50,6 +50,10 @@
   --color-paper-transparent-900: var(--mantine-color-darkTransparent-9);
   --color-paper-transparent-950: var(--mantine-color-darkTransparent-9);
 
+  --color-black: #060606;
+  --color-donation: rgb(246, 100, 108);
+  --color-points: rgb(65, 192, 169);
+
   /* Elevation tokens */
   --elevation-dm-hi-base: rgba(255, 255, 255, 0.02);
   --elevation-dm-hi-mid: rgba(255, 255, 255, 0.05);

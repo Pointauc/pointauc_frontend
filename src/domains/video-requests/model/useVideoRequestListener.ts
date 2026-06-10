@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
+import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import { connectIntegrationWithTimeout } from '@domains/bids/external-integrations/shared/pubsub/subscriptionTimeout';
 import { useMergedSubscriptionsState } from '@domains/bids/external-integrations/shared/useMergedState';
 import { registerGlobalBidConsumer } from '@domains/bids/lib/globalBidsEventBus.ts';
@@ -44,6 +45,9 @@ export const useVideoRequestListener = () => {
 
   const availableIntegrationsByGroup = useMemo(() => {
     return getAvailableVideoRequestIntegrations(authData);
+  }, [authData]);
+  const unavailableIntegrations = useMemo(() => {
+    return integrationUtils.groupBy.availability(integrations.all, authData).unavailable;
   }, [authData]);
 
   const activeBidGroups = settingsQuery.data?.listening.activeBidGroups ?? VIDEO_REQUEST_BID_GROUPS;
@@ -185,6 +189,7 @@ export const useVideoRequestListener = () => {
 
     await saveSettingsMutation.mutateAsync({
       listening: {
+        isEnabled: nextGroups.size > 0,
         activeBidGroups: VIDEO_REQUEST_BID_GROUPS.filter((item) => nextGroups.has(item)),
       },
     });
@@ -196,6 +201,7 @@ export const useVideoRequestListener = () => {
     isSaving: saveSettingsMutation.isPending,
     subscriptions,
     availableIntegrationsByGroup,
+    unavailableIntegrations,
     setListeningEnabled,
     toggleBidGroup,
   };

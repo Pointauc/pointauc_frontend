@@ -9,7 +9,9 @@ import {
   useClearVideoRequestHistory,
   useClearVideoRequestQueue,
   useCreateVideoRequest,
+  useDeleteVideoRequestHistoryRecord,
   useDeleteVideoRequest,
+  useReorderVideoRequestQueue,
   useSaveVideoRequestSettings,
   useVideoRequestHistory,
   useVideoRequestQueue,
@@ -23,17 +25,22 @@ import {
 } from '@domains/video-requests/model/types';
 import VideoRequestsUtilityBar from '@domains/video-requests/ui/Controls/VideoRequestsUtilityBar';
 import VideoRequestDebugPanel from '@domains/video-requests/ui/Debug/VideoRequestDebugPanel';
-import VideoRequestHistoryModal from '@domains/video-requests/ui/History/VideoRequestHistoryModal';
 import VideoRequestPlayer from '@domains/video-requests/ui/Player/VideoRequestPlayer';
 import VideoRequestQueue from '@domains/video-requests/ui/Queue/VideoRequestQueue';
 import VideoRequestSettingsModal from '@domains/video-requests/ui/Settings/VideoRequestSettingsModal';
 import VideoRequestWheelPicker from '@domains/video-requests/ui/Wheel/VideoRequestWheelPicker';
-
-const getRemainingRequests = (queue: VideoRequest[], currentRequestId: string | null) =>
-  currentRequestId ? queue.filter((request) => request.id !== currentRequestId) : queue;
+import { useInitializeUser } from '@domains/bids/lib/useInitializeUser';
+import { registerGlobalBidFallbackConsumer } from '@domains/bids/lib/globalBidsEventBus';
 
 const getPreviousRequest = (history: VideoRequestHistoryRecord[]) =>
   history.find((request) => request.status === 'watched' || request.status === 'skipped') ?? null;
+
+const getFrontQueueTimestamp = (queue: VideoRequest[]) => {
+  const queueTimestamps = queue.map((queueRequest) => Date.parse(queueRequest.createdAt));
+  const earliestQueueTimestamp = queueTimestamps.length > 0 ? Math.min(...queueTimestamps) : Date.now();
+
+  return new Date(earliestQueueTimestamp - 1).toISOString();
+};
 
 const VideoRequestsPage = () => {
   const listener = useVideoRequestListener();
@@ -43,13 +50,13 @@ const VideoRequestsPage = () => {
   const clearQueueMutation = useClearVideoRequestQueue();
   const appendHistoryMutation = useAppendVideoRequestHistory();
   const clearHistoryMutation = useClearVideoRequestHistory();
+  const deleteHistoryMutation = useDeleteVideoRequestHistoryRecord();
+  const reorderQueueMutation = useReorderVideoRequestQueue();
   const saveSettingsMutation = useSaveVideoRequestSettings();
   const createRequestMutation = useCreateVideoRequest();
-  const [isHistoryOpened, historyModal] = useDisclosure(false);
   const [isSettingsOpened, settingsModal] = useDisclosure(false);
   const [isTheaterMode, theaterMode] = useDisclosure(false);
   const [isTheaterPanelOpen, setIsTheaterPanelOpen] = useState(false);
-  const [currentRequestId, setCurrentRequestId] = useState<string | null>(null);
   const [wheelRequests, setWheelRequests] = useState<VideoRequest[]>([]);
   const [isWheelPicking, setIsWheelPicking] = useState(false);
 
@@ -58,24 +65,25 @@ const VideoRequestsPage = () => {
   const previousRequest = getPreviousRequest(history);
   const isAutoplayEnabled = Boolean(listener.settings?.isAutoplayEnabled);
   const nextStrategy = listener.settings?.nextStrategy ?? 'requestOrder';
-  const currentRequest =
-    queue.find((request) => request.id === currentRequestId) ??
-    selectNextVideoRequest(queue, nextStrategy);
-  const remainingRequests = getRemainingRequests(queue, currentRequest?.id ?? null);
+  const currentRequest = queue[0] ?? null;
+  const remainingRequests = currentRequest ? queue.filter((request) => request.id !== currentRequest.id) : queue;
   const nextRequest = selectNextVideoRequest(remainingRequests, nextStrategy);
+
+  useInitializeUser();
+
+  // useEffect(() => {
+  //   return registerGlobalBidFallbackConsumer(async (bid) => {
+  //     dispatch(processRedemption(bid));
+  //     return true;
+  //   });
+  // }, [dispatch]);
 
   useEffect(() => {
     if (queue.length === 0) {
-      setCurrentRequestId(null);
       setIsWheelPicking(false);
       setWheelRequests([]);
-      return;
     }
-
-    if (!currentRequest || !queue.some((request) => request.id === currentRequest.id)) {
-      setCurrentRequestId(selectNextVideoRequest(queue, nextStrategy)?.id ?? null);
-    }
-  }, [currentRequest, nextStrategy, queue]);
+  }, [queue.length]);
 
   useEffect(() => {
     if (!isTheaterMode) {
@@ -105,33 +113,46 @@ const VideoRequestsPage = () => {
     };
   }, [isTheaterMode]);
 
-  const completeRequest = useCallback(async (request: VideoRequest, status: VideoRequestHistoryStatus) => {
-    await appendHistoryMutation.mutateAsync({
-      ...request,
-      status,
-    });
-    await deleteRequestMutation.mutateAsync(request.id);
-  }, [appendHistoryMutation, deleteRequestMutation]);
+  const completeRequest = useCallback(
+    async (request: VideoRequest, status: VideoRequestHistoryStatus) => {
+      await appendHistoryMutation.mutateAsync({
+        ...request,
+        status,
+      });
+      await deleteRequestMutation.mutateAsync(request.id);
+    },
+    [appendHistoryMutation, deleteRequestMutation],
+  );
 
-  const advanceCurrentRequest = useCallback(async (status: Extract<VideoRequestHistoryStatus, 'watched' | 'skipped'>) => {
-    if (!currentRequest && queue.length === 0) {
-      return;
-    }
+  const advanceCurrentRequest = useCallback(
+    async (status: Extract<VideoRequestHistoryStatus, 'watched' | 'skipped'>) => {
+      if (!currentRequest && queue.length === 0) {
+        return;
+      }
 
-    const selectableRequests = getRemainingRequests(queue, currentRequest?.id ?? null);
+      const selectableRequests = currentRequest ? queue.filter((request) => request.id !== currentRequest.id) : queue;
 
-    if (currentRequest) {
-      await completeRequest(currentRequest, status);
-    }
+      if (currentRequest) {
+        await completeRequest(currentRequest, status);
+      }
 
-    if (nextStrategy === 'randomWheel' && selectableRequests.length > 0) {
-      setWheelRequests(selectableRequests);
-      setIsWheelPicking(true);
-      return;
-    }
+      if (nextStrategy === 'randomWheel' && selectableRequests.length > 0) {
+        setWheelRequests(selectableRequests);
+        setIsWheelPicking(true);
+        return;
+      }
 
-    setCurrentRequestId(selectNextVideoRequest(selectableRequests, nextStrategy)?.id ?? null);
-  }, [completeRequest, currentRequest, nextStrategy, queue]);
+      const selectedRequest = selectNextVideoRequest(selectableRequests, nextStrategy);
+
+      if (selectedRequest) {
+        await reorderQueueMutation.mutateAsync([
+          selectedRequest.id,
+          ...selectableRequests.filter((request) => request.id !== selectedRequest.id).map((request) => request.id),
+        ]);
+      }
+    },
+    [completeRequest, currentRequest, nextStrategy, queue, reorderQueueMutation],
+  );
 
   const handleNext = async () => {
     await advanceCurrentRequest('watched');
@@ -156,6 +177,67 @@ const VideoRequestsPage = () => {
     await completeRequest(request, 'removed');
   };
 
+  const handlePlayRequest = async (id: string) => {
+    if (id === currentRequest?.id) {
+      return;
+    }
+
+    await reorderQueueMutation.mutateAsync([
+      id,
+      ...queue.filter((request) => request.id !== id).map((request) => request.id),
+    ]);
+  };
+
+  const handleMoveRequestToTop = async (id: string) => {
+    if (id === currentRequest?.id) {
+      return;
+    }
+
+    const request = queue.find((queueRequest) => queueRequest.id === id);
+
+    if (!request) {
+      return;
+    }
+
+    await reorderQueueMutation.mutateAsync([
+      request.id,
+      ...queue.filter((queueRequest) => queueRequest.id !== id).map((queueRequest) => queueRequest.id),
+    ]);
+  };
+
+  const restoreHistoryRequest = async (request: VideoRequestHistoryRecord, shouldPlay: boolean) => {
+    const restoredRequestId = crypto.randomUUID();
+    const createdAt = shouldPlay ? getFrontQueueTimestamp(queue) : new Date().toISOString();
+
+    await createRequestMutation.mutateAsync({
+      ...request,
+      id: restoredRequestId,
+      status: 'queued',
+      createdAt,
+    });
+    await deleteHistoryMutation.mutateAsync(request.id);
+  };
+
+  const handleRestoreHistory = async (id: string) => {
+    const request = history.find((item) => item.id === id);
+
+    if (!request) {
+      return;
+    }
+
+    await restoreHistoryRequest(request, false);
+  };
+
+  const handlePlayHistory = async (id: string) => {
+    const request = history.find((item) => item.id === id);
+
+    if (!request) {
+      return;
+    }
+
+    await restoreHistoryRequest(request, true);
+  };
+
   const handlePrevious = async () => {
     if (!previousRequest) {
       return;
@@ -167,9 +249,9 @@ const VideoRequestsPage = () => {
       ...previousRequest,
       id: restoredRequestId,
       status: 'queued',
-      createdAt: new Date().toISOString(),
+      createdAt: getFrontQueueTimestamp(queue),
     });
-    setCurrentRequestId(restoredRequestId);
+    await deleteHistoryMutation.mutateAsync(previousRequest.id);
   };
 
   const handlePlayerEnded = () => {
@@ -178,8 +260,13 @@ const VideoRequestsPage = () => {
     }
   };
 
-  const handleWheelWin = (requestId: string) => {
-    setCurrentRequestId(requestId);
+  const handleWheelWin = async (requestId: string) => {
+    await reorderQueueMutation.mutateAsync([
+      requestId,
+      ...queue
+        .filter((request) => request.id !== requestId && request.id !== currentRequest?.id)
+        .map((request) => request.id),
+    ]);
     setIsWheelPicking(false);
     setWheelRequests([]);
   };
@@ -202,13 +289,12 @@ const VideoRequestsPage = () => {
           <div className='flex min-h-0 flex-1 flex-col'>
             <div className='border-paper-600 bg-paper-950 mt-3 ml-3 min-h-0 flex-1 overflow-hidden rounded-md border'>
               {isWheelPicking ? (
-                <VideoRequestWheelPicker requests={wheelRequests} onWin={handleWheelWin} />
-              ) : (
-                <VideoRequestPlayer
-                  request={currentRequest}
-                  listener={listener}
-                  onEnded={handlePlayerEnded}
+                <VideoRequestWheelPicker
+                  requests={wheelRequests}
+                  onWin={(requestId) => void handleWheelWin(requestId)}
                 />
+              ) : (
+                <VideoRequestPlayer request={currentRequest} listener={listener} onEnded={handlePlayerEnded} />
               )}
             </div>
 
@@ -226,7 +312,6 @@ const VideoRequestsPage = () => {
                 onToggleAutoplay={(isEnabled) =>
                   void saveSettingsMutation.mutateAsync({ isAutoplayEnabled: isEnabled })
                 }
-                onOpenHistory={historyModal.open}
                 onOpenSettings={settingsModal.open}
                 onToggleTheater={theaterMode.toggle}
               />
@@ -259,41 +344,49 @@ const VideoRequestsPage = () => {
                   onToggleAutoplay={(isEnabled) =>
                     void saveSettingsMutation.mutateAsync({ isAutoplayEnabled: isEnabled })
                   }
-                  onOpenHistory={historyModal.open}
                   onOpenSettings={settingsModal.open}
                   onToggleTheater={theaterMode.toggle}
                 />
                 <VideoRequestQueue
                   requests={queue}
+                  history={history}
                   currentRequestId={currentRequest?.id ?? null}
                   listener={listener}
                   isClearing={clearQueueMutation.isPending}
+                  isClearingHistory={clearHistoryMutation.isPending}
                   isTheaterMode
+                  onPlay={(id) => void handlePlayRequest(id)}
+                  onMoveToTop={(id) => void handleMoveRequestToTop(id)}
                   onRemove={(id) => void handleRemove(id)}
+                  onRestoreHistory={(id) => void handleRestoreHistory(id)}
+                  onPlayHistory={(id) => void handlePlayHistory(id)}
+                  onDeleteHistory={(id) => void deleteHistoryMutation.mutateAsync(id)}
                   onClear={() => void clearQueueMutation.mutateAsync()}
+                  onClearHistory={() => void clearHistoryMutation.mutateAsync()}
                 />
               </div>
             </>
           ) : (
             <VideoRequestQueue
               requests={queue}
+              history={history}
               currentRequestId={currentRequest?.id ?? null}
               listener={listener}
               isClearing={clearQueueMutation.isPending}
+              isClearingHistory={clearHistoryMutation.isPending}
+              onPlay={(id) => void handlePlayRequest(id)}
+              onMoveToTop={(id) => void handleMoveRequestToTop(id)}
               onRemove={(id) => void handleRemove(id)}
+              onRestoreHistory={(id) => void handleRestoreHistory(id)}
+              onPlayHistory={(id) => void handlePlayHistory(id)}
+              onDeleteHistory={(id) => void deleteHistoryMutation.mutateAsync(id)}
               onClear={() => void clearQueueMutation.mutateAsync()}
+              onClearHistory={() => void clearHistoryMutation.mutateAsync()}
             />
           )}
         </div>
       )}
 
-      <VideoRequestHistoryModal
-        opened={isHistoryOpened}
-        history={history}
-        isClearing={clearHistoryMutation.isPending}
-        onClose={historyModal.close}
-        onClear={() => void clearHistoryMutation.mutateAsync()}
-      />
       <VideoRequestSettingsModal opened={isSettingsOpened} onClose={settingsModal.close} />
     </main>
   );

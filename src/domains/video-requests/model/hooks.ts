@@ -70,6 +70,17 @@ export const useUpdateVideoRequest = () => {
   });
 };
 
+export const useReorderVideoRequestQueue = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (requestIds: string[]) => videoRequestsRepository.reorderRequests(requestIds),
+    onSuccess: async () => {
+      await invalidateQueueQueries(queryClient);
+    },
+  });
+};
+
 export const useDeleteVideoRequest = () => {
   const queryClient = useQueryClient();
 
@@ -178,6 +189,17 @@ export const useClearVideoRequestHistory = () => {
 
   return useMutation({
     mutationFn: () => videoRequestsRepository.clearHistory(),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: VIDEO_REQUESTS_QUERY_KEYS.history });
+    },
+  });
+};
+
+export const useDeleteVideoRequestHistoryRecord = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => videoRequestsRepository.deleteHistoryRecord(id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: VIDEO_REQUESTS_QUERY_KEYS.history });
     },
