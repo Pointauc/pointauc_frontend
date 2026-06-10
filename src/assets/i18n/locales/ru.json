@@ -666,7 +666,7 @@
   },
   "rules": {
     "background": "Фон",
-    "resizeHandle": "Resize rules section",
+    "resizeHandle": "Изменить размер раздела правил",
     "size": "Размер"
   },
   "changelog": {
@@ -1591,120 +1591,117 @@
   "videoRequests": {
     "page": {
       "title": "Запросы видео",
-      "description": "Review viewer requests in a clean playback scene."
+      "description": "Просматривайте запросы зрителей в удобном плеере."
     },
     "sources": {
       "youtube": "YouTube",
-      "twitchClip": "Clip",
+      "twitchClip": "Клип",
       "twitchVod": "VOD"
     },
     "player": {
-      "emptyTitle": "Queue is empty",
-      "emptyDescription": "Turn on listening, pick a bid source, then viewer links will land in the queue automatically.",
+      "emptyTitle": "Очередь пуста",
+      "emptyDescription": "Зрители могут предлагать видео для просмотра через донаты или награды за баллы канала. Все заказы попадают в очередь автоматически.",
       "services": {
-        "youtube": "YouTube videos",
-        "twitch": "Twitch clips and VODs"
+        "youtube": "Видео YouTube",
+        "twitch": "Клипы и Записи Twitch"
       },
-      "noEmbed": "This request does not have a playable embed URL.",
-      "errorTitle": "Player could not start",
-      "errorDescription": "The video may be unavailable, blocked from embeds, or waiting for a manual play gesture."
+      "noEmbed": "У этого запроса нет встраиваемой ссылки для воспроизведения.",
+      "errorTitle": "Не удалось запустить плеер",
+      "errorDescription": "Видео может быть недоступно, заблокировано для встраивания или ожидать ручного запуска."
     },
     "card": {
-      "views": "{{value}} views",
-      "likes": "{{percentage}} likes",
-      "by": "by {{name}}",
-      "actions": "Card actions",
-      "play": "Play",
-      "moveToTop": "Move to top",
-      "restore": "Restore",
-      "delete": "Delete"
+      "by": "от {{name}}",
+      "actions": "Действия",
+      "play": "Воспроизвести",
+      "moveToTop": "Переместить наверх",
+      "restore": "Вернуть в очередь",
+      "delete": "Удалить"
     },
     "queue": {
-      "title": "Queue",
-      "count": "{{count}} requests",
-      "emptyTitle": "No videos waiting",
-      "emptyDescription": "New accepted requests will appear here.",
-      "remove": "Remove request",
-      "clear": "Clear queue",
-      "clearWithCount": "Clear queue ({{count}})",
-      "clearWithDuration": "Clear queue ({{duration}})",
-      "clearConfirmTitle": "Clear queue?",
-      "clearConfirmDescription": "This will remove {{count}} queued requests."
+      "title": "Очередь",
+      "count": "{{count}} запросов",
+      "emptyTitle": "Нет новых видео",
+      "emptyDescription": "Новые заказы появятся здесь.",
+      "remove": "Удалить запрос",
+      "clear": "Очистить очередь",
+      "clearWithCount": "Очистить очередь ({{count}})",
+      "clearWithDuration": "Очистить очередь ({{duration}})",
+      "clearConfirmTitle": "Очистить очередь?",
+      "clearConfirmDescription": "Это удалит {{count}} запросов из очереди."
     },
     "utility": {
-      "nowPlaying": "Now playing",
-      "noCurrent": "Nothing selected",
-      "previous": "Previous",
-      "next": "Next",
-      "pickNext": "Next video",
-      "spinWheel": "Spin the wheel",
-      "noPrevious": "No previous video",
-      "noNext": "No next video",
-      "autoplay": "Autoplay",
-      "history": "History",
-      "settings": "Settings",
-      "theater": "Theater mode",
-      "exitTheater": "Exit theater",
-      "skipVotesRemaining": "{{count}} to skip ({{current}}/{{required}})"
+      "noCurrent": "Ничего не выбрано",
+      "previous": "Предыдущее",
+      "next": "Следующее",
+      "pickNext": "Следующее",
+      "spinWheel": "Крутить колесо",
+      "noPrevious": "Нет предыдущего видео",
+      "noNext": "Нет следующего видео",
+      "autoplay": "Автовоспроизведение",
+      "history": "История",
+      "settings": "Настройки",
+      "theater": "Театральный режим",
+      "exitTheater": "Выйти из театрального режима",
+      "skipVotesRemaining": "{{count}} до пропуска ({{current}}/{{required}})"
     },
     "history": {
-      "title": "History",
-      "emptyTitle": "History is empty",
-      "emptyDescription": "Watched and skipped requests will appear here.",
-      "clear": "Clear history",
-      "clearWithCount": "Clear history ({{count}})",
-      "clearConfirmTitle": "Clear history?",
-      "clearConfirmDescription": "This will permanently delete {{count}} history records.",
+      "title": "История",
+      "emptyTitle": "История пуста",
+      "emptyDescription": "Просмотренные и пропущенные запросы появятся здесь.",
+      "clear": "Очистить историю",
+      "clearWithCount": "Очистить историю ({{count}})",
+      "clearConfirmTitle": "Очистить историю?",
+      "clearConfirmDescription": "Это навсегда удалит {{count}} записей истории.",
       "status": {
-        "watched": "Watched",
-        "skipped": "Skipped",
-        "removed": "Removed"
+        "watched": "Просмотрено",
+        "skipped": "Пропущено",
+        "removed": "Удалено"
       }
     },
     "settings": {
-      "title": "Video request settings",
+      "title": "Настройки сайта",
       "sections": {
-        "filters": "Filters",
-        "nextSelection": "Next pick",
-        "skipVoting": "Skip voting settings",
-        "order": "Order",
-        "skip": "Skip",
-        "points": "Points",
-        "donations": "Donations"
+        "filters": "Фильтры",
+        "nextSelection": "Очередь",
+        "skipVoting": "Голосование за скип",
+        "order": "Порядок",
+        "skip": "Пропуск",
+        "points": "Баллы канала",
+        "donations": "Донаты"
       },
       "fields": {
-        "supportedPlatforms": "Supported platforms",
-        "maxLength": "Max video length",
-        "minViews": "Minimum views",
-        "limitPerViewer": "Max videos from one viewer",
-        "maxTotalVideos": "Max total videos",
-        "maxTotalLength": "Max total length",
-        "skipVotingEnabled": "Enable skip voting",
-        "requiredSkipVotes": "Required skip votes",
-        "skipCommand": "Skip command",
-        "denyCommand": "Deny command",
-        "allowDenySkip": "Allow vote removal"
+        "supportedPlatforms": "Поддерживаемые платформы",
+        "maxLength": "Максимальная длина видео",
+        "minViews": "Минимум просмотров",
+        "limitPerViewer": "Лимит видео от одного зрителя",
+        "maxTotalVideos": "Лимит на ВСЕ видео",
+        "maxTotalLength": "Максимальная общая длительность",
+        "skipVotingEnabled": "Включить голосование за пропуск",
+        "requiredSkipVotes": "Необходимое число голосов за пропуск",
+        "skipCommand": "Команда пропуска",
+        "denyCommand": "Команда отмены",
+        "allowDenySkip": "Разрешить отмену голоса"
       },
       "units": {
-        "minutes": "min"
+        "minutes": "мин"
       },
       "actions": {
-        "selectAll": "Select all",
-        "deselectAll": "Deselect all"
+        "selectAll": "Выбрать все",
+        "deselectAll": "Убрать все"
       },
       "nextStrategies": {
-        "requestOrder": "Request order",
-        "biggestBid": "Biggest bid",
-        "randomWheel": "Random wheel"
+        "requestOrder": "Порядок запросов",
+        "biggestBid": "Самая большая ставка",
+        "randomWheel": "Случайное колесо"
       }
     },
     "listener": {
       "title": "Прослушивание ставок",
       "description": "Выберите, какие подключенные интеграции должны направлять входящие ставки в очередь запросов видео.",
       "enable": "Прослушивание включено",
-      "queueSwitchLabel": "Listening",
-      "inlineTitle": "Collect requests from bids",
-      "inlineDescription": "Use connected donation and channel-point services as request sources.",
+      "queueSwitchLabel": "Прослушивание",
+      "inlineTitle": "Собирать запросы из ставок",
+      "inlineDescription": "Используйте подключенные сервисы донатов и баллов канала как источники запросов.",
       "groupsTitle": "Группы ставок",
       "groups": {
         "donations": "Донаты",
@@ -1712,12 +1709,12 @@
       },
       "tooltips": {
         "enable": {
-          "donations": "Enable donation requests",
-          "channelPoints": "Enable channel point requests"
+          "donations": "Включить запросы через донаты",
+          "channelPoints": "Включить запросы через баллы канала"
         },
         "disable": {
-          "donations": "Disable donation requests",
-          "channelPoints": "Disable channel point requests"
+          "donations": "Выключить запросы через донаты",
+          "channelPoints": "Выключить запросы через баллы канала"
         }
       },
       "integrationsTitle": "Авторизованные интеграции",
@@ -1733,22 +1730,22 @@
       }
     },
     "debug": {
-      "title": "Debug request",
-      "description": "Send a local test bid through the same global bid pipeline used by real integrations.",
-      "send": "Send request",
-      "openSettings": "Open debug request settings",
-      "randomize": "Randomize all fields",
-      "sentNotification": "Debug request sent.",
+      "title": "Отладочный запрос",
+      "description": "Отправьте локальную тестовую ставку через тот же общий поток ставок, который используют реальные интеграции.",
+      "send": "Отправить запрос",
+      "openSettings": "Открыть настройки отладочного запроса",
+      "randomize": "Заполнить все поля случайно",
+      "sentNotification": "Отладочный запрос отправлен.",
       "integrationTypes": {
-        "donate": "Donations",
-        "points": "Channel points"
+        "donate": "Донаты",
+        "points": "Баллы канала"
       },
       "fields": {
-        "requestContent": "Request content",
-        "viewerName": "Viewer name",
-        "integration": "Integration",
-        "cost": "Amount",
-        "rewardId": "Reward ID"
+        "requestContent": "Содержимое запроса",
+        "viewerName": "Имя зрителя",
+        "integration": "Интеграция",
+        "cost": "Сумма",
+        "rewardId": "ID награды"
       }
     }
   },
