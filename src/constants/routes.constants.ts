@@ -1,7 +1,7 @@
 const ROUTES = {
   HOME: '/',
   AUC_PAGE: '/auc',
-  VIDEO_REQUESTS: '/videoPoints',
+  VIDEO_REQUESTS: '/video-player',
   CHAT_BOT: '/chatBot',
   TWITCH_REDIRECT: '/twitch/redirect',
   DA_REDIRECT: '/da/redirect',
