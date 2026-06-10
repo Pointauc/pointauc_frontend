@@ -47,7 +47,12 @@ export const useVideoRequestListener = () => {
     return getAvailableVideoRequestIntegrations(authData);
   }, [authData]);
   const unavailableIntegrations = useMemo(() => {
-    return integrationUtils.groupBy.availability(integrations.all, authData).unavailable;
+    return integrationUtils.groupBy.availability(
+      integrations.all.filter((integration) =>
+        integration.type === 'donate' && !integration.branding.partner ? false : true,
+      ),
+      authData,
+    ).unavailable;
   }, [authData]);
 
   const activeBidGroups = settingsQuery.data?.listening.activeBidGroups ?? VIDEO_REQUEST_BID_GROUPS;
