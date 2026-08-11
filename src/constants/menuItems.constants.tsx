@@ -93,12 +93,12 @@ export const useMenuGroups = (): MenuGroups => {
           icon: <VerifiedUserIcon />,
           path: ROUTES.TICKET_VERIFICATION_INFO,
         },
-        // {
-        //   title: 'menu.items.videoRequests.title',
-        //   icon: <VideoLibraryIcon />,
-        //   path: ROUTES.VIDEO_REQUESTS,
-        // },
-        { title: 'menu.items.guides.title', icon: <HelpIcon />, path: docsPath, target: '_blank' },
+        {
+          title: 'menu.items.videoRequests.title',
+          icon: <VideoLibraryIcon />,
+          path: ROUTES.VIDEO_REQUESTS,
+        },
+        // { title: 'menu.items.guides.title', icon: <HelpIcon />, path: docsPath, target: '_blank' },
         ...(userId
           ? [
               {
