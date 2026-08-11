@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { Anchor, Button, Group, Image, Modal, PasswordInput, Stack, Stepper, Text, Title } from '@mantine/core';
 
 import withLoading from '@decorators/withLoading.ts';
@@ -17,7 +18,7 @@ interface AuthModalProps {
 
 function AuthModal({ opened, onClose }: AuthModalProps) {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const [token, setToken] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +34,7 @@ function AuthModal({ opened, onClose }: AuthModalProps) {
     await withLoading(setIsLoading, async () => {
       await donateHelperControllerAuthorize({ body: { accessToken: token } });
       integrationUtils.storage.set('donateHelper', 'authToken', token);
-      await loadUserData(dispatch);
+      await dispatch(loadUserData());
       handleClose();
     })();
   };

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { Navigate, useLocation } from 'react-router';
 
 import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
@@ -20,7 +21,7 @@ interface RedirectPageProps {
 const RedirectPage = ({ integration }: RedirectPageProps) => {
   const { t } = useTranslation();
   const { authFlow } = integration;
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const location = useLocation();
   const returnPathRef = useRef<string | null>(null);
 
@@ -39,7 +40,7 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
     queryFn: async () => {
       await authFlow.authenticate(code!);
       if (integration.id !== 'donatex') {
-        await loadUserData(dispatch);
+        await dispatch(loadUserData());
       }
       return true;
     },

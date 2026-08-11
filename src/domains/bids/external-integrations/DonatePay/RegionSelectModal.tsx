@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { Button, Group, Modal, PasswordInput, Stack, Stepper, Text, TextInput, Title } from '@mantine/core';
 
 import withLoading from '@decorators/withLoading.ts';
@@ -23,7 +24,7 @@ const REGION_API_URLS: Record<DonatePayRegion, string> = {
 
 function RegionSelectModal({ opened, onClose }: RegionSelectModalProps) {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const [activeStep, setActiveStep] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState<DonatePayRegion | null>(null);
@@ -62,7 +63,7 @@ function RegionSelectModal({ opened, onClose }: RegionSelectModalProps) {
 
       await authenticateFn({ body: { accessToken: token } });
       integrationUtils.storage.set(regionConfig.integrationId, 'authToken', token);
-      await loadUserData(dispatch);
+      await dispatch(loadUserData());
       handleClose();
     })();
   };

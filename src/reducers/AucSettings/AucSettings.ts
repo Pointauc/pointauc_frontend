@@ -157,76 +157,76 @@ export const saveSettings =
     }
   };
 
-export const loadUserData = async (dispatch: ThunkDispatch<RootState, {}, Action>): Promise<GetUserDto> => {
-  const user = await getUserData();
-  const {
-    twitchAuth,
-    kickAuth,
-    vkVideoLiveAuth,
-    activeSettings,
-    daAuth,
-    tourniquetAuth,
-    donatePayAuth,
-    donatePayEuAuth,
-    activeSettingsPresetId,
-    ihaqAuth,
-    userId,
-    donateHelperAuth,
-  } = user;
-  const donatexAuth = getDonateXAuthData();
+export const loadUserData =
+  () =>
+  async (
+    dispatch: ThunkDispatch<RootState, {}, Action>,
+    getState: () => RootState,
+  ): Promise<GetUserDto> => {
+    const user = await getUserData();
+    const {
+      twitchAuth,
+      kickAuth,
+      vkVideoLiveAuth,
+      daAuth,
+      tourniquetAuth,
+      donatePayAuth,
+      donatePayEuAuth,
+      activeSettingsPresetId,
+      ihaqAuth,
+      userId,
+      donateHelperAuth,
+    } = user;
+    const donatexAuth = getDonateXAuthData();
 
-  if (activeSettings) {
-    const { timeStep, ...settings } = activeSettings;
     dispatch(
-      setAucSettings({
-        ...settings,
-        isLotLinkParsingEnabled: resolveLotLinkParsingSetting(settings as Record<string, unknown>),
-        backgroundType: resolveBackgroundType(settings.background, settings.backgroundType),
-        primaryColor:
-          localStorage.getItem('isColorResetDone') !== 'true' ? COLORS.THEME.PRIMARY : settings.primaryColor,
+      setUserState({
+        username:
+          twitchAuth?.username ??
+          kickAuth?.username ??
+          vkVideoLiveAuth?.username ??
+          daAuth?.username ??
+          donatePayAuth?.username ??
+          donatexAuth?.username ??
+          'Empty',
+        userId: twitchAuth?.id ?? kickAuth?.id ?? vkVideoLiveAuth?.id,
+        pointaucUserId: userId,
+        activeSettingsPresetId,
+        authData: {
+          donatePay: donatePayAuth,
+          donatePayEu: donatePayEuAuth,
+          da: daAuth,
+          twitch: twitchAuth,
+          kick: kickAuth,
+          vkVideoLive: vkVideoLiveAuth,
+          tourniquet: tourniquetAuth,
+          ihaq: ihaqAuth,
+          donatex: donatexAuth,
+          donateHelper: donateHelperAuth,
+        },
       }),
     );
-  }
-  dispatch(
-    setUserState({
-      username:
-        twitchAuth?.username ??
-        kickAuth?.username ??
-        vkVideoLiveAuth?.username ??
-        daAuth?.username ??
-        donatePayAuth?.username ??
-        donatexAuth?.username ??
-        'Empty',
-      userId: twitchAuth?.id ?? kickAuth?.id ?? vkVideoLiveAuth?.id,
-      pointaucUserId: userId,
-      activeSettingsPresetId,
-      authData: {
-        donatePay: donatePayAuth,
-        donatePayEu: donatePayEuAuth,
-        da: daAuth,
-        twitch: twitchAuth,
-        kick: kickAuth,
-        vkVideoLive: vkVideoLiveAuth,
-        tourniquet: tourniquetAuth,
-        ihaq: ihaqAuth,
-        donatex: donatexAuth,
-        donateHelper: donateHelperAuth,
-      },
-    }),
-  );
 
-  if (localStorage.getItem('isColorResetDone') !== 'true') {
-    dispatch(saveSettings({ primaryColor: COLORS.THEME.PRIMARY }));
-    localStorage.setItem('isColorResetDone', 'true');
-  }
-  // if (localStorage.getItem('minTime')) {
-  //   dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime }));
-  //   localStorage.removeItem('isMinTimeActive');
-  //   localStorage.removeItem('minTime');
-  // }
-  dispatch(validateIntegrations);
+    if (localStorage.getItem('isColorResetDone') !== 'true') {
+      dispatch(setAucSettings({ primaryColor: COLORS.THEME.PRIMARY }));
+      localStorage.setItem('isColorResetDone', 'true');
+    }
+    // if (localStorage.getItem('minTime')) {
+    //   dispatch(saveSettings({ minTime: minTime ? Number(minTime) : activeSettings.minTime }));
+    //   localStorage.removeItem('isMinTimeActive');
+    //   localStorage.removeItem('minTime');
+    // }
+    dispatch(validateIntegrations);
 
-  return user;
-};
+    if (activeSettingsPresetId) {
+      try {
+        await updateSettings({ settings: getState().aucSettings.settings, id: activeSettingsPresetId });
+      } catch (err) {
+        console.error('Failed to sync local settings to backend', err);
+      }
+    }
+
+    return user;
+  };
 
 export default aucSettingsSlice.reducer;

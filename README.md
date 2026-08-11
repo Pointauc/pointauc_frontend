@@ -32,6 +32,16 @@ pnpm install
 pnpm dev
 ```
 
+### Build Production Artifacts Locally
+
+To create the same deployable application and documentation output as the production workflow, using the root `.env` file:
+
+```bash
+pnpm build:manual
+```
+
+The application and source hash manifest are written to `dist/`. Documentation is written to `docs/.vitepress/dist/`.
+
 ## 🔐 Authenticity Verification
 
 The code running on [pointauc.com](https://pointauc.com) can be verified against this repository. Each deployment generates SHA-256 hashes of all HTML, JS, and CSS files, published as an immutable [GitHub release](https://github.com/Pointauc/pointauc_frontend/releases) with the tag format `deploy-<commit-sha>`.

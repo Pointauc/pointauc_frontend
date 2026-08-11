@@ -16,6 +16,7 @@
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server --mode production",
     "prerender": "node scripts/prerender.js",
     "build:ssg": "pnpm run build:client && pnpm run build:server && pnpm run prerender && node -e \"import('fs').then(f=>f.rmSync('dist/server',{recursive:true,force:true}))\"",
+    "build:manual": "node --env-file=.env scripts/build-manual.js",
     "analyze": "cross-env ANALYZE=true npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",

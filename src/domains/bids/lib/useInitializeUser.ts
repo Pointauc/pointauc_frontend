@@ -42,7 +42,7 @@ export const useInitializeUser = () => {
 
   useEffect(() => {
     const loadUser = async () => {
-      await loadUserData(dispatch);
+      await dispatch(loadUserData());
     };
 
     if (hasUserToken) {
