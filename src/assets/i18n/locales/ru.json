@@ -141,6 +141,12 @@
     "donatePayEu": {
       "name": "Donate Pay"
     },
+    "ihaq": {
+      "name": "IHAQ Donate",
+      "version": "IHAQ Donate <1>v2.0</1>",
+      "details": "Комиссия — <1>3,5%</1>, Виджеты (new) — нейромемы",
+      "acceptedCurrencies": "Принимаем - RUB, $ и EUR"
+    },
     "da": {
       "name": "Donation Alerts"
     },

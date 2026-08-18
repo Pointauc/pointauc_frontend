@@ -224,7 +224,10 @@
       "name": "Tourniquet"
     },
     "ihaq": {
-      "name": "IHAQ Donate"
+      "name": "IHAQ Donate",
+      "version": "version 2.0",
+      "details": "Commission — 3.5%, Widgets (new) — neuromemes",
+      "acceptedCurrencies": "Accept — RUB, $ and EUR, etc."
     },
     "donatex": {
       "name": "DonateX"

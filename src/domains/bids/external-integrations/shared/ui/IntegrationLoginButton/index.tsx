@@ -23,26 +23,34 @@ const IntegrationLoginButton = ({
   color,
 }: IntegrationLoginButtonProps) => {
   const { t } = useTranslation();
-  const { icon: Icon, partner, description } = branding;
-  const isPartner = partner && description;
+  const { icon: Icon, partner, description, extraDescription, title } = branding;
+  const isPartner = Boolean(partner && (description || extraDescription));
+  const titleText = title || t(`integration.${id}.name`);
 
   if (isPartner) {
     const button = (
-      <Button
-        className={clsx('h-auto min-h-[56px] px-4 py-2', classes?.button)}
-        classNames={{ label: 'flex flex-col items-start' }}
-        variant='filled'
-        onClick={onClick}
-        data-integration={id}
-      >
-        <Group w='100%' justify='center' gap='xs'>
-          <Icon size={22} classes={classes?.icon} />
-          <Text size='lg' fw={600}>
-            {t(`integration.${id}.name`)}
+      <div>
+        <Button
+          className={clsx('relative z-10 h-auto min-h-[56px] px-4 py-2', classes?.button)}
+          classNames={{ label: 'flex flex-col items-start' }}
+          variant='filled'
+          onClick={onClick}
+          data-integration={id}
+        >
+          <Group w='100%' justify='center' gap='xs'>
+            <Icon size={22} classes={classes?.icon} />
+            <Text size='lg' fw={600}>
+              {titleText}
+            </Text>
+          </Group>
+          <Text size='xs'>{description}</Text>
+        </Button>
+        {extraDescription && (
+          <Text className='-mt-2 rounded-b-lg bg-[#344b66] pt-3 pb-1 text-center opacity-90' size='xs'>
+            {extraDescription}
           </Text>
-        </Group>
-        <Text size='xs'>{description}</Text>
-      </Button>
+        )}
+      </div>
     );
 
     if (!showPartnerChip) {
@@ -68,7 +76,7 @@ const IntegrationLoginButton = ({
       data-integration={id}
       color={color}
     >
-      {t(`integration.${id}.name`)}
+      {titleText}
     </Button>
   );
 };

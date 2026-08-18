@@ -1,4 +1,4 @@
-import { FC, FunctionComponent } from 'react';
+import { FC, FunctionComponent, ReactNode } from 'react';
 import { Store } from '@tanstack/react-store';
 import EventEmitter from 'eventemitter3';
 
@@ -57,13 +57,21 @@ export interface Branding {
    */
   icon: FC<IconProps>;
   /**
+   * Optional translation key for the text displayed beside the icon.
+   */
+  title?: ReactNode;
+  /**
    * Partner branding adds extra styles and exposure
    */
   partner?: boolean;
   /**
    * This description will be displayed on the login button (only when `partner` is `true`)
    */
-  description?: string;
+  description?: ReactNode;
+  /**
+   * Optional component for structured partner details.
+   */
+  extraDescription?: ReactNode;
 }
 
 export interface AuthFlowCommon {

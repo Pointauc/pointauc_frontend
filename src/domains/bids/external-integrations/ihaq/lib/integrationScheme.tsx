@@ -1,8 +1,11 @@
+import { Trans, useTranslation } from 'react-i18next';
+
 import { buildRedirectAuthFlow } from '@domains/bids/external-integrations/shared/auth/redirect/buildRedirectFlow';
 import { BackendFlow } from '@domains/bids/external-integrations/shared/pubsub/Backend/backendFlow';
 import ROUTES from '@constants/routes.constants';
 import { ihaqControllerAuthorize } from '@api/openapi';
 import { IhaqIcon } from '@domains/bids/external-integrations/ihaq/ui/Icon';
+import IhaqDescription from '@domains/bids/external-integrations/ihaq/ui/IhaqDescription';
 import * as Integration from '@models/integration';
 
 import './ihaqStyles.css';
@@ -26,6 +29,16 @@ const authenticate = async (code: string) => {
 
 const authFlow = buildRedirectAuthFlow({ url: { path: authUrl, params: authParams }, authenticate, id });
 
+const Title = () => {
+  const { t } = useTranslation();
+  return (
+    <Trans
+      i18nKey='integration.ihaq.version'
+      components={{ 1: <span className='relative left-[-0.1rem] text-xs' /> }}
+    />
+  );
+};
+
 const ihaq: Integration.Config = {
   id: 'ihaq',
   type: 'donate',
@@ -33,7 +46,13 @@ const ihaq: Integration.Config = {
   pubsubFlow: new BackendFlow({ id }),
   branding: {
     icon: IhaqIcon,
-    description: 'Комиссия – 3,5%. Уникальные виджеты!',
+    title: <Title />,
+    description: (
+      <span className='text-xs'>
+        Комиссия - <strong>3,5%</strong>, Виджет <strong>нейромемы</strong>
+      </span>
+    ),
+    extraDescription: <IhaqDescription />,
     partner: true,
   },
 };
