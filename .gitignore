@@ -32,4 +32,6 @@ docs/.vitepress/dist
 
 nginx/private-nginx.conf
 
+restore-archive-data.cmd
+
 dev-docs/
