@@ -35,3 +35,5 @@ nginx/private-nginx.conf
 restore-archive-data.cmd
 
 dev-docs/
+
+release/

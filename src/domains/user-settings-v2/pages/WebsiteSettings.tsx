@@ -39,8 +39,22 @@ const WebsiteSettings = () => {
   });
 
   const contentRef = useRef<HTMLDivElement | null>(null);
+  const initialBackgroundRef = useRef(settings.background);
   const latestChangeVersionRef = useRef(0);
   const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
+
+  // Background arrives asynchronously from IndexedDB after the form is initialized,
+  // so pull it in once without creating dirty state or triggering autosave.
+  useEffect(() => {
+    const hasBackgroundHydrated = settings.background !== initialBackgroundRef.current;
+    const isBackgroundDirty = Boolean(formMethods.getFieldState('background').isDirty);
+
+    if (!hasBackgroundHydrated || isBackgroundDirty) {
+      return;
+    }
+
+    formMethods.setValue('background', settings.background, { shouldDirty: false });
+  }, [settings.background, formMethods]);
 
   const autosaveDebouncer = useAsyncDebouncer(
     async ({ dirtyValues, changeVersion }: WebsiteSettingsAutosavePayload) => {

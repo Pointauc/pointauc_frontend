@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
-import { mergeWith } from 'es-toolkit';
+import { mergeWith, omit } from 'es-toolkit';
 
 import { getUserData, updateSettings } from '@api/userApi.ts';
 import { GetUserDto } from '@models/user.model.ts';
@@ -12,6 +12,7 @@ import { BidNameStrategy } from '@enums/bid.enum';
 import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
 import { DEFAULT_ALLOWED_DOMAINS } from '@domains/links/config/defaultAllowedDomains';
 import { isBrowser } from '@utils/ssr.ts';
+import { checkIsBackgroundMigrated, saveAppSettings } from '@shared/lib/database/appSettingsDb';
 
 import { setUserState } from '../User/User';
 import { RootState } from '../index';
@@ -122,8 +123,22 @@ const aucSettingsSlice = createSlice({
   initialState,
   reducers: {
     setAucSettings(state, action: PayloadAction<Partial<AucSettingsDto>>): void {
+      const previousBackground = state.settings.background;
       const mergedSettings = mergeWith(state.settings, action.payload, mergeCheck);
-      localStorage.setItem('settings', JSON.stringify(mergedSettings));
+      // Keep the legacy background copy in localStorage until IndexedDB takes over,
+      // so settings written before the migration is confirmed cannot erase it.
+      const settingsToStore = checkIsBackgroundMigrated()
+        ? omit(mergedSettings, ['background'])
+        : mergedSettings;
+      localStorage.setItem('settings', JSON.stringify(settingsToStore));
+
+      const nextBackground = mergedSettings.background ?? null;
+      if ('background' in action.payload && nextBackground !== (previousBackground ?? null)) {
+        void saveAppSettings({ background: nextBackground }).catch((err) => {
+          console.error('Failed to save background setting to IndexedDB', err);
+        });
+      }
+
       state.settings = mergedSettings;
     },
     setCompact(state, action: PayloadAction<boolean>): void {

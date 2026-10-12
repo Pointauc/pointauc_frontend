@@ -4,6 +4,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { getIntegrationsValidity } from '@api/userApi';
 import { COLORS } from '@constants/color.constants';
+import { loadAppSettings } from '@shared/lib/database/appSettingsDb';
 import { loadUserData, setAucSettings } from '@reducers/AucSettings/AucSettings';
 import { getCookie } from '@utils/common.utils';
 import { isBrowser } from '@utils/ssr';
@@ -21,6 +22,28 @@ export const useInitializeUser = () => {
     isColorResetDone.current = true;
     dispatch(setAucSettings({ primaryColor: COLORS.THEME.PRIMARY }));
   }
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    const loadLocalSettings = async () => {
+      try {
+        const appSettings = await loadAppSettings();
+
+        if (!isCancelled && appSettings.background !== undefined) {
+          dispatch(setAucSettings({ background: appSettings.background }));
+        }
+      } catch (err) {
+        console.error('Failed to load app settings from IndexedDB', err);
+      }
+    };
+
+    loadLocalSettings();
+
+    return (): void => {
+      isCancelled = true;
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     let interval: any;
