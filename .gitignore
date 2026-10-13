@@ -35,5 +35,6 @@ nginx/private-nginx.conf
 restore-archive-data.cmd
 
 dev-docs/
-
 release/
+dist-electron/
+electron/dist/

@@ -1,0 +1,23 @@
+appId: com.pointauc.desktop
+productName: Pointauc
+protocols:
+  - name: Pointauc
+    schemes:
+      - pointauc
+directories:
+  app: dist-electron/app
+  output: release
+files:
+  - "**/*"
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: electron/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  artifactName: Pointauc-Setup-${version}.${ext}
+forceCodeSigning: false

@@ -16,6 +16,7 @@ import {
   KICK_STATE_STORAGE_KEY,
 } from '@domains/bids/external-integrations/Kick/lib/auth';
 import { KickIcon } from '@domains/bids/external-integrations/Kick/ui/Icon';
+import { startIntegrationLogin } from '@shared/lib/desktop/startIntegrationLogin';
 
 import styles from './index.module.css';
 
@@ -60,7 +61,7 @@ const authFlow: Integration.RedirectFlow = {
       onClick={async () => {
         saveRedirectReturnPath(integrationId);
         const authUrl = await createKickAuthorizeUrl(clientId, redirectUri);
-        window.open(authUrl, '_self');
+        startIntegrationLogin('kick', authUrl);
       }}
     />
   ),

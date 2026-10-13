@@ -1876,6 +1876,13 @@
     },
     "newArchiveName": "Archive {{date}}"
   },
+  "desktop": {
+    "oauth": {
+      "title": "Authorizing Pointauc Desktop...",
+      "description": "You can close this tab or click the link below if it did not open automatically.",
+      "openPointauc": "Click here to open Pointauc"
+    }
+  },
   "testEnvironmentModal": {
     "title": "Testing Environment",
     "description": "You are currently using the testing environment. This version may be unstable compared to the original website.",

@@ -1,6 +1,6 @@
 import { notifications } from '@mantine/notifications';
 import { useQuery } from '@tanstack/react-query';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -10,8 +10,10 @@ import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
 import { QUERIES } from '@constants/common.constants.ts';
 import * as Integration from '@models/integration';
 import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
+import { checkIsDesktop } from '@shared/lib/desktop/checkIsDesktop';
 import { getQueryValue } from '@utils/url.utils.ts';
 
+import DesktopAuthRedirectPrompt from './DesktopAuthRedirectPrompt';
 import { consumeRedirectReturnPath } from './redirectReturnPath';
 
 interface RedirectPageProps {
@@ -26,6 +28,18 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
   const returnPathRef = useRef<string | null>(null);
 
   const code = getQueryValue(location.search, authFlow.redirectCodeQueryKey ?? QUERIES.CODE);
+  const state = getQueryValue(location.search, 'state');
+
+  const isDesktop = checkIsDesktop();
+  const isDesktopHandshake = !isDesktop && (state?.startsWith('desktop.') ?? false);
+
+  const protocolUrl = `pointauc://oauth-callback?provider=${integration.id}&${location.search.replace(/^\?/, '')}`;
+
+  useEffect(() => {
+    if (isDesktopHandshake) {
+      window.location.href = protocolUrl;
+    }
+  }, [isDesktopHandshake, protocolUrl]);
 
   const getReturnPath = (): string => {
     if (!returnPathRef.current) {
@@ -44,10 +58,14 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
       }
       return true;
     },
-    enabled: !!code,
+    enabled: !isDesktopHandshake && !!code,
     retry: false,
     staleTime: Infinity,
   });
+
+  if (isDesktopHandshake) {
+    return <DesktopAuthRedirectPrompt protocolUrl={protocolUrl} />;
+  }
 
   if (authQuery.isError) {
     notifications.show({

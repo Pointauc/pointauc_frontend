@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
+  "main": "electron/dist/main.cjs",
   "packageManager": "pnpm@9.15.4",
   "engines": {
     "node": ">=22.0.0"
@@ -29,7 +30,9 @@
     "verify:authenticity": "node scripts/verify-authenticity.js",
     "docker:build": "docker build -t pointauc-frontend .",
     "docker:run": "docker run --rm --name pointauc-frontend -p 3000:80 pointauc-frontend",
-    "docker:up": "pnpm run docker:build && pnpm run docker:run"
+    "docker:up": "pnpm run docker:build && pnpm run docker:run",
+    "dev:desktop": "node --env-file=.env electron/dev-desktop.mjs",
+    "build:desktop": "node --env-file=.env.production electron/build-desktop.mjs"
   },
   "dependencies": {
     "7tv": "^0.1.2",
@@ -137,6 +140,7 @@
     "@types/js-cookie": "^3.0.5",
     "@types/lodash.merge": "^4.6.8",
     "@types/lodash.mergewith": "^4.6.8",
+    "@types/node": "^26.6.5",
     "@types/qs": "^6.9.18",
     "@types/react": "^19.0.0",
     "@types/react-color": "^3.0.9",
@@ -155,6 +159,10 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "concurrently": "^9.2.0",
     "cross-env": "^10.1.0",
+    "electron": "34.3.0",
+    "electron-builder": "25.1.8",
+    "electron-updater": "6.3.9",
+    "esbuild": "0.25.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",

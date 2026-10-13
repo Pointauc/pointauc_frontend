@@ -1,6 +1,7 @@
 import IntegrationLoginButton from '@domains/bids/external-integrations/shared/ui/IntegrationLoginButton/index.tsx';
 import { saveRedirectReturnPath } from '@domains/bids/external-integrations/shared/auth/redirect/redirectReturnPath';
 import * as Integration from '@models/integration';
+import { startIntegrationLogin } from '@shared/lib/desktop/startIntegrationLogin';
 
 import { buildAuthorizeUrl } from './auth.ts';
 import styles from './index.module.css';
@@ -10,7 +11,7 @@ const DonateXLoginButton = ({ id, branding, classes, showPartnerChip }: Integrat
     try {
       saveRedirectReturnPath(id);
       const url = await buildAuthorizeUrl();
-      window.open(url, '_self');
+      startIntegrationLogin('donatex', url);
     } catch (e) {
       console.error('Failed to start DonateX auth', e);
     }

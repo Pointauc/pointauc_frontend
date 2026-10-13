@@ -27,6 +27,7 @@ import { RouteErrorBoundary } from '@App/error-tracking/RouteErrorBoundary';
 import { integrationUtils } from '@domains/bids/external-integrations/shared/helpers.ts';
 import INTEGRATIONS from '@domains/bids/external-integrations/integrations.ts';
 import GlobalBidRuntime from '@domains/bids/lib/GlobalBidRuntime';
+import DesktopOAuthListener from '@shared/lib/desktop/DesktopOAuthListener.tsx';
 import i18n from '@assets/i18n/index.ts';
 import Metadata from '@components/Metadata';
 import RedirectPage from '@domains/bids/external-integrations/shared/auth/redirect/RedirectPage.tsx';
@@ -75,7 +76,7 @@ i18n.on('languageChanged', (language) => {
   dayjs.locale(dayjsLocale);
 });
 
-window.onbeforeunload = (): undefined => {
+const performFinalSave = async (): Promise<void> => {
   const {
     slots: { slots },
     purchases: { purchases },
@@ -89,8 +90,14 @@ window.onbeforeunload = (): undefined => {
       actionLog,
       isAutosave: true,
     });
-    archiveApi.upsertAutosave(data).catch((err) => console.error('Final autosave failed:', err));
+    await archiveApi.upsertAutosave(data);
   }
+};
+
+window.__pointauc_perform_final_save = performFinalSave;
+
+window.onbeforeunload = (): undefined => {
+  performFinalSave().catch((err) => console.error('Final autosave failed:', err));
 
   return undefined;
 };
@@ -113,6 +120,7 @@ const router = createBrowserRouter([
               <Notifications limit={4} autoClose={3000} />
               <Metadata />
               <GlobalBidRuntime />
+              <DesktopOAuthListener />
               <Outlet />
             </QueryClientProvider>
           </TutorialProvider>
