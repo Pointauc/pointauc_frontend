@@ -28,11 +28,11 @@ const IntegrationLoginButton = ({
   const titleText = title || t(`integration.${id}.name`);
 
   if (isPartner) {
-    const button = (
-      <div>
+    return (
+      <div className={clsx('relative flex flex-col', classes?.button)}>
         <Button
-          className={clsx('relative z-10 h-auto min-h-[56px] px-4 py-2', classes?.button)}
-          classNames={{ label: 'flex flex-col items-start' }}
+          className='relative z-10 h-auto min-h-[56px] w-full px-4 py-2'
+          classNames={{ label: 'flex w-full flex-col items-center' }}
           variant='filled'
           onClick={onClick}
           data-integration={id}
@@ -43,26 +43,24 @@ const IntegrationLoginButton = ({
               {titleText}
             </Text>
           </Group>
-          <Text size='xs'>{description}</Text>
+          <Text size='xs' w='100%' ta='center'>
+            {description}
+          </Text>
         </Button>
         {extraDescription && (
-          <Text className='-mt-2 rounded-b-lg bg-[#344b66] pt-3 pb-1 text-center opacity-90' size='xs'>
+          <Text className='-mt-2 w-full rounded-b-lg bg-[#344b66] px-2 pt-3 pb-1 text-center opacity-90' size='xs'>
             {extraDescription}
           </Text>
         )}
-      </div>
-    );
-
-    if (!showPartnerChip) {
-      return button;
-    }
-
-    return (
-      <div className='relative'>
-        {button}
-        <Badge className='pointer-events-none absolute -top-1 -right-1 rounded-full' color='green.6' variant='filled'>
-          <ThumbUpIcon sx={{ fontSize: 12 }} />
-        </Badge>
+        {showPartnerChip && (
+          <Badge
+            className='pointer-events-none absolute -top-1 -right-1 z-20 rounded-full'
+            color='green.6'
+            variant='filled'
+          >
+            <ThumbUpIcon sx={{ fontSize: 12 }} />
+          </Badge>
+        )}
       </div>
     );
   }

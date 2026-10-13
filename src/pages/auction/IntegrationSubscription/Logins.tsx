@@ -66,7 +66,7 @@ const IntegrationSubscriptionLogins = ({ integrations }: IntegrationSubscription
         opened={isModalOpened}
         onClose={() => setIsModalOpened(false)}
         title={t('integration.connectServices')}
-        size='lg'
+        size='xl'
         centered
       >
         <Stack gap='lg'>

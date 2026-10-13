@@ -34,7 +34,7 @@ const DonationSection = ({ onlyPartners = false }: DonationSectionProps) => {
   const buttonsGridClassName = 'grid grid-cols-4 items-start gap-3 px-4';
   const integrationCardsClassName = 'grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 px-4';
   const integrationLoginButtonClassName = 'w-full';
-  const partnerIntegrationLoginButtonClassName = 'w-full min-w-[220px] max-w-[280px]';
+  const partnerIntegrationLoginButtonClassName = 'w-full';
 
   return (
     <SettingsSection

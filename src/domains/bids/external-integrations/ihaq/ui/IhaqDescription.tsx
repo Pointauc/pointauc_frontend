@@ -8,8 +8,8 @@ const IhaqDescription = () => {
 
   return (
     <span className='flex w-full flex-nowrap items-center justify-center gap-x-2'>
-      <IconInfoCircle size={14} />
-      <span className='text-xxs'>{t('integration.ihaq.acceptedCurrencies')}</span>
+      <IconInfoCircle size={14} className='shrink-0' />
+      <span className='text-xxs whitespace-nowrap'>{t('integration.ihaq.acceptedCurrencies')}</span>
       <PaymentLogos />
     </span>
   );
