@@ -9,6 +9,7 @@ export interface PointaucDesktopBridge {
   restartAndInstallUpdate?: () => void;
   startOAuth?: (request: { providerId: string; authorizeUrl: string }) => Promise<void>;
   onOAuthCallback?: (listener: (callback: { providerId: string; search: string }) => void) => () => void;
+  onDesktopSyncSession?: (listener: (sessionId: string) => void) => () => void;
 }
 
 declare global {

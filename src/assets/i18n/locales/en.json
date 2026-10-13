@@ -1881,6 +1881,76 @@
       "title": "Authorizing Pointauc Desktop...",
       "description": "You can close this tab or click the link below if it did not open automatically.",
       "openPointauc": "Click here to open Pointauc"
+    },
+    "splash": {
+      "title": "Welcome to Pointauc Desktop",
+      "subtitle": "Choose how you would like to set up your desktop workspace",
+      "startScratch": {
+        "title": "Start from Scratch",
+        "description": "Start fresh with default settings. You can always configure integrations and preferences later.",
+        "button": "Start Fresh"
+      },
+      "transferBrowser": {
+        "badge": "Recommended",
+        "title": "Carry all data from web browser",
+        "description": "Seamlessly transfer your existing web browser data to this desktop application in one click.",
+        "highlights": {
+          "account": "Login session & cookies",
+          "archives": "Auction saves, history & lots",
+          "settings": "Appearance & preferences"
+        },
+        "button": "Transfer from Browser"
+      },
+      "waiting": {
+        "title": "Waiting for browser transfer...",
+        "description": "We opened Pointauc in your web browser. Click 'Transfer' there to send your data here.",
+        "copyLink": "Copy link",
+        "copied": "Copied!",
+        "openBrowser": "Open in browser again",
+        "manualFile": "Import from backup file instead",
+        "cancel": "Back to options"
+      },
+      "fileImport": {
+        "title": "Import Backup File",
+        "description": "Select or drop a .pointauc or .json backup file exported from Pointauc.",
+        "dropzonePrompt": "Drop your backup file here, or click to browse",
+        "dropzoneSubprompt": "Supports .pointauc and .json backup files",
+        "invalidFile": "Invalid backup file. Please provide a valid Pointauc export file.",
+        "cancel": "Cancel",
+        "button": "Import File"
+      },
+      "success": {
+        "title": "Transfer Complete!",
+        "description": "All your data has been successfully imported into Pointauc Desktop.",
+        "greeting": "Welcome back, {{username}}!",
+        "greetingGuest": "Welcome to Pointauc Desktop!",
+        "summaryArchives": "{{count}} saved record(s) imported",
+        "summarySettings": "{{count}} setting(s) applied",
+        "button": "Launch Pointauc"
+      },
+      "error": {
+        "sessionFailed": "Failed to initialize sync session. Please try again.",
+        "claimFailed": "Failed to transfer data. Please try again or use file import.",
+        "retry": "Try again"
+      }
+    },
+    "sync": {
+      "title": "Transfer Data to Pointauc Desktop",
+      "subtitle": "Send your current session, saves, and settings to your desktop application.",
+      "noSession": "Invalid or missing sync session ID. Please launch sync from Pointauc Desktop.",
+      "accountTitle": "Detected Account",
+      "signedInAs": "Signed in as {{username}}",
+      "guestMode": "Guest mode (no active login)",
+      "localDataTitle": "Local Data Summary",
+      "archivesFound": "Auction saves & history records: {{count}}",
+      "settingsFound": "Settings & preferences keys: {{count}}",
+      "buttonTransfer": "Transfer to Pointauc Desktop",
+      "buttonDownload": "Download backup file (.pointauc)",
+      "transferring": "Transferring your data...",
+      "successTitle": "Transfer Successful!",
+      "successDescription": "Your data has been sent to Pointauc Desktop. You can return to the desktop app now.",
+      "openAppButton": "Return to Pointauc Desktop",
+      "error": "Failed to upload sync data. Please try again or download a backup file."
     }
   },
   "testEnvironmentModal": {

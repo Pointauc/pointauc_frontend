@@ -5,3 +5,4 @@ export const UPDATE_DOWNLOADED_CHANNEL = 'desktop:update-downloaded';
 export const RESTART_AND_INSTALL_UPDATE_CHANNEL = 'desktop:restart-and-install-update';
 export const OAUTH_START_CHANNEL = 'desktop:start-oauth';
 export const OAUTH_CALLBACK_CHANNEL = 'desktop:oauth-callback';
+export const DESKTOP_SYNC_SESSION_CHANNEL = 'desktop:sync-session';

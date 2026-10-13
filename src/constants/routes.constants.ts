@@ -22,6 +22,7 @@ const ROUTES = {
   OVERLAY_VIEW: '/overlays/view/:id',
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
+  DESKTOP_SYNC: '/desktop-sync',
   TEST: '/test',
   DEBUG: '/debug',
   TICKET_VERIFICATION_INFO: '/tickets/info',

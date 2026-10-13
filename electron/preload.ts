@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron';
 
 import {
+  DESKTOP_SYNC_SESSION_CHANNEL,
   OAUTH_CALLBACK_CHANNEL,
   OAUTH_START_CHANNEL,
   OPEN_EXTERNAL_CHANNEL,
@@ -24,6 +25,59 @@ export interface DesktopOAuthCallback {
 const protocolUrlListeners = new Set<(url: string) => void>();
 const queuedProtocolUrls: string[] = [];
 
+const desktopSyncSessionListeners = new Set<(sessionId: string) => void>();
+const queuedDesktopSyncSessions: string[] = [];
+
+const parseDesktopSyncProtocolUrl = (url: string): string | undefined => {
+  try {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.protocol !== 'pointauc:') {
+      return undefined;
+    }
+
+    const host = parsedUrl.host;
+    const pathSegments = parsedUrl.pathname.split('/').filter(Boolean);
+    const isDesktopSync = host === 'desktop-sync' || pathSegments[0] === 'desktop-sync';
+
+    if (!isDesktopSync) {
+      return undefined;
+    }
+
+    const session = parsedUrl.searchParams.get('session') ?? parsedUrl.searchParams.get('sessionId');
+    return session || undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+let lastDispatchedSessionId = '';
+let lastDispatchedSessionTime = 0;
+
+const emitDesktopSyncSession = (sessionId: string): void => {
+  const now = Date.now();
+  if (lastDispatchedSessionId === sessionId && now - lastDispatchedSessionTime < 1000) {
+    return;
+  }
+
+  lastDispatchedSessionId = sessionId;
+  lastDispatchedSessionTime = now;
+
+  if (desktopSyncSessionListeners.size === 0) {
+    queuedDesktopSyncSessions.push(sessionId);
+    return;
+  }
+
+  for (const listener of desktopSyncSessionListeners) {
+    listener(sessionId);
+  }
+};
+
+ipcRenderer.on(DESKTOP_SYNC_SESSION_CHANNEL, (_event: IpcRendererEvent, sessionId: unknown) => {
+  if (typeof sessionId === 'string' && sessionId) {
+    emitDesktopSyncSession(sessionId);
+  }
+});
+
 const oauthListeners = new Set<(callback: DesktopOAuthCallback) => void>();
 const queuedOAuthCallbacks: DesktopOAuthCallback[] = [];
 
@@ -40,11 +94,15 @@ ipcRenderer.on(PROTOCOL_URL_CHANNEL, (_event: IpcRendererEvent, url: unknown) =>
 
   if (protocolUrlListeners.size === 0) {
     queuedProtocolUrls.push(url);
-    return;
+  } else {
+    for (const listener of protocolUrlListeners) {
+      listener(url);
+    }
   }
 
-  for (const listener of protocolUrlListeners) {
-    listener(url);
+  const syncSessionId = parseDesktopSyncProtocolUrl(url);
+  if (syncSessionId) {
+    emitDesktopSyncSession(syncSessionId);
   }
 });
 
@@ -119,6 +177,17 @@ contextBridge.exposeInMainWorld('pointaucDesktop', {
 
     return () => {
       oauthListeners.delete(listener);
+    };
+  },
+  onDesktopSyncSession: (listener: (sessionId: string) => void): (() => void) => {
+    desktopSyncSessionListeners.add(listener);
+    const pendingSessions = queuedDesktopSyncSessions.splice(0, queuedDesktopSyncSessions.length);
+    for (const sessionId of pendingSessions) {
+      listener(sessionId);
+    }
+
+    return () => {
+      desktopSyncSessionListeners.delete(listener);
     };
   },
   onUpdateAvailable: (listener: (info: unknown) => void): (() => void) => {

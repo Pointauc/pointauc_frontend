@@ -22,6 +22,9 @@ import { buildSocketIoOptions } from '@shared/lib/socketIo';
 import { useIsMobile } from '@shared/lib/ui';
 import { getSocketIOUrl } from '@utils/url.utils.ts';
 import { registerGlobalBidFallbackConsumer } from '@domains/bids/lib/globalBidsEventBus.ts';
+import { checkIsDesktopSetupCompleted } from '@domains/desktop/lib/desktopSetupStorage';
+import { DesktopSplashScreen } from '@domains/desktop/ui/DesktopSplashScreen/DesktopSplashScreen';
+import { checkIsDesktop } from '@shared/lib/desktop/checkIsDesktop';
 import { processRedemption } from '@reducers/Purchases/Purchases.ts';
 
 import ROUTES from '../../constants/routes.constants';
@@ -41,6 +44,9 @@ const App: React.FC = () => {
   const [isHovered, setIsDrawerOpen] = useState(false);
   const [isTestEnvironmentModalOpened, setIsTestEnvironmentModalOpened] = useState(
     () => isBrowser && window.location.hostname === 'test.pointauc.com',
+  );
+  const [isDesktopSetupNeeded, setIsDesktopSetupNeeded] = useState(
+    () => checkIsDesktop() && !checkIsDesktopSetupCompleted(),
   );
   const { username } = useSelector((root: RootState) => root.user);
   const [activeMenu, setActiveMenu] = useState<MenuItem | undefined>();
@@ -94,6 +100,10 @@ const App: React.FC = () => {
   const isGeometryBackgroundColorEnabled = useSelector(
     (root: RootState) => root.aucSettings.settings.isGeometryBackgroundColorEnabled,
   );
+
+  if (isDesktopSetupNeeded) {
+    return <DesktopSplashScreen onComplete={() => setIsDesktopSetupNeeded(false)} />;
+  }
 
   return (
     <PortalContextProvider>

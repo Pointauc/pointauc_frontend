@@ -64,6 +64,7 @@ export { store };
 
 const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
 const VideoRequestsPage = lazy(() => import('@domains/video-requests/ui/Page/VideoRequestsPage'));
+const DesktopSyncPage = lazy(() => import('@pages/desktop-sync/DesktopSyncPage'));
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -130,6 +131,7 @@ const router = createBrowserRouter([
     children: [
       { path: ROUTES.VIDEO_REQUESTS, element: <VideoRequestsPage /> },
       { path: '/overlays/view/:id', element: <OverlayViewPage /> },
+      { path: ROUTES.DESKTOP_SYNC, element: <DesktopSyncPage /> },
       { path: `${ROUTES.HOME}*`, element: <App /> },
       ...redirectRoutes,
     ],
