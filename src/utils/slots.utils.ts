@@ -13,6 +13,19 @@ type CreateSideFunc = (restItems: WheelItem[], side: Side, gameId: ID) => SideIn
 export const getWinnerSlot = (slots: Lot[]): Lot =>
   slots.reduce((winnerSlot, slot) => (Number(winnerSlot.amount) > Number(slot.amount) ? winnerSlot : slot));
 
+export const checkIsLotEmpty = (lot?: Lot | null): boolean => {
+  if (!lot) {
+    return false;
+  }
+
+  return (
+    !lot.name?.trim() &&
+    (lot.amount == null || lot.amount === 0) &&
+    (!lot.contributors || lot.contributors.length === 0) &&
+    !lot.lockedPercentage
+  );
+};
+
 // export const parseWheelPreset = (text: string): WheelItem[] => {
 //   return text.split('\n').map<WheelItem>((value, id) => ({ id: id.toString(), name: value, color: getWheelColor() }));
 // };

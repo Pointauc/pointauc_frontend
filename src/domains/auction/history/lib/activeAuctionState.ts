@@ -1,3 +1,5 @@
+import { checkIsLotEmpty } from '@utils/slots.utils';
+
 import { SMART_CLEAR_MIN_DURATION_MS } from '../model/constants';
 
 import type { RootState } from '@reducers';
@@ -25,8 +27,7 @@ export const checkIsAuctionStateEmpty = (
 
   return (
     state.slots.slots.length === 1 &&
-    !lot?.name?.trim() &&
-    Number(lot?.amount ?? 0) <= 0 &&
+    checkIsLotEmpty(lot) &&
     state.purchases.purchases.length === 0 &&
     state.activeAuctionHistory.pendingWinnerEvents.length === 0
   );

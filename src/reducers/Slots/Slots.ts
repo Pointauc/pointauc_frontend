@@ -22,6 +22,7 @@ import {
   contributorsFromLegacyInvestors,
   getBidContributorName,
 } from '@utils/slotContributors.utils';
+import { checkIsLotEmpty } from '@utils/slots.utils.ts';
 
 import slotNamesMap from '../../services/SlotNamesMap';
 import { addedBidsMap, Purchase, removePurchase } from '../Purchases/Purchases';
@@ -325,6 +326,13 @@ export const createSlotFromPurchase =
       aucSettings: { settings },
       slots: { slots },
     } = getState();
+    const emptySlot = slots.find(checkIsLotEmpty);
+
+    if (emptySlot) {
+      dispatch(addBid(emptySlot.id, bid));
+      return;
+    }
+
     const slotName = bidUtils.getName(bid);
     const amount = bidUtils.parseCost(bid, settings, true);
     const contributorName = getBidContributorName(bid);
@@ -375,12 +383,14 @@ export const addBid =
     }
 
     const { id } = bid;
-    const amount = bidUtils.parseCost(bid, settings, false);
+    const isLotNew = checkIsLotEmpty(lot);
+    const amount = bidUtils.parseCost(bid, settings, isLotNew);
     const bidName = bidUtils.getName(bid);
 
     slotNamesMap.set(bidName, lot.id);
 
-    if (!lot.name || lot.name === '') {
+    const hasNoName = !lot.name || !lot.name.trim();
+    if (hasNoName) {
       dispatch(
         setSlotData({
           id: lot.id,
@@ -399,7 +409,15 @@ export const addBid =
       );
     }
 
-    dispatch(logBidProcessed(bid, lot, amount, false));
+    const updatedLotName = hasNoName ? bidName : lot.name;
+    const updatedLot: Lot = {
+      ...lot,
+      name: updatedLotName,
+      amount: amount + (lot.amount ?? 0),
+      contributors: addContributorAmount(lot.contributors, getBidContributorName(bid), amount),
+    };
+
+    dispatch(logBidProcessed(bid, updatedLot, amount, isLotNew));
     addedBidsMap.set(id, lot.id);
     removeBid && dispatch(removePurchase(id));
     callback?.(amount);

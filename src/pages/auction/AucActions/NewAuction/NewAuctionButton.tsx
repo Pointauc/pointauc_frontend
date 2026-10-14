@@ -18,6 +18,7 @@ import {
   setCurrentAuctionMetadata,
 } from '@domains/auction/history/lib/currentAuctionMetadata';
 import { finalizeAuctionHistory } from '@domains/auction/history/lib/finalizeAuctionHistory';
+import { checkIsLotEmpty } from '@utils/slots.utils';
 
 import type { AuctionRequestsKind } from '@domains/auction/history/model/types';
 
@@ -33,8 +34,7 @@ const NewAuctionButton = () => {
 
     return (
       state.slots.slots.length === 1 &&
-      !lot?.name?.trim() &&
-      Number(lot?.amount ?? 0) <= 0 &&
+      checkIsLotEmpty(lot) &&
       state.purchases.purchases.length === 0 &&
       state.actionsLog.entries.length === 0 &&
       state.activeAuctionHistory.pendingWinnerEvents.length === 0
