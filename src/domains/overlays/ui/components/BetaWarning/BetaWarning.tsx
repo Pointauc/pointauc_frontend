@@ -24,7 +24,7 @@ function BetaWarning() {
           {t('overlays.betaWarning.createGithubIssue')}
         </Anchor>{' '}
         {t('overlays.betaWarning.or')}{' '}
-        <Anchor href='https://t.me/kozjarych' target='_blank' rel='noreferrer'>
+        <Anchor href='https://t.me/pointauc_contact' target='_blank' rel='noreferrer'>
           {t('overlays.betaWarning.contactTelegram')}
         </Anchor>
         .

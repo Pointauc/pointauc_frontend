@@ -55,7 +55,7 @@ export const useActiveMenu = (items: MenuItem[]): MenuItem | undefined => {
 export const flattenMenuGroups = (groups: MenuGroups): MenuItem[] => Object.values(groups).flat();
 
 const GITHUB_REPO_URL = 'https://github.com/Pointauc/pointauc_frontend';
-const TELEGRAM_AUTHOR_URL = 'https://t.me/kozjarych';
+const TELEGRAM_AUTHOR_URL = 'https://t.me/pointauc_contact';
 const SUPPORT_URL = 'https://boosty.to/kozjar/donate';
 
 /**
