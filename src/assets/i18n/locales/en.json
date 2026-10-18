@@ -1960,5 +1960,12 @@
     "stateExport": "You can export the full app state on the",
     "settingsLink": "settings page",
     "confirm": "I understand"
+  },
+  "recovery": {
+    "loading": "Saving data...",
+    "success": "Data saved successfully.",
+    "error": "Failed to save data. Please try again.",
+    "backHome": "Back to Home",
+    "retry": "Try again"
   }
 }

@@ -44,6 +44,7 @@ import { slotsToArchivedLots } from '@domains/auction/archive/lib/converters';
 import * as Integration from '@models/integration';
 import { queryClient } from '@shared/lib/react-query/client.ts';
 import { registerTestingScenarios } from '@domains/testing/registerTestingScenarios.ts';
+import { requestStoragePersistence } from '@shared/lib/storage/persistStorage';
 
 import App from './App/entrypoint/App.tsx';
 import { setupBackendApiConfig } from './api/backendConfig.ts';
@@ -65,6 +66,9 @@ export { store };
 const OverlayViewPage = lazy(() => import('@domains/overlays/ui/View/Page/OverlayViewPage'));
 const VideoRequestsPage = lazy(() => import('@domains/video-requests/ui/Page/VideoRequestsPage'));
 const DesktopSyncPage = lazy(() => import('@pages/desktop-sync/DesktopSyncPage'));
+const RecoveryPage = lazy(() => import('@pages/recovery/RecoveryPage'));
+
+requestStoragePersistence().catch((err) => console.warn('Failed to request persistent storage on startup:', err));
 
 dayjs.extend(relativeTime);
 dayjs.extend(duration);
@@ -132,6 +136,7 @@ const router = createBrowserRouter([
       { path: ROUTES.VIDEO_REQUESTS, element: <VideoRequestsPage /> },
       { path: '/overlays/view/:id', element: <OverlayViewPage /> },
       { path: ROUTES.DESKTOP_SYNC, element: <DesktopSyncPage /> },
+      { path: ROUTES.RECOVERY, element: <RecoveryPage /> },
       { path: `${ROUTES.HOME}*`, element: <App /> },
       ...redirectRoutes,
     ],

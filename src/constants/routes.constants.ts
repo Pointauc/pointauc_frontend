@@ -23,6 +23,7 @@ const ROUTES = {
   AUDIO_ROOM: '/audioRoom',
   LOGOUT: '/logout',
   DESKTOP_SYNC: '/desktop-sync',
+  RECOVERY: '/recovery',
   TEST: '/test',
   DEBUG: '/debug',
   TICKET_VERIFICATION_INFO: '/tickets/info',
