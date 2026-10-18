@@ -9,6 +9,8 @@ jobs:
   deploy:
     name: Build and Deploy to Production
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     environment:
       name: production
 
@@ -28,23 +30,31 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build application
+      - name: Generate .env.local from GitHub variables
         env:
-          VITE_DOCS_BASE_URL: ${{ secrets.VITE_DOCS_BASE_URL }}
-          VITE_DONATEX_CLIENT_ID: ${{ secrets.VITE_DONATEX_CLIENT_ID_PRODUCTION }}
-          VITE_ERROR_TRACKING_PROVIDER: ${{ secrets.VITE_ERROR_TRACKING_PROVIDER }}
-          VITE_GLITCHTIP_DSN: ${{ secrets.VITE_GLITCHTIP_DSN }}
-          VITE_GLITCHTIP_ENVIRONMENT: ${{ secrets.VITE_GLITCHTIP_ENVIRONMENT }}
-          VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID: ${{ secrets.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID }}
-          VITE_KINOPOISK_METADATA_WORKER_URL: ${{ secrets.VITE_KINOPOISK_METADATA_WORKER_URL }}
-          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
-          VITE_SENTRY_ENVIRONMENT: ${{ secrets.VITE_SENTRY_ENVIRONMENT }}
-          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
-          VITE_TWITCH_CLIENT_ID: ${{ secrets.VITE_TWITCH_CLIENT_ID }}
-          VITE_VK_VIDEO_LIVE_CLIENT_ID: ${{ secrets.VITE_VK_VIDEO_LIVE_CLIENT_ID }}
-          VITE_KICK_CLIENT_ID: ${{ secrets.VITE_KICK_CLIENT_ID }}
-          VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
-          VITE_PUBLIC_POSTHOG_HOST: ${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
+          VARS_JSON: ${{ toJson(vars) }}
+        run: |
+          node -e '
+            const vars = JSON.parse(process.env.VARS_JSON || "{}");
+            const entries = Object.entries(vars).filter(([key]) => key.startsWith("VITE_"));
+
+            // Safety guardrail: ensure no sensitive credentials were accidentally prefixed with VITE_
+            const forbiddenKeywords = [/SECRET/i, /PRIVATE/i, /PASSWORD/i, /TOKEN.*PRIVATE/i];
+            for (const [key] of entries) {
+              if (forbiddenKeywords.some((pattern) => pattern.test(key))) {
+                console.error(`::error::Security violation: "${key}" contains sensitive keywords but has a VITE_ prefix. Frontend variables are public!`);
+                process.exit(1);
+              }
+            }
+
+            const content = entries.map(([key, value]) => `${key}=${value}`).join("\n") + "\n";
+            require("fs").writeFileSync(".env.local", content);
+
+            console.log(`Injected ${entries.length} safe frontend variables into .env.local:`);
+            entries.forEach(([key]) => console.log(`  - ${key}`));
+          '
+
+      - name: Build application
         run: pnpm build:ssg
 
       - name: Generate source hashes manifest
@@ -101,4 +111,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: rm -f ~/.ssh/deploy_key
+        run: rm -f ~/.ssh/deploy_key .env.local
