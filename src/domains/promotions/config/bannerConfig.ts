@@ -1,6 +1,6 @@
 import { BannerPlacement, BannerPlacementConfig } from '@domains/promotions/model/types';
 
-export const DEFAULT_GLOBAL_MULTIPLIER = 1;
+export const DEFAULT_GLOBAL_MULTIPLIER = 0.75;
 export const DEFAULT_UTM_SOURCE = 'pointauc';
 export const DEFAULT_BASE_URL = 'https://ihaqdonate.com/';
 
