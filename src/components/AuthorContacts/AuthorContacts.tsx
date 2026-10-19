@@ -22,8 +22,8 @@ const AuthorContacts = ({ compact }: AuthorContactsProps) => {
         </Title>
         <Group wrap='nowrap' gap='xs' className={classes.contact}>
           <TelegramIcon className={classes.icon} />
-          <Anchor href='https://t.me/kozjarych' rel='noreferrer' target='_blank' className={classes.text}>
-            @kozjarych
+          <Anchor href='https://t.me/pointauc_contact' rel='noreferrer' target='_blank' className={classes.text}>
+            @pointauc_contact
           </Anchor>
         </Group>
       </Stack>
