@@ -18,6 +18,8 @@ import DonationSection from '@domains/user-settings-v2/Widgets/donations/Donatio
 import ApiSection from '@domains/user-settings-v2/Widgets/api/ApiSection';
 import { initialState, saveSettings } from '@reducers/AucSettings/AucSettings.ts';
 import { getDirtyValues } from '@utils/common.utils';
+import { PromotionPageProvider } from '@domains/promotions/lib/PromotionPageContext';
+import { PromotionBanner } from '@domains/promotions/ui/PromotionBanner';
 import { settingsApi } from '@api/userApi';
 
 const WEBSITE_SETTINGS_CONTENT_ID = 'website-settings-content';
@@ -124,36 +126,43 @@ const WebsiteSettings = () => {
   }, [autosaveDebouncer, formMethods]);
 
   return (
-    <FormProvider {...formMethods}>
-      <form className='w-full'>
-        <PageContainer
-          contentId={WEBSITE_SETTINGS_CONTENT_ID}
-          contentRef={contentRef}
-          className='h-full'
-          classes={{ content: 'items-start' }}
-          padding={false}
-        >
-          <div className='grid w-full min-w-0 grid-cols-1 items-start gap-y-8 self-start xl:grid-cols-[minmax(0,1fr)_minmax(0,800px)_minmax(0,1fr)] xl:gap-x-8'>
-            <div className='w-full min-w-0 xl:col-start-2 xl:mx-auto xl:max-w-[800px] xl:py-6'>
-              <div className='flex flex-col gap-8'>
-                <TimerSection />
-                <AppearanceSection />
-                <BidsGeneralSection />
-                <ChannelPointsSection />
-                <DonationSection />
-                <ExtraModesSection />
-                <ApiSection />
+    <PromotionPageProvider page='settings'>
+      <FormProvider {...formMethods}>
+        <form className='w-full'>
+          <PageContainer
+            contentId={WEBSITE_SETTINGS_CONTENT_ID}
+            contentRef={contentRef}
+            className='h-full'
+            classes={{ content: 'items-start' }}
+            padding={false}
+          >
+            <div className='grid w-full min-w-0 grid-cols-1 items-start gap-y-8 self-start xl:grid-cols-[minmax(0,1fr)_minmax(0,800px)_minmax(0,1fr)] xl:gap-x-8'>
+              <div className='hidden items-end xl:sticky xl:top-0 xl:col-start-1 xl:flex xl:h-screen xl:flex-col xl:justify-end xl:py-6'>
+                <PromotionBanner placement='settings_bottom_left' className='w-full max-w-[320px]' />
+              </div>
+
+              <div className='w-full min-w-0 xl:col-start-2 xl:mx-auto xl:max-w-[800px] xl:py-6'>
+                <div className='flex flex-col gap-6'>
+                  <PromotionBanner placement='settings_top' className='w-full max-w-[800px]' />
+                  <TimerSection />
+                  <AppearanceSection />
+                  <BidsGeneralSection />
+                  <ChannelPointsSection />
+                  <DonationSection />
+                  <ExtraModesSection />
+                  <ApiSection />
+                </div>
+              </div>
+
+              <div className='w-full min-w-0 xl:sticky xl:top-0 xl:col-start-3 xl:flex xl:h-screen xl:max-w-[320px] xl:flex-col xl:justify-between xl:py-6'>
+                <SettingsTableOfContents contentId={WEBSITE_SETTINGS_CONTENT_ID} contentRef={contentRef} />
+                <SettingsSidebar />
               </div>
             </div>
-
-            <div className='w-full min-w-0 xl:sticky xl:top-0 xl:col-start-3 xl:flex xl:h-screen xl:max-w-[320px] xl:flex-col xl:justify-between xl:py-6'>
-              <SettingsTableOfContents contentId={WEBSITE_SETTINGS_CONTENT_ID} contentRef={contentRef} />
-              <SettingsSidebar />
-            </div>
-          </div>
-        </PageContainer>
-      </form>
-    </FormProvider>
+          </PageContainer>
+        </form>
+      </FormProvider>
+    </PromotionPageProvider>
   );
 };
 

@@ -5,3 +5,9 @@ export { trackOverlayOpened } from './overlay';
 export { trackSettingsSaved } from './settings';
 export { trackTimerEdited } from './timer';
 export { trackWheelSpinResult } from './wheel';
+export {
+  trackPromotionBannerImpression,
+  trackPromotionBannerClick,
+  trackPromotionImpression,
+  trackPromotionClick,
+} from './promotion';

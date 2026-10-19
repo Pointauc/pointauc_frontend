@@ -17,6 +17,11 @@ const authParams = {
   client_id: '97045f2d-e0c1-416a-9b8f-d9de09d67775',
   redirect_uri: redirectUri,
   response_type: 'code',
+  utm_source: 'pointauc',
+  utm_medium: 'integration',
+  utm_campaign: 'pointauc_integration',
+  utm_content: 'settings_donations_button',
+  utm_term: 'donations',
 };
 
 const authUrl = 'https://ihaqdonate.com/oauth/authorize';

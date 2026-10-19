@@ -7,6 +7,8 @@ export const analyticsEventNames = {
   settingsSaved: 'settings_saved',
   timerEdited: 'timer_edited',
   wheelSpinResult: 'wheel_spin_result',
+  promotionBannerImpression: 'promotion_banner_impression',
+  promotionBannerClick: 'promotion_banner_click',
 } as const;
 
 /**
@@ -39,6 +41,15 @@ export interface WheelSpinResultPayload {
   winner_weight: number;
   winner_chance_percent_total: number;
   winner_chance_percent_final_spin: number;
+}
+
+export interface PromotionBannerEventPayload {
+  banner_id: string;
+  placement: string;
+  size: string;
+  campaign: string;
+  target_url: string;
+  page: string;
 }
 
 export interface AnalyticsEventMap {
@@ -104,6 +115,8 @@ export interface AnalyticsEventMap {
     timer_type: 'timer' | 'total';
   };
   [analyticsEventNames.wheelSpinResult]: WheelSpinResultPayload;
+  [analyticsEventNames.promotionBannerImpression]: PromotionBannerEventPayload;
+  [analyticsEventNames.promotionBannerClick]: PromotionBannerEventPayload;
 }
 
 export type AnalyticsEventName = keyof AnalyticsEventMap;

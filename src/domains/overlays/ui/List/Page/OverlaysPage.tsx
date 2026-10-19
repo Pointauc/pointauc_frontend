@@ -5,6 +5,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 
 import {
   overlaysControllerCreateMutation,
@@ -14,12 +15,13 @@ import {
 } from '@api/openapi/@tanstack/react-query.gen';
 import PageContainer from '@components/PageContainer/PageContainer';
 import ROUTES from '@constants/routes.constants';
+import { PromotionPageProvider } from '@domains/promotions/lib/PromotionPageContext';
+import { PromotionBanner } from '@domains/promotions/ui/PromotionBanner';
 import { RootState } from '@reducers';
 
 import { buildTransform, detectDefaultResolution } from '../../../lib/canvas';
 import { hasSeenWelcome, markWelcomeSeen } from '../../../lib/overlaysOnboarding';
 import { Overlay, OverlayType } from '../../../model/overlay.types';
-import BetaWarning from '../../components/BetaWarning/BetaWarning';
 import OverlaysHelpButton from '../../components/OverlaysHelpButton/OverlaysHelpButton';
 import InstructionsModal from '../../Modals/InstructionsModal/InstructionsModal';
 import UnauthorizedModal from '../../Modals/UnauthorizedModal/UnauthorizedModal';
@@ -172,33 +174,35 @@ const OverlaysPage: FC = () => {
   }, []);
 
   return (
-    <PageContainer
-      title={
-        <Group gap='sm' align='center'>
-          <Title order={1}>{t('overlays.title')}</Title>
-          <OverlaysHelpButton onClick={handleOpenInstructions} />
-        </Group>
-      }
-      classes={{ content: classes.pageContent }}
-    >
-      <Stack gap='md'>
-        <BetaWarning />
-        <OverlaysGrid
-          overlays={overlays}
-          onEditOverlay={handleEditOverlay}
-          onCreateOverlay={handleCreateOverlay}
-          onDeleteOverlay={handleDeleteOverlay}
+    <PromotionPageProvider page='overlays'>
+      <PageContainer
+        title={
+          <Group gap='sm' align='center'>
+            <Title order={1}>{t('overlays.title')}</Title>
+            <OverlaysHelpButton onClick={handleOpenInstructions} />
+          </Group>
+        }
+        classes={{ content: clsx(classes.pageContent, 'w-full') }}
+      >
+        <Stack gap='md' className='w-full'>
+          <PromotionBanner placement='overlays_top' className='w-full max-w-[800px]' />
+          <OverlaysGrid
+            overlays={overlays}
+            onEditOverlay={handleEditOverlay}
+            onCreateOverlay={handleCreateOverlay}
+            onDeleteOverlay={handleDeleteOverlay}
+          />
+        </Stack>
+        <CreateOverlayModal
+          opened={createModalOpened}
+          onClose={() => setCreateModalOpened(false)}
+          onSelectType={handleSelectOverlayType}
         />
-      </Stack>
-      <CreateOverlayModal
-        opened={createModalOpened}
-        onClose={() => setCreateModalOpened(false)}
-        onSelectType={handleSelectOverlayType}
-      />
-      <UnauthorizedModal opened={unauthorizedModalOpened} onClose={() => setUnauthorizedModalOpened(false)} />
-      <WelcomeModal opened={welcomeModalOpened} onClose={handleWelcomeClose} onContinue={handleWelcomeContinue} />
-      <InstructionsModal opened={instructionsModalOpened} onClose={() => setInstructionsModalOpened(false)} />
-    </PageContainer>
+        <UnauthorizedModal opened={unauthorizedModalOpened} onClose={() => setUnauthorizedModalOpened(false)} />
+        <WelcomeModal opened={welcomeModalOpened} onClose={handleWelcomeClose} onContinue={handleWelcomeContinue} />
+        <InstructionsModal opened={instructionsModalOpened} onClose={() => setInstructionsModalOpened(false)} />
+      </PageContainer>
+    </PromotionPageProvider>
   );
 };
 

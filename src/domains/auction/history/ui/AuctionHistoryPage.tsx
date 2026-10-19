@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import PageContainer from '@components/PageContainer/PageContainer';
+import { PromotionPageProvider } from '@domains/promotions/lib/PromotionPageContext';
 import { resetActiveAuctionHistory } from '@domains/auction/history/model/activeAuctionHistorySlice';
 import { setCurrentAuctionMetadata } from '@domains/auction/history/lib/currentAuctionMetadata';
 import { resetPurchases } from '@reducers/Purchases/Purchases';
@@ -312,74 +313,76 @@ const AuctionHistoryPage = () => {
   };
 
   return (
-    <PageContainer title={t('auctionHistory.page.title')}>
-      <Stack gap='lg'>
-        {isLoading ? (
-          <div className='flex min-h-80 items-center justify-center'>
-            <Loader />
-          </div>
-        ) : (
-          <div className='flex flex-col gap-4 pb-3'>
-            <MetricStrip totals={totals} biggestWinningLotName={biggestWinningLotName} />
-            <div className='grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,12fr)_5fr]'>
-              <Stack ref={leftPanelRef} gap='md'>
-                <AuctionActivitySection
-                  auctions={auctions}
-                  endDate={endDate}
-                  heatmapMode={heatmapMode}
-                  selectedDay={selectedDay}
-                  onHeatmapModeChange={setHeatmapMode}
-                  onDaySelect={(dayKey) => {
-                    setSelectedDay(dayKey);
-                    setSelectedAuctionId(null);
-                    setPage(1);
-                  }}
-                />
-                {selectedAuctionId && selectedDetails ? (
-                  <SelectedAuctionView
-                    details={selectedDetails}
-                    participants={participants}
-                    onBack={() => setSelectedAuctionId(null)}
-                  />
-                ) : selectedAuctionId && isSelectedLoading ? (
-                  <div className='flex min-h-64 items-center justify-center'>
-                    <Loader />
-                  </div>
-                ) : (
-                  <LotsList
-                    dateRange={dateRange}
-                    selectedDay={selectedDay}
-                    visibleSummaries={visibleSummaries}
-                    totalPages={totalPages}
-                    page={page}
-                    onDateRangeChange={(value) => {
-                      setDateRange(value);
-                      setPage(1);
-                      setSelectedDay(null);
-                    }}
-                    onPageChange={setPage}
-                    onClearDayFilter={() => setSelectedDay(null)}
-                    onSelectAuction={setSelectedAuctionId}
-                    onDeleteAuction={(auctionId) => handleDeleteAuction(auctionId).catch((err) => console.error(err))}
-                    onRestoreAuction={handleRestoreAuction}
-                    isCurrentAuctionEmpty={isCurrentAuctionEmpty}
-                    deletingAuctionId={deletingAuctionId}
-                    restoringAuctionId={restoringAuctionId}
-                  />
-                )}
-              </Stack>
-              <AuctionLeaderboardPanel
-                scores={participantScores}
-                totals={totals}
-                isSelectedAuction={Boolean(selectedDetails)}
-                highlights={auctionHighlights}
-                maxHeight={leaderboardMaxHeight}
-              />
+    <PromotionPageProvider page='history'>
+      <PageContainer title={t('auctionHistory.page.title')}>
+        <Stack gap='lg'>
+          {isLoading ? (
+            <div className='flex min-h-80 items-center justify-center'>
+              <Loader />
             </div>
-          </div>
-        )}
-      </Stack>
-    </PageContainer>
+          ) : (
+            <div className='flex flex-col gap-4 pb-3'>
+              <MetricStrip totals={totals} biggestWinningLotName={biggestWinningLotName} />
+              <div className='grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,12fr)_5fr]'>
+                <Stack ref={leftPanelRef} gap='md'>
+                  <AuctionActivitySection
+                    auctions={auctions}
+                    endDate={endDate}
+                    heatmapMode={heatmapMode}
+                    selectedDay={selectedDay}
+                    onHeatmapModeChange={setHeatmapMode}
+                    onDaySelect={(dayKey) => {
+                      setSelectedDay(dayKey);
+                      setSelectedAuctionId(null);
+                      setPage(1);
+                    }}
+                  />
+                  {selectedAuctionId && selectedDetails ? (
+                    <SelectedAuctionView
+                      details={selectedDetails}
+                      participants={participants}
+                      onBack={() => setSelectedAuctionId(null)}
+                    />
+                  ) : selectedAuctionId && isSelectedLoading ? (
+                    <div className='flex min-h-64 items-center justify-center'>
+                      <Loader />
+                    </div>
+                  ) : (
+                    <LotsList
+                      dateRange={dateRange}
+                      selectedDay={selectedDay}
+                      visibleSummaries={visibleSummaries}
+                      totalPages={totalPages}
+                      page={page}
+                      onDateRangeChange={(value) => {
+                        setDateRange(value);
+                        setPage(1);
+                        setSelectedDay(null);
+                      }}
+                      onPageChange={setPage}
+                      onClearDayFilter={() => setSelectedDay(null)}
+                      onSelectAuction={setSelectedAuctionId}
+                      onDeleteAuction={(auctionId) => handleDeleteAuction(auctionId).catch((err) => console.error(err))}
+                      onRestoreAuction={handleRestoreAuction}
+                      isCurrentAuctionEmpty={isCurrentAuctionEmpty}
+                      deletingAuctionId={deletingAuctionId}
+                      restoringAuctionId={restoringAuctionId}
+                    />
+                  )}
+                </Stack>
+                <AuctionLeaderboardPanel
+                  scores={participantScores}
+                  totals={totals}
+                  isSelectedAuction={Boolean(selectedDetails)}
+                  highlights={auctionHighlights}
+                  maxHeight={leaderboardMaxHeight}
+                />
+              </div>
+            </div>
+          )}
+        </Stack>
+      </PageContainer>
+    </PromotionPageProvider>
   );
 };
 

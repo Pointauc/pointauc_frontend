@@ -776,14 +776,6 @@
     "updateError": "Failed to update overlay",
     "deleteSuccess": "Overlay deleted successfully",
     "deleteError": "Failed to delete overlay",
-    "betaWarning": {
-      "title": "Beta Feature",
-      "description": "This feature is brand new and actively being developed. You may encounter bugs or unexpected behavior. We recommend checking back regularly for updates and improvements.",
-      "reportIssue": "If you find any issues, please",
-      "createGithubIssue": "create an issue on GitHub",
-      "or": "or",
-      "contactTelegram": "message me on Telegram"
-    },
     "overlayLink": "OBS Link",
     "displaySettings": "Display Settings",
     "statusMessages": {
@@ -1967,5 +1959,13 @@
     "error": "Failed to save data. Please try again.",
     "backHome": "Back to Home",
     "retry": "Try again"
+  },
+  "promotions": {
+    "banners": {
+      "donatMiner": "Donat-Miner — For those who love auctions",
+      "pointaucPromo": "iHAQ Donate × Pointauc — Promo code POINTAUC for 2.5% donation fee",
+      "wordWidget": "Widget Word — Boost your stream donations",
+      "word320_2": "Widget Word — Guess, play, get stream support"
+    }
   }
 }
