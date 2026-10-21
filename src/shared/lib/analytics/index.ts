@@ -1,4 +1,5 @@
 export type { AnalyticsBaseContext, AnalyticsContext } from './context';
+export { getAnalyticsEnvironment } from './environment';
 export { analytics, initAnalytics } from './service';
 export type { AnalyticsClient, InitAnalyticsOptions } from './service';
 export * from './events';

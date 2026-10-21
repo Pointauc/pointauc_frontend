@@ -1,11 +1,13 @@
 import i18n from '@assets/i18n/index.ts';
 import { isBrowser } from '@utils/ssr.ts';
 
+import { getAnalyticsEnvironment } from './environment';
+
 import type { AnalyticsEventMap } from './events/catalog';
 import type { AnalyticsBaseContext, AnalyticsContext } from './context';
 import type { AnalyticsEventEnvelope, AnalyticsTrackedEvent } from './events/envelope';
 import type { AnalyticsEventName } from './events/catalog';
-import type { AnalyticsProvider } from './providers/provider';
+import type { AnalyticsProvider, AnalyticsProviderInitOptions } from './providers/provider';
 
 export interface InitAnalyticsOptions {
   providers?: AnalyticsProvider[];
@@ -78,7 +80,7 @@ export class AnalyticsService implements AnalyticsClient {
       pathname: isBrowser ? window.location.pathname : undefined,
       locale: this.getBrowserLocale(),
       mode: import.meta.env.MODE,
-      environment: import.meta.env.MODE,
+      environment: getAnalyticsEnvironment(),
       isDev: import.meta.env.DEV,
     };
   }
@@ -105,7 +107,13 @@ export class AnalyticsService implements AnalyticsClient {
 
     this.initializedProviders.add(provider);
 
-    Promise.resolve(provider.initialize()).catch((error) => {
+    const initOptions: AnalyticsProviderInitOptions = {
+      environment: getAnalyticsEnvironment(),
+      mode: import.meta.env.MODE,
+      isDev: import.meta.env.DEV,
+    };
+
+    Promise.resolve(provider.initialize(initOptions)).catch((error) => {
       this.logProviderError('Failed to initialize analytics provider', provider.name, error);
     });
   }
