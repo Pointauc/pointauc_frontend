@@ -2,10 +2,10 @@ import posthog from 'posthog-js';
 
 import { isBrowser } from '@utils/ssr.ts';
 
-import { analyticsEventNames } from '../events/catalog';
+import { getAnalyticsEnvironment } from '../environment';
 
 import type { AnalyticsTrackedEvent } from '../events/envelope';
-import type { AnalyticsProvider } from './provider';
+import type { AnalyticsProvider, AnalyticsProviderInitOptions } from './provider';
 
 export class PostHogProvider implements AnalyticsProvider {
   readonly name = 'posthog';
@@ -18,15 +18,22 @@ export class PostHogProvider implements AnalyticsProvider {
     this.host = host;
   }
 
-  initialize(): void {
+  initialize(options?: AnalyticsProviderInitOptions): void {
     if (!isBrowser || !this.key) {
       return;
     }
+
+    const environment = options?.environment ?? getAnalyticsEnvironment();
 
     posthog.init(this.key, {
       api_host: this.host,
       capture_pageview: false,
       capture_pageleave: true,
+      loaded: (ph) => {
+        ph.register({
+          environment,
+        });
+      },
     });
   }
 
@@ -38,6 +45,7 @@ export class PostHogProvider implements AnalyticsProvider {
     posthog.capture(event.name, {
       ...event.payload,
       $current_url: event.context.href,
+      environment: event.context.environment,
     });
   }
 
@@ -57,6 +65,34 @@ export class PostHogProvider implements AnalyticsProvider {
       return;
     }
     posthog.reset();
+  }
+
+  getFeatureFlag(key: string): string | boolean | undefined {
+    if (!isBrowser) {
+      return undefined;
+    }
+    return posthog.getFeatureFlag(key);
+  }
+
+  getFeatureFlagPayload<T = unknown>(key: string): T | undefined {
+    if (!isBrowser) {
+      return undefined;
+    }
+    return posthog.getFeatureFlagPayload(key) as T | undefined;
+  }
+
+  onFeatureFlags(callback: () => void): () => void {
+    if (!isBrowser) {
+      return () => {};
+    }
+    return posthog.onFeatureFlags(callback);
+  }
+
+  getDistinctId(): string | undefined {
+    if (!isBrowser) {
+      return undefined;
+    }
+    return posthog.get_distinct_id();
   }
 }
 

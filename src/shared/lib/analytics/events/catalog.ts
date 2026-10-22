@@ -9,6 +9,7 @@ export const analyticsEventNames = {
   wheelSpinResult: 'wheel_spin_result',
   promotionBannerImpression: 'promotion_banner_impression',
   promotionBannerClick: 'promotion_banner_click',
+  promotionBannerClose: 'promotion_banner_close',
 } as const;
 
 /**
@@ -50,6 +51,8 @@ export interface PromotionBannerEventPayload {
   campaign: string;
   target_url: string;
   page: string;
+  experiment_frequency_variant?: string;
+  experiment_slots_variant?: string;
 }
 
 export interface AnalyticsEventMap {
@@ -117,6 +120,7 @@ export interface AnalyticsEventMap {
   [analyticsEventNames.wheelSpinResult]: WheelSpinResultPayload;
   [analyticsEventNames.promotionBannerImpression]: PromotionBannerEventPayload;
   [analyticsEventNames.promotionBannerClick]: PromotionBannerEventPayload;
+  [analyticsEventNames.promotionBannerClose]: PromotionBannerEventPayload;
 }
 
 export type AnalyticsEventName = keyof AnalyticsEventMap;

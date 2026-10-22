@@ -7,6 +7,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import TrailersContainer from '@components/TrailersContainer/TrailersContainer';
 import { RootState } from '@reducers';
 import { revertLatestActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
+import { PromotionPageProvider } from '@domains/promotions/lib/PromotionPageContext';
 import { updatePercents } from '@services/PercentsRefMap.ts';
 import { HOTKEY_ACTION_IDS } from '@shared/lib/hotkeys/hotkeys.types';
 import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
@@ -96,15 +97,17 @@ const AucPageContentMobile: React.FC = () => {
 
 const AucPage: React.FC = () => {
   const isMobile = useIsMobile();
-  if (isMobile) {
-    return (
-      <ScrollContextProvider>
-        <AucPageContentMobile />
-      </ScrollContextProvider>
-    );
-  }
-
-  return <AucPageContent />;
+  return (
+    <PromotionPageProvider page='auction'>
+      {isMobile ? (
+        <ScrollContextProvider>
+          <AucPageContentMobile />
+        </ScrollContextProvider>
+      ) : (
+        <AucPageContent />
+      )}
+    </PromotionPageProvider>
+  );
 };
 
 export default AucPage;
