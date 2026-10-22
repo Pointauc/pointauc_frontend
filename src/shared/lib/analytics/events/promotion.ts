@@ -10,5 +10,10 @@ export function trackPromotionBannerClick(payload: PromotionBannerEventPayload):
   analytics.track(analyticsEventNames.promotionBannerClick, payload);
 }
 
+export function trackPromotionBannerClose(payload: PromotionBannerEventPayload): void {
+  analytics.track(analyticsEventNames.promotionBannerClose, payload);
+}
+
 export const trackPromotionImpression = trackPromotionBannerImpression;
 export const trackPromotionClick = trackPromotionBannerClick;
+export const trackPromotionClose = trackPromotionBannerClose;

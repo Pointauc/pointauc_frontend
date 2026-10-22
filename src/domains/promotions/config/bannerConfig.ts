@@ -9,20 +9,43 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     coefficient: 0.5,
     size: '800x110',
     page: 'settings',
+    banners: {
+      DM_800: 1,
+    },
   },
   settings_bottom_left: {
     coefficient: 0.5,
     size: '320x165',
     page: 'settings',
+    banners: {
+      DM_320: 1,
+      Point_320: 1,
+      Word_320: 1,
+      Word_320_2: 1,
+    },
   },
   overlays_top: {
     coefficient: 0.5,
     size: '800x110',
     page: 'overlays',
+    banners: {
+      DM_800: 1,
+    },
   },
   history_bottom: {
     coefficient: 0.5,
     size: '500x80',
     page: 'history',
+    banners: {
+      DM_500: 1,
+    },
+  },
+  auction_integrations: {
+    coefficient: 0.5,
+    size: '320x165',
+    page: 'auction',
+    banners: {
+      Point_320: 1,
+    },
   },
 };

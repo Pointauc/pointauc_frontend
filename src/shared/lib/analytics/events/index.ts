@@ -8,6 +8,8 @@ export { trackWheelSpinResult } from './wheel';
 export {
   trackPromotionBannerImpression,
   trackPromotionBannerClick,
+  trackPromotionBannerClose,
   trackPromotionImpression,
   trackPromotionClick,
+  trackPromotionClose,
 } from './promotion';

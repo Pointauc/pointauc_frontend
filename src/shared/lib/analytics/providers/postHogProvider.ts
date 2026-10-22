@@ -66,6 +66,34 @@ export class PostHogProvider implements AnalyticsProvider {
     }
     posthog.reset();
   }
+
+  getFeatureFlag(key: string): string | boolean | undefined {
+    if (!isBrowser) {
+      return undefined;
+    }
+    return posthog.getFeatureFlag(key);
+  }
+
+  getFeatureFlagPayload<T = unknown>(key: string): T | undefined {
+    if (!isBrowser) {
+      return undefined;
+    }
+    return posthog.getFeatureFlagPayload(key) as T | undefined;
+  }
+
+  onFeatureFlags(callback: () => void): () => void {
+    if (!isBrowser) {
+      return () => {};
+    }
+    return posthog.onFeatureFlags(callback);
+  }
+
+  getDistinctId(): string | undefined {
+    if (!isBrowser) {
+      return undefined;
+    }
+    return posthog.get_distinct_id();
+  }
 }
 
 const posthogKey = import.meta.env.VITE_PUBLIC_POSTHOG_KEY as string | undefined;
