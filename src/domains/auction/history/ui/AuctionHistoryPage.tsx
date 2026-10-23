@@ -3,7 +3,7 @@ import { notifications } from '@mantine/notifications';
 import { IconCrown, IconDiamond, IconHeart, IconTrophy, IconUsers } from '@tabler/icons-react';
 import { useElementSize } from '@mantine/hooks';
 import { useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,7 +23,8 @@ import {
   useAuctionHistoryParticipants,
   useAuctionHistoryRangeDetails,
 } from '../api/hooks';
-import auctionHistoryApi from '../api/IndexedDBAdapter';
+import auctionHistoryApi from '../api/HybridAuctionHistoryAdapter';
+import { registerConflictHandler, syncAuctionHistory, type AuctionSyncConflict } from '../lib/syncService';
 import { checkIsAuctionStateEmpty } from '../lib/activeAuctionState';
 import {
   formatCompactMoney,
@@ -48,6 +49,7 @@ import { buildRestoredAuctionLots } from '../lib/restoreAuctionLots';
 import { AUCTION_HISTORY_PAGE_SIZE } from '../model/constants';
 import { auctionHistoryMetricColors } from '../config/metricColors';
 
+import AuctionHistoryConflictModal from './AuctionHistoryConflictModal';
 import AuctionActivitySection from './AuctionActivitySection';
 import AuctionLeaderboardPanel, { type AuctionHighlight } from './AuctionLeaderboardPanel';
 import LotsList from './LotsList';
@@ -86,6 +88,7 @@ const getAuctionHighlights = ({
           rangeDetails.contributions,
           resolveParticipantName,
           selectedAuction.pointsToDonationRatio,
+          rangeDetails.bids,
         )
       : undefined;
 
@@ -193,14 +196,29 @@ const AuctionHistoryPage = () => {
   const [page, setPage] = useState(1);
   const [deletingAuctionId, setDeletingAuctionId] = useState<string | null>(null);
   const [restoringAuctionId, setRestoringAuctionId] = useState<string | null>(null);
+  const [activeConflict, setActiveConflict] = useState<AuctionSyncConflict | null>(null);
   const isCurrentAuctionEmpty = useSelector((state: RootState) => checkIsAuctionStateEmpty(state));
+
+  useEffect(() => {
+    const unregister = registerConflictHandler((conflict) => {
+      setActiveConflict(conflict);
+    });
+
+    syncAuctionHistory()
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: auctionHistoryQueryKeys.all });
+      })
+      .catch((err) => console.error('Auction history sync error:', err));
+
+    return unregister;
+  }, [queryClient]);
   const deleteAuctionMutation = useDeleteAuctionHistory();
   const startDate = dateRange[0] ?? getPreviousDateKey(365);
   const endDate = dateRange[1] ?? dateRange[0] ?? toDateKey(new Date());
   const startAt = fromDateKey(startDate);
   const endAt = fromDateKey(endDate, true);
   const { data: auctions = [], isLoading: isAuctionsLoading } = useAuctionHistoryAuctions(startAt, endAt);
-  const { data: rangeDetails = { lots: [], contributions: [], winnerEvents: [] }, isLoading: isRangeLoading } =
+  const { data: rangeDetails = { lots: [], bids: [], contributions: [], winnerEvents: [] }, isLoading: isRangeLoading } =
     useAuctionHistoryRangeDetails(startAt, endAt);
   const { data: participants = [] } = useAuctionHistoryParticipants();
   const { data: selectedDetails, isLoading: isSelectedLoading } = useAuctionHistoryDetails(selectedAuctionId);
@@ -211,6 +229,7 @@ const AuctionHistoryPage = () => {
       selectedDetails
         ? {
             lots: selectedDetails.lots,
+            bids: selectedDetails.bids ?? [],
             contributions: selectedDetails.contributions,
             winnerEvents: selectedDetails.winnerEvents,
           }
@@ -265,6 +284,7 @@ const AuctionHistoryPage = () => {
         panelRangeDetails.contributions,
         resolveParticipantName,
         panelAuctions.find((auction) => auction.id === totals.biggestWinningLot?.auctionId)?.pointsToDonationRatio ?? 1,
+        panelRangeDetails.bids,
       )
     : undefined;
 
@@ -381,6 +401,14 @@ const AuctionHistoryPage = () => {
             </div>
           )}
         </Stack>
+        <AuctionHistoryConflictModal
+          opened={Boolean(activeConflict)}
+          conflict={activeConflict}
+          onClose={() => {
+            setActiveConflict(null);
+            queryClient.invalidateQueries({ queryKey: auctionHistoryQueryKeys.all });
+          }}
+        />
       </PageContainer>
     </PromotionPageProvider>
   );

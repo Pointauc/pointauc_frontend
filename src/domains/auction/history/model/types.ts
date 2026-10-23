@@ -14,6 +14,7 @@ export interface CurrentAuctionMetadata {
 
 export interface AuctionHistoryAuction {
   id: string;
+  userId?: string;
   name: string;
   requestsKind: AuctionRequestsKind;
   startedAt: string;
@@ -32,6 +33,7 @@ export interface AuctionHistoryAuction {
 
 export interface AuctionHistoryLot {
   id: string;
+  userId?: string;
   auctionId: string;
   name: string | null;
   totalAmount: number;
@@ -41,6 +43,8 @@ export interface AuctionHistoryLot {
 
 export interface AuctionHistoryParticipant {
   id: string;
+  syncKey?: string;
+  userId?: string;
   displayName: string;
   platformKey: Bid.Source | 'unknown';
   auctionCount: number;
@@ -54,6 +58,7 @@ export interface AuctionHistoryParticipant {
 
 export interface AuctionHistoryContribution {
   id: string;
+  userId?: string;
   auctionId: string;
   lotId: string;
   participantId: string;
@@ -62,8 +67,24 @@ export interface AuctionHistoryContribution {
   bidsCount: number;
 }
 
+export type AuctionHistoryBidKind = 'points' | 'money';
+
+export interface AuctionHistoryBid {
+  id: string;
+  userId?: string;
+  auctionId: string;
+  lotId: string;
+  participantId: string;
+  kind: AuctionHistoryBidKind;
+  amount_cents: number;
+  amountCents: number;
+  currency: string | null;
+  createdAt: string;
+}
+
 export interface AuctionHistoryWinnerEvent {
   id: string;
+  userId?: string;
   auctionId: string;
   lotId: string;
   method: AuctionHistorySelectionMethod;
@@ -72,6 +93,19 @@ export interface AuctionHistoryWinnerEvent {
   chancePercent?: number;
   wheelVariant?: AuctionHistoryWheelVariant;
   dropoutVariant?: AuctionHistoryDropoutVariant;
+  createdAt: string;
+}
+
+export type SyncOperation = 'save' | 'delete';
+export type SyncEntityType = 'auction';
+
+export interface SyncQueueItem {
+  id: string;
+  userId: string;
+  operation: SyncOperation;
+  entityType: SyncEntityType;
+  entityId: string;
+  payload?: any;
   createdAt: string;
 }
 
@@ -90,9 +124,10 @@ export interface PendingAuctionWinnerEvent {
 export interface AuctionHistorySnapshot {
   auction: AuctionHistoryAuction;
   lots: AuctionHistoryLot[];
-  contributions: AuctionHistoryContribution[];
+  bids: AuctionHistoryBid[];
   participants: AuctionHistoryParticipant[];
   winnerEvents: AuctionHistoryWinnerEvent[];
+  contributions?: AuctionHistoryContribution[];
 }
 
 export interface BuildAuctionHistorySnapshotParams {

@@ -44,6 +44,11 @@ const applicationDirectory = path.join(rootDirectory, 'dist-electron/app');
 fs.rmSync(applicationDirectory, { recursive: true, force: true });
 fs.mkdirSync(applicationDirectory, { recursive: true });
 
+const releaseDirectory = path.join(rootDirectory, 'release');
+if (fs.existsSync(releaseDirectory)) {
+  fs.rmSync(releaseDirectory, { recursive: true, force: true });
+}
+
 fs.copyFileSync(
   path.join(rootDirectory, 'electron/dist/main.cjs'),
   path.join(applicationDirectory, 'main.cjs'),
@@ -63,12 +68,14 @@ fs.cpSync(path.join(rootDirectory, 'dist'), path.join(applicationDirectory, 'dis
 fs.rmSync(path.join(applicationDirectory, 'dist/server'), { recursive: true, force: true });
 
 const rootPackageJson = JSON.parse(fs.readFileSync(path.join(rootDirectory, 'package.json'), 'utf8'));
+const appVersion = process.env.DESKTOP_APP_VERSION?.trim() || rootPackageJson.version;
+
 fs.writeFileSync(
   path.join(applicationDirectory, 'package.json'),
   JSON.stringify(
     {
       name: 'pointauc',
-      version: rootPackageJson.version,
+      version: appVersion,
       private: true,
       description: 'Pointauc desktop client',
       author: 'Pointauc',
@@ -79,12 +86,32 @@ fs.writeFileSync(
   ),
 );
 
-console.log('Packaging desktop application with electron-builder...');
+console.log(`Packaging desktop application with electron-builder (version ${appVersion})...`);
+const builderArguments = [
+  'exec',
+  'electron-builder',
+  '--win',
+  '--config',
+  'electron-builder.yml',
+  '--publish',
+  'never',
+  `-c.extraMetadata.version=${appVersion}`,
+];
+
+const shouldAutoDiscoverCertificates = Boolean(process.env.CSC_LINK || process.env.WIN_CSC_LINK);
+
 await executeCommand(
   'pnpm',
-  ['exec', 'electron-builder', '--win', 'nsis', '--x64', '--config', 'electron-builder.yml', '--publish', 'never'],
+  builderArguments,
   {
     ...process.env,
-    CSC_IDENTITY_AUTO_DISCOVERY: 'false',
+    CSC_IDENTITY_AUTO_DISCOVERY: shouldAutoDiscoverCertificates ? 'true' : 'false',
   },
 );
+
+const sourceAsarPath = path.join(rootDirectory, 'release/win-unpacked/resources/app.asar');
+if (fs.existsSync(sourceAsarPath)) {
+  console.log('Exporting standalone app.asar update asset...');
+  fs.copyFileSync(sourceAsarPath, path.join(rootDirectory, 'release/app.asar'));
+  fs.copyFileSync(sourceAsarPath, path.join(rootDirectory, `release/Pointauc-Update-${appVersion}-app.asar`));
+}

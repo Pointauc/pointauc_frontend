@@ -31,8 +31,13 @@
     "docker:build": "docker build -t pointauc-frontend .",
     "docker:run": "docker run --rm --name pointauc-frontend -p 3000:80 pointauc-frontend",
     "docker:up": "pnpm run docker:build && pnpm run docker:run",
-    "dev:desktop": "node --env-file=.env electron/dev-desktop.mjs",
-    "build:desktop": "node --env-file=.env.production electron/build-desktop.mjs"
+    "dev:desktop": "node --env-file-if-exists=.env.local --env-file-if-exists=.env electron/dev-desktop.mjs",
+    "build:desktop": "node --env-file-if-exists=.env.production --env-file-if-exists=.env.local electron/build-desktop.mjs",
+    "build:electron": "node electron/bundle.mjs",
+    "typecheck:electron": "tsc -p tsconfig.electron.json --noEmit",
+    "smoke:desktop": "node electron/bundle.mjs && cross-env DESKTOP_SMOKE=1 electron .",
+    "smoke:desktop:packaged": "node electron/smoke-package.mjs",
+    "test:desktop": "vitest run src/domains/desktop"
   },
   "dependencies": {
     "7tv": "^0.1.2",
@@ -170,6 +175,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "fake-indexeddb": "^6.2.6",
     "jsdom": "^26.1.0",
     "postcss": "^8.5.4",
     "postcss-preset-mantine": "^1.18.0",

@@ -3,7 +3,8 @@ import { PurchaseStatusEnum } from '@models/purchase';
 import { AUCTION_HISTORY_SCHEMA_VERSION } from '../model/constants';
 
 import type {
-  AuctionHistoryContribution,
+  AuctionHistoryBid,
+  AuctionHistoryBidKind,
   AuctionHistoryLot,
   AuctionHistoryParticipant,
   AuctionHistorySnapshot,
@@ -20,19 +21,15 @@ interface ParticipantAccumulator {
   totalDonationCents: number;
 }
 
-interface ContributionAccumulator {
-  id: string;
-  auctionId: string;
-  lotId: string;
-  participantId: string;
-  points: number;
-  donationCents: number;
-  bidsCount: number;
-}
-
 const normalizeUsername = (username: string | undefined): string => {
   const normalized = username?.trim().toLowerCase();
   return normalized || 'anonymous';
+};
+
+const normalizeCurrency = (curr: string | null | undefined): string | null => {
+  if (!curr) return null;
+  const trimmed = curr.trim().toUpperCase();
+  return trimmed ? trimmed.slice(0, 3) : null;
 };
 
 const resolveParticipantId = (source: Bid.Source | undefined, investorId: string | undefined, username: string): string => {
@@ -81,7 +78,8 @@ export const buildAuctionHistorySnapshot = ({
   const lotById = new Map(historyLots.map((lot) => [lot.id, lot]));
   const runtimeLotIds = new Set(activeLots.map((lot) => lot.id));
   const participantsById = new Map<string, ParticipantAccumulator>();
-  const contributionsById = new Map<string, ContributionAccumulator>();
+  const bids: AuctionHistoryBid[] = [];
+  const seenBidIds = new Set<string>();
 
   purchases.forEach((purchase) => {
     if (purchase.status !== PurchaseStatusEnum.Processed || !purchase.target || !runtimeLotIds.has(purchase.target)) {
@@ -96,10 +94,31 @@ export const buildAuctionHistorySnapshot = ({
     const platformKey = purchase.source ?? 'unknown';
     const displayName = purchase.username?.trim() || 'Anonymous';
     const participantId = resolveParticipantId(purchase.source, purchase.investorId, displayName);
-    const contributionId = `${auctionId}:${lotId}:${participantId}`;
     const rawCost = Number(purchase.rawCost ?? purchase.cost ?? 0);
+    const kind: AuctionHistoryBidKind = purchase.isDonation ? 'money' : 'points';
+    const amountCents = purchase.isDonation ? centsFromDonation(rawCost) : Math.round(rawCost);
+    const currency = purchase.isDonation ? normalizeCurrency((purchase as { currency?: string }).currency ?? 'RUB') : null;
     const points = purchase.isDonation ? 0 : rawCost;
     const donationCents = purchase.isDonation ? centsFromDonation(rawCost) : 0;
+
+    let bidId = purchase.id?.trim();
+    if (!bidId || seenBidIds.has(bidId)) {
+      bidId = crypto.randomUUID();
+    }
+    seenBidIds.add(bidId);
+
+    const bid: AuctionHistoryBid = {
+      id: bidId,
+      auctionId,
+      lotId,
+      participantId,
+      kind,
+      amount_cents: amountCents,
+      amountCents,
+      currency,
+      createdAt: purchase.timestamp || endedAt,
+    };
+    bids.push(bid);
 
     const participant = participantsById.get(participantId) ?? {
       id: participantId,
@@ -114,20 +133,6 @@ export const buildAuctionHistorySnapshot = ({
     participant.totalPoints += points;
     participant.totalDonationCents += donationCents;
     participantsById.set(participantId, participant);
-
-    const contribution = contributionsById.get(contributionId) ?? {
-      id: contributionId,
-      auctionId,
-      lotId,
-      participantId,
-      points: 0,
-      donationCents: 0,
-      bidsCount: 0,
-    };
-    contribution.points += points;
-    contribution.donationCents += donationCents;
-    contribution.bidsCount += 1;
-    contributionsById.set(contributionId, contribution);
 
     const lot = lotById.get(lotId);
     if (lot) {
@@ -166,14 +171,13 @@ export const buildAuctionHistorySnapshot = ({
   const confirmedWinnerLotIds = new Set(
     winnerEvents.filter((event) => event.status === 'confirmed').map((event) => event.lotId),
   );
-  const wonLotCountByParticipantId = new Map<string, number>();
+  const wonLotIdsByParticipant = new Map<string, Set<string>>();
 
-  Array.from(contributionsById.values()).forEach((contribution) => {
-    if (confirmedWinnerLotIds.has(contribution.lotId)) {
-      wonLotCountByParticipantId.set(
-        contribution.participantId,
-        (wonLotCountByParticipantId.get(contribution.participantId) ?? 0) + 1,
-      );
+  bids.forEach((bid) => {
+    if (confirmedWinnerLotIds.has(bid.lotId)) {
+      const wonSet = wonLotIdsByParticipant.get(bid.participantId) ?? new Set<string>();
+      wonSet.add(bid.lotId);
+      wonLotIdsByParticipant.set(bid.participantId, wonSet);
     }
   });
 
@@ -182,7 +186,7 @@ export const buildAuctionHistorySnapshot = ({
     displayName: participant.displayName,
     platformKey: participant.platformKey,
     auctionCount: 1,
-    wonLotCount: wonLotCountByParticipantId.get(participant.id) ?? 0,
+    wonLotCount: wonLotIdsByParticipant.get(participant.id)?.size ?? 0,
     bidCount: participant.bidCount,
     totalPoints: participant.totalPoints,
     totalDonationCents: participant.totalDonationCents,
@@ -213,7 +217,7 @@ export const buildAuctionHistorySnapshot = ({
       schemaVersion: AUCTION_HISTORY_SCHEMA_VERSION,
     },
     lots: historyLots,
-    contributions: Array.from(contributionsById.values()),
+    bids,
     participants,
     winnerEvents,
   };

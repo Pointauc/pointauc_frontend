@@ -2,6 +2,7 @@ import { createSlot } from '@reducers/Slots/Slots';
 import { sortSlots } from '@utils/common.utils';
 
 import { calculateWeightedTotalPoints } from './derived';
+import { deriveContributionsFromBids } from './statistics';
 
 import type { AuctionHistoryDetails } from '../api/AuctionHistoryApi';
 import type { AuctionHistoryParticipant } from '../model/types';
@@ -13,8 +14,13 @@ export const buildRestoredAuctionLots = (
 ): Lot[] => {
   const participantNameById = new Map(participants.map((participant) => [participant.id, participant.displayName]));
 
+  const contributions =
+    details.bids && details.bids.length > 0
+      ? deriveContributionsFromBids(details.bids)
+      : details.contributions ?? [];
+
   const lots = details.lots.map((lot, index) => {
-    const contributors = details.contributions
+    const contributors = contributions
       .filter((contribution) => contribution.lotId === lot.id)
       .map((contribution) => ({
         name: participantNameById.get(contribution.participantId) ?? contribution.participantId,

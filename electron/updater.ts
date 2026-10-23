@@ -7,6 +7,11 @@ import {
   UPDATE_DOWNLOADED_CHANNEL,
 } from './channels';
 import { checkIsDev, checkIsSmoke } from './desktopEnv';
+import {
+  applyPortableAsarUpdate,
+  checkForPortableUpdates,
+  checkIsPortable,
+} from './portableUpdater';
 
 let isUpdaterInitialized = false;
 
@@ -15,6 +20,26 @@ export const setupAutoUpdater = (win: BrowserWindow): void => {
     return;
   }
   isUpdaterInitialized = true;
+
+  const isPortable = checkIsPortable();
+
+  if (isPortable) {
+    ipcMain.handle(RESTART_AND_INSTALL_UPDATE_CHANNEL, () => {
+      const isApplied = applyPortableAsarUpdate();
+      if (!isApplied) {
+        console.error('Failed to apply portable update: new asar not found');
+      }
+    });
+
+    if (checkIsDev() || checkIsSmoke()) {
+      return;
+    }
+
+    checkForPortableUpdates(win).catch((err: unknown) => {
+      console.error('Failed to check for portable updates:', err);
+    });
+    return;
+  }
 
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
