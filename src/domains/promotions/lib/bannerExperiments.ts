@@ -12,20 +12,6 @@ import {
 
 export const ANALYTICS_DISTINCT_ID_STORAGE_KEY = 'pointauc_analytics_distinct_id';
 
-// Ensure posthog has an active instance in browser so featureFlags.override works out-of-the-box in dev
-if (isBrowser && !(posthog as unknown as { __loaded?: boolean }).__loaded) {
-  try {
-    posthog.init('local-dev', {
-      api_host: 'http://localhost',
-      autocapture: false,
-      advanced_disable_decide: true,
-      disable_session_recording: true,
-    });
-  } catch {
-    // Ignore initialization errors
-  }
-}
-
 /**
  * Maps a string deterministically to a floating point value in [0, 1) using 32-bit FNV-1a.
  */

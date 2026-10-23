@@ -6,10 +6,20 @@ import { BannerExperimentsConfig } from '@domains/promotions/model/experimentTyp
 // Local Development: Force AB Testing Variants
 // Uncomment the snippet below to force specific variants locally:
 // ============================================================================
-// posthog.featureFlags?.override({
-//   'promotion-banner-slots': 'auction_slot', // 'standard' | 'auction_slot'
-//   'promotion-banner-frequency': 'probabilistic', // 'probabilistic' | 'frequency_capped'
-// });
+// if (typeof window !== 'undefined') {
+//   if (!posthog.__loaded) {
+//     posthog.init('dev-dummy-key', {
+//       api_host: 'https://us.i.posthog.com',
+//       autocapture: false,
+//       advanced_disable_decide: true,
+//       disable_session_recording: true,
+//     });
+//   }
+//   posthog.featureFlags?.override({
+//     'promotion-banner-slots': 'auction_slot', // 'standard' | 'auction_slot'
+//     'promotion-banner-frequency': 'probabilistic', // 'probabilistic' | 'frequency_capped'
+//   });
+// }
 
 export const DEFAULT_FREQUENCY_CAPPED_PARAMS = {
   maxImpressions: 3,
