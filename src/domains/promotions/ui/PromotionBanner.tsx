@@ -28,19 +28,22 @@ export const PromotionBanner: React.FC<PromotionBannerProps> = ({
   const [width, height] = banner.creative.size.split('x').map(Number);
   const isHorizontal800 = placement === 'settings_top' || placement === 'overlays_top';
   const isAuctionIntegrations = placement === 'auction_integrations';
+  const isAuctionBids = placement === 'auction_bids';
 
   return (
     <div
-      className={`group relative block overflow-hidden rounded-lg transition-transform hover:scale-[1.01] ${
+      className={`group relative block overflow-hidden rounded-lg ${
         isHorizontal800 ? 'aspect-[800/90] max-h-[90px] w-full max-w-[800px]' : ''
-      } ${isAuctionIntegrations ? 'h-[90px] w-full max-w-[320px]' : ''} ${className ?? ''}`.trim()}
+      } ${isAuctionIntegrations ? 'h-[90px] w-full max-w-[320px]' : ''} ${
+        isAuctionBids ? 'w-[260px] max-w-full shrink-0' : ''
+      } ${className ?? ''}`.trim()}
     >
       <a
         href={banner.url}
         target='_blank'
         rel='noopener sponsored'
         onClick={handleClick}
-        className='focus:ring-primary block h-full w-full rounded-lg focus:ring-2 focus:outline-none'
+        className='focus:ring-primary block h-full w-full overflow-hidden rounded-lg focus:ring-2 focus:outline-none'
       >
         <img
           src={banner.creative.imageSrc}
@@ -48,13 +51,15 @@ export const PromotionBanner: React.FC<PromotionBannerProps> = ({
           width={width}
           height={height}
           loading='lazy'
-          className={`block rounded-lg shadow-sm transition-opacity group-hover:opacity-95 ${
+          className={`block rounded-lg shadow-sm transition-transform duration-300 ease-out group-hover:scale-105 ${
             imageClassName ??
             (isAuctionIntegrations
               ? 'h-full w-full object-cover object-bottom'
               : isHorizontal800
                 ? 'h-full w-full object-cover object-center'
-                : 'h-auto w-full object-contain')
+                : isAuctionBids
+                  ? 'h-auto w-[260px] max-w-full object-contain'
+                  : 'h-auto w-full object-contain')
           }`}
         />
       </a>
@@ -69,9 +74,9 @@ export const PromotionBanner: React.FC<PromotionBannerProps> = ({
           }}
           aria-label={t('promotions.banners.close', { defaultValue: 'Close' })}
           title={t('promotions.banners.close', { defaultValue: 'Close' })}
-          className='absolute top-0 right-0 z-20 flex h-5 w-5 items-center justify-center rounded-none bg-white text-gray-900 shadow-sm transition-colors hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:outline-none'
+          className='absolute top-0 right-0 z-20 flex h-[22px] w-[22px] items-center justify-center rounded-bl-md bg-white text-gray-900 shadow-sm transition-colors hover:bg-gray-100 hover:text-black focus:ring-1 focus:ring-black focus:outline-none'
         >
-          <IconX size={12} stroke={2.5} />
+          <IconX size={14} stroke={2.5} />
         </button>
       )}
     </div>

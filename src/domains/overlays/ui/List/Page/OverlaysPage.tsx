@@ -16,7 +16,6 @@ import {
 import PageContainer from '@components/PageContainer/PageContainer';
 import ROUTES from '@constants/routes.constants';
 import { PromotionPageProvider } from '@domains/promotions/lib/PromotionPageContext';
-import { PromotionBanner } from '@domains/promotions/ui/PromotionBanner';
 import { RootState } from '@reducers';
 
 import { buildTransform, detectDefaultResolution } from '../../../lib/canvas';
@@ -185,7 +184,6 @@ const OverlaysPage: FC = () => {
         classes={{ content: clsx(classes.pageContent, 'w-full') }}
       >
         <Stack gap='md' className='w-full'>
-          <PromotionBanner placement='overlays_top' className='w-full max-w-[800px]' />
           <OverlaysGrid
             overlays={overlays}
             onEditOverlay={handleEditOverlay}

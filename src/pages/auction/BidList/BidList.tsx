@@ -8,6 +8,7 @@ import { PURCHASE_SORT_OPTIONS } from '@constants/purchase.constants.ts';
 import { RootState } from '@reducers';
 import { addActionLogEntry, createActionLogEntry, revertActionLogEntry } from '@reducers/ActionsLog/ActionsLog.ts';
 import { Purchase, resetPurchases } from '@reducers/Purchases/Purchases.ts';
+import { PromotionBanner } from '@domains/promotions/ui/PromotionBanner';
 
 import DragBidContext from '../DragBidContext/DragBidContext';
 import DraggableBid from '../DraggableBid/DraggableBid';
@@ -108,6 +109,7 @@ const BidList: React.FC = () => {
             {sortedPurchases.map((purchase) => (
               <DraggableBid {...purchase} key={purchase.id} isHotkeyTarget={sortedPurchases[0]?.id === purchase.id} />
             ))}
+            <PromotionBanner placement='auction_bids' className='mx-auto' />
           </div>
           {!!purchases.length && (
             <div className='mt-3 flex w-full justify-end align-middle'>

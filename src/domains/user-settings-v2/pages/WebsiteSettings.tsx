@@ -137,9 +137,7 @@ const WebsiteSettings = () => {
             padding={false}
           >
             <div className='grid w-full min-w-0 grid-cols-1 items-start gap-y-8 self-start xl:grid-cols-[minmax(0,1fr)_minmax(0,800px)_minmax(0,1fr)] xl:gap-x-8'>
-              <div className='hidden items-end xl:sticky xl:top-0 xl:col-start-1 xl:flex xl:h-screen xl:flex-col xl:justify-end xl:py-6'>
-                <PromotionBanner placement='settings_bottom_left' className='w-full max-w-[320px]' />
-              </div>
+              <div className='hidden xl:block xl:col-start-1' />
 
               <div className='w-full min-w-0 xl:col-start-2 xl:mx-auto xl:max-w-[800px] xl:py-6'>
                 <div className='flex flex-col gap-6'>

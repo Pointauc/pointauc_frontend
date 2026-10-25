@@ -5,9 +5,10 @@ export type BannerPlacement =
   | 'settings_bottom_left'
   | 'overlays_top'
   | 'history_bottom'
-  | 'auction_integrations';
+  | 'auction_integrations'
+  | 'auction_bids';
 
-export type BannerSize = '800x110' | '320x165' | '500x80';
+export type BannerSize = '800x110' | '320x165' | '500x80' | '260x400';
 
 export type BannerCreativeId =
   | 'DM_800'
@@ -16,6 +17,9 @@ export type BannerCreativeId =
   | 'Point_320'
   | 'Word_320'
   | 'Word_320_2'
+  | 'Point_260'
+  | 'Word_260'
+  | 'DM_260'
   | (string & {});
 
 export interface PlacementBannerWeight {

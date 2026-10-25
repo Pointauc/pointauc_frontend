@@ -13,8 +13,18 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
       DM_800: 1,
     },
   },
+  auction_bids: {
+    coefficient: 1,
+    size: '260x400',
+    page: 'auction',
+    banners: {
+      Point_260: 1,
+      Word_260: 1,
+      DM_260: 1,
+    },
+  },
   settings_bottom_left: {
-    coefficient: 0.5,
+    coefficient: 0,
     size: '320x165',
     page: 'settings',
     banners: {
@@ -25,7 +35,7 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     },
   },
   overlays_top: {
-    coefficient: 0.5,
+    coefficient: 0,
     size: '800x110',
     page: 'overlays',
     banners: {
@@ -33,7 +43,7 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     },
   },
   history_bottom: {
-    coefficient: 0.5,
+    coefficient: 0,
     size: '500x80',
     page: 'history',
     banners: {
@@ -41,7 +51,7 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     },
   },
   auction_integrations: {
-    coefficient: 0.5,
+    coefficient: 0,
     size: '320x165',
     page: 'auction',
     banners: {

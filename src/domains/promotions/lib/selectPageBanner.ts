@@ -9,8 +9,8 @@ import {
   BANNER_CREATIVES_BY_SIZE,
 } from '@domains/promotions/config/bannerRegistry';
 import { isBannersDismissed } from '@domains/promotions/lib/bannerFrequencyStore';
+import { getNextVerticalBannerCreative } from '@domains/promotions/lib/bannerRotationStore';
 import { buildBannerUrl } from '@domains/promotions/lib/buildBannerUrl';
-import { ActiveBannerExperiments } from '@domains/promotions/model/experimentTypes';
 import {
   ActiveBanner,
   BannerCreative,
@@ -28,7 +28,7 @@ export interface WeightedCreative {
 export const getEligibleWeightedCreatives = (
   config: BannerPlacementConfig,
   options?: {
-    creativesBySize?: Record<BannerSize, BannerCreative[]>;
+    creativesBySize?: Partial<Record<BannerSize, BannerCreative[]>>;
     creativesById?: Record<string, BannerCreative>;
     isIhaqEnabled?: boolean;
   },
@@ -100,15 +100,16 @@ export const pickWeightedCreative = (
 export interface SelectPageBannerOptions {
   placementsConfig?: Partial<Record<BannerPlacement, BannerPlacementConfig>>;
   globalMultiplier?: number;
-  creativesBySize?: Record<BannerSize, BannerCreative[]>;
+  creativesBySize?: Partial<Record<BannerSize, BannerCreative[]>>;
   creativesById?: Record<string, BannerCreative>;
   baseUrl?: string;
   utmSource?: string;
   random?: () => number;
   isIhaqEnabled?: boolean;
-  experiments?: ActiveBannerExperiments;
-  isFrequencyCapped?: boolean;
   isDismissed?: boolean;
+  advanceRotation?: boolean;
+  forceNewRotation?: boolean;
+  forcedCreative?: BannerCreative;
 }
 
 export const selectPageBanner = (
@@ -123,8 +124,6 @@ export const selectPageBanner = (
   const utmSource = options?.utmSource ?? DEFAULT_UTM_SOURCE;
   const random = options?.random ?? Math.random;
   const isIhaqEnabled = options?.isIhaqEnabled ?? false;
-  const experiments = options?.experiments;
-  const isFrequencyCapped = options?.isFrequencyCapped ?? false;
   const isDismissed = options?.isDismissed ?? isBannersDismissed();
 
   // If banners are dismissed by the user (24h cooldown), show no banners
@@ -132,20 +131,51 @@ export const selectPageBanner = (
     return null;
   }
 
-  // If in frequency-capped mode and the cooldown/cap is currently reached, show no banners
-  if (experiments?.frequencyVariant === 'frequency_capped' && isFrequencyCapped) {
-    return null;
+  // Auction page: vertical banner is ALWAYS shown unless dismissed or IHAQ is already enabled
+  if (page === 'auction') {
+    const bidsConfig = placementsConfig.auction_bids;
+    if (options?.placementsConfig && !bidsConfig) {
+      return null;
+    }
+    if (bidsConfig && bidsConfig.coefficient <= 0) {
+      return null;
+    }
+
+    if (isIhaqEnabled) {
+      return null;
+    }
+
+    const chosenCreative =
+      options?.forcedCreative ??
+      getNextVerticalBannerCreative({
+        creativesById,
+        advance: options?.advanceRotation ?? true,
+        forceNew: options?.forceNewRotation ?? false,
+      });
+
+    if (!chosenCreative) {
+      return null;
+    }
+
+    const url = buildBannerUrl({
+      placement: 'auction_bids',
+      creative: chosenCreative,
+      page: 'auction',
+      baseUrl,
+      utmSource,
+    });
+
+    return {
+      placement: 'auction_bids',
+      creative: chosenCreative,
+      url,
+    };
   }
 
   const candidatePlacements = (
     Object.entries(placementsConfig) as [BannerPlacement, BannerPlacementConfig][]
-  ).filter(([placementKey, config]) => {
-    if (!config || config.page !== page) {
-      return false;
-    }
-
-    // Auction slot is only eligible when the slots experiment variant is 'auction_slot'
-    if (placementKey === 'auction_integrations' && experiments?.slotsVariant !== 'auction_slot') {
+  ).filter(([_, config]) => {
+    if (!config || config.page !== page || config.coefficient <= 0) {
       return false;
     }
 
@@ -157,36 +187,27 @@ export const selectPageBanner = (
     return eligibleCreatives.length > 0;
   });
 
-  const passingPlacements: BannerPlacement[] = [];
-
-  for (const [placementKey, config] of candidatePlacements) {
-    const isGuaranteedInFrequencyCapped = experiments?.frequencyVariant === 'frequency_capped';
-    const effectiveProbability = isGuaranteedInFrequencyCapped
-      ? 1
-      : Math.min(1, Math.max(0, config.coefficient * globalMultiplier));
-
-    if (effectiveProbability > 0 && (isGuaranteedInFrequencyCapped || random() < effectiveProbability)) {
-      passingPlacements.push(placementKey);
-    }
-  }
-
-  if (passingPlacements.length === 0) {
+  if (candidatePlacements.length === 0) {
     return null;
   }
 
-  const chosenPlacement = passingPlacements[Math.floor(random() * passingPlacements.length)];
-  const chosenConfig = placementsConfig[chosenPlacement];
-  if (!chosenConfig) {
+  // Roll against effective probability
+  const chosenIndex = Math.floor(random() * candidatePlacements.length);
+  const [chosenPlacement, chosenPlacementConfig] = candidatePlacements[chosenIndex];
+
+  const effectiveProbability = Math.min(1, chosenPlacementConfig.coefficient * globalMultiplier);
+  if (random() >= effectiveProbability) {
     return null;
   }
 
-  const eligibleCreatives = getEligibleWeightedCreatives(chosenConfig, {
+  const eligibleCreatives = getEligibleWeightedCreatives(chosenPlacementConfig, {
     creativesBySize,
     creativesById,
     isIhaqEnabled,
   });
 
-  const chosenCreative = pickWeightedCreative(eligibleCreatives, random);
+  const chosenCreative =
+    options?.forcedCreative ?? pickWeightedCreative(eligibleCreatives, random);
   if (!chosenCreative) {
     return null;
   }

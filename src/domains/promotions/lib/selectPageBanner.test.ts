@@ -1,10 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
-import { BANNER_CREATIVES_BY_SIZE } from '@domains/promotions/config/bannerRegistry';
+import { resetVerticalBannerRotation } from '@domains/promotions/lib/bannerRotationStore';
 import { selectPageBanner } from '@domains/promotions/lib/selectPageBanner';
 import { BannerCreative, BannerPlacement, BannerPlacementConfig } from '@domains/promotions/model/types';
 
 describe('selectPageBanner with IHAQ filtering', () => {
+  beforeEach(() => {
+    resetVerticalBannerRotation();
+  });
+
   it('returns an active banner when isIhaqEnabled is false and probability passes', () => {
     const banner = selectPageBanner('settings', {
       globalMultiplier: 1,
@@ -59,6 +63,7 @@ describe('selectPageBanner with IHAQ filtering', () => {
         '800x110': [partnerCreative, regularCreative],
         '320x165': [],
         '500x80': [],
+        '260x400': [],
       },
       globalMultiplier: 1,
       random: () => 0,
@@ -103,6 +108,7 @@ describe('selectPageBanner with IHAQ filtering', () => {
         '800x110': [ihaqOnly800],
         '320x165': [nonIhaq320],
         '500x80': [],
+        '260x400': [],
       },
       globalMultiplier: 1,
       random: () => 0,
@@ -115,70 +121,46 @@ describe('selectPageBanner with IHAQ filtering', () => {
   });
 });
 
-describe('selectPageBanner with AB Experiments', () => {
-  it('excludes auction_integrations when slotsVariant is standard', () => {
-    const banner = selectPageBanner('auction', {
-      globalMultiplier: 1,
-      random: () => 0.01,
-      isIhaqEnabled: false,
-      experiments: {
-        frequencyVariant: 'probabilistic',
-        slotsVariant: 'standard',
-        frequencyParams: { maxImpressions: 3, windowMs: 86400000 },
-      },
-    });
+describe('selectPageBanner on auction page', () => {
+  beforeEach(() => {
+    resetVerticalBannerRotation();
+  });
 
+  it('always shows vertical banner on the main page and rotates promo -> widget (Word) -> promo -> widget (DM)', () => {
+    const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    expect(banner1?.placement).toBe('auction_bids');
+    expect(banner1?.creative.id).toBe('Point_260');
+
+    const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    expect(banner2?.placement).toBe('auction_bids');
+    expect(banner2?.creative.id).toBe('Word_260');
+
+    const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    expect(banner3?.placement).toBe('auction_bids');
+    expect(banner3?.creative.id).toBe('Point_260');
+
+    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    expect(banner4?.placement).toBe('auction_bids');
+    expect(banner4?.creative.id).toBe('DM_260');
+  });
+
+  it('returns null on auction page when dismissed', () => {
+    const banner = selectPageBanner('auction', { isIhaqEnabled: false, isDismissed: true });
     expect(banner).toBeNull();
   });
 
-  it('includes auction_integrations when slotsVariant is auction_slot', () => {
-    const banner = selectPageBanner('auction', {
-      globalMultiplier: 1,
-      random: () => 0.01,
-      isIhaqEnabled: false,
-      experiments: {
-        frequencyVariant: 'probabilistic',
-        slotsVariant: 'auction_slot',
-        frequencyParams: { maxImpressions: 3, windowMs: 86400000 },
-      },
-    });
-
-    expect(banner).not.toBeNull();
-    expect(banner?.placement).toBe('auction_integrations');
-  });
-
-  it('returns null when frequencyVariant is frequency_capped and isFrequencyCapped is true', () => {
-    const banner = selectPageBanner('settings', {
-      globalMultiplier: 1,
-      random: () => 0.01,
-      isIhaqEnabled: false,
-      isFrequencyCapped: true,
-      experiments: {
-        frequencyVariant: 'frequency_capped',
-        slotsVariant: 'standard',
-        frequencyParams: { maxImpressions: 3, windowMs: 86400000 },
-      },
-    });
-
+  it('returns null on auction page when IHAQ is already enabled', () => {
+    const banner = selectPageBanner('auction', { isIhaqEnabled: true });
     expect(banner).toBeNull();
   });
 
-  it('returns active banner when frequencyVariant is frequency_capped and isFrequencyCapped is false', () => {
-    const banner = selectPageBanner('settings', {
-      globalMultiplier: 1,
-      random: () => 0.99, // In probabilistic this might fail with lower coef, but frequency_capped guarantees display
-      isIhaqEnabled: false,
-      isFrequencyCapped: false,
-      experiments: {
-        frequencyVariant: 'frequency_capped',
-        slotsVariant: 'standard',
-        frequencyParams: { maxImpressions: 3, windowMs: 86400000 },
-      },
-    });
-
-    expect(banner).not.toBeNull();
+  it('returns null for disabled placements on other pages like overlays or history', () => {
+    expect(selectPageBanner('overlays', { isIhaqEnabled: false })).toBeNull();
+    expect(selectPageBanner('history', { isIhaqEnabled: false })).toBeNull();
   });
+});
 
+describe('selectPageBanner dismissal', () => {
   it('returns null when isDismissed is true', () => {
     const banner = selectPageBanner('settings', {
       globalMultiplier: 1,

@@ -1,7 +1,5 @@
 import { useMemo, useState, type CSSProperties } from 'react';
 
-import { PromotionBanner } from '@domains/promotions/ui/PromotionBanner';
-
 import {
   sortParticipantScores,
   type LeaderboardSort,
@@ -96,7 +94,7 @@ const AuctionLeaderboardPanel = ({
         onSortChange={setSort}
         onExpandedChange={setIsExpanded}
       />
-      <div className='grid min-h-0 gap-3 xl:grid-rows-[minmax(0,1fr)_auto_auto]'>
+      <div className='grid min-h-0 gap-3 xl:grid-rows-[minmax(0,1fr)_auto]'>
         <ContributionBreakdownCard
           totals={totals}
           pointsShare={pointsShare}
@@ -104,7 +102,6 @@ const AuctionLeaderboardPanel = ({
           className='xl:h-full'
         />
         <AuctionsHighlights highlights={highlights} />
-        <PromotionBanner placement='history_bottom' className='w-full max-w-[500px]' />
       </div>
     </div>
   );

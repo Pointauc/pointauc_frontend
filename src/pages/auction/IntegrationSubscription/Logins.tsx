@@ -3,8 +3,6 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as Integration from '@models/integration';
-import { usePromotionBanner } from '@domains/promotions/lib/usePromotionBanner';
-import { PromotionBanner } from '@domains/promotions/ui/PromotionBanner';
 import IntegrationConnectButton from '@pages/auction/IntegrationSubscription/IntegrationConnectButton.tsx';
 import IntegrationLoginGroup from '@pages/auction/IntegrationSubscription/IntegrationLoginGroup.tsx';
 
@@ -22,24 +20,15 @@ interface IntegrationSubscriptionLoginsProps {
 const IntegrationSubscriptionLogins = ({ integrations }: IntegrationSubscriptionLoginsProps) => {
   const { t } = useTranslation();
   const [isModalOpened, setIsModalOpened] = useState(false);
-  const { isVisible: isAuctionBannerVisible, banner: auctionBanner } = usePromotionBanner('auction_integrations');
-  const isIhaqReplacedByBanner = isAuctionBannerVisible && Boolean(auctionBanner);
 
   const partnerIntegrations = useMemo(
     () => integrations.filter((integration) => integration.branding.partner),
     [integrations],
   );
-  const regularIntegrations = useMemo(
-    () => integrations.filter((integration) => !integration.branding.partner),
-    [integrations],
-  );
 
   const connectButtonIntegrations = useMemo(() => {
-    if (isIhaqReplacedByBanner) {
-      return sortIntegrationsByPartner(integrations);
-    }
-    return regularIntegrations;
-  }, [integrations, isIhaqReplacedByBanner, regularIntegrations]);
+    return sortIntegrationsByPartner(integrations);
+  }, [integrations]);
 
   const modalChannelPointIntegrations = useMemo(
     () => sortIntegrationsByPartner(integrations.filter((integration) => integration.type === 'points')),
@@ -59,12 +48,9 @@ const IntegrationSubscriptionLogins = ({ integrations }: IntegrationSubscription
       <Stack gap='sm' className='mt-1'>
         {partnerIntegrations.length > 0 &&
           partnerIntegrations.map((integration) => {
-            if (integration.id === 'ihaq' && isIhaqReplacedByBanner) {
-              return (
-                <div key={integration.id} className='min-w-0'>
-                  <PromotionBanner placement='auction_integrations' className='w-full' />
-                </div>
-              );
+            // Temporarily remove IHAQ button even when the banner is closed
+            if (integration.id === 'ihaq') {
+              return null;
             }
 
             return (
