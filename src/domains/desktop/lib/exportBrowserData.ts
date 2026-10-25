@@ -9,6 +9,7 @@ import {
 export const KNOWN_POINTAUC_DATABASES: readonly string[] = [
   'pointauc-archive',
   'pointauc-auction-history',
+  'pointauc-auction-history-v2',
   'pointauc-rules',
   'pointauc-app-settings',
   'pointauc-user-settings',

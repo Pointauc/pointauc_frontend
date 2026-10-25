@@ -4,7 +4,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { backendApi } from '@api/backendApi';
 
-import indexedDBAdapter, { AuctionHistoryDatabase, IndexedDBAdapter } from '../api/IndexedDBAdapter';
+import indexedDBAdapter, {
+  AuctionHistoryDatabase,
+  IndexedDBAdapter,
+  LegacyAuctionHistoryDatabase,
+} from '../api/IndexedDBAdapter';
 import { HybridAuctionHistoryAdapter } from '../api/HybridAuctionHistoryAdapter';
 
 import {
@@ -763,20 +767,12 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
     expect(cBob.totalPoints).toBe(500);
   });
 
-  it('Scenario 7: Dexie V1 to V2 Schema Upgrade preserves existing records and migrates syncKey', async () => {
-    const upgradeDbName = `test-v1-upgrade-${Date.now()}-${Math.random()}`;
-    const rawDexieV1 = new Dexie(upgradeDbName);
-    rawDexieV1.version(1).stores({
-      auctions: 'id, name, startedAt, endedAt, selectionMethod',
-      lots: 'id, auctionId',
-      participants: 'id, platformKey, displayName, wonLotCount, auctionCount',
-      contributions:
-        'id, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId]',
-      winnerEvents: 'id, auctionId, lotId, status, createdAt, [auctionId+status]',
-    });
+  it('Scenario 7: Auto-migration from legacy V1 database to separate V2 database preserves records and populates syncKey', async () => {
+    const legacyDbName = `test-legacy-v1-${Date.now()}-${Math.random()}`;
+    const legacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
 
-    await rawDexieV1.open();
-    await rawDexieV1.table('auctions').put({
+    await legacyDb.open();
+    await legacyDb.auctions.put({
       id: AUCTION_A_ID,
       name: 'Legacy V1 Auction',
       requestsKind: 'any',
@@ -793,7 +789,7 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
       createdAt: '2026-09-01T11:00:00.000Z',
       schemaVersion: 1,
     });
-    await rawDexieV1.table('participants').put({
+    await legacyDb.participants.put({
       id: 'twitch:bob',
       displayName: 'Bob Legacy',
       platformKey: 'twitch',
@@ -805,11 +801,14 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
       firstSeenAt: '2026-09-01T10:00:00.000Z',
       lastSeenAt: '2026-09-01T11:00:00.000Z',
     });
-    rawDexieV1.close();
+    legacyDb.close();
 
-    // Now open via AuctionHistoryDatabase (which runs .version(2).upgrade(...))
-    const upgradedDb = new AuctionHistoryDatabase(upgradeDbName);
-    const upgradedAdapter = new IndexedDBAdapter(upgradedDb);
+    // Now open separate V2 database and trigger auto-migration from legacy
+    const newDbName = `test-v2-auto-${Date.now()}-${Math.random()}`;
+    const newDb = new AuctionHistoryDatabase(newDbName);
+    const upgradedAdapter = new IndexedDBAdapter(newDb);
+
+    await upgradedAdapter.ensureMigratedFromLegacy(legacyDbName);
 
     const auctions = await upgradedAdapter.getAuctions(ANONYMOUS_USER_ID);
     expect(auctions).toHaveLength(1);
@@ -822,7 +821,15 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
     expect(participants[0].userId).toBe(ANONYMOUS_USER_ID);
     expect(participants[0].syncKey).toBe(`${ANONYMOUS_USER_ID}:twitch:bob`);
 
-    await upgradedDb.delete();
+    // Verify legacy DB is still at version 1 and untouched
+    const verifyLegacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
+    await verifyLegacyDb.open();
+    expect(verifyLegacyDb.verno).toBe(1);
+    expect(await verifyLegacyDb.auctions.count()).toBe(1);
+    verifyLegacyDb.close();
+
+    await newDb.delete();
+    await verifyLegacyDb.delete();
   });
 
   it('Scenario 8: Divergent Conflict Resolution with "remote" replaces local lots cleanly without zombies', async () => {
@@ -900,35 +907,14 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
     expect(lotIds).not.toContain('lot-a2-local-only');
   });
 
-  it('Scenario 9: Dexie V3 to V4 Schema Upgrade migrates contributions to raw bids while preserving old contributions store', async () => {
-    const upgradeDbName = `test-v3-upgrade-${Date.now()}-${Math.random()}`;
-    const rawDexieV3 = new Dexie(upgradeDbName);
-    rawDexieV3.version(1).stores({
-      auctions: 'id, name, startedAt, endedAt, selectionMethod',
-      lots: 'id, auctionId',
-      participants: 'id, platformKey, displayName, wonLotCount, auctionCount',
-      contributions:
-        'id, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId]',
-      winnerEvents: 'id, auctionId, lotId, status, createdAt, [auctionId+status]',
-    });
-    rawDexieV3.version(2).stores({
-      auctions: 'id, userId, name, startedAt, endedAt, selectionMethod, [userId+startedAt]',
-      lots: 'id, userId, auctionId, [userId+auctionId]',
-      userParticipants: 'syncKey, id, userId, platformKey, displayName, wonLotCount, auctionCount',
-      contributions:
-        'id, userId, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId], [userId+auctionId]',
-      winnerEvents: 'id, userId, auctionId, lotId, status, createdAt, [auctionId+status], [userId+auctionId]',
-      syncQueue: 'id, userId, operation, entityType, entityId, createdAt',
-    });
-    rawDexieV3.version(3).stores({
-      participants: null,
-    });
+  it('Scenario 9: Untouched Legacy Database & Non-Destructive Migration to Separate V2 Database', async () => {
+    const legacyDbName = `test-legacy-v1-${Date.now()}-${Math.random()}`;
+    const legacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
 
-    await rawDexieV3.open();
-    await rawDexieV3.table('auctions').put({
+    await legacyDb.open();
+    await legacyDb.auctions.put({
       id: AUCTION_A_ID,
-      userId: USER_101,
-      name: 'Legacy V3 Auction',
+      name: 'Legacy V1 Auction',
       requestsKind: 'any',
       startedAt: '2026-09-01T10:00:00.000Z',
       endedAt: '2026-09-01T11:00:00.000Z',
@@ -943,9 +929,23 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
       createdAt: '2026-09-01T11:00:00.000Z',
       schemaVersion: 1,
     });
-    await rawDexieV3.table('contributions').put({
+    await legacyDb.lots.put({
+      id: 'lot-a1',
+      auctionId: AUCTION_A_ID,
+      name: 'Legacy Game Lot',
+      totalAmount: 2000,
+      totalPoints: 500,
+      totalDonationCents: 1500,
+    });
+    await legacyDb.participants.put({
+      id: 'twitch:bob',
+      displayName: 'Bob',
+      platformKey: 'twitch',
+      auctionCount: 1,
+      wonLotCount: 1,
+    });
+    await legacyDb.contributions.put({
       id: `${AUCTION_A_ID}:lot-a1:twitch:bob`,
-      userId: USER_101,
       auctionId: AUCTION_A_ID,
       lotId: 'lot-a1',
       participantId: 'twitch:bob',
@@ -953,21 +953,53 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
       donationCents: 1500,
       bidsCount: 2,
     });
-    rawDexieV3.close();
+    await legacyDb.winnerEvents.put({
+      id: 'win-legacy-1',
+      auctionId: AUCTION_A_ID,
+      lotId: 'lot-a1',
+      method: 'wheel',
+      status: 'confirmed',
+      createdAt: '2026-09-01T11:00:00.000Z',
+    });
+    legacyDb.close();
 
-    // Now open via AuctionHistoryDatabase (runs version 4 upgrade)
-    const upgradedDb = new AuctionHistoryDatabase(upgradeDbName);
-    const upgradedAdapter = new IndexedDBAdapter(upgradedDb);
+    // Now open fresh separate V2 database
+    const v2DbName = `test-v2-db-${Date.now()}-${Math.random()}`;
+    const v2Db = new AuctionHistoryDatabase(v2DbName);
+    const v2Adapter = new IndexedDBAdapter(v2Db);
 
-    // 1. Verify old contributions store STILL exists and contains original record
-    const oldContributions = await upgradedDb.contributions.toArray();
+    // Perform migration from legacy DB
+    const migrationResult = await v2Adapter.migrateFromLegacyDatabase(USER_101, legacyDbName);
+    expect(migrationResult.migratedAuctionsCount).toBe(1);
+    expect(migrationResult.migratedBidsCount).toBe(2);
+
+    // 1. VERIFY LEGACY DB IS 100% UNTOUCHED
+    const verifyLegacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
+    await verifyLegacyDb.open();
+    expect(verifyLegacyDb.verno).toBe(1);
+
+    const oldAuctions = await verifyLegacyDb.auctions.toArray();
+    expect(oldAuctions).toHaveLength(1);
+    expect(oldAuctions[0].name).toBe('Legacy V1 Auction');
+
+    const oldContributions = await verifyLegacyDb.contributions.toArray();
     expect(oldContributions).toHaveLength(1);
     expect(oldContributions[0].id).toBe(`${AUCTION_A_ID}:lot-a1:twitch:bob`);
     expect(oldContributions[0].points).toBe(500);
     expect(oldContributions[0].donationCents).toBe(1500);
 
-    // 2. Verify new bids store contains the migrated raw bids
-    const migratedBids = await upgradedDb.bids.toArray();
+    const oldParticipants = await verifyLegacyDb.participants.toArray();
+    expect(oldParticipants).toHaveLength(1);
+    expect(oldParticipants[0].id).toBe('twitch:bob');
+
+    verifyLegacyDb.close();
+
+    // 2. VERIFY NEW V2 DB HAS CONVERTED DATA
+    const newAuctions = await v2Db.auctions.toArray();
+    expect(newAuctions).toHaveLength(1);
+    expect(newAuctions[0].userId).toBe(USER_101);
+
+    const migratedBids = await v2Db.bids.toArray();
     expect(migratedBids).toHaveLength(2);
 
     const pointsBid = migratedBids.find((b) => b.kind === 'points');
@@ -983,12 +1015,15 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
     expect(moneyBid?.currency).toBe('RUB');
     expect(moneyBid?.participantId).toBe('twitch:bob');
 
-    // 3. Verify getDetails returns both bids and contributions
-    const details = await upgradedAdapter.getDetails(AUCTION_A_ID, USER_101);
+    // 3. Verify getDetails on V2 adapter derives contributions from bids
+    const details = await v2Adapter.getDetails(AUCTION_A_ID, USER_101);
     expect(details?.bids).toHaveLength(2);
     expect(details?.contributions).toHaveLength(1);
+    expect(details?.contributions?.[0].points).toBe(500);
+    expect(details?.contributions?.[0].donationCents).toBe(1500);
 
-    await upgradedDb.delete();
+    await v2Db.delete();
+    await verifyLegacyDb.delete();
   });
 
   it('Scenario 10: Raw Bids Ledger Persistence with Kind, Amount Cents, Currency, and Range Totals', async () => {
@@ -1110,16 +1145,22 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
     );
     expect(rangeDetails.bids).toHaveLength(2);
 
-    // 4. Verify no new writes to legacy contributions store
-    const contribsInDb = await db.contributions.where('auctionId').equals(rawBidsAuctionId).toArray();
-    expect(contribsInDb).toHaveLength(0);
+    // 4. Verify contributions are derived dynamically from bids
+    expect(details?.contributions).toHaveLength(2);
+    const bobContrib = details?.contributions?.find((c) => c.participantId === 'twitch:bob');
+    const aliceContrib = details?.contributions?.find((c) => c.participantId === 'twitch:alice');
+    expect(bobContrib?.points).toBe(1000);
+    expect(aliceContrib?.donationCents).toBe(1500);
   });
 
-  it('Scenario 11: restoreFromLegacyContributions restores legacy backup store without data loss', async () => {
+  it('Scenario 11: restoreFromLegacyDatabase restores from untouched legacy database without modifying it', async () => {
+    const legacyDbName = `test-legacy-restore-${Date.now()}-${Math.random()}`;
+    const legacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
+    await legacyDb.open();
+
     const legacyAuctionId = 'eeeeeeee-eeee-4eee-eeee-eeeeeeeeeeee';
-    await db.auctions.put({
+    await legacyDb.auctions.put({
       id: legacyAuctionId,
-      userId: USER_101,
       name: 'Legacy Backup Auction',
       requestsKind: 'any',
       startedAt: '2026-10-15T10:00:00.000Z',
@@ -1135,10 +1176,23 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
       createdAt: '2026-10-15T11:00:00.000Z',
       schemaVersion: 1,
     });
-
-    await db.contributions.put({
+    await legacyDb.lots.put({
+      id: 'lot-e1',
+      auctionId: legacyAuctionId,
+      name: 'Game E',
+      totalAmount: 3000,
+      totalPoints: 1000,
+      totalDonationCents: 2000,
+    });
+    await legacyDb.participants.put({
+      id: 'twitch:charlie',
+      displayName: 'Charlie',
+      platformKey: 'twitch',
+      auctionCount: 1,
+      wonLotCount: 0,
+    });
+    await legacyDb.contributions.put({
       id: 'contrib-legacy-1',
-      userId: USER_101,
       auctionId: legacyAuctionId,
       lotId: 'lot-e1',
       participantId: 'twitch:charlie',
@@ -1146,14 +1200,26 @@ describe('Auction History Hybrid Storage & Multi-Device Sync (integration)', () 
       donationCents: 2000,
       bidsCount: 2,
     });
+    legacyDb.close();
 
-    const restoredCount = await localAdapter.restoreFromLegacyContributions(USER_101);
+    const restoredCount = await localAdapter.restoreFromLegacyContributions(USER_101, legacyDbName);
     expect(restoredCount).toBe(2);
 
     const restoredBids = await db.bids.where('auctionId').equals(legacyAuctionId).toArray();
     expect(restoredBids).toHaveLength(2);
     expect(restoredBids.some((b) => b.kind === 'points' && b.amount_cents === 1000)).toBe(true);
     expect(restoredBids.some((b) => b.kind === 'money' && b.amount_cents === 2000 && b.currency === 'RUB')).toBe(true);
+
+    // Verify legacy DB was NOT modified
+    const verifyLegacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
+    await verifyLegacyDb.open();
+    const legacyContribs = await verifyLegacyDb.contributions.toArray();
+    expect(legacyContribs).toHaveLength(1);
+    expect(legacyContribs[0].points).toBe(1000);
+    expect(legacyContribs[0].donationCents).toBe(2000);
+
+    verifyLegacyDb.close();
+    await verifyLegacyDb.delete();
   });
 });
 

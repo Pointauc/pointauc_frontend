@@ -5,7 +5,7 @@
 The Auction History domain provides historical tracking and visualization of completed auctions, lots, participant contributions, and winner selections.
 
 To ensure seamless operation regardless of network connectivity, the frontend employs an **offline-first hybrid architecture**:
-- **Local Persistence**: Dexie.js (IndexedDB `pointauc-auction-history`, Schema Version 2).
+- **Local Persistence**: Dexie.js (IndexedDB `pointauc-auction-history-v2` for active raw bids ledger, and untouched `pointauc-auction-history` for legacy historical backup).
 - **Remote Synchronization**: REST endpoints at `/api/auction-history` on `pointauc_backend`.
 
 ---
@@ -45,20 +45,27 @@ All UI hooks and business logic interact with `AuctionHistoryApi`:
 
 ---
 
-## 2. Multi-User Scoping & Dexie Schema Versioning
+## 2. Multi-User Scoping & Dedicated Database Architecture
 
-### Dexie Schema Evolution (V1 -> V4)
-The database schema (`pointauc-auction-history`) includes `userId` indexing and raw bids tracking:
+### Preserved Legacy Database (`pointauc-auction-history`)
+To guarantee complete zero-risk data safety, the pre-existing database `pointauc-auction-history` is left in its original Schema V1 state. It is **never** upgraded in-place or mutated by schema migrations:
+- `auctions`: `'id, name, startedAt, endedAt, selectionMethod'`
+- `lots`: `'id, auctionId'`
+- `participants`: `'id, platformKey, displayName, wonLotCount, auctionCount'`
+- `contributions`: `'id, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId]'`
+- `winnerEvents`: `'id, auctionId, lotId, status, createdAt, [auctionId+status]'`
+
+### New Dedicated Database (`pointauc-auction-history-v2`)
+All active operations occur in a dedicated database `pointauc-auction-history-v2`:
 - `auctions`: `'id, userId, name, startedAt, endedAt, selectionMethod, [userId+startedAt]'`
 - `lots`: `'id, userId, auctionId, [userId+auctionId]'`
 - `bids`: `'id, userId, auctionId, lotId, participantId, kind, [userId+auctionId], [auctionId+lotId], [auctionId+participantId], createdAt'`
 - `userParticipants`: `'syncKey, id, userId, platformKey, displayName, wonLotCount, auctionCount'`
 - `winnerEvents`: `'id, userId, auctionId, lotId, status, createdAt, [auctionId+status], [userId+auctionId]'`
 - `syncQueue`: `'id, userId, operation, entityType, entityId, createdAt'`
-- `contributions` *(Legacy Backup Store)*: `'id, userId, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId], [userId+auctionId]'`
 
 > [!NOTE]
-> The `contributions` store is retained in Dexie V4 as a historical backup store. New snapshots write exclusively to `bids`. If needed, `indexedDBAdapter.restoreFromLegacyContributions(userId)` can re-populate raw bids from this backup store.
+> On initial startup, `indexedDBAdapter.ensureMigratedFromLegacy()` performs a non-destructive copy from the untouched `pointauc-auction-history` database into `pointauc-auction-history-v2`. Legacy contributions are converted into raw bids. If manual re-import is ever needed, `indexedDBAdapter.restoreFromLegacyDatabase(userId)` is available.
 
 ### User Context Resolution
 - **Logged in**: `userId` is the string representation of `state.user.pointaucUserId` (or `state.user.userId`).

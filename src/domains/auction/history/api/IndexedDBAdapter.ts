@@ -2,7 +2,11 @@ import Dexie, { type EntityTable } from 'dexie';
 
 import i18n from '@assets/i18n';
 
-import { AUCTION_HISTORY_DB_NAME } from '../model/constants';
+import {
+  AUCTION_HISTORY_DB_NAME,
+  AUCTION_HISTORY_LEGACY_DB_NAME,
+  AUCTION_HISTORY_NEW_DB_NAME,
+} from '../model/constants';
 import { resolveNextDefaultAuctionName } from '../lib/derived';
 import { ANONYMOUS_USER_ID, getActiveUserId, getLastActiveUserId } from '../lib/userContext';
 
@@ -19,22 +23,35 @@ import type {
   SyncQueueItem,
 } from '../model/types';
 
-export class AuctionHistoryDatabase extends Dexie {
+export interface LegacyAuctionHistoryParticipant {
+  id: string;
+  userId?: string;
+  displayName: string;
+  platformKey: Bid.Source | 'unknown';
+  auctionCount: number;
+  wonLotCount: number;
+  bidCount?: number;
+  totalPoints?: number;
+  totalDonationCents?: number;
+  firstSeenAt?: string;
+  lastSeenAt?: string;
+}
+
+/**
+ * Legacy IndexedDB database ('pointauc-auction-history').
+ * Strictly preserved in Schema Version 1 state and never modified or upgraded.
+ */
+export class LegacyAuctionHistoryDatabase extends Dexie {
   auctions!: EntityTable<AuctionHistoryAuction, 'id'>;
   lots!: EntityTable<AuctionHistoryLot, 'id'>;
-  bids!: EntityTable<AuctionHistoryBid, 'id'>;
+  participants!: EntityTable<LegacyAuctionHistoryParticipant, 'id'>;
   contributions!: EntityTable<AuctionHistoryContribution, 'id'>;
   winnerEvents!: EntityTable<AuctionHistoryWinnerEvent, 'id'>;
-  syncQueue!: EntityTable<SyncQueueItem, 'id'>;
-  userParticipants!: EntityTable<AuctionHistoryParticipant, 'syncKey'>;
 
-  get participants(): EntityTable<AuctionHistoryParticipant, 'syncKey'> {
-    return this.userParticipants;
-  }
-
-  constructor(dbName = AUCTION_HISTORY_DB_NAME) {
+  constructor(dbName = AUCTION_HISTORY_LEGACY_DB_NAME) {
     super(dbName);
 
+    // Strictly preserved legacy Schema V1. Never upgraded or mutated.
     this.version(1).stores({
       auctions: 'id, name, startedAt, endedAt, selectionMethod',
       lots: 'id, auctionId',
@@ -43,145 +60,289 @@ export class AuctionHistoryDatabase extends Dexie {
         'id, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId]',
       winnerEvents: 'id, auctionId, lotId, status, createdAt, [auctionId+status]',
     });
+  }
+}
 
-    this.version(2)
-      .stores({
-        auctions: 'id, userId, name, startedAt, endedAt, selectionMethod, [userId+startedAt]',
-        lots: 'id, userId, auctionId, [userId+auctionId]',
-        userParticipants: 'syncKey, id, userId, platformKey, displayName, wonLotCount, auctionCount',
-        contributions:
-          'id, userId, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId], [userId+auctionId]',
-        winnerEvents: 'id, userId, auctionId, lotId, status, createdAt, [auctionId+status], [userId+auctionId]',
-        syncQueue: 'id, userId, operation, entityType, entityId, createdAt',
-      })
-      .upgrade(async (tx) => {
-        const defaultUserId = getLastActiveUserId() || ANONYMOUS_USER_ID;
+/**
+ * Dedicated IndexedDB database for raw bids ledger ('pointauc-auction-history-v2').
+ */
+export class AuctionHistoryDatabase extends Dexie {
+  auctions!: EntityTable<AuctionHistoryAuction, 'id'>;
+  lots!: EntityTable<AuctionHistoryLot, 'id'>;
+  bids!: EntityTable<AuctionHistoryBid, 'id'>;
+  winnerEvents!: EntityTable<AuctionHistoryWinnerEvent, 'id'>;
+  syncQueue!: EntityTable<SyncQueueItem, 'id'>;
+  userParticipants!: EntityTable<AuctionHistoryParticipant, 'syncKey'>;
 
-        // Migrating legacy participants: copy to userParticipants table with syncKey
-        try {
-          const oldParticipants = await tx.table('participants').toArray();
-          if (oldParticipants.length > 0) {
-            const migrated = oldParticipants.map((item) => {
-              const userId = item.userId || defaultUserId;
-              return {
-                ...item,
-                userId,
-                syncKey: item.syncKey || `${userId}:${item.id}`,
-              };
-            });
-            await tx.table('userParticipants').bulkPut(migrated);
-          }
-        } catch {
-          // table might not exist on clean installs
-        }
+  get participants(): EntityTable<AuctionHistoryParticipant, 'syncKey'> {
+    return this.userParticipants;
+  }
 
-        await Promise.all([
-          tx.table('auctions').toCollection().modify((item) => {
-            if (!item.userId) item.userId = defaultUserId;
-          }),
-          tx.table('lots').toCollection().modify((item) => {
-            if (!item.userId) item.userId = defaultUserId;
-          }),
-          tx.table('contributions').toCollection().modify((item) => {
-            if (!item.userId) item.userId = defaultUserId;
-          }),
-          tx.table('winnerEvents').toCollection().modify((item) => {
-            if (!item.userId) item.userId = defaultUserId;
-          }),
-        ]);
-      });
+  constructor(dbName = AUCTION_HISTORY_NEW_DB_NAME) {
+    super(dbName);
 
-    this.version(3).stores({
-      participants: null,
+    this.version(1).stores({
+      auctions: 'id, userId, name, startedAt, endedAt, selectionMethod, [userId+startedAt]',
+      lots: 'id, userId, auctionId, [userId+auctionId]',
+      userParticipants: 'syncKey, id, userId, platformKey, displayName, wonLotCount, auctionCount',
+      bids:
+        'id, userId, auctionId, lotId, participantId, kind, [userId+auctionId], [auctionId+lotId], [auctionId+participantId], createdAt',
+      winnerEvents: 'id, userId, auctionId, lotId, status, createdAt, [auctionId+status], [userId+auctionId]',
+      syncQueue: 'id, userId, operation, entityType, entityId, createdAt',
     });
-
-    this.version(4)
-      .stores({
-        auctions: 'id, userId, name, startedAt, endedAt, selectionMethod, [userId+startedAt]',
-        lots: 'id, userId, auctionId, [userId+auctionId]',
-        userParticipants: 'syncKey, id, userId, platformKey, displayName, wonLotCount, auctionCount',
-        contributions:
-          'id, userId, auctionId, lotId, participantId, [auctionId+participantId], [lotId+participantId], [auctionId+lotId], [userId+auctionId]',
-        bids:
-          'id, userId, auctionId, lotId, participantId, kind, [userId+auctionId], [auctionId+lotId], [auctionId+participantId], createdAt',
-        winnerEvents: 'id, userId, auctionId, lotId, status, createdAt, [auctionId+status], [userId+auctionId]',
-        syncQueue: 'id, userId, operation, entityType, entityId, createdAt',
-      })
-      .upgrade(async (tx) => {
-        try {
-          const oldContributions = await tx.table('contributions').toArray();
-          if (oldContributions.length > 0) {
-            const auctions = await tx.table('auctions').toArray();
-            const auctionMap = new Map(auctions.map((a) => [a.id, a]));
-            const defaultUserId = getLastActiveUserId() || ANONYMOUS_USER_ID;
-            const migratedBids: AuctionHistoryBid[] = [];
-
-            for (const c of oldContributions) {
-              const auction = auctionMap.get(c.auctionId);
-              const userId = c.userId || auction?.userId || defaultUserId;
-              const defaultCreatedAt = auction?.endedAt || auction?.startedAt || new Date().toISOString();
-
-              if (c.points > 0) {
-                migratedBids.push({
-                  id: `${c.id}:migrated:points`,
-                  userId,
-                  auctionId: c.auctionId,
-                  lotId: c.lotId,
-                  participantId: c.participantId,
-                  kind: 'points',
-                  amount_cents: c.points,
-                  amountCents: c.points,
-                  currency: null,
-                  createdAt: defaultCreatedAt,
-                });
-              }
-              if (c.donationCents > 0) {
-                migratedBids.push({
-                  id: `${c.id}:migrated:money`,
-                  userId,
-                  auctionId: c.auctionId,
-                  lotId: c.lotId,
-                  participantId: c.participantId,
-                  kind: 'money',
-                  amount_cents: c.donationCents,
-                  amountCents: c.donationCents,
-                  currency: 'RUB',
-                  createdAt: defaultCreatedAt,
-                });
-              }
-              if (c.points === 0 && c.donationCents === 0) {
-                migratedBids.push({
-                  id: `${c.id}:migrated:bid`,
-                  userId,
-                  auctionId: c.auctionId,
-                  lotId: c.lotId,
-                  participantId: c.participantId,
-                  kind: 'points',
-                  amount_cents: 0,
-                  amountCents: 0,
-                  currency: null,
-                  createdAt: defaultCreatedAt,
-                });
-              }
-            }
-
-            if (migratedBids.length > 0) {
-              await tx.table('bids').bulkPut(migratedBids);
-            }
-          }
-        } catch {
-          // Table might not exist on clean installs or already migrated
-        }
-      });
   }
 }
 
 export class IndexedDBAdapter extends AuctionHistoryApi {
   public db: AuctionHistoryDatabase;
+  private migrationPromise: Promise<{ migratedAuctionsCount: number; migratedBidsCount: number }> | null = null;
 
   constructor(db?: AuctionHistoryDatabase) {
     super();
     this.db = db ?? new AuctionHistoryDatabase();
+  }
+
+  /**
+   * Lazily triggers a non-destructive one-time migration from the untouched legacy
+   * database ('pointauc-auction-history') to the new database ('pointauc-auction-history-v2').
+   */
+  async ensureMigratedFromLegacy(
+    legacyDbName = AUCTION_HISTORY_LEGACY_DB_NAME,
+  ): Promise<{ migratedAuctionsCount: number; migratedBidsCount: number }> {
+    // Only auto-migrate for standard production DBs to prevent unexpected test interference
+    if (this.db.name !== AUCTION_HISTORY_NEW_DB_NAME && legacyDbName === AUCTION_HISTORY_LEGACY_DB_NAME) {
+      return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+    }
+
+    if (this.migrationPromise) {
+      return this.migrationPromise;
+    }
+
+    this.migrationPromise = (async () => {
+      try {
+        const legacyExists = await Dexie.exists(legacyDbName);
+        if (!legacyExists) {
+          return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+        }
+
+        const count = await this.db.auctions.count();
+        if (count > 0) {
+          return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+        }
+
+        const defaultUserId = getLastActiveUserId() || ANONYMOUS_USER_ID;
+        return await this.migrateFromLegacyDatabase(defaultUserId, legacyDbName);
+      } catch (err) {
+        console.warn('Auto migration from legacy auction history DB failed:', err);
+        return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+      }
+    })();
+
+    return this.migrationPromise;
+  }
+
+  /**
+   * Performs a non-destructive copy of data from the untouched legacy database
+   * ('pointauc-auction-history') to the new database ('pointauc-auction-history-v2').
+   * Legacy contributions are converted into raw bids with kind, amount_cents, currency ('RUB' for money).
+   *
+   * The legacy database is opened strictly read-only and is left 100% untouched.
+   */
+  async migrateFromLegacyDatabase(
+    targetUserId = getLastActiveUserId() || ANONYMOUS_USER_ID,
+    legacyDbName = AUCTION_HISTORY_LEGACY_DB_NAME,
+    force = false,
+  ): Promise<{ migratedAuctionsCount: number; migratedBidsCount: number }> {
+    const legacyExists = await Dexie.exists(legacyDbName);
+    if (!legacyExists) {
+      return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+    }
+
+    const legacyDb = new LegacyAuctionHistoryDatabase(legacyDbName);
+    try {
+      await legacyDb.open();
+
+      const [legacyAuctions, legacyLots, legacyParticipants, legacyContributions, legacyWinnerEvents] =
+        await Promise.all([
+          legacyDb.auctions.toArray(),
+          legacyDb.lots.toArray(),
+          legacyDb.participants.toArray(),
+          legacyDb.contributions.toArray(),
+          legacyDb.winnerEvents.toArray(),
+        ]);
+
+      if (legacyAuctions.length === 0) {
+        return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+      }
+
+      const existingAuctionIds = force
+        ? new Set<string>()
+        : new Set((await this.db.auctions.toCollection().primaryKeys()) as string[]);
+
+      const auctionsToMigrate = legacyAuctions.filter((a) => !existingAuctionIds.has(a.id));
+      if (auctionsToMigrate.length === 0) {
+        return { migratedAuctionsCount: 0, migratedBidsCount: 0 };
+      }
+
+      const auctionIdsToMigrate = new Set(auctionsToMigrate.map((a) => a.id));
+      const auctionMap = new Map(legacyAuctions.map((a) => [a.id, a]));
+
+      const scopedAuctions = auctionsToMigrate.map((a) => ({
+        ...a,
+        userId: a.userId || targetUserId,
+      }));
+
+      const scopedLots = legacyLots
+        .filter((l) => auctionIdsToMigrate.has(l.auctionId))
+        .map((l) => ({
+          ...l,
+          userId: l.userId || targetUserId,
+        }));
+
+      const scopedWinnerEvents = legacyWinnerEvents
+        .filter((w) => auctionIdsToMigrate.has(w.auctionId))
+        .map((w) => ({
+          ...w,
+          userId: w.userId || targetUserId,
+        }));
+
+      const migratedBids: AuctionHistoryBid[] = [];
+      for (const c of legacyContributions) {
+        if (!auctionIdsToMigrate.has(c.auctionId)) continue;
+        const auction = auctionMap.get(c.auctionId);
+        const userId = c.userId || auction?.userId || targetUserId;
+        const defaultCreatedAt = auction?.endedAt || auction?.startedAt || new Date().toISOString();
+
+        if (c.points > 0) {
+          migratedBids.push({
+            id: `${c.id}:migrated:points`,
+            userId,
+            auctionId: c.auctionId,
+            lotId: c.lotId,
+            participantId: c.participantId,
+            kind: 'points',
+            amount_cents: c.points,
+            amountCents: c.points,
+            currency: null,
+            createdAt: defaultCreatedAt,
+          });
+        }
+        if (c.donationCents > 0) {
+          migratedBids.push({
+            id: `${c.id}:migrated:money`,
+            userId,
+            auctionId: c.auctionId,
+            lotId: c.lotId,
+            participantId: c.participantId,
+            kind: 'money',
+            amount_cents: c.donationCents,
+            amountCents: c.donationCents,
+            currency: 'RUB',
+            createdAt: defaultCreatedAt,
+          });
+        }
+        if (c.points === 0 && c.donationCents === 0) {
+          migratedBids.push({
+            id: `${c.id}:migrated:bid`,
+            userId,
+            auctionId: c.auctionId,
+            lotId: c.lotId,
+            participantId: c.participantId,
+            kind: 'points',
+            amount_cents: 0,
+            amountCents: 0,
+            currency: null,
+            createdAt: defaultCreatedAt,
+          });
+        }
+      }
+
+      const participantMap = new Map<string, AuctionHistoryParticipant>();
+      for (const p of legacyParticipants) {
+        participantMap.set(p.id, {
+          ...p,
+          userId: p.userId || targetUserId,
+          syncKey: `${p.userId || targetUserId}:${p.id}`,
+          bidCount: p.bidCount || 0,
+          totalPoints: p.totalPoints || 0,
+          totalDonationCents: p.totalDonationCents || 0,
+          firstSeenAt: p.firstSeenAt || new Date().toISOString(),
+          lastSeenAt: p.lastSeenAt || new Date().toISOString(),
+        });
+      }
+
+      for (const b of migratedBids) {
+        let p = participantMap.get(b.participantId);
+        if (!p) {
+          p = {
+            id: b.participantId,
+            syncKey: `${b.userId}:${b.participantId}`,
+            userId: b.userId,
+            displayName: b.participantId.includes(':') ? b.participantId.split(':')[1] : b.participantId,
+            platformKey: (b.participantId.includes(':') ? b.participantId.split(':')[0] : 'unknown') as any,
+            auctionCount: 1,
+            wonLotCount: 0,
+            bidCount: 0,
+            totalPoints: 0,
+            totalDonationCents: 0,
+            firstSeenAt: b.createdAt,
+            lastSeenAt: b.createdAt,
+          };
+          participantMap.set(b.participantId, p);
+        }
+        p.bidCount += 1;
+        const amt = Number(b.amount_cents || 0);
+        if (b.kind === 'points') {
+          p.totalPoints += amt;
+        } else {
+          p.totalDonationCents += amt;
+        }
+      }
+
+      const migratedParticipants = Array.from(participantMap.values());
+
+      await this.db.transaction(
+        'rw',
+        [this.db.auctions, this.db.lots, this.db.bids, this.db.participants, this.db.winnerEvents],
+        async () => {
+          if (scopedAuctions.length > 0) await this.db.auctions.bulkPut(scopedAuctions);
+          if (scopedLots.length > 0) await this.db.lots.bulkPut(scopedLots);
+          if (migratedBids.length > 0) await this.db.bids.bulkPut(migratedBids);
+          if (scopedWinnerEvents.length > 0) await this.db.winnerEvents.bulkPut(scopedWinnerEvents);
+          if (migratedParticipants.length > 0) await this.db.participants.bulkPut(migratedParticipants);
+        },
+      );
+
+      return {
+        migratedAuctionsCount: scopedAuctions.length,
+        migratedBidsCount: migratedBids.length,
+      };
+    } finally {
+      legacyDb.close();
+    }
+  }
+
+  /**
+   * Explicitly restores / re-imports historical data from the legacy untouched database.
+   */
+  async restoreFromLegacyDatabase(
+    userId = getActiveUserId(),
+    legacyDbName = AUCTION_HISTORY_LEGACY_DB_NAME,
+    force = true,
+  ): Promise<{ restoredAuctionsCount: number; restoredBidsCount: number }> {
+    const result = await this.migrateFromLegacyDatabase(userId, legacyDbName, force);
+    return {
+      restoredAuctionsCount: result.migratedAuctionsCount,
+      restoredBidsCount: result.migratedBidsCount,
+    };
+  }
+
+  async restoreFromLegacyContributions(
+    userId = getActiveUserId(),
+    legacyDbName = AUCTION_HISTORY_LEGACY_DB_NAME,
+  ): Promise<number> {
+    const result = await this.restoreFromLegacyDatabase(userId, legacyDbName);
+    return result.restoredBidsCount;
   }
 
   deriveBidsFromContributions(
@@ -263,6 +424,7 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
   }
 
   async getAuctions(userId = getActiveUserId()): Promise<AuctionHistoryAuction[]> {
+    await this.ensureMigratedFromLegacy();
     const auctions = await this.db.auctions
       .where('userId')
       .equals(userId)
@@ -278,6 +440,7 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
     endAt: string,
     userId = getActiveUserId(),
   ): Promise<AuctionHistoryAuction[]> {
+    await this.ensureMigratedFromLegacy();
     const auctions = await this.db.auctions
       .where('userId')
       .equals(userId)
@@ -290,71 +453,15 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
   }
 
   async getParticipants(userId = getActiveUserId()): Promise<AuctionHistoryParticipant[]> {
+    await this.ensureMigratedFromLegacy();
     return this.db.participants
       .where('userId')
       .equals(userId)
       .toArray();
   }
 
-  async restoreFromLegacyContributions(userId = getActiveUserId()): Promise<number> {
-    const legacyContribs = await this.db.contributions.where('userId').equals(userId).toArray();
-    if (legacyContribs.length === 0) return 0;
-    const auctions = await this.db.auctions.where('userId').equals(userId).toArray();
-    const auctionMap = new Map(auctions.map((a) => [a.id, a]));
-    const restoredBids: AuctionHistoryBid[] = [];
-    for (const c of legacyContribs) {
-      const auction = auctionMap.get(c.auctionId);
-      const createdAt = auction?.endedAt || auction?.startedAt || new Date().toISOString();
-      if (c.points > 0) {
-        restoredBids.push({
-          id: `${c.id}:restored:points`,
-          userId,
-          auctionId: c.auctionId,
-          lotId: c.lotId,
-          participantId: c.participantId,
-          kind: 'points',
-          amount_cents: c.points,
-          amountCents: c.points,
-          currency: null,
-          createdAt,
-        });
-      }
-      if (c.donationCents > 0) {
-        restoredBids.push({
-          id: `${c.id}:restored:money`,
-          userId,
-          auctionId: c.auctionId,
-          lotId: c.lotId,
-          participantId: c.participantId,
-          kind: 'money',
-          amount_cents: c.donationCents,
-          amountCents: c.donationCents,
-          currency: 'RUB',
-          createdAt,
-        });
-      }
-      if (c.points === 0 && c.donationCents === 0) {
-        restoredBids.push({
-          id: `${c.id}:restored:bid`,
-          userId,
-          auctionId: c.auctionId,
-          lotId: c.lotId,
-          participantId: c.participantId,
-          kind: 'points',
-          amount_cents: 0,
-          amountCents: 0,
-          currency: null,
-          createdAt,
-        });
-      }
-    }
-    if (restoredBids.length > 0) {
-      await this.db.bids.bulkPut(restoredBids);
-    }
-    return restoredBids.length;
-  }
-
   async getDetails(auctionId: string, userId = getActiveUserId()): Promise<AuctionHistoryDetails | null> {
+    await this.ensureMigratedFromLegacy();
     const auction = await this.db.auctions.get(auctionId);
     if (!auction || (auction.userId && auction.userId !== userId)) {
       return null;
@@ -366,21 +473,11 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
       this.db.winnerEvents.where('auctionId').equals(auctionId).toArray(),
     ]);
 
-    let effectiveBids = bids;
-
-    // Self-healing: if bids is empty but old contributions exist in IndexedDB, restore bids
-    if (effectiveBids.length === 0) {
-      const legacyContributions = await this.db.contributions.where('auctionId').equals(auctionId).toArray();
-      if (legacyContributions.length > 0) {
-        effectiveBids = this.deriveBidsFromContributions(legacyContributions, auction.endedAt);
-      }
-    }
-
     return {
       auction,
       lots,
-      bids: effectiveBids,
-      contributions: this.deriveContributionsFromBids(effectiveBids),
+      bids,
+      contributions: this.deriveContributionsFromBids(bids),
       winnerEvents: winnerEvents.sort(
         (first, second) => new Date(first.createdAt).getTime() - new Date(second.createdAt).getTime(),
       ),
@@ -410,19 +507,10 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
       this.db.winnerEvents.where('auctionId').anyOf(auctionIds).toArray(),
     ]);
 
-    let effectiveBids = bids;
-
-    if (effectiveBids.length === 0) {
-      const legacyContributions = await this.db.contributions.where('auctionId').anyOf(auctionIds).toArray();
-      if (legacyContributions.length > 0) {
-        effectiveBids = this.deriveBidsFromContributions(legacyContributions, new Date().toISOString());
-      }
-    }
-
     return {
       lots,
-      bids: effectiveBids,
-      contributions: this.deriveContributionsFromBids(effectiveBids),
+      bids,
+      contributions: this.deriveContributionsFromBids(bids),
       winnerEvents: winnerEvents.sort(
         (first, second) => new Date(first.createdAt).getTime() - new Date(second.createdAt).getTime(),
       ),
@@ -531,7 +619,7 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
 
     await this.db.transaction(
       'rw',
-      [this.db.auctions, this.db.lots, this.db.bids, this.db.participants, this.db.contributions, this.db.winnerEvents],
+      [this.db.auctions, this.db.lots, this.db.bids, this.db.participants, this.db.winnerEvents],
       async () => {
         // If auction already exists locally, clean up previous version to prevent duplicate lots/bids
         const existingAuction = await this.db.auctions.get(scopedAuction.id);
@@ -603,7 +691,7 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
   async deleteAuction(auctionId: string, userId = getActiveUserId()): Promise<void> {
     await this.db.transaction(
       'rw',
-      [this.db.auctions, this.db.lots, this.db.bids, this.db.participants, this.db.contributions, this.db.winnerEvents],
+      [this.db.auctions, this.db.lots, this.db.bids, this.db.participants, this.db.winnerEvents],
       async () => {
         await this.deleteAuctionInternal(auctionId, userId);
       },
@@ -611,18 +699,12 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
   }
 
   private async deleteAuctionInternal(auctionId: string, userId: string): Promise<void> {
-    const [bids, contributions, winnerEvents] = await Promise.all([
+    const [bids, winnerEvents] = await Promise.all([
       this.db.bids.where('auctionId').equals(auctionId).toArray(),
-      this.db.contributions.where('auctionId').equals(auctionId).toArray(),
       this.db.winnerEvents.where('auctionId').equals(auctionId).toArray(),
     ]);
 
-    const participantIds = Array.from(
-      new Set([
-        ...bids.map((b) => b.participantId),
-        ...contributions.map((c) => c.participantId),
-      ]),
-    );
+    const participantIds = Array.from(new Set(bids.map((b) => b.participantId)));
 
     const existingUserParticipants = await this.db.participants
       .where('userId')
@@ -639,44 +721,25 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
       { bidCount: number; totalPoints: number; totalDonationCents: number; wonLotIds: Set<string> }
     >();
 
-    if (bids.length > 0) {
-      bids.forEach((b) => {
-        const adjustment = participantAdjustments.get(b.participantId) ?? {
-          bidCount: 0,
-          totalPoints: 0,
-          totalDonationCents: 0,
-          wonLotIds: new Set<string>(),
-        };
-        adjustment.bidCount += 1;
-        const amount = Number(b.amount_cents ?? b.amountCents ?? 0);
-        if (b.kind === 'points') {
-          adjustment.totalPoints += amount;
-        } else {
-          adjustment.totalDonationCents += amount;
-        }
-        if (confirmedWinnerLotIds.has(b.lotId)) {
-          adjustment.wonLotIds.add(b.lotId);
-        }
-        participantAdjustments.set(b.participantId, adjustment);
-      });
-    } else {
-      contributions.forEach((contribution) => {
-        const adjustment = participantAdjustments.get(contribution.participantId) ?? {
-          bidCount: 0,
-          totalPoints: 0,
-          totalDonationCents: 0,
-          wonLotIds: new Set<string>(),
-        };
-
-        adjustment.bidCount += contribution.bidsCount;
-        adjustment.totalPoints += contribution.points;
-        adjustment.totalDonationCents += contribution.donationCents;
-        if (confirmedWinnerLotIds.has(contribution.lotId)) {
-          adjustment.wonLotIds.add(contribution.lotId);
-        }
-        participantAdjustments.set(contribution.participantId, adjustment);
-      });
-    }
+    bids.forEach((b) => {
+      const adjustment = participantAdjustments.get(b.participantId) ?? {
+        bidCount: 0,
+        totalPoints: 0,
+        totalDonationCents: 0,
+        wonLotIds: new Set<string>(),
+      };
+      adjustment.bidCount += 1;
+      const amount = Number(b.amount_cents ?? b.amountCents ?? 0);
+      if (b.kind === 'points') {
+        adjustment.totalPoints += amount;
+      } else {
+        adjustment.totalDonationCents += amount;
+      }
+      if (confirmedWinnerLotIds.has(b.lotId)) {
+        adjustment.wonLotIds.add(b.lotId);
+      }
+      participantAdjustments.set(b.participantId, adjustment);
+    });
 
     const nextParticipants = participantIds
       .map((id) => existingMap.get(id))
@@ -701,7 +764,6 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
       this.db.auctions.delete(auctionId),
       this.db.lots.where('auctionId').equals(auctionId).delete(),
       this.db.bids.where('auctionId').equals(auctionId).delete(),
-      this.db.contributions.where('auctionId').equals(auctionId).delete(),
       this.db.winnerEvents.where('auctionId').equals(auctionId).delete(),
     ]);
 
@@ -770,7 +832,6 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
         this.db.lots,
         this.db.bids,
         this.db.participants,
-        this.db.contributions,
         this.db.winnerEvents,
         this.db.syncQueue,
       ],
@@ -781,11 +842,10 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
         // 1. Update auction
         await this.db.auctions.put({ ...auction, userId: targetUserId });
 
-        // 2. Update lots, bids, contributions, winner events
-        const [lots, bids, contributions, winnerEvents] = await Promise.all([
+        // 2. Update lots, bids, winner events
+        const [lots, bids, winnerEvents] = await Promise.all([
           this.db.lots.where('auctionId').equals(auctionId).toArray(),
           this.db.bids.where('auctionId').equals(auctionId).toArray(),
-          this.db.contributions.where('auctionId').equals(auctionId).toArray(),
           this.db.winnerEvents.where('auctionId').equals(auctionId).toArray(),
         ]);
 
@@ -795,14 +855,11 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
         if (bids.length > 0) {
           await this.db.bids.bulkPut(bids.map((b) => ({ ...b, userId: targetUserId })));
         }
-        if (contributions.length > 0) {
-          await this.db.contributions.bulkPut(contributions.map((c) => ({ ...c, userId: targetUserId })));
-        }
         if (winnerEvents.length > 0) {
           await this.db.winnerEvents.bulkPut(winnerEvents.map((w) => ({ ...w, userId: targetUserId })));
         }
 
-        // 3. Migrate / accumulate participants into target user based on this auction's bids (or contributions) & winner events
+        // 3. Migrate / accumulate participants into target user based on this auction's bids & winner events
         const confirmedWinnerLotIds = new Set(
           winnerEvents.filter((event) => event.status === 'confirmed').map((event) => event.lotId),
         );
@@ -812,43 +869,25 @@ export class IndexedDBAdapter extends AuctionHistoryApi {
           { bidCount: number; points: number; donationCents: number; wonLotIds: Set<string> }
         >();
 
-        if (bids.length > 0) {
-          bids.forEach((b) => {
-            const adj = participantAdjustments.get(b.participantId) ?? {
-              bidCount: 0,
-              points: 0,
-              donationCents: 0,
-              wonLotIds: new Set<string>(),
-            };
-            adj.bidCount += 1;
-            const amt = Number(b.amount_cents ?? b.amountCents ?? 0);
-            if (b.kind === 'points') {
-              adj.points += amt;
-            } else {
-              adj.donationCents += amt;
-            }
-            if (confirmedWinnerLotIds.has(b.lotId)) {
-              adj.wonLotIds.add(b.lotId);
-            }
-            participantAdjustments.set(b.participantId, adj);
-          });
-        } else {
-          contributions.forEach((c) => {
-            const adj = participantAdjustments.get(c.participantId) ?? {
-              bidCount: 0,
-              points: 0,
-              donationCents: 0,
-              wonLotIds: new Set<string>(),
-            };
-            adj.bidCount += c.bidsCount;
-            adj.points += c.points;
-            adj.donationCents += c.donationCents;
-            if (confirmedWinnerLotIds.has(c.lotId)) {
-              adj.wonLotIds.add(c.lotId);
-            }
-            participantAdjustments.set(c.participantId, adj);
-          });
-        }
+        bids.forEach((b) => {
+          const adj = participantAdjustments.get(b.participantId) ?? {
+            bidCount: 0,
+            points: 0,
+            donationCents: 0,
+            wonLotIds: new Set<string>(),
+          };
+          adj.bidCount += 1;
+          const amt = Number(b.amount_cents ?? b.amountCents ?? 0);
+          if (b.kind === 'points') {
+            adj.points += amt;
+          } else {
+            adj.donationCents += amt;
+          }
+          if (confirmedWinnerLotIds.has(b.lotId)) {
+            adj.wonLotIds.add(b.lotId);
+          }
+          participantAdjustments.set(b.participantId, adj);
+        });
 
         const participantIds = Array.from(participantAdjustments.keys());
         const [targetParticipants, anonParticipants] = await Promise.all([
