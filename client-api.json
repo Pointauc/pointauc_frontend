@@ -15,6 +15,20 @@
         ]
       }
     },
+    "/health/ready": {
+      "get": {
+        "operationId": "HealthController_getReadiness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Health"
+        ]
+      }
+    },
     "/user": {
       "get": {
         "operationId": "UserController_getUser",
@@ -451,6 +465,230 @@
         "summary": "Revoke Donate Helper integration",
         "tags": [
           "Donate Helper Integration"
+        ]
+      }
+    },
+    "/vkVideoLive/auth": {
+      "post": {
+        "operationId": "VkVideoLiveController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "VkVideoLive"
+        ]
+      }
+    },
+    "/vkVideoLive/refresh": {
+      "post": {
+        "operationId": "VkVideoLiveController_refresh",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "VkVideoLive"
+        ]
+      }
+    },
+    "/vkVideoLive/revoke": {
+      "post": {
+        "operationId": "VkVideoLiveController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "VkVideoLive"
+        ]
+      }
+    },
+    "/kick/auth/state": {
+      "post": {
+        "operationId": "KickController_setAuthState",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Kick"
+        ]
+      }
+    },
+    "/kick/auth": {
+      "post": {
+        "operationId": "KickController_authorize",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Kick"
+        ]
+      }
+    },
+    "/kick/rewards": {
+      "delete": {
+        "operationId": "KickController_deleteRewards",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Kick"
+        ]
+      }
+    },
+    "/kick/redemptions": {
+      "patch": {
+        "operationId": "KickController_updateRedemption",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Kick"
+        ]
+      }
+    },
+    "/kick/redemptions/batch": {
+      "patch": {
+        "operationId": "KickController_updateRedemptions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Kick"
+        ]
+      }
+    },
+    "/kick/revoke": {
+      "post": {
+        "operationId": "KickController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Kick"
+        ]
+      }
+    },
+    "/webhook/kick/auction/bid": {
+      "post": {
+        "operationId": "KickWebhookController_webhook",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "KickWebhook"
+        ]
+      }
+    },
+    "/donli/auth": {
+      "post": {
+        "description": "Processes Donli OAuth authorization code with PKCE and links the Donli account to the user session. Returns whether this is a new user registration.",
+        "operationId": "DonliController_authorize",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "OAuth authorization code, code verifier, and redirect URI",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonliAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully authorized with Donli via OAuth",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonliAuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authorize user with Donli OAuth 2.0",
+        "tags": [
+          "donli"
+        ]
+      }
+    },
+    "/donli/token": {
+      "post": {
+        "description": "Links Donli account using personal integration key from Donli dashboard settings. Returns whether this is a new user registration.",
+        "operationId": "DonliController_authorizeToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Donli cabinet key (API key)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DonliTokenAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully authorized with Donli via cabinet key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DonliAuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Authorize user with Donli cabinet key",
+        "tags": [
+          "donli"
+        ]
+      }
+    },
+    "/donli/revoke": {
+      "post": {
+        "description": "Invalidates and removes Donli integration for the authenticated user. Requires authentication via cookie.",
+        "operationId": "DonliController_revoke",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Successfully revoked Donli integration"
+          }
+        },
+        "summary": "Revoke Donli integration",
+        "tags": [
+          "donli"
         ]
       }
     },
@@ -1352,6 +1590,390 @@
           "Overlays"
         ]
       }
+    },
+    "/data-sync/session": {
+      "post": {
+        "operationId": "DataSyncController_createSession",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDataSyncSessionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Create a new data synchronization session",
+        "tags": [
+          "data-sync"
+        ]
+      }
+    },
+    "/data-sync/status/{sessionId}": {
+      "get": {
+        "operationId": "DataSyncController_getStatus",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "required": true,
+            "in": "path",
+            "description": "Session UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataSyncStatusResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get current status of a data synchronization session",
+        "tags": [
+          "data-sync"
+        ]
+      }
+    },
+    "/data-sync/upload": {
+      "post": {
+        "operationId": "DataSyncController_uploadData",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadDataSyncDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDataSyncResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upload browser data snapshot to synchronization session",
+        "tags": [
+          "data-sync"
+        ]
+      }
+    },
+    "/data-sync/claim": {
+      "post": {
+        "operationId": "DataSyncController_claim",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimDataSyncDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimDataSyncResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Claim synchronization session data and establish user session",
+        "tags": [
+          "data-sync"
+        ]
+      }
+    },
+    "/recovery": {
+      "post": {
+        "operationId": "RecoveryController_uploadRecoveryData",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecoveryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRecoveryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Upload browser storage snapshot for data recovery",
+        "tags": [
+          "recovery"
+        ]
+      }
+    },
+    "/auction-history": {
+      "get": {
+        "operationId": "AuctionHistoryController_getAuctions",
+        "parameters": [
+          {
+            "name": "startAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endAt",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuctionHistoryAuctionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get list of auctions for the current user",
+        "tags": [
+          "auction-history"
+        ]
+      },
+      "post": {
+        "operationId": "AuctionHistoryController_saveSnapshot",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Save auction history snapshot",
+        "tags": [
+          "auction-history"
+        ]
+      }
+    },
+    "/auction-history/participants": {
+      "get": {
+        "operationId": "AuctionHistoryController_getParticipants",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuctionHistoryParticipantDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get aggregated participants for current user",
+        "tags": [
+          "auction-history"
+        ]
+      }
+    },
+    "/auction-history/range-details": {
+      "get": {
+        "operationId": "AuctionHistoryController_getRangeDetails",
+        "parameters": [
+          {
+            "name": "startAt",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endAt",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuctionHistoryRangeDetailsDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get combined details for auctions in a date range",
+        "tags": [
+          "auction-history"
+        ]
+      }
+    },
+    "/auction-history/next-default-name": {
+      "get": {
+        "operationId": "AuctionHistoryController_getNextDefaultName",
+        "parameters": [
+          {
+            "name": "language",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NextDefaultNameResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Calculate next default sequential auction name",
+        "tags": [
+          "auction-history"
+        ]
+      }
+    },
+    "/auction-history/sync/conflict-log": {
+      "post": {
+        "operationId": "AuctionHistoryController_logConflict",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConflictLogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Log client-side sync conflict resolution",
+        "tags": [
+          "auction-history"
+        ]
+      }
+    },
+    "/auction-history/{id}": {
+      "get": {
+        "operationId": "AuctionHistoryController_getDetails",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuctionHistoryDetailsDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Auction not found"
+          }
+        },
+        "summary": "Get details for a single auction",
+        "tags": [
+          "auction-history"
+        ]
+      },
+      "delete": {
+        "operationId": "AuctionHistoryController_deleteAuction",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "Auction not found"
+          }
+        },
+        "summary": "Delete auction by ID",
+        "tags": [
+          "auction-history"
+        ]
+      }
     }
   },
   "info": {
@@ -1446,6 +2068,57 @@
         },
         "required": [
           "isNew"
+        ]
+      },
+      "DonliAuthDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "OAuth authorization code received from Donli",
+            "example": "oauth_authorization_code_here"
+          },
+          "code_verifier": {
+            "type": "string",
+            "description": "PKCE code verifier generated before redirect",
+            "example": "pkce_code_verifier_here"
+          },
+          "redirect_uri": {
+            "type": "string",
+            "description": "Redirect URI used in the OAuth flow",
+            "example": "https://your-app.com/callback"
+          }
+        },
+        "required": [
+          "code",
+          "code_verifier",
+          "redirect_uri"
+        ]
+      },
+      "DonliAuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "isNew": {
+            "type": "boolean",
+            "description": "Indicates whether this authorization resulted in a new user registration",
+            "example": false
+          }
+        },
+        "required": [
+          "isNew"
+        ]
+      },
+      "DonliTokenAuthDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Personal integration key (cabinet key) copied from Donli settings",
+            "example": "donli_key_from_cabinet"
+          }
+        },
+        "required": [
+          "accessToken"
         ]
       },
       "ExistingActiveTicketResponseDto": {
@@ -2855,6 +3528,683 @@
             ]
           }
         }
+      },
+      "CreateDataSyncSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Unique identifier of the synchronization session (UUID)",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "claimToken": {
+            "type": "string",
+            "description": "Cryptographically secure 32-byte hexadecimal claim token",
+            "example": "4f8d9b1a2c3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a"
+          }
+        },
+        "required": [
+          "sessionId",
+          "claimToken"
+        ]
+      },
+      "DataSyncStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Current status of the synchronization session",
+            "enum": [
+              "PENDING",
+              "READY",
+              "CLAIMED",
+              "EXPIRED"
+            ],
+            "example": "PENDING"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "DataSyncPayloadDto": {
+        "type": "object",
+        "properties": {
+          "localStorage": {
+            "type": "object",
+            "description": "Key-value pairs exported from local storage"
+          },
+          "sessionStorage": {
+            "type": "object",
+            "description": "Key-value pairs exported from session storage"
+          },
+          "indexedDb": {
+            "description": "Serialized IndexedDB database dumps",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "localStorage",
+          "sessionStorage",
+          "indexedDb"
+        ]
+      },
+      "UploadDataSyncDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Unique identifier of the target synchronization session",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "data": {
+            "description": "Client browser storage snapshot payload",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DataSyncPayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "sessionId",
+          "data"
+        ]
+      },
+      "UploadDataSyncResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether upload succeeded",
+            "example": true
+          }
+        },
+        "required": [
+          "success"
+        ]
+      },
+      "ClaimDataSyncDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Unique identifier of the synchronization session to claim",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "claimToken": {
+            "type": "string",
+            "description": "Security claim token matching the session",
+            "example": "4f8d9b1a2c3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a"
+          }
+        },
+        "required": [
+          "sessionId",
+          "claimToken"
+        ]
+      },
+      "ClaimDataSyncResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether claim succeeded",
+            "example": true
+          },
+          "userId": {
+            "type": "number",
+            "description": "ID of user whose data was claimed",
+            "example": 1
+          },
+          "data": {
+            "description": "Client storage data snapshot retrieved from sync session",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DataSyncPayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "userId",
+          "data"
+        ]
+      },
+      "CreateRecoveryDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "description": "Optional PointAuc user ID if known to the client",
+            "example": 1
+          },
+          "data": {
+            "type": "object",
+            "description": "Storage dump containing localStorage, sessionStorage, and indexedDb data"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Optional metadata about client environment, timestamp, summary counts"
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateRecoveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "example": "Recovery data saved successfully"
+          }
+        },
+        "required": [
+          "success",
+          "id",
+          "message"
+        ]
+      },
+      "RecoveryRecordDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "userId": {
+            "type": "number",
+            "example": 1,
+            "nullable": true
+          },
+          "data": {
+            "type": "object"
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "ipAddress": {
+            "type": "string",
+            "example": "127.0.0.1"
+          },
+          "userAgent": {
+            "type": "string",
+            "example": "Mozilla/5.0..."
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-10-17T12:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-10-17T12:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "data",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AuctionHistoryAuctionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "name": {
+            "type": "string",
+            "example": "Auction #1"
+          },
+          "requestsKind": {
+            "type": "string",
+            "example": "any"
+          },
+          "startedAt": {
+            "type": "string",
+            "example": "2026-10-21T12:00:00.000Z"
+          },
+          "endedAt": {
+            "type": "string",
+            "example": "2026-10-21T13:00:00.000Z"
+          },
+          "durationMs": {
+            "type": "number",
+            "example": 3600000
+          },
+          "selectionMethod": {
+            "type": "string",
+            "example": "wheel"
+          },
+          "pointsToDonationRatio": {
+            "type": "number",
+            "example": 1
+          },
+          "lotCount": {
+            "type": "number",
+            "example": 5
+          },
+          "participantCount": {
+            "type": "number",
+            "example": 10
+          },
+          "totalAmount": {
+            "type": "number",
+            "example": 1000
+          },
+          "totalPoints": {
+            "type": "number",
+            "example": 1000
+          },
+          "totalDonationCents": {
+            "type": "number",
+            "example": 0
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2026-10-21T13:00:05.000Z"
+          },
+          "schemaVersion": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "requestsKind",
+          "startedAt",
+          "endedAt",
+          "durationMs",
+          "selectionMethod",
+          "pointsToDonationRatio",
+          "lotCount",
+          "participantCount",
+          "totalAmount",
+          "totalPoints",
+          "totalDonationCents",
+          "createdAt",
+          "schemaVersion"
+        ]
+      },
+      "AuctionHistoryParticipantDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "twitch:bob"
+          },
+          "displayName": {
+            "type": "string",
+            "example": "Bob"
+          },
+          "platformKey": {
+            "type": "string",
+            "example": "twitch"
+          },
+          "auctionCount": {
+            "type": "number",
+            "example": 3
+          },
+          "wonLotCount": {
+            "type": "number",
+            "example": 1
+          },
+          "bidCount": {
+            "type": "number",
+            "example": 12
+          },
+          "totalPoints": {
+            "type": "number",
+            "example": 1200
+          },
+          "totalDonationCents": {
+            "type": "number",
+            "example": 500
+          },
+          "firstSeenAt": {
+            "type": "string",
+            "example": "2026-10-20T10:00:00.000Z"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "example": "2026-10-21T13:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "displayName",
+          "platformKey",
+          "auctionCount",
+          "wonLotCount",
+          "bidCount",
+          "totalPoints",
+          "totalDonationCents",
+          "firstSeenAt",
+          "lastSeenAt"
+        ]
+      },
+      "AuctionHistoryLotDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "4a49c25f-2f77-4b71-a8bb-eec2f87cf3c6"
+          },
+          "auctionId": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "name": {
+            "type": "string",
+            "example": "Game A",
+            "nullable": true
+          },
+          "totalAmount": {
+            "type": "number",
+            "example": 500
+          },
+          "totalPoints": {
+            "type": "number",
+            "example": 500
+          },
+          "totalDonationCents": {
+            "type": "number",
+            "example": 0
+          }
+        },
+        "required": [
+          "id",
+          "auctionId",
+          "totalAmount",
+          "totalPoints",
+          "totalDonationCents"
+        ]
+      },
+      "AuctionHistoryBidDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "auctionId": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "lotId": {
+            "type": "string",
+            "example": "4a49c25f-2f77-4b71-a8bb-eec2f87cf3c6"
+          },
+          "participantId": {
+            "type": "string",
+            "example": "twitch:bob"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "points",
+              "money"
+            ],
+            "example": "points"
+          },
+          "amount_cents": {
+            "type": "number",
+            "example": 1000
+          },
+          "amountCents": {
+            "type": "number",
+            "example": 1000
+          },
+          "currency": {
+            "type": "string",
+            "example": "USD",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2026-10-21T13:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "auctionId",
+          "lotId",
+          "participantId",
+          "kind",
+          "amount_cents",
+          "amountCents",
+          "createdAt"
+        ]
+      },
+      "AuctionHistoryContributionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "b3f5451a:4a49c25f:twitch:bob"
+          },
+          "auctionId": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "lotId": {
+            "type": "string",
+            "example": "4a49c25f-2f77-4b71-a8bb-eec2f87cf3c6"
+          },
+          "participantId": {
+            "type": "string",
+            "example": "twitch:bob"
+          },
+          "points": {
+            "type": "number",
+            "example": 300
+          },
+          "donationCents": {
+            "type": "number",
+            "example": 0
+          },
+          "bidsCount": {
+            "type": "number",
+            "example": 4
+          }
+        },
+        "required": [
+          "id",
+          "auctionId",
+          "lotId",
+          "participantId",
+          "points",
+          "donationCents",
+          "bidsCount"
+        ]
+      },
+      "AuctionHistoryWinnerEventDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "d09d6c4a-6f68-4537-b6f7-b2eb22964971"
+          },
+          "auctionId": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "lotId": {
+            "type": "string",
+            "example": "4a49c25f-2f77-4b71-a8bb-eec2f87cf3c6"
+          },
+          "method": {
+            "type": "string",
+            "example": "wheel"
+          },
+          "status": {
+            "type": "string",
+            "example": "confirmed"
+          },
+          "randomNumber": {
+            "type": "number",
+            "example": 42,
+            "nullable": true
+          },
+          "chancePercent": {
+            "type": "number",
+            "example": 25.5,
+            "nullable": true
+          },
+          "wheelVariant": {
+            "type": "string",
+            "example": "default",
+            "nullable": true
+          },
+          "dropoutVariant": {
+            "type": "string",
+            "example": "classic",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2026-10-21T13:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "auctionId",
+          "lotId",
+          "method",
+          "status",
+          "createdAt"
+        ]
+      },
+      "AuctionHistoryRangeDetailsDto": {
+        "type": "object",
+        "properties": {
+          "lots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryLotDto"
+            }
+          },
+          "bids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryBidDto"
+            }
+          },
+          "contributions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryContributionDto"
+            }
+          },
+          "winnerEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryWinnerEventDto"
+            }
+          }
+        },
+        "required": [
+          "lots",
+          "bids",
+          "winnerEvents"
+        ]
+      },
+      "NextDefaultNameResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Auction #1"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ConflictLogDto": {
+        "type": "object",
+        "properties": {
+          "auctionId": {
+            "type": "string",
+            "example": "b3f5451a-7b3b-4860-9d32-d1a2fd6d17e9"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "local",
+              "remote"
+            ],
+            "example": "local"
+          },
+          "localDetails": {
+            "type": "object"
+          },
+          "remoteDetails": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "auctionId",
+          "resolution",
+          "localDetails",
+          "remoteDetails"
+        ]
+      },
+      "AuctionHistoryDetailsDto": {
+        "type": "object",
+        "properties": {
+          "auction": {
+            "$ref": "#/components/schemas/AuctionHistoryAuctionDto"
+          },
+          "lots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryLotDto"
+            }
+          },
+          "bids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryBidDto"
+            }
+          },
+          "contributions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryContributionDto"
+            }
+          },
+          "winnerEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuctionHistoryWinnerEventDto"
+            }
+          }
+        },
+        "required": [
+          "auction",
+          "lots",
+          "bids",
+          "winnerEvents"
+        ]
       }
     }
   }

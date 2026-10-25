@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+
 
 import i18n from '@assets/i18n';
 import { backendApi } from '@api/backendApi';
@@ -79,7 +79,8 @@ export const settingsApi = {
     },
     create: async (data: AucSettingsDto): Promise<SettingsPreset> => {
       const presets = getLocalSettingsPresets();
-      const newPreset: SettingsPresetLocal = { id: uuidv4(), name: i18n.t('settings.presets.newTitle'), data };
+      const presetId = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Math.random().toString(36).substring(2);
+      const newPreset: SettingsPresetLocal = { id: presetId, name: i18n.t('settings.presets.newTitle'), data };
 
       await settingsApi.preset.setAll([...presets, newPreset]);
 

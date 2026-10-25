@@ -1,7 +1,9 @@
 import { MantineProvider } from '@mantine/core';
+import { configureStore } from '@reduxjs/toolkit';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { Provider } from 'react-redux';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import enTranslations from '@assets/i18n/locales/en.json';
@@ -27,8 +29,20 @@ i18n.use(initReactI18next).init({
   },
 });
 
+const createTestStore = () => {
+  return configureStore({
+    reducer: {
+      user: () => ({ username: null }),
+    },
+  });
+};
+
 const renderWithProviders = (component: React.ReactNode) => {
-  return render(<MantineProvider>{component}</MantineProvider>);
+  return render(
+    <Provider store={createTestStore()}>
+      <MantineProvider>{component}</MantineProvider>
+    </Provider>,
+  );
 };
 
 describe('DesktopSplashScreen', () => {

@@ -191,6 +191,7 @@ export const loadUserData =
       ihaqAuth,
       userId,
       donateHelperAuth,
+      donliAuth,
     } = user;
     const donatexAuth = getDonateXAuthData();
 
@@ -203,6 +204,7 @@ export const loadUserData =
           daAuth?.username ??
           donatePayAuth?.username ??
           donatexAuth?.username ??
+          donliAuth?.username ??
           'Empty',
         userId: twitchAuth?.id ?? kickAuth?.id ?? vkVideoLiveAuth?.id,
         pointaucUserId: userId,
@@ -218,6 +220,7 @@ export const loadUserData =
           ihaq: ihaqAuth,
           donatex: donatexAuth,
           donateHelper: donateHelperAuth,
+          donli: donliAuth,
         },
       }),
     );

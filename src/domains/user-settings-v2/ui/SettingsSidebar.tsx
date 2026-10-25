@@ -1,10 +1,14 @@
 import { Card, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
+import DesktopDownloadSidebarCard from '@domains/desktop/ui/DesktopDownloadModal/DesktopDownloadSidebarCard';
+import DesktopSyncSidebarCard from '@domains/desktop/ui/DesktopSyncModal/DesktopSyncSidebarCard';
 import PresetEditableDropdown from '@domains/user-settings-v2/ui/PresetEditableDropdown';
+import { checkIsDesktop } from '@shared/lib/desktop/checkIsDesktop';
 
 const SettingsSidebar = () => {
   const { t } = useTranslation();
+  const isDesktop = checkIsDesktop();
 
   return (
     <div className='flex flex-col gap-4'>
@@ -22,6 +26,8 @@ const SettingsSidebar = () => {
           <PresetEditableDropdown />
         </div>
       </Card>
+
+      {isDesktop ? <DesktopSyncSidebarCard /> : <DesktopDownloadSidebarCard />}
     </div>
   );
 };

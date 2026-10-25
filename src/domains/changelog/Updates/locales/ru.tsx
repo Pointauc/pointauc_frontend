@@ -5,8 +5,40 @@ import { UpdateData } from '@domains/changelog/model/types';
 import ROUTES from '@constants/routes.constants';
 import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
+import DesktopDownloadLink from '@domains/desktop/ui/DesktopDownloadModal/DesktopDownloadLink';
 
 export const ChangesRU: UpdateData[] = [
+  {
+    date: '2026-10-25T23:30:35.656Z',
+    newFeatures: [
+      {
+        briefDescription: (
+          <span>
+            Вышел ПК-клиент Pointauc (Бета) — <DesktopDownloadLink>Скачать</DesktopDownloadLink>
+          </span>
+        ),
+        content: (
+          <>
+            <strong>
+              <DesktopDownloadLink>Десктоп-клиент Pointauc (Бета)</DesktopDownloadLink>
+            </strong>
+            <Space h='sm' />
+            <div>
+              Pointauc теперь доступен в виде отдельного приложения для Windows в стадии <strong>Бета</strong>!
+              <br />
+              Проводите аукционы в отдельном окне без лишних вкладок браузера. Приложение работает полностью офлайн, но
+              для получения донатов в реальном времени в любом случае нужен интернет.
+            </div>
+            <Space h='xs' />
+            <div>
+              Доступен как установщик с автообновлением, так и портативная версия без установки:{' '}
+              <DesktopDownloadLink>Скачать Pointauc Desktop (Бета)</DesktopDownloadLink>.
+            </div>
+          </>
+        ),
+      },
+    ],
+  },
   {
     date: '2026-06-02T15:00:00.023Z',
     newFeatures: [

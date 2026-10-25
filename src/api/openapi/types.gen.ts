@@ -46,6 +46,35 @@ export type DonateHelperAuthResponseDto = {
     isNew: boolean;
 };
 
+export type DonliAuthDto = {
+    /**
+     * OAuth authorization code received from Donli
+     */
+    code: string;
+    /**
+     * PKCE code verifier generated before redirect
+     */
+    code_verifier: string;
+    /**
+     * Redirect URI used in the OAuth flow
+     */
+    redirect_uri: string;
+};
+
+export type DonliAuthResponseDto = {
+    /**
+     * Indicates whether this authorization resulted in a new user registration
+     */
+    isNew: boolean;
+};
+
+export type DonliTokenAuthDto = {
+    /**
+     * Personal integration key (cabinet key) copied from Donli settings
+     */
+    accessToken: string;
+};
+
 export type ExistingActiveTicketResponseDto = {
     /**
      * Random.org ticket ID
@@ -678,6 +707,234 @@ export type UpdateWheelOverlayDto = {
     transform?: TransformDto | null;
 };
 
+export type CreateDataSyncSessionResponseDto = {
+    /**
+     * Unique identifier of the synchronization session (UUID)
+     */
+    sessionId: string;
+    /**
+     * Cryptographically secure 32-byte hexadecimal claim token
+     */
+    claimToken: string;
+};
+
+export type DataSyncStatusResponseDto = {
+    /**
+     * Current status of the synchronization session
+     */
+    status: 'PENDING' | 'READY' | 'CLAIMED' | 'EXPIRED';
+};
+
+export type DataSyncPayloadDto = {
+    /**
+     * Key-value pairs exported from local storage
+     */
+    localStorage: {
+        [key: string]: unknown;
+    };
+    /**
+     * Key-value pairs exported from session storage
+     */
+    sessionStorage: {
+        [key: string]: unknown;
+    };
+    /**
+     * Serialized IndexedDB database dumps
+     */
+    indexedDb: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+export type UploadDataSyncDto = {
+    /**
+     * Unique identifier of the target synchronization session
+     */
+    sessionId: string;
+    /**
+     * Client browser storage snapshot payload
+     */
+    data: DataSyncPayloadDto;
+};
+
+export type UploadDataSyncResponseDto = {
+    /**
+     * Whether upload succeeded
+     */
+    success: boolean;
+};
+
+export type ClaimDataSyncDto = {
+    /**
+     * Unique identifier of the synchronization session to claim
+     */
+    sessionId: string;
+    /**
+     * Security claim token matching the session
+     */
+    claimToken: string;
+};
+
+export type ClaimDataSyncResponseDto = {
+    /**
+     * Whether claim succeeded
+     */
+    success: boolean;
+    /**
+     * ID of user whose data was claimed
+     */
+    userId: number;
+    /**
+     * Client storage data snapshot retrieved from sync session
+     */
+    data: DataSyncPayloadDto;
+};
+
+export type CreateRecoveryDto = {
+    /**
+     * Optional PointAuc user ID if known to the client
+     */
+    userId?: number;
+    /**
+     * Storage dump containing localStorage, sessionStorage, and indexedDb data
+     */
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional metadata about client environment, timestamp, summary counts
+     */
+    metadata?: {
+        [key: string]: unknown;
+    };
+};
+
+export type CreateRecoveryResponseDto = {
+    success: boolean;
+    id: number;
+    message: string;
+};
+
+export type RecoveryRecordDto = {
+    id: number;
+    userId: number | null;
+    data: {
+        [key: string]: unknown;
+    };
+    metadata?: {
+        [key: string]: unknown;
+    };
+    ipAddress?: string;
+    userAgent?: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type AuctionHistoryAuctionDto = {
+    id: string;
+    name: string;
+    requestsKind: string;
+    startedAt: string;
+    endedAt: string;
+    durationMs: number;
+    selectionMethod: string;
+    pointsToDonationRatio: number;
+    lotCount: number;
+    participantCount: number;
+    totalAmount: number;
+    totalPoints: number;
+    totalDonationCents: number;
+    createdAt: string;
+    schemaVersion: number;
+};
+
+export type AuctionHistoryParticipantDto = {
+    id: string;
+    displayName: string;
+    platformKey: string;
+    auctionCount: number;
+    wonLotCount: number;
+    bidCount: number;
+    totalPoints: number;
+    totalDonationCents: number;
+    firstSeenAt: string;
+    lastSeenAt: string;
+};
+
+export type AuctionHistoryLotDto = {
+    id: string;
+    auctionId: string;
+    name?: string | null;
+    totalAmount: number;
+    totalPoints: number;
+    totalDonationCents: number;
+};
+
+export type AuctionHistoryBidDto = {
+    id: string;
+    auctionId: string;
+    lotId: string;
+    participantId: string;
+    kind: 'points' | 'money';
+    amount_cents: number;
+    amountCents: number;
+    currency?: string | null;
+    createdAt: string;
+};
+
+export type AuctionHistoryContributionDto = {
+    id: string;
+    auctionId: string;
+    lotId: string;
+    participantId: string;
+    points: number;
+    donationCents: number;
+    bidsCount: number;
+};
+
+export type AuctionHistoryWinnerEventDto = {
+    id: string;
+    auctionId: string;
+    lotId: string;
+    method: string;
+    status: string;
+    randomNumber?: number | null;
+    chancePercent?: number | null;
+    wheelVariant?: string | null;
+    dropoutVariant?: string | null;
+    createdAt: string;
+};
+
+export type AuctionHistoryRangeDetailsDto = {
+    lots: Array<AuctionHistoryLotDto>;
+    bids: Array<AuctionHistoryBidDto>;
+    contributions?: Array<AuctionHistoryContributionDto>;
+    winnerEvents: Array<AuctionHistoryWinnerEventDto>;
+};
+
+export type NextDefaultNameResponseDto = {
+    name: string;
+};
+
+export type ConflictLogDto = {
+    auctionId: string;
+    resolution: 'local' | 'remote';
+    localDetails: {
+        [key: string]: unknown;
+    };
+    remoteDetails: {
+        [key: string]: unknown;
+    };
+};
+
+export type AuctionHistoryDetailsDto = {
+    auction: AuctionHistoryAuctionDto;
+    lots: Array<AuctionHistoryLotDto>;
+    bids: Array<AuctionHistoryBidDto>;
+    contributions?: Array<AuctionHistoryContributionDto>;
+    winnerEvents: Array<AuctionHistoryWinnerEventDto>;
+};
+
 export type AppControllerGetHelloData = {
     body?: never;
     path?: never;
@@ -686,6 +943,17 @@ export type AppControllerGetHelloData = {
 };
 
 export type AppControllerGetHelloResponses = {
+    200: unknown;
+};
+
+export type HealthControllerGetReadinessData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/health/ready';
+};
+
+export type HealthControllerGetReadinessResponses = {
     200: unknown;
 };
 
@@ -982,6 +1250,170 @@ export type DonateHelperControllerRevokeData = {
 export type DonateHelperControllerRevokeResponses = {
     /**
      * Successfully revoked Donate Helper integration
+     */
+    201: unknown;
+};
+
+export type VkVideoLiveControllerAuthorizeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/vkVideoLive/auth';
+};
+
+export type VkVideoLiveControllerAuthorizeResponses = {
+    201: unknown;
+};
+
+export type VkVideoLiveControllerRefreshData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/vkVideoLive/refresh';
+};
+
+export type VkVideoLiveControllerRefreshResponses = {
+    201: unknown;
+};
+
+export type VkVideoLiveControllerRevokeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/vkVideoLive/revoke';
+};
+
+export type VkVideoLiveControllerRevokeResponses = {
+    201: unknown;
+};
+
+export type KickControllerSetAuthStateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/kick/auth/state';
+};
+
+export type KickControllerSetAuthStateResponses = {
+    204: void;
+};
+
+export type KickControllerSetAuthStateResponse = KickControllerSetAuthStateResponses[keyof KickControllerSetAuthStateResponses];
+
+export type KickControllerAuthorizeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/kick/auth';
+};
+
+export type KickControllerAuthorizeResponses = {
+    201: unknown;
+};
+
+export type KickControllerDeleteRewardsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/kick/rewards';
+};
+
+export type KickControllerDeleteRewardsResponses = {
+    200: unknown;
+};
+
+export type KickControllerUpdateRedemptionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/kick/redemptions';
+};
+
+export type KickControllerUpdateRedemptionResponses = {
+    200: unknown;
+};
+
+export type KickControllerUpdateRedemptionsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/kick/redemptions/batch';
+};
+
+export type KickControllerUpdateRedemptionsResponses = {
+    200: unknown;
+};
+
+export type KickControllerRevokeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/kick/revoke';
+};
+
+export type KickControllerRevokeResponses = {
+    201: unknown;
+};
+
+export type KickWebhookControllerWebhookData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/webhook/kick/auction/bid';
+};
+
+export type KickWebhookControllerWebhookResponses = {
+    200: unknown;
+};
+
+export type DonliControllerAuthorizeData = {
+    /**
+     * OAuth authorization code, code verifier, and redirect URI
+     */
+    body: DonliAuthDto;
+    path?: never;
+    query?: never;
+    url: '/donli/auth';
+};
+
+export type DonliControllerAuthorizeResponses = {
+    /**
+     * Successfully authorized with Donli via OAuth
+     */
+    201: DonliAuthResponseDto;
+};
+
+export type DonliControllerAuthorizeResponse = DonliControllerAuthorizeResponses[keyof DonliControllerAuthorizeResponses];
+
+export type DonliControllerAuthorizeTokenData = {
+    /**
+     * Donli cabinet key (API key)
+     */
+    body: DonliTokenAuthDto;
+    path?: never;
+    query?: never;
+    url: '/donli/token';
+};
+
+export type DonliControllerAuthorizeTokenResponses = {
+    /**
+     * Successfully authorized with Donli via cabinet key
+     */
+    201: DonliAuthResponseDto;
+};
+
+export type DonliControllerAuthorizeTokenResponse = DonliControllerAuthorizeTokenResponses[keyof DonliControllerAuthorizeTokenResponses];
+
+export type DonliControllerRevokeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/donli/revoke';
+};
+
+export type DonliControllerRevokeResponses = {
+    /**
+     * Successfully revoked Donli integration
      */
     201: unknown;
 };
@@ -1392,6 +1824,200 @@ export type OverlaysControllerReplaceResponses = {
 };
 
 export type OverlaysControllerReplaceResponse = OverlaysControllerReplaceResponses[keyof OverlaysControllerReplaceResponses];
+
+export type DataSyncControllerCreateSessionData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/data-sync/session';
+};
+
+export type DataSyncControllerCreateSessionResponses = {
+    201: CreateDataSyncSessionResponseDto;
+};
+
+export type DataSyncControllerCreateSessionResponse = DataSyncControllerCreateSessionResponses[keyof DataSyncControllerCreateSessionResponses];
+
+export type DataSyncControllerGetStatusData = {
+    body?: never;
+    path: {
+        /**
+         * Session UUID
+         */
+        sessionId: string;
+    };
+    query?: never;
+    url: '/data-sync/status/{sessionId}';
+};
+
+export type DataSyncControllerGetStatusResponses = {
+    200: DataSyncStatusResponseDto;
+};
+
+export type DataSyncControllerGetStatusResponse = DataSyncControllerGetStatusResponses[keyof DataSyncControllerGetStatusResponses];
+
+export type DataSyncControllerUploadDataData = {
+    body: UploadDataSyncDto;
+    path?: never;
+    query?: never;
+    url: '/data-sync/upload';
+};
+
+export type DataSyncControllerUploadDataResponses = {
+    200: UploadDataSyncResponseDto;
+};
+
+export type DataSyncControllerUploadDataResponse = DataSyncControllerUploadDataResponses[keyof DataSyncControllerUploadDataResponses];
+
+export type DataSyncControllerClaimData = {
+    body: ClaimDataSyncDto;
+    path?: never;
+    query?: never;
+    url: '/data-sync/claim';
+};
+
+export type DataSyncControllerClaimResponses = {
+    200: ClaimDataSyncResponseDto;
+};
+
+export type DataSyncControllerClaimResponse = DataSyncControllerClaimResponses[keyof DataSyncControllerClaimResponses];
+
+export type RecoveryControllerUploadRecoveryDataData = {
+    body: CreateRecoveryDto;
+    path?: never;
+    query?: never;
+    url: '/recovery';
+};
+
+export type RecoveryControllerUploadRecoveryDataResponses = {
+    201: CreateRecoveryResponseDto;
+};
+
+export type RecoveryControllerUploadRecoveryDataResponse = RecoveryControllerUploadRecoveryDataResponses[keyof RecoveryControllerUploadRecoveryDataResponses];
+
+export type AuctionHistoryControllerGetAuctionsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        startAt?: string;
+        endAt?: string;
+    };
+    url: '/auction-history';
+};
+
+export type AuctionHistoryControllerGetAuctionsResponses = {
+    200: Array<AuctionHistoryAuctionDto>;
+};
+
+export type AuctionHistoryControllerGetAuctionsResponse = AuctionHistoryControllerGetAuctionsResponses[keyof AuctionHistoryControllerGetAuctionsResponses];
+
+export type AuctionHistoryControllerSaveSnapshotData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auction-history';
+};
+
+export type AuctionHistoryControllerSaveSnapshotResponses = {
+    201: unknown;
+};
+
+export type AuctionHistoryControllerGetParticipantsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/auction-history/participants';
+};
+
+export type AuctionHistoryControllerGetParticipantsResponses = {
+    200: Array<AuctionHistoryParticipantDto>;
+};
+
+export type AuctionHistoryControllerGetParticipantsResponse = AuctionHistoryControllerGetParticipantsResponses[keyof AuctionHistoryControllerGetParticipantsResponses];
+
+export type AuctionHistoryControllerGetRangeDetailsData = {
+    body?: never;
+    path?: never;
+    query: {
+        startAt: string;
+        endAt: string;
+    };
+    url: '/auction-history/range-details';
+};
+
+export type AuctionHistoryControllerGetRangeDetailsResponses = {
+    200: AuctionHistoryRangeDetailsDto;
+};
+
+export type AuctionHistoryControllerGetRangeDetailsResponse = AuctionHistoryControllerGetRangeDetailsResponses[keyof AuctionHistoryControllerGetRangeDetailsResponses];
+
+export type AuctionHistoryControllerGetNextDefaultNameData = {
+    body?: never;
+    path?: never;
+    query?: {
+        language?: string;
+    };
+    url: '/auction-history/next-default-name';
+};
+
+export type AuctionHistoryControllerGetNextDefaultNameResponses = {
+    200: NextDefaultNameResponseDto;
+};
+
+export type AuctionHistoryControllerGetNextDefaultNameResponse = AuctionHistoryControllerGetNextDefaultNameResponses[keyof AuctionHistoryControllerGetNextDefaultNameResponses];
+
+export type AuctionHistoryControllerLogConflictData = {
+    body: ConflictLogDto;
+    path?: never;
+    query?: never;
+    url: '/auction-history/sync/conflict-log';
+};
+
+export type AuctionHistoryControllerLogConflictResponses = {
+    200: unknown;
+};
+
+export type AuctionHistoryControllerDeleteAuctionData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/auction-history/{id}';
+};
+
+export type AuctionHistoryControllerDeleteAuctionErrors = {
+    /**
+     * Auction not found
+     */
+    404: unknown;
+};
+
+export type AuctionHistoryControllerDeleteAuctionResponses = {
+    200: unknown;
+};
+
+export type AuctionHistoryControllerGetDetailsData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/auction-history/{id}';
+};
+
+export type AuctionHistoryControllerGetDetailsErrors = {
+    /**
+     * Auction not found
+     */
+    404: unknown;
+};
+
+export type AuctionHistoryControllerGetDetailsResponses = {
+    200: AuctionHistoryDetailsDto;
+};
+
+export type AuctionHistoryControllerGetDetailsResponse = AuctionHistoryControllerGetDetailsResponses[keyof AuctionHistoryControllerGetDetailsResponses];
 
 export type ClientOptions = {
     baseURL: string;

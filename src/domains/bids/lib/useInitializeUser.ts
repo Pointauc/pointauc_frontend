@@ -10,6 +10,7 @@ import { getCookie } from '@utils/common.utils';
 import { isBrowser } from '@utils/ssr';
 import { RootState } from '@reducers/index';
 
+export const checkHasUserToken = (): boolean => isBrowser && Boolean(getCookie('userSession'));
 export const hasUserToken = isBrowser && !!getCookie('userSession');
 
 export const useInitializeUser = () => {
@@ -17,7 +18,7 @@ export const useInitializeUser = () => {
 
   const { username } = useSelector((root: RootState) => root.user);
   const isColorResetDone = useRef(localStorage.getItem('isColorResetDone') === 'true');
-  if (!isColorResetDone.current && !hasUserToken) {
+  if (!isColorResetDone.current && !checkHasUserToken()) {
     localStorage.setItem('isColorResetDone', 'true');
     isColorResetDone.current = true;
     dispatch(setAucSettings({ primaryColor: COLORS.THEME.PRIMARY }));
@@ -47,7 +48,7 @@ export const useInitializeUser = () => {
 
   useEffect(() => {
     let interval: any;
-    if (hasUserToken && username) {
+    if (checkHasUserToken() && username) {
       interval = setInterval(
         () => {
           getIntegrationsValidity();
@@ -68,7 +69,7 @@ export const useInitializeUser = () => {
       await dispatch(loadUserData());
     };
 
-    if (hasUserToken) {
+    if (checkHasUserToken()) {
       loadUser();
     }
   }, [dispatch]);

@@ -119,7 +119,7 @@ jobs:
         shell: pwsh
         run: |
           $hashes = @()
-          Get-ChildItem -Path release\* -Include "Pointauc-Setup-*.exe", "Pointauc-Portable-*.zip", "Pointauc-Update-*-app.asar", "app.asar" -File | ForEach-Object {
+          Get-ChildItem -Path release\* -Include "Pointauc-Setup*.exe", "Pointauc-Portable*.zip", "Pointauc-Update-*-app.asar", "app.asar" -File | ForEach-Object {
             $hash = (Get-FileHash -Path $_.FullName -Algorithm SHA256).Hash.ToLower()
             $hashes += "$hash  $($_.Name)"
           }
@@ -132,9 +132,9 @@ jobs:
         with:
           name: pointauc-desktop-${{ env.DESKTOP_APP_VERSION }}
           path: |
-            release/Pointauc-Setup-*.exe
+            release/Pointauc-Setup*.exe
             release/Pointauc-Setup-*.exe.blockmap
-            release/Pointauc-Portable-*.zip
+            release/Pointauc-Portable*.zip
             release/Pointauc-Update-*-app.asar
             release/app.asar
             release/latest.yml
@@ -170,7 +170,7 @@ jobs:
           if ($isDraft) { $flags += "--draft" }
           if ($isPrerelease) { $flags += "--prerelease" }
 
-          $assets = Get-ChildItem -Path release\* -Include "Pointauc-Setup-*.exe", "Pointauc-Setup-*.exe.blockmap", "Pointauc-Portable-*.zip", "Pointauc-Update-*-app.asar", "app.asar", "latest.yml", "SHA256SUMS.txt" -File | Select-Object -ExpandProperty FullName
+          $assets = Get-ChildItem -Path release\* -Include "Pointauc-Setup*.exe", "Pointauc-Setup-*.exe.blockmap", "Pointauc-Portable*.zip", "Pointauc-Update-*-app.asar", "app.asar", "latest.yml", "SHA256SUMS.txt" -File | Select-Object -ExpandProperty FullName
 
           # Check if release already exists (e.g. created by web deployment workflow)
           $existing = gh release view $tag 2>$null
@@ -213,7 +213,7 @@ jobs:
             $summary += ""
             $summary += "| File | Size |"
             $summary += "| --- | --- |"
-            Get-ChildItem -Path release\* -Include "Pointauc-Setup-*.exe", "Pointauc-Setup-*.exe.blockmap", "Pointauc-Portable-*.zip", "Pointauc-Update-*-app.asar", "app.asar", "latest.yml", "SHA256SUMS.txt" -File | ForEach-Object {
+            Get-ChildItem -Path release\* -Include "Pointauc-Setup*.exe", "Pointauc-Setup-*.exe.blockmap", "Pointauc-Portable*.zip", "Pointauc-Update-*-app.asar", "app.asar", "latest.yml", "SHA256SUMS.txt" -File | ForEach-Object {
               $sizeMb = [math]::Round($_.Length / 1MB, 2)
               $summary += "| ``$($_.Name)`` | ${sizeMb} MB ($($_.Length) bytes) |"
             }

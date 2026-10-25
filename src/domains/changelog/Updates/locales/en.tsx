@@ -5,8 +5,40 @@ import lockedPercentageGif from '@assets/img/locked-percentage-demo.gif';
 import overlayDemoGif from '@assets/img/overlay-demo-v1.gif';
 import ROUTES from '@constants/routes.constants';
 import { UpdateData } from '@domains/changelog/model/types';
+import DesktopDownloadLink from '@domains/desktop/ui/DesktopDownloadModal/DesktopDownloadLink';
 
 export const ChangesEN: UpdateData[] = [
+  {
+    date: '2026-10-25T23:30:35.656Z',
+    newFeatures: [
+      {
+        briefDescription: (
+          <span>
+            Pointauc Desktop Client (Beta) is now available — <DesktopDownloadLink>Download</DesktopDownloadLink>
+          </span>
+        ),
+        content: (
+          <>
+            <strong>
+              <DesktopDownloadLink>Pointauc Desktop Client (Beta)</DesktopDownloadLink>
+            </strong>
+            <Space h='sm' />
+            <div>
+              Pointauc is now available as a dedicated Windows application in <strong>Beta</strong>!
+              <br />
+              Run your auctions in a separate window without unnecessary browser tabs. The app works completely offline,
+              though an internet connection is still required to receive donations in real time.
+            </div>
+            <Space h='xs' />
+            <div>
+              Available as both an auto-updating installer and a zero-install portable version:{' '}
+              <DesktopDownloadLink>Download Pointauc Desktop (Beta)</DesktopDownloadLink>.
+            </div>
+          </>
+        ),
+      },
+    ],
+  },
   {
     date: '2026-06-02T15:00:00.023Z',
     newFeatures: [

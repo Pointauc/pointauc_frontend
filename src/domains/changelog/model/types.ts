@@ -4,7 +4,7 @@ export type ChangeType = 'newFeature' | 'improvement' | 'fix';
 
 export interface ChangeItem {
   content: ReactNode;
-  briefDescription?: string;
+  briefDescription?: ReactNode;
 }
 
 export interface UpdateData {

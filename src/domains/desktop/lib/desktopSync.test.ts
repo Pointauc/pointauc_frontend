@@ -444,6 +444,25 @@ describe('Desktop Data Sync Engine', () => {
       // Verify setup completion marked
       expect(checkIsDesktopSetupCompleted()).toBe(true);
     });
+
+    it('restores userSession cookies from payload localStorage into document.cookie', async () => {
+      document.cookie = 'userSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'userSession.sig=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+      const payload: DesktopSyncDataPayload = {
+        localStorage: {
+          pointauc_cookie_userSession: 'cookie-sess-val-123',
+          pointauc_cookie_userSession_sig: 'cookie-sess-sig-456',
+        },
+        sessionStorage: {},
+        indexedDb: [],
+      };
+
+      await importDesktopData(payload);
+
+      expect(document.cookie).toContain('userSession=cookie-sess-val-123');
+      expect(document.cookie).toContain('userSession.sig=cookie-sess-sig-456');
+    });
   });
 
   describe('desktopSyncApi', () => {

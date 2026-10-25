@@ -22,6 +22,7 @@ export interface UserState extends UserInfo {
     tourniquet?: IntegrationDataDto;
     donatex?: IntegrationDataDto;
     donateHelper?: IntegrationDataDto;
+    donli?: IntegrationDataDto;
   };
   events: {
     aukus: IntegrationAvailability;

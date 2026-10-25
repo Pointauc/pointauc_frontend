@@ -4,4 +4,5 @@ import { getBackendOrigin } from '@shared/api/backendOrigin';
 
 export const backendApi = axios.create({
   baseURL: getBackendOrigin(),
+  withCredentials: true,
 });

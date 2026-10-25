@@ -140,6 +140,16 @@
       "details": "Комиссия — <1>3,5%</1>, Виджеты (new) — нейромемы",
       "acceptedCurrencies": "Принимаем - RUB, $ и EUR"
     },
+    "donli": {
+      "name": "ДОНЛИ",
+      "authModal": {
+        "title": "Подключение ДОНЛИ",
+        "oauthButton": "Войти через Donli (OAuth 2.0)",
+        "cabinetKeyDescription": "Вставьте ключ из личного кабинета Donli (раздел «Настройки» → «Интеграция»):",
+        "openCabinet": "Перейти на сайт Donli ↗",
+        "invalidToken": "Неверный ключ Donli или ошибка соединения"
+      }
+    },
     "da": {
       "name": "Donation Alerts"
     },
@@ -1858,6 +1868,40 @@
     "newArchiveName": "Архив {{date}}"
   },
   "desktop": {
+    "sidebarCard": {
+      "title": "Pointauc Desktop",
+      "description": "Запускайте Pointauc в отдельном окне Windows без лишних вкладок браузера.",
+      "button": "Скачать приложение"
+    },
+    "syncSidebarCard": {
+      "title": "Pointauc Desktop",
+      "description": "Перенесите сохраненные аукционы, историю и авторизацию из вашего браузера.",
+      "button": "Синхронизировать с браузером"
+    },
+    "syncModal": {
+      "title": "Синхронизация с браузером",
+      "badge": "Десктоп"
+    },
+    "downloadModal": {
+      "title": "Pointauc Desktop",
+      "betaBadge": "Бета",
+      "installer": {
+        "title": "Установщик",
+        "format": ".exe",
+        "badge": "Рекомендуется",
+        "description": "Классическая установка. Автоматические фоновые обновления и ярлыки в системе.",
+        "action": "Скачать .exe"
+      },
+      "portable": {
+        "title": "Портативная версия",
+        "format": ".zip",
+        "badge": "Без установки",
+        "description": "Запуск без установки из любой папки или с флешки. Не оставляет файлов в системе.",
+        "action": "Скачать .zip"
+      },
+      "systemRequirements": "Windows 10 / 11 (64-bit)",
+      "viewAllReleases": "Все релизы на GitHub"
+    },
     "oauth": {
       "title": "Авторизация Pointauc Desktop...",
       "description": "Вы можете закрыть эту вкладку или нажать на ссылку ниже, если приложение не открылось автоматически.",
@@ -1920,6 +1964,7 @@
       "subtitle": "Отправьте вашу текущую сессию, сохранения и настройки в приложение на компьютере.",
       "noSession": "Не указан идентификатор сессии. Пожалуйста, начните синхронизацию из приложения Pointauc Desktop.",
       "accountTitle": "Обнаруженный аккаунт",
+      "loadingAccount": "Загрузка аккаунта...",
       "signedInAs": "Вход выполнен как {{username}}",
       "guestMode": "Гостевой режим (без авторизации)",
       "localDataTitle": "Локальные данные",

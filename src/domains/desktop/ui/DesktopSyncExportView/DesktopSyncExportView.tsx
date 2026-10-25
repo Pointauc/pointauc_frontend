@@ -23,19 +23,24 @@ import {
 import dayjs from 'dayjs';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
+import type { ThunkDispatch } from 'redux-thunk';
 
+import { checkHasUserToken } from '@domains/bids/lib/useInitializeUser';
 import { uploadDesktopSyncData } from '@domains/desktop/api/desktopSyncApi';
 import {
   discoverDatabaseNames,
   exportBrowserData,
   exportSingleIndexedDatabase,
 } from '@domains/desktop/lib/exportBrowserData';
+import { loadUserData } from '@reducers/AucSettings/AucSettings';
 import { RootState } from '@reducers';
+import { getCookie } from '@utils/common.utils';
 
 export const DesktopSyncExportView = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session') || searchParams.get('sessionId') || '';
 
@@ -44,10 +49,34 @@ export const DesktopSyncExportView = () => {
   const [archivesCount, setArchivesCount] = useState<number>(0);
   const [settingsCount, setSettingsCount] = useState<number>(0);
   const [isCountingData, setIsCountingData] = useState<boolean>(true);
+  const [isUserLoading, setIsUserLoading] = useState<boolean>(() => checkHasUserToken() && !username);
   const [isTransferring, setIsTransferring] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    if (checkHasUserToken() && !username) {
+      setIsUserLoading(true);
+      dispatch(loadUserData())
+        .catch(() => {
+          // If loading user fails, maintain current state
+        })
+        .finally(() => {
+          if (!isCancelled) {
+            setIsUserLoading(false);
+          }
+        });
+    } else {
+      setIsUserLoading(false);
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [dispatch, username]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -99,11 +128,28 @@ export const DesktopSyncExportView = () => {
     setErrorMessage(null);
 
     try {
-      if (username && typeof window !== 'undefined' && window.localStorage) {
-        try {
-          window.localStorage.setItem('pointauc_username', username);
-        } catch {
-          // Ignore storage write error
+      if (typeof window !== 'undefined' && window.localStorage) {
+        if (username) {
+          try {
+            window.localStorage.setItem('pointauc_username', username);
+          } catch {
+            // Ignore storage write error
+          }
+        }
+
+        if (typeof document !== 'undefined') {
+          try {
+            const userSession = getCookie('userSession');
+            const userSessionSig = getCookie('userSession.sig');
+            if (userSession) {
+              window.localStorage.setItem('pointauc_cookie_userSession', userSession);
+            }
+            if (userSessionSig) {
+              window.localStorage.setItem('pointauc_cookie_userSession_sig', userSessionSig);
+            }
+          } catch {
+            // Ignore cookie write errors
+          }
         }
       }
 
@@ -131,11 +177,28 @@ export const DesktopSyncExportView = () => {
     setIsDownloading(true);
 
     try {
-      if (username && typeof window !== 'undefined' && window.localStorage) {
-        try {
-          window.localStorage.setItem('pointauc_username', username);
-        } catch {
-          // Ignore storage write error
+      if (typeof window !== 'undefined' && window.localStorage) {
+        if (username) {
+          try {
+            window.localStorage.setItem('pointauc_username', username);
+          } catch {
+            // Ignore storage write error
+          }
+        }
+
+        if (typeof document !== 'undefined') {
+          try {
+            const userSession = getCookie('userSession');
+            const userSessionSig = getCookie('userSession.sig');
+            if (userSession) {
+              window.localStorage.setItem('pointauc_cookie_userSession', userSession);
+            }
+            if (userSessionSig) {
+              window.localStorage.setItem('pointauc_cookie_userSession_sig', userSessionSig);
+            }
+          } catch {
+            // Ignore cookie write errors
+          }
         }
       }
 
@@ -227,26 +290,41 @@ export const DesktopSyncExportView = () => {
 
                 <Group justify='space-between' align='center'>
                   <Group gap='sm'>
-                    {username ? (
-                      <Avatar radius='xl' color='violet' size='md'>
-                        {username.charAt(0).toUpperCase()}
-                      </Avatar>
+                    {isUserLoading ? (
+                      <>
+                        <Avatar radius='xl' color='violet' size='md'>
+                          <Loader size='xs' color='violet' />
+                        </Avatar>
+                        <div>
+                          <Text size='sm' fw={600} className='text-zinc-400'>
+                            {t('desktop.sync.loadingAccount')}
+                          </Text>
+                        </div>
+                      </>
                     ) : (
-                      <Avatar radius='xl' color='gray' size='md'>
-                        <IconUser size={18} />
-                      </Avatar>
-                    )}
+                      <>
+                        {username ? (
+                          <Avatar radius='xl' color='violet' size='md'>
+                            {username.charAt(0).toUpperCase()}
+                          </Avatar>
+                        ) : (
+                          <Avatar radius='xl' color='gray' size='md'>
+                            <IconUser size={18} />
+                          </Avatar>
+                        )}
 
-                    <div>
-                      <Text size='sm' fw={600} className='text-zinc-200'>
-                        {username
-                          ? t('desktop.sync.signedInAs', { username })
-                          : t('desktop.sync.guestMode')}
-                      </Text>
-                    </div>
+                        <div>
+                          <Text size='sm' fw={600} className='text-zinc-200'>
+                            {username
+                              ? t('desktop.sync.signedInAs', { username })
+                              : t('desktop.sync.guestMode')}
+                          </Text>
+                        </div>
+                      </>
+                    )}
                   </Group>
 
-                  {username && (
+                  {!isUserLoading && username && (
                     <Badge variant='light' color='violet' size='sm'>
                       Active
                     </Badge>
@@ -288,7 +366,7 @@ export const DesktopSyncExportView = () => {
                   size='md'
                   fullWidth
                   loading={isTransferring}
-                  disabled={!sessionId || isCountingData}
+                  disabled={!sessionId || isCountingData || isUserLoading}
                   onClick={handleTransfer}
                   leftSection={<IconSend size={18} />}
                   className='bg-violet-600 hover:bg-violet-700 text-white font-medium shadow-md'

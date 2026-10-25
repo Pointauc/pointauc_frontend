@@ -14,7 +14,8 @@ export type ID =
   | 'ihaq'
   | 'donatex'
   | 'donatePayEu'
-  | 'donateHelper';
+  | 'donateHelper'
+  | 'donli';
 export type BidType = 'donate' | 'points';
 
 export interface LoginButtonClasses {

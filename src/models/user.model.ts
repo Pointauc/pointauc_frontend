@@ -28,6 +28,7 @@ export interface IntegrationData {
   ihaqAuth: IntegrationDataDto;
   donatexAuth: IntegrationDataDto;
   donateHelperAuth: IntegrationDataDto;
+  donliAuth?: IntegrationDataDto;
 }
 
 export interface GetUserDto extends IntegrationData {

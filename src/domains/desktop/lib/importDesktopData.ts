@@ -124,5 +124,25 @@ export const importDesktopData = async (payload: DesktopSyncDataPayload): Promis
     }
   }
 
+  if (typeof document !== 'undefined') {
+    try {
+      const userSession =
+        payload.localStorage?.pointauc_cookie_userSession ||
+        (typeof window !== 'undefined' && window.localStorage?.getItem('pointauc_cookie_userSession'));
+      const userSessionSig =
+        payload.localStorage?.pointauc_cookie_userSession_sig ||
+        (typeof window !== 'undefined' && window.localStorage?.getItem('pointauc_cookie_userSession_sig'));
+
+      if (userSession) {
+        document.cookie = `userSession=${userSession}; path=/; max-age=31536000; SameSite=Lax`;
+      }
+      if (userSessionSig) {
+        document.cookie = `userSession.sig=${userSessionSig}; path=/; max-age=31536000; SameSite=Lax`;
+      }
+    } catch {
+      // Ignore cookie restoration error in restricted environments
+    }
+  }
+
   markDesktopSetupCompleted();
 };

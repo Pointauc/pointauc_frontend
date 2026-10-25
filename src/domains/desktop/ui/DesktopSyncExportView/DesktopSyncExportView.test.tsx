@@ -54,6 +54,9 @@ const renderExportView = (
 describe('DesktopSyncExportView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    document.cookie = 'userSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'userSession.sig=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    window.localStorage.clear();
   });
 
   it('renders sync view and uploads data when transfer button is clicked', async () => {
@@ -81,6 +84,41 @@ describe('DesktopSyncExportView', () => {
       expect(uploadSpy).toHaveBeenCalledWith('session-99', mockPayload);
       expect(screen.getByText('Transfer Successful!')).toBeInTheDocument();
     });
+  });
+
+  it('saves username and session cookies to localStorage when transfer button is clicked', async () => {
+    document.cookie = 'userSession=sample-sess-token-xyz; path=/';
+    document.cookie = 'userSession.sig=sample-sess-sig-xyz; path=/';
+
+    const mockPayload = {
+      localStorage: {},
+      sessionStorage: {},
+      indexedDb: [],
+    };
+
+    vi.spyOn(exportModule, 'exportBrowserData').mockResolvedValue(mockPayload);
+    vi.spyOn(syncApi, 'uploadDesktopSyncData').mockResolvedValue(undefined);
+
+    renderExportView('/desktop-sync?session=session-100', createTestStore('StreamerPro'));
+
+    expect(screen.getByText('Signed in as StreamerPro')).toBeInTheDocument();
+
+    const transferButton = screen.getByRole('button', { name: 'Transfer to Pointauc Desktop' });
+    await waitFor(() => {
+      expect(transferButton).not.toBeDisabled();
+    });
+    fireEvent.click(transferButton);
+
+    await waitFor(() => {
+      expect(window.localStorage.getItem('pointauc_username')).toBe('StreamerPro');
+      expect(window.localStorage.getItem('pointauc_cookie_userSession')).toBe('sample-sess-token-xyz');
+      expect(window.localStorage.getItem('pointauc_cookie_userSession_sig')).toBe('sample-sess-sig-xyz');
+    });
+  });
+
+  it('shows guest mode when not signed in', () => {
+    renderExportView('/desktop-sync?session=session-99', createTestStore(null as any));
+    expect(screen.getByText('Guest mode (no active login)')).toBeInTheDocument();
   });
 
   it('shows missing session alert when no session query param is present', () => {

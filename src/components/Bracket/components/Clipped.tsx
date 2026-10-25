@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { v4 } from 'uuid';
 import { ReactElement, ReactNode } from 'react';
+
+const getRandomId = () =>
+  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : Math.random().toString(36).substring(2);
 
 export interface ClippedProps {
   path: ReactElement | ReactElement[];
@@ -8,7 +12,7 @@ export interface ClippedProps {
 }
 
 class Clipped extends React.PureComponent<ClippedProps> {
-  _id = v4();
+  _id = getRandomId();
 
   render() {
     const { _id } = this;

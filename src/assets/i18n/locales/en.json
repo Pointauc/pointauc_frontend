@@ -229,6 +229,16 @@
       "details": "Commission — 3.5%, Widgets (new) — neuromemes",
       "acceptedCurrencies": "Accept — RUB, $ and EUR, etc."
     },
+    "donli": {
+      "name": "Donli",
+      "authModal": {
+        "title": "Connect Donli",
+        "oauthButton": "Log in with Donli (OAuth 2.0)",
+        "cabinetKeyDescription": "Paste personal integration key from Donli dashboard (Settings → Integration):",
+        "openCabinet": "Open Donli website ↗",
+        "invalidToken": "Invalid Donli key or connection error"
+      }
+    },
     "donatex": {
       "name": "DonateX"
     },
@@ -1869,6 +1879,40 @@
     "newArchiveName": "Archive {{date}}"
   },
   "desktop": {
+    "sidebarCard": {
+      "title": "Pointauc Desktop",
+      "description": "Run Pointauc in a separate Windows window without unnecessary browser tabs.",
+      "button": "Download App"
+    },
+    "syncSidebarCard": {
+      "title": "Pointauc Desktop",
+      "description": "Sync your auction saves, history, and login session with your browser.",
+      "button": "Sync with Browser"
+    },
+    "syncModal": {
+      "title": "Sync with Browser",
+      "badge": "Desktop"
+    },
+    "downloadModal": {
+      "title": "Pointauc Desktop",
+      "betaBadge": "Beta",
+      "installer": {
+        "title": "Installer",
+        "format": ".exe",
+        "badge": "Recommended",
+        "description": "Classic installation. Automatic background updates and system shortcuts.",
+        "action": "Download .exe"
+      },
+      "portable": {
+        "title": "Portable Version",
+        "format": ".zip",
+        "badge": "No Install",
+        "description": "Run without installation from any folder or USB drive. Leaves no leftover files in the system.",
+        "action": "Download .zip"
+      },
+      "systemRequirements": "Windows 10 / 11 (64-bit)",
+      "viewAllReleases": "All releases on GitHub"
+    },
     "oauth": {
       "title": "Authorizing Pointauc Desktop...",
       "description": "You can close this tab or click the link below if it did not open automatically.",
@@ -1931,6 +1975,7 @@
       "subtitle": "Send your current session, saves, and settings to your desktop application.",
       "noSession": "Invalid or missing sync session ID. Please launch sync from Pointauc Desktop.",
       "accountTitle": "Detected Account",
+      "loadingAccount": "Loading account...",
       "signedInAs": "Signed in as {{username}}",
       "guestMode": "Guest mode (no active login)",
       "localDataTitle": "Local Data Summary",

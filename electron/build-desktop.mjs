@@ -115,3 +115,22 @@ if (fs.existsSync(sourceAsarPath)) {
   fs.copyFileSync(sourceAsarPath, path.join(rootDirectory, 'release/app.asar'));
   fs.copyFileSync(sourceAsarPath, path.join(rootDirectory, `release/Pointauc-Update-${appVersion}-app.asar`));
 }
+
+const releaseFiles = fs.readdirSync(path.join(rootDirectory, 'release'));
+const setupFile = releaseFiles.find((file) => file.startsWith('Pointauc-Setup-') && file.endsWith('.exe'));
+if (setupFile && setupFile !== 'Pointauc-Setup.exe') {
+  console.log(`Creating permanent alias Pointauc-Setup.exe -> ${setupFile}`);
+  fs.copyFileSync(
+    path.join(rootDirectory, 'release', setupFile),
+    path.join(rootDirectory, 'release/Pointauc-Setup.exe'),
+  );
+}
+
+const portableFile = releaseFiles.find((file) => file.startsWith('Pointauc-Portable-') && file.endsWith('.zip'));
+if (portableFile && portableFile !== 'Pointauc-Portable.zip') {
+  console.log(`Creating permanent alias Pointauc-Portable.zip -> ${portableFile}`);
+  fs.copyFileSync(
+    path.join(rootDirectory, 'release', portableFile),
+    path.join(rootDirectory, 'release/Pointauc-Portable.zip'),
+  );
+}

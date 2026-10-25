@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { settingsApi } from '@api/userApi.ts';
 import { SettingsPresetLocal } from '@models/settings.model.ts';
 import { loadFile } from '@utils/common.utils.ts';
@@ -83,8 +81,13 @@ export const applyPresetTransferPayload = async (payload: PresetTransferPayload)
 };
 
 export const createPresetRecord = (name: string, data: SettingsPresetLocal['data']): SettingsPresetLocal => {
+  const id =
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : Math.random().toString(36).substring(2);
+
   return {
-    id: uuidv4(),
+    id,
     name,
     data,
   };
