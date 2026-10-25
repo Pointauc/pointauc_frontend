@@ -68,11 +68,12 @@ jobs:
           TAG_NAME="deploy-${SHORT_SHA}"
           RELEASE_TITLE="Deployment - ${SHORT_SHA}"
 
-          # Create release
-          gh release create "${TAG_NAME}" \
-            --title "${RELEASE_TITLE}" \
-            --notes "Automated deployment from commit ${{ github.sha }}" \
-            --target ${{ github.sha }}
+          # Create release if it does not already exist
+          gh release view "${TAG_NAME}" >/dev/null 2>&1 || \
+            gh release create "${TAG_NAME}" \
+              --title "${RELEASE_TITLE}" \
+              --notes "Automated deployment from commit ${{ github.sha }}" \
+              --target ${{ github.sha }}
 
       - name: Upload source hashes to release
         env:
