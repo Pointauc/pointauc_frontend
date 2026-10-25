@@ -38,3 +38,6 @@ dev-docs/
 release/
 dist-electron/
 electron/dist/
+
+# Local agent skills containing private credentials
+.agents/skills/posthog-api/
