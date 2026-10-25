@@ -4,6 +4,10 @@ import { consoleAnalyticsProvider } from '@shared/lib/analytics/providers/consol
 import { ConfiguredAnalyticsProviders } from '@shared/lib/analytics/providers/configuredProviders.ts';
 import { googleTagManagerProvider } from '@shared/lib/analytics/providers/googleTagManagerProvider.ts';
 
+vi.mock('@shared/lib/analytics/providers/postHogProvider.ts', () => ({
+  postHogProvider: null,
+}));
+
 describe('ConfiguredAnalyticsProviders', () => {
   afterEach(() => {
     vi.restoreAllMocks();

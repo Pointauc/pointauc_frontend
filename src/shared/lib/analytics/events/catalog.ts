@@ -10,6 +10,7 @@ export const analyticsEventNames = {
   promotionBannerImpression: 'promotion_banner_impression',
   promotionBannerClick: 'promotion_banner_click',
   promotionBannerClose: 'promotion_banner_close',
+  auctionHistorySyncConflict: 'auction_history_sync_conflict',
 } as const;
 
 /**
@@ -104,6 +105,7 @@ export interface AnalyticsEventMap {
     enabled_integrations_count: number;
     integrations_with_transferred_bids: string;
     integrations_with_transferred_bids_count: number;
+    participant_count?: number;
   };
   [analyticsEventNames.overlayOpened]: {
     overlay_id?: string;
@@ -121,6 +123,12 @@ export interface AnalyticsEventMap {
   [analyticsEventNames.promotionBannerImpression]: PromotionBannerEventPayload;
   [analyticsEventNames.promotionBannerClick]: PromotionBannerEventPayload;
   [analyticsEventNames.promotionBannerClose]: PromotionBannerEventPayload;
+  [analyticsEventNames.auctionHistorySyncConflict]: {
+    auctionId: string;
+    resolution: 'local' | 'remote';
+    localTotalAmount?: number;
+    remoteTotalAmount?: number;
+  };
 }
 
 export type AnalyticsEventName = keyof AnalyticsEventMap;

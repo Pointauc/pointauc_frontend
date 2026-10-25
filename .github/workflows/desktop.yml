@@ -1,0 +1,213 @@
+name: Desktop Application CI/CD
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'desktop-v*'
+      - 'v*'
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      custom_version:
+        description: 'Release version override (e.g. 1.0.0). Defaults to package.json version or Git tag'
+        required: false
+        default: ''
+      publish_release:
+        description: 'Publish release assets to GitHub Releases'
+        type: boolean
+        required: false
+        default: false
+      draft:
+        description: 'Create GitHub release as a draft'
+        type: boolean
+        required: false
+        default: false
+      prerelease:
+        description: 'Mark GitHub release as pre-release'
+        type: boolean
+        required: false
+        default: false
+
+concurrency:
+  group: desktop-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  desktop-pipeline:
+    name: Desktop Build, Smoke Test & Release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Determine Desktop Application Version
+        shell: pwsh
+        run: |
+          $customVersion = "${{ github.event.inputs.custom_version }}"
+          $refName = "${{ github.ref_name }}"
+          $pkgJson = Get-Content package.json | ConvertFrom-Json
+          $pkgVersion = $pkgJson.version
+
+          if ($customVersion -and $customVersion.Trim() -ne "") {
+            $resolvedVersion = $customVersion.Trim().TrimStart("v")
+          } elseif ($refName -match '^desktop-v?(\d+\.\d+\.\d+.*)$') {
+            $resolvedVersion = $Matches[1]
+          } elseif ($refName -match '^v?(\d+\.\d+\.\d+.*)$') {
+            $resolvedVersion = $Matches[1]
+          } elseif ($pkgVersion -and $pkgVersion -ne "0.0.0") {
+            $resolvedVersion = $pkgVersion
+          } else {
+            $shortSha = "${{ github.sha }}".Substring(0, 7)
+            $resolvedVersion = "0.0.0-$shortSha"
+          }
+
+          Write-Host "Resolved Desktop App Version: $resolvedVersion"
+          "DESKTOP_APP_VERSION=$resolvedVersion" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Generate .env.local from GitHub repository variables
+        env:
+          VARS_JSON: ${{ toJson(vars) }}
+        run: node scripts/generate-desktop-env.js
+
+      - name: Typecheck Desktop and Electron
+        run: |
+          pnpm run typecheck:electron
+          pnpm exec tsc --noEmit
+
+      - name: Lint Electron and Desktop Domain
+        run: |
+          pnpm exec eslint electron --ext ts
+          pnpm exec eslint src/domains/desktop --ext ts,tsx
+
+      - name: Run Desktop Domain Unit & Integration Tests
+        run: pnpm run test:desktop
+
+      - name: Build Desktop Application
+        env:
+          DESKTOP_APP_VERSION: ${{ env.DESKTOP_APP_VERSION }}
+          DESKTOP_BACKEND_ORIGIN: ${{ vars.DESKTOP_BACKEND_ORIGIN || 'https://pointauc.com' }}
+          DESKTOP_PUBLIC_ORIGIN: ${{ vars.DESKTOP_PUBLIC_ORIGIN || 'https://pointauc.com' }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: pnpm run build:desktop
+
+      - name: Run Packaged Desktop Smoke Test
+        run: pnpm run smoke:desktop:packaged
+
+      - name: Generate Checksums
+        shell: pwsh
+        run: |
+          $hashes = @()
+          Get-ChildItem -Path release\* -Include "Pointauc-Setup-*.exe", "Pointauc-Portable-*.zip", "Pointauc-Update-*-app.asar", "app.asar" -File | ForEach-Object {
+            $hash = (Get-FileHash -Path $_.FullName -Algorithm SHA256).Hash.ToLower()
+            $hashes += "$hash  $($_.Name)"
+          }
+          $hashes | Out-File -FilePath release/SHA256SUMS.txt -Encoding utf8
+          Write-Host "Generated SHA256SUMS.txt:"
+          Get-Content release/SHA256SUMS.txt
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pointauc-desktop-${{ env.DESKTOP_APP_VERSION }}
+          path: |
+            release/Pointauc-Setup-*.exe
+            release/Pointauc-Setup-*.exe.blockmap
+            release/Pointauc-Portable-*.zip
+            release/Pointauc-Update-*-app.asar
+            release/app.asar
+            release/latest.yml
+            release/SHA256SUMS.txt
+          retention-days: ${{ github.event_name == 'pull_request' && 7 || 14 }}
+
+      - name: Publish GitHub Release
+        if: |
+          startsWith(github.ref, 'refs/tags/desktop-v') ||
+          startsWith(github.ref, 'refs/tags/v') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.publish_release == 'true')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: pwsh
+        run: |
+          $tag = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME } else { "desktop-v$($env:DESKTOP_APP_VERSION)" }
+          $title = "Pointauc Desktop v$($env:DESKTOP_APP_VERSION)"
+          $isDraft = "${{ github.event.inputs.draft }}" -eq "true"
+          $isPrerelease = "${{ github.event.inputs.prerelease }}" -eq "true"
+
+          $flags = @()
+          if ($isDraft) { $flags += "--draft" }
+          if ($isPrerelease) { $flags += "--prerelease" }
+
+          $assets = Get-ChildItem -Path release\* -Include "Pointauc-Setup-*.exe", "Pointauc-Setup-*.exe.blockmap", "Pointauc-Portable-*.zip", "Pointauc-Update-*-app.asar", "app.asar", "latest.yml", "SHA256SUMS.txt" -File | Select-Object -ExpandProperty FullName
+
+          # Check if release already exists
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release $tag already exists. Uploading assets..."
+            foreach ($asset in $assets) {
+              gh release upload $tag $asset --clobber
+            }
+          } else {
+            Write-Host "Creating release $tag..."
+            gh release create $tag $assets `
+              --title $title `
+              --notes "Automated release for Pointauc Desktop client v$($env:DESKTOP_APP_VERSION)" `
+              @flags
+          }
+
+      - name: Write Step Summary
+        if: always()
+        shell: pwsh
+        run: |
+          $summary = @()
+          $summary += "## 🖥️ Pointauc Desktop CI/CD Summary"
+          $summary += ""
+          $summary += "- **App Version:** ``$($env:DESKTOP_APP_VERSION)``"
+          $summary += "- **Commit:** ``${{ github.sha }}``"
+          $summary += "- **Branch/Ref:** ``${{ github.ref_name }}``"
+          $summary += "- **Trigger:** ``${{ github.event_name }}``"
+          $summary += ""
+
+          if (Test-Path release) {
+            $summary += "### 📦 Generated Artifacts"
+            $summary += ""
+            $summary += "| File | Size |"
+            $summary += "| --- | --- |"
+            Get-ChildItem -Path release\* -Include "Pointauc-Setup-*.exe", "Pointauc-Setup-*.exe.blockmap", "Pointauc-Portable-*.zip", "Pointauc-Update-*-app.asar", "app.asar", "latest.yml", "SHA256SUMS.txt" -File | ForEach-Object {
+              $sizeMb = [math]::Round($_.Length / 1MB, 2)
+              $summary += "| ``$($_.Name)`` | ${sizeMb} MB ($($_.Length) bytes) |"
+            }
+            $summary += ""
+          }
+
+          if (Test-Path release/SHA256SUMS.txt) {
+            $codeFence = '```'
+            $summary += "### 🔒 SHA-256 Checksums"
+            $summary += "${codeFence}text"
+            $summary += (Get-Content release/SHA256SUMS.txt)
+            $summary += $codeFence
+            $summary += ""
+          }
+
+          $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8

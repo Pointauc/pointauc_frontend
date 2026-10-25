@@ -11,13 +11,21 @@ files:
   - "**/*"
 win:
   target:
+    - target: zip
+      arch:
+        - x64
     - target: nsis
       arch:
         - x64
   icon: electron/icon.ico
+  artifactName: Pointauc-Portable-${version}.${ext}
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
   perMachine: false
   artifactName: Pointauc-Setup-${version}.${ext}
 forceCodeSigning: false
+publish:
+  provider: github
+  owner: Pointauc
+  repo: pointauc_frontend

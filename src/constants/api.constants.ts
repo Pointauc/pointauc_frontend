@@ -60,6 +60,13 @@ const ENDPOINTS = {
     RESULT: 'https://aukus.fun/api/point_auc/result',
     TIMER_STARTED: 'https://aukus.fun/api/point_auc/timer_started',
   },
+  AUCTION_HISTORY: {
+    BASE: '/api/auction-history',
+    PARTICIPANTS: '/api/auction-history/participants',
+    RANGE_DETAILS: '/api/auction-history/range-details',
+    NEXT_DEFAULT_NAME: '/api/auction-history/next-default-name',
+    CONFLICT_LOG: '/api/auction-history/sync/conflict-log',
+  },
 };
 
 export default ENDPOINTS;

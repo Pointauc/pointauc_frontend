@@ -26,6 +26,7 @@ import { checkIsDesktopSetupCompleted } from '@domains/desktop/lib/desktopSetupS
 import { DesktopSplashScreen } from '@domains/desktop/ui/DesktopSplashScreen/DesktopSplashScreen';
 import { checkIsDesktop } from '@shared/lib/desktop/checkIsDesktop';
 import { processRedemption } from '@reducers/Purchases/Purchases.ts';
+import { initSyncListeners } from '@domains/auction/history/lib/syncService.ts';
 
 import ROUTES from '../../constants/routes.constants';
 import { connectToBroadcastingSocket, disconnectBroadcastingSocket } from '../../domains/broadcasting/lib/socket';
@@ -91,6 +92,10 @@ const App: React.FC = () => {
       return true;
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    return initSyncListeners();
+  }, []);
 
   const isNavbarExpanded = useMemo(() => {
     return (isHovered && activeMenu?.navbarFixedState !== 'closed') || activeMenu?.navbarFixedState === 'opened';

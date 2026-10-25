@@ -5,12 +5,12 @@ import { initReactI18next } from 'react-i18next';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { configureStore } from '@reduxjs/toolkit';
 
 import enTranslations from '@assets/i18n/locales/en.json';
 import * as syncApi from '@domains/desktop/api/desktopSyncApi';
 import * as exportModule from '@domains/desktop/lib/exportBrowserData';
 import { DesktopSyncExportView } from '@domains/desktop/ui/DesktopSyncExportView/DesktopSyncExportView';
-import { configureStore } from '@reduxjs/toolkit';
 
 i18n.use(initReactI18next).init({
   lng: 'en',

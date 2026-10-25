@@ -9,6 +9,7 @@ import type { LotContributor } from '@models/slot.model';
 import type { AuctionHistoryRangeDetails } from '../api/AuctionHistoryApi';
 import type {
   AuctionHistoryAuction,
+  AuctionHistoryBid,
   AuctionHistoryContribution,
   AuctionHistoryLot,
   AuctionHistoryParticipant,
@@ -139,6 +140,34 @@ export const getEffectiveWinnerLot = (
   return (winnerEvent ? lots.find((lot) => lot.id === winnerEvent.lotId) : undefined) ?? getBiggestLot(lots);
 };
 
+export const deriveContributionsFromBids = (
+  bids: AuctionHistoryBid[],
+): AuctionHistoryContribution[] => {
+  const map = new Map<string, AuctionHistoryContribution>();
+  for (const b of bids) {
+    const key = `${b.auctionId}:${b.lotId}:${b.participantId}`;
+    const existing = map.get(key) ?? {
+      id: key,
+      userId: b.userId,
+      auctionId: b.auctionId,
+      lotId: b.lotId,
+      participantId: b.participantId,
+      points: 0,
+      donationCents: 0,
+      bidsCount: 0,
+    };
+    const amount = Number(b.amount_cents ?? b.amountCents ?? 0);
+    if (b.kind === 'points') {
+      existing.points += amount;
+    } else {
+      existing.donationCents += amount;
+    }
+    existing.bidsCount += 1;
+    map.set(key, existing);
+  }
+  return Array.from(map.values());
+};
+
 export const getContributionWeightedTotal = (
   contribution: Pick<AuctionHistoryContribution, 'points' | 'donationCents'>,
   pointsToDonationRatio: number,
@@ -148,11 +177,14 @@ export const getContributionWeightedTotal = (
 
 export const getTopContributorName = (
   lotId: string,
-  contributions: AuctionHistoryContribution[],
+  contributions: AuctionHistoryContribution[] | undefined,
   resolveParticipantName: (participantId: string) => string,
   pointsToDonationRatio: number,
+  bids?: AuctionHistoryBid[],
 ): string | undefined => {
-  const topContribution = contributions
+  const effectiveContributions =
+    bids && bids.length > 0 ? deriveContributionsFromBids(bids) : contributions ?? [];
+  const topContribution = effectiveContributions
     .filter((contribution) => contribution.lotId === lotId)
     .sort((first, second) => {
       const firstTotal = getContributionWeightedTotal(first, pointsToDonationRatio);
@@ -165,11 +197,14 @@ export const getTopContributorName = (
 
 export const getLotContributors = (
   lotId: string,
-  contributions: AuctionHistoryContribution[],
+  contributions: AuctionHistoryContribution[] | undefined,
   resolveParticipantName: (participantId: string) => string,
   pointsToDonationRatio: number,
+  bids?: AuctionHistoryBid[],
 ): LotContributor[] => {
-  return contributions
+  const effectiveContributions =
+    bids && bids.length > 0 ? deriveContributionsFromBids(bids) : contributions ?? [];
+  return effectiveContributions
     .filter((contribution) => contribution.lotId === lotId)
     .map((contribution) => ({
       name: resolveParticipantName(contribution.participantId),
@@ -197,8 +232,19 @@ export const resolveRangeTotals = (
   // Range-level aggregates are computed from already-loaded IndexedDB rows.
   // This stays O(auctions + contributions + lots) for ranges with hundreds of
   // auctions and hundreds of thousands of contribution records.
-  const participantIds = new Set(rangeDetails.contributions.map((contribution) => contribution.participantId));
-  const totalBids = rangeDetails.contributions.reduce((sum, contribution) => sum + contribution.bidsCount, 0);
+  const contributions =
+    rangeDetails.bids && rangeDetails.bids.length > 0
+      ? deriveContributionsFromBids(rangeDetails.bids)
+      : rangeDetails.contributions ?? [];
+  const participantIds = new Set(
+    rangeDetails.bids && rangeDetails.bids.length > 0
+      ? rangeDetails.bids.map((b) => b.participantId)
+      : contributions.map((contribution) => contribution.participantId),
+  );
+  const totalBids =
+    rangeDetails.bids && rangeDetails.bids.length > 0
+      ? rangeDetails.bids.length
+      : contributions.reduce((sum, contribution) => sum + contribution.bidsCount, 0);
   const totalPoints = auctions.reduce((sum, auction) => sum + auction.totalPoints, 0);
   const totalDonationCents = auctions.reduce((sum, auction) => sum + auction.totalDonationCents, 0);
   const winnerEventsByAuctionId = groupBy(rangeDetails.winnerEvents, (event) => event.auctionId);
@@ -241,8 +287,13 @@ export const buildAuctionCardSummaries = (
 ): AuctionCardSummary[] => {
   // Cards need winner, bid count, and flavor metadata. Grouping once avoids
   // repeatedly scanning the full contribution set for every rendered auction.
+  const effectiveContributions =
+    rangeDetails.bids && rangeDetails.bids.length > 0
+      ? deriveContributionsFromBids(rangeDetails.bids)
+      : rangeDetails.contributions ?? [];
   const lotsByAuctionId = groupBy(rangeDetails.lots, (lot) => lot.auctionId);
-  const contributionsByAuctionId = groupBy(rangeDetails.contributions, (contribution) => contribution.auctionId);
+  const bidsByAuctionId = groupBy(rangeDetails.bids || [], (bid) => bid.auctionId);
+  const contributionsByAuctionId = groupBy(effectiveContributions, (contribution) => contribution.auctionId);
   const winnerEventsByAuctionId = groupBy(rangeDetails.winnerEvents, (event) => event.auctionId);
   const participantAverage = getAverage(auctions.map((auction) => auction.participantCount));
   const participantPercentile = getPercentile(
@@ -267,19 +318,30 @@ export const buildAuctionCardSummaries = (
 
   return auctions.map((auction) => {
     const auctionLots = lotsByAuctionId.get(auction.id) ?? [];
+    const auctionBids = bidsByAuctionId.get(auction.id) ?? [];
     const auctionContributions = contributionsByAuctionId.get(auction.id) ?? [];
     const auctionWinnerEvents = winnerEventsByAuctionId.get(auction.id) ?? [];
     const winnerEvent = getConfirmedWinnerEvent(auctionWinnerEvents);
     const winnerLot = getEffectiveWinnerLot(auctionLots, auctionWinnerEvents);
+    const effectiveContribs =
+      auctionBids.length > 0
+        ? deriveContributionsFromBids(auctionBids)
+        : auctionContributions;
     const winnerContributors = winnerLot
-      ? getLotContributors(winnerLot.id, auctionContributions, resolveParticipantName, auction.pointsToDonationRatio)
+      ? getLotContributors(
+          winnerLot.id,
+          auctionContributions,
+          resolveParticipantName,
+          auction.pointsToDonationRatio,
+          auctionBids,
+        )
       : [];
     const combinedTotal = getAuctionWeightedTotal(auction);
     const contributionPerParticipant = auction.participantCount ? combinedTotal / auction.participantCount : 0;
     const winnerParticipationPercent =
-      winnerLot && auctionContributions.length > 0
-        ? (auctionContributions.filter((contribution) => contribution.lotId === winnerLot.id).length /
-            auctionContributions.length) *
+      winnerLot && effectiveContribs.length > 0
+        ? (effectiveContribs.filter((contribution) => contribution.lotId === winnerLot.id).length /
+            effectiveContribs.length) *
           100
         : 100;
     let flavor: StatusFlavor = statusFlavors.popular;
@@ -302,9 +364,14 @@ export const buildAuctionCardSummaries = (
       flavor = statusFlavors.popular;
     }
 
+    const bidCount =
+      auctionBids.length > 0
+        ? auctionBids.length
+        : auctionContributions.reduce((sum, contribution) => sum + contribution.bidsCount, 0);
+
     return {
       auction,
-      bidCount: auctionContributions.reduce((sum, contribution) => sum + contribution.bidsCount, 0),
+      bidCount,
       currencyMode: getAuctionCurrencyMode(auction),
       flavor,
       winnerLot,
@@ -379,7 +446,12 @@ export const buildParticipantScores = (
       .map((lot) => lot.id),
   );
 
-  rangeDetails.contributions.forEach((contribution) => {
+  const contributions =
+    rangeDetails.bids && rangeDetails.bids.length > 0
+      ? deriveContributionsFromBids(rangeDetails.bids)
+      : rangeDetails.contributions ?? [];
+
+  contributions.forEach((contribution) => {
     const score = scoreByParticipantId.get(contribution.participantId) ?? {
       id: contribution.participantId,
       displayName: resolveParticipantName(contribution.participantId),
@@ -409,7 +481,7 @@ export const buildParticipantScores = (
   );
   const auctionParticipationByParticipantId = new Map<string, Set<string>>();
 
-  rangeDetails.contributions.forEach((contribution) => {
+  contributions.forEach((contribution) => {
     const auctionIds = auctionParticipationByParticipantId.get(contribution.participantId) ?? new Set<string>();
     auctionIds.add(contribution.auctionId);
     auctionParticipationByParticipantId.set(contribution.participantId, auctionIds);

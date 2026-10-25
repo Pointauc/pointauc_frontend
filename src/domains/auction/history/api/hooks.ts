@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
-import auctionHistoryApi from './IndexedDBAdapter';
+import auctionHistoryApi from './HybridAuctionHistoryAdapter';
 
 import type { AuctionHistorySnapshot } from '../model/types';
 

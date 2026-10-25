@@ -3,7 +3,7 @@ import { resetPurchases } from '@reducers/Purchases/Purchases';
 import { resetSlots } from '@reducers/Slots/Slots';
 import { store } from '@store';
 
-import auctionHistoryApi from '../api/IndexedDBAdapter';
+import auctionHistoryApi from '../api/HybridAuctionHistoryAdapter';
 import { resetActiveAuctionHistory } from '../model/activeAuctionHistorySlice';
 
 import { getActiveAuctionDurationMs } from './activeAuctionState';

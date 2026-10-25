@@ -81,5 +81,6 @@ export const buildAuctionEndedPayload = ({
     enabled_integrations_count: enabledIntegrations.length,
     integrations_with_transferred_bids: integrationsWithTransferredBids.join(','),
     integrations_with_transferred_bids_count: integrationsWithTransferredBids.length,
+    participant_count: getUniqueParticipantCount(activeLots),
   };
 };
