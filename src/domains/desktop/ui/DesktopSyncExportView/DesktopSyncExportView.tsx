@@ -25,7 +25,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
-import type { ThunkDispatch } from 'redux-thunk';
 
 import { checkHasUserToken } from '@domains/bids/lib/useInitializeUser';
 import { uploadDesktopSyncData } from '@domains/desktop/api/desktopSyncApi';
@@ -37,6 +36,8 @@ import {
 import { loadUserData } from '@reducers/AucSettings/AucSettings';
 import { RootState } from '@reducers';
 import { getCookie } from '@utils/common.utils';
+
+import type { ThunkDispatch } from 'redux-thunk';
 
 export const DesktopSyncExportView = () => {
   const { t } = useTranslation();

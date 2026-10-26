@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import type { ThunkDispatch } from 'redux-thunk';
 
 import { checkHasUserToken } from '@domains/bids/lib/useInitializeUser';
 import {
@@ -14,6 +13,8 @@ import { getSyncPayloadSummary } from '@domains/desktop/lib/validateSyncPayload'
 import { DesktopSyncDataPayload, DesktopSyncSession } from '@domains/desktop/model/types';
 import { loadUserData } from '@reducers/AucSettings/AucSettings';
 import { getPointaucDesktop } from '@shared/lib/desktop/checkIsDesktop';
+
+import type { ThunkDispatch } from 'redux-thunk';
 
 export type DesktopSyncFlowStep = 'intro' | 'waiting' | 'file-import' | 'importing' | 'success' | 'error';
 
