@@ -60,7 +60,7 @@ export const DesktopSyncExportView = () => {
 
     if (checkHasUserToken() && !username) {
       setIsUserLoading(true);
-      dispatch(loadUserData())
+      (dispatch(loadUserData()) as any)
         .catch(() => {
           // If loading user fails, maintain current state
         })

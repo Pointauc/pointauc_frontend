@@ -14,9 +14,41 @@ describe('bannerRotationStore', () => {
     resetVerticalBannerRotation();
   });
 
-  it('rotates 1. Promocode banner -> 2. Widget banner with widgets rotated in their own sequence across page loads', () => {
-    // 1st page load: Promocode
-    const banner1 = getNextVerticalBannerCreative({ forceNew: true });
+  describe('first banner appearance randomness (50/50 promo vs widget, and random widget)', () => {
+    it('picks Promo (Point_260) on first appearance when random < 0.5', () => {
+      // random returns 0.2 (< 0.5 -> promo) and widgetIndex 0
+      const banner = getNextVerticalBannerCreative({ forceNew: true, random: () => 0.2 });
+      expect(banner?.id).toBe('Point_260');
+    });
+
+    it('picks Widget 1 (Word_260) on first appearance when random >= 0.5 and widget index is 0', () => {
+      let callCount = 0;
+      // 1st call: 0.8 (>= 0.5 -> widget), 2nd call: 0.1 (Math.floor(0.1 * 2) = 0 -> Word_260)
+      const mockRandom = () => {
+        callCount++;
+        return callCount === 1 ? 0.8 : 0.1;
+      };
+
+      const banner = getNextVerticalBannerCreative({ forceNew: true, random: mockRandom });
+      expect(banner?.id).toBe('Word_260');
+    });
+
+    it('picks Widget 2 (DM_260) on first appearance when random >= 0.5 and widget index is 1', () => {
+      let callCount = 0;
+      // 1st call: 0.8 (>= 0.5 -> widget), 2nd call: 0.9 (Math.floor(0.9 * 2) = 1 -> DM_260)
+      const mockRandom = () => {
+        callCount++;
+        return callCount === 1 ? 0.8 : 0.9;
+      };
+
+      const banner = getNextVerticalBannerCreative({ forceNew: true, random: mockRandom });
+      expect(banner?.id).toBe('DM_260');
+    });
+  });
+
+  it('rotates promo -> widget (Word) -> promo -> widget (DM) when starting with Promo', () => {
+    // 1st page load: Promocode (force random to choose promo with word widget next)
+    const banner1 = getNextVerticalBannerCreative({ forceNew: true, random: () => 0 });
     expect(banner1?.id).toBe('Point_260');
 
     // 2nd page load: 1st Widget (Word)
@@ -38,19 +70,40 @@ describe('bannerRotationStore', () => {
     // 6th page load: 1st Widget (Word)
     const banner6 = getNextVerticalBannerCreative({ forceNew: true });
     expect(banner6?.id).toBe('Word_260');
+  });
 
-    // 7th page load: Promocode
-    const banner7 = getNextVerticalBannerCreative({ forceNew: true });
-    expect(banner7?.id).toBe('Point_260');
+  it('rotates widget (DM) -> promo -> widget (Word) -> promo when starting with Widget (DM)', () => {
+    let callCount = 0;
+    // 1st call: 0.8 (widget), 2nd call: 0.9 (DM_260)
+    const mockRandom = () => {
+      callCount++;
+      return callCount === 1 ? 0.8 : 0.9;
+    };
 
-    // 8th page load: 2nd Widget (DM)
-    const banner8 = getNextVerticalBannerCreative({ forceNew: true });
-    expect(banner8?.id).toBe('DM_260');
+    // 1st page load: Widget (DM)
+    const banner1 = getNextVerticalBannerCreative({ forceNew: true, random: mockRandom });
+    expect(banner1?.id).toBe('DM_260');
+
+    // 2nd page load: Promocode
+    const banner2 = getNextVerticalBannerCreative({ forceNew: true });
+    expect(banner2?.id).toBe('Point_260');
+
+    // 3rd page load: Widget (Word)
+    const banner3 = getNextVerticalBannerCreative({ forceNew: true });
+    expect(banner3?.id).toBe('Word_260');
+
+    // 4th page load: Promocode
+    const banner4 = getNextVerticalBannerCreative({ forceNew: true });
+    expect(banner4?.id).toBe('Point_260');
+
+    // 5th page load: Widget (DM)
+    const banner5 = getNextVerticalBannerCreative({ forceNew: true });
+    expect(banner5?.id).toBe('DM_260');
   });
 
   it('keeps the same banner within a single page session without forceNew', () => {
-    // 1st call on page: selects Point_260
-    const bannerA = getNextVerticalBannerCreative();
+    // 1st call on page: selects Point_260 with random: () => 0
+    const bannerA = getNextVerticalBannerCreative({ random: () => 0 });
     expect(bannerA?.id).toBe('Point_260');
 
     // Repeated renders / effect calls within the same page session: still returns Point_260 without advancing
@@ -67,12 +120,11 @@ describe('bannerRotationStore', () => {
   });
 
   it('does not advance counters when advance is false', () => {
-    const bannerA = getNextVerticalBannerCreative({ advance: false });
+    const bannerA = getNextVerticalBannerCreative({ advance: false, random: () => 0 });
     expect(bannerA?.id).toBe('Point_260');
 
-    const indices = getStoredRotationIndices();
-    expect(indices.typeIndex).toBe(0);
-    expect(indices.widgetIndex).toBe(0);
+    expect(window.localStorage.getItem(VERTICAL_ROTATION_TYPE_KEY)).toBeNull();
+    expect(window.localStorage.getItem(VERTICAL_ROTATION_WIDGET_KEY)).toBeNull();
   });
 
   it('resets indices when resetVerticalBannerRotation is called', () => {
@@ -80,8 +132,8 @@ describe('bannerRotationStore', () => {
     expect(getStoredRotationIndices()).toEqual({ typeIndex: 3, widgetIndex: 1 });
 
     resetVerticalBannerRotation();
-    expect(getStoredRotationIndices()).toEqual({ typeIndex: 0, widgetIndex: 0 });
     expect(window.localStorage.getItem(VERTICAL_ROTATION_TYPE_KEY)).toBeNull();
     expect(window.localStorage.getItem(VERTICAL_ROTATION_WIDGET_KEY)).toBeNull();
+    expect(getStoredRotationIndices(() => 0)).toEqual({ typeIndex: 0, widgetIndex: 0 });
   });
 });

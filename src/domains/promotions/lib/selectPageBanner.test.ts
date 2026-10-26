@@ -127,7 +127,7 @@ describe('selectPageBanner on auction page', () => {
   });
 
   it('always shows vertical banner on the main page and rotates promo -> widget (Word) -> promo -> widget (DM)', () => {
-    const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
     expect(banner1?.placement).toBe('auction_bids');
     expect(banner1?.creative.id).toBe('Point_260');
 
@@ -142,6 +142,19 @@ describe('selectPageBanner on auction page', () => {
     const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner4?.placement).toBe('auction_bids');
     expect(banner4?.creative.id).toBe('DM_260');
+  });
+
+  it('can start randomly with a widget on first appearance', () => {
+    let callCount = 0;
+    // 1st call: 0.8 (widget), 2nd call: 0.9 (DM_260)
+    const mockRandom = () => {
+      callCount++;
+      return callCount === 1 ? 0.8 : 0.9;
+    };
+
+    const banner = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: mockRandom });
+    expect(banner?.placement).toBe('auction_bids');
+    expect(banner?.creative.id).toBe('DM_260');
   });
 
   it('returns null on auction page when dismissed', () => {

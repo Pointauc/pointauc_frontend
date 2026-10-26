@@ -151,6 +151,7 @@ export const selectPageBanner = (
         creativesById,
         advance: options?.advanceRotation ?? true,
         forceNew: options?.forceNewRotation ?? false,
+        random,
       });
 
     if (!chosenCreative) {
