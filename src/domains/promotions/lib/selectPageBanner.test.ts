@@ -126,20 +126,22 @@ describe('selectPageBanner on auction page', () => {
     resetVerticalBannerRotation();
   });
 
-  it('always shows vertical banner on the main page and rotates promo -> widget (Word) -> promo -> widget (DM)', () => {
+  it('always shows vertical banner on the main page and rotates promo -> widget -> promo -> widget', () => {
     const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
     expect(banner1?.placement).toBe('auction_bids');
     expect(banner1?.creative.id).toBe('Point_260');
 
-    const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    // 2nd load: Widget step (random returns 0.3 -> Memes_260)
+    const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.3 });
     expect(banner2?.placement).toBe('auction_bids');
-    expect(banner2?.creative.id).toBe('Word_260');
+    expect(banner2?.creative.id).toBe('Memes_260');
 
-    const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
     expect(banner3?.placement).toBe('auction_bids');
     expect(banner3?.creative.id).toBe('Point_260');
 
-    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    // 4th load: Widget step (random returns 0.95 -> DM_260)
+    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.95 });
     expect(banner4?.placement).toBe('auction_bids');
     expect(banner4?.creative.id).toBe('DM_260');
   });

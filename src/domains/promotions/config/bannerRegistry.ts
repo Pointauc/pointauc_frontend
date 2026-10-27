@@ -7,6 +7,7 @@ import word3202Img from '@assets/img/ihaq/Word_320_2.png';
 import dm260Img from '@assets/img/ihaq/DM_260.png';
 import point2602Img from '@assets/img/ihaq/point_260_2.png';
 import word260Img from '@assets/img/ihaq/Word_260.png';
+import memes260Img from '@assets/img/ihaq/Memes_260.png';
 import { BannerCreative, BannerSize } from '@domains/promotions/model/types';
 
 export const BANNER_CREATIVE_DM_800: BannerCreative = {
@@ -99,6 +100,16 @@ export const BANNER_CREATIVE_DM_260: BannerCreative = {
   partner: 'ihaq',
 };
 
+export const BANNER_CREATIVE_MEMES_260: BannerCreative = {
+  id: 'Memes_260',
+  size: '260x400',
+  imageSrc: memes260Img,
+  altKey: 'promotions.banners.memesWidget',
+  campaign: 'memes_widget',
+  contentId: 'memes_260',
+  partner: 'ihaq',
+};
+
 export const BANNER_CREATIVES: BannerCreative[] = [
   BANNER_CREATIVE_DM_800,
   BANNER_CREATIVE_DM_500,
@@ -109,6 +120,7 @@ export const BANNER_CREATIVES: BannerCreative[] = [
   BANNER_CREATIVE_POINT_260,
   BANNER_CREATIVE_WORD_260,
   BANNER_CREATIVE_DM_260,
+  BANNER_CREATIVE_MEMES_260,
 ];
 
 export const BANNER_CREATIVES_BY_SIZE: Record<BannerSize, BannerCreative[]> = {
@@ -124,6 +136,7 @@ export const BANNER_CREATIVES_BY_SIZE: Record<BannerSize, BannerCreative[]> = {
     BANNER_CREATIVE_POINT_260,
     BANNER_CREATIVE_WORD_260,
     BANNER_CREATIVE_DM_260,
+    BANNER_CREATIVE_MEMES_260,
   ],
 };
 
@@ -137,4 +150,5 @@ export const BANNER_CREATIVES_BY_ID: Record<string, BannerCreative> = {
   [BANNER_CREATIVE_POINT_260.id]: BANNER_CREATIVE_POINT_260,
   [BANNER_CREATIVE_WORD_260.id]: BANNER_CREATIVE_WORD_260,
   [BANNER_CREATIVE_DM_260.id]: BANNER_CREATIVE_DM_260,
+  [BANNER_CREATIVE_MEMES_260.id]: BANNER_CREATIVE_MEMES_260,
 };

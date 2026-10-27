@@ -19,6 +19,7 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     page: 'auction',
     banners: {
       Point_260: 1,
+      Memes_260: 8,
       Word_260: 1,
       DM_260: 1,
     },
