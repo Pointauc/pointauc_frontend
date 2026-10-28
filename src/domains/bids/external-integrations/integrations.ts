@@ -10,7 +10,7 @@ import { integrationUtils } from '@domains/bids/external-integrations/shared/hel
 import donateHelper from '@domains/bids/external-integrations/donate-helper/lib/integrationScheme';
 import donli from '@domains/bids/external-integrations/donli/lib/integrationScheme';
 
-const INTEGRATIONS = [ihaq, donateHelper, twitch, kick, vkVideoLive, da, donatePay, donatex, tourniquet];
+const INTEGRATIONS = [ihaq, donateHelper, twitch, kick, vkVideoLive, da, donatePay, donatex, donli, tourniquet];
 
 export default INTEGRATIONS;
 
