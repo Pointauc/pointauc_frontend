@@ -21,6 +21,7 @@ export type BannerCreativeId =
   | 'Word_260'
   | 'DM_260'
   | 'Memes_260'
+  | 'Battery_260'
   | (string & {});
 
 export interface PlacementBannerWeight {

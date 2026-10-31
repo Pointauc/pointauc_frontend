@@ -126,37 +126,36 @@ describe('selectPageBanner on auction page', () => {
     resetVerticalBannerRotation();
   });
 
-  it('always shows vertical banner on the main page and rotates promo -> widget -> promo -> widget', () => {
+  it('always shows vertical banner on the main page and rotates widgets continuously', () => {
     const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
     expect(banner1?.placement).toBe('auction_bids');
-    expect(banner1?.creative.id).toBe('Point_260');
+    expect(banner1?.creative.id).toBe('Memes_260');
 
-    // 2nd load: Widget step (random returns 0.3 -> Memes_260)
-    const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.3 });
+    // 2nd load: Word_260
+    const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner2?.placement).toBe('auction_bids');
-    expect(banner2?.creative.id).toBe('Memes_260');
+    expect(banner2?.creative.id).toBe('Word_260');
 
-    const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
+    // 3rd load: DM_260
+    const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner3?.placement).toBe('auction_bids');
-    expect(banner3?.creative.id).toBe('Point_260');
+    expect(banner3?.creative.id).toBe('DM_260');
 
-    // 4th load: Widget step (random returns 0.95 -> DM_260)
-    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.95 });
+    // 4th load: Battery_260
+    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner4?.placement).toBe('auction_bids');
-    expect(banner4?.creative.id).toBe('DM_260');
+    expect(banner4?.creative.id).toBe('Battery_260');
+
+    // 5th load: loops back to Memes_260
+    const banner5 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    expect(banner5?.placement).toBe('auction_bids');
+    expect(banner5?.creative.id).toBe('Memes_260');
   });
 
-  it('can start randomly with a widget on first appearance', () => {
-    let callCount = 0;
-    // 1st call: 0.8 (widget), 2nd call: 0.9 (DM_260)
-    const mockRandom = () => {
-      callCount++;
-      return callCount === 1 ? 0.8 : 0.9;
-    };
-
-    const banner = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: mockRandom });
+  it('can start randomly with any widget on first appearance', () => {
+    const banner = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.8 });
     expect(banner?.placement).toBe('auction_bids');
-    expect(banner?.creative.id).toBe('DM_260');
+    expect(banner?.creative.id).toBe('Battery_260');
   });
 
   it('returns null on auction page when dismissed', () => {

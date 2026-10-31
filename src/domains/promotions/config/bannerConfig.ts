@@ -18,10 +18,10 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     size: '260x400',
     page: 'auction',
     banners: {
-      Point_260: 1,
-      Memes_260: 8,
+      Memes_260: 1,
       Word_260: 1,
       DM_260: 1,
+      Battery_260: 1,
     },
   },
   settings_bottom_left: {

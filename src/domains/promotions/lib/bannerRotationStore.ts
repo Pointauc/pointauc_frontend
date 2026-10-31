@@ -2,11 +2,18 @@ import { BANNER_CREATIVES_BY_ID } from '@domains/promotions/config/bannerRegistr
 import { BannerCreative } from '@domains/promotions/model/types';
 import { isBrowser } from '@utils/ssr.ts';
 
+export const VERTICAL_ROTATION_INDEX_KEY = 'pointauc_promo_vertical_widget_index';
 export const VERTICAL_ROTATION_TYPE_KEY = 'pointauc_promo_vertical_type_step';
 export const VERTICAL_ROTATION_WIDGET_KEY = 'pointauc_promo_vertical_widget_step';
 
-export const VERTICAL_PROMO_BANNER_IDS = ['Point_260'] as const;
-export const VERTICAL_WIDGET_BANNER_IDS = ['Memes_260', 'Word_260', 'DM_260'] as const;
+export const VERTICAL_PROMO_BANNER_IDS = [] as const;
+
+export const VERTICAL_WIDGET_BANNER_IDS = [
+  'Memes_260',
+  'Word_260',
+  'DM_260',
+  'Battery_260',
+] as const;
 
 export interface WeightedWidgetCreativeId {
   id: string;
@@ -14,9 +21,10 @@ export interface WeightedWidgetCreativeId {
 }
 
 export const VERTICAL_WIDGET_CREATIVES_CONFIG: readonly WeightedWidgetCreativeId[] = [
-  { id: 'Memes_260', weight: 10 },
-  { id: 'Word_260', weight: 10 },
-  { id: 'DM_260', weight: 10 },
+  { id: 'Memes_260', weight: 1 },
+  { id: 'Word_260', weight: 1 },
+  { id: 'DM_260', weight: 1 },
+  { id: 'Battery_260', weight: 1 },
 ];
 
 export const pickWeightedWidgetBannerId = (
@@ -40,78 +48,65 @@ export const pickWeightedWidgetBannerId = (
   return weights[weights.length - 1].id;
 };
 
-let inMemoryTypeIndex: number | null = null;
-let inMemoryWidgetIndex: number | null = null;
+let inMemoryIndex: number | null = null;
 let sessionVerticalCreative: BannerCreative | null = null;
 
-export const getStoredRotationIndices = (
-  random: () => number = Math.random,
-): { typeIndex: number; widgetIndex: number } => {
+export const getStoredRotationIndex = (): number | null => {
   if (!isBrowser) {
-    if (inMemoryTypeIndex === null || inMemoryWidgetIndex === null) {
-      const isFirstPromo = random() < 0.5;
-      inMemoryTypeIndex = isFirstPromo ? 0 : 1;
-      inMemoryWidgetIndex = 0;
-    }
-    return { typeIndex: inMemoryTypeIndex, widgetIndex: inMemoryWidgetIndex };
+    return inMemoryIndex;
   }
 
   try {
-    const rawType = window.localStorage.getItem(VERTICAL_ROTATION_TYPE_KEY);
-    const rawWidget = window.localStorage.getItem(VERTICAL_ROTATION_WIDGET_KEY);
-
-    if (rawType !== null) {
-      const typeIndex = Math.max(0, parseInt(rawType, 10) || 0);
-      const widgetIndex = rawWidget !== null ? Math.max(0, parseInt(rawWidget, 10) || 0) : 0;
-      return { typeIndex, widgetIndex };
+    const raw = window.localStorage.getItem(VERTICAL_ROTATION_INDEX_KEY);
+    if (raw !== null) {
+      const parsed = parseInt(raw, 10);
+      return Number.isFinite(parsed) ? Math.max(0, parsed) : null;
     }
-
-    if (inMemoryTypeIndex !== null && inMemoryWidgetIndex !== null) {
-      return { typeIndex: inMemoryTypeIndex, widgetIndex: inMemoryWidgetIndex };
-    }
-
-    // First appearance: 50/50 between promo (typeIndex 0) and widget (typeIndex 1).
-    const isFirstPromo = random() < 0.5;
-    const typeIndex = isFirstPromo ? 0 : 1;
-    const widgetIndex = 0;
-
-    inMemoryTypeIndex = typeIndex;
-    inMemoryWidgetIndex = widgetIndex;
-
-    return { typeIndex, widgetIndex };
+    return inMemoryIndex;
   } catch {
-    if (inMemoryTypeIndex === null || inMemoryWidgetIndex === null) {
-      const isFirstPromo = random() < 0.5;
-      inMemoryTypeIndex = isFirstPromo ? 0 : 1;
-      inMemoryWidgetIndex = 0;
-    }
-    return { typeIndex: inMemoryTypeIndex, widgetIndex: inMemoryWidgetIndex };
+    return inMemoryIndex;
   }
 };
 
-export const saveRotationIndices = (typeIndex: number, widgetIndex: number): void => {
-  inMemoryTypeIndex = typeIndex;
-  inMemoryWidgetIndex = widgetIndex;
+export const saveRotationIndex = (index: number): void => {
+  inMemoryIndex = index;
 
   if (!isBrowser) {
     return;
   }
 
   try {
-    window.localStorage.setItem(VERTICAL_ROTATION_TYPE_KEY, typeIndex.toString());
-    window.localStorage.setItem(VERTICAL_ROTATION_WIDGET_KEY, widgetIndex.toString());
+    window.localStorage.setItem(VERTICAL_ROTATION_INDEX_KEY, index.toString());
   } catch {
     // Ignore storage errors
   }
 };
 
+export const getStoredRotationIndices = (
+  random: () => number = Math.random,
+  weights: readonly WeightedWidgetCreativeId[] = VERTICAL_WIDGET_CREATIVES_CONFIG,
+  bannerIds: readonly string[] = VERTICAL_WIDGET_BANNER_IDS,
+): { typeIndex: number; widgetIndex: number } => {
+  let index = getStoredRotationIndex();
+  if (index === null) {
+    const chosenId = pickWeightedWidgetBannerId(random, weights);
+    const foundIndex = (bannerIds as readonly string[]).indexOf(chosenId);
+    index = foundIndex >= 0 ? foundIndex : 0;
+  }
+  return { typeIndex: index, widgetIndex: index };
+};
+
+export const saveRotationIndices = (_typeIndex: number, widgetIndex: number): void => {
+  saveRotationIndex(widgetIndex);
+};
+
 export const resetVerticalBannerRotation = (): void => {
-  inMemoryTypeIndex = null;
-  inMemoryWidgetIndex = null;
+  inMemoryIndex = null;
   sessionVerticalCreative = null;
 
   if (isBrowser) {
     try {
+      window.localStorage.removeItem(VERTICAL_ROTATION_INDEX_KEY);
       window.localStorage.removeItem(VERTICAL_ROTATION_TYPE_KEY);
       window.localStorage.removeItem(VERTICAL_ROTATION_WIDGET_KEY);
     } catch {
@@ -125,13 +120,23 @@ export interface NextVerticalBannerOptions {
   advance?: boolean;
   forceNew?: boolean;
   random?: () => number;
+  weights?: readonly WeightedWidgetCreativeId[];
+  bannerIds?: readonly string[];
 }
 
-export const getNextVerticalBannerCreative = (options?: NextVerticalBannerOptions): BannerCreative | null => {
+export const getNextVerticalBannerCreative = (
+  options?: NextVerticalBannerOptions,
+): BannerCreative | null => {
   const creativesById = options?.creativesById ?? BANNER_CREATIVES_BY_ID;
   const advance = options?.advance ?? true;
   const forceNew = options?.forceNew ?? false;
   const random = options?.random ?? Math.random;
+  const weights = options?.weights ?? VERTICAL_WIDGET_CREATIVES_CONFIG;
+  const bannerIds = options?.bannerIds ?? VERTICAL_WIDGET_BANNER_IDS;
+
+  if (bannerIds.length === 0) {
+    return null;
+  }
 
   // During a single page load / view, return the already selected creative so multiple React renders,
   // StrictMode mount/unmount/remount, and state updates do not advance or change the banner.
@@ -139,27 +144,26 @@ export const getNextVerticalBannerCreative = (options?: NextVerticalBannerOption
     return sessionVerticalCreative;
   }
 
-  const { typeIndex, widgetIndex } = getStoredRotationIndices(random);
+  const storedIndex = getStoredRotationIndex();
 
-  // 1. Promocode banner (even step: 0, 2, 4...) -> 2. Widget banner (odd step: 1, 3, 5...)
-  const isPromo = typeIndex % 2 === 0;
+  let currentIndex: number;
 
-  let chosenId: string;
-  let nextWidgetIndex = widgetIndex;
-
-  if (isPromo) {
-    const promoIndexInList = Math.floor(typeIndex / 2) % VERTICAL_PROMO_BANNER_IDS.length;
-    chosenId = VERTICAL_PROMO_BANNER_IDS[promoIndexInList];
+  if (storedIndex !== null) {
+    // Subsequent visits: rotate continuously from the stored index
+    currentIndex = storedIndex % bannerIds.length;
   } else {
-    chosenId = pickWeightedWidgetBannerId(random);
-    const widgetIndexInList = (VERTICAL_WIDGET_BANNER_IDS as readonly string[]).indexOf(chosenId);
-    nextWidgetIndex = widgetIndexInList >= 0 ? widgetIndexInList : 0;
+    // First visit: randomly select widget banner based on weights
+    const chosenId = pickWeightedWidgetBannerId(random, weights);
+    const foundIndex = (bannerIds as readonly string[]).indexOf(chosenId);
+    currentIndex = foundIndex >= 0 ? foundIndex : 0;
   }
 
+  const chosenId = bannerIds[currentIndex];
   const creative = creativesById[chosenId] ?? null;
 
   if (advance) {
-    saveRotationIndices(typeIndex + 1, nextWidgetIndex);
+    const nextIndex = (currentIndex + 1) % bannerIds.length;
+    saveRotationIndex(nextIndex);
     sessionVerticalCreative = creative;
   }
 
