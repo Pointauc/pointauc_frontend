@@ -14,7 +14,7 @@ export interface WeightedWidgetCreativeId {
 }
 
 export const VERTICAL_WIDGET_CREATIVES_CONFIG: readonly WeightedWidgetCreativeId[] = [
-  { id: 'Memes_260', weight: 80 },
+  { id: 'Memes_260', weight: 10 },
   { id: 'Word_260', weight: 10 },
   { id: 'DM_260', weight: 10 },
 ];
@@ -127,9 +127,7 @@ export interface NextVerticalBannerOptions {
   random?: () => number;
 }
 
-export const getNextVerticalBannerCreative = (
-  options?: NextVerticalBannerOptions,
-): BannerCreative | null => {
+export const getNextVerticalBannerCreative = (options?: NextVerticalBannerOptions): BannerCreative | null => {
   const creativesById = options?.creativesById ?? BANNER_CREATIVES_BY_ID;
   const advance = options?.advance ?? true;
   const forceNew = options?.forceNew ?? false;
