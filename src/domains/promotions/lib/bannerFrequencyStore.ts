@@ -3,7 +3,7 @@ import { FrequencyCappedParams, FrequencyCapStatus } from '@domains/promotions/m
 
 export const BANNER_IMPRESSIONS_STORAGE_KEY = 'pointauc_promo_banner_impressions';
 export const BANNER_DISMISSED_UNTIL_STORAGE_KEY = 'pointauc_promo_banners_dismissed_until';
-export const DEFAULT_BANNER_DISMISS_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+export const DEFAULT_BANNER_DISMISS_DURATION_MS = 36 * 60 * 60 * 1000; // 24 hours
 
 let inMemoryTimestamps: number[] = [];
 let inMemoryDismissedUntil: number | null = null;
@@ -85,10 +85,7 @@ export const isBannersDismissed = (now = Date.now()): boolean => {
   return now < until;
 };
 
-export const dismissAllBanners = (
-  durationMs = DEFAULT_BANNER_DISMISS_DURATION_MS,
-  now = Date.now(),
-): void => {
+export const dismissAllBanners = (durationMs = DEFAULT_BANNER_DISMISS_DURATION_MS, now = Date.now()): void => {
   const until = now + durationMs;
   saveBannersDismissedUntil(until);
 };
@@ -97,19 +94,12 @@ export const clearBannerDismissal = (): void => {
   saveBannersDismissedUntil(null);
 };
 
-export const cleanExpiredTimestamps = (
-  timestamps: number[],
-  windowMs: number,
-  now = Date.now(),
-): number[] => {
+export const cleanExpiredTimestamps = (timestamps: number[], windowMs: number, now = Date.now()): number[] => {
   const cutoff = now - windowMs;
   return timestamps.filter((timestamp) => timestamp > cutoff).sort((a, b) => a - b);
 };
 
-export const getFrequencyCapStatus = (
-  params: FrequencyCappedParams,
-  now = Date.now(),
-): FrequencyCapStatus => {
+export const getFrequencyCapStatus = (params: FrequencyCappedParams, now = Date.now()): FrequencyCapStatus => {
   const rawTimestamps = getStoredImpressionTimestamps();
   const validTimestamps = cleanExpiredTimestamps(rawTimestamps, params.windowMs, now);
 
@@ -131,10 +121,7 @@ export const getFrequencyCapStatus = (
   };
 };
 
-export const recordBannerImpression = (
-  now = Date.now(),
-  params?: FrequencyCappedParams,
-): void => {
+export const recordBannerImpression = (now = Date.now(), params?: FrequencyCappedParams): void => {
   const current = getStoredImpressionTimestamps();
   const windowMs = params?.windowMs ?? 24 * 60 * 60 * 1000;
   const cleaned = cleanExpiredTimestamps(current, windowMs, now);
