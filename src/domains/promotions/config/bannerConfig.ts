@@ -6,12 +6,10 @@ export const DEFAULT_BASE_URL = 'https://ihaqdonate.com/';
 
 export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPlacementConfig> = {
   settings_top: {
-    coefficient: 0.5,
+    coefficient: 0,
     size: '800x110',
     page: 'settings',
-    banners: {
-      DM_800: 1,
-    },
+    banners: {},
   },
   auction_bids: {
     coefficient: 1,
@@ -20,8 +18,6 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     banners: {
       Memes_260: 1,
       Word_260: 1,
-      DM_260: 1,
-      Battery_260: 1,
     },
   },
   settings_bottom_left: {
@@ -29,7 +25,6 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     size: '320x165',
     page: 'settings',
     banners: {
-      DM_320: 1,
       Point_320: 1,
       Word_320: 1,
       Word_320_2: 1,
@@ -39,17 +34,13 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     coefficient: 0,
     size: '800x110',
     page: 'overlays',
-    banners: {
-      DM_800: 1,
-    },
+    banners: {},
   },
   history_bottom: {
     coefficient: 0,
     size: '500x80',
     page: 'history',
-    banners: {
-      DM_500: 1,
-    },
+    banners: {},
   },
   auction_integrations: {
     coefficient: 0,
