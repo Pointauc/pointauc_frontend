@@ -18,6 +18,7 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     banners: {
       Memes_260: 1,
       Word_260: 1,
+      Chatometer_260: 1,
     },
   },
   settings_bottom_left: {

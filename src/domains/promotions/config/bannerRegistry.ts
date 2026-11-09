@@ -9,6 +9,7 @@ import point2602Img from '@assets/img/ihaq/point_260_2.png';
 import word260Img from '@assets/img/ihaq/Word_260.png';
 import memes260Img from '@assets/img/ihaq/Memes_260.png';
 import battery260Img from '@assets/img/ihaq/Battery_260.png';
+import chatometer260Img from '@assets/img/ihaq/Chatometer_260.png';
 import { BannerCreative, BannerSize } from '@domains/promotions/model/types';
 
 export const BANNER_CREATIVE_DM_800: BannerCreative = {
@@ -121,6 +122,16 @@ export const BANNER_CREATIVE_BATTERY_260: BannerCreative = {
   partner: 'ihaq',
 };
 
+export const BANNER_CREATIVE_CHATOMETER_260: BannerCreative = {
+  id: 'Chatometer_260',
+  size: '260x400',
+  imageSrc: chatometer260Img,
+  altKey: 'promotions.banners.chatometerWidget',
+  campaign: 'chatometer_widget',
+  contentId: 'chatometer_260',
+  partner: 'ihaq',
+};
+
 export const BANNER_CREATIVES: BannerCreative[] = [
   BANNER_CREATIVE_POINT_320,
   BANNER_CREATIVE_WORD_320,
@@ -128,6 +139,7 @@ export const BANNER_CREATIVES: BannerCreative[] = [
   BANNER_CREATIVE_POINT_260,
   BANNER_CREATIVE_WORD_260,
   BANNER_CREATIVE_MEMES_260,
+  BANNER_CREATIVE_CHATOMETER_260,
 ];
 
 export const BANNER_CREATIVES_BY_SIZE: Record<BannerSize, BannerCreative[]> = {
@@ -142,6 +154,7 @@ export const BANNER_CREATIVES_BY_SIZE: Record<BannerSize, BannerCreative[]> = {
     BANNER_CREATIVE_POINT_260,
     BANNER_CREATIVE_WORD_260,
     BANNER_CREATIVE_MEMES_260,
+    BANNER_CREATIVE_CHATOMETER_260,
   ],
 };
 
@@ -157,4 +170,5 @@ export const BANNER_CREATIVES_BY_ID: Record<string, BannerCreative> = {
   [BANNER_CREATIVE_DM_260.id]: BANNER_CREATIVE_DM_260,
   [BANNER_CREATIVE_MEMES_260.id]: BANNER_CREATIVE_MEMES_260,
   [BANNER_CREATIVE_BATTERY_260.id]: BANNER_CREATIVE_BATTERY_260,
+  [BANNER_CREATIVE_CHATOMETER_260.id]: BANNER_CREATIVE_CHATOMETER_260,
 };

@@ -11,6 +11,7 @@ export const VERTICAL_PROMO_BANNER_IDS = [] as const;
 export const VERTICAL_WIDGET_BANNER_IDS = [
   'Memes_260',
   'Word_260',
+  'Chatometer_260',
 ] as const;
 
 export interface WeightedWidgetCreativeId {
@@ -21,6 +22,7 @@ export interface WeightedWidgetCreativeId {
 export const VERTICAL_WIDGET_CREATIVES_CONFIG: readonly WeightedWidgetCreativeId[] = [
   { id: 'Memes_260', weight: 1 },
   { id: 'Word_260', weight: 1 },
+  { id: 'Chatometer_260', weight: 1 },
 ];
 
 export const pickWeightedWidgetBannerId = (
