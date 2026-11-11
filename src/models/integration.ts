@@ -15,7 +15,8 @@ export type ID =
   | 'donatex'
   | 'donatePayEu'
   | 'donateHelper'
-  | 'donli';
+  | 'donli'
+  | 'oxygenDonuts';
 export type BidType = 'donate' | 'points';
 
 export interface LoginButtonClasses {
@@ -208,4 +209,8 @@ export interface Config<TAuth extends AuthFlow = AuthFlow, TPubsub extends Pubsu
    * How the service is displayed across the app.
    */
   branding: Branding;
+  /**
+   * Optional controls shown on the service card in the donation settings while the service is connected.
+   */
+  settingsComponent?: FC;
 }

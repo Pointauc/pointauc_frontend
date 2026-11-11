@@ -290,5 +290,16 @@
     "loading": "Загрузка...",
     "backToOverlays": "Назад да аверлеяў",
     "overlayNotFound": "Аверлей не знойдзены"
+  },
+  "integration": {
+    "oxygenDonuts": {
+      "name": "Oxygen Donuts",
+      "rate": {
+        "label": "Курс даляра для Oxygen Donuts",
+        "description": "Oxygen Donuts дасылае сумы данатаў у далярах. Пазначце, колькі залічваць у аўкцыёне за адзін даляр."
+      },
+      "connectionLost": "Няма сувязі з Oxygen Donuts, данаты не адсочваюцца. Уключыце інтэграцыю зноў.",
+      "authorizationLost": "Доступ да Oxygen Donuts адкліканы. Падлучыце сэрвіс нанова."
+    }
   }
 }
