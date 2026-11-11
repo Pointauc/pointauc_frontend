@@ -297,5 +297,16 @@
     "loading": "Завантаження...",
     "backToOverlays": "Назад до оверлеїв",
     "overlayNotFound": "Оверлей не знайдено"
+  },
+  "integration": {
+    "oxygenDonuts": {
+      "name": "Oxygen Donuts",
+      "rate": {
+        "label": "Курс долара для Oxygen Donuts",
+        "description": "Oxygen Donuts надсилає суми донатів у доларах. Вкажіть, скільки зараховувати в аукціоні за один долар."
+      },
+      "connectionLost": "Немає зв'язку з Oxygen Donuts, донати не відстежуються. Увімкніть інтеграцію знову.",
+      "authorizationLost": "Доступ до Oxygen Donuts відкликано. Підключіть сервіс заново."
+    }
   }
 }
