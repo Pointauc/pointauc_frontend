@@ -2007,14 +2007,8 @@
   },
   "promotions": {
     "banners": {
-      "donatMiner": "Donat-Miner — For those who love auctions",
-      "pointaucPromo": "iHAQ Donate × Pointauc — Promo code POINTAUC for 2.5% donation fee",
-      "wordWidget": "Widget Word — Boost your stream donations",
-      "word320_2": "Widget Word — Guess, play, get stream support",
-      "memesWidget": "Widget Neuromemes — Viewer creativity on your stream",
-      "chatometerWidget": "Widget «Chatometer» — Chat speed and most active chatters",
-      "batteryWidget": "Widget Battery — Charges from donations",
-      "close": "Close"
+      "close": "Close",
+      "donatnoeNebo": "Donatnoe Nebo — the universe of donators on iHAQ Donate"
     }
   }
 }

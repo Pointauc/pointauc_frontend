@@ -2,7 +2,7 @@ import { BannerPlacement, BannerPlacementConfig } from '@domains/promotions/mode
 
 export const DEFAULT_GLOBAL_MULTIPLIER = 0.75;
 export const DEFAULT_UTM_SOURCE = 'pointauc';
-export const DEFAULT_BASE_URL = 'https://ihaqdonate.com/';
+export const DEFAULT_BASE_URL = 'https://ihaqdonate.com/donatnoe-nebo';
 
 export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPlacementConfig> = {
   settings_top: {
@@ -16,20 +16,15 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     size: '260x400',
     page: 'auction',
     banners: {
-      Memes_260: 1,
-      Word_260: 1,
-      Chatometer_260: 1,
+      DonatnoeNebo_Streamer_260: 1,
+      DonatnoeNebo_Universe_260: 1,
     },
   },
   settings_bottom_left: {
     coefficient: 0,
     size: '320x165',
     page: 'settings',
-    banners: {
-      Point_320: 1,
-      Word_320: 1,
-      Word_320_2: 1,
-    },
+    banners: {},
   },
   overlays_top: {
     coefficient: 0,
@@ -47,8 +42,6 @@ export const DEFAULT_BANNER_PLACEMENTS_CONFIG: Record<BannerPlacement, BannerPla
     coefficient: 0,
     size: '320x165',
     page: 'auction',
-    banners: {
-      Point_320: 1,
-    },
+    banners: {},
   },
 };

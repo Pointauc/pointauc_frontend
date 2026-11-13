@@ -9,15 +9,14 @@ describe('selectPageBanner with IHAQ filtering', () => {
     resetVerticalBannerRotation();
   });
 
-  it('returns an active banner when isIhaqEnabled is false and probability passes', () => {
+  it('returns null on settings pages because previous banners were removed from the registry', () => {
     const banner = selectPageBanner('settings', {
       globalMultiplier: 1,
       random: () => 0.01,
       isIhaqEnabled: false,
     });
 
-    expect(banner).not.toBeNull();
-    expect(banner?.creative.partner).toBe('ihaq');
+    expect(banner).toBeNull();
   });
 
   it('returns null when isIhaqEnabled is true because all registry creatives are IHAQ', () => {
@@ -126,36 +125,26 @@ describe('selectPageBanner on auction page', () => {
     resetVerticalBannerRotation();
   });
 
-  it('always shows vertical banner on the main page and rotates widgets continuously', () => {
+  it('always shows vertical banner on the main page and rotates banners continuously', () => {
     const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
     expect(banner1?.placement).toBe('auction_bids');
-    expect(banner1?.creative.id).toBe('Memes_260');
+    expect(banner1?.creative.id).toBe('DonatnoeNebo_Streamer_260');
 
-    // 2nd load: Word_260
+    // 2nd load: DonatnoeNebo_Universe_260
     const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner2?.placement).toBe('auction_bids');
-    expect(banner2?.creative.id).toBe('Word_260');
+    expect(banner2?.creative.id).toBe('DonatnoeNebo_Universe_260');
 
-    // 3rd load: DM_260
+    // 3rd load: loops back to DonatnoeNebo_Streamer_260
     const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner3?.placement).toBe('auction_bids');
-    expect(banner3?.creative.id).toBe('DM_260');
-
-    // 4th load: Battery_260
-    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
-    expect(banner4?.placement).toBe('auction_bids');
-    expect(banner4?.creative.id).toBe('Battery_260');
-
-    // 5th load: loops back to Memes_260
-    const banner5 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
-    expect(banner5?.placement).toBe('auction_bids');
-    expect(banner5?.creative.id).toBe('Memes_260');
+    expect(banner3?.creative.id).toBe('DonatnoeNebo_Streamer_260');
   });
 
-  it('can start randomly with any widget on first appearance', () => {
+  it('can start randomly with either banner on first appearance', () => {
     const banner = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.8 });
     expect(banner?.placement).toBe('auction_bids');
-    expect(banner?.creative.id).toBe('Battery_260');
+    expect(banner?.creative.id).toBe('DonatnoeNebo_Universe_260');
   });
 
   it('returns null on auction page when dismissed', () => {
@@ -188,6 +177,37 @@ describe('selectPageBanner dismissal', () => {
 });
 
 describe('selectPageBanner with placement-specific banners and appearance frequencies', () => {
+  const testCreatives: BannerCreative[] = [
+    {
+      id: 'test_a',
+      size: '320x165',
+      imageSrc: '/test-a.png',
+      altKey: 'test.a',
+      campaign: 'test',
+      contentId: 'a',
+    },
+    {
+      id: 'test_b',
+      size: '320x165',
+      imageSrc: '/test-b.png',
+      altKey: 'test.b',
+      campaign: 'test',
+      contentId: 'b',
+    },
+    {
+      id: 'test_c',
+      size: '320x165',
+      imageSrc: '/test-c.png',
+      altKey: 'test.c',
+      campaign: 'test',
+      contentId: 'c',
+    },
+  ];
+
+  const creativesById = Object.fromEntries(
+    testCreatives.map((creative) => [creative.id, creative]),
+  );
+
   it('only shows banners explicitly configured for that placement', () => {
     const customPlacements: Partial<Record<BannerPlacement, BannerPlacementConfig>> = {
       settings_bottom_left: {
@@ -195,20 +215,21 @@ describe('selectPageBanner with placement-specific banners and appearance freque
         size: '320x165',
         page: 'settings',
         banners: {
-          Word_320: 1,
+          test_a: 1,
         },
       },
     };
 
     const banner = selectPageBanner('settings', {
       placementsConfig: customPlacements,
+      creativesById,
       globalMultiplier: 1,
       random: () => 0,
       isIhaqEnabled: false,
     });
 
     expect(banner).not.toBeNull();
-    expect(banner?.creative.id).toBe('Word_320');
+    expect(banner?.creative.id).toBe('test_a');
   });
 
   it('selects banners according to their relative appearance frequency / weights', () => {
@@ -218,29 +239,31 @@ describe('selectPageBanner with placement-specific banners and appearance freque
         size: '320x165',
         page: 'settings',
         banners: {
-          DM_320: 3,    // 75%
-          Point_320: 1, // 25%
+          test_b: 3, // 75%
+          test_a: 1, // 25%
         },
       },
     };
 
-    // With total weight 4, random 0.2 gives r = 0.8 < 3 -> DM_320
+    // With total weight 4, random 0.2 gives r = 0.8 < 3 -> test_b
     const banner1 = selectPageBanner('settings', {
       placementsConfig: customPlacements,
+      creativesById,
       globalMultiplier: 1,
       random: () => 0.2,
       isIhaqEnabled: false,
     });
-    expect(banner1?.creative.id).toBe('DM_320');
+    expect(banner1?.creative.id).toBe('test_b');
 
-    // With total weight 4, random 0.9 gives r = 3.6 > 3 -> Point_320
+    // With total weight 4, random 0.9 gives r = 3.6 > 3 -> test_a
     const banner2 = selectPageBanner('settings', {
       placementsConfig: customPlacements,
+      creativesById,
       globalMultiplier: 1,
       random: () => 0.9,
       isIhaqEnabled: false,
     });
-    expect(banner2?.creative.id).toBe('Point_320');
+    expect(banner2?.creative.id).toBe('test_a');
   });
 
   it('supports banners as array of banner IDs or objects with weights', () => {
@@ -250,20 +273,21 @@ describe('selectPageBanner with placement-specific banners and appearance freque
         size: '320x165',
         page: 'settings',
         banners: [
-          { bannerId: 'Word_320', weight: 1 },
-          { bannerId: 'Word_320_2', weight: 2 },
+          { bannerId: 'test_a', weight: 1 },
+          { bannerId: 'test_c', weight: 2 },
         ],
       },
     };
 
     const banner = selectPageBanner('settings', {
       placementsConfig: customPlacements,
+      creativesById,
       globalMultiplier: 1,
       random: () => 0.8,
       isIhaqEnabled: false,
     });
 
     expect(banner).not.toBeNull();
-    expect(banner?.creative.id).toBe('Word_320_2');
+    expect(banner?.creative.id).toBe('test_c');
   });
 });

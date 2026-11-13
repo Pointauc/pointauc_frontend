@@ -2,49 +2,22 @@ import { BANNER_CREATIVES_BY_ID } from '@domains/promotions/config/bannerRegistr
 import { BannerCreative } from '@domains/promotions/model/types';
 import { isBrowser } from '@utils/ssr.ts';
 
-export const VERTICAL_ROTATION_INDEX_KEY = 'pointauc_promo_vertical_widget_index';
-export const VERTICAL_ROTATION_TYPE_KEY = 'pointauc_promo_vertical_type_step';
-export const VERTICAL_ROTATION_WIDGET_KEY = 'pointauc_promo_vertical_widget_step';
+export const VERTICAL_ROTATION_INDEX_KEY = 'pointauc_promo_vertical_banner_index';
 
-export const VERTICAL_PROMO_BANNER_IDS = [] as const;
-
-export const VERTICAL_WIDGET_BANNER_IDS = [
-  'Memes_260',
-  'Word_260',
-  'Chatometer_260',
+/**
+ * Legacy storage keys from the old widget-vs-promo banner rotation logic.
+ * Cleaned up on reset to avoid stale entries in users' localStorage.
+ */
+const LEGACY_ROTATION_KEYS = [
+  'pointauc_promo_vertical_widget_index',
+  'pointauc_promo_vertical_type_step',
+  'pointauc_promo_vertical_widget_step',
 ] as const;
 
-export interface WeightedWidgetCreativeId {
-  id: string;
-  weight: number;
-}
-
-export const VERTICAL_WIDGET_CREATIVES_CONFIG: readonly WeightedWidgetCreativeId[] = [
-  { id: 'Memes_260', weight: 1 },
-  { id: 'Word_260', weight: 1 },
-  { id: 'Chatometer_260', weight: 1 },
-];
-
-export const pickWeightedWidgetBannerId = (
-  random: () => number = Math.random,
-  weights: readonly WeightedWidgetCreativeId[] = VERTICAL_WIDGET_CREATIVES_CONFIG,
-): string => {
-  const totalWeight = weights.reduce((sum, item) => sum + item.weight, 0);
-  if (totalWeight <= 0) {
-    return weights[0]?.id ?? 'Memes_260';
-  }
-
-  const r = random() * totalWeight;
-  let cumulative = 0;
-  for (const { id, weight } of weights) {
-    cumulative += weight;
-    if (r < cumulative) {
-      return id;
-    }
-  }
-
-  return weights[weights.length - 1].id;
-};
+export const VERTICAL_BANNER_IDS = [
+  'DonatnoeNebo_Streamer_260',
+  'DonatnoeNebo_Universe_260',
+] as const;
 
 let inMemoryIndex: number | null = null;
 let sessionVerticalCreative: BannerCreative | null = null;
@@ -80,24 +53,6 @@ export const saveRotationIndex = (index: number): void => {
   }
 };
 
-export const getStoredRotationIndices = (
-  random: () => number = Math.random,
-  weights: readonly WeightedWidgetCreativeId[] = VERTICAL_WIDGET_CREATIVES_CONFIG,
-  bannerIds: readonly string[] = VERTICAL_WIDGET_BANNER_IDS,
-): { typeIndex: number; widgetIndex: number } => {
-  let index = getStoredRotationIndex();
-  if (index === null) {
-    const chosenId = pickWeightedWidgetBannerId(random, weights);
-    const foundIndex = (bannerIds as readonly string[]).indexOf(chosenId);
-    index = foundIndex >= 0 ? foundIndex : 0;
-  }
-  return { typeIndex: index, widgetIndex: index };
-};
-
-export const saveRotationIndices = (_typeIndex: number, widgetIndex: number): void => {
-  saveRotationIndex(widgetIndex);
-};
-
 export const resetVerticalBannerRotation = (): void => {
   inMemoryIndex = null;
   sessionVerticalCreative = null;
@@ -105,8 +60,9 @@ export const resetVerticalBannerRotation = (): void => {
   if (isBrowser) {
     try {
       window.localStorage.removeItem(VERTICAL_ROTATION_INDEX_KEY);
-      window.localStorage.removeItem(VERTICAL_ROTATION_TYPE_KEY);
-      window.localStorage.removeItem(VERTICAL_ROTATION_WIDGET_KEY);
+      for (const key of LEGACY_ROTATION_KEYS) {
+        window.localStorage.removeItem(key);
+      }
     } catch {
       // Ignore storage errors
     }
@@ -118,10 +74,19 @@ export interface NextVerticalBannerOptions {
   advance?: boolean;
   forceNew?: boolean;
   random?: () => number;
-  weights?: readonly WeightedWidgetCreativeId[];
   bannerIds?: readonly string[];
 }
 
+/**
+ * Picks the vertical banner to show on the current page view.
+ *
+ * - First ever visit: one of the banners is picked randomly with equal weight
+ *   (50/50 for two banners).
+ * - Subsequent visits: banners alternate continuously (A → B → A → ...).
+ * - Within a single page load / view the already selected creative is returned
+ *   so multiple React renders, StrictMode mount/unmount/remount, and state
+ *   updates do not advance or change the banner.
+ */
 export const getNextVerticalBannerCreative = (
   options?: NextVerticalBannerOptions,
 ): BannerCreative | null => {
@@ -129,15 +94,13 @@ export const getNextVerticalBannerCreative = (
   const advance = options?.advance ?? true;
   const forceNew = options?.forceNew ?? false;
   const random = options?.random ?? Math.random;
-  const weights = options?.weights ?? VERTICAL_WIDGET_CREATIVES_CONFIG;
-  const bannerIds = options?.bannerIds ?? VERTICAL_WIDGET_BANNER_IDS;
+  const bannerIds = options?.bannerIds ?? VERTICAL_BANNER_IDS;
 
   if (bannerIds.length === 0) {
     return null;
   }
 
-  // During a single page load / view, return the already selected creative so multiple React renders,
-  // StrictMode mount/unmount/remount, and state updates do not advance or change the banner.
+  // During a single page load / view, return the already selected creative.
   if (sessionVerticalCreative && !forceNew) {
     return sessionVerticalCreative;
   }
@@ -147,13 +110,14 @@ export const getNextVerticalBannerCreative = (
   let currentIndex: number;
 
   if (storedIndex !== null) {
-    // Subsequent visits: rotate continuously from the stored index
+    // Subsequent visits: rotate continuously from the stored index.
     currentIndex = storedIndex % bannerIds.length;
   } else {
-    // First visit: randomly select widget banner based on weights
-    const chosenId = pickWeightedWidgetBannerId(random, weights);
-    const foundIndex = (bannerIds as readonly string[]).indexOf(chosenId);
-    currentIndex = foundIndex >= 0 ? foundIndex : 0;
+    // First visit: pick one of the banners randomly with equal weight.
+    currentIndex = Math.min(
+      Math.floor(random() * bannerIds.length),
+      bannerIds.length - 1,
+    );
   }
 
   const chosenId = bannerIds[currentIndex];

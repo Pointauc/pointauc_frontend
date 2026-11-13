@@ -145,22 +145,15 @@ export const selectPageBanner = (
       return null;
     }
 
-    let weights: { id: string; weight: number }[] | undefined;
     let bannerIds: string[] | undefined;
 
     if (bidsConfig?.banners) {
       if (Array.isArray(bidsConfig.banners)) {
         bannerIds = bidsConfig.banners.map((b) => (typeof b === 'string' ? b : b.bannerId));
-        weights = bidsConfig.banners.map((b) => ({
-          id: typeof b === 'string' ? b : b.bannerId,
-          weight: typeof b === 'string' ? 1 : (b.weight ?? 1),
-        }));
       } else if (typeof bidsConfig.banners === 'object') {
-        const entries = Object.entries(bidsConfig.banners).filter(
-          ([_, w]) => typeof w === 'number' && w > 0,
-        );
-        bannerIds = entries.map(([id]) => id);
-        weights = entries.map(([id, weight]) => ({ id, weight: weight as number }));
+        bannerIds = Object.entries(bidsConfig.banners)
+          .filter(([_, w]) => typeof w === 'number' && w > 0)
+          .map(([id]) => id);
       }
     }
 
@@ -171,7 +164,6 @@ export const selectPageBanner = (
         advance: options?.advanceRotation ?? true,
         forceNew: options?.forceNewRotation ?? false,
         random,
-        weights,
         bannerIds,
       });
 
