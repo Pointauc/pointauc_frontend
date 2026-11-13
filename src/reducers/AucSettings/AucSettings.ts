@@ -10,6 +10,7 @@ import { InsertStrategy } from '@enums/insertStrategy.enum';
 import { aukus } from '@components/Event/events.ts';
 import { BidNameStrategy } from '@enums/bid.enum';
 import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
+import { getOxygenDonutsAuthData } from '@domains/bids/external-integrations/oxygen-donuts/lib/authStorage.ts';
 import { DEFAULT_ALLOWED_DOMAINS } from '@domains/links/config/defaultAllowedDomains';
 import { isBrowser } from '@utils/ssr.ts';
 import { checkIsBackgroundMigrated, saveAppSettings } from '@shared/lib/database/appSettingsDb';
@@ -194,6 +195,7 @@ export const loadUserData =
       donliAuth,
     } = user;
     const donatexAuth = getDonateXAuthData();
+    const oxygenDonutsAuth = getOxygenDonutsAuthData();
 
     dispatch(
       setUserState({
@@ -205,6 +207,7 @@ export const loadUserData =
           donatePayAuth?.username ??
           donatexAuth?.username ??
           donliAuth?.username ??
+          oxygenDonutsAuth?.username ??
           'Empty',
         userId: twitchAuth?.id ?? kickAuth?.id ?? vkVideoLiveAuth?.id,
         pointaucUserId: userId,
@@ -221,6 +224,7 @@ export const loadUserData =
           donatex: donatexAuth,
           donateHelper: donateHelperAuth,
           donli: donliAuth,
+          oxygenDonuts: oxygenDonutsAuth,
         },
       }),
     );

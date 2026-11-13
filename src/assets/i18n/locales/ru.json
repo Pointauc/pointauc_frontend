@@ -190,6 +190,15 @@
     "donatex": {
       "name": "DonateX"
     },
+    "oxygenDonuts": {
+      "name": "Oxygen Donuts",
+      "rate": {
+        "label": "Курс доллара для Oxygen Donuts",
+        "description": "Oxygen Donuts присылает суммы донатов в долларах. Укажите, сколько засчитывать в аукционе за один доллар."
+      },
+      "connectionLost": "Нет связи с Oxygen Donuts, донаты не отслеживаются. Включите интеграцию снова.",
+      "authorizationLost": "Доступ к Oxygen Donuts отозван. Подключите сервис заново."
+    },
     "donateHelper": {
       "name": "Donate Helper",
       "authModal": {

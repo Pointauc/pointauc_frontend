@@ -2,8 +2,11 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { Action } from 'redux';
 
 import { getIntegrationsValidity } from '@api/userApi.ts';
-import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
 import { integrations } from '@domains/bids/external-integrations/integrations.ts';
+import {
+  checkIsFrontendOnlyIntegration,
+  getFrontendOnlyAuthData,
+} from '@domains/bids/external-integrations/shared/frontendOnly.ts';
 
 import { RootState } from '../index';
 import { setUserState } from '../User/User';
@@ -22,9 +25,9 @@ export const validateIntegrations = async (
     const isValidFromBackend = validityKey in validity ? validity[validityKey] : undefined;
     const isFlowValid = authFlow.validate();
 
-    if (id === 'donatex') {
-      const donatexData = getDonateXAuthData() ?? authData.donatex;
-      return { ...acc, donatex: (isValidFromBackend ?? true) && isFlowValid ? donatexData : undefined };
+    if (checkIsFrontendOnlyIntegration(id)) {
+      const localData = getFrontendOnlyAuthData(id) ?? authData[id];
+      return { ...acc, [id]: (isValidFromBackend ?? true) && isFlowValid ? localData : undefined };
     }
 
     const data = (isValidFromBackend ?? authData[id]?.isValid) && isFlowValid ? authData[id] : undefined;

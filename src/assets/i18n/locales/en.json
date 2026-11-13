@@ -242,6 +242,15 @@
     "donatex": {
       "name": "DonateX"
     },
+    "oxygenDonuts": {
+      "name": "Oxygen Donuts",
+      "rate": {
+        "label": "Dollar rate for Oxygen Donuts",
+        "description": "Oxygen Donuts reports donation amounts in US dollars. Set how much one dollar counts for in the auction."
+      },
+      "connectionLost": "No connection to Oxygen Donuts, so donations are not being tracked. Turn the integration on again.",
+      "authorizationLost": "Access to Oxygen Donuts was revoked. Connect the service again."
+    },
     "donateHelper": {
       "name": "Donate Helper",
       "authModal": {

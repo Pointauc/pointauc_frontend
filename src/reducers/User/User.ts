@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { IntegrationAvailability, IntegrationDataDto } from '@models/user.model.ts';
 import { getDonateXAuthData } from '@domains/bids/external-integrations/DonateX/auth.ts';
+import { getOxygenDonutsAuthData } from '@domains/bids/external-integrations/oxygen-donuts/lib/authStorage.ts';
 
 export interface UserInfo {
   username?: string | null;
@@ -23,6 +24,7 @@ export interface UserState extends UserInfo {
     donatex?: IntegrationDataDto;
     donateHelper?: IntegrationDataDto;
     donli?: IntegrationDataDto;
+    oxygenDonuts?: IntegrationDataDto;
   };
   events: {
     aukus: IntegrationAvailability;
@@ -36,6 +38,7 @@ const initialState: UserState = {
   activeSettingsPresetId: '',
   authData: {
     donatex: getDonateXAuthData(),
+    oxygenDonuts: getOxygenDonutsAuthData(),
   },
   events: { aukus: { isValid: false } },
 };
