@@ -150,6 +150,9 @@
         "invalidToken": "Неверный ключ Donli или ошибка соединения"
       }
     },
+    "memeAlerts": {
+      "name": "MemeAlerts"
+    },
     "da": {
       "name": "Donation Alerts"
     },

@@ -75,6 +75,24 @@ export type DonliTokenAuthDto = {
     accessToken: string;
 };
 
+export type MemeAlertsAuthDto = {
+    /**
+     * OAuth authorization code received from MemeAlerts
+     */
+    code: string;
+    /**
+     * Redirect URI used in the OAuth flow
+     */
+    redirect_uri: string;
+};
+
+export type MemeAlertsAuthResponseDto = {
+    /**
+     * Indicates whether this authorization resulted in a new user registration
+     */
+    isNew: boolean;
+};
+
 export type ExistingActiveTicketResponseDto = {
     /**
      * Random.org ticket ID
@@ -1414,6 +1432,39 @@ export type DonliControllerRevokeData = {
 export type DonliControllerRevokeResponses = {
     /**
      * Successfully revoked Donli integration
+     */
+    201: unknown;
+};
+
+export type MemeAlertsControllerAuthorizeData = {
+    /**
+     * OAuth authorization code and redirect URI
+     */
+    body: MemeAlertsAuthDto;
+    path?: never;
+    query?: never;
+    url: '/memeAlerts/auth';
+};
+
+export type MemeAlertsControllerAuthorizeResponses = {
+    /**
+     * Successfully authorized with MemeAlerts
+     */
+    201: MemeAlertsAuthResponseDto;
+};
+
+export type MemeAlertsControllerAuthorizeResponse = MemeAlertsControllerAuthorizeResponses[keyof MemeAlertsControllerAuthorizeResponses];
+
+export type MemeAlertsControllerRevokeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/memeAlerts/revoke';
+};
+
+export type MemeAlertsControllerRevokeResponses = {
+    /**
+     * Successfully revoked MemeAlerts integration
      */
     201: unknown;
 };

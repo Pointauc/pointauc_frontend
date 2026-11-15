@@ -15,7 +15,8 @@ export type ID =
   | 'donatex'
   | 'donatePayEu'
   | 'donateHelper'
-  | 'donli';
+  | 'donli'
+  | 'memeAlerts';
 export type BidType = 'donate' | 'points';
 
 export interface LoginButtonClasses {

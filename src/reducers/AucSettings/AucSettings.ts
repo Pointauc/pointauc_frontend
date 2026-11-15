@@ -192,6 +192,7 @@ export const loadUserData =
       userId,
       donateHelperAuth,
       donliAuth,
+      memeAlertsAuth,
     } = user;
     const donatexAuth = getDonateXAuthData();
 
@@ -205,6 +206,7 @@ export const loadUserData =
           donatePayAuth?.username ??
           donatexAuth?.username ??
           donliAuth?.username ??
+          memeAlertsAuth?.username ??
           'Empty',
         userId: twitchAuth?.id ?? kickAuth?.id ?? vkVideoLiveAuth?.id,
         pointaucUserId: userId,
@@ -221,6 +223,7 @@ export const loadUserData =
           donatex: donatexAuth,
           donateHelper: donateHelperAuth,
           donli: donliAuth,
+          memeAlerts: memeAlertsAuth,
         },
       }),
     );

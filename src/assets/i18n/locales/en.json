@@ -239,6 +239,9 @@
         "invalidToken": "Invalid Donli key or connection error"
       }
     },
+    "memeAlerts": {
+      "name": "MemeAlerts"
+    },
     "donatex": {
       "name": "DonateX"
     },

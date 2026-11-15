@@ -23,6 +23,7 @@ export interface UserState extends UserInfo {
     donatex?: IntegrationDataDto;
     donateHelper?: IntegrationDataDto;
     donli?: IntegrationDataDto;
+    memeAlerts?: IntegrationDataDto;
   };
   events: {
     aukus: IntegrationAvailability;
