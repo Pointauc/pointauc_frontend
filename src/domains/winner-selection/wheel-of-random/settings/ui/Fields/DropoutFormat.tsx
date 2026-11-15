@@ -12,6 +12,7 @@ const DropoutFormatField = () => {
     () => [
       { value: DropoutVariant.New.toString(), label: t('wheel.dropoutVariant.new') },
       { value: DropoutVariant.Classic.toString(), label: t('wheel.dropoutVariant.classic') },
+      { value: DropoutVariant.Pointer.toString(), label: t('wheel.dropoutVariant.pointer') },
     ],
     [t],
   );

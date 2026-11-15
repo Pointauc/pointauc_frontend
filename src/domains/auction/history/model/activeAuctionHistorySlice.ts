@@ -51,6 +51,10 @@ const mapDropoutVariant = (format?: WheelFormat, dropoutVariant?: DropoutVariant
     return 'none';
   }
 
+  if (dropoutVariant === DropoutVariant.Pointer) {
+    return 'pointer';
+  }
+
   return dropoutVariant === DropoutVariant.Classic ? 'classic' : 'new';
 };
 

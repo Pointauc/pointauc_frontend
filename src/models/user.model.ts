@@ -29,7 +29,6 @@ export interface IntegrationData {
   donatexAuth: IntegrationDataDto;
   donateHelperAuth: IntegrationDataDto;
   donliAuth?: IntegrationDataDto;
-  memeAlertsAuth?: IntegrationDataDto;
 }
 
 export interface GetUserDto extends IntegrationData {

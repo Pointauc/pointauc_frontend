@@ -7,6 +7,7 @@ import useBattleRoyale from '../../Duel/lib/useBattleRoyale';
 import useNormalWheel from '../../lib/strategy/useNormalWheel';
 import useRuntimeDropout from '../../Dropout/lib/useRuntimeDropout';
 import useSimulationDropout from '../../Dropout/lib/useSimulationDropout';
+import usePointerDropout from '../../Dropout/lib/usePointerDropout';
 
 import { WheelResolverProps } from './types';
 
@@ -21,6 +22,7 @@ const useWheelResolver = ({
   const battleRoyal = useBattleRoyale(controller);
   const runtimeDropout = useRuntimeDropout(controller);
   const simulationDropout = useSimulationDropout({ controller, isTicketRevealed, resetTicket });
+  const pointerDropout = usePointerDropout(controller);
 
   return useMemo(() => {
     if (format === WheelFormat.Dropout) {
@@ -29,6 +31,8 @@ const useWheelResolver = ({
           return runtimeDropout;
         case DropoutVariant.New:
           return simulationDropout;
+        case DropoutVariant.Pointer:
+          return pointerDropout;
         default:
           return runtimeDropout;
       }
@@ -42,7 +46,7 @@ const useWheelResolver = ({
       default:
         return normalWheel;
     }
-  }, [format, dropoutVariant, runtimeDropout, simulationDropout, normalWheel, battleRoyal]);
+  }, [format, dropoutVariant, runtimeDropout, simulationDropout, pointerDropout, normalWheel, battleRoyal]);
 };
 
 export default useWheelResolver;
