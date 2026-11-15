@@ -19,7 +19,7 @@ export const analyticsEventNames = {
  */
 export interface WheelSpinResultPayload {
   format: 'default' | 'dropout' | 'battle-royale';
-  dropout_variant: 'classic' | 'new' | 'none';
+  dropout_variant: 'classic' | 'new' | 'pointer' | 'none';
   randomness_source: 'local-basic' | 'random-org' | 'random-org-signed';
   configured_spin_time_seconds: number | null;
   actual_spin_time_seconds: number;

@@ -109,27 +109,10 @@ window.onbeforeunload = (): undefined => {
 
 const redirectRoutes = integrationUtils.filterBy
   .authFlow<Integration.RedirectFlow>(INTEGRATIONS, 'redirect')
-  .flatMap((integration) => {
-    if (integration.id === 'memeAlerts') {
-      return [
-        {
-          path: '/memealerts/redirect',
-          element: <RedirectPage integration={integration} />,
-        },
-        {
-          path: '/memeAlerts/redirect',
-          element: <RedirectPage integration={integration} />,
-        },
-      ];
-    }
-
-    return [
-      {
-        path: `/${integration.id}/redirect`,
-        element: <RedirectPage integration={integration} />,
-      },
-    ];
-  });
+  .map((integration) => ({
+    path: `/${integration.id}/redirect`,
+    element: <RedirectPage integration={integration} />,
+  }));
 
 const router = createBrowserRouter([
   {

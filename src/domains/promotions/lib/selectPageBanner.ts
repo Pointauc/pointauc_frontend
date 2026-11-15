@@ -145,18 +145,6 @@ export const selectPageBanner = (
       return null;
     }
 
-    let bannerIds: string[] | undefined;
-
-    if (bidsConfig?.banners) {
-      if (Array.isArray(bidsConfig.banners)) {
-        bannerIds = bidsConfig.banners.map((b) => (typeof b === 'string' ? b : b.bannerId));
-      } else if (typeof bidsConfig.banners === 'object') {
-        bannerIds = Object.entries(bidsConfig.banners)
-          .filter(([_, w]) => typeof w === 'number' && w > 0)
-          .map(([id]) => id);
-      }
-    }
-
     const chosenCreative =
       options?.forcedCreative ??
       getNextVerticalBannerCreative({
@@ -164,7 +152,6 @@ export const selectPageBanner = (
         advance: options?.advanceRotation ?? true,
         forceNew: options?.forceNewRotation ?? false,
         random,
-        bannerIds,
       });
 
     if (!chosenCreative) {

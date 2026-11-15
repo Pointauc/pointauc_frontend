@@ -85,6 +85,10 @@ const mapDropoutVariant = (
     return 'none';
   }
 
+  if (dropoutVariant === DropoutVariant.Pointer) {
+    return 'pointer';
+  }
+
   return dropoutVariant === DropoutVariant.Classic ? 'classic' : 'new';
 };
 

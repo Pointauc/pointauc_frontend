@@ -239,9 +239,6 @@
         "invalidToken": "Invalid Donli key or connection error"
       }
     },
-    "memeAlerts": {
-      "name": "MemeAlerts"
-    },
     "donatex": {
       "name": "DonateX"
     },
@@ -1193,7 +1190,8 @@
           "description": "This action will return all participants back to the wheel."
         }
       },
-      "newVariantFairnessInfo": "Only the final winner is selected proportionally to its contribution to the auction. All eliminated participants are selected afterwards just to create suspense."
+      "newVariantFairnessInfo": "Only the final winner is selected proportionally to its contribution to the auction. All eliminated participants are selected afterwards just to create suspense.",
+      "pointerVariantInfo": "Sectors keep their size based on the bid. Who gets eliminated is decided purely by where the pointer stops — no percentage math, just the wheel."
     },
     "duel": {
       "helpNotification": {
@@ -1206,7 +1204,8 @@
     },
     "dropoutVariant": {
       "new": "New",
-      "classic": "Classic"
+      "classic": "Classic",
+      "pointer": "By pointer"
     },
     "addLotsToAuc": "Save lots in auction",
     "connectTwitchForMoreEmotes": "Connect Twitch to choose more images on the wheel (7TV, BTTV, FFZ)",
@@ -2010,8 +2009,12 @@
   },
   "promotions": {
     "banners": {
-      "close": "Close",
-      "donatnoeNebo": "Donatnoe Nebo — the universe of donators on iHAQ Donate"
+      "donatMiner": "Donat-Miner — For those who love auctions",
+      "pointaucPromo": "iHAQ Donate × Pointauc — Promo code POINTAUC for 2.5% donation fee",
+      "wordWidget": "Widget Word — Boost your stream donations",
+      "word320_2": "Widget Word — Guess, play, get stream support",
+      "memesWidget": "Widget Neuromemes — Viewer creativity on your stream",
+      "close": "Close"
     }
   }
 }

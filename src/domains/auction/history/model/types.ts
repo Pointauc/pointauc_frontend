@@ -4,7 +4,7 @@ import type { WheelFormat } from '@constants/wheel';
 export type AuctionHistorySelectionMethod = 'direct' | 'wheel';
 export type AuctionHistoryWinnerStatus = 'candidate' | 'confirmed' | 'rerolled';
 export type AuctionHistoryWheelVariant = 'default' | 'dropout' | 'battleRoyal';
-export type AuctionHistoryDropoutVariant = 'classic' | 'new' | 'none';
+export type AuctionHistoryDropoutVariant = 'classic' | 'new' | 'pointer' | 'none';
 export type AuctionRequestsKind = 'any' | 'game' | 'movie' | 'video';
 
 export interface CurrentAuctionMetadata {

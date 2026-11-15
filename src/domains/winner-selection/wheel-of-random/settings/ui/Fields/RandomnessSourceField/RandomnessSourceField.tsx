@@ -59,7 +59,8 @@ const RandomnessSourceField = ({ ticketData, availableQuota, ticketError }: Rand
   useEffect(() => {
     const isRestrictedWheel =
       format === WheelFormat.BattleRoyal ||
-      (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
+      (format === WheelFormat.Dropout &&
+        (dropoutVariant === DropoutVariant.Classic || dropoutVariant === DropoutVariant.Pointer));
 
     if (isRestrictedWheel && randomnessSource !== 'local-basic') {
       setValue('randomnessSource', 'local-basic');
@@ -67,7 +68,9 @@ const RandomnessSourceField = ({ ticketData, availableQuota, ticketError }: Rand
   }, [format, dropoutVariant, randomnessSource, setValue]);
 
   const isRestrictedWheel =
-    format === WheelFormat.BattleRoyal || (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
+    format === WheelFormat.BattleRoyal ||
+    (format === WheelFormat.Dropout &&
+      (dropoutVariant === DropoutVariant.Classic || dropoutVariant === DropoutVariant.Pointer));
 
   const randomnessOptions = [
     { value: 'local-basic', label: t('wheel.randomnessSource.localBasic') },

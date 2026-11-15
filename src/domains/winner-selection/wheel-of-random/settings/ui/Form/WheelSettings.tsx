@@ -139,6 +139,11 @@ const WheelSettings = (props: WheelSettingsProps) => {
                   <DropoutHelp />
                   {dropoutVariant === DropoutVariant.New && <NewDropoutDescription />}
                   {dropoutVariant === DropoutVariant.Classic && <ClassicDropoutDescription />}
+                  {dropoutVariant === DropoutVariant.Pointer && (
+                    <Alert variant='light' color='blue' icon={<IconInfoCircle size={32} />}>
+                      {t('wheel.dropout.pointerVariantInfo')}
+                    </Alert>
+                  )}
                 </>
               )}
             </Stack>
