@@ -54,3 +54,40 @@ if (!globalThis.IntersectionObserver) {
 
   vi.stubGlobal('IntersectionObserver', IntersectionObserverMock);
 }
+
+// Polyfill broken Node 22 experimental localStorage in jsdom environment
+if (typeof window !== 'undefined') {
+  let isStorageBroken = false;
+  try {
+    window.localStorage?.getItem('test');
+  } catch {
+    isStorageBroken = true;
+  }
+
+  if (isStorageBroken || !window.localStorage) {
+    const createStorageMock = (): Storage => {
+      let store: Record<string, string> = {};
+      return {
+        getItem: (key: string) => store[key] ?? null,
+        setItem: (key: string, value: string) => {
+          store[key] = String(value);
+        },
+        removeItem: (key: string) => {
+          delete store[key];
+        },
+        clear: () => {
+          store = {};
+        },
+        key: (index: number) => Object.keys(store)[index] ?? null,
+        get length() {
+          return Object.keys(store).length;
+        },
+      };
+    };
+
+    const mock = createStorageMock();
+    Object.defineProperty(window, 'localStorage', { value: mock, writable: true, configurable: true });
+    Object.defineProperty(globalThis, 'localStorage', { value: mock, writable: true, configurable: true });
+  }
+}
+

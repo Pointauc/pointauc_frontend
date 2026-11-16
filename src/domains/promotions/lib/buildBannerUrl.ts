@@ -23,6 +23,26 @@ export const sanitizeUtmValue = (value: string): string => {
     .slice(0, 255);
 };
 
+/**
+ * Normalizes the base banner URL to ensure directory paths have a trailing slash.
+ * Upstream reverse proxies (such as Nginx / OpenResty) often perform canonicalization
+ * 301 redirects when a path lacks a trailing slash. If their internal proxy pass forwards
+ * to an internal port (e.g. :3000), those redirects may inadvertently expose the internal
+ * port and break the redirect in production. Ensuring a trailing slash here prevents this.
+ */
+export const normalizeBannerBaseUrl = (rawUrl: string): string => {
+  try {
+    const url = new URL(rawUrl);
+    const lastSegment = url.pathname.split('/').filter(Boolean).pop() ?? '';
+    if (!url.pathname.endsWith('/') && !lastSegment.includes('.')) {
+      url.pathname = `${url.pathname}/`;
+    }
+    return url.toString();
+  } catch {
+    return rawUrl;
+  }
+};
+
 export const buildBannerUrl = ({
   placement,
   creative,
@@ -30,7 +50,8 @@ export const buildBannerUrl = ({
   baseUrl = DEFAULT_BASE_URL,
   utmSource = DEFAULT_UTM_SOURCE,
 }: BuildBannerUrlParams): string => {
-  const url = new URL(baseUrl);
+  const normalizedBase = normalizeBannerBaseUrl(baseUrl);
+  const url = new URL(normalizedBase);
 
   url.searchParams.set('utm_source', sanitizeUtmValue(utmSource));
   url.searchParams.set('utm_medium', 'banner');
