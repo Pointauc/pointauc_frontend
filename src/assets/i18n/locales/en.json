@@ -2011,7 +2011,10 @@
   "promotions": {
     "banners": {
       "close": "Close",
-      "donatnoeNebo": "Donatnoe Nebo — the universe of donators on iHAQ Donate"
+      "donatnoeNebo": "Donatnoe Nebo — the universe of donators on iHAQ Donate",
+      "pointaucPromo": "iHAQ Donate × Pointauc — Promo code POINTAUC for 2.5% donation fee",
+      "batteryWidget": "Widget Battery — Charges from donations",
+      "emotionsWidget": "Widget Emotion Remote — Quick reactions for stream"
     }
   }
 }

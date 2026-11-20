@@ -1998,7 +1998,10 @@
   "promotions": {
     "banners": {
       "close": "Закрыть",
-      "donatnoeNebo": "Донатное Небо — вселенная донатеров на iHAQ Donate"
+      "donatnoeNebo": "Донатное Небо — вселенная донатеров на iHAQ Donate",
+      "pointaucPromo": "iHAQ Donate × Pointauc — С промо-кодом POINTAUC комиссия на донаты всего 2,5%",
+      "batteryWidget": "Виджет «Батарейка» — Заряжается от донатов",
+      "emotionsWidget": "Виджет «Пульт эмоций» — Быстрые реакции для эфира"
     }
   }
 }

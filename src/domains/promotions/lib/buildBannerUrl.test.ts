@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { BANNER_CREATIVE_DONATNOE_NEBO_STREAMER_260 } from '@domains/promotions/config/bannerRegistry';
+import { BANNER_CREATIVE_POINT_260 } from '@domains/promotions/config/bannerRegistry';
 
 import { buildBannerUrl, normalizeBannerBaseUrl, sanitizeUtmValue } from './buildBannerUrl';
 
@@ -39,28 +39,31 @@ describe('buildBannerUrl', () => {
     it('constructs url with trailing slash before query params avoiding partner 301 redirect', () => {
       const url = buildBannerUrl({
         placement: 'auction_bids',
-        creative: BANNER_CREATIVE_DONATNOE_NEBO_STREAMER_260,
+        creative: BANNER_CREATIVE_POINT_260,
         page: 'auction',
-        baseUrl: 'https://ihaqdonate.com/donatnoe-nebo',
+        baseUrl: 'https://ihaqdonate.com',
       });
 
       expect(url).toBe(
-        'https://ihaqdonate.com/donatnoe-nebo/?utm_source=pointauc&utm_medium=banner&utm_campaign=donatnoe_nebo&utm_content=auction_bids_donatnoe_nebo_streamer_260&utm_term=auction',
+        'https://ihaqdonate.com/?utm_source=pointauc&utm_medium=banner&utm_campaign=pointauc_promo&utm_content=auction_bids_point_260&utm_term=auction',
       );
     });
 
     it('uses DEFAULT_BASE_URL when baseUrl is omitted', () => {
       const url = buildBannerUrl({
         placement: 'auction_bids',
-        creative: BANNER_CREATIVE_DONATNOE_NEBO_STREAMER_260,
+        creative: BANNER_CREATIVE_POINT_260,
         page: 'auction',
       });
 
-      expect(url).toContain('https://ihaqdonate.com/donatnoe-nebo/?');
+      expect(url).toBe(
+        'https://ihaqdonate.com/?utm_source=pointauc&utm_medium=banner&utm_campaign=pointauc_promo&utm_content=auction_bids_point_260&utm_term=auction',
+      );
+      expect(url).toContain('https://ihaqdonate.com/?');
       expect(url).toContain('utm_source=pointauc');
       expect(url).toContain('utm_medium=banner');
-      expect(url).toContain('utm_campaign=donatnoe_nebo');
-      expect(url).toContain('utm_content=auction_bids_donatnoe_nebo_streamer_260');
+      expect(url).toContain('utm_campaign=pointauc_promo');
+      expect(url).toContain('utm_content=auction_bids_point_260');
       expect(url).toContain('utm_term=auction');
     });
   });

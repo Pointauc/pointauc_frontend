@@ -15,8 +15,9 @@ const LEGACY_ROTATION_KEYS = [
 ] as const;
 
 export const VERTICAL_BANNER_IDS = [
-  'DonatnoeNebo_Streamer_260',
-  'DonatnoeNebo_Universe_260',
+  'Point_260',
+  'Battery_260',
+  'Emotions_260',
 ] as const;
 
 let inMemoryIndex: number | null = null;
@@ -94,7 +95,8 @@ export const getNextVerticalBannerCreative = (
   const advance = options?.advance ?? true;
   const forceNew = options?.forceNew ?? false;
   const random = options?.random ?? Math.random;
-  const bannerIds = options?.bannerIds ?? VERTICAL_BANNER_IDS;
+  const rawBannerIds = options?.bannerIds ?? VERTICAL_BANNER_IDS;
+  const bannerIds = rawBannerIds.filter((id) => Boolean(creativesById[id]));
 
   if (bannerIds.length === 0) {
     return null;

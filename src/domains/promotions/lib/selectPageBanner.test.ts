@@ -128,23 +128,28 @@ describe('selectPageBanner on auction page', () => {
   it('always shows vertical banner on the main page and rotates banners continuously', () => {
     const banner1 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0 });
     expect(banner1?.placement).toBe('auction_bids');
-    expect(banner1?.creative.id).toBe('DonatnoeNebo_Streamer_260');
+    expect(banner1?.creative.id).toBe('Point_260');
 
-    // 2nd load: DonatnoeNebo_Universe_260
+    // 2nd load: Battery_260
     const banner2 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner2?.placement).toBe('auction_bids');
-    expect(banner2?.creative.id).toBe('DonatnoeNebo_Universe_260');
+    expect(banner2?.creative.id).toBe('Battery_260');
 
-    // 3rd load: loops back to DonatnoeNebo_Streamer_260
+    // 3rd load: Emotions_260
     const banner3 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
     expect(banner3?.placement).toBe('auction_bids');
-    expect(banner3?.creative.id).toBe('DonatnoeNebo_Streamer_260');
+    expect(banner3?.creative.id).toBe('Emotions_260');
+
+    // 4th load: loops back to Point_260
+    const banner4 = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true });
+    expect(banner4?.placement).toBe('auction_bids');
+    expect(banner4?.creative.id).toBe('Point_260');
   });
 
   it('can start randomly with either banner on first appearance', () => {
     const banner = selectPageBanner('auction', { isIhaqEnabled: false, forceNewRotation: true, random: () => 0.8 });
     expect(banner?.placement).toBe('auction_bids');
-    expect(banner?.creative.id).toBe('DonatnoeNebo_Universe_260');
+    expect(banner?.creative.id).toBe('Emotions_260');
   });
 
   it('returns null on auction page when dismissed', () => {
