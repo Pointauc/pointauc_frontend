@@ -2,6 +2,7 @@ import { useAsyncDebouncer } from '@tanstack/react-pacer/async-debouncer';
 import { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { ThunkDispatch } from 'redux-thunk';
 
 import PageContainer from '@components/PageContainer/PageContainer.tsx';
@@ -89,6 +90,23 @@ const WebsiteSettings = () => {
     formMethods.reset(settings);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
+
+  // Scroll to the section referenced by the URL hash (e.g. links from other pages
+  // pointing to a specific settings section like the channel points integrations)
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) {
+      return;
+    }
+
+    const scrollTargetId = location.hash.slice(1);
+    const timer = setTimeout(() => {
+      document.getElementById(scrollTargetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+
+    return () => clearTimeout(timer);
+  }, [location.hash]);
 
   useEffect(() => {
     const unsubscribe = formMethods.subscribe({

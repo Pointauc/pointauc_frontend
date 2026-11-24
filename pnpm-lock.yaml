@@ -200,6 +200,9 @@ importers:
       posthog-js:
         specifier: ^1.372.6
         version: 1.372.6
+      qrcode.react:
+        specifier: ^4.2.0
+        version: 4.2.0(react@19.2.0)
       qs:
         specifier: ^6.14.0
         version: 6.14.0
@@ -1508,9 +1511,8 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/styled-engine-sc@9.5.0':
-    resolution: {integrity: sha512-APk/HmMjfopqTUnEx3sGtp/00AhbI+4ZDKMnbXjPBvzya+qVU5TMn+MJtIckDOV/Tfpf2K1n06DOGJiRIGJhtg==}
-    engines: {node: '>=14.0.0'}
+  '@mui/styled-engine-sc@9.6.0':
+    resolution: {integrity: sha512-HtF+xtulcsP5Bx4LBvQOaeF4fPkkr4TS9IZANlw3fNNUCp7C8DKn9pWqoYIm2ZLI96lhjDJlcizWHlkWe438xg==}
     peerDependencies:
       styled-components: ^6.0.0
 
@@ -4806,6 +4808,7 @@ packages:
   image-size@0.5.5:
     resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
+    deprecated: Please migrate to image-size@2.x
     hasBin: true
 
   imask@7.6.1:
@@ -6035,6 +6038,11 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  qrcode.react@4.2.0:
+    resolution: {integrity: sha512-QpgqWi8rD9DsS9EP3z7BT+5lY5SFhsqGjpgW5DY/i3mK4M9DTBNz3ErMi8BWYEfI3L0d8GIbGmcdFAS1uIRGjA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   qs@6.14.0:
     resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
@@ -8508,7 +8516,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.6
 
-  '@mui/styled-engine-sc@9.5.0(@types/react@19.2.6)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))':
+  '@mui/styled-engine-sc@9.6.0(@types/react@19.2.6)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))':
     dependencies:
       '@babel/runtime': 8.0.7
       '@types/hoist-non-react-statics': 3.3.7(@types/react@19.2.6)
@@ -8523,7 +8531,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.2
       '@mui/private-theming': 7.3.7(@types/react@19.2.6)(react@19.2.0)
-      '@mui/styled-engine': '@mui/styled-engine-sc@9.5.0(@types/react@19.2.6)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))'
+      '@mui/styled-engine': '@mui/styled-engine-sc@9.6.0(@types/react@19.2.6)(styled-components@6.1.19(react-dom@19.2.0(react@19.2.0))(react@19.2.0))'
       '@mui/types': 7.4.10(@types/react@19.2.6)
       '@mui/utils': 7.3.7(@types/react@19.2.6)(react@19.2.0)
       clsx: 2.1.1
@@ -13439,6 +13447,10 @@ snapshots:
   punycode.js@2.3.1: {}
 
   punycode@2.3.1: {}
+
+  qrcode.react@4.2.0(react@19.2.0):
+    dependencies:
+      react: 19.2.0
 
   qs@6.14.0:
     dependencies:

@@ -12,11 +12,11 @@ import classes from './RandomnessExplanationModal.module.css';
 interface RandomnessExplanationModalProps {
   opened: boolean;
   onClose: () => void;
-  initialTab?: 'local-basic' | 'random-org' | 'random-org-signed';
+  initialTab?: 'local-basic' | 'random-org' | 'verifiable';
 }
 
 type ViewMode = 'intro' | 'sources';
-type RandomnessSource = 'local-basic' | 'random-org' | 'random-org-signed';
+type RandomnessSource = 'local-basic' | 'random-org' | 'verifiable';
 
 const STORAGE_KEY = 'randomnessModalState';
 
@@ -36,8 +36,10 @@ const RandomnessExplanationModal = ({ opened, onClose, initialTab }: RandomnessE
       if (savedState) {
         try {
           const { view: savedView, activeTab: savedTab } = JSON.parse(savedState);
+          const isKnownTab = ['local-basic', 'random-org', 'verifiable'].includes(savedTab);
+
           setView(savedView || 'intro');
-          setActiveTab(savedTab || 'local-basic');
+          setActiveTab(isKnownTab ? savedTab : 'local-basic');
         } catch (e) {
           // Ignore parse errors
         }

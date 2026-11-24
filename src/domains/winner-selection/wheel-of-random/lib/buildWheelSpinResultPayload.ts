@@ -117,6 +117,7 @@ export const buildWheelSpinResultPayload = ({
     format: mapWheelFormat(settings.format),
     dropout_variant: mapDropoutVariant(settings.format, settings.dropoutVariant),
     randomness_source: settings.randomnessSource,
+    viewer_verifiable_spin: Boolean(settings.viewerVerifiableSpin),
     configured_spin_time_seconds: settings.spinTime,
     actual_spin_time_seconds: spinDuration,
     is_random_spin_enabled: settings.randomSpinEnabled,

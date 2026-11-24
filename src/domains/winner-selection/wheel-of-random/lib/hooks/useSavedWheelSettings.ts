@@ -10,6 +10,7 @@ export const defaultWheelSettings: Wheel.Settings = {
   randomSpinEnabled: false,
 
   randomnessSource: 'local-basic',
+  viewerVerifiableSpin: false,
   format: WheelFormat.Default,
   paceConfig: PACE_PRESETS.suddenFinal,
   split: 1,

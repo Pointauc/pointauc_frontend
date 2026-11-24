@@ -11,10 +11,6 @@ import {
   useState,
 } from 'react';
 import { FormProvider, UseFormReturn, useForm, useFormContext, useWatch } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { notifications } from '@mantine/notifications';
-import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 
 import { addWheelWinnerCandidate } from '@domains/auction/history/model/activeAuctionHistorySlice';
@@ -32,14 +28,12 @@ import { WheelFormat } from '@constants/wheel.ts';
 import withLoading from '@decorators/withLoading';
 import { WheelItem } from '@models/wheel.model.ts';
 import { getRandomNumber } from '@api/randomApi';
-import { signedRandomControllerGenerateWinnerMutation } from '@api/openapi/@tanstack/react-query.gen';
 import { trackWheelSpinResult } from '@shared/lib/analytics/events/wheel';
 import { useSyncEffect } from '@shared/lib/react';
 import { getTotalSize, random, shuffle } from '@utils/common.utils.ts';
 import array from '@utils/dataType/array.ts';
 
 import WheelFlexboxAutosizer from '../../BaseWheel/FlexboxAutosizer';
-import { MAX_QUOTA } from '../../settings/ui/Fields/TicketCard/TicketCard';
 import { defaultWheelSettings } from '../../lib/hooks/useSavedWheelSettings';
 import PlayerFactory from '../../settings/ui/Fields/Soundtrack/PlayerFactory';
 import { PlayerRef } from '../../settings/ui/Fields/Soundtrack/PlayerFactory/types';
@@ -113,20 +107,6 @@ export interface RandomWheelController {
   spin?: WheelController['spin'];
 }
 
-interface RandomOrgTicketResponse {
-  jsonrpc: string;
-  id: number;
-  result: {
-    ticketId: string;
-    creationTime: string;
-    usedTime: string;
-    random: {
-      data: number[];
-      completionTime: string;
-    };
-  };
-}
-
 const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   items: _itemsFromProps,
   deleteItem,
@@ -143,11 +123,12 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const elements = useMemo(() => ({ ...initialAvailableSettings, ...elementsFromProps }), [elementsFromProps]);
   const [isLoadingSeed, setIsLoadingSeed] = useState<boolean>(false);
   const wheelController = useRef<WheelController | null>(null);
-  const { handleSubmit, setValue, control } = useFormContext<Wheel.Settings>();
+  const { handleSubmit, control } = useFormContext<Wheel.Settings>();
   const randomSpinEnabled = useWatch({ name: 'randomSpinEnabled', control });
   const randomSpinConfig = useWatch({ name: 'randomSpinConfig', control });
   const spinTime = useWatch({ name: 'spinTime', control });
   const randomnessSource = useWatch({ name: 'randomnessSource', control });
+  const viewerVerifiableSpin = useWatch({ name: 'viewerVerifiableSpin', control });
   const format = useWatch({ name: 'format', control });
   const paceConfig = useWatch({ name: 'paceConfig', control });
   const split = useWatch({ name: 'split' });
@@ -163,48 +144,20 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   const soundtrackOffset = useWatch({ name: 'soundtrack.offset', control });
   const soundtrackVolume = useWatch({ name: 'soundtrack.volume', control });
   const soundtrackPlayerRef = useRef<PlayerRef | null>(null);
-  const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { t } = useTranslation();
 
-  // Ticket management for signed random.org flow
+  // Ticket management for the viewer verifiable spin flow
   const {
-    activeTicketId,
-    availableQuota,
-    setAvailableQuota,
-    setRevealedTicketId,
-    resetRevealedTicket,
-    refreshActiveTicket,
-    isCreating,
-    setShouldRevealNumber,
+    activeTicket,
+    isBusy: isTicketBusy,
+    error: ticketError,
+    revealedTicket,
     shouldRevealNumber,
-    error,
-  } = useTicketManagement(randomnessSource === 'random-org-signed');
-
-  // Mutation for generating winner with signed random.org
-  const signedWinnerMutation = useMutation({
-    ...signedRandomControllerGenerateWinnerMutation(),
-    onError: (error) => {
-      if (error?.response?.data?.code === 'QUOTA_EXCEEDED') {
-        setAvailableQuota(0);
-        notifications.show({
-          title: t('wheel.ticket.quotaExceeded'),
-          message: t('wheel.ticket.quotaExceededMessage', { totalQuota: MAX_QUOTA }),
-          color: 'red',
-          autoClose: 10000,
-          withCloseButton: true,
-        });
-      } else {
-        notifications.show({
-          title: t('wheel.ticket.spinUnknownErrorTitle'),
-          message: t('wheel.ticket.spinUnknownErrorMessage', { error: error.response?.data?.message }),
-          color: 'red',
-          autoClose: 10000,
-          withCloseButton: true,
-        });
-      }
-    },
-  });
+    setShouldRevealNumber,
+    revealTicket,
+    revealTicketForViewers,
+    resetRevealedTicket,
+  } = useTicketManagement(viewerVerifiableSpin);
 
   useImperativeHandle<RandomWheelController, RandomWheelController>(
     wheelRef,
@@ -217,31 +170,21 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     [],
   );
 
-  const randomOrgTicketQuery = useQuery({
-    queryKey: ['random-org-ticket', activeTicketId],
-    queryFn: () =>
-      axios
-        .post<RandomOrgTicketResponse>('https://api.random.org/json-rpc/4/invoke', {
-          jsonrpc: '2.0',
-          method: 'getTicket',
-          params: {
-            ticketId: activeTicketId,
-          },
-          id: Math.floor(Math.random() * 10000),
-        })
-        .then((res) => res.data),
-    enabled: !!activeTicketId,
-    staleTime: 1000 * 60 * 60,
-  });
+  const visibleTicketData: RevealedData | null = useMemo(() => {
+    if (revealedTicket) {
+      return {
+        ...revealedTicket,
+        // The random number is only shown once the winner has been presented locally
+        randomNumber: shouldRevealNumber ? revealedTicket.randomNumber : null,
+      };
+    }
 
-  const visibleRevealedData: RevealedData | null = randomOrgTicketQuery.data
-    ? {
-        ticketId: randomOrgTicketQuery.data.result.ticketId,
-        createdAt: randomOrgTicketQuery.data.result.creationTime,
-        revealedAt: randomOrgTicketQuery.data.result.usedTime,
-        randomNumber: shouldRevealNumber ? randomOrgTicketQuery.data.result.random.data[0] : null,
-      }
-    : null;
+    if (activeTicket) {
+      return { ticketId: activeTicket.ticketId, createdAt: activeTicket.createdAt };
+    }
+
+    return null;
+  }, [revealedTicket, shouldRevealNumber, activeTicket]);
 
   useEffect(() => {
     wheelController.current?.resetPosition();
@@ -252,10 +195,11 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     format,
     dropoutVariant,
     controller: wheelController,
-    isTicketRevealed: !!visibleRevealedData?.randomNumber,
+    isTicketRevealed: !!visibleTicketData?.randomNumber,
     resetTicket: resetRevealedTicket,
   });
   const { items, init, extraSettings, renderSubmitButton, onSpinEnd, content, reset } = wheelStrategy;
+  const isDropoutFlowStarted = Boolean(wheelStrategy.isSpinFlowStarted);
 
   const filteredItems = useMemo(() => {
     const filtered = getTotalSize(itemsFromProps)
@@ -282,52 +226,31 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
   }, [filteredItems]);
 
   const onSpinClick = useCallback(
-    async ({ randomnessSource }: Wheel.Settings) => {
+    async ({ randomnessSource, viewerVerifiableSpin }: Wheel.Settings) => {
       const duration = getSpinDuration({ randomSpinConfig, randomSpinEnabled, spinTime });
       const activeWheelItems = wheelController.current?.getItems() ?? [];
       let generatedRandomNumber: number | undefined;
+      let revealedTicketId: string | null = null;
 
       const generateSeed = async (): Promise<number> => {
-        if (randomnessSource === 'random-org') {
-          // Simple random.org API call
-          const seed = await getSeed();
-          generatedRandomNumber = seed ?? random.value();
-          return generatedRandomNumber;
-        } else if (randomnessSource === 'random-org-signed') {
-          // Signed random.org flow
-          if (!activeTicketId) {
-            setValue('randomnessSource', 'local-basic');
-            generatedRandomNumber = random.value();
-            return generatedRandomNumber;
-          }
-
+        if (viewerVerifiableSpin) {
+          // Viewer verifiable spin: reveal the active ticket and use its random number
           const participants = filteredItems.map((item) => ({
             name: item.name,
             amount: item.amount,
           }));
 
-          const response = await signedWinnerMutation.mutateAsync({
-            body: {
-              participants,
-            },
-          });
-          queryClient.setQueryData(['random-org-ticket', activeTicketId], {
-            ...randomOrgTicketQuery.data,
-            result: {
-              ...randomOrgTicketQuery.data?.result,
-              random: response.random,
-              signature: response.signature,
-              usedTime: response.random.completionTime,
-            },
-          });
-          setAvailableQuota(response.quotaLeft);
-          refreshActiveTicket();
-          setRevealedTicketId(response.random.ticketData.ticketId);
-          // Extract random number and completion time from response
-          const randomData = response.random;
-          const randomNumber = randomData.data[0];
+          const response = await revealTicket(participants);
+          revealedTicketId = response.ticketId;
+          generatedRandomNumber = response.randomNumber;
 
-          generatedRandomNumber = randomNumber !== undefined ? randomNumber : random.value();
+          return generatedRandomNumber;
+        }
+
+        if (randomnessSource === 'random-org') {
+          // Simple random.org API call
+          const seed = await getSeed();
+          generatedRandomNumber = seed ?? random.value();
           return generatedRandomNumber;
         }
 
@@ -372,6 +295,17 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
 
       await onSpinEnd?.(winnerItem);
 
+      // Publish the revealed ticket to viewers once the wheel has stopped
+      // and the winner has been presented locally
+      if (viewerVerifiableSpin && winnerResult.isFinalSpin) {
+        setShouldRevealNumber(true);
+
+        const ticketToPublish = revealedTicketId ?? revealedTicket?.ticketId;
+        if (ticketToPublish) {
+          await revealTicketForViewers(ticketToPublish).catch(() => undefined);
+        }
+      }
+
       const finalWinnerId = winnerResult.finalWinnerId ?? winnerResult.id;
 
       if (winnerResult.isFinalSpin && finalWinnerId) {
@@ -399,6 +333,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
                 randomSpinConfig,
                 randomSpinEnabled,
                 randomnessSource,
+                viewerVerifiableSpin,
                 format,
                 paceConfig,
                 split,
@@ -421,10 +356,6 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
         }
       }
 
-      if (randomnessSource === 'random-org-signed' && winnerResult.isFinalSpin) {
-        setShouldRevealNumber(true);
-      }
-
       winnerItem && onWin?.(winnerItem as TWheelItem);
     },
     [
@@ -441,18 +372,13 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
       trackAuctionHistoryWinner,
       dispatch,
       getSeed,
-      activeTicketId,
       filteredItems,
-      signedWinnerMutation,
-      queryClient,
-      randomOrgTicketQuery.data,
-      setAvailableQuota,
-      refreshActiveTicket,
-      setRevealedTicketId,
-      setValue,
+      revealTicket,
+      revealedTicket,
+      revealTicketForViewers,
+      setShouldRevealNumber,
       soundtrackOffset,
       soundtrackVolume,
-      setShouldRevealNumber,
       paceConfig,
       split,
       maxDepth,
@@ -518,13 +444,13 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
           <div className={classNames('wheel-controls')}>
             <WheelSettings
               direction={content ? 'row' : 'column'}
-              isLoadingSeed={isLoadingSeed || signedWinnerMutation.isPending}
+              isLoadingSeed={isLoadingSeed || isTicketBusy}
               controls={elements}
               renderSubmitButton={renderSubmitButton}
-              ticketData={visibleRevealedData}
-              availableQuota={availableQuota}
-              isCreatingTicket={isCreating}
-              ticketError={error}
+              ticketData={visibleTicketData}
+              isCreatingTicket={isTicketBusy}
+              ticketError={ticketError}
+              isDropoutFlowStarted={isDropoutFlowStarted}
             >
               <>
                 {extraSettings}

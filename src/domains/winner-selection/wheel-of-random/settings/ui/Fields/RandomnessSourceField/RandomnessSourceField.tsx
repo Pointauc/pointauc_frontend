@@ -1,34 +1,21 @@
-import { Alert, Anchor, Group, Select, Stack, Text, Tooltip } from '@mantine/core';
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ActionIcon, Checkbox, Group, Tooltip } from '@mantine/core';
+import { IconQuestionMark } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { AxiosError } from 'axios';
-import { IconAlertCircle, IconShieldCheckFilled } from '@tabler/icons-react';
 
 import { WheelFormat } from '@constants/wheel.ts';
 import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/DropoutVariant';
-import TicketCard from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/TicketCard/TicketCard';
 import RandomnessExplanationModal from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/RandomnessExplanationModal';
-import { RevealedData } from '@domains/winner-selection/wheel-of-random/lib/hooks/useTicketManagement';
-
-import classes from './RandomnessSourceField.module.css';
-
-interface RandomnessSourceFieldProps {
-  ticketData?: RevealedData | null;
-  availableQuota?: number | null;
-  ticketError?: Error | null;
-}
-
-const MODAL_OPENED_KEY = 'randomnessModalHasBeenOpened';
 
 /**
- * Randomness source selection field with integrated side effects:
- * - Auto-opens explanation modal for first-time random-org-signed users
- * - Auto-resets to local-basic for restricted wheel types
- * - Displays ticket card for random-org-signed
- * - Handles ticket errors
+ * "Use random.org" checkbox backed by the randomnessSource setting
+ * ('random-org' when checked, 'local-basic' when unchecked) with integrated
+ * side effects:
+ * - Auto-unchecks for restricted wheel types (battle royale, classic dropout)
+ * - Opens the explanation modal via the question mark icon button
  */
-const RandomnessSourceField = ({ ticketData, availableQuota, ticketError }: RandomnessSourceFieldProps) => {
+const RandomnessSourceField = () => {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<Wheel.Settings>();
   const { isSubmitting } = useFormState<Wheel.Settings>({ control });
@@ -36,132 +23,77 @@ const RandomnessSourceField = ({ ticketData, availableQuota, ticketError }: Rand
   const dropoutVariant = useWatch<Wheel.Settings, 'dropoutVariant'>({ name: 'dropoutVariant' });
   const randomnessSource = useWatch<Wheel.Settings, 'randomnessSource'>({ name: 'randomnessSource' });
   const [randomnessModalOpened, setRandomnessModalOpened] = useState(false);
-  const [initialModalTab, setInitialModalTab] = useState<'local-basic' | 'random-org' | 'random-org-signed'>();
-
-  // Auto-open modal for random-org-signed if it hasn't been opened before
-  useEffect(() => {
-    if (randomnessSource === 'random-org-signed') {
-      const hasBeenOpened = localStorage.getItem(MODAL_OPENED_KEY);
-      if (!hasBeenOpened) {
-        setRandomnessModalOpened(true);
-        localStorage.setItem(MODAL_OPENED_KEY, 'true');
-      }
-    }
-  }, [randomnessSource]);
 
   useEffect(() => {
-    if (!['local-basic', 'random-org', 'random-org-signed'].includes(randomnessSource)) {
+    if (!['local-basic', 'random-org'].includes(randomnessSource)) {
       setValue('randomnessSource', 'local-basic');
     }
   }, [randomnessSource, setValue]);
 
-  // Auto-reset randomnessSource to 'local-basic' for restricted wheel types
-  useEffect(() => {
-    const isRestrictedWheel =
-      format === WheelFormat.BattleRoyal ||
-      (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
-
-    if (isRestrictedWheel && randomnessSource !== 'local-basic') {
-      setValue('randomnessSource', 'local-basic');
-    }
-  }, [format, dropoutVariant, randomnessSource, setValue]);
-
   const isRestrictedWheel =
     format === WheelFormat.BattleRoyal || (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
 
-  const randomnessOptions = [
-    { value: 'local-basic', label: t('wheel.randomnessSource.localBasic') },
-    { value: 'random-org', label: t('wheel.randomnessSource.randomOrg'), disabled: isRestrictedWheel },
-    {
-      value: 'random-org-signed',
-      label: t('wheel.randomnessSource.randomOrgSigned'),
-      disabled: isRestrictedWheel,
-    },
-  ];
-
-  const ticketErrorMessage = useMemo(() => {
-    if (randomnessSource !== 'random-org-signed' || !ticketError) return null;
-    if (randomnessSource === 'random-org-signed' && (ticketError as AxiosError)?.status === 403) {
-      return t('wheel.ticket.unauthorizedError');
+  // Auto-uncheck for restricted wheel types
+  useEffect(() => {
+    if (isRestrictedWheel && randomnessSource !== 'local-basic') {
+      setValue('randomnessSource', 'local-basic');
     }
-    return t('wheel.ticket.unknownError');
-  }, [ticketError, randomnessSource, t]);
+  }, [isRestrictedWheel, randomnessSource, setValue]);
 
-  const handleOpenRandomnessModal = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setInitialModalTab(undefined);
+  const handleCheckboxChange = (checked: boolean) => {
+    setValue('randomnessSource', checked ? 'random-org' : 'local-basic');
+  };
+
+  const handleOpenExplanationModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent the checkbox label click from toggling the checkbox
+    event.preventDefault();
+    event.stopPropagation();
     setRandomnessModalOpened(true);
-  };
-
-  const handleCloseModal = () => {
-    setRandomnessModalOpened(false);
-    setInitialModalTab(undefined);
-  };
-
-  const renderSelectOption: Parameters<typeof Select>[0]['renderOption'] = ({ option }) => {
-    if (option.value === 'random-org-signed') {
-      return (
-        <Stack gap={0}>
-          <Group gap='xxs' align='center'>
-            <IconShieldCheckFilled size={20} className={classes.lockIcon} />
-            <Text>{option.label}</Text>
-          </Group>
-          <Text size='xs' c='dimmed'>
-            {t('wheel.randomnessSource.verifiableDescription')}
-          </Text>
-        </Stack>
-      );
-    }
-    return option.label;
   };
 
   return (
     <>
-      <Stack gap='sm'>
-        <Controller
-          name='randomnessSource'
-          render={({ field: { value, onChange } }) => (
-            <Tooltip label={t('wheel.randomnessSource.disabledTooltip')} disabled={!isRestrictedWheel} withArrow>
-              <Select
-                classNames={{ label: 'w-full' }}
+      <Tooltip
+        label={t('wheel.randomnessSource.disabledTooltip')}
+        disabled={!isRestrictedWheel}
+        multiline
+        maw={340}
+        withArrow
+        events={{ hover: true, focus: false, touch: true }}
+      >
+        <div>
+          <Controller
+            name='randomnessSource'
+            control={control}
+            render={({ field: { value } }) => (
+              <Checkbox
                 label={
-                  <Group gap='xs' justify='space-between' wrap='nowrap' w='100%'>
-                    <Text>{t('wheel.randomnessSource.label')}</Text>
-                    <Anchor size='sm' onClick={handleOpenRandomnessModal} style={{ whiteSpace: 'nowrap' }}>
-                      {t('wheel.randomnessSource.learnMore')}
-                    </Anchor>
+                  <Group gap='xxs' wrap='nowrap'>
+                    <span>{t('wheel.randomnessSource.useRandomOrg')}</span>
+                    <ActionIcon
+                      variant='outline'
+                      color='primary'
+                      radius={100}
+                      size='compact-sm'
+                      onClick={handleOpenExplanationModal}
+                      title={t('wheel.randomnessSource.learnMore')}
+                    >
+                      <IconQuestionMark size={16} />
+                    </ActionIcon>
                   </Group>
                 }
-                value={value}
-                onChange={(val) => onChange(val)}
-                data={randomnessOptions}
-                disabled={isSubmitting}
-                allowDeselect={false}
-                renderOption={renderSelectOption}
+                checked={value === 'random-org'}
+                onChange={(event) => handleCheckboxChange(event.currentTarget.checked)}
+                disabled={isSubmitting || isRestrictedWheel}
               />
-            </Tooltip>
-          )}
-        />
-        {randomnessSource === 'random-org-signed' && ticketData && (
-          <TicketCard
-            ticketId={ticketData.ticketId}
-            createdAt={ticketData.createdAt}
-            revealedAt={ticketData?.revealedAt}
-            randomNumber={ticketData?.randomNumber}
-            availableQuota={availableQuota}
+            )}
           />
-        )}
-        {ticketErrorMessage && (
-          <Alert icon={<IconAlertCircle size={20} />} title={t('wheel.ticket.errorTitle')} color='red'>
-            {ticketErrorMessage}
-          </Alert>
-        )}
-      </Stack>
+        </div>
+      </Tooltip>
       <RandomnessExplanationModal
         opened={randomnessModalOpened}
-        onClose={handleCloseModal}
-        initialTab={initialModalTab}
+        onClose={() => setRandomnessModalOpened(false)}
+        initialTab='random-org'
       />
     </>
   );

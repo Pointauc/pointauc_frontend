@@ -104,6 +104,8 @@ const useSimulationDropout = ({
     renderSubmitButton,
     onSpinEnd,
     reset: onReset,
+    // At least one dropout spin has happened and the flow has not been reset yet
+    isSpinFlowStarted: items.length > 0 && items.length < initialItems.length,
   };
 };
 

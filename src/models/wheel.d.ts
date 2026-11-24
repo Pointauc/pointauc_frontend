@@ -51,7 +51,10 @@ declare global {
       randomSpinConfig: { min: number; max: number };
       randomSpinEnabled: boolean;
 
-      randomnessSource: 'local-basic' | 'random-org' | 'random-org-signed';
+      /** Client-side generation method, ignored when viewerVerifiableSpin is enabled */
+      randomnessSource: 'local-basic' | 'random-org';
+      /** Tickets system: the winner is decided by a ticket reveal that viewers can verify */
+      viewerVerifiableSpin: boolean;
       format: WheelFormat;
       paceConfig: RandomPaceConfig;
       split: number;
@@ -99,6 +102,8 @@ declare global {
       renderSubmitButton?: (defaultButton: ReactNode) => ReactNode;
       extraSettings?: ReactNode;
       reset?: () => void;
+      /** True when a multi-spin flow (e.g. dropout) has started but has not been reset yet */
+      isSpinFlowStarted?: boolean;
     }
   }
 }

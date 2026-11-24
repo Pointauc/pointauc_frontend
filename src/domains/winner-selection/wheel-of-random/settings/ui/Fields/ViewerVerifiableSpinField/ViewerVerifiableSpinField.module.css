@@ -1,0 +1,14 @@
+.fieldWrapper {
+  padding-top: 6px;
+}
+
+.newBadge {
+  flex: none;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.warningIcon {
+  color: var(--mantine-color-yellow-5);
+  flex: none;
+}

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import classes from './RandomnessExplanationModal.module.css';
 
 interface IntroViewProps {
-  onSourceClick: (source: 'local-basic' | 'random-org' | 'random-org-signed') => void;
+  onSourceClick: (source: 'local-basic' | 'random-org' | 'verifiable') => void;
 }
 
 const IntroView = ({ onSourceClick }: IntroViewProps) => {
@@ -71,11 +71,11 @@ const IntroView = ({ onSourceClick }: IntroViewProps) => {
             radius='md'
             withBorder
             className={classes.sourceCard}
-            onClick={() => onSourceClick('random-org-signed')}
+            onClick={() => onSourceClick('verifiable')}
           >
             <Stack gap='sm' align='center'>
               <Title order={3} size='h4' ta='center'>
-                {t('wheel.randomnessSource.randomOrgSigned')}
+                {t('wheel.viewerVerifiableSpin.label')}
               </Title>
               <Badge color='grape'>{t('wheel.randomnessModal.intro.maxSecurity')}</Badge>
               <Text size='sm' ta='center' c='dimmed'>

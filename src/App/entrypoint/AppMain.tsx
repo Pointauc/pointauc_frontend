@@ -7,6 +7,7 @@ import ROUTES from '@constants/routes.constants';
 import WebsiteSettings from '@domains/user-settings-v2/pages/WebsiteSettings';
 import AucPage from '@pages/auction/AucPage';
 import LogoutPage from '@pages/logout/LogoutPage.tsx';
+import RevealedTicketRedirect from '@pages/tickets/RevealedTicketRedirect';
 import TestPage from '@pages/test/TestPage';
 import WheelPage from '@pages/wheel/WheelPage/WheelPage';
 
@@ -17,7 +18,7 @@ const AuctionHistoryPage = lazy(() => import('@domains/auction/history/ui/Auctio
 const OverlayPage = lazy(() => import('@domains/overlays/ui/Edit/Page/OverlayPage'));
 const DebugPage = lazy(() => import('@domains/debug/ui/Page/DebugPage'));
 const TicketVerificationInstructionsPage = lazy(() => import('@pages/tickets/TicketVerificationInstructionsPage'));
-const RevealedTicketPage = lazy(() => import('@pages/tickets/RevealedTicketPage'));
+const SpinVerificationPage = lazy(() => import('@pages/tickets/SpinVerificationPage'));
 
 export const AppMain = () => {
   const isHomePage = useMatch(ROUTES.HOME);
@@ -37,7 +38,8 @@ export const AppMain = () => {
         <Route path={ROUTES.OVERLAYS} element={<OverlaysPage />} />
         <Route path={ROUTES.OVERLAY_EDIT} element={<OverlayPage />} />
         <Route path={ROUTES.TICKET_VERIFICATION_INFO} element={<TicketVerificationInstructionsPage />} />
-        <Route path={ROUTES.TICKET_DETAILS} element={<RevealedTicketPage />} />
+        <Route path={ROUTES.SPIN_VERIFICATION} element={<SpinVerificationPage />} />
+        <Route path={ROUTES.TICKET_DETAILS} element={<RevealedTicketRedirect />} />
         <Route path={ROUTES.LOGOUT} element={<LogoutPage />} />
         <Route path={ROUTES.TEST} element={<TestPage />} />
         <Route path={ROUTES.DEBUG} element={<DebugPage />} />

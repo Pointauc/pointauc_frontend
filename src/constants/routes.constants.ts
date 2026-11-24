@@ -27,6 +27,7 @@ const ROUTES = {
   TEST: '/test',
   DEBUG: '/debug',
   TICKET_VERIFICATION_INFO: '/tickets/info',
+  SPIN_VERIFICATION: '/verify/:ticketId',
   TICKET_DETAILS: '/tickets/:ticketId',
   REDIRECT: {
     DEFAULT: '/redirect',

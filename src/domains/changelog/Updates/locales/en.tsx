@@ -9,6 +9,32 @@ import DesktopDownloadLink from '@domains/desktop/ui/DesktopDownloadModal/Deskto
 
 export const ChangesEN: UpdateData[] = [
   {
+    date: '2026-11-24T19:15:41.209Z',
+    newFeatures: [
+      {
+        briefDescription: 'Viewers can now verify the wheel spin result',
+        content: (
+          <>
+            <strong>Viewer verifiable spins</strong>
+            <Space h='sm' />
+            <div>
+              Added a new <Link to={ROUTES.WHEEL}>wheel</Link> option —{' '}
+              <strong>&quot;Viewers can verify the spin&quot;</strong>. When enabled, the winner is decided by a
+              ticket that is created <strong>before</strong> the spin: anyone can check the result via a public link
+              or QR code, so neither the streamer nor the website can affect the outcome.
+            </div>
+            <Space h='xs' />
+            <div>
+              This feature already existed as a random generation method, but it was easy to miss — now it has its
+              own checkbox on the wheel page and a public verification page that viewers can open even while the
+              wheel is still spinning.
+            </div>
+          </>
+        ),
+      },
+    ],
+  },
+  {
     date: '2026-10-25T23:30:35.656Z',
     newFeatures: [
       {

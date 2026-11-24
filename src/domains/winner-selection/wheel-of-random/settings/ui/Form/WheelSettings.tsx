@@ -13,6 +13,7 @@ import { useAppHotkey } from '@shared/lib/hotkeys/useAppHotkey';
 import HotkeyHint from '@shared/ui/HotkeyHint/HotkeyHint';
 import ClassicDropoutDescription from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ClassicDropoutDescription';
 import RandomnessSourceField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/RandomnessSourceField/RandomnessSourceField';
+import ViewerVerifiableSpinField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/ViewerVerifiableSpinField/ViewerVerifiableSpinField';
 import SplitField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/Split';
 import WheelFormatField from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/WheelFormat';
 
@@ -34,9 +35,9 @@ interface WheelSettingsProps {
   renderSubmitButton?: (defaultButton: ReactNode) => ReactNode;
   direction?: 'row' | 'column';
   ticketData?: RevealedData | null;
-  availableQuota?: number | null;
   isCreatingTicket?: boolean;
   ticketError?: Error | null;
+  isDropoutFlowStarted?: boolean;
 }
 
 const WheelSettings = (props: WheelSettingsProps) => {
@@ -48,8 +49,8 @@ const WheelSettings = (props: WheelSettingsProps) => {
     renderSubmitButton,
     ticketData,
     isCreatingTicket,
-    availableQuota,
     ticketError,
+    isDropoutFlowStarted = false,
   } = props;
   const { t } = useTranslation();
   const { control } = useFormContext<Wheel.Settings>();
@@ -57,6 +58,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
   const submitButtonRef = useRef<HTMLButtonElement | null>(null);
   const format = useWatch<Wheel.Settings>({ name: 'format' });
   const dropoutVariant = useWatch<Wheel.Settings>({ name: 'dropoutVariant' });
+  const viewerVerifiableSpin = useWatch<Wheel.Settings>({ name: 'viewerVerifiableSpin' });
   const [isNewDropoutFairnessInfoDismissed, setIsNewDropoutFairnessInfoDismissed] = useLocalStorageState(
     'wheelNewDropoutFairnessInfoDismissed',
     false,
@@ -145,11 +147,15 @@ const WheelSettings = (props: WheelSettingsProps) => {
             {children}
             {controls.split && <SplitField />}
             {controls.randomOrg && (
-              <RandomnessSourceField
-                ticketData={ticketData}
-                availableQuota={availableQuota}
-                ticketError={ticketError}
-              />
+              <>
+                {/* The generation method is decided by the backend while viewer verifiable spin is on */}
+                {!viewerVerifiableSpin && <RandomnessSourceField />}
+                <ViewerVerifiableSpinField
+                  ticketData={ticketData ?? null}
+                  ticketError={ticketError ?? null}
+                  isDropoutFlowStarted={isDropoutFlowStarted}
+                />
+              </>
             )}
             {/*{elements.randomPace && (*/}
             {/*  <>*/}

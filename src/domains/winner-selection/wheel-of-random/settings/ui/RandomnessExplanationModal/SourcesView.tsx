@@ -6,7 +6,7 @@ import LocalBasicTab from './LocalBasicTab';
 import RandomOrgTab from './RandomOrgTab';
 import RandomOrgSignedTab from './RandomOrgSignedTab';
 
-type RandomnessSource = 'local-basic' | 'random-org' | 'random-org-signed';
+type RandomnessSource = 'local-basic' | 'random-org' | 'verifiable';
 
 interface SourcesViewProps {
   activeTab: RandomnessSource;
@@ -30,7 +30,7 @@ const SourcesView = ({ activeTab, onTabChange, onBackToIntro, onViewTechnicalDet
         <Tabs.List>
           <Tabs.Tab value='local-basic'>{t('wheel.randomnessSource.localBasic')}</Tabs.Tab>
           <Tabs.Tab value='random-org'>{t('wheel.randomnessSource.randomOrg')}</Tabs.Tab>
-          <Tabs.Tab value='random-org-signed'>{t('wheel.randomnessSource.randomOrgSigned')}</Tabs.Tab>
+          <Tabs.Tab value='verifiable'>{t('wheel.viewerVerifiableSpin.label')}</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value='local-basic' pt='md'>
@@ -39,7 +39,7 @@ const SourcesView = ({ activeTab, onTabChange, onBackToIntro, onViewTechnicalDet
         <Tabs.Panel value='random-org' pt='md'>
           <RandomOrgTab />
         </Tabs.Panel>
-        <Tabs.Panel value='random-org-signed' pt='md'>
+        <Tabs.Panel value='verifiable' pt='md'>
           <RandomOrgSignedTab onViewTechnicalDetails={onViewTechnicalDetails} />
         </Tabs.Panel>
       </Tabs>
@@ -48,4 +48,3 @@ const SourcesView = ({ activeTab, onTabChange, onBackToIntro, onViewTechnicalDet
 };
 
 export default SourcesView;
-

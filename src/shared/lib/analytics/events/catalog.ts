@@ -20,7 +20,8 @@ export const analyticsEventNames = {
 export interface WheelSpinResultPayload {
   format: 'default' | 'dropout' | 'battle-royale';
   dropout_variant: 'classic' | 'new' | 'none';
-  randomness_source: 'local-basic' | 'random-org' | 'random-org-signed';
+  randomness_source: 'local-basic' | 'random-org';
+  viewer_verifiable_spin: boolean;
   configured_spin_time_seconds: number | null;
   actual_spin_time_seconds: number;
   is_random_spin_enabled: boolean;
