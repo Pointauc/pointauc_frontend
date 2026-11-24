@@ -8,6 +8,8 @@ import { WheelFormat } from '@constants/wheel.ts';
 import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/DropoutVariant';
 import RandomnessExplanationModal from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/RandomnessExplanationModal';
 
+const RANDOMNESS_SOURCES = ['local-basic', 'random-org'] as const;
+
 /**
  * "Use random.org" checkbox backed by the randomnessSource setting
  * ('random-org' when checked, 'local-basic' when unchecked) with integrated
@@ -24,8 +26,11 @@ const RandomnessSourceField = () => {
   const randomnessSource = useWatch<Wheel.Settings, 'randomnessSource'>({ name: 'randomnessSource' });
   const [randomnessModalOpened, setRandomnessModalOpened] = useState(false);
 
+  // Normalize legacy values (e.g. the removed 'random-org-signed'). Skip the
+  // transient undefined state while the watch value has not hydrated yet,
+  // otherwise a saved 'random-org' could be reset on page refresh
   useEffect(() => {
-    if (!['local-basic', 'random-org'].includes(randomnessSource)) {
+    if (randomnessSource !== undefined && !RANDOMNESS_SOURCES.includes(randomnessSource)) {
       setValue('randomnessSource', 'local-basic');
     }
   }, [randomnessSource, setValue]);

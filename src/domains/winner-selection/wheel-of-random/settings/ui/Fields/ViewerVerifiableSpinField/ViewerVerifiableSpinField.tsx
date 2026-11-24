@@ -11,6 +11,7 @@ import { WheelFormat } from '@constants/wheel.ts';
 import ROUTES from '@constants/routes.constants';
 import { RootState } from '@reducers';
 import { DropoutVariant } from '@domains/winner-selection/wheel-of-random/BaseWheel/DropoutVariant';
+import { checkHasUserToken } from '@domains/bids/lib/useInitializeUser';
 import TicketCard from '@domains/winner-selection/wheel-of-random/settings/ui/Fields/TicketCard/TicketCard';
 import RandomnessExplanationModal from '@domains/winner-selection/wheel-of-random/settings/ui/RandomnessExplanationModal/RandomnessExplanationModal';
 import { RevealedData } from '@domains/winner-selection/wheel-of-random/lib/hooks/useTicketManagement';
@@ -28,10 +29,10 @@ interface ViewerVerifiableSpinFieldProps {
 /**
  * Viewer verifiable spin checkbox with integrated side effects:
  * - Auto-unchecks for restricted wheel types (battle royale, classic dropout)
- *   and while the user is not authenticated (the flow needs a session)
+ *   and when the user is known to be logged out (no session cookie)
  * - Disabled while a spin is in progress or in the middle of a dropout flow
  * - Disabled with an explanatory tooltip and an exclamation mark icon
- *   when the user is not authenticated
+ *   when the user is known to be logged out
  * - Displays the verification ticket card and ticket errors
  */
 const ViewerVerifiableSpinField = ({
@@ -55,19 +56,25 @@ const ViewerVerifiableSpinField = ({
 
   // Auto-uncheck for restricted wheel types, and for users who cannot use the
   // feature at all: revealing tickets requires an authenticated session, so a
-  // default-on checkbox must not stay checked while logged out
+  // default-on checkbox must not stay checked while logged out.
+  // The username arrives asynchronously after a page refresh, so the session
+  // cookie is the signal for "known logged out" — otherwise the saved value
+  // must not be clobbered (and autosaved) while auth is still resolving.
+  const hasUserSession = checkHasUserToken();
+  const isKnownLoggedOut = !hasUserSession && !isAuthenticated;
+
   useEffect(() => {
-    if ((isRestrictedWheel || !isAuthenticated) && viewerVerifiableSpin) {
+    if ((isRestrictedWheel || isKnownLoggedOut) && viewerVerifiableSpin) {
       setValue('viewerVerifiableSpin', false);
     }
-  }, [isRestrictedWheel, isAuthenticated, viewerVerifiableSpin, setValue]);
+  }, [isRestrictedWheel, isKnownLoggedOut, viewerVerifiableSpin, setValue]);
 
-  const isDisabled = !isAuthenticated || isRestrictedWheel || isSubmitting || isDropoutFlowStarted;
+  const isDisabled = isKnownLoggedOut || isRestrictedWheel || isSubmitting || isDropoutFlowStarted;
 
   const tooltipLabel = useMemo<ReactNode>(() => {
     const content = [<Text size='sm'>{t('wheel.viewerVerifiableSpin.description')}</Text>];
 
-    if (!isAuthenticated) {
+    if (isKnownLoggedOut) {
       content.push(
         <Text key='unauthenticated' size='sm'>
           {t('wheel.viewerVerifiableSpin.unauthenticatedTooltip')}
@@ -103,7 +110,7 @@ const ViewerVerifiableSpinField = ({
     }
 
     return <Stack gap='xs'>{content}</Stack>;
-  }, [isAuthenticated, isRestrictedWheel, isSubmitting, isDropoutFlowStarted, t]);
+  }, [isKnownLoggedOut, isRestrictedWheel, isSubmitting, isDropoutFlowStarted, t]);
 
   const ticketErrorMessage = useMemo(() => {
     if (!viewerVerifiableSpin || !ticketError) return null;
@@ -146,7 +153,7 @@ const ViewerVerifiableSpinField = ({
                       <Badge color='red' variant='filled' size='sm' radius='sm' className={classes.newBadge}>
                         {t('wheel.viewerVerifiableSpin.newLabel')}
                       </Badge>
-                      {!isAuthenticated && <IconExclamationMark size={16} className={classes.warningIcon} />}
+                      {!isKnownLoggedOut ? null : <IconExclamationMark size={16} className={classes.warningIcon} />}
                       <ActionIcon
                         variant='outline'
                         color='primary'
