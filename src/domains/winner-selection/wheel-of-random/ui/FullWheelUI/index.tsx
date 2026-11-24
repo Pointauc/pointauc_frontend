@@ -151,6 +151,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
     activeTicket,
     isBusy: isTicketBusy,
     error: ticketError,
+    rateLimitRemainingMs: ticketRateLimitRemainingMs,
     revealedTicket,
     shouldRevealNumber,
     setShouldRevealNumber,
@@ -450,6 +451,7 @@ const FullWheelUI = <TWheelItem extends WheelItem = WheelItem>({
               ticketData={visibleTicketData}
               isCreatingTicket={isTicketBusy}
               ticketError={ticketError}
+              ticketRateLimitRemainingMs={ticketRateLimitRemainingMs}
               isDropoutFlowStarted={isDropoutFlowStarted}
             >
               <>

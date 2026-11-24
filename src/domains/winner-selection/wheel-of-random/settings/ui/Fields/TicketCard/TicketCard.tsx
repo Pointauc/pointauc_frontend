@@ -1,5 +1,5 @@
 import { ActionIcon, Anchor, Card, Divider, Group, Stack, Text, Title } from '@mantine/core';
-import { IconClock, IconCopy } from '@tabler/icons-react';
+import { IconClock, IconCopy, IconHourglass } from '@tabler/icons-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useTranslation } from 'react-i18next';
 import { notifications } from '@mantine/notifications';
@@ -12,6 +12,11 @@ interface TicketCardProps {
   createdAt: string;
   revealedAt?: string | null;
   randomNumber?: number | null;
+  /**
+   * When set, ticket generation is rate limited and the card shows a rate
+   * limiting message with this countdown instead of the ticket data.
+   */
+  rateLimitRemainingMs?: number | null;
 }
 
 const QR_CODE_SIZE = 92;
@@ -22,9 +27,34 @@ const formatTimestamp = (timestamp: string) => dayjs(timestamp).format('DD.MM.YY
  * Compact viewer verification ticket card.
  * Shows the ticket creation time and the public verification link with a QR code;
  * the reveal time and the random number appear once the spin is done.
+ * While the backend rate limits the generation of a new ticket, the card shows
+ * a rate limiting message with a countdown instead.
  */
-const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber }: TicketCardProps) => {
+const TicketCard = ({ ticketId, createdAt, revealedAt, randomNumber, rateLimitRemainingMs }: TicketCardProps) => {
   const { t } = useTranslation();
+
+  if (rateLimitRemainingMs != null) {
+    const secondsLeft = Math.max(1, Math.ceil(rateLimitRemainingMs / 1000));
+
+    return (
+      <Card withBorder padding='sm' radius='md' className={styles.card}>
+        <Stack gap='xs'>
+          <Group gap='xs' align='center' wrap='nowrap'>
+            <IconHourglass size={16} className={styles.rateLimitIcon} />
+            <Title order={5} pb={0}>
+              {t('wheel.ticket.title')}
+            </Title>
+          </Group>
+          <Text size='sm' c='dimmed'>
+            {t('wheel.ticket.rateLimitedMessage')}
+          </Text>
+          <Text className={styles.rateLimitCountdown}>
+            {t('wheel.ticket.rateLimitedCountdown', { seconds: secondsLeft })}
+          </Text>
+        </Stack>
+      </Card>
+    );
+  }
 
   const verificationUrl = `${location.origin}/verify/${ticketId}`;
 

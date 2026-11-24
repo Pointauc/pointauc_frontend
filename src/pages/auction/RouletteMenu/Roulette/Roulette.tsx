@@ -91,6 +91,10 @@ const Roulette: FC<RouletteProps> = ({ presets, onRoll, bid, selectedPreset }) =
             initialSettings={{
               ...defaultWheelSettings,
               spinTime,
+              // The casino wheel never uses the viewer verifiable spin flow
+              // (the checkbox is not rendered there and spins must not depend
+              // on an authenticated session or consume verification tickets)
+              viewerVerifiableSpin: false,
               coreImage: initialSettings?.data?.coreImage || defaultWheelSettings.coreImage,
               wheelStyles: initialSettings?.data?.wheelStyles || defaultWheelSettings.wheelStyles,
             }}

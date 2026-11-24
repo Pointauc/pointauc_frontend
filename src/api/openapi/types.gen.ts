@@ -1602,6 +1602,20 @@ export type TicketsControllerGetActiveTicketData = {
     url: '/random/tickets/active';
 };
 
+export type TicketsControllerGetActiveTicketErrors = {
+    /**
+     * Rate limited: a new ticket would be created within 2 seconds of the previous one
+     */
+    429: {
+        statusCode?: number;
+        message?: string;
+        code?: string;
+        retryAfterMs?: number;
+    };
+};
+
+export type TicketsControllerGetActiveTicketError = TicketsControllerGetActiveTicketErrors[keyof TicketsControllerGetActiveTicketErrors];
+
 export type TicketsControllerGetActiveTicketResponses = {
     /**
      * Active ticket (created on first call if none existed)

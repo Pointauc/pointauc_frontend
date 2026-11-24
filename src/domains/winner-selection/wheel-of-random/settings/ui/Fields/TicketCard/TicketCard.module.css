@@ -45,3 +45,15 @@
   color: var(--mantine-color-blue-6);
   font-size: 0.75rem;
 }
+
+.rateLimitIcon {
+  color: var(--mantine-color-yellow-6);
+  flex: none;
+}
+
+.rateLimitCountdown {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}

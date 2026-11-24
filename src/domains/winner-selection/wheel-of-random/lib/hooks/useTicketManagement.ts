@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { notifications } from '@mantine/notifications';
@@ -44,11 +44,25 @@ interface RevealErrorData {
   code?: string;
 }
 
+/** Error body returned by the backend when ticket generation is rate limited (HTTP 429) */
+interface RateLimitErrorData extends RevealErrorData {
+  retryAfterMs?: number;
+}
+
+/** How often the rate limit countdown state is refreshed */
+const RATE_LIMIT_TICK_MS = 250;
+
 interface UseTicketManagementReturn {
   activeTicket: ActiveTicketResponseDto | null;
   /** True while the active ticket is being fetched or a ticket is being revealed */
   isBusy: boolean;
   error: Error | null;
+  /**
+   * Milliseconds left until a new ticket can be generated, ticking down while the
+   * backend rate limits the request (one ticket every 2 seconds per user).
+   * Null when not rate limited. Once it reaches zero the ticket is fetched again.
+   */
+  rateLimitRemainingMs: number | null;
   revealedTicket: RevealedTicketData | null;
   shouldRevealNumber: boolean;
   setShouldRevealNumber: (shouldReveal: boolean) => void;
@@ -93,6 +107,59 @@ const useTicketManagement = (isEnabled: boolean): UseTicketManagementReturn => {
     ...ticketsControllerGetActiveTicketOptions(),
     enabled: isEnabled,
   });
+
+  const [rateLimitRemainingMs, setRateLimitRemainingMs] = useState<number | null>(null);
+  const rateLimitDeadlineRef = useRef<number | null>(null);
+
+  /**
+   * Rate limit feedback: while the backend refuses to generate a new ticket
+   * (429 RATE_LIMITED), keep a live countdown of the remaining cooldown and
+   * fetch the ticket again once it expires.
+   */
+  useEffect(() => {
+    const rateLimitError = activeTicketQuery.error as AxiosError<RateLimitErrorData> | null;
+    const retryAfterMs =
+      rateLimitError?.response?.data?.code === 'RATE_LIMITED'
+        ? rateLimitError.response.data.retryAfterMs
+        : undefined;
+
+    if (retryAfterMs == null) {
+      rateLimitDeadlineRef.current = null;
+      setRateLimitRemainingMs(null);
+      return;
+    }
+
+    const deadline = Date.now() + Math.max(retryAfterMs, RATE_LIMIT_TICK_MS);
+    rateLimitDeadlineRef.current = deadline;
+    setRateLimitRemainingMs(deadline - Date.now());
+
+    const tick = setInterval(() => {
+      const remaining = (rateLimitDeadlineRef.current ?? 0) - Date.now();
+
+      if (remaining > 0) {
+        setRateLimitRemainingMs(remaining);
+        return;
+      }
+
+      // The cooldown has passed: request the ticket again
+      clearInterval(tick);
+      rateLimitDeadlineRef.current = null;
+      setRateLimitRemainingMs(null);
+      activeTicketQuery.refetch();
+    }, RATE_LIMIT_TICK_MS);
+
+    return () => clearInterval(tick);
+    // activeTicketQuery.error and .refetch are the stable slice the effect needs;
+    // depending on the whole query object would restart the countdown every render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTicketQuery.error, activeTicketQuery.refetch]);
+
+  // While rate limited the ticket card shows the countdown, so the error must
+  // not surface through the generic error alert as well. Covers the refetch
+  // window after the countdown ends, while the stale 429 is still on the query.
+  const ticketError = activeTicketQuery.error as AxiosError<RateLimitErrorData> | null;
+  const isRateLimited =
+    rateLimitRemainingMs != null || ticketError?.response?.data?.code === 'RATE_LIMITED';
 
   const revealTicketMutation = useMutation({
     ...ticketsControllerRevealTicketMutation(),
@@ -182,7 +249,8 @@ const useTicketManagement = (isEnabled: boolean): UseTicketManagementReturn => {
   return {
     activeTicket: activeTicketQuery.data ?? null,
     isBusy: activeTicketQuery.isLoading || revealTicketMutation.isPending,
-    error: activeTicketQuery.error,
+    error: isRateLimited ? null : activeTicketQuery.error,
+    rateLimitRemainingMs,
     revealedTicket: mapKey ? revealedTickets[mapKey] : null,
     shouldRevealNumber: mapKey ? shouldRevealNumberMap[mapKey] : false,
     setShouldRevealNumber: (shouldReveal: boolean) => {

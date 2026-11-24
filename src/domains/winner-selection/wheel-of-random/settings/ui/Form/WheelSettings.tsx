@@ -37,6 +37,8 @@ interface WheelSettingsProps {
   ticketData?: RevealedData | null;
   isCreatingTicket?: boolean;
   ticketError?: Error | null;
+  /** Rate limit countdown for the next ticket generation */
+  ticketRateLimitRemainingMs?: number | null;
   isDropoutFlowStarted?: boolean;
 }
 
@@ -50,6 +52,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
     ticketData,
     isCreatingTicket,
     ticketError,
+    ticketRateLimitRemainingMs,
     isDropoutFlowStarted = false,
   } = props;
   const { t } = useTranslation();
@@ -153,6 +156,7 @@ const WheelSettings = (props: WheelSettingsProps) => {
                 <ViewerVerifiableSpinField
                   ticketData={ticketData ?? null}
                   ticketError={ticketError ?? null}
+                  ticketRateLimitRemainingMs={ticketRateLimitRemainingMs ?? null}
                   isDropoutFlowStarted={isDropoutFlowStarted}
                 />
               </>

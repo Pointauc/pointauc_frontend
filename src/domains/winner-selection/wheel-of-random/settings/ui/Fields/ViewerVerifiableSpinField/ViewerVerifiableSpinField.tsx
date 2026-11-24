@@ -20,18 +20,26 @@ import classes from './ViewerVerifiableSpinField.module.css';
 interface ViewerVerifiableSpinFieldProps {
   ticketData: RevealedData | null;
   ticketError: Error | null;
+  /** Rate limit countdown for the next ticket generation; the card shows it instead of ticket data */
+  ticketRateLimitRemainingMs?: number | null;
   isDropoutFlowStarted: boolean;
 }
 
 /**
  * Viewer verifiable spin checkbox with integrated side effects:
  * - Auto-unchecks for restricted wheel types (battle royale, classic dropout)
+ *   and while the user is not authenticated (the flow needs a session)
  * - Disabled while a spin is in progress or in the middle of a dropout flow
  * - Disabled with an explanatory tooltip and an exclamation mark icon
  *   when the user is not authenticated
  * - Displays the verification ticket card and ticket errors
  */
-const ViewerVerifiableSpinField = ({ ticketData, ticketError, isDropoutFlowStarted }: ViewerVerifiableSpinFieldProps) => {
+const ViewerVerifiableSpinField = ({
+  ticketData,
+  ticketError,
+  ticketRateLimitRemainingMs,
+  isDropoutFlowStarted,
+}: ViewerVerifiableSpinFieldProps) => {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<Wheel.Settings>();
   const { isSubmitting } = useFormState<Wheel.Settings>({ control });
@@ -45,12 +53,14 @@ const ViewerVerifiableSpinField = ({ ticketData, ticketError, isDropoutFlowStart
   const isRestrictedWheel =
     format === WheelFormat.BattleRoyal || (format === WheelFormat.Dropout && dropoutVariant === DropoutVariant.Classic);
 
-  // Auto-uncheck for restricted wheel types
+  // Auto-uncheck for restricted wheel types, and for users who cannot use the
+  // feature at all: revealing tickets requires an authenticated session, so a
+  // default-on checkbox must not stay checked while logged out
   useEffect(() => {
-    if (isRestrictedWheel && viewerVerifiableSpin) {
+    if ((isRestrictedWheel || !isAuthenticated) && viewerVerifiableSpin) {
       setValue('viewerVerifiableSpin', false);
     }
-  }, [isRestrictedWheel, viewerVerifiableSpin, setValue]);
+  }, [isRestrictedWheel, isAuthenticated, viewerVerifiableSpin, setValue]);
 
   const isDisabled = !isAuthenticated || isRestrictedWheel || isSubmitting || isDropoutFlowStarted;
 
@@ -157,12 +167,13 @@ const ViewerVerifiableSpinField = ({ ticketData, ticketError, isDropoutFlowStart
             />
           </div>
         </Tooltip>
-        {viewerVerifiableSpin && ticketData && (
+        {viewerVerifiableSpin && (ticketData || ticketRateLimitRemainingMs != null) && (
           <TicketCard
-            ticketId={ticketData.ticketId}
-            createdAt={ticketData.createdAt}
-            revealedAt={ticketData.revealedAt}
-            randomNumber={ticketData.randomNumber}
+            ticketId={ticketData?.ticketId ?? ''}
+            createdAt={ticketData?.createdAt ?? ''}
+            revealedAt={ticketData?.revealedAt}
+            randomNumber={ticketData?.randomNumber}
+            rateLimitRemainingMs={ticketRateLimitRemainingMs}
           />
         )}
         {ticketErrorMessage && (

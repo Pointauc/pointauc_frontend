@@ -51,9 +51,11 @@ const RevealedTicketView = ({ ticket, isPublished }: RevealedTicketViewProps) =>
         </Alert>
       )}
 
-      <Button variant='outline' component='a' href={ROUTES.TICKET_VERIFICATION_INFO} target='_blank'>
-        {t('tickets.revealed.checkInstruction')}
-      </Button>
+      {!isBackendProvider && (
+        <Button variant='outline' component='a' href={ROUTES.TICKET_VERIFICATION_INFO} target='_blank'>
+          {t('tickets.revealed.checkInstruction')}
+        </Button>
+      )}
 
       <Card shadow='sm' padding='lg' radius='md' withBorder>
         <Stack gap='sm'>
