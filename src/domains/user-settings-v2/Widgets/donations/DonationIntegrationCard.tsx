@@ -26,6 +26,7 @@ const DonationIntegrationCard = ({ integration }: DonationIntegrationCardProps) 
 
   const status: IntegrationStatusCardStatus = loading ? 'loading' : subscribed ? 'enabled' : 'disabled';
   const Icon = branding.icon;
+  const SettingsComponent = integration.settingsComponent;
 
   const displayName = useMemo(() => {
     const baseName = t(`integration.${id}.name`);
@@ -75,6 +76,7 @@ const DonationIntegrationCard = ({ integration }: DonationIntegrationCardProps) 
       />
 
       <IntegrationStatusCardBody onClick={(event) => event.stopPropagation()}>
+        {SettingsComponent && <SettingsComponent />}
         <RevokeIntegrationButton
           revoke={integration.authFlow.revoke}
           className='border-paper-200 hover:border-paper-100 hover:bg-paper-600 w-full border'

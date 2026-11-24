@@ -8,6 +8,7 @@ import { Navigate, useLocation } from 'react-router';
 
 import LoadingPage from '@components/LoadingPage/LoadingPage.tsx';
 import { QUERIES } from '@constants/common.constants.ts';
+import { checkIsFrontendOnlyIntegration } from '@domains/bids/external-integrations/shared/frontendOnly.ts';
 import * as Integration from '@models/integration';
 import { loadUserData } from '@reducers/AucSettings/AucSettings.ts';
 import { checkIsDesktop } from '@shared/lib/desktop/checkIsDesktop';
@@ -53,7 +54,7 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
     queryKey: ['auth-redirect', code],
     queryFn: async () => {
       await authFlow.authenticate(code!);
-      if (integration.id !== 'donatex') {
+      if (!checkIsFrontendOnlyIntegration(integration.id)) {
         await dispatch(loadUserData());
       }
       return true;
@@ -67,7 +68,11 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
     return <DesktopAuthRedirectPrompt protocolUrl={protocolUrl} />;
   }
 
-  if (authQuery.isError) {
+  // The service sent the user back without a code: they declined the request or the service failed.
+  const isRejected = !code;
+  const isDeclinedByUser = isRejected && getQueryValue(location.search, 'error') === 'access_denied';
+
+  if (authQuery.isError || (isRejected && !isDeclinedByUser)) {
     notifications.show({
       title: t('common.authError'),
       message: t('common.authErrorMessage'),
@@ -78,7 +83,7 @@ const RedirectPage = ({ integration }: RedirectPageProps) => {
     return <Navigate to={getReturnPath()} replace />;
   }
 
-  if (authQuery.isSuccess) {
+  if (authQuery.isSuccess || isRejected) {
     return <Navigate to={getReturnPath()} replace />;
   }
 
